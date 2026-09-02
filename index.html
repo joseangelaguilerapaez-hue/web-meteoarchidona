@@ -243,7 +243,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 28px;
+            gap: 30px;
 
             height: 100%;
         }
@@ -261,10 +261,16 @@
                 12px;
 
             font-weight:
-                500;
+                600;
 
             text-transform:
                 uppercase;
+
+            white-space:
+                nowrap;
+
+            transition:
+                color 0.18s ease;
         }
 
         .navegacion a:hover {
@@ -290,6 +296,10 @@
 
             background:
                 var(--accent);
+
+            box-shadow:
+                0 0 12px
+                rgba(240, 165, 0, 0.38);
         }
 
         .hora {
@@ -322,6 +332,16 @@
 
             font-weight:
                 600;
+        }
+
+        .panel-aplicacion {
+            display:
+                none;
+        }
+
+        .panel-aplicacion.activo {
+            display:
+                block;
         }
 
         .contenido {
@@ -1607,17 +1627,291 @@
                 right;
         }
 
+        .panel-futuro {
+            width:
+                min(
+                    1500px,
+                    calc(100% - 48px)
+                );
+
+            margin:
+                38px auto;
+
+            min-height:
+                calc(100vh - 170px);
+
+            display:
+                grid;
+
+            place-items:
+                center;
+
+            padding:
+                40px;
+        }
+
+        .panel-futuro-contenido {
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            width:
+                min(
+                    800px,
+                    100%
+                );
+
+            padding:
+                58px
+                46px;
+
+            text-align:
+                center;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                24px;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(54, 213, 255, 0.08),
+                    transparent 45%
+                ),
+                linear-gradient(
+                    145deg,
+                    rgba(17, 30, 46, 0.98),
+                    rgba(7, 17, 28, 0.98)
+                );
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .panel-futuro-contenido::before {
+            content: "";
+
+            position:
+                absolute;
+
+            inset:
+                0;
+
+            pointer-events:
+                none;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(54, 213, 255, 0.025) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    rgba(54, 213, 255, 0.025) 1px,
+                    transparent 1px
+                );
+
+            background-size:
+                36px 36px;
+        }
+
+        .panel-futuro-icono {
+            position:
+                relative;
+
+            z-index:
+                1;
+
+            display:
+                grid;
+
+            place-items:
+                center;
+
+            width:
+                88px;
+
+            height:
+                88px;
+
+            margin:
+                0 auto 24px;
+
+            border:
+                1px solid
+                rgba(240, 165, 0, 0.28);
+
+            border-radius:
+                24px;
+
+            background:
+                rgba(240, 165, 0, 0.07);
+
+            font-size:
+                40px;
+        }
+
+        .panel-futuro-etiqueta {
+            position:
+                relative;
+
+            z-index:
+                1;
+
+            margin-bottom:
+                12px;
+
+            color:
+                var(--cyan);
+
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                11px;
+
+            font-weight:
+                600;
+
+            letter-spacing:
+                0.12em;
+        }
+
+        .panel-futuro h1 {
+            position:
+                relative;
+
+            z-index:
+                1;
+
+            margin:
+                0 0 16px;
+
+            font-size:
+                clamp(
+                    30px,
+                    4vw,
+                    54px
+                );
+
+            letter-spacing:
+                -0.045em;
+        }
+
+        .panel-futuro p {
+            position:
+                relative;
+
+            z-index:
+                1;
+
+            max-width:
+                620px;
+
+            margin:
+                0 auto;
+
+            color:
+                var(--muted);
+
+            line-height:
+                1.75;
+
+            font-size:
+                14px;
+        }
+
+        .panel-en-vivo {
+            width:
+                100%;
+
+            margin:
+                0;
+
+            padding:
+                0;
+
+            background:
+                var(--bg);
+        }
+
+        .panel-en-vivo iframe {
+            display:
+                block;
+
+            width:
+                100%;
+
+            height:
+                calc(100vh - 93px);
+
+            min-height:
+                760px;
+
+            border:
+                0;
+
+            background:
+                var(--bg);
+        }
+
         @media (
             max-width: 1250px
         ) {
             .cabecera {
                 grid-template-columns:
                     1fr auto;
+
+                gap:
+                    8px 20px;
             }
 
             .navegacion {
+                grid-column:
+                    1 / -1;
+
+                order:
+                    3;
+
+                justify-content:
+                    center;
+
+                gap:
+                    30px;
+
+                width:
+                    100%;
+
+                overflow-x:
+                    auto;
+
+                scrollbar-width:
+                    none;
+
+                border-top:
+                    1px solid
+                    rgba(255, 255, 255, 0.04);
+            }
+
+            .navegacion::-webkit-scrollbar {
                 display:
                     none;
+            }
+
+            .navegacion a {
+                padding:
+                    17px 0 15px;
+            }
+
+            .navegacion a.activo::after {
+                bottom:
+                    6px;
             }
 
             .panel-superior {
@@ -1649,6 +1943,11 @@
                 grid-template-columns:
                     repeat(3, 1fr);
             }
+
+            .panel-en-vivo iframe {
+                height:
+                    calc(100vh - 145px);
+            }
         }
 
         @media (
@@ -1663,6 +1962,9 @@
 
                 gap:
                     8px;
+
+                padding-bottom:
+                    0;
             }
 
             .hora {
@@ -1671,6 +1973,30 @@
 
                 text-align:
                     left;
+            }
+
+            .navegacion {
+                grid-column:
+                    auto;
+
+                justify-content:
+                    flex-start;
+
+                gap:
+                    24px;
+
+                margin:
+                    4px
+                    -20px
+                    0;
+
+                padding:
+                    0 20px;
+            }
+
+            .navegacion a {
+                flex:
+                    0 0 auto;
             }
 
             .panel-superior {
@@ -1718,6 +2044,37 @@
             .pie-derecha {
                 text-align:
                     left;
+            }
+
+            .panel-futuro {
+                width:
+                    min(
+                        100% - 24px,
+                        1500px
+                    );
+
+                margin:
+                    20px auto;
+
+                min-height:
+                    620px;
+
+                padding:
+                    10px;
+            }
+
+            .panel-futuro-contenido {
+                padding:
+                    42px
+                    24px;
+            }
+
+            .panel-en-vivo iframe {
+                min-height:
+                    720px;
+
+                height:
+                    calc(100vh - 180px);
             }
         }
 
@@ -1858,6 +2215,30 @@
                 grid-template-columns:
                     1fr;
             }
+
+            .panel-futuro {
+                min-height:
+                    540px;
+            }
+
+            .panel-futuro-icono {
+                width:
+                    72px;
+
+                height:
+                    72px;
+
+                font-size:
+                    32px;
+            }
+
+            .panel-en-vivo iframe {
+                min-height:
+                    650px;
+
+                height:
+                    calc(100vh - 190px);
+            }
         }
 
         @media (
@@ -1882,8 +2263,10 @@
         <header class="cabecera">
 
             <a
-                href="#"
+                href="#actualidad"
                 class="marca"
+                data-panel="actualidad"
+                aria-label="Ir a Actualidad"
             >
                 <div
                     class="marca-icono"
@@ -1909,34 +2292,33 @@
                 aria-label="Navegación principal"
             >
                 <a
-                    href="#actual"
+                    href="#actualidad"
                     class="activo"
+                    data-panel="actualidad"
+                    aria-current="page"
                 >
-                    Actual
+                    Actualidad
                 </a>
 
-                <a href="#historicos">
-                    Históricos
+                <a
+                    href="#prediccion"
+                    data-panel="prediccion"
+                >
+                    Predicción
                 </a>
 
-                <a href="#graficos">
-                    Gráficos
+                <a
+                    href="#observaciones"
+                    data-panel="observaciones"
+                >
+                    Observaciones
                 </a>
 
-                <a href="#camaras">
-                    Cámaras
-                </a>
-
-                <a href="#estaciones">
-                    Estaciones
-                </a>
-
-                <a href="#alertas">
-                    Alertas
-                </a>
-
-                <a href="#acerca">
-                    Acerca de
+                <a
+                    href="#en-vivo"
+                    data-panel="en-vivo"
+                >
+                    En vivo
                 </a>
             </nav>
 
@@ -1960,1164 +2342,1270 @@
 
         </header>
 
-        <main
-            class="contenido"
-            id="actual"
+        <section
+            class="panel-aplicacion activo"
+            id="panel-actualidad"
+            data-panel-contenido="actualidad"
         >
 
-            <section class="panel-superior">
-
-                <aside class="tarjeta resumen">
-
-                    <h2 class="seccion-titulo">
-                        Condiciones actuales
-                    </h2>
-
-                    <div class="estado">
-                        <span class="punto"></span>
-                        Datos MeteoArchidona
-                    </div>
-
-                    <div class="estado-grafico">
-                        <div
-                            class="tiempo-icono"
-                            aria-hidden="true"
-                        >
-                            <div class="sol"></div>
-                            <div class="nube"></div>
-                        </div>
-                    </div>
-
-                    <div class="ubicacion">
-                        ⌖ ARCHIDONA
-                    </div>
-
-                    <div class="ubicacion-sub">
-                        Málaga · Andalucía
-                    </div>
-
-                    <div class="sol-horas">
-
-                        <div class="sol-hora">
-                            ☀ 07:45
-
-                            <span>
-                                Amanecer
-                            </span>
-                        </div>
-
-                        <div class="sol-hora">
-                            ☾ 20:44
-
-                            <span>
-                                Atardecer
-                            </span>
-                        </div>
-
-                    </div>
-
-                </aside>
-
-                <article
-                    class="tarjeta estacion-principal"
-                    id="tarjeta-EL_SILO"
-                >
-
-                    <div class="estacion-contenido">
-
-                        <div class="estacion-cabecera">
-
-                            <div>
-                                <h2
-                                    class="estacion-nombre"
-                                    id="nombre-EL_SILO"
-                                >
-                                    EL SILO
-                                </h2>
-
-                                <div class="estacion-localidad">
-                                    Archidona
-                                </div>
-                            </div>
-
-                            <div
-                                class="online"
-                                id="estado-EL_SILO"
-                            >
-                                <span class="punto"></span>
-                                Cargando...
-                            </div>
-
-                        </div>
-
-                        <div class="temperatura-area">
-
-                            <div>
-                                <div
-                                    class="temperatura"
-                                    id="temperatura-EL_SILO"
-                                >
-                                    --<sup>°C</sup>
-                                </div>
-
-                                <div
-                                    class="sensacion"
-                                    id="sensacion-EL_SILO"
-                                >
-                                    Sensación -- °C
-                                </div>
-
-                                <div
-                                    class="sensacion"
-                                    id="observacion-EL_SILO"
-                                >
-                                    Observación --:--
-                                </div>
-                            </div>
-
-                            <div class="simbolo-tiempo">
-                                ☀️
-
-                                <span>
-                                    Datos actuales
-                                </span>
-                            </div>
-
-                        </div>
-
-                        <div
-                            class="patrocinio-estacion"
-                            id="patrocinio-EL_SILO"
-                            aria-label="Patrocinadores de los datos de lluvia de El Silo"
-                        >
-
-                            <div class="patrocinio-estacion-titulo">
-                                🌧️ LLUVIA EN VIVO
-                            </div>
-
-                            <div class="patrocinio-estacion-ventana">
-
-                                <div class="patrocinio-estacion-pista">
-
-                                    <span class="patrocinio-estacion-texto">
-                                        Datos patrocinados por
-                                        <strong>Restaurante San Isidro</strong>
-                                        ·
-                                        <strong>Bar Central</strong>
-                                        ·
-                                        <strong>Las Viñas</strong>
-                                        ·
-                                        <strong>Gestión 95</strong>
-                                    </span>
-
-                                    <span
-                                        class="patrocinio-estacion-texto"
-                                        aria-hidden="true"
-                                    >
-                                        Datos patrocinados por
-                                        <strong>Restaurante San Isidro</strong>
-                                        ·
-                                        <strong>Bar Central</strong>
-                                        ·
-                                        <strong>Las Viñas</strong>
-                                        ·
-                                        <strong>Gestión 95</strong>
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="patrocinio-estacion-control"
-                                data-patrocinio="EL_SILO"
-                                aria-label="Pausar patrocinio"
-                                aria-pressed="false"
-                            >
-                                Ⅱ
-                            </button>
-
-                        </div>
-
-                        <div class="lluvia-resumen">
-
-                            <div class="lluvia-resumen-item">
-                                <div
-                                    class="lluvia-resumen-icono"
-                                    id="lluvia-resumen-icono-dia-EL_SILO"
-                                >
-                                    ☁️
-                                </div>
-
-                                <div class="lluvia-resumen-label">
-                                    Lluvia hoy
-                                </div>
-
-                                <div
-                                    class="lluvia-resumen-valor"
-                                    id="lluvia-dia-EL_SILO"
-                                >
-                                    -- mm
-                                </div>
-                            </div>
-
-                            <div class="lluvia-resumen-item">
-                                <div
-                                    class="lluvia-resumen-icono"
-                                    id="lluvia-resumen-icono-mes-EL_SILO"
-                                >
-                                    ☁️
-                                </div>
-
-                                <div class="lluvia-resumen-label">
-                                    Este mes
-                                </div>
-
-                                <div
-                                    class="lluvia-resumen-valor"
-                                    id="lluvia-mes-EL_SILO"
-                                >
-                                    -- mm
-                                </div>
-                            </div>
-
-                            <div class="lluvia-resumen-item">
-                                <div
-                                    class="lluvia-resumen-icono"
-                                    id="lluvia-resumen-icono-anio-EL_SILO"
-                                >
-                                    ☁️
-                                </div>
-
-                                <div class="lluvia-resumen-label">
-                                    Año agrícola
-                                </div>
-
-                                <div
-                                    class="lluvia-resumen-valor"
-                                    id="lluvia-anio-EL_SILO"
-                                >
-                                    -- mm
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="metricas-estacion">
-
-                        <div class="metrica-estacion">
-                            <div class="metrica-label">
-                                💧 Humedad
-                            </div>
-
-                            <div
-                                class="metrica-valor"
-                                id="humedad-EL_SILO"
-                            >
-                                -- %
-                            </div>
-                        </div>
-
-                        <div class="metrica-estacion">
-                            <div class="metrica-label">
-                                ◇ Punto de rocío
-                            </div>
-
-                            <div
-                                class="metrica-valor"
-                                id="rocio-EL_SILO"
-                            >
-                                -- °C
-                            </div>
-                        </div>
-
-                        <div class="metrica-estacion">
-                            <div class="metrica-label">
-                                ◉ Presión
-                            </div>
-
-                            <div
-                                class="metrica-valor"
-                                id="presion-EL_SILO"
-                            >
-                                -- hPa
-                            </div>
-                        </div>
-
-                        <div class="metrica-estacion">
-                            <div class="metrica-label">
-                                ◷ Fecha
-                            </div>
-
-                            <div
-                                class="metrica-valor"
-                                id="fecha-EL_SILO"
-                            >
-                                --
-                            </div>
-                        </div>
-
-                    </div>
-
-                </article>
-
-                <article
-                    class="tarjeta estacion-principal"
-                    id="tarjeta-LOS_LLANOS"
-                >
-
-                    <div class="estacion-contenido">
-
-                        <div class="estacion-cabecera">
-
-                            <div>
-                                <h2
-                                    class="estacion-nombre"
-                                    id="nombre-LOS_LLANOS"
-                                >
-                                    LOS LLANOS
-                                </h2>
-
-                                <div class="estacion-localidad">
-                                    Villanueva del Trabuco
-                                </div>
-                            </div>
-
-                            <div
-                                class="online"
-                                id="estado-LOS_LLANOS"
-                            >
-                                <span class="punto"></span>
-                                Cargando...
-                            </div>
-
-                        </div>
-
-                        <div class="temperatura-area">
-
-                            <div>
-                                <div
-                                    class="temperatura"
-                                    id="temperatura-LOS_LLANOS"
-                                >
-                                    --<sup>°C</sup>
-                                </div>
-
-                                <div
-                                    class="sensacion"
-                                    id="sensacion-LOS_LLANOS"
-                                >
-                                    Sensación -- °C
-                                </div>
-
-                                <div
-                                    class="sensacion"
-                                    id="observacion-LOS_LLANOS"
-                                >
-                                    Observación --:--
-                                </div>
-                            </div>
-
-                            <div class="simbolo-tiempo">
-                                🌤️
-
-                                <span>
-                                    Datos actuales
-                                </span>
-                            </div>
-
-                        </div>
-
-                        <div
-                            class="patrocinio-estacion"
-                            id="patrocinio-LOS_LLANOS"
-                            aria-label="Patrocinadores de los datos de lluvia de Los Llanos"
-                        >
-
-                            <div class="patrocinio-estacion-titulo">
-                                🌧️ LLUVIA EN VIVO
-                            </div>
-
-                            <div class="patrocinio-estacion-ventana">
-
-                                <div class="patrocinio-estacion-pista">
-
-                                    <span class="patrocinio-estacion-texto">
-                                        Datos patrocinados por
-                                        <strong>Restaurante San Isidro</strong>
-                                        ·
-                                        <strong>Bar Central</strong>
-                                        ·
-                                        <strong>Las Viñas</strong>
-                                        ·
-                                        <strong>Gestión 95</strong>
-                                    </span>
-
-                                    <span
-                                        class="patrocinio-estacion-texto"
-                                        aria-hidden="true"
-                                    >
-                                        Datos patrocinados por
-                                        <strong>Restaurante San Isidro</strong>
-                                        ·
-                                        <strong>Bar Central</strong>
-                                        ·
-                                        <strong>Las Viñas</strong>
-                                        ·
-                                        <strong>Gestión 95</strong>
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="patrocinio-estacion-control"
-                                data-patrocinio="LOS_LLANOS"
-                                aria-label="Pausar patrocinio"
-                                aria-pressed="false"
-                            >
-                                Ⅱ
-                            </button>
-
-                        </div>
-
-                        <div class="lluvia-resumen">
-
-                            <div class="lluvia-resumen-item">
-                                <div
-                                    class="lluvia-resumen-icono"
-                                    id="lluvia-resumen-icono-dia-LOS_LLANOS"
-                                >
-                                    ☁️
-                                </div>
-
-                                <div class="lluvia-resumen-label">
-                                    Lluvia hoy
-                                </div>
-
-                                <div
-                                    class="lluvia-resumen-valor"
-                                    id="lluvia-dia-LOS_LLANOS"
-                                >
-                                    -- mm
-                                </div>
-                            </div>
-
-                            <div class="lluvia-resumen-item">
-                                <div
-                                    class="lluvia-resumen-icono"
-                                    id="lluvia-resumen-icono-mes-LOS_LLANOS"
-                                >
-                                    ☁️
-                                </div>
-
-                                <div class="lluvia-resumen-label">
-                                    Este mes
-                                </div>
-
-                                <div
-                                    class="lluvia-resumen-valor"
-                                    id="lluvia-mes-LOS_LLANOS"
-                                >
-                                    -- mm
-                                </div>
-                            </div>
-
-                            <div class="lluvia-resumen-item">
-                                <div
-                                    class="lluvia-resumen-icono"
-                                    id="lluvia-resumen-icono-anio-LOS_LLANOS"
-                                >
-                                    ☁️
-                                </div>
-
-                                <div class="lluvia-resumen-label">
-                                    Año agrícola
-                                </div>
-
-                                <div
-                                    class="lluvia-resumen-valor"
-                                    id="lluvia-anio-LOS_LLANOS"
-                                >
-                                    -- mm
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="metricas-estacion">
-
-                        <div class="metrica-estacion">
-                            <div class="metrica-label">
-                                💧 Humedad
-                            </div>
-
-                            <div
-                                class="metrica-valor"
-                                id="humedad-LOS_LLANOS"
-                            >
-                                -- %
-                            </div>
-                        </div>
-
-                        <div class="metrica-estacion">
-                            <div class="metrica-label">
-                                ◇ Punto de rocío
-                            </div>
-
-                            <div
-                                class="metrica-valor"
-                                id="rocio-LOS_LLANOS"
-                            >
-                                -- °C
-                            </div>
-                        </div>
-
-                        <div class="metrica-estacion">
-                            <div class="metrica-label">
-                                ◉ Presión
-                            </div>
-
-                            <div
-                                class="metrica-valor"
-                                id="presion-LOS_LLANOS"
-                            >
-                                -- hPa
-                            </div>
-                        </div>
-
-                        <div class="metrica-estacion">
-                            <div class="metrica-label">
-                                ◷ Fecha
-                            </div>
-
-                            <div
-                                class="metrica-valor"
-                                id="fecha-LOS_LLANOS"
-                            >
-                                --
-                            </div>
-                        </div>
-
-                    </div>
-
-                </article>
-
-            </section>
-
-            <section class="bloques-medicion">
-
-                <article class="tarjeta instrumento">
-
-                    <div class="instrumento-titulo">
-                        Viento actual
-                    </div>
-
-                    <div class="instrumento-contenido">
-
-                        <div class="brujula"></div>
-
-                        <div>
-                            <div class="instrumento-dato">
-                                NE
-                            </div>
-
-                            <div class="instrumento-secundario">
-                                45°
-                            </div>
-
-                            <div class="instrumento-secundario">
-                                Racha 25.3 km/h
-                            </div>
-                        </div>
-
-                    </div>
-
-                </article>
-
-                <article class="tarjeta instrumento">
-
-                    <div class="instrumento-titulo">
-                        Lluvia · El Silo
-                    </div>
-
-                    <div class="instrumento-contenido">
-
-                        <div
-                            class="instrumento-icono"
-                            id="lluvia-icono-EL_SILO"
-                        >
-                            ☁️
-                        </div>
-
-                        <div class="lluvia-detalle">
-
-                            <div
-                                class="lluvia-detalle-principal"
-                                id="lluvia-tarjeta-dia-EL_SILO"
-                            >
-                                --
-                                <small>mm</small>
-                            </div>
-
-                            <div class="lluvia-detalle-linea">
-                                <span>Mes</span>
-
-                                <strong
-                                    id="lluvia-tarjeta-mes-EL_SILO"
-                                >
-                                    -- mm
-                                </strong>
-                            </div>
-
-                            <div class="lluvia-detalle-linea">
-                                <span>Año agrícola</span>
-
-                                <strong
-                                    id="lluvia-tarjeta-anio-EL_SILO"
-                                >
-                                    -- mm
-                                </strong>
-                            </div>
-
-                            <div class="lluvia-detalle-linea">
-                                <span>Intensidad</span>
-
-                                <strong
-                                    id="lluvia-tasa-EL_SILO"
-                                >
-                                    -- mm/h
-                                </strong>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </article>
-
-                <article class="tarjeta instrumento">
-
-                    <div class="instrumento-titulo">
-                        Lluvia · Los Llanos
-                    </div>
-
-                    <div class="instrumento-contenido">
-
-                        <div
-                            class="instrumento-icono"
-                            id="lluvia-icono-LOS_LLANOS"
-                        >
-                            ☁️
-                        </div>
-
-                        <div class="lluvia-detalle">
-
-                            <div
-                                class="lluvia-detalle-principal"
-                                id="lluvia-tarjeta-dia-LOS_LLANOS"
-                            >
-                                --
-                                <small>mm</small>
-                            </div>
-
-                            <div class="lluvia-detalle-linea">
-                                <span>Mes</span>
-
-                                <strong
-                                    id="lluvia-tarjeta-mes-LOS_LLANOS"
-                                >
-                                    -- mm
-                                </strong>
-                            </div>
-
-                            <div class="lluvia-detalle-linea">
-                                <span>Año agrícola</span>
-
-                                <strong
-                                    id="lluvia-tarjeta-anio-LOS_LLANOS"
-                                >
-                                    -- mm
-                                </strong>
-                            </div>
-
-                            <div class="lluvia-detalle-linea">
-                                <span>Intensidad</span>
-
-                                <strong
-                                    id="lluvia-tasa-LOS_LLANOS"
-                                >
-                                    -- mm/h
-                                </strong>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </article>
-
-                <article class="tarjeta instrumento">
-
-                    <div class="instrumento-titulo">
-                        Presión
-                    </div>
-
-                    <div class="instrumento-contenido">
-
-                        <div class="instrumento-icono">
-                            ◴
-                        </div>
-
-                        <div>
-                            <div class="instrumento-dato">
-                                1016.2
-                                <small>hPa</small>
-                            </div>
-
-                            <div class="instrumento-secundario">
-                                Estable →
-                            </div>
-                        </div>
-
-                    </div>
-
-                </article>
-
-                <article class="tarjeta instrumento">
-
-                    <div class="instrumento-titulo">
-                        Radiación solar
-                    </div>
-
-                    <div class="instrumento-contenido">
-
-                        <div class="instrumento-icono">
-                            ☀️
-                        </div>
-
-                        <div>
-                            <div class="instrumento-dato">
-                                812
-                                <small>W/m²</small>
-                            </div>
-
-                            <div class="instrumento-secundario">
-                                Alta
-                            </div>
-                        </div>
-
-                    </div>
-
-                </article>
-
-                <article class="tarjeta instrumento">
-
-                    <div class="instrumento-titulo">
-                        UVI
-                    </div>
-
-                    <div class="instrumento-contenido">
-
-                        <div class="instrumento-icono">
-                            ◉
-                        </div>
-
-                        <div>
-                            <div class="instrumento-dato">
-                                6
-                            </div>
-
-                            <div
-                                class="instrumento-secundario"
-                                style="color: var(--red);"
-                            >
-                                Alto
-                            </div>
-                        </div>
-
-                    </div>
-
-                </article>
-
-            </section>
-
-            <section
-                class="paneles-graficos"
-                id="graficos"
+            <main
+                class="contenido"
+                id="actual"
             >
 
-                <article class="tarjeta grafico">
+                <section class="panel-superior">
 
-                    <div class="grafico-cabecera">
+                    <aside class="tarjeta resumen">
 
-                        <div class="grafico-titulo">
-                            Temperatura · últimas 24 horas
+                        <h2 class="seccion-titulo">
+                            Condiciones actuales
+                        </h2>
+
+                        <div class="estado">
+                            <span class="punto"></span>
+                            Datos MeteoArchidona
                         </div>
 
-                        <div class="leyenda">
-                            <span>
-                                El Silo
-                            </span>
-
-                            <span>
-                                Los Llanos
-                            </span>
+                        <div class="estado-grafico">
+                            <div
+                                class="tiempo-icono"
+                                aria-hidden="true"
+                            >
+                                <div class="sol"></div>
+                                <div class="nube"></div>
+                            </div>
                         </div>
 
-                    </div>
+                        <div class="ubicacion">
+                            ⌖ ARCHIDONA
+                        </div>
 
-                    <svg
-                        class="grafico-svg"
-                        viewBox="0 0 600 190"
-                        preserveAspectRatio="none"
-                        aria-label="Gráfico de temperatura de muestra"
+                        <div class="ubicacion-sub">
+                            Málaga · Andalucía
+                        </div>
+
+                        <div class="sol-horas">
+
+                            <div class="sol-hora">
+                                ☀ 07:45
+
+                                <span>
+                                    Amanecer
+                                </span>
+                            </div>
+
+                            <div class="sol-hora">
+                                ☾ 20:44
+
+                                <span>
+                                    Atardecer
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </aside>
+
+                    <article
+                        class="tarjeta estacion-principal"
+                        id="tarjeta-EL_SILO"
                     >
 
-                        <line
-                            class="rejilla"
-                            x1="0"
-                            y1="40"
-                            x2="600"
-                            y2="40"
-                        />
+                        <div class="estacion-contenido">
 
-                        <line
-                            class="rejilla"
-                            x1="0"
-                            y1="90"
-                            x2="600"
-                            y2="90"
-                        />
+                            <div class="estacion-cabecera">
 
-                        <line
-                            class="rejilla"
-                            x1="0"
-                            y1="140"
-                            x2="600"
-                            y2="140"
-                        />
+                                <div>
+                                    <h2
+                                        class="estacion-nombre"
+                                        id="nombre-EL_SILO"
+                                    >
+                                        EL SILO
+                                    </h2>
 
-                        <polyline
-                            class="linea-silo"
-                            points="
-                                0,85
-                                70,55
-                                140,40
-                                210,48
-                                280,78
-                                350,125
-                                420,142
-                                490,105
-                                550,72
-                                600,68
-                            "
-                        />
+                                    <div class="estacion-localidad">
+                                        Archidona
+                                    </div>
+                                </div>
 
-                        <polyline
-                            class="linea-llanos"
-                            points="
-                                0,95
-                                70,72
-                                140,60
-                                210,68
-                                280,98
-                                350,140
-                                420,152
-                                490,118
-                                550,88
-                                600,84
-                            "
-                        />
+                                <div
+                                    class="online"
+                                    id="estado-EL_SILO"
+                                >
+                                    <span class="punto"></span>
+                                    Cargando...
+                                </div>
 
-                    </svg>
+                            </div>
 
-                </article>
+                            <div class="temperatura-area">
 
-                <article class="tarjeta grafico">
+                                <div>
+                                    <div
+                                        class="temperatura"
+                                        id="temperatura-EL_SILO"
+                                    >
+                                        --<sup>°C</sup>
+                                    </div>
 
-                    <div class="grafico-cabecera">
+                                    <div
+                                        class="sensacion"
+                                        id="sensacion-EL_SILO"
+                                    >
+                                        Sensación -- °C
+                                    </div>
 
-                        <div class="grafico-titulo">
-                            Lluvia · últimos 7 días
+                                    <div
+                                        class="sensacion"
+                                        id="observacion-EL_SILO"
+                                    >
+                                        Observación --:--
+                                    </div>
+                                </div>
+
+                                <div class="simbolo-tiempo">
+                                    ☀️
+
+                                    <span>
+                                        Datos actuales
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="patrocinio-estacion"
+                                id="patrocinio-EL_SILO"
+                                aria-label="Patrocinadores de los datos de lluvia de El Silo"
+                            >
+
+                                <div class="patrocinio-estacion-titulo">
+                                    🌧️ LLUVIA EN VIVO
+                                </div>
+
+                                <div class="patrocinio-estacion-ventana">
+
+                                    <div class="patrocinio-estacion-pista">
+
+                                        <span class="patrocinio-estacion-texto">
+                                            Datos patrocinados por
+                                            <strong>Restaurante San Isidro</strong>
+                                            ·
+                                            <strong>Bar Central</strong>
+                                            ·
+                                            <strong>Las Viñas</strong>
+                                            ·
+                                            <strong>Gestión 95</strong>
+                                        </span>
+
+                                        <span
+                                            class="patrocinio-estacion-texto"
+                                            aria-hidden="true"
+                                        >
+                                            Datos patrocinados por
+                                            <strong>Restaurante San Isidro</strong>
+                                            ·
+                                            <strong>Bar Central</strong>
+                                            ·
+                                            <strong>Las Viñas</strong>
+                                            ·
+                                            <strong>Gestión 95</strong>
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="patrocinio-estacion-control"
+                                    data-patrocinio="EL_SILO"
+                                    aria-label="Pausar patrocinio"
+                                    aria-pressed="false"
+                                >
+                                    Ⅱ
+                                </button>
+
+                            </div>
+
+                            <div class="lluvia-resumen">
+
+                                <div class="lluvia-resumen-item">
+                                    <div
+                                        class="lluvia-resumen-icono"
+                                        id="lluvia-resumen-icono-dia-EL_SILO"
+                                    >
+                                        ☁️
+                                    </div>
+
+                                    <div class="lluvia-resumen-label">
+                                        Lluvia hoy
+                                    </div>
+
+                                    <div
+                                        class="lluvia-resumen-valor"
+                                        id="lluvia-dia-EL_SILO"
+                                    >
+                                        -- mm
+                                    </div>
+                                </div>
+
+                                <div class="lluvia-resumen-item">
+                                    <div
+                                        class="lluvia-resumen-icono"
+                                        id="lluvia-resumen-icono-mes-EL_SILO"
+                                    >
+                                        ☁️
+                                    </div>
+
+                                    <div class="lluvia-resumen-label">
+                                        Este mes
+                                    </div>
+
+                                    <div
+                                        class="lluvia-resumen-valor"
+                                        id="lluvia-mes-EL_SILO"
+                                    >
+                                        -- mm
+                                    </div>
+                                </div>
+
+                                <div class="lluvia-resumen-item">
+                                    <div
+                                        class="lluvia-resumen-icono"
+                                        id="lluvia-resumen-icono-anio-EL_SILO"
+                                    >
+                                        ☁️
+                                    </div>
+
+                                    <div class="lluvia-resumen-label">
+                                        Año agrícola
+                                    </div>
+
+                                    <div
+                                        class="lluvia-resumen-valor"
+                                        id="lluvia-anio-EL_SILO"
+                                    >
+                                        -- mm
+                                    </div>
+                                </div>
+
+                            </div>
+
                         </div>
 
-                    </div>
+                        <div class="metricas-estacion">
 
-                    <svg
-                        class="grafico-svg"
-                        viewBox="0 0 500 190"
-                        preserveAspectRatio="none"
-                        aria-label="Gráfico de lluvia de muestra"
+                            <div class="metrica-estacion">
+                                <div class="metrica-label">
+                                    💧 Humedad
+                                </div>
+
+                                <div
+                                    class="metrica-valor"
+                                    id="humedad-EL_SILO"
+                                >
+                                    -- %
+                                </div>
+                            </div>
+
+                            <div class="metrica-estacion">
+                                <div class="metrica-label">
+                                    ◇ Punto de rocío
+                                </div>
+
+                                <div
+                                    class="metrica-valor"
+                                    id="rocio-EL_SILO"
+                                >
+                                    -- °C
+                                </div>
+                            </div>
+
+                            <div class="metrica-estacion">
+                                <div class="metrica-label">
+                                    ◉ Presión
+                                </div>
+
+                                <div
+                                    class="metrica-valor"
+                                    id="presion-EL_SILO"
+                                >
+                                    -- hPa
+                                </div>
+                            </div>
+
+                            <div class="metrica-estacion">
+                                <div class="metrica-label">
+                                    ◷ Fecha
+                                </div>
+
+                                <div
+                                    class="metrica-valor"
+                                    id="fecha-EL_SILO"
+                                >
+                                    --
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article
+                        class="tarjeta estacion-principal"
+                        id="tarjeta-LOS_LLANOS"
                     >
 
-                        <line
-                            class="rejilla"
-                            x1="0"
-                            y1="40"
-                            x2="500"
-                            y2="40"
-                        />
+                        <div class="estacion-contenido">
 
-                        <line
-                            class="rejilla"
-                            x1="0"
-                            y1="90"
-                            x2="500"
-                            y2="90"
-                        />
+                            <div class="estacion-cabecera">
 
-                        <line
-                            class="rejilla"
-                            x1="0"
-                            y1="140"
-                            x2="500"
-                            y2="140"
-                        />
+                                <div>
+                                    <h2
+                                        class="estacion-nombre"
+                                        id="nombre-LOS_LLANOS"
+                                    >
+                                        LOS LLANOS
+                                    </h2>
 
-                        <rect
-                            class="barra"
-                            x="25"
-                            y="135"
-                            width="40"
-                            height="35"
-                        />
+                                    <div class="estacion-localidad">
+                                        Villanueva del Trabuco
+                                    </div>
+                                </div>
 
-                        <rect
-                            class="barra"
-                            x="95"
-                            y="55"
-                            width="40"
-                            height="115"
-                        />
+                                <div
+                                    class="online"
+                                    id="estado-LOS_LLANOS"
+                                >
+                                    <span class="punto"></span>
+                                    Cargando...
+                                </div>
 
-                        <rect
-                            class="barra"
-                            x="165"
-                            y="145"
-                            width="40"
-                            height="25"
-                        />
+                            </div>
 
-                        <rect
-                            class="barra"
-                            x="235"
-                            y="166"
-                            width="40"
-                            height="4"
-                        />
+                            <div class="temperatura-area">
 
-                        <rect
-                            class="barra"
-                            x="305"
-                            y="168"
-                            width="40"
-                            height="2"
-                        />
+                                <div>
+                                    <div
+                                        class="temperatura"
+                                        id="temperatura-LOS_LLANOS"
+                                    >
+                                        --<sup>°C</sup>
+                                    </div>
 
-                    </svg>
+                                    <div
+                                        class="sensacion"
+                                        id="sensacion-LOS_LLANOS"
+                                    >
+                                        Sensación -- °C
+                                    </div>
 
-                </article>
+                                    <div
+                                        class="sensacion"
+                                        id="observacion-LOS_LLANOS"
+                                    >
+                                        Observación --:--
+                                    </div>
+                                </div>
 
-                <article
-                    class="tarjeta grafico"
-                    id="camaras"
+                                <div class="simbolo-tiempo">
+                                    🌤️
+
+                                    <span>
+                                        Datos actuales
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="patrocinio-estacion"
+                                id="patrocinio-LOS_LLANOS"
+                                aria-label="Patrocinadores de los datos de lluvia de Los Llanos"
+                            >
+
+                                <div class="patrocinio-estacion-titulo">
+                                    🌧️ LLUVIA EN VIVO
+                                </div>
+
+                                <div class="patrocinio-estacion-ventana">
+
+                                    <div class="patrocinio-estacion-pista">
+
+                                        <span class="patrocinio-estacion-texto">
+                                            Datos patrocinados por
+                                            <strong>Restaurante San Isidro</strong>
+                                            ·
+                                            <strong>Bar Central</strong>
+                                            ·
+                                            <strong>Las Viñas</strong>
+                                            ·
+                                            <strong>Gestión 95</strong>
+                                        </span>
+
+                                        <span
+                                            class="patrocinio-estacion-texto"
+                                            aria-hidden="true"
+                                        >
+                                            Datos patrocinados por
+                                            <strong>Restaurante San Isidro</strong>
+                                            ·
+                                            <strong>Bar Central</strong>
+                                            ·
+                                            <strong>Las Viñas</strong>
+                                            ·
+                                            <strong>Gestión 95</strong>
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="patrocinio-estacion-control"
+                                    data-patrocinio="LOS_LLANOS"
+                                    aria-label="Pausar patrocinio"
+                                    aria-pressed="false"
+                                >
+                                    Ⅱ
+                                </button>
+
+                            </div>
+
+                            <div class="lluvia-resumen">
+
+                                <div class="lluvia-resumen-item">
+                                    <div
+                                        class="lluvia-resumen-icono"
+                                        id="lluvia-resumen-icono-dia-LOS_LLANOS"
+                                    >
+                                        ☁️
+                                    </div>
+
+                                    <div class="lluvia-resumen-label">
+                                        Lluvia hoy
+                                    </div>
+
+                                    <div
+                                        class="lluvia-resumen-valor"
+                                        id="lluvia-dia-LOS_LLANOS"
+                                    >
+                                        -- mm
+                                    </div>
+                                </div>
+
+                                <div class="lluvia-resumen-item">
+                                    <div
+                                        class="lluvia-resumen-icono"
+                                        id="lluvia-resumen-icono-mes-LOS_LLANOS"
+                                    >
+                                        ☁️
+                                    </div>
+
+                                    <div class="lluvia-resumen-label">
+                                        Este mes
+                                    </div>
+
+                                    <div
+                                        class="lluvia-resumen-valor"
+                                        id="lluvia-mes-LOS_LLANOS"
+                                    >
+                                        -- mm
+                                    </div>
+                                </div>
+
+                                <div class="lluvia-resumen-item">
+                                    <div
+                                        class="lluvia-resumen-icono"
+                                        id="lluvia-resumen-icono-anio-LOS_LLANOS"
+                                    >
+                                        ☁️
+                                    </div>
+
+                                    <div class="lluvia-resumen-label">
+                                        Año agrícola
+                                    </div>
+
+                                    <div
+                                        class="lluvia-resumen-valor"
+                                        id="lluvia-anio-LOS_LLANOS"
+                                    >
+                                        -- mm
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="metricas-estacion">
+
+                            <div class="metrica-estacion">
+                                <div class="metrica-label">
+                                    💧 Humedad
+                                </div>
+
+                                <div
+                                    class="metrica-valor"
+                                    id="humedad-LOS_LLANOS"
+                                >
+                                    -- %
+                                </div>
+                            </div>
+
+                            <div class="metrica-estacion">
+                                <div class="metrica-label">
+                                    ◇ Punto de rocío
+                                </div>
+
+                                <div
+                                    class="metrica-valor"
+                                    id="rocio-LOS_LLANOS"
+                                >
+                                    -- °C
+                                </div>
+                            </div>
+
+                            <div class="metrica-estacion">
+                                <div class="metrica-label">
+                                    ◉ Presión
+                                </div>
+
+                                <div
+                                    class="metrica-valor"
+                                    id="presion-LOS_LLANOS"
+                                >
+                                    -- hPa
+                                </div>
+                            </div>
+
+                            <div class="metrica-estacion">
+                                <div class="metrica-label">
+                                    ◷ Fecha
+                                </div>
+
+                                <div
+                                    class="metrica-valor"
+                                    id="fecha-LOS_LLANOS"
+                                >
+                                    --
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+                <section class="bloques-medicion">
+
+                    <article class="tarjeta instrumento">
+
+                        <div class="instrumento-titulo">
+                            Viento actual
+                        </div>
+
+                        <div class="instrumento-contenido">
+
+                            <div class="brujula"></div>
+
+                            <div>
+                                <div class="instrumento-dato">
+                                    NE
+                                </div>
+
+                                <div class="instrumento-secundario">
+                                    45°
+                                </div>
+
+                                <div class="instrumento-secundario">
+                                    Racha 25.3 km/h
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article class="tarjeta instrumento">
+
+                        <div class="instrumento-titulo">
+                            Lluvia · El Silo
+                        </div>
+
+                        <div class="instrumento-contenido">
+
+                            <div
+                                class="instrumento-icono"
+                                id="lluvia-icono-EL_SILO"
+                            >
+                                ☁️
+                            </div>
+
+                            <div class="lluvia-detalle">
+
+                                <div
+                                    class="lluvia-detalle-principal"
+                                    id="lluvia-tarjeta-dia-EL_SILO"
+                                >
+                                    --
+                                    <small>mm</small>
+                                </div>
+
+                                <div class="lluvia-detalle-linea">
+                                    <span>Mes</span>
+
+                                    <strong
+                                        id="lluvia-tarjeta-mes-EL_SILO"
+                                    >
+                                        -- mm
+                                    </strong>
+                                </div>
+
+                                <div class="lluvia-detalle-linea">
+                                    <span>Año agrícola</span>
+
+                                    <strong
+                                        id="lluvia-tarjeta-anio-EL_SILO"
+                                    >
+                                        -- mm
+                                    </strong>
+                                </div>
+
+                                <div class="lluvia-detalle-linea">
+                                    <span>Intensidad</span>
+
+                                    <strong
+                                        id="lluvia-tasa-EL_SILO"
+                                    >
+                                        -- mm/h
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article class="tarjeta instrumento">
+
+                        <div class="instrumento-titulo">
+                            Lluvia · Los Llanos
+                        </div>
+
+                        <div class="instrumento-contenido">
+
+                            <div
+                                class="instrumento-icono"
+                                id="lluvia-icono-LOS_LLANOS"
+                            >
+                                ☁️
+                            </div>
+
+                            <div class="lluvia-detalle">
+
+                                <div
+                                    class="lluvia-detalle-principal"
+                                    id="lluvia-tarjeta-dia-LOS_LLANOS"
+                                >
+                                    --
+                                    <small>mm</small>
+                                </div>
+
+                                <div class="lluvia-detalle-linea">
+                                    <span>Mes</span>
+
+                                    <strong
+                                        id="lluvia-tarjeta-mes-LOS_LLANOS"
+                                    >
+                                        -- mm
+                                    </strong>
+                                </div>
+
+                                <div class="lluvia-detalle-linea">
+                                    <span>Año agrícola</span>
+
+                                    <strong
+                                        id="lluvia-tarjeta-anio-LOS_LLANOS"
+                                    >
+                                        -- mm
+                                    </strong>
+                                </div>
+
+                                <div class="lluvia-detalle-linea">
+                                    <span>Intensidad</span>
+
+                                    <strong
+                                        id="lluvia-tasa-LOS_LLANOS"
+                                    >
+                                        -- mm/h
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article class="tarjeta instrumento">
+
+                        <div class="instrumento-titulo">
+                            Presión
+                        </div>
+
+                        <div class="instrumento-contenido">
+
+                            <div class="instrumento-icono">
+                                ◴
+                            </div>
+
+                            <div>
+                                <div class="instrumento-dato">
+                                    1016.2
+                                    <small>hPa</small>
+                                </div>
+
+                                <div class="instrumento-secundario">
+                                    Estable →
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article class="tarjeta instrumento">
+
+                        <div class="instrumento-titulo">
+                            Radiación solar
+                        </div>
+
+                        <div class="instrumento-contenido">
+
+                            <div class="instrumento-icono">
+                                ☀️
+                            </div>
+
+                            <div>
+                                <div class="instrumento-dato">
+                                    812
+                                    <small>W/m²</small>
+                                </div>
+
+                                <div class="instrumento-secundario">
+                                    Alta
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article class="tarjeta instrumento">
+
+                        <div class="instrumento-titulo">
+                            UVI
+                        </div>
+
+                        <div class="instrumento-contenido">
+
+                            <div class="instrumento-icono">
+                                ◉
+                            </div>
+
+                            <div>
+                                <div class="instrumento-dato">
+                                    6
+                                </div>
+
+                                <div
+                                    class="instrumento-secundario"
+                                    style="color: var(--red);"
+                                >
+                                    Alto
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+                <section
+                    class="paneles-graficos"
+                    id="graficos"
                 >
 
-                    <div class="grafico-cabecera">
+                    <article class="tarjeta grafico">
 
-                        <div class="grafico-titulo">
-                            Cámaras en directo
+                        <div class="grafico-cabecera">
+
+                            <div class="grafico-titulo">
+                                Temperatura · últimas 24 horas
+                            </div>
+
+                            <div class="leyenda">
+                                <span>
+                                    El Silo
+                                </span>
+
+                                <span>
+                                    Los Llanos
+                                </span>
+                            </div>
+
                         </div>
 
-                        <div
-                            style="
-                                color: var(--blue);
-                                font-size: 10px;
-                            "
+                        <svg
+                            class="grafico-svg"
+                            viewBox="0 0 600 190"
+                            preserveAspectRatio="none"
+                            aria-label="Gráfico de temperatura de muestra"
                         >
-                            Ver todas →
-                        </div>
 
-                    </div>
+                            <line
+                                class="rejilla"
+                                x1="0"
+                                y1="40"
+                                x2="600"
+                                y2="40"
+                            />
 
-                    <div class="camaras">
+                            <line
+                                class="rejilla"
+                                x1="0"
+                                y1="90"
+                                x2="600"
+                                y2="90"
+                            />
 
-                        <div class="camara">
+                            <line
+                                class="rejilla"
+                                x1="0"
+                                y1="140"
+                                x2="600"
+                                y2="140"
+                            />
 
-                            <div class="camara-estado">
-                                🟢 En línea
+                            <polyline
+                                class="linea-silo"
+                                points="
+                                    0,85
+                                    70,55
+                                    140,40
+                                    210,48
+                                    280,78
+                                    350,125
+                                    420,142
+                                    490,105
+                                    550,72
+                                    600,68
+                                "
+                            />
+
+                            <polyline
+                                class="linea-llanos"
+                                points="
+                                    0,95
+                                    70,72
+                                    140,60
+                                    210,68
+                                    280,98
+                                    350,140
+                                    420,152
+                                    490,118
+                                    550,88
+                                    600,84
+                                "
+                            />
+
+                        </svg>
+
+                    </article>
+
+                    <article class="tarjeta grafico">
+
+                        <div class="grafico-cabecera">
+
+                            <div class="grafico-titulo">
+                                Lluvia · últimos 7 días
                             </div>
 
-                            <div class="camara-nombre">
-                                El Silo · Vista Sur
+                        </div>
+
+                        <svg
+                            class="grafico-svg"
+                            viewBox="0 0 500 190"
+                            preserveAspectRatio="none"
+                            aria-label="Gráfico de lluvia de muestra"
+                        >
+
+                            <line
+                                class="rejilla"
+                                x1="0"
+                                y1="40"
+                                x2="500"
+                                y2="40"
+                            />
+
+                            <line
+                                class="rejilla"
+                                x1="0"
+                                y1="90"
+                                x2="500"
+                                y2="90"
+                            />
+
+                            <line
+                                class="rejilla"
+                                x1="0"
+                                y1="140"
+                                x2="500"
+                                y2="140"
+                            />
+
+                            <rect
+                                class="barra"
+                                x="25"
+                                y="135"
+                                width="40"
+                                height="35"
+                            />
+
+                            <rect
+                                class="barra"
+                                x="95"
+                                y="55"
+                                width="40"
+                                height="115"
+                            />
+
+                            <rect
+                                class="barra"
+                                x="165"
+                                y="145"
+                                width="40"
+                                height="25"
+                            />
+
+                            <rect
+                                class="barra"
+                                x="235"
+                                y="166"
+                                width="40"
+                                height="4"
+                            />
+
+                            <rect
+                                class="barra"
+                                x="305"
+                                y="168"
+                                width="40"
+                                height="2"
+                            />
+
+                        </svg>
+
+                    </article>
+
+                    <article
+                        class="tarjeta grafico"
+                        id="camaras"
+                    >
+
+                        <div class="grafico-cabecera">
+
+                            <div class="grafico-titulo">
+                                Cámaras en directo
+                            </div>
+
+                            <a
+                                href="#en-vivo"
+                                data-panel="en-vivo"
+                                style="
+                                    color: var(--blue);
+                                    font-size: 10px;
+                                "
+                            >
+                                Ver todas →
+                            </a>
+
+                        </div>
+
+                        <div class="camaras">
+
+                            <div class="camara">
+
+                                <div class="camara-estado">
+                                    🟢 En línea
+                                </div>
+
+                                <div class="camara-nombre">
+                                    El Silo · Vista Sur
+                                </div>
+
+                            </div>
+
+                            <div class="camara">
+
+                                <div class="camara-estado">
+                                    🟢 En línea
+                                </div>
+
+                                <div class="camara-nombre">
+                                    Los Llanos · Vista Norte
+                                </div>
+
                             </div>
 
                         </div>
 
-                        <div class="camara">
+                    </article>
 
-                            <div class="camara-estado">
-                                🟢 En línea
+                </section>
+
+                <section class="tarjeta accesos">
+
+                    <a
+                        href="#historicos"
+                        class="acceso"
+                    >
+                        <div class="acceso-icono">
+                            📊
+                        </div>
+
+                        <div>
+                            <div class="acceso-titulo">
+                                HISTÓRICOS
                             </div>
 
-                            <div class="camara-nombre">
-                                Los Llanos · Vista Norte
+                            <div class="acceso-subtitulo">
+                                Datos por fecha
+                            </div>
+                        </div>
+                    </a>
+
+                    <a
+                        href="#graficos"
+                        class="acceso"
+                    >
+                        <div class="acceso-icono">
+                            📈
+                        </div>
+
+                        <div>
+                            <div class="acceso-titulo">
+                                GRÁFICOS
                             </div>
 
+                            <div class="acceso-subtitulo">
+                                Evolución detallada
+                            </div>
+                        </div>
+                    </a>
+
+                    <a
+                        href="#en-vivo"
+                        class="acceso"
+                        data-panel="en-vivo"
+                    >
+                        <div class="acceso-icono">
+                            📷
                         </div>
 
-                    </div>
+                        <div>
+                            <div class="acceso-titulo">
+                                CÁMARAS
+                            </div>
 
-                </article>
+                            <div class="acceso-subtitulo">
+                                Imágenes en directo
+                            </div>
+                        </div>
+                    </a>
 
-            </section>
+                    <a
+                        href="#estaciones"
+                        class="acceso"
+                    >
+                        <div class="acceso-icono">
+                            📡
+                        </div>
 
-            <section class="tarjeta accesos">
+                        <div>
+                            <div class="acceso-titulo">
+                                ESTACIONES
+                            </div>
 
-                <a
-                    href="#historicos"
-                    class="acceso"
-                >
-                    <div class="acceso-icono">
-                        📊
-                    </div>
+                            <div class="acceso-subtitulo">
+                                Información técnica
+                            </div>
+                        </div>
+                    </a>
+
+                    <a
+                        href="#alertas"
+                        class="acceso"
+                    >
+                        <div class="acceso-icono">
+                            ⚠️
+                        </div>
+
+                        <div>
+                            <div class="acceso-titulo">
+                                ALERTAS
+                            </div>
+
+                            <div class="acceso-subtitulo">
+                                Avisos meteorológicos
+                            </div>
+                        </div>
+                    </a>
+
+                    <a
+                        href="#estado"
+                        class="acceso"
+                    >
+                        <div class="acceso-icono">
+                            ✅
+                        </div>
+
+                        <div>
+                            <div class="acceso-titulo">
+                                ESTADO SISTEMA
+                            </div>
+
+                            <div class="acceso-subtitulo">
+                                Datos automáticos
+                            </div>
+                        </div>
+                    </a>
+
+                </section>
+
+                <footer class="pie">
 
                     <div>
-                        <div class="acceso-titulo">
-                            HISTÓRICOS
-                        </div>
-
-                        <div class="acceso-subtitulo">
-                            Datos por fecha
-                        </div>
-                    </div>
-                </a>
-
-                <a
-                    href="#graficos"
-                    class="acceso"
-                >
-                    <div class="acceso-icono">
-                        📈
+                        © 2026 MeteoArchidona
+                        <br>
+                        Todos los derechos reservados
                     </div>
 
-                    <div>
-                        <div class="acceso-titulo">
-                            GRÁFICOS
-                        </div>
-
-                        <div class="acceso-subtitulo">
-                            Evolución detallada
-                        </div>
-                    </div>
-                </a>
-
-                <a
-                    href="#camaras"
-                    class="acceso"
-                >
-                    <div class="acceso-icono">
-                        📷
+                    <div class="pie-centro">
+                        🟢 Datos meteorológicos
+                        actualizados automáticamente
                     </div>
 
-                    <div>
-                        <div class="acceso-titulo">
-                            CÁMARAS
-                        </div>
-
-                        <div class="acceso-subtitulo">
-                            Imágenes en directo
-                        </div>
-                    </div>
-                </a>
-
-                <a
-                    href="#estaciones"
-                    class="acceso"
-                >
-                    <div class="acceso-icono">
-                        📡
+                    <div class="pie-derecha">
+                        MeteoArchidona · Archidona
                     </div>
 
-                    <div>
-                        <div class="acceso-titulo">
-                            ESTACIONES
-                        </div>
+                </footer>
 
-                        <div class="acceso-subtitulo">
-                            Información técnica
-                        </div>
-                    </div>
-                </a>
+            </main>
 
-                <a
-                    href="#alertas"
-                    class="acceso"
-                >
-                    <div class="acceso-icono">
-                        ⚠️
-                    </div>
+        </section>
 
-                    <div>
-                        <div class="acceso-titulo">
-                            ALERTAS
-                        </div>
+        <section
+            class="panel-aplicacion"
+            id="panel-prediccion"
+            data-panel-contenido="prediccion"
+            aria-hidden="true"
+        >
 
-                        <div class="acceso-subtitulo">
-                            Avisos meteorológicos
-                        </div>
-                    </div>
-                </a>
+            <main class="panel-futuro">
 
-                <a
-                    href="#estado"
-                    class="acceso"
-                >
-                    <div class="acceso-icono">
-                        ✅
+                <div class="panel-futuro-contenido">
+
+                    <div
+                        class="panel-futuro-icono"
+                        aria-hidden="true"
+                    >
+                        🌦️
                     </div>
 
-                    <div>
-                        <div class="acceso-titulo">
-                            ESTADO SISTEMA
-                        </div>
-
-                        <div class="acceso-subtitulo">
-                            Datos automáticos
-                        </div>
+                    <div class="panel-futuro-etiqueta">
+                        METEOARCHIDONA · PREDICCIÓN
                     </div>
-                </a>
 
-            </section>
+                    <h1>
+                        Lo que viene.
+                    </h1>
 
-            <footer class="pie">
+                    <p>
+                        Aquí construiremos la predicción
+                        meteorológica de MeteoArchidona:
+                        previsión municipal, evolución horaria,
+                        próximos días, alertas y nuestra propia
+                        forma de contar el tiempo.
+                    </p>
 
-                <div>
-                    © 2026 MeteoArchidona
-                    <br>
-                    Todos los derechos reservados
                 </div>
 
-                <div class="pie-centro">
-                    🟢 Datos meteorológicos
-                    actualizados automáticamente
+            </main>
+
+        </section>
+
+        <section
+            class="panel-aplicacion"
+            id="panel-observaciones"
+            data-panel-contenido="observaciones"
+            aria-hidden="true"
+        >
+
+            <main class="panel-futuro">
+
+                <div class="panel-futuro-contenido">
+
+                    <div
+                        class="panel-futuro-icono"
+                        aria-hidden="true"
+                    >
+                        🛰️
+                    </div>
+
+                    <div class="panel-futuro-etiqueta">
+                        METEOARCHIDONA · OBSERVACIONES
+                    </div>
+
+                    <h1>
+                        Mira la atmósfera.
+                    </h1>
+
+                    <p>
+                        Radar, satélite, rayos y otras
+                        observaciones meteorológicas tendrán
+                        aquí su espacio, recurriendo a fuentes
+                        oficiales y productos de especial
+                        interés para nuestra comarca.
+                    </p>
+
                 </div>
 
-                <div class="pie-derecha">
-                    MeteoArchidona · Archidona
-                </div>
+            </main>
 
-            </footer>
+        </section>
 
-        </main>
+        <section
+            class="panel-aplicacion panel-en-vivo"
+            id="panel-en-vivo"
+            data-panel-contenido="en-vivo"
+            aria-hidden="true"
+        >
+
+            <iframe
+                src="en-vivo.html"
+                title="MeteoArchidona · En vivo"
+                loading="eager"
+            ></iframe>
+
+        </section>
 
     </div>
 
@@ -3561,6 +4049,185 @@
             ]);
         }
 
+        function activarPanel(
+            nombrePanel,
+            actualizarHash = true
+        ) {
+            const paneles =
+                document.querySelectorAll(
+                    "[data-panel-contenido]"
+                );
+
+            const enlaces =
+                document.querySelectorAll(
+                    ".navegacion [data-panel]"
+                );
+
+            let panelEncontrado =
+                false;
+
+            paneles.forEach(
+                (panel) => {
+                    const activo =
+                        panel.dataset.panelContenido ===
+                        nombrePanel;
+
+                    panel.classList.toggle(
+                        "activo",
+                        activo
+                    );
+
+                    panel.setAttribute(
+                        "aria-hidden",
+                        String(
+                            !activo
+                        )
+                    );
+
+                    if (
+                        activo
+                    ) {
+                        panelEncontrado =
+                            true;
+                    }
+                }
+            );
+
+            if (
+                !panelEncontrado
+            ) {
+                return;
+            }
+
+            enlaces.forEach(
+                (enlace) => {
+                    const activo =
+                        enlace.dataset.panel ===
+                        nombrePanel;
+
+                    enlace.classList.toggle(
+                        "activo",
+                        activo
+                    );
+
+                    if (
+                        activo
+                    ) {
+                        enlace.setAttribute(
+                            "aria-current",
+                            "page"
+                        );
+                    } else {
+                        enlace.removeAttribute(
+                            "aria-current"
+                        );
+                    }
+                }
+            );
+
+            if (
+                actualizarHash
+            ) {
+                history.replaceState(
+                    null,
+                    "",
+                    `#${nombrePanel}`
+                );
+            }
+
+            window.scrollTo({
+                top: 0,
+                behavior: "auto",
+            });
+        }
+
+        function configurarPaneles() {
+            const controles =
+                document.querySelectorAll(
+                    "[data-panel]"
+                );
+
+            controles.forEach(
+                (control) => {
+                    control.addEventListener(
+                        "click",
+                        (evento) => {
+                            const nombrePanel =
+                                control.dataset.panel;
+
+                            if (
+                                !nombrePanel
+                            ) {
+                                return;
+                            }
+
+                            evento.preventDefault();
+
+                            activarPanel(
+                                nombrePanel
+                            );
+                        }
+                    );
+                }
+            );
+
+            const hashInicial =
+                window.location.hash
+                    .replace(
+                        "#",
+                        ""
+                    )
+                    .trim();
+
+            const panelesValidos =
+                [
+                    "actualidad",
+                    "prediccion",
+                    "observaciones",
+                    "en-vivo",
+                ];
+
+            if (
+                panelesValidos.includes(
+                    hashInicial
+                )
+            ) {
+                activarPanel(
+                    hashInicial,
+                    false
+                );
+            } else {
+                activarPanel(
+                    "actualidad",
+                    false
+                );
+            }
+
+            window.addEventListener(
+                "hashchange",
+                () => {
+                    const nombrePanel =
+                        window.location.hash
+                            .replace(
+                                "#",
+                                ""
+                            )
+                            .trim();
+
+                    if (
+                        panelesValidos.includes(
+                            nombrePanel
+                        )
+                    ) {
+                        activarPanel(
+                            nombrePanel,
+                            false
+                        );
+                    }
+                }
+            );
+        }
+
         actualizarReloj();
 
         setInterval(
@@ -3569,6 +4236,8 @@
         );
 
         configurarPatrocinios();
+
+        configurarPaneles();
 
         cargarCondiciones();
 
