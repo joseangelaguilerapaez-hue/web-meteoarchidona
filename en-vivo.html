@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -13,11 +14,13 @@
         rel="preconnect"
         href="https://fonts.googleapis.com"
     >
+
     <link
         rel="preconnect"
         href="https://fonts.gstatic.com"
         crossorigin
     >
+
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"
@@ -27,26 +30,66 @@
         :root {
             --fondo: #07111f;
             --fondo-profundo: #030914;
-            --panel: rgba(12, 28, 47, 0.92);
-            --panel-claro: rgba(20, 42, 66, 0.88);
-            --panel-suave: rgba(16, 35, 56, 0.65);
+
+            --panel:
+                rgba(
+                    12,
+                    28,
+                    47,
+                    0.94
+                );
+
+            --panel-claro:
+                rgba(
+                    20,
+                    42,
+                    66,
+                    0.88
+                );
 
             --oro: #f2bf58;
             --oro-claro: #ffd989;
+
             --cyan: #36d9ff;
-            --cyan-suave: rgba(54, 217, 255, 0.16);
 
             --verde: #67e8a5;
+
             --blanco: #f5f8fc;
             --texto: #c9d6e5;
             --texto-suave: #8194aa;
 
-            --borde: rgba(255, 255, 255, 0.08);
-            --borde-oro: rgba(242, 191, 88, 0.28);
-            --borde-cyan: rgba(54, 217, 255, 0.26);
+            --borde:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.08
+                );
+
+            --borde-oro:
+                rgba(
+                    242,
+                    191,
+                    88,
+                    0.28
+                );
+
+            --borde-cyan:
+                rgba(
+                    54,
+                    217,
+                    255,
+                    0.26
+                );
 
             --sombra:
-                0 24px 70px rgba(0, 0, 0, 0.38);
+                0 24px 70px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.38
+                );
 
             --radio-grande: 28px;
             --radio: 20px;
@@ -63,6 +106,7 @@
 
         body {
             margin: 0;
+
             min-height: 100vh;
 
             font-family:
@@ -70,17 +114,28 @@
                 system-ui,
                 sans-serif;
 
-            color: var(--blanco);
+            color:
+                var(--blanco);
 
             background:
                 radial-gradient(
                     circle at 15% 0%,
-                    rgba(54, 217, 255, 0.10),
+                    rgba(
+                        54,
+                        217,
+                        255,
+                        0.10
+                    ),
                     transparent 32%
                 ),
                 radial-gradient(
                     circle at 90% 8%,
-                    rgba(242, 191, 88, 0.09),
+                    rgba(
+                        242,
+                        191,
+                        88,
+                        0.09
+                    ),
                     transparent 28%
                 ),
                 linear-gradient(
@@ -96,8 +151,15 @@
         }
 
         .pagina {
-            width: min(1500px, calc(100% - 48px));
-            margin: 0 auto;
+            width:
+                min(
+                    1500px,
+                    calc(100% - 48px)
+                );
+
+            margin:
+                0 auto;
+
             padding:
                 42px
                 0
@@ -106,14 +168,17 @@
 
         .cabecera-en-vivo {
             position: relative;
+
             overflow: hidden;
 
             display: grid;
+
             grid-template-columns:
                 minmax(0, 1.35fr)
                 minmax(330px, 0.65fr);
 
             gap: 38px;
+
             align-items: center;
 
             min-height: 320px;
@@ -130,8 +195,18 @@
             background:
                 linear-gradient(
                     135deg,
-                    rgba(14, 31, 53, 0.96),
-                    rgba(7, 19, 35, 0.96)
+                    rgba(
+                        14,
+                        31,
+                        53,
+                        0.96
+                    ),
+                    rgba(
+                        7,
+                        19,
+                        35,
+                        0.96
+                    )
                 );
 
             box-shadow:
@@ -142,6 +217,7 @@
             content: "";
 
             position: absolute;
+
             inset: 0;
 
             pointer-events: none;
@@ -149,11 +225,21 @@
             background:
                 linear-gradient(
                     90deg,
-                    rgba(54, 217, 255, 0.035) 1px,
+                    rgba(
+                        54,
+                        217,
+                        255,
+                        0.035
+                    ) 1px,
                     transparent 1px
                 ),
                 linear-gradient(
-                    rgba(54, 217, 255, 0.035) 1px,
+                    rgba(
+                        54,
+                        217,
+                        255,
+                        0.035
+                    ) 1px,
                     transparent 1px
                 );
 
@@ -171,12 +257,15 @@
 
         .cabecera-texto {
             position: relative;
+
             z-index: 2;
         }
 
         .eyebrow {
             display: inline-flex;
+
             gap: 10px;
+
             align-items: center;
 
             margin-bottom: 16px;
@@ -186,10 +275,13 @@
                 monospace;
 
             font-size: 0.78rem;
+
             font-weight: 600;
+
             letter-spacing: 0.14em;
 
-            color: var(--cyan);
+            color:
+                var(--cyan);
         }
 
         .punto-directo {
@@ -202,8 +294,20 @@
                 var(--cyan);
 
             box-shadow:
-                0 0 0 7px rgba(54, 217, 255, 0.09),
-                0 0 20px rgba(54, 217, 255, 0.65);
+                0 0 0 7px
+                rgba(
+                    54,
+                    217,
+                    255,
+                    0.09
+                ),
+                0 0 20px
+                rgba(
+                    54,
+                    217,
+                    255,
+                    0.65
+                );
 
             animation:
                 pulso
@@ -228,7 +332,9 @@
                 );
 
             line-height: 0.95;
-            letter-spacing: -0.055em;
+
+            letter-spacing:
+                -0.055em;
         }
 
         .cabecera-en-vivo h1 span {
@@ -256,10 +362,13 @@
 
         .cabecera-dibujo {
             position: relative;
+
             z-index: 2;
 
             display: flex;
+
             justify-content: center;
+
             align-items: center;
 
             min-height: 230px;
@@ -282,11 +391,19 @@
             top: 50%;
 
             transform:
-                translate(-50%, -50%);
+                translate(
+                    -50%,
+                    -50%
+                );
 
             border:
                 1px solid
-                rgba(54, 217, 255, 0.22);
+                rgba(
+                    54,
+                    217,
+                    255,
+                    0.22
+                );
 
             border-radius: 50%;
         }
@@ -301,13 +418,21 @@
             top: 50%;
 
             transform:
-                translate(-50%, -50%);
+                translate(
+                    -50%,
+                    -50%
+                );
 
             border-radius: 50%;
 
             border:
                 1px solid
-                rgba(54, 217, 255, 0.18);
+                rgba(
+                    54,
+                    217,
+                    255,
+                    0.18
+                );
         }
 
         .radar::before {
@@ -330,13 +455,17 @@
             height: 95px;
 
             transform-origin:
-                0
-                0;
+                0 0;
 
             background:
                 linear-gradient(
                     35deg,
-                    rgba(54, 217, 255, 0.34),
+                    rgba(
+                        54,
+                        217,
+                        255,
+                        0.34
+                    ),
                     transparent 70%
                 );
 
@@ -354,14 +483,17 @@
                 infinite;
         }
 
-        .camara {
+        .camara-dibujo {
             position: absolute;
 
             left: 50%;
             top: 50%;
 
             transform:
-                translate(-50%, -50%);
+                translate(
+                    -50%,
+                    -50%
+                );
 
             width: 114px;
             height: 76px;
@@ -380,11 +512,23 @@
                 );
 
             box-shadow:
-                0 18px 45px rgba(0, 0, 0, 0.36),
-                0 0 35px rgba(242, 191, 88, 0.10);
+                0 18px 45px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.36
+                ),
+                0 0 35px
+                rgba(
+                    242,
+                    191,
+                    88,
+                    0.10
+                );
         }
 
-        .camara::before {
+        .camara-dibujo::before {
             content: "";
 
             position: absolute;
@@ -415,7 +559,7 @@
                 );
         }
 
-        .camara::after {
+        .camara-dibujo::after {
             content: "";
 
             position: absolute;
@@ -433,7 +577,12 @@
 
             box-shadow:
                 0 0 15px
-                rgba(103, 232, 165, 0.75);
+                rgba(
+                    103,
+                    232,
+                    165,
+                    0.75
+                );
         }
 
         .soporte-camara {
@@ -451,7 +600,12 @@
             background:
                 linear-gradient(
                     var(--oro),
-                    rgba(242, 191, 88, 0.35)
+                    rgba(
+                        242,
+                        191,
+                        88,
+                        0.35
+                    )
                 );
 
             border-radius: 6px;
@@ -481,7 +635,12 @@
             position: absolute;
 
             color:
-                rgba(255, 255, 255, 0.15);
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.15
+                );
 
             font-size: 2.3rem;
 
@@ -513,9 +672,14 @@
 
         .titulo-seccion {
             display: flex;
-            justify-content: space-between;
+
+            justify-content:
+                space-between;
+
             gap: 20px;
-            align-items: flex-end;
+
+            align-items:
+                flex-end;
 
             margin:
                 0
@@ -552,7 +716,8 @@
         }
 
         .etiqueta-seccion {
-            flex: 0 0 auto;
+            flex:
+                0 0 auto;
 
             padding:
                 8px
@@ -569,21 +734,26 @@
                 "JetBrains Mono",
                 monospace;
 
-            font-size:
-                0.72rem;
+            font-size: 0.72rem;
 
             color:
                 var(--oro);
         }
 
-        .camara-destacada {
-            overflow: hidden;
-
+        .rejilla-camaras {
             display: grid;
 
             grid-template-columns:
-                minmax(0, 1.65fr)
-                minmax(300px, 0.55fr);
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+
+            gap: 22px;
+        }
+
+        .tarjeta-camara {
+            overflow: hidden;
 
             border:
                 1px solid
@@ -599,484 +769,70 @@
                 var(--sombra);
         }
 
-        .visor {
+        .visor-camara {
             position: relative;
-
-            min-height: 500px;
 
             overflow: hidden;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%;
+
+            aspect-ratio:
+                16 / 9;
 
             background:
-                linear-gradient(
-                    180deg,
-                    #173854 0%,
-                    #486a81 43%,
-                    #c1ccd2 44%,
-                    #122638 100%
-                );
+                #091523;
         }
 
-        .visor::before {
-            content: "";
-
-            position: absolute;
-
-            width: 125%;
-            height: 57%;
-
-            left: -10%;
-            bottom: -6%;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #dbe5e8 0 24%,
-                    #9eb2bd 25% 32%,
-                    #344d60 33% 43%,
-                    #f2f5f3 44% 54%,
-                    #657b89 55% 66%,
-                    #1d3546 67%
-                );
-
-            clip-path:
-                polygon(
-                    0 100%,
-                    0 73%,
-                    14% 56%,
-                    22% 64%,
-                    33% 37%,
-                    42% 59%,
-                    55% 17%,
-                    69% 58%,
-                    78% 39%,
-                    88% 66%,
-                    100% 51%,
-                    100% 100%
-                );
-
-            opacity: 0.82;
-        }
-
-        .visor::after {
-            content: "";
-
-            position: absolute;
-
-            inset: 0;
-
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(3, 11, 20, 0.10),
-                    rgba(3, 11, 20, 0.60)
-                );
-        }
-
-        .sol-visor {
-            position: absolute;
-
-            width: 75px;
-            height: 75px;
-
-            right: 11%;
-            top: 12%;
-
-            border-radius: 50%;
-
-            background:
-                var(--oro-claro);
-
-            box-shadow:
-                0 0 70px
-                rgba(255, 217, 137, 0.52);
-        }
-
-        .nubes-visor {
-            position: absolute;
-
-            left: -30%;
-            top: 16%;
-
-            width: 160%;
-
-            font-size: 3rem;
-            letter-spacing: 3.4rem;
-
-            color:
-                rgba(255, 255, 255, 0.23);
-
-            white-space: nowrap;
-
-            animation:
-                nubes
-                35s
-                linear
-                infinite;
-        }
-
-        .overlay-visor {
-            position: relative;
-            z-index: 4;
-
-            width:
-                min(
-                    470px,
-                    calc(100% - 48px)
-                );
-
-            padding:
-                30px;
-
-            text-align: center;
-
-            border:
-                1px solid
-                rgba(255, 255, 255, 0.15);
-
-            border-radius:
-                24px;
-
-            background:
-                rgba(3, 12, 21, 0.74);
-
-            backdrop-filter:
-                blur(15px);
-
-            box-shadow:
-                0 20px 55px rgba(0, 0, 0, 0.30);
-        }
-
-        .icono-preparando {
-            display: grid;
-            place-items: center;
-
-            width: 72px;
-            height: 72px;
-
-            margin:
-                0
-                auto
-                20px;
-
-            border:
-                1px solid
-                var(--borde-cyan);
-
-            border-radius:
-                22px;
-
-            font-size:
-                2rem;
-
-            background:
-                rgba(54, 217, 255, 0.08);
-        }
-
-        .overlay-visor strong {
+        .visor-camara img {
             display: block;
-
-            margin-bottom:
-                9px;
-
-            font-size:
-                1.25rem;
-        }
-
-        .overlay-visor p {
-            margin: 0;
-
-            color:
-                var(--texto);
-
-            font-size:
-                0.92rem;
-
-            line-height:
-                1.65;
-        }
-
-        .visor-etiqueta {
-            position: absolute;
-            z-index: 5;
-
-            left: 20px;
-            top: 20px;
-
-            display: inline-flex;
-            gap: 8px;
-            align-items: center;
-
-            padding:
-                8px
-                12px;
-
-            border-radius:
-                999px;
-
-            background:
-                rgba(2, 9, 16, 0.72);
-
-            border:
-                1px solid
-                rgba(255, 255, 255, 0.11);
-
-            font-family:
-                "JetBrains Mono",
-                monospace;
-
-            font-size:
-                0.7rem;
-
-            letter-spacing:
-                0.08em;
-
-            color:
-                var(--blanco);
-        }
-
-        .visor-etiqueta span {
-            width: 7px;
-            height: 7px;
-
-            border-radius:
-                50%;
-
-            background:
-                var(--oro);
-        }
-
-        .informacion-camara {
-            display: flex;
-            flex-direction: column;
-
-            padding:
-                34px
-                30px;
-        }
-
-        .origen {
-            margin-bottom:
-                11px;
-
-            font-family:
-                "JetBrains Mono",
-                monospace;
-
-            font-size:
-                0.72rem;
-
-            letter-spacing:
-                0.12em;
-
-            color:
-                var(--cyan);
-        }
-
-        .informacion-camara h3 {
-            margin:
-                0
-                0
-                8px;
-
-            font-size:
-                1.75rem;
-
-            letter-spacing:
-                -0.045em;
-        }
-
-        .ubicacion {
-            margin:
-                0
-                0
-                26px;
-
-            color:
-                var(--texto-suave);
-        }
-
-        .datos-camara {
-            display: grid;
-            gap: 0;
-
-            margin:
-                0
-                0
-                28px;
-
-            border-top:
-                1px solid
-                var(--borde);
-        }
-
-        .dato-camara {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-
-            padding:
-                16px
-                0;
-
-            border-bottom:
-                1px solid
-                var(--borde);
-        }
-
-        .dato-camara span:first-child {
-            color:
-                var(--texto-suave);
-
-            font-size:
-                0.84rem;
-        }
-
-        .dato-camara span:last-child {
-            text-align: right;
-
-            font-family:
-                "JetBrains Mono",
-                monospace;
-
-            font-size:
-                0.82rem;
-
-            color:
-                var(--blanco);
-        }
-
-        .estado-espera {
-            display: flex;
-            gap: 11px;
-            align-items: flex-start;
-
-            margin-top: auto;
-
-            padding:
-                16px;
-
-            border:
-                1px solid
-                var(--borde-oro);
-
-            border-radius:
-                var(--radio-pequeno);
-
-            background:
-                rgba(242, 191, 88, 0.07);
-        }
-
-        .estado-espera-icono {
-            flex: 0 0 auto;
-
-            font-size: 1.15rem;
-        }
-
-        .estado-espera strong {
-            display: block;
-
-            margin-bottom:
-                4px;
-
-            font-size:
-                0.82rem;
-
-            color:
-                var(--oro);
-        }
-
-        .estado-espera p {
-            margin: 0;
-
-            font-size:
-                0.77rem;
-
-            line-height: 1.55;
-
-            color:
-                var(--texto-suave);
-        }
-
-        .rejilla-futuras {
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-
-            gap: 20px;
-        }
-
-        .futura-camara {
-            position: relative;
-            overflow: hidden;
-
-            min-height: 390px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-
-            border:
-                1px solid
-                var(--borde);
-
-            border-radius:
-                var(--radio);
-
-            background:
-                var(--panel);
-
-            box-shadow:
-                0 18px 50px
-                rgba(0, 0, 0, 0.25);
-        }
-
-        .futura-imagen {
-            position: absolute;
-
-            inset: 0;
 
             width: 100%;
             height: 100%;
 
-            object-fit: cover;
+            object-fit:
+                contain;
 
-            transition:
-                transform
-                0.5s
-                ease;
+            object-position:
+                center;
+
+            background:
+                #050b12;
         }
 
-        .futura-camara:hover
-        .futura-imagen {
-            transform:
-                scale(1.025);
-        }
-
-        .futura-camara::after {
+        .visor-camara::after {
             content: "";
 
             position: absolute;
 
             inset: 0;
 
-            z-index: 1;
+            pointer-events: none;
 
             background:
                 linear-gradient(
                     180deg,
-                    rgba(3, 9, 17, 0.05) 0%,
-                    rgba(3, 9, 17, 0.12) 38%,
-                    rgba(3, 9, 17, 0.78) 76%,
-                    rgba(3, 9, 17, 0.96) 100%
+                    rgba(
+                        3,
+                        9,
+                        17,
+                        0
+                    ) 0%,
+                    rgba(
+                        3,
+                        9,
+                        17,
+                        0
+                    ) 72%,
+                    rgba(
+                        3,
+                        9,
+                        17,
+                        0.10
+                    ) 100%
                 );
         }
 
-        .futura-superior {
+        .etiquetas-visor {
             position: absolute;
 
             z-index: 4;
@@ -1085,222 +841,291 @@
             top: 18px;
 
             display: flex;
-            gap: 8px;
+
             flex-wrap: wrap;
+
+            gap: 8px;
         }
 
-        .tipo-camara,
-        .imagen-provisional {
-            width: fit-content;
-
+        .etiqueta-visor {
             padding:
-                7px
-                10px;
+                8px
+                12px;
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.12
+                );
 
             border-radius:
                 999px;
+
+            background:
+                rgba(
+                    4,
+                    15,
+                    26,
+                    0.78
+                );
+
+            backdrop-filter:
+                blur(9px);
 
             font-family:
                 "JetBrains Mono",
                 monospace;
 
-            font-size:
-                0.65rem;
+            font-size: 0.68rem;
 
             font-weight: 600;
 
             letter-spacing:
-                0.05em;
-
-            backdrop-filter:
-                blur(10px);
-        }
-
-        .tipo-camara {
-            border:
-                1px solid
-                var(--borde-cyan);
-
-            color:
-                var(--cyan);
-
-            background:
-                rgba(3, 13, 23, 0.72);
-        }
-
-        .imagen-provisional {
-            border:
-                1px solid
-                rgba(255, 255, 255, 0.16);
+                0.08em;
 
             color:
                 var(--texto);
-
-            background:
-                rgba(3, 13, 23, 0.72);
         }
 
-        .sello-construccion {
+        .etiqueta-visor.propia {
+            color:
+                var(--cyan);
+
+            border-color:
+                var(--borde-cyan);
+        }
+
+        .cinta-construccion {
             position: absolute;
 
-            z-index: 5;
+            z-index: 6;
 
-            right: -47px;
-            top: 33px;
+            top: 34px;
+            right: -65px;
 
-            width: 230px;
+            width: 280px;
 
             padding:
-                10px
-                15px;
+                11px
+                0;
 
             transform:
-                rotate(35deg);
+                rotate(36deg);
 
             text-align: center;
 
             border-top:
                 1px solid
-                rgba(255, 255, 255, 0.40);
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.25
+                );
 
             border-bottom:
                 1px solid
-                rgba(255, 255, 255, 0.40);
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.20
+                );
 
             background:
                 linear-gradient(
                     90deg,
-                    #c98200,
-                    var(--oro),
-                    #c98200
+                    #d99408,
+                    #ffc84f,
+                    #e99d08
                 );
 
             box-shadow:
-                0 8px 28px
-                rgba(0, 0, 0, 0.38);
+                0 8px 22px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.28
+                );
 
             color:
-                #07111f;
+                #17202b;
 
             font-family:
                 "JetBrains Mono",
                 monospace;
 
-            font-size:
-                0.72rem;
+            font-size: 0.73rem;
 
-            font-weight:
-                800;
+            font-weight: 700;
 
             letter-spacing:
-                0.07em;
+                0.11em;
 
-            text-transform:
-                uppercase;
+            white-space: nowrap;
         }
 
-        .futura-contenido {
-            position: relative;
-
-            z-index: 3;
-
+        .informacion-camara {
             padding:
-                28px;
+                24px
+                26px
+                27px;
         }
 
-        .proximamente-directo {
-            display: inline-flex;
+        .estado-proximo {
+            display: flex;
 
             align-items: center;
 
-            gap: 8px;
+            gap: 10px;
 
-            margin-bottom:
-                10px;
-
-            color:
-                var(--oro);
+            margin-bottom: 11px;
 
             font-family:
                 "JetBrains Mono",
                 monospace;
 
-            font-size:
-                0.68rem;
+            font-size: 0.72rem;
 
-            font-weight:
-                600;
+            font-weight: 600;
 
             letter-spacing:
-                0.08em;
+                0.10em;
 
-            text-transform:
-                uppercase;
+            color:
+                var(--oro);
         }
 
-        .proximamente-directo::before {
+        .estado-proximo::before {
             content: "";
 
-            width: 7px;
-            height: 7px;
+            width: 9px;
+            height: 9px;
 
             flex:
                 0 0 auto;
 
-            border-radius:
-                50%;
+            border-radius: 50%;
 
             background:
                 var(--oro);
 
             box-shadow:
-                0 0 12px
-                rgba(242, 191, 88, 0.55);
+                0 0 16px
+                rgba(
+                    242,
+                    191,
+                    88,
+                    0.48
+                );
         }
 
-        .futura-camara h3 {
+        .informacion-camara h3 {
             margin:
                 0
                 0
-                7px;
+                10px;
 
             font-size:
                 clamp(
-                    1.35rem,
+                    1.45rem,
                     2vw,
-                    1.7rem
+                    1.9rem
                 );
 
             letter-spacing:
-                -0.035em;
+                -0.045em;
         }
 
-        .futura-camara p {
+        .informacion-camara p {
             margin: 0;
-
-            max-width: 580px;
 
             color:
                 var(--texto);
 
-            line-height:
-                1.6;
-
             font-size:
-                0.86rem;
+                0.92rem;
+
+            line-height: 1.7;
+        }
+
+        .nota-imagen {
+            display: flex;
+
+            gap: 10px;
+
+            align-items:
+                flex-start;
+
+            margin-top: 20px;
+
+            padding:
+                14px
+                15px;
+
+            border:
+                1px solid
+                var(--borde-cyan);
+
+            border-radius:
+                var(--radio-pequeno);
+
+            background:
+                rgba(
+                    54,
+                    217,
+                    255,
+                    0.055
+                );
+        }
+
+        .nota-imagen-icono {
+            flex:
+                0 0 auto;
+
+            font-size: 1rem;
+        }
+
+        .nota-imagen strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            color:
+                var(--cyan);
+
+            font-size: 0.77rem;
+        }
+
+        .nota-imagen span {
+            display: block;
+
+            color:
+                var(--texto-suave);
+
+            font-size: 0.74rem;
+
+            line-height: 1.5;
         }
 
         .pie-en-vivo {
-            margin-top:
-                38px;
+            margin-top: 38px;
 
             padding:
                 24px
                 26px;
 
             display: flex;
-            justify-content: space-between;
+
+            justify-content:
+                space-between;
+
             gap: 24px;
+
             align-items: center;
 
             border-top:
@@ -1310,11 +1135,9 @@
             color:
                 var(--texto-suave);
 
-            font-size:
-                0.79rem;
+            font-size: 0.79rem;
 
-            line-height:
-                1.6;
+            line-height: 1.6;
         }
 
         .pie-en-vivo strong {
@@ -1323,7 +1146,8 @@
         }
 
         .marca {
-            flex: 0 0 auto;
+            flex:
+                0 0 auto;
 
             font-family:
                 "JetBrains Mono",
@@ -1337,22 +1161,28 @@
             0%,
             100% {
                 opacity: 1;
-                transform: scale(1);
+
+                transform:
+                    scale(1);
             }
 
             50% {
                 opacity: 0.55;
-                transform: scale(0.82);
+
+                transform:
+                    scale(0.82);
             }
         }
 
         @keyframes barrido {
             from {
-                transform: rotate(0deg);
+                transform:
+                    rotate(0deg);
             }
 
             to {
-                transform: rotate(360deg);
+                transform:
+                    rotate(360deg);
             }
         }
 
@@ -1369,18 +1199,6 @@
             }
         }
 
-        @keyframes nubes {
-            from {
-                transform:
-                    translateX(0);
-            }
-
-            to {
-                transform:
-                    translateX(28%);
-            }
-        }
-
         @media (
             prefers-reduced-motion:
             reduce
@@ -1394,10 +1212,6 @@
 
                 scroll-behavior:
                     auto
-                    !important;
-
-                transition:
-                    none
                     !important;
             }
         }
@@ -1419,19 +1233,9 @@
                     205px;
             }
 
-            .camara-destacada {
+            .rejilla-camaras {
                 grid-template-columns:
                     1fr;
-            }
-
-            .visor {
-                min-height:
-                    430px;
-            }
-
-            .informacion-camara {
-                min-height:
-                    350px;
             }
         }
 
@@ -1489,55 +1293,46 @@
                     column;
             }
 
-            .camara-destacada {
+            .tarjeta-camara {
                 border-radius:
                     22px;
             }
 
-            .visor {
-                min-height:
-                    360px;
-            }
-
-            .overlay-visor {
-                padding:
-                    24px
-                    19px;
-            }
-
             .informacion-camara {
                 padding:
-                    27px
-                    22px;
+                    22px
+                    20px
+                    24px;
             }
 
-            .rejilla-futuras {
-                grid-template-columns:
-                    1fr;
+            .etiquetas-visor {
+                left: 12px;
+                top: 12px;
+
+                gap: 6px;
             }
 
-            .futura-camara {
-                min-height:
-                    360px;
-            }
-
-            .futura-contenido {
+            .etiqueta-visor {
                 padding:
-                    23px;
-            }
-
-            .sello-construccion {
-                right:
-                    -57px;
-
-                top:
-                    40px;
-
-                width:
-                    235px;
+                    6px
+                    9px;
 
                 font-size:
-                    0.65rem;
+                    0.58rem;
+            }
+
+            .cinta-construccion {
+                top: 27px;
+                right: -78px;
+
+                width: 270px;
+
+                padding:
+                    9px
+                    0;
+
+                font-size:
+                    0.64rem;
             }
 
             .pie-en-vivo {
@@ -1602,7 +1397,8 @@
                     </div>
 
                     <div class="soporte-camara"></div>
-                    <div class="camara"></div>
+
+                    <div class="camara-dibujo"></div>
 
                 </div>
 
@@ -1616,186 +1412,20 @@
             <div class="titulo-seccion">
 
                 <div>
-                    <h2>
-                        Sierra Nevada
-                    </h2>
 
-                    <p>
-                        Primera cámara externa seleccionada para
-                        nuestras pruebas de integración en directo.
-                    </p>
-                </div>
-
-                <div class="etiqueta-seccion">
-                    LAB · PRIMERA PRUEBA
-                </div>
-
-            </div>
-
-
-            <article class="camara-destacada">
-
-                <div
-                    class="visor"
-                    id="visor-borreguiles"
-                >
-
-                    <div class="sol-visor"></div>
-
-                    <div
-                        class="nubes-visor"
-                        aria-hidden="true"
-                    >
-                        ☁ ☁ ☁ ☁ ☁
-                    </div>
-
-                    <div class="visor-etiqueta">
-                        <span></span>
-                        BORREGUILES
-                    </div>
-
-
-                    <!--
-                        El reproductor oficial de Feratel
-                        se insertará aquí cuando dispongamos
-                        del código de integración autorizado.
-
-                        Ejemplo de estructura futura:
-
-                        <iframe
-                            src="URL_OFICIAL_FERATEL"
-                            title="Sierra Nevada · Borreguiles"
-                            allow="autoplay; fullscreen"
-                            allowfullscreen
-                        ></iframe>
-                    -->
-
-
-                    <div class="overlay-visor">
-
-                        <div class="icono-preparando">
-                            📡
-                        </div>
-
-                        <strong>
-                            Preparando emisión
-                        </strong>
-
-                        <p>
-                            MeteoArchidona ha solicitado acceso
-                            al reproductor oficial de Feratel.
-                            Cuando recibamos el código de integración,
-                            esta zona mostrará la cámara real
-                            de Borreguiles.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="informacion-camara">
-
-                    <div class="origen">
-                        CÁMARA EXTERNA
-                    </div>
-
-                    <h3>
-                        Zona Borreguiles
-                    </h3>
-
-                    <p class="ubicacion">
-                        Sierra Nevada · Granada
-                    </p>
-
-
-                    <div class="datos-camara">
-
-                        <div class="dato-camara">
-                            <span>
-                                Fuente
-                            </span>
-
-                            <span>
-                                Sierra Nevada / Feratel
-                            </span>
-                        </div>
-
-                        <div class="dato-camara">
-                            <span>
-                                Tipo
-                            </span>
-
-                            <span>
-                                Livecam panorámica
-                            </span>
-                        </div>
-
-                        <div class="dato-camara">
-                            <span>
-                                Interés
-                            </span>
-
-                            <span>
-                                Nieve · nubosidad · visibilidad
-                            </span>
-                        </div>
-
-                        <div class="dato-camara">
-                            <span>
-                                Estado
-                            </span>
-
-                            <span>
-                                Pendiente de integración
-                            </span>
-                        </div>
-
-                    </div>
-
-
-                    <div class="estado-espera">
-
-                        <div class="estado-espera-icono">
-                            ⏳
-                        </div>
-
-                        <div>
-                            <strong>
-                                Solicitud enviada
-                            </strong>
-
-                            <p>
-                                Estamos esperando las instrucciones
-                                oficiales para integrar el
-                                MediaPlayer de Feratel.
-                            </p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-        </section>
-
-
-        <section class="seccion">
-
-            <div class="titulo-seccion">
-
-                <div>
                     <h2>
                         Red MeteoArchidona
                     </h2>
 
                     <p>
-                        Nuestro objetivo es que estas imágenes
-                        complementen los datos de las estaciones
-                        y permitan comprobar con los propios ojos
-                        qué está ocurriendo.
+                        Primeras ubicaciones previstas para
+                        nuestra futura red visual meteorológica.
+                        Las imágenes actuales son fotografías
+                        provisionales tomadas desde Los Llanos
+                        mientras preparamos las emisiones
+                        en directo.
                     </p>
+
                 </div>
 
                 <div class="etiqueta-seccion">
@@ -1805,36 +1435,39 @@
             </div>
 
 
-            <div class="rejilla-futuras">
+            <div class="rejilla-camaras">
 
-                <article class="futura-camara">
+                <article class="tarjeta-camara">
 
-                    <img
-                        class="futura-imagen"
-                        src="assets/camaras/1788373982470.jpg"
-                        alt="Imagen provisional para la futura cámara meteorológica de El Silo"
-                    >
+                    <div class="visor-camara">
 
-                    <div class="futura-superior">
+                        <img
+                            src="assets/camaras/1788373982470.jpg"
+                            alt="Vista meteorológica provisional utilizada para la futura cámara de El Silo"
+                        >
 
-                        <div class="tipo-camara">
-                            CÁMARA PROPIA
+                        <div class="etiquetas-visor">
+
+                            <div class="etiqueta-visor propia">
+                                CÁMARA PROPIA
+                            </div>
+
+                            <div class="etiqueta-visor">
+                                IMAGEN PROVISIONAL
+                            </div>
+
                         </div>
 
-                        <div class="imagen-provisional">
-                            IMAGEN PROVISIONAL
+                        <div class="cinta-construccion">
+                            🚧 EN CONSTRUCCIÓN
                         </div>
 
                     </div>
 
-                    <div class="sello-construccion">
-                        🚧 En construcción
-                    </div>
+                    <div class="informacion-camara">
 
-                    <div class="futura-contenido">
-
-                        <div class="proximamente-directo">
-                            Próximamente en directo
+                        <div class="estado-proximo">
+                            PRÓXIMAMENTE EN DIRECTO
                         </div>
 
                         <h3>
@@ -1843,45 +1476,70 @@
 
                         <p>
                             Futura cámara meteorológica de
-                            MeteoArchidona para observar en tiempo
-                            real la evolución del cielo, nubosidad,
-                            precipitación y visibilidad desde
-                            Archidona.
+                            MeteoArchidona para observar en
+                            tiempo real la evolución del cielo,
+                            nubosidad, precipitación y visibilidad
+                            desde Archidona.
                         </p>
+
+                        <div class="nota-imagen">
+
+                            <div class="nota-imagen-icono">
+                                📷
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Imagen provisional
+                                </strong>
+
+                                <span>
+                                    Fotografía temporal de nuestra
+                                    webcam de Los Llanos. Será
+                                    sustituida por la emisión real
+                                    de El Silo cuando la cámara
+                                    entre en servicio.
+                                </span>
+                            </div>
+
+                        </div>
 
                     </div>
 
                 </article>
 
 
-                <article class="futura-camara">
+                <article class="tarjeta-camara">
 
-                    <img
-                        class="futura-imagen"
-                        src="assets/camaras/1788373953410.jpg"
-                        alt="Imagen provisional de Los Llanos para su futura cámara meteorológica"
-                    >
+                    <div class="visor-camara">
 
-                    <div class="futura-superior">
+                        <img
+                            src="assets/camaras/1788373953410.jpg"
+                            alt="Vista meteorológica desde Los Llanos"
+                        >
 
-                        <div class="tipo-camara">
-                            CÁMARA PROPIA
+                        <div class="etiquetas-visor">
+
+                            <div class="etiqueta-visor propia">
+                                CÁMARA PROPIA
+                            </div>
+
+                            <div class="etiqueta-visor">
+                                IMAGEN PROVISIONAL
+                            </div>
+
                         </div>
 
-                        <div class="imagen-provisional">
-                            IMAGEN PROVISIONAL
+                        <div class="cinta-construccion">
+                            🚧 EN CONSTRUCCIÓN
                         </div>
 
                     </div>
 
-                    <div class="sello-construccion">
-                        🚧 En construcción
-                    </div>
+                    <div class="informacion-camara">
 
-                    <div class="futura-contenido">
-
-                        <div class="proximamente-directo">
-                            Próximamente en directo
+                        <div class="estado-proximo">
+                            PRÓXIMAMENTE EN DIRECTO
                         </div>
 
                         <h3>
@@ -1889,11 +1547,34 @@
                         </h3>
 
                         <p>
-                            Imagen real de la ubicación que
-                            anticipa la futura emisión meteorológica
-                            en directo y ampliará la cobertura visual
-                            de nuestra red.
+                            Vista meteorológica desde Los Llanos.
+                            Esta ubicación ampliará la cobertura
+                            visual de MeteoArchidona y permitirá
+                            comparar el estado del cielo con
+                            Archidona y otros puntos de nuestra
+                            futura red.
                         </p>
+
+                        <div class="nota-imagen">
+
+                            <div class="nota-imagen-icono">
+                                📷
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Imagen real de la ubicación
+                                </strong>
+
+                                <span>
+                                    Fotografía obtenida desde la
+                                    webcam existente en Los Llanos.
+                                    La emisión en directo se
+                                    incorporará posteriormente.
+                                </span>
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -1907,11 +1588,11 @@
         <footer class="pie-en-vivo">
 
             <div>
-                Las cámaras externas mantienen la autoría y
-                condiciones de sus respectivos proveedores.
+                MeteoArchidona está preparando su propia red
+                de cámaras meteorológicas.
                 <strong>
-                    MeteoArchidona priorizará siempre
-                    integraciones oficiales y autorizadas.
+                    Las imágenes provisionales serán sustituidas
+                    progresivamente por emisiones en directo.
                 </strong>
             </div>
 
