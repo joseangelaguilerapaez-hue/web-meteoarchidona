@@ -1014,10 +1014,7 @@
             position: relative;
             overflow: hidden;
 
-            min-height: 260px;
-
-            padding:
-                28px;
+            min-height: 390px;
 
             display: flex;
             flex-direction: column;
@@ -1031,28 +1028,33 @@
                 var(--radio);
 
             background:
-                linear-gradient(
-                    145deg,
-                    rgba(16, 37, 60, 0.95),
-                    rgba(7, 18, 31, 0.98)
-                );
+                var(--panel);
+
+            box-shadow:
+                0 18px 50px
+                rgba(0, 0, 0, 0.25);
         }
 
-        .futura-camara::before {
-            content: "◉";
-
+        .futura-imagen {
             position: absolute;
 
-            right: 28px;
-            top: 14px;
+            inset: 0;
 
-            font-size:
-                7rem;
+            width: 100%;
+            height: 100%;
 
-            line-height: 1;
+            object-fit: cover;
 
-            color:
-                rgba(54, 217, 255, 0.045);
+            transition:
+                transform
+                0.5s
+                ease;
+        }
+
+        .futura-camara:hover
+        .futura-imagen {
+            transform:
+                scale(1.025);
         }
 
         .futura-camara::after {
@@ -1060,36 +1062,40 @@
 
             position: absolute;
 
-            width: 170px;
-            height: 170px;
+            inset: 0;
 
-            right: -50px;
-            top: -55px;
+            z-index: 1;
 
-            border:
-                1px solid
-                rgba(54, 217, 255, 0.08);
-
-            border-radius:
-                50%;
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(3, 9, 17, 0.05) 0%,
+                    rgba(3, 9, 17, 0.12) 38%,
+                    rgba(3, 9, 17, 0.78) 76%,
+                    rgba(3, 9, 17, 0.96) 100%
+                );
         }
 
-        .tipo-camara {
-            position: relative;
-            z-index: 2;
+        .futura-superior {
+            position: absolute;
 
+            z-index: 4;
+
+            left: 18px;
+            top: 18px;
+
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tipo-camara,
+        .imagen-provisional {
             width: fit-content;
-
-            margin-bottom:
-                15px;
 
             padding:
                 7px
                 10px;
-
-            border:
-                1px solid
-                var(--borde-cyan);
 
             border-radius:
                 999px;
@@ -1099,41 +1105,189 @@
                 monospace;
 
             font-size:
-                0.68rem;
+                0.65rem;
+
+            font-weight: 600;
+
+            letter-spacing:
+                0.05em;
+
+            backdrop-filter:
+                blur(10px);
+        }
+
+        .tipo-camara {
+            border:
+                1px solid
+                var(--borde-cyan);
 
             color:
                 var(--cyan);
+
+            background:
+                rgba(3, 13, 23, 0.72);
+        }
+
+        .imagen-provisional {
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
+
+            color:
+                var(--texto);
+
+            background:
+                rgba(3, 13, 23, 0.72);
+        }
+
+        .sello-construccion {
+            position: absolute;
+
+            z-index: 5;
+
+            right: -47px;
+            top: 33px;
+
+            width: 230px;
+
+            padding:
+                10px
+                15px;
+
+            transform:
+                rotate(35deg);
+
+            text-align: center;
+
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.40);
+
+            border-bottom:
+                1px solid
+                rgba(255, 255, 255, 0.40);
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #c98200,
+                    var(--oro),
+                    #c98200
+                );
+
+            box-shadow:
+                0 8px 28px
+                rgba(0, 0, 0, 0.38);
+
+            color:
+                #07111f;
+
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                0.72rem;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                0.07em;
+
+            text-transform:
+                uppercase;
+        }
+
+        .futura-contenido {
+            position: relative;
+
+            z-index: 3;
+
+            padding:
+                28px;
+        }
+
+        .proximamente-directo {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-bottom:
+                10px;
+
+            color:
+                var(--oro);
+
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                0.68rem;
+
+            font-weight:
+                600;
+
+            letter-spacing:
+                0.08em;
+
+            text-transform:
+                uppercase;
+        }
+
+        .proximamente-directo::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            flex:
+                0 0 auto;
+
+            border-radius:
+                50%;
+
+            background:
+                var(--oro);
+
+            box-shadow:
+                0 0 12px
+                rgba(242, 191, 88, 0.55);
         }
 
         .futura-camara h3 {
-            position: relative;
-            z-index: 2;
-
             margin:
                 0
                 0
                 7px;
 
             font-size:
-                1.35rem;
+                clamp(
+                    1.35rem,
+                    2vw,
+                    1.7rem
+                );
+
+            letter-spacing:
+                -0.035em;
         }
 
         .futura-camara p {
-            position: relative;
-            z-index: 2;
-
             margin: 0;
 
-            max-width: 520px;
+            max-width: 580px;
 
             color:
-                var(--texto-suave);
+                var(--texto);
 
             line-height:
                 1.6;
 
             font-size:
-                0.88rem;
+                0.86rem;
         }
 
         .pie-en-vivo {
@@ -1240,6 +1394,10 @@
 
                 scroll-behavior:
                     auto
+                    !important;
+
+                transition:
+                    none
                     !important;
             }
         }
@@ -1356,6 +1514,30 @@
             .rejilla-futuras {
                 grid-template-columns:
                     1fr;
+            }
+
+            .futura-camara {
+                min-height:
+                    360px;
+            }
+
+            .futura-contenido {
+                padding:
+                    23px;
+            }
+
+            .sello-construccion {
+                right:
+                    -57px;
+
+                top:
+                    40px;
+
+                width:
+                    235px;
+
+                font-size:
+                    0.65rem;
             }
 
             .pie-en-vivo {
@@ -1617,7 +1799,7 @@
                 </div>
 
                 <div class="etiqueta-seccion">
-                    PRÓXIMAMENTE
+                    EN CONSTRUCCIÓN
                 </div>
 
             </div>
@@ -1627,40 +1809,93 @@
 
                 <article class="futura-camara">
 
-                    <div class="tipo-camara">
-                        CÁMARA PROPIA
+                    <img
+                        class="futura-imagen"
+                        src="assets/camaras/1788373982470.jpg"
+                        alt="Imagen provisional para la futura cámara meteorológica de El Silo"
+                    >
+
+                    <div class="futura-superior">
+
+                        <div class="tipo-camara">
+                            CÁMARA PROPIA
+                        </div>
+
+                        <div class="imagen-provisional">
+                            IMAGEN PROVISIONAL
+                        </div>
+
                     </div>
 
-                    <h3>
-                        El Silo · Archidona
-                    </h3>
+                    <div class="sello-construccion">
+                        🚧 En construcción
+                    </div>
 
-                    <p>
-                        Futura visión meteorológica panorámica
-                        desde Archidona para observar nubosidad,
-                        precipitación, visibilidad y evolución
-                        del cielo en tiempo real.
-                    </p>
+                    <div class="futura-contenido">
+
+                        <div class="proximamente-directo">
+                            Próximamente en directo
+                        </div>
+
+                        <h3>
+                            El Silo · Archidona
+                        </h3>
+
+                        <p>
+                            Futura cámara meteorológica de
+                            MeteoArchidona para observar en tiempo
+                            real la evolución del cielo, nubosidad,
+                            precipitación y visibilidad desde
+                            Archidona.
+                        </p>
+
+                    </div>
 
                 </article>
 
 
                 <article class="futura-camara">
 
-                    <div class="tipo-camara">
-                        CÁMARA PROPIA
+                    <img
+                        class="futura-imagen"
+                        src="assets/camaras/1788373953410.jpg"
+                        alt="Imagen provisional de Los Llanos para su futura cámara meteorológica"
+                    >
+
+                    <div class="futura-superior">
+
+                        <div class="tipo-camara">
+                            CÁMARA PROPIA
+                        </div>
+
+                        <div class="imagen-provisional">
+                            IMAGEN PROVISIONAL
+                        </div>
+
                     </div>
 
-                    <h3>
-                        Los Llanos
-                    </h3>
+                    <div class="sello-construccion">
+                        🚧 En construcción
+                    </div>
 
-                    <p>
-                        Segunda ubicación prevista para ampliar
-                        la cobertura visual de nuestra red
-                        meteorológica y comparar el estado
-                        del cielo entre diferentes zonas.
-                    </p>
+                    <div class="futura-contenido">
+
+                        <div class="proximamente-directo">
+                            Próximamente en directo
+                        </div>
+
+                        <h3>
+                            Los Llanos
+                        </h3>
+
+                        <p>
+                            Imagen real de la ubicación que
+                            anticipa la futura emisión meteorológica
+                            en directo y ampliará la cobertura visual
+                            de nuestra red.
+                        </p>
+
+                    </div>
 
                 </article>
 
