@@ -2,7 +2,7 @@
 
 ## 1. Propósito
 
-Este documento define el diseño funcional inicial del subsistema de predicción y alertas meteorológicas de MeteoArchidona.
+Este documento define el diseño funcional del subsistema de predicción y alertas meteorológicas de MeteoArchidona.
 
 El objetivo del subsistema es proporcionar información meteorológica futura de forma clara, útil, personalizada y con identidad propia, utilizando fuentes meteorológicas externas de referencia y añadiendo una capa editorial propia de MeteoArchidona.
 
@@ -11,12 +11,14 @@ El subsistema deberá proporcionar principalmente:
 - predicción meteorológica diaria;
 - predicción meteorológica semanal;
 - predicción detallada a corto plazo;
+- predicción horaria cuando la fuente lo permita;
 - alertas meteorológicas oficiales;
 - alertas propias de MeteoArchidona;
-- representación gráfica de las predicciones;
+- representación gráfica propia;
 - textos descriptivos propios;
 - refranes y expresiones meteorológicas;
 - recomendaciones ante situaciones meteorológicas adversas;
+- comparación o consulta de predicciones procedentes de otras fuentes;
 - integración futura con usuarios y sistemas de notificación.
 
 La predicción meteorológica y las alertas se consideran partes de un mismo subsistema.
@@ -26,13 +28,13 @@ La predicción meteorológica y las alertas se consideran partes de un mismo sub
 
 En el momento de redactar este documento, el subsistema todavía no está implementado.
 
-Este documento constituye una primera especificación funcional.
+Este documento constituye una especificación funcional y arquitectónica inicial.
 
 No se consideran todavía definitivos:
 
-- el modelo de base de datos;
+- el modelo físico de base de datos;
 - las tablas;
-- los nombres de campos;
+- los nombres finales de campos;
 - los servicios;
 - los repositorios;
 - los proveedores;
@@ -41,202 +43,367 @@ No se consideran todavía definitivos:
 - las frecuencias definitivas de actualización;
 - la interfaz pública.
 
-Estas decisiones se tomarán durante la implementación.
+Estas decisiones se tomarán durante la implementación y después de analizar los datos reales proporcionados por las fuentes externas.
 
 
 ## 3. Principios generales
 
 El subsistema seguirá los siguientes principios:
 
-- utilizar fuentes meteorológicas identificadas;
+- utilizar fuentes meteorológicas claramente identificadas;
 - conservar la procedencia de cada predicción;
-- almacenar la información necesaria en la infraestructura propia;
-- evitar que la web pública dependa directamente de proveedores externos;
+- almacenar en infraestructura propia la información necesaria;
+- evitar que la web pública dependa directamente de proveedores externos para la predicción principal;
 - separar adquisición, normalización, persistencia, negocio y presentación;
 - proporcionar una presentación propia de MeteoArchidona;
 - diferenciar claramente información oficial e información propia;
 - mantener históricos cuando aporten valor;
 - permitir futuras ampliaciones;
 - facilitar la personalización por usuario y municipio;
-- mantener una identidad meteorológica local.
+- mantener una identidad meteorológica local;
+- no presentar como propio un dato originado por un tercero;
+- reutilizar los datos adquiridos sin provocar consultas externas innecesarias.
 
 
-## 4. Fuentes iniciales
+## 4. Separación entre predicción y observación
+
+El sistema deberá distinguir claramente entre:
+
+### Predicción
+
+Información sobre lo que se espera que ocurra en el futuro.
+
+### Observación
+
+Información sobre lo que está ocurriendo o ha ocurrido realmente.
+
+Las estaciones meteorológicas propias pertenecen al ámbito de observación.
+
+Los radares, satélites, rayos, actividad solar, embalses y otros productos de seguimiento de fenómenos reales se documentarán en el subsistema de Observaciones.
+
+Aunque predicción y observación podrán mostrarse juntas en determinadas páginas, deberán permanecer conceptualmente separadas.
+
+
+## 5. Fuentes iniciales de predicción
 
 Inicialmente se contemplan dos fuentes externas principales:
 
 1. AEMET.
 2. eltiempo.es.
 
-Ambas fuentes tendrán responsabilidades independientes y deberán identificarse correctamente.
+También se podrá permitir la consulta de otras predicciones externas mediante widgets, gadgets, enlaces u otros mecanismos autorizados.
+
+Cada fuente deberá mantener claramente identificada su procedencia.
 
 
-## 5. AEMET
+## 6. AEMET
 
-AEMET será la fuente oficial y principal de predicción meteorológica.
+AEMET será inicialmente la fuente oficial principal de predicción meteorológica.
 
-MeteoArchidona utilizará los productos de AEMET que resulten adecuados para obtener información estructurada de predicción y alertas.
+MeteoArchidona utilizará los productos de AEMET adecuados para obtener información estructurada de predicción y alertas.
 
-Entre los productos de interés se encuentra la predicción por municipios.
-
-
-## 6. Predicción municipal de AEMET
-
-AEMET dispone de información estructurada de predicción municipal.
-
-Entre los productos de interés para MeteoArchidona se encuentra la predicción de siete días.
-
-También existen productos de predicción más detallada a corto plazo que podrán estudiarse durante la implementación.
-
-El objetivo será obtener estos datos mediante los mecanismos de acceso programático proporcionados por AEMET, evitando procesos manuales.
+La integración principal deberá realizarse mediante mecanismos programáticos oficiales y no mediante extracción de contenido visual de sus páginas web.
 
 
-## 7. XML de predicción
+## 7. AEMET OpenData
 
-AEMET proporciona predicciones municipales mediante información estructurada descargable, incluyendo XML.
+AEMET dispone de la plataforma AEMET OpenData para el acceso programático a sus datos.
 
-El subsistema deberá disponer de un proveedor específico encargado de:
+La implementación de MeteoArchidona utilizará preferentemente AEMET OpenData para automatizar la adquisición de predicciones.
 
-1. solicitar la información;
-2. recibirla;
-3. interpretar el contenido;
-4. normalizarlo al modelo propio;
-5. persistir la información necesaria.
+El acceso programático requiere una API Key proporcionada por AEMET.
 
-La estructura exacta de los productos utilizados deberá estudiarse antes de implementar el normalizador.
+La obtención de esta clave es gratuita conforme al funcionamiento actual del servicio.
 
+La clave deberá tratarse como un secreto de infraestructura.
 
-## 8. Flujo previsto de AEMET
+Nunca deberá:
 
-El flujo conceptual será:
+- incorporarse al HTML público;
+- incorporarse al JavaScript público;
+- almacenarse en el repositorio;
+- exponerse mediante nuestra API.
 
-**AEMET → adquisición → normalización → PostgreSQL → servicios → API MeteoArchidona → web**
-
-La web pública no deberá depender de una consulta directa a AEMET para representar la predicción.
+Se configurará mediante secretos o variables de entorno de la infraestructura correspondiente.
 
 
-## 9. Conservación de la fuente
+## 8. Caducidad de la API Key
 
-Cada predicción deberá conservar información suficiente para conocer su procedencia.
+La infraestructura deberá permitir sustituir fácilmente la API Key de AEMET.
 
-MeteoArchidona podrá transformar la presentación de la predicción, pero no deberá hacer pasar datos externos por observaciones o predicciones generadas originalmente por MeteoArchidona.
+No se deberá diseñar ningún componente suponiendo que la misma clave permanecerá válida indefinidamente.
 
-
-## 10. eltiempo.es
-
-eltiempo.es será inicialmente una segunda fuente meteorológica de interés.
-
-Podrá utilizarse como:
-
-- fuente complementaria de predicción;
-- fuente editorial;
-- fuente de contenidos meteorológicos adicionales;
-- posible fuente multimedia.
-
-La integración concreta dependerá de los mecanismos técnicos disponibles y de las condiciones de utilización de sus contenidos.
+La sustitución de la credencial no deberá exigir cambios de código.
 
 
-## 11. Contenido multimedia de eltiempo.es
+## 9. Predicción municipal de AEMET
 
-Se estudiará especialmente la posibilidad de integrar contenidos audiovisuales de predicción meteorológica.
+Entre los productos de mayor interés se encuentran las predicciones específicas por municipio.
 
-Entre ellos podrán encontrarse vídeos con presentadores meteorológicos y partes diarios.
+Se consideran especialmente relevantes:
 
-Estos contenidos solo se integrarán cuando exista un mecanismo autorizado para hacerlo.
+- predicción diaria por municipio;
+- predicción horaria por municipio.
 
-Si el proveedor permite insertar o compartir el contenido mediante un reproductor, widget, enlace o mecanismo equivalente, MeteoArchidona podrá utilizarlo.
-
-No se presupone que cualquier contenido audiovisual pueda descargarse, copiarse o redistribuirse.
+La predicción municipal será la base inicial de la información futura mostrada por MeteoArchidona.
 
 
-## 12. Predicción diaria
+## 10. Predicción diaria
 
-MeteoArchidona ofrecerá una predicción diaria.
+AEMET proporciona predicción municipal para varios días.
 
-La información podrá incluir, dependiendo de los datos disponibles:
+El producto de siete días será una de las fuentes principales para construir la predicción semanal de MeteoArchidona.
+
+La información disponible puede incluir, dependiendo del periodo y del producto:
 
 - estado del cielo;
 - temperatura máxima;
 - temperatura mínima;
+- temperatura;
+- sensación térmica;
+- humedad relativa;
 - precipitación;
 - probabilidad de precipitación;
-- viento;
-- dirección del viento;
-- humedad;
-- tormentas;
 - nieve;
-- fenómenos adversos;
-- información adicional proporcionada por las fuentes.
+- probabilidad de nieve;
+- tormentas;
+- probabilidad de tormenta;
+- dirección del viento;
+- velocidad del viento;
+- rachas;
+- otras variables proporcionadas por la fuente.
 
-La lista definitiva dependerá del análisis de los productos disponibles.
-
-
-## 13. Predicción semanal
-
-Uno de los productos principales será la predicción de los próximos días.
-
-Como referencia inicial se utilizará la predicción municipal de siete días proporcionada por AEMET.
-
-La interfaz pública deberá permitir comprender rápidamente la evolución meteorológica de la semana.
+La estructura definitiva se determinará utilizando respuestas reales de AEMET.
 
 
-## 14. Predicción a corto plazo
+## 11. Predicción horaria
 
-Además de la visión semanal, se estudiará la utilización de productos de mayor resolución temporal para las próximas horas.
+AEMET dispone de predicción municipal horaria a corto plazo.
 
-Esto permitirá proporcionar información más detallada cuando las fuentes utilizadas lo permitan.
+Este producto resulta especialmente interesante para mostrar la evolución prevista durante las próximas horas.
 
+La predicción horaria podrá utilizarse para construir:
 
-## 15. No desarrollar inicialmente una predicción propia
+- evolución de temperatura;
+- evolución de precipitación;
+- probabilidad de lluvia;
+- evolución del viento;
+- sensación térmica;
+- humedad;
+- estado del cielo;
+- otros fenómenos disponibles.
 
-MeteoArchidona no desarrollará inicialmente un modelo meteorológico propio basado en años de observaciones históricas.
-
-Esta línea queda aparcada.
-
-La arquitectura no deberá impedir que en el futuro se estudien:
-
-- modelos estadísticos;
-- aprendizaje automático;
-- inteligencia artificial;
-- correcciones locales de predicciones externas.
-
-Pero estas posibilidades no forman parte del alcance inicial.
+Su integración deberá conservar correctamente la semántica temporal de cada variable.
 
 
-## 16. Capa editorial propia
+## 12. Resolución temporal
 
-Aunque los datos procedan de fuentes externas, MeteoArchidona tendrá una forma propia de presentar y describir la predicción.
+No debe asumirse que todas las variables de una predicción representan exactamente el mismo intervalo temporal.
 
-No se pretende limitar la web a reproducir literalmente textos de otros proveedores.
+Algunas variables podrán corresponder a un instante determinado.
 
-Los datos estructurados serán interpretados para construir una narrativa propia.
+Otras podrán representar:
+
+- acumulados;
+- máximos;
+- probabilidades;
+- intervalos horarios;
+- intervalos de varias horas;
+- periodos diarios.
+
+El normalizador deberá interpretar correctamente la semántica proporcionada por AEMET.
 
 
-## 17. Motor de narrativa meteorológica
+## 13. Conversión temporal
 
-Se diseñará un motor de narrativa meteorológica.
+Los datos externos podrán utilizar UTC u otras convenciones temporales.
 
-Su función será convertir condiciones y predicciones estructuradas en descripciones naturales y variadas.
+La infraestructura interna conservará los instantes de forma no ambigua.
 
-Por ejemplo, una situación de lluvia podrá expresarse de distintas formas sin modificar el significado meteorológico de la predicción.
+La presentación pública deberá convertir correctamente las fechas y horas a la zona horaria aplicable al municipio.
+
+Para el ámbito inicial de MeteoArchidona se utilizará normalmente:
+
+**Europe/Madrid**
+
+cuando corresponda.
 
 
-## 18. Condiciones meteorológicas normalizadas
+## 14. Predicción correspondiente al municipio
 
-La narrativa no deberá depender directamente de códigos particulares de cada proveedor.
+La predicción municipal proporcionada por AEMET se refiere al municipio y no necesariamente al punto exacto donde exista una estación MeteoArchidona.
 
-Se establecerá un conjunto propio de conceptos meteorológicos normalizados.
+La predicción deberá identificarse como predicción municipal.
+
+No deberá presentarse como si fuera una predicción calculada específicamente para las coordenadas de una estación concreta cuando no lo sea.
+
+
+## 15. Diferencia entre municipio y estación
+
+Un municipio y una estación meteorológica son conceptos distintos.
+
+Un municipio puede disponer de:
+
+- ninguna estación;
+- una estación;
+- varias estaciones.
+
+La existencia de una predicción municipal no requiere que MeteoArchidona tenga una estación propia dentro de ese municipio.
+
+Las estaciones conservarán su identidad y coordenadas propias.
+
+
+## 16. XML público de AEMET
+
+AEMET ofrece desde sus páginas municipales la posibilidad de acceder a información estructurada de predicción, incluyendo XML.
+
+Estos XML resultan especialmente útiles para:
+
+- estudiar la estructura real de los productos;
+- conocer campos;
+- comprobar periodos;
+- estudiar códigos;
+- comprobar valores opcionales;
+- analizar estados del cielo;
+- estudiar viento y precipitación;
+- diseñar los normalizadores.
+
+Antes de implementar definitivamente el modelo de persistencia se analizará al menos un XML real de un municipio del ámbito inicial, comenzando preferentemente por Archidona.
+
+
+## 17. Uso productivo frente a análisis manual
+
+El XML accesible desde la web puede utilizarse durante el análisis y desarrollo.
+
+Sin embargo, la adquisición productiva automatizada deberá utilizar preferentemente AEMET OpenData u otro mecanismo programático oficial adecuado.
+
+No se diseñará el sistema productivo dependiendo de automatizar pulsaciones o descargar manualmente archivos desde la interfaz web.
+
+
+## 18. Flujo principal de AEMET
+
+El flujo conceptual será:
+
+**AEMET OpenData**
+
+↓
+
+**Proveedor AEMET**
+
+↓
+
+**Adquisición**
+
+↓
+
+**Normalización**
+
+↓
+
+**PostgreSQL**
+
+↓
+
+**Servicios MeteoArchidona**
+
+↓
+
+**API MeteoArchidona**
+
+↓
+
+**Web y otros consumidores**
+
+La web pública no deberá consultar directamente la API privada de AEMET para construir la predicción principal.
+
+
+## 19. Persistencia
+
+Las predicciones que resulte útil conservar deberán almacenarse en PostgreSQL.
+
+La estrategia definitiva se decidirá durante la implementación.
+
+Se deberá estudiar especialmente la conservación de diferentes ediciones de una misma predicción.
+
+
+## 20. Histórico de predicciones
+
+Una predicción nueva no deberá necesariamente destruir la anterior.
+
+Conservar diferentes ediciones permitirá estudiar posteriormente:
+
+**lo previsto → lo observado**
+
+Esto puede permitir analizar:
+
+- precisión;
+- evolución de una predicción;
+- cambios realizados por las fuentes;
+- anticipación de fenómenos;
+- diferencias entre proveedores;
+- comportamiento de alertas.
+
+
+## 21. Trazabilidad
+
+Cada predicción deberá conservar suficiente información para conocer:
+
+- fuente;
+- producto;
+- municipio;
+- momento de adquisición;
+- momento de elaboración de la predicción cuando esté disponible;
+- periodo al que corresponde;
+- versión o edición cuando proceda.
+
+La trazabilidad será importante para comparar posteriormente predicciones con observaciones reales.
+
+
+## 22. Datos originales
+
+Durante la implementación se estudiará qué información original conviene conservar para facilitar:
+
+- diagnóstico;
+- trazabilidad;
+- reprocesamiento;
+- auditoría;
+- evolución de normalizadores.
+
+Esta conservación deberá respetar siempre las condiciones de utilización de cada fuente.
+
+
+## 23. Normalización
+
+La representación interna de MeteoArchidona no deberá depender innecesariamente de estructuras particulares de AEMET.
+
+Los datos externos deberán transformarse, cuando sea razonable, a conceptos propios.
+
+Esto facilitará:
+
+- incorporar nuevas fuentes;
+- comparar proveedores;
+- cambiar proveedores;
+- mantener estable nuestra API;
+- construir narrativa propia;
+- utilizar iconografía propia.
+
+
+## 24. Condiciones meteorológicas normalizadas
+
+Se establecerá progresivamente un catálogo propio de situaciones meteorológicas.
 
 Como ejemplos iniciales:
 
 - despejado;
 - poco nuboso;
 - nuboso;
+- muy nuboso;
 - cubierto;
 - lluvia;
 - lluvia intensa;
 - chubascos;
 - tormenta;
+- granizo;
 - nieve;
 - niebla;
 - viento;
@@ -246,14 +413,156 @@ Como ejemplos iniciales:
 - calor;
 - calor intenso.
 
-La clasificación definitiva se determinará al estudiar las fuentes.
+La clasificación definitiva se determinará después de estudiar los códigos reales de las fuentes utilizadas.
 
 
-## 19. Catálogo de frases meteorológicas
+## 25. Frecuencia de actualización
 
-MeteoArchidona dispondrá de un catálogo propio de frases meteorológicas.
+La adquisición deberá adaptarse a la frecuencia real de actualización de cada producto externo.
 
-Este catálogo permitirá proporcionar variedad a los partes.
+No deberán realizarse solicitudes innecesarias.
+
+Antes de programar cada tarea automática se determinará:
+
+- cuándo actualiza el proveedor;
+- con qué frecuencia tiene sentido consultar;
+- límites del servicio;
+- comportamiento ante fallos;
+- estrategia de reintentos;
+- tolerancia ante retrasos.
+
+
+## 26. Indisponibilidad de una fuente
+
+La indisponibilidad temporal de AEMET u otra fuente no debería provocar automáticamente la desaparición de toda la predicción de MeteoArchidona.
+
+La persistencia permitirá conservar la última información válida cuando resulte apropiado.
+
+La interfaz deberá poder indicar cuándo una predicción está desactualizada.
+
+
+## 27. eltiempo.es
+
+eltiempo.es será inicialmente una segunda fuente meteorológica de interés.
+
+Podrá utilizarse como:
+
+- fuente complementaria de predicción;
+- fuente editorial;
+- fuente de contenidos gráficos;
+- fuente multimedia;
+- fuente de comparación.
+
+La integración concreta dependerá de los mecanismos técnicos disponibles y de las condiciones de utilización vigentes.
+
+
+## 28. Contenido multimedia externo
+
+Se estudiará especialmente la posibilidad de integrar contenido audiovisual meteorológico de fuentes externas.
+
+Por ejemplo:
+
+- vídeos de predicción;
+- partes meteorológicos;
+- explicaciones de situaciones relevantes.
+
+Estos contenidos solo se incorporarán utilizando mecanismos autorizados.
+
+Podrán utilizarse:
+
+- reproductores oficiales;
+- widgets;
+- iframes permitidos;
+- enlaces;
+- mecanismos de compartición proporcionados por la fuente.
+
+No se presupone autorización para descargar y republicar cualquier contenido audiovisual.
+
+
+## 29. Predicción propia de MeteoArchidona
+
+MeteoArchidona tendrá una presentación propia de la predicción aunque los datos meteorológicos estructurados procedan inicialmente de fuentes externas.
+
+La predicción principal deberá estar integrada con:
+
+- nuestros municipios;
+- nuestra interfaz;
+- nuestra narrativa;
+- nuestros iconos;
+- nuestras alertas;
+- nuestras recomendaciones;
+- las preferencias futuras del usuario.
+
+
+## 30. No desarrollar inicialmente un modelo meteorológico propio
+
+MeteoArchidona no desarrollará inicialmente un modelo físico o estadístico propio de predicción basado en años de observaciones históricas.
+
+Esta línea queda aparcada.
+
+La arquitectura no deberá impedir estudiar posteriormente:
+
+- modelos estadísticos;
+- aprendizaje automático;
+- inteligencia artificial;
+- correcciones locales;
+- combinación de modelos;
+- evaluación automática de errores.
+
+Estas posibilidades no forman parte de la primera implementación.
+
+
+## 31. Inteligencia artificial
+
+En una evolución futura podrá utilizarse inteligencia artificial como herramienta complementaria.
+
+Un uso posible será la generación de narrativa a partir de datos meteorológicos estructurados.
+
+La IA no deberá inventar:
+
+- temperaturas;
+- precipitaciones;
+- probabilidades;
+- avisos;
+- niveles;
+- fenómenos;
+- horas;
+- datos inexistentes en las fuentes.
+
+La fuente meteorológica y la capa editorial deberán seguir siendo distinguibles.
+
+
+## 32. Capa editorial propia
+
+MeteoArchidona no se limitará a reproducir literalmente textos de otros proveedores.
+
+Los datos estructurados podrán utilizarse para construir una narrativa propia.
+
+Esta capa editorial deberá mantener intacto el significado meteorológico de la predicción.
+
+
+## 33. Motor de narrativa meteorológica
+
+Se diseñará un motor de narrativa meteorológica.
+
+Su función será convertir condiciones y predicciones estructuradas en descripciones naturales, locales y variadas.
+
+Podrá utilizar:
+
+- fenómeno;
+- intensidad;
+- temperatura;
+- época del año;
+- mes;
+- hora;
+- contexto;
+- probabilidad;
+- otras variables disponibles.
+
+
+## 34. Catálogo de frases meteorológicas
+
+MeteoArchidona dispondrá de un catálogo propio de frases.
 
 Podrá contener:
 
@@ -265,23 +574,14 @@ Podrá contener:
 - expresiones tradicionales;
 - determinadas expresiones en otros idiomas utilizadas deliberadamente.
 
-Por ejemplo, podrán existir expresiones equivalentes a:
-
-- jornada pasada por agua;
-- día de perros;
-- en abril, aguas mil;
-- it's raining cats and dogs.
-
-El catálogo deberá crecer progresivamente.
+El objetivo es proporcionar personalidad sin alterar el significado de la predicción.
 
 
-## 20. Catálogo cerrado
+## 35. Catálogo cerrado de frases
 
-El catálogo de frases meteorológicas será un catálogo editorial interno de MeteoArchidona.
+El catálogo de frases será un catálogo editorial interno.
 
-No será un catálogo abierto a los usuarios.
-
-Los usuarios registrados no podrán dar de alta libremente:
+Los usuarios registrados no podrán crear directamente:
 
 - frases;
 - refranes;
@@ -291,183 +591,246 @@ Los usuarios registrados no podrán dar de alta libremente:
 Las incorporaciones serán realizadas o aprobadas por los responsables de MeteoArchidona.
 
 
-## 21. Clasificación de frases
+## 36. Clasificación de frases
 
-Las frases deberán poder relacionarse con condiciones que determinen cuándo pueden utilizarse.
-
-Entre otras:
+Las frases podrán clasificarse según:
 
 - fenómeno;
 - intensidad;
-- época del año;
 - mes;
-- estación;
+- estación del año;
 - contexto;
-- tono.
+- tono;
+- temperatura;
+- probabilidad;
+- otras condiciones.
 
-Esto evitará utilizar una frase correcta en un contexto meteorológico incorrecto.
+Esto evitará utilizar expresiones fuera de contexto.
 
 
-## 22. Refranes condicionados
+## 37. Refranes condicionados
 
-Los refranes no deberán seleccionarse únicamente mediante azar.
-
-Su utilización podrá depender de condiciones adicionales.
+Los refranes deberán utilizarse únicamente cuando su contexto sea adecuado.
 
 Por ejemplo:
 
-> En abril, aguas mil.
+**En abril, aguas mil**
 
-solo tendrá sentido durante abril y cuando exista un contexto relacionado con precipitación.
+solo deberá considerarse durante abril y en un contexto relacionado con precipitación.
 
-El motor deberá comprobar estas condiciones antes de considerar una frase candidata.
-
-
-## 23. Selección aleatoria controlada
-
-Cuando existan varias frases válidas para una misma situación, podrá realizarse una selección aleatoria.
-
-La selección podrá evolucionar posteriormente para:
-
-- evitar repeticiones excesivas;
-- favorecer variedad;
-- utilizar pesos;
-- considerar frases utilizadas recientemente.
-
-La aleatoriedad nunca deberá alterar el significado meteorológico.
+El motor deberá comprobar estas condiciones antes de seleccionar una frase.
 
 
-## 24. Inteligencia artificial y narrativa
+## 38. Selección aleatoria controlada
 
-En una evolución futura podrá estudiarse la utilización de inteligencia artificial como herramienta de redacción.
+Cuando existan varias frases válidas para una misma situación podrá realizarse una selección aleatoria controlada.
 
-En ese caso, la IA no será necesariamente la fuente de la predicción.
+Posteriormente podrán añadirse mecanismos para:
 
-Podrá utilizar información meteorológica estructurada y validada para construir una narración más natural.
+- evitar repeticiones;
+- aplicar pesos;
+- recordar textos utilizados recientemente;
+- aumentar variedad;
+- favorecer determinados textos.
 
-Cualquier mecanismo de este tipo deberá impedir que la capa narrativa invente:
-
-- temperaturas;
-- precipitaciones;
-- probabilidades;
-- alertas;
-- fenómenos;
-- datos no existentes en las fuentes utilizadas.
+La aleatoriedad nunca deberá modificar el significado meteorológico.
 
 
-## 25. Iconografía meteorológica
+## 39. Iconografía meteorológica
 
-La predicción tendrá una representación gráfica mediante iconos meteorológicos.
+MeteoArchidona desarrollará progresivamente una iconografía propia.
 
-MeteoArchidona pretende disponer progresivamente de una iconografía propia.
+Los iconos deberán mantener:
 
-Los iconos propios tendrán un estilo visual coherente con la identidad del proyecto.
+- claridad meteorológica;
+- identidad visual;
+- coherencia;
+- personalidad;
+- posibilidad de incorporar humor o caricatura.
 
-
-## 26. Iconos propios de MeteoArchidona
-
-Los iconos propios podrán incorporar:
-
-- caricaturas;
-- expresiones;
-- cierto sentido del humor;
-- personalidad visual;
-- elementos reconocibles de MeteoArchidona.
-
-El humor no deberá impedir identificar rápidamente el fenómeno meteorológico representado.
+El fenómeno representado deberá resultar siempre reconocible.
 
 
-## 27. Catálogo normalizado de iconos
+## 40. Separación entre condición e icono
 
-La representación gráfica se separará del significado meteorológico.
-
-Un código meteorológico normalizado podrá tener asociado un icono propio.
+La condición meteorológica y su representación gráfica serán conceptos independientes.
 
 Conceptualmente:
 
-**condición meteorológica → representación gráfica**
+**condición normalizada → representación gráfica**
 
-Esto permitirá sustituir imágenes sin modificar los datos meteorológicos.
+Esto permitirá cambiar o ampliar iconos sin modificar los datos meteorológicos.
 
 
-## 28. Prioridad de iconos
+## 41. Prioridad de iconos
 
 La estrategia inicial será:
 
-1. utilizar un icono propio de MeteoArchidona cuando exista;
-2. utilizar el recurso gráfico proporcionado por la fuente cuando esté permitido y no exista sustituto propio;
+1. utilizar un icono propio MeteoArchidona cuando exista;
+2. utilizar el recurso gráfico de la fuente cuando esté autorizado y no exista equivalente propio;
 3. utilizar un icono genérico propio como último recurso.
 
-De esta forma la colección gráfica podrá desarrollarse progresivamente.
+La colección MeteoArchidona podrá ampliarse progresivamente.
 
 
-## 29. Iconos proporcionados por AEMET
+## 42. Variantes gráficas
 
-Cuando AEMET proporcione una URL correspondiente a una representación gráfica de la predicción, podrá conservarse la referencia necesaria para utilizarla cuando proceda.
+Podrán existir varias representaciones gráficas propias de una misma condición.
 
-No será necesario descargar y almacenar automáticamente cada icono si el mecanismo proporcionado permite utilizarlo directamente y sus condiciones de uso lo permiten.
+Por ejemplo, varias ilustraciones diferentes de cielo despejado.
 
-La implementación deberá respetar siempre las condiciones aplicables a esos recursos.
-
-
-## 30. Variantes gráficas
-
-En el futuro podrán existir varias representaciones propias para una misma condición.
-
-Por ejemplo, varias caricaturas diferentes de una jornada soleada.
-
-Si se utiliza selección aleatoria entre iconos, todas las variantes candidatas deberán representar inequívocamente el mismo fenómeno.
+La selección podrá variar, siempre que todas las variantes representen inequívocamente el mismo fenómeno.
 
 
-## 31. Alertas meteorológicas
+## 43. Predicciones externas
+
+Además de la predicción principal de MeteoArchidona, la web podrá disponer de un apartado dedicado a consultar predicciones de otras fuentes.
+
+Su finalidad será permitir al visitante comparar distintas interpretaciones meteorológicas sin tener que recorrer numerosas páginas externas.
+
+
+## 44. Página de otras predicciones
+
+La web podrá incluir una página o pestaña con un nombre equivalente a:
+
+**Otras predicciones**
+
+En ella podrán incorporarse, cuando sea técnicamente posible y esté autorizado, recursos de:
+
+- AEMET;
+- eltiempo.es;
+- WeatherLink;
+- Weather Underground;
+- Meteoclimatic;
+- otros servicios meteorológicos útiles.
+
+La inclusión de una fuente concreta dependerá siempre de su disponibilidad y condiciones vigentes.
+
+
+## 45. Widgets y gadgets externos
+
+Algunas fuentes ofrecen widgets, gadgets, iframes u otros componentes preparados para ser incorporados en páginas de terceros.
+
+MeteoArchidona podrá utilizarlos como contenido complementario.
+
+Estos elementos no sustituirán necesariamente nuestra integración estructurada de datos.
+
+
+## 46. Diferencia entre integración de datos y widget
+
+Se distinguirán dos mecanismos diferentes.
+
+### Integración estructurada
+
+**Fuente → adquisición → PostgreSQL → API MeteoArchidona → web**
+
+Permite:
+
+- normalización;
+- personalización;
+- persistencia;
+- histórico;
+- narrativa;
+- iconos propios;
+- alertas;
+- reutilización.
+
+### Widget externo
+
+**Fuente externa → componente oficial incrustado**
+
+Permite mostrar directamente una representación ofrecida por el proveedor.
+
+Ambos mecanismos pueden coexistir.
+
+
+## 47. AEMET como ejemplo de doble integración
+
+AEMET podrá aparecer de dos maneras diferentes:
+
+1. como fuente estructurada de nuestra predicción mediante OpenData;
+2. como contenido oficial externo mediante gadget, widget o recurso gráfico cuando resulte útil.
+
+La predicción principal seguirá siendo presentada con la interfaz MeteoArchidona.
+
+El widget oficial podrá servir como referencia o comparación.
+
+
+## 48. Procedencia visible
+
+Todo widget, gadget, vídeo o contenido externo deberá mantener claramente visible su procedencia.
+
+MeteoArchidona no deberá inducir al usuario a pensar que un producto externo ha sido generado internamente.
+
+
+## 49. Condiciones de uso de terceros
+
+Antes de incorporar cualquier componente externo deberá comprobarse:
+
+- autorización de incrustación;
+- términos de uso;
+- atribución requerida;
+- posibilidad de iframe;
+- posibilidad de script externo;
+- cookies;
+- publicidad incorporada;
+- políticas de privacidad;
+- limitaciones técnicas;
+- disponibilidad del recurso.
+
+La existencia técnica de una URL no implica automáticamente autorización para reutilizarla.
+
+
+## 50. Alertas meteorológicas
 
 Las alertas forman parte integral del subsistema de predicción.
 
 MeteoArchidona gestionará inicialmente dos fuentes claramente diferenciadas:
 
-1. alertas oficiales de AEMET;
-2. alertas propias de MeteoArchidona.
+1. alertas oficiales;
+2. alertas propias MeteoArchidona.
 
 
-## 32. Alertas oficiales de AEMET
+## 51. Alertas oficiales
 
-Los avisos procedentes de AEMET se mostrarán identificados como avisos oficiales.
+Los avisos procedentes de organismos oficiales se mostrarán claramente identificados.
 
-MeteoArchidona conservará la información necesaria sobre su origen.
+AEMET será inicialmente la principal fuente oficial de alertas meteorológicas.
 
-Cuando se represente una alerta oficial deberá quedar claro para el usuario que la fuente es AEMET.
+Cuando se represente un aviso oficial deberá quedar claro para el usuario:
 
-
-## 33. Alertas propias de MeteoArchidona
-
-MeteoArchidona podrá publicar alertas propias.
-
-Estas alertas serán elaboradas a partir del análisis meteorológico realizado por los responsables del proyecto y de la información disponible.
-
-Podrán existir incluso cuando AEMET no haya publicado un aviso oficial para la misma situación.
-
-También podrán coexistir con avisos oficiales y aportar una valoración más localizada.
-
-
-## 34. Diferenciación entre alertas
-
-Las alertas propias nunca deberán presentarse de manera que puedan confundirse con una alerta oficial de AEMET.
-
-La web deberá identificar claramente:
-
-- fuente;
-- nivel;
+- quién lo emite;
 - fenómeno;
-- vigencia;
-- probabilidad;
-- descripción.
-
-Las alertas propias podrán incluir una indicación expresa de que constituyen un aviso elaborado por MeteoArchidona y no un aviso oficial de AEMET.
+- nivel;
+- ámbito;
+- vigencia.
 
 
-## 35. Escala propia de alertas MeteoArchidona
+## 52. Alertas propias MeteoArchidona
 
-MeteoArchidona utilizará inicialmente una escala propia de cuatro niveles:
+MeteoArchidona podrá publicar alertas propias elaboradas por los responsables del proyecto.
+
+Podrán publicarse:
+
+- cuando exista también un aviso oficial;
+- cuando se considere necesario proporcionar una valoración local adicional;
+- cuando no exista aviso oficial pero MeteoArchidona considere relevante comunicar una situación.
+
+Nunca deberán confundirse con un aviso oficial.
+
+
+## 53. Identificación de alertas propias
+
+La interfaz deberá identificar expresamente una alerta propia mediante una denominación equivalente a:
+
+**ALERTA METEOARCHIDONA**
+
+La identidad visual deberá diferenciarla claramente de los avisos oficiales.
+
+
+## 54. Escala propia de MeteoArchidona
+
+MeteoArchidona utilizará inicialmente cuatro niveles propios:
 
 ### Amarillo
 
@@ -481,31 +844,29 @@ Nivel moderado.
 
 Nivel alto.
 
-Es un nivel propio de MeteoArchidona situado entre naranja y rojo.
+Es un nivel propio situado entre naranja y rojo.
 
 ### Rojo
 
 Nivel máximo.
 
-Se reservará para situaciones de especial gravedad o carácter potencialmente extremo.
-
-La existencia del nivel fucsia diferencia la escala propia de MeteoArchidona de otros sistemas de avisos.
+El nivel rojo se reservará para situaciones de especial gravedad o carácter potencialmente extremo.
 
 
-## 36. Nivel y probabilidad
+## 55. Nivel y probabilidad
 
-El nivel de alerta y la probabilidad serán conceptos diferentes.
+El nivel de una alerta y su probabilidad serán conceptos diferentes.
 
-Por ejemplo, podrá existir una alerta:
+Por ejemplo:
 
 **FUCSIA — probabilidad 70 %**
 
-El nivel representa la importancia o gravedad potencial de la situación.
+El nivel representa la gravedad potencial de la situación.
 
-La probabilidad representa el grado estimado de posibilidad de que se produzca el fenómeno descrito.
+La probabilidad representa la posibilidad estimada de que el fenómeno se produzca.
 
 
-## 37. Vigencia de una alerta
+## 56. Vigencia de una alerta
 
 Cada alerta deberá disponer de un intervalo temporal.
 
@@ -516,16 +877,16 @@ Como mínimo:
 - fecha de finalización;
 - hora de finalización.
 
-Esto permitirá representar episodios que duren:
+Esto permitirá gestionar episodios de:
 
 - unas horas;
-- una jornada;
+- un día;
 - varios días.
 
 
-## 38. Información de una alerta propia
+## 57. Información de una alerta
 
-Una alerta podrá contener, entre otros elementos:
+Una alerta podrá contener:
 
 - identificador;
 - fuente;
@@ -533,20 +894,21 @@ Una alerta podrá contener, entre otros elementos:
 - nivel;
 - probabilidad;
 - ámbito geográfico;
+- municipio o municipios afectados;
 - fecha y hora de emisión;
 - fecha y hora de inicio;
 - fecha y hora de finalización;
 - descripción;
 - recomendaciones;
 - estado;
-- fecha y hora de última modificación.
+- fecha y hora de última actualización.
 
-El diseño técnico definitivo se realizará durante la implementación.
+El modelo físico definitivo se diseñará posteriormente.
 
 
-## 39. Fenómenos de alerta
+## 58. Fenómenos de alerta
 
-El catálogo podrá contemplar progresivamente fenómenos como:
+El catálogo podrá contemplar fenómenos como:
 
 - lluvia;
 - lluvia intensa;
@@ -561,154 +923,113 @@ El catálogo podrá contemplar progresivamente fenómenos como:
 - niebla;
 - otros fenómenos adversos.
 
-Los fenómenos definitivos se determinarán posteriormente.
+La relación definitiva se establecerá durante la implementación.
 
 
-## 40. Actualización de alertas
+## 59. Evolución de una alerta
 
-Una alerta podrá evolucionar.
+Una alerta podrá cambiar durante su periodo de vida.
 
-Por ejemplo:
+Podrá:
 
-- cambiar de probabilidad;
 - aumentar de nivel;
-- reducir de nivel;
+- disminuir de nivel;
+- cambiar de probabilidad;
 - modificar su periodo;
 - ampliar su ámbito;
-- actualizar su descripción;
+- reducir su ámbito;
+- modificar su descripción;
 - finalizar anticipadamente.
 
-El sistema deberá conservar suficiente información para gestionar correctamente estas modificaciones.
+El sistema deberá permitir representar estas modificaciones.
 
 
-## 41. Histórico de alertas
+## 60. Histórico de alertas
 
-Las alertas finalizadas no deberán desaparecer de la base de datos.
+Las alertas terminadas no deberán eliminarse.
 
 Se conservará un histórico.
 
-Esto permitirá posteriormente estudiar:
+Esto permitirá analizar posteriormente:
 
 - qué se predijo;
 - cuándo se emitió;
 - qué nivel se asignó;
-- qué probabilidad se asignó;
-- cómo evolucionó la alerta;
-- qué terminó ocurriendo realmente.
+- qué probabilidad se indicó;
+- cómo evolucionó;
+- qué ocurrió finalmente.
 
-El histórico podrá ser especialmente útil para evaluar las alertas propias de MeteoArchidona.
+Será especialmente útil para evaluar las alertas propias.
 
 
-## 42. Recomendaciones meteorológicas
+## 61. Recomendaciones
 
 Las alertas podrán incorporar recomendaciones para la población.
 
-Estas recomendaciones formarán un catálogo independiente de las frases narrativas.
+Estas recomendaciones estarán separadas del catálogo narrativo.
 
-No deberán considerarse elementos humorísticos ni decorativos.
+No tendrán finalidad humorística.
 
-Su objetivo será proporcionar información útil ante situaciones adversas.
+Su finalidad será proporcionar información útil ante fenómenos adversos.
 
 
-## 43. Catálogo normalizado de recomendaciones
+## 62. Catálogo normalizado de recomendaciones
 
-Las recomendaciones se asociarán principalmente a:
+Las recomendaciones podrán asociarse principalmente a:
 
-**fenómeno + nivel de alerta**
+**fenómeno + nivel**
 
 Por ejemplo:
 
 **VIENTO + AMARILLO**
 
-podrá tener recomendaciones diferentes de:
+podrá disponer de recomendaciones diferentes de:
 
 **VIENTO + FUCSIA**
 
-Lo mismo ocurrirá con lluvia, calor, frío y otros fenómenos.
 
+## 63. Recomendaciones por viento
 
-## 44. Ejemplos de recomendaciones por viento
-
-Ante situaciones de viento podrán contemplarse recomendaciones relacionadas con:
+Podrán contemplarse recomendaciones relacionadas con:
 
 - cerrar o recoger toldos;
-- retirar objetos susceptibles de caer;
+- asegurar objetos susceptibles de caer;
 - retirar o asegurar macetas;
 - asegurar puertas y ventanas;
 - extremar precauciones en zonas arboladas;
 - extremar precauciones durante desplazamientos;
 - evitar determinadas actividades cuando la intensidad lo justifique.
 
-Las recomendaciones concretas deberán revisarse antes de su publicación.
 
+## 64. Recomendaciones por lluvia
 
-## 45. Ejemplos de recomendaciones por lluvia
-
-Ante situaciones de precipitación intensa podrán contemplarse recomendaciones relacionadas con:
+Podrán contemplarse recomendaciones relacionadas con:
 
 - evitar cauces;
 - evitar zonas inundables;
 - prestar atención a zonas bajas;
 - no atravesar carreteras o caminos cubiertos por agua;
 - extremar la precaución durante desplazamientos;
-- atender las indicaciones de los organismos competentes.
-
-Las recomendaciones concretas deberán revisarse antes de su publicación.
+- atender indicaciones de organismos competentes.
 
 
-## 46. Ejemplos de recomendaciones por calor
+## 65. Recomendaciones por calor
 
-Ante temperaturas elevadas podrán contemplarse recomendaciones relacionadas con:
+Podrán contemplarse recomendaciones relacionadas con:
 
 - hidratación;
-- evitar ejercicio intenso en horas centrales;
-- reducir exposición al sol;
+- evitar ejercicio intenso en las horas centrales;
+- reducir exposición solar;
 - especial atención a personas mayores;
 - especial atención a niños;
 - especial atención a personas vulnerables.
 
-Las recomendaciones concretas deberán revisarse antes de su publicación.
 
+## 66. Fuente de las recomendaciones
 
-## 47. Recomendaciones críticas
+Las recomendaciones de seguridad deberán basarse en información procedente de organismos y fuentes fiables.
 
-Las recomendaciones importantes no se seleccionarán mediante azar de forma que algunas puedan quedar accidentalmente ocultas.
-
-Cuando un fenómeno y nivel requieran un conjunto de recomendaciones esenciales, deberán mostrarse todas las que correspondan.
-
-La seguridad tendrá prioridad sobre la variedad editorial.
-
-
-## 48. Recomendaciones adicionales
-
-Podrá estudiarse una distinción futura entre:
-
-- recomendaciones esenciales;
-- recomendaciones adicionales.
-
-Las esenciales se mostrarían siempre.
-
-Las adicionales podrían utilizar reglas de selección distintas cuando exista un número muy elevado.
-
-
-## 49. Niveles acumulativos de recomendaciones
-
-Se estudiará la posibilidad de que los niveles superiores hereden recomendaciones de los inferiores.
-
-Por ejemplo:
-
-**FUCSIA = recomendaciones básicas + moderadas + específicas de nivel alto**
-
-Este comportamiento no se considera todavía una decisión técnica definitiva, pero deberá evaluarse al diseñar el modelo.
-
-
-## 50. Catálogo cerrado de recomendaciones
-
-Las recomendaciones serán administradas exclusivamente por MeteoArchidona.
-
-Los usuarios no podrán crear recomendaciones de seguridad.
-
-Antes de crear la carga inicial deberán consultarse recomendaciones de organismos y fuentes fiables, como:
+Entre ellos podrán encontrarse:
 
 - AEMET;
 - Protección Civil;
@@ -716,12 +1037,49 @@ Antes de crear la carga inicial deberán consultarse recomendaciones de organism
 - autoridades sanitarias;
 - otros organismos competentes.
 
-MeteoArchidona podrá adaptar su presentación, pero deberá preservar la corrección de las recomendaciones.
+MeteoArchidona podrá adaptar la presentación, pero no deberá alterar de manera irresponsable su significado.
 
 
-## 51. Alertas en la web
+## 67. Recomendaciones esenciales
 
-Las alertas activas deberán tener una presencia claramente visible en la web.
+Las recomendaciones importantes no se seleccionarán aleatoriamente.
+
+Cuando un fenómeno y nivel requieran varias recomendaciones esenciales, deberán mostrarse todas las relevantes.
+
+La seguridad tendrá prioridad sobre la variedad editorial.
+
+
+## 68. Posible clasificación de recomendaciones
+
+Podrá estudiarse posteriormente una distinción entre:
+
+- recomendaciones esenciales;
+- recomendaciones complementarias.
+
+Las esenciales se mostrarían siempre.
+
+El comportamiento de las complementarias se decidirá durante la implementación.
+
+
+## 69. Herencia entre niveles
+
+Podrá estudiarse si determinados niveles superiores reutilizan recomendaciones definidas para niveles inferiores.
+
+Esta posibilidad no se considera todavía una decisión definitiva.
+
+Se determinará cuando se diseñe el catálogo real.
+
+
+## 70. Catálogo cerrado de recomendaciones
+
+Los usuarios no podrán crear recomendaciones de seguridad.
+
+El catálogo será administrado por MeteoArchidona.
+
+
+## 71. Alertas en la web
+
+Las alertas activas deberán tener una presencia claramente visible.
 
 Su representación podrá incluir:
 
@@ -729,281 +1087,246 @@ Su representación podrá incluir:
 - nivel;
 - fenómeno;
 - probabilidad;
-- periodo de vigencia;
+- periodo;
 - descripción;
 - recomendaciones;
 - fuente.
 
-El diseño gráfico se determinará cuando se desarrolle la interfaz.
+El diseño gráfico se determinará durante el desarrollo de la interfaz.
 
 
-## 52. Alertas dentro de la predicción
+## 72. Alertas relacionadas con días de predicción
 
-Cuando una alerta afecte a un periodo incluido en una predicción diaria o semanal, podrá aparecer relacionada con esa predicción.
+Cuando una alerta afecte a un día incluido en la predicción diaria o semanal, podrá mostrarse vinculada a ese periodo.
 
-Esto permitirá que el visitante comprenda que determinado día requiere especial atención.
-
-
-## 53. Integración futura con notificaciones
-
-El subsistema de predicción y alertas proporcionará información que podrá ser consumida posteriormente por un subsistema independiente de usuarios y notificaciones.
-
-Por ejemplo:
-
-**predicción → notificación diaria**
-
-o:
-
-**alerta → notificación inmediata**
-
-La predicción no deberá responsabilizarse directamente de la gestión de usuarios ni de los canales de entrega.
+Así el visitante podrá identificar rápidamente qué jornada requiere especial atención.
 
 
-## 54. Predicción diaria por correo electrónico
+## 73. Catálogo territorial de municipios
 
-Está prevista la posibilidad de que un usuario registrado solicite recibir periódicamente una predicción.
+El subsistema de predicción se apoyará en un catálogo propio de municipios.
 
-Por ejemplo:
-
-- predicción diaria;
-- predicción semanal;
-- resumen de alertas.
-
-La construcción y entrega del correo corresponderá al futuro subsistema de usuarios/notificaciones.
-
-El subsistema de predicción proporcionará los datos necesarios.
+Este catálogo permitirá relacionar cada municipio con los identificadores necesarios para consultar proveedores externos.
 
 
-## 55. Alertas en los correos de predicción
+## 74. Código INE
 
-Cuando exista una alerta activa relacionada con el municipio del usuario, podrá incluirse en el correo de predicción.
+El catálogo conservará el código INE correspondiente a cada municipio cuando sea necesario.
 
-Podrán incluirse tanto:
+El código INE será tratado como dato maestro.
 
-- alertas oficiales AEMET;
-- alertas propias MeteoArchidona.
+No deberá inferirse de forma insegura.
 
-La fuente deberá quedar claramente diferenciada.
-
-
-## 56. Otros canales de notificación
-
-En el futuro podrán estudiarse otros canales, entre ellos:
-
-- WhatsApp;
-- notificaciones web;
-- aplicación móvil;
-- otros servicios de mensajería.
-
-Cada canal se estudiará según:
-
-- viabilidad técnica;
-- coste;
-- condiciones del proveedor;
-- consentimiento del usuario;
-- normativa aplicable.
-
-No forman parte de la primera implementación de predicción.
+Deberá cargarse o verificarse utilizando información fiable.
 
 
-## 57. Catálogo territorial de municipios
+## 75. Carga inicial
 
-La predicción se apoyará en un catálogo propio de municipios.
+No se cargará inicialmente todo el catálogo nacional únicamente por disponer de él.
 
-Este catálogo permitirá relacionar los municipios con los identificadores necesarios para consultar las fuentes externas.
+El despliegue inicial podrá concentrarse en:
 
-
-## 58. Código INE
-
-El catálogo conservará el código INE correspondiente al municipio cuando sea necesario para los productos utilizados.
-
-El código será tratado como dato maestro.
-
-No deberá inferirse de manera insegura ni introducirse sin validación.
-
-
-## 59. Carga inicial de municipios
-
-No se pretende cargar inicialmente todos los municipios de España.
-
-La carga inicial se realizará de manera controlada.
-
-Como punto de partida se contempla:
-
-- provincia de Málaga;
+- municipios de Málaga;
 - determinados municipios próximos de Granada;
 - determinados municipios próximos de Córdoba;
-- otros municipios de interés para MeteoArchidona.
+- otras localidades que resulten relevantes.
 
-El catálogo podrá ampliarse posteriormente.
-
-
-## 60. Crecimiento orgánico del catálogo
-
-El catálogo de municipios podrá crecer en función de la demanda real de los usuarios.
-
-Esto evitará mantener inicialmente un catálogo nacional que el proyecto no necesita.
+La relación inicial definitiva se preparará antes de implementar la carga de referencia.
 
 
-## 61. Municipio principal del usuario
+## 76. Crecimiento orgánico
 
-Cuando se implemente el registro de usuarios, cada usuario podrá seleccionar un municipio principal de interés.
+El catálogo territorial crecerá progresivamente según la demanda real.
 
-No será obligatorio interpretar este municipio como residencia legal o domicilio.
-
-Representará simplemente el municipio sobre el que el usuario desea recibir principalmente información meteorológica.
+Esto evitará mantener desde el inicio miles de municipios que no tienen todavía utilidad para MeteoArchidona.
 
 
-## 62. Utilización del municipio de interés
+## 77. Municipio principal de interés
 
-El municipio principal podrá utilizarse posteriormente para:
+Cuando exista registro de usuarios, cada usuario podrá seleccionar un municipio principal de interés.
+
+Este municipio no deberá interpretarse necesariamente como su domicilio.
+
+Puede representar:
+
+- lugar donde vive;
+- lugar donde trabaja;
+- lugar donde tiene una finca;
+- localidad familiar;
+- cualquier municipio que desee seguir.
+
+
+## 78. Utilización del municipio principal
+
+El municipio podrá utilizarse para:
 
 - predicción personalizada;
 - alertas;
 - correo diario;
-- correo semanal;
+- resumen semanal;
 - notificaciones;
-- personalización de la web;
+- personalización de la portada;
 - otros servicios meteorológicos.
 
 
-## 63. Municipio no disponible
+## 79. Municipio no disponible
 
-Si durante el registro o configuración el usuario no encuentra su municipio, podrá solicitar su incorporación.
-
-La interfaz podrá ofrecer una opción equivalente a:
+Si el usuario busca un municipio y no aparece en el catálogo, podrá utilizar una opción equivalente a:
 
 **No encuentro mi municipio**
 
-Esta acción generará una solicitud de alta.
+Esto iniciará una solicitud de incorporación.
 
 
-## 64. Solicitud de alta de municipio
+## 80. Solicitud de alta de municipio
 
-Una solicitud podrá contener:
+La solicitud podrá incluir:
 
 - municipio solicitado;
 - provincia;
-- comunidad autónoma cuando corresponda;
+- comunidad autónoma;
 - usuario solicitante;
 - fecha de solicitud;
 - estado;
 - observaciones administrativas.
 
-La estructura definitiva se diseñará con el subsistema de usuarios.
+La estructura definitiva se diseñará junto con el subsistema de usuarios.
 
 
-## 65. Alta controlada
+## 81. Alta controlada
 
-El usuario podrá solicitar un municipio, pero no dará de alta directamente el registro maestro.
+Un usuario podrá solicitar un municipio, pero no crear directamente el registro maestro.
 
-MeteoArchidona revisará la solicitud.
+Antes de incorporar el municipio, MeteoArchidona comprobará:
 
-Antes del alta definitiva se verificará:
-
-- nombre correcto;
+- nombre oficial;
 - provincia;
 - código INE;
 - inexistencia de duplicados;
-- disponibilidad de los productos meteorológicos necesarios.
+- disponibilidad de predicción;
+- cualquier otra información territorial necesaria.
 
 
-## 66. Utilidad de las solicitudes
+## 82. Demanda territorial
 
-Las solicitudes de municipios tendrán además valor para conocer la demanda geográfica de MeteoArchidona.
+Las solicitudes de nuevos municipios permitirán conocer la demanda geográfica real.
 
-Un número creciente de solicitudes en una determinada localidad podrá indicar interés potencial para:
+Un crecimiento de solicitudes en una localidad podrá indicar interés potencial para:
 
-- ampliar servicios;
-- integrar estaciones;
 - ampliar predicciones;
-- establecer futuras colaboraciones.
+- incorporar estaciones;
+- buscar colaboradores;
+- estudiar cámaras;
+- estudiar acuerdos institucionales;
+- ampliar servicios.
 
 
-## 67. Separación entre municipio y estación
+## 83. Relación con usuarios
 
-Un municipio y una estación meteorológica son conceptos diferentes.
+Predicción y usuarios serán subsistemas independientes.
 
-Un municipio puede tener:
+El subsistema de usuarios podrá consumir predicciones y alertas.
 
-- ninguna estación;
-- una estación;
-- varias estaciones.
-
-Una estación deberá conservar su propia identidad y ubicación.
-
-La predicción municipal podrá existir aunque MeteoArchidona no disponga de una estación propia dentro de ese municipio.
+El subsistema de predicción no necesitará conocer los detalles de autenticación o gestión de perfiles para adquirir y almacenar predicciones.
 
 
-## 68. Predicción frente a observación
+## 84. Notificaciones
 
-El sistema deberá distinguir claramente:
+Las predicciones y alertas podrán alimentar posteriormente un subsistema de notificaciones.
 
-**observación**
+Conceptualmente:
 
-Información sobre lo que realmente está ocurriendo o ha ocurrido, procedente de estaciones meteorológicas.
+**predicción → preferencias del usuario → notificación**
 
-**predicción**
+y:
 
-Información sobre lo que se espera que ocurra.
-
-Ambos tipos de información podrán mostrarse juntos, pero nunca deberán confundirse en el modelo.
+**alerta → preferencias del usuario → notificación**
 
 
-## 69. Persistencia de predicciones
+## 85. Correo diario
 
-Las predicciones que resulte útil conservar deberán almacenarse en PostgreSQL.
+Un usuario podrá solicitar en el futuro una predicción meteorológica diaria por correo electrónico.
 
-La estrategia exacta se decidirá durante la implementación.
+Podrá configurarse, entre otros aspectos:
 
-Se deberá estudiar especialmente la conveniencia de conservar diferentes ediciones de una misma predicción.
+- municipio;
+- horario;
+- tipo de resumen;
+- inclusión de alertas.
 
-
-## 70. Histórico de predicciones
-
-Conservar predicciones anteriores puede permitir en el futuro comparar:
-
-**lo previsto → lo observado**
-
-Esto permitiría evaluar:
-
-- precisión de las fuentes;
-- evolución de las predicciones;
-- diferencias entre proveedores;
-- comportamiento de determinados fenómenos.
-
-Por ello, no se deberá diseñar la persistencia suponiendo automáticamente que una predicción nueva sustituye y destruye a la anterior.
+El envío pertenecerá al subsistema de usuarios/notificaciones.
 
 
-## 71. Comparación entre fuentes
+## 86. Resumen semanal
 
-Cuando exista información comparable de AEMET y eltiempo.es, podrá estudiarse su comparación.
+También podrá existir un resumen semanal.
 
-MeteoArchidona no deberá fabricar automáticamente una supuesta predicción propia mezclando ambas fuentes sin un modelo definido.
+Podrá mostrar:
 
-Las fuentes deberán poder conservar su identidad.
+- evolución prevista;
+- máximas y mínimas;
+- precipitación;
+- días más significativos;
+- alertas;
+- narrativa MeteoArchidona.
 
 
-## 72. Personalidad de MeteoArchidona
+## 87. Otros canales
 
-La existencia de fuentes externas no deberá convertir MeteoArchidona en una copia visual o textual de otros portales.
+Posteriormente podrán estudiarse:
 
-La identidad propia se construirá mediante:
+- WhatsApp;
+- notificaciones web;
+- aplicaciones móviles;
+- otros sistemas de mensajería.
+
+Su utilización dependerá de:
+
+- disponibilidad técnica;
+- costes;
+- condiciones de los proveedores;
+- consentimiento;
+- normativa aplicable.
+
+
+## 88. Comparación entre fuentes
+
+Cuando existan varias predicciones disponibles para un mismo municipio, MeteoArchidona podrá facilitar su consulta o comparación.
+
+La comparación deberá conservar la identidad de cada fuente.
+
+No se fabricará automáticamente una supuesta predicción propia mezclando valores de varias fuentes sin que exista un modelo definido para ello.
+
+
+## 89. Utilidad de otras predicciones
+
+La consulta de fuentes externas puede tener un valor importante para aficionados y usuarios avanzados.
+
+Muchas personas consultan distintas páginas meteorológicas antes de formarse una opinión.
+
+MeteoArchidona podrá facilitar esa tarea reuniendo diferentes predicciones en un mismo entorno.
+
+
+## 90. Personalidad de MeteoArchidona
+
+La existencia de fuentes externas no deberá convertir MeteoArchidona en una copia textual o visual de otros portales.
+
+Su personalidad se construirá mediante:
 
 - diseño;
 - iconografía;
 - narrativa;
-- refranero;
+- refranes;
 - expresiones;
 - contexto local;
 - alertas propias;
-- presentación gráfica;
-- información procedente de nuestra red de estaciones.
+- recomendaciones;
+- integración con nuestras observaciones.
 
 
-## 73. Separación de responsabilidades
+## 91. Separación de responsabilidades
 
-Conceptualmente, el subsistema deberá mantener responsabilidades diferenciadas para:
+Conceptualmente deberán mantenerse responsabilidades diferenciadas para:
 
 - proveedores externos;
 - adquisición;
@@ -1014,216 +1337,177 @@ Conceptualmente, el subsistema deberá mantener responsabilidades diferenciadas 
 - iconografía;
 - alertas;
 - recomendaciones;
+- catálogo territorial;
 - exposición mediante API.
 
-La capa HTTP no deberá contener la lógica meteorológica del subsistema.
+La capa HTTP no deberá contener lógica meteorológica de negocio.
 
 
-## 74. Independencia de proveedores
+## 92. API propia
 
-La representación interna no deberá depender innecesariamente de estructuras particulares de AEMET o eltiempo.es.
+La web MeteoArchidona deberá consumir nuestra propia API para la predicción estructurada.
 
-Siempre que tenga sentido, los datos externos deberán transformarse a conceptos propios.
+Conceptualmente:
 
-Esto permitirá:
+**web → API MeteoArchidona → servicios → PostgreSQL**
 
-- cambiar proveedores;
-- incorporar nuevas fuentes;
-- comparar fuentes;
-- mantener estable la API pública.
+La web no deberá contener credenciales de los proveedores.
 
 
-## 75. Disponibilidad de proveedores
+## 93. Excepción de componentes externos
 
-La indisponibilidad temporal de una fuente externa no debería provocar necesariamente la desaparición inmediata de toda predicción de MeteoArchidona.
+Los widgets, gadgets, vídeos o recursos oficiales embebidos constituyen una excepción consciente.
 
-La persistencia permitirá conservar la última información válida disponible cuando resulte apropiado.
+En esos casos el navegador podrá consumir directamente un componente externo porque no se está utilizando como fuente interna de nuestros datos, sino mostrando una aplicación gráfica del proveedor.
 
-La interfaz deberá poder indicar cuándo una predicción no está suficientemente actualizada.
+Esta excepción deberá mantenerse claramente diferenciada de la predicción propia.
 
 
-## 76. Datos originales
+## 94. Relación con publicidad
 
-Durante la implementación deberá estudiarse qué información original de los proveedores conviene conservar para:
+Las páginas de predicción podrán disponer en el futuro de espacios patrocinables.
 
-- diagnóstico;
-- trazabilidad;
-- reprocesamiento;
-- auditoría;
-- evolución de normalizadores.
+La lógica de campañas, anunciantes, tarifas y rotaciones pertenecerá al subsistema de publicidad.
 
-Esto deberá hacerse respetando las condiciones de utilización de cada fuente.
+Predicción no deberá implementar internamente esa responsabilidad.
 
 
-## 77. Frecuencia de actualización
+## 95. Información esencial
 
-La frecuencia de adquisición deberá adaptarse a la frecuencia real de actualización de cada producto.
+La predicción meteorológica esencial deberá continuar tratándose como información meteorológica del proyecto.
 
-No se deberán realizar peticiones externas innecesarias.
+Las decisiones futuras sobre servicios premium, suscripciones u otras modalidades se definirán separadamente.
 
-Antes de implementar cada proceso automático se estudiará:
+La monetización no deberá contaminar la fiabilidad ni la procedencia de los datos.
 
-- cuándo actualiza el proveedor;
-- cuántas veces tiene sentido consultar;
-- límites del servicio;
-- comportamiento ante errores;
-- reintentos.
 
+## 96. Productos futuros
 
-## 78. Posible arquitectura de adquisición
+Una vez construido el núcleo podrán estudiarse productos adicionales de AEMET u otras fuentes.
 
-Sin considerarse todavía diseño técnico definitivo, el flujo general previsto será:
+Entre ellos podrían encontrarse:
 
-**fuente externa**
+- índice ultravioleta previsto;
+- productos especializados;
+- predicción de fenómenos específicos;
+- otros productos relevantes para los municipios cubiertos.
 
-↓
+La existencia de un producto externo no implica automáticamente que deba incorporarse.
 
-**proveedor**
 
-↓
+## 97. Fuera de alcance de este documento
 
-**normalización**
+No forman parte principal de este documento:
 
-↓
+- radar meteorológico;
+- imágenes de satélite;
+- rayos;
+- vigilancia solar;
+- tormentas geomagnéticas;
+- imágenes de vapor de agua;
+- masas de aire observadas;
+- embalses;
+- cuencas hidrográficas;
+- otros recursos de observación.
 
-**persistencia**
+Estos contenidos se documentarán posteriormente dentro del subsistema de Observaciones.
 
-↓
 
-**servicios de predicción**
+## 98. Próximos trabajos técnicos
 
-↓
+Antes de comenzar la implementación deberán realizarse al menos los siguientes trabajos:
 
-**API MeteoArchidona**
+1. obtener una API Key de AEMET OpenData;
+2. obtener una predicción real de Archidona;
+3. estudiar el XML o respuesta estructurada completa;
+4. identificar campos y códigos;
+5. estudiar la predicción diaria;
+6. estudiar la predicción horaria;
+7. estudiar la estructura real de los avisos oficiales;
+8. identificar frecuencias de actualización;
+9. definir el catálogo inicial de municipios;
+10. definir el modelo normalizado;
+11. definir el catálogo inicial de condiciones meteorológicas;
+12. definir el catálogo inicial de frases;
+13. definir el catálogo inicial de recomendaciones;
+14. definir fenómenos y niveles de alertas;
+15. estudiar las posibilidades reales de eltiempo.es;
+16. investigar qué fuentes externas permiten widgets o gadgets;
+17. definir la primera interfaz de predicción.
 
-↓
 
-**web y otros consumidores**
+## 99. Decisiones adoptadas
 
+Quedan recogidas como decisiones funcionales:
 
-## 79. Relación con el subsistema de usuarios
-
-Predicción y usuarios serán subsistemas independientes.
-
-El subsistema de usuarios podrá consumir predicciones y alertas para ofrecer servicios personalizados.
-
-El subsistema de predicción no deberá necesitar conocer cómo se autentica un usuario para poder generar y almacenar una predicción.
-
-
-## 80. Relación con el subsistema de publicidad
-
-La predicción podrá disponer en el futuro de espacios patrocinables.
-
-Estos espacios pertenecerán al subsistema de publicidad.
-
-La predicción no deberá contener lógica de campañas, anunciantes o tarifas.
-
-El subsistema publicitario decidirá qué contenido comercial corresponde a un espacio patrocinable.
-
-
-## 81. Información esencial y monetización
-
-Las decisiones futuras sobre servicios personalizados o suscripciones no deberán confundirse con la naturaleza del dato meteorológico.
-
-Las políticas concretas de monetización se definirán en los subsistemas correspondientes.
-
-El diseño de predicción deberá permitir que la información meteorológica esencial continúe siendo accesible públicamente según la política general de MeteoArchidona.
-
-
-## 82. Evolución futura
-
-Una vez que el sistema inicial esté funcionando, podrán estudiarse líneas como:
-
-- nuevas fuentes;
-- modelos meteorológicos;
-- predicción propia;
-- inteligencia artificial;
-- correcciones locales;
-- evaluación automática de predicciones;
-- nuevas alertas;
-- mayor personalización;
-- nuevos canales de notificación;
-- ampliación territorial.
-
-
-## 83. Próximos trabajos de análisis
-
-Antes de comenzar la implementación deberá estudiarse al menos:
-
-1. estructura completa del XML de predicción municipal de AEMET;
-2. productos disponibles mediante AEMET OpenData;
-3. estructura de los avisos oficiales;
-4. frecuencia de actualización;
-5. códigos meteorológicos utilizados;
-6. iconos y referencias gráficas;
-7. condiciones de utilización;
-8. posibilidades técnicas de eltiempo.es;
-9. catálogo inicial de municipios;
-10. catálogo inicial de frases;
-11. catálogo inicial de recomendaciones;
-12. fenómenos y niveles de alertas propias.
-
-
-## 84. Decisiones ya adoptadas
-
-En esta primera versión quedan recogidas como decisiones funcionales:
-
-- AEMET será la fuente oficial principal;
-- eltiempo.es será una fuente complementaria a estudiar;
+- AEMET será inicialmente la fuente oficial principal;
+- la integración productiva con AEMET utilizará preferentemente OpenData;
+- la API Key de AEMET será privada;
+- la credencial no se expondrá en la web;
 - se utilizará predicción municipal;
-- se pretende disponer de predicción diaria y semanal;
-- AEMET dispone de un producto municipal de siete días de especial interés;
-- la adquisición deberá automatizarse;
-- la web no dependerá directamente de AEMET;
+- se estudiará predicción diaria de siete días;
+- se estudiará predicción horaria a corto plazo;
+- la web no dependerá directamente de AEMET para la predicción principal;
+- la predicción estructurada se persistirá cuando resulte útil;
+- se conservará la procedencia;
+- se estudiará conservar histórico de distintas ediciones;
+- eltiempo.es será una fuente complementaria a estudiar;
 - MeteoArchidona tendrá narrativa propia;
 - existirá un catálogo cerrado de frases y refranes;
-- los usuarios no podrán modificar ese catálogo;
+- los usuarios no podrán modificar dicho catálogo;
 - se desarrollará progresivamente iconografía propia;
 - los iconos propios tendrán prioridad cuando existan;
 - las alertas forman parte del subsistema;
-- coexistirán alertas oficiales AEMET y alertas propias MeteoArchidona;
-- las alertas propias se identificarán claramente como tales;
+- coexistirán alertas oficiales y alertas propias;
+- las alertas propias se identificarán claramente;
 - la escala propia tendrá amarillo, naranja, fucsia y rojo;
 - fucsia estará situado entre naranja y rojo;
 - nivel y probabilidad serán conceptos independientes;
-- las alertas tendrán vigencia temporal;
-- existirá un catálogo controlado de recomendaciones;
-- las recomendaciones esenciales no dependerán de una selección aleatoria;
+- las alertas tendrán un periodo de vigencia;
 - se conservará histórico de alertas;
+- existirá un catálogo controlado de recomendaciones;
+- las recomendaciones esenciales no serán aleatorias;
 - existirá un catálogo propio de municipios;
 - inicialmente no se cargará necesariamente toda España;
-- el catálogo crecerá de forma controlada;
-- los futuros usuarios tendrán un municipio principal de interés;
+- el catálogo crecerá progresivamente;
+- los usuarios tendrán un municipio principal de interés;
 - un usuario podrá solicitar el alta de un municipio no disponible;
-- el alta definitiva del municipio será controlada por MeteoArchidona;
-- predicción, usuarios y notificaciones serán responsabilidades separadas;
+- el alta definitiva será revisada por MeteoArchidona;
+- podrán existir predicciones externas accesibles desde la web;
+- podrán utilizarse widgets y gadgets oficiales autorizados;
+- integración estructurada y widget externo serán conceptos diferentes;
+- predicción y observación permanecerán separadas;
+- radar, satélite, actividad solar y recursos hídricos se documentarán en Observaciones;
 - una predicción propia basada en años de histórico queda aparcada inicialmente.
 
 
-## 85. Conclusión
+## 100. Conclusión
 
-El subsistema de predicción y alertas no se concibe como una simple reproducción de una página de AEMET.
+El subsistema de Predicción y Alertas de MeteoArchidona no se concibe como una simple reproducción de una página de terceros.
 
 Las fuentes externas proporcionarán información meteorológica de referencia.
 
-MeteoArchidona será responsable de adquirir, estructurar, conservar y presentar esa información dentro de su propia plataforma.
+MeteoArchidona será responsable de adquirir, normalizar, conservar y presentar esa información dentro de su propia plataforma.
 
 Sobre esos datos se construirá una identidad propia mediante:
 
-- narrativa meteorológica;
+- narrativa;
 - expresiones;
 - refranes;
 - iconografía;
 - contexto local;
 - alertas propias;
-- recomendaciones.
+- recomendaciones;
+- personalización territorial.
 
 Las alertas oficiales y las alertas MeteoArchidona coexistirán manteniendo siempre claramente identificada su procedencia.
 
-El catálogo territorial permitirá comenzar con un ámbito reducido y crecer conforme aparezca demanda real.
+El catálogo territorial permitirá comenzar con un ámbito reducido y crecer según la demanda real.
 
 La futura integración con usuarios permitirá transformar la predicción en un servicio personalizado mediante correos, alertas y otros canales.
 
-La arquitectura deberá permitir esta evolución manteniendo una regla fundamental:
+También se permitirá consultar predicciones externas mediante widgets, gadgets u otros mecanismos autorizados cuando resulten útiles para comparar fuentes.
+
+La arquitectura deberá mantener una regla fundamental:
 
 > MeteoArchidona podrá contar el tiempo con personalidad propia, pero el origen, significado y fiabilidad de los datos meteorológicos deberán permanecer siempre claros.
