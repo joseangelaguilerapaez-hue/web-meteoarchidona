@@ -1,0 +1,2286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="MeteoArchidona - Información meteorológica de Archidona y su comarca."
+    >
+
+    <title>MeteoArchidona</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --bg: #080d14;
+            --surface: #0d1520;
+            --card: #111e2e;
+            --card-soft: #0d1a27;
+            --border: #1a2d42;
+
+            --accent: #f0a500;
+            --gold: #d48800;
+
+            --teal: #00c9a7;
+            --blue: #3b9eff;
+            --cyan: #36d5ff;
+
+            --green: #22c55e;
+            --red: #ef4444;
+            --orange: #f97316;
+
+            --text: #f6f8fb;
+            --muted: #aabdd0;
+
+            --shadow:
+                0 12px 35px
+                rgba(0, 0, 0, 0.28);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-width: 320px;
+        }
+
+        body {
+            margin: 0;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #0b1b2d 0,
+                    var(--bg) 38%
+                );
+
+            color: var(--text);
+
+            font-family:
+                "Sora",
+                sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .pagina {
+            min-height: 100vh;
+        }
+
+        .cabecera {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+
+            display: grid;
+            grid-template-columns:
+                minmax(260px, 1fr)
+                auto
+                minmax(180px, 0.5fr);
+
+            align-items: center;
+            gap: 28px;
+
+            min-height: 92px;
+            padding:
+                16px
+                clamp(20px, 3vw, 54px);
+
+            background:
+                rgba(8, 13, 20, 0.94);
+
+            border-bottom:
+                1px solid var(--border);
+
+            backdrop-filter:
+                blur(16px);
+        }
+
+        .marca {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .marca-icono {
+            position: relative;
+
+            width: 70px;
+            height: 54px;
+
+            flex: 0 0 auto;
+        }
+
+        .sol {
+            position: absolute;
+            top: 3px;
+            left: 25px;
+
+            width: 28px;
+            height: 28px;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffd44f,
+                    var(--accent)
+                );
+
+            box-shadow:
+                0 0 24px
+                rgba(240, 165, 0, 0.28);
+        }
+
+        .nube {
+            position: absolute;
+            left: 10px;
+            bottom: 7px;
+
+            width: 52px;
+            height: 23px;
+
+            border:
+                2px solid #e5edf5;
+
+            border-radius:
+                22px;
+
+            background:
+                var(--bg);
+        }
+
+        .nube::before,
+        .nube::after {
+            content: "";
+
+            position: absolute;
+
+            background:
+                var(--bg);
+
+            border:
+                2px solid #e5edf5;
+
+            border-bottom: 0;
+
+            border-radius:
+                50% 50% 0 0;
+        }
+
+        .nube::before {
+            width: 21px;
+            height: 17px;
+
+            left: 7px;
+            top: -13px;
+        }
+
+        .nube::after {
+            width: 25px;
+            height: 21px;
+
+            left: 23px;
+            top: -17px;
+        }
+
+        .marca-titulo {
+            font-size:
+                clamp(19px, 1.6vw, 26px);
+
+            font-weight: 700;
+
+            letter-spacing:
+                0.02em;
+        }
+
+        .marca-titulo span {
+            color:
+                var(--accent);
+        }
+
+        .marca-subtitulo {
+            margin-top: 3px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                12px;
+        }
+
+        .navegacion {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+
+            height: 100%;
+        }
+
+        .navegacion a {
+            position: relative;
+
+            padding:
+                33px 0 29px;
+
+            color:
+                #b7c8da;
+
+            font-size:
+                12px;
+
+            font-weight:
+                500;
+
+            text-transform:
+                uppercase;
+        }
+
+        .navegacion a:hover {
+            color:
+                white;
+        }
+
+        .navegacion a.activo {
+            color:
+                var(--accent);
+        }
+
+        .navegacion a.activo::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            right: 0;
+            bottom: 17px;
+
+            height: 2px;
+
+            background:
+                var(--accent);
+        }
+
+        .hora {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 16px;
+
+            text-align: right;
+        }
+
+        .fecha {
+            color:
+                var(--muted);
+
+            font-size:
+                11px;
+        }
+
+        .reloj {
+            margin-top:
+                3px;
+
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                27px;
+
+            font-weight:
+                600;
+        }
+
+        .contenido {
+            width:
+                min(1800px, 100%);
+
+            margin:
+                0 auto;
+
+            padding:
+                18px
+                clamp(18px, 2vw, 34px)
+                28px;
+        }
+
+        .panel-superior {
+            display: grid;
+
+            grid-template-columns:
+                250px
+                minmax(0, 1fr)
+                minmax(0, 1fr);
+
+            gap:
+                14px;
+        }
+
+        .tarjeta {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(17, 30, 46, 0.98),
+                    rgba(9, 22, 34, 0.98)
+                );
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                11px;
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .resumen {
+            padding:
+                20px;
+        }
+
+        .seccion-titulo {
+            margin:
+                0 0 8px;
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+
+            text-transform:
+                uppercase;
+        }
+
+        .estado {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                12px;
+        }
+
+        .punto {
+            width:
+                9px;
+
+            height:
+                9px;
+
+            border-radius:
+                50%;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 12px
+                rgba(34, 197, 94, 0.5);
+        }
+
+        .estado-grafico {
+            display: grid;
+            place-items: center;
+
+            min-height:
+                160px;
+
+            margin:
+                13px 0;
+        }
+
+        .tiempo-icono {
+            position: relative;
+
+            width:
+                120px;
+
+            height:
+                120px;
+
+            border-radius:
+                50%;
+
+            border:
+                2px solid #244567;
+
+            background:
+                radial-gradient(
+                    circle,
+                    #163354,
+                    #0b1724 70%
+                );
+        }
+
+        .tiempo-icono .sol {
+            width:
+                42px;
+
+            height:
+                42px;
+
+            left:
+                27px;
+
+            top:
+                24px;
+        }
+
+        .tiempo-icono .nube {
+            left:
+                43px;
+
+            bottom:
+                25px;
+
+            width:
+                61px;
+
+            background:
+                #d9e2e9;
+
+            border:
+                none;
+        }
+
+        .tiempo-icono .nube::before,
+        .tiempo-icono .nube::after {
+            background:
+                #d9e2e9;
+
+            border:
+                none;
+        }
+
+        .ubicacion {
+            font-size:
+                18px;
+
+            font-weight:
+                600;
+        }
+
+        .ubicacion-sub {
+            margin-top:
+                4px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                12px;
+        }
+
+        .sol-horas {
+            display: grid;
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                10px;
+
+            margin-top:
+                19px;
+
+            padding-top:
+                16px;
+
+            border-top:
+                1px solid var(--border);
+        }
+
+        .sol-hora {
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                12px;
+        }
+
+        .sol-hora span {
+            display: block;
+
+            margin-top:
+                3px;
+
+            color:
+                var(--muted);
+
+            font-family:
+                "Sora",
+                sans-serif;
+
+            font-size:
+                10px;
+        }
+
+        .estacion-principal {
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            min-height:
+                340px;
+
+            padding:
+                20px 25px;
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(4, 29, 57, 0.35),
+                    rgba(3, 13, 23, 0.94)
+                ),
+                radial-gradient(
+                    circle at 70% 0%,
+                    rgba(59, 158, 255, 0.28),
+                    transparent 48%
+                ),
+                linear-gradient(
+                    135deg,
+                    #0d2c49,
+                    #101c27 60%,
+                    #07111c
+                );
+        }
+
+        .estacion-cabecera {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+
+            position:
+                relative;
+
+            z-index:
+                2;
+        }
+
+        .estacion-nombre {
+            margin:
+                0;
+
+            font-size:
+                22px;
+        }
+
+        .estacion-localidad {
+            margin-top:
+                3px;
+
+            color:
+                #c7d7e5;
+
+            font-size:
+                13px;
+        }
+
+        .online {
+            display:
+                flex;
+
+            gap:
+                8px;
+
+            align-items:
+                center;
+
+            color:
+                var(--green);
+
+            font-size:
+                12px;
+        }
+
+        .temperatura-area {
+            position:
+                relative;
+
+            z-index:
+                2;
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            min-height:
+                180px;
+        }
+
+        .temperatura {
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                clamp(50px, 5vw, 74px);
+
+            font-weight:
+                600;
+
+            color:
+                #85c948;
+
+            letter-spacing:
+                -0.06em;
+        }
+
+        .temperatura sup {
+            font-size:
+                27px;
+
+            letter-spacing:
+                0;
+        }
+
+        .sensacion {
+            margin-top:
+                5px;
+
+            font-size:
+                13px;
+        }
+
+        .simbolo-tiempo {
+            text-align:
+                center;
+
+            font-size:
+                68px;
+        }
+
+        .simbolo-tiempo span {
+            display:
+                block;
+
+            margin-top:
+                -5px;
+
+            font-size:
+                13px;
+        }
+
+        .metricas-estacion {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            position:
+                absolute;
+
+            left:
+                0;
+
+            right:
+                0;
+
+            bottom:
+                0;
+
+            z-index:
+                2;
+
+            background:
+                rgba(3, 13, 23, 0.80);
+
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+        }
+
+        .metrica-estacion {
+            padding:
+                15px 17px;
+
+            border-right:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+        }
+
+        .metrica-estacion:last-child {
+            border-right:
+                none;
+        }
+
+        .metrica-label {
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+        .metrica-valor {
+            margin-top:
+                5px;
+
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                16px;
+
+            font-weight:
+                600;
+        }
+
+        .bloques-medicion {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap:
+                14px;
+
+            margin-top:
+                14px;
+
+            margin-left:
+                264px;
+        }
+
+        .instrumento {
+            min-height:
+                145px;
+
+            padding:
+                17px;
+        }
+
+        .instrumento-titulo {
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+
+            text-transform:
+                uppercase;
+        }
+
+        .instrumento-contenido {
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            min-height:
+                88px;
+
+            gap:
+                10px;
+        }
+
+        .instrumento-icono {
+            font-size:
+                42px;
+        }
+
+        .instrumento-dato {
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                25px;
+
+            font-weight:
+                600;
+        }
+
+        .instrumento-dato small {
+            font-size:
+                12px;
+
+            font-weight:
+                400;
+        }
+
+        .instrumento-secundario {
+            margin-top:
+                5px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+        .brujula {
+            display:
+                grid;
+
+            place-items:
+                center;
+
+            width:
+                78px;
+
+            height:
+                78px;
+
+            border-radius:
+                50%;
+
+            border:
+                2px solid #294865;
+
+            color:
+                var(--muted);
+
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                10px;
+        }
+
+        .brujula::after {
+            content:
+                "↗";
+
+            font-size:
+                32px;
+
+            color:
+                var(--accent);
+        }
+
+        .paneles-graficos {
+            display:
+                grid;
+
+            grid-template-columns:
+                1.1fr
+                0.85fr
+                1fr;
+
+            gap:
+                14px;
+
+            margin-top:
+                14px;
+        }
+
+        .grafico {
+            min-height:
+                270px;
+
+            padding:
+                18px;
+        }
+
+        .grafico-cabecera {
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            gap:
+                16px;
+
+            margin-bottom:
+                14px;
+        }
+
+        .grafico-titulo {
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+
+            text-transform:
+                uppercase;
+        }
+
+        .leyenda {
+            display:
+                flex;
+
+            gap:
+                14px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+        .leyenda span::before {
+            content:
+                "";
+
+            display:
+                inline-block;
+
+            width:
+                8px;
+
+            height:
+                8px;
+
+            margin-right:
+                5px;
+
+            border-radius:
+                50%;
+
+            background:
+                var(--green);
+        }
+
+        .leyenda span:last-child::before {
+            background:
+                var(--blue);
+        }
+
+        .grafico-svg {
+            width:
+                100%;
+
+            height:
+                185px;
+        }
+
+        .rejilla {
+            stroke:
+                #183149;
+
+            stroke-width:
+                1;
+        }
+
+        .linea-silo {
+            fill:
+                none;
+
+            stroke:
+                var(--green);
+
+            stroke-width:
+                3;
+        }
+
+        .linea-llanos {
+            fill:
+                none;
+
+            stroke:
+                var(--blue);
+
+            stroke-width:
+                3;
+        }
+
+        .barra {
+            fill:
+                #3b9eff;
+        }
+
+        .camaras {
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                12px;
+
+            margin-top:
+                15px;
+        }
+
+        .camara {
+            position:
+                relative;
+
+            min-height:
+                175px;
+
+            overflow:
+                hidden;
+
+            border-radius:
+                8px;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    #286ca2 0%,
+                    #7dbbda 36%,
+                    #6c8e69 37%,
+                    #34452f 70%,
+                    #18251c 100%
+                );
+        }
+
+        .camara::before {
+            content:
+                "";
+
+            position:
+                absolute;
+
+            left:
+                -5%;
+
+            right:
+                -5%;
+
+            bottom:
+                32px;
+
+            height:
+                60px;
+
+            background:
+                linear-gradient(
+                    160deg,
+                    transparent 35%,
+                    #334e35 36% 53%,
+                    #223428 54%
+                );
+
+            opacity:
+                0.9;
+        }
+
+        .camara-estado {
+            position:
+                absolute;
+
+            top:
+                8px;
+
+            left:
+                8px;
+
+            z-index:
+                2;
+
+            padding:
+                4px 7px;
+
+            border-radius:
+                4px;
+
+            background:
+                rgba(6, 20, 31, 0.75);
+
+            font-size:
+                9px;
+        }
+
+        .camara-nombre {
+            position:
+                absolute;
+
+            left:
+                0;
+
+            right:
+                0;
+
+            bottom:
+                0;
+
+            z-index:
+                2;
+
+            padding:
+                10px;
+
+            background:
+                rgba(4, 12, 19, 0.88);
+
+            font-size:
+                10px;
+        }
+
+        .accesos {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(6, 1fr);
+
+            gap:
+                12px;
+
+            margin-top:
+                14px;
+
+            padding:
+                18px;
+        }
+
+        .acceso {
+            min-height:
+                76px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                13px;
+
+            padding:
+                12px 14px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                8px;
+
+            background:
+                rgba(12, 28, 43, 0.8);
+        }
+
+        .acceso:hover {
+            border-color:
+                #315579;
+
+            transform:
+                translateY(-1px);
+        }
+
+        .acceso-icono {
+            font-size:
+                26px;
+        }
+
+        .acceso-titulo {
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+        }
+
+        .acceso-subtitulo {
+            margin-top:
+                4px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+        }
+
+        .pie {
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 1fr 1fr;
+
+            gap:
+                20px;
+
+            align-items:
+                center;
+
+            padding:
+                20px 5px 5px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+        .pie-centro {
+            text-align:
+                center;
+        }
+
+        .pie-derecha {
+            text-align:
+                right;
+        }
+
+        @media (
+            max-width: 1250px
+        ) {
+            .cabecera {
+                grid-template-columns:
+                    1fr auto;
+            }
+
+            .navegacion {
+                display:
+                    none;
+            }
+
+            .panel-superior {
+                grid-template-columns:
+                    220px
+                    1fr
+                    1fr;
+            }
+
+            .bloques-medicion {
+                margin-left:
+                    234px;
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .paneles-graficos {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .paneles-graficos .grafico:last-child {
+                grid-column:
+                    1 / -1;
+            }
+
+            .accesos {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+        }
+
+        @media (
+            max-width: 850px
+        ) {
+            .cabecera {
+                position:
+                    relative;
+
+                grid-template-columns:
+                    1fr;
+
+                gap:
+                    8px;
+            }
+
+            .hora {
+                justify-content:
+                    flex-start;
+
+                text-align:
+                    left;
+            }
+
+            .panel-superior {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .resumen {
+                display:
+                    none;
+            }
+
+            .bloques-medicion {
+                margin-left:
+                    0;
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .paneles-graficos {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .paneles-graficos .grafico:last-child {
+                grid-column:
+                    auto;
+            }
+
+            .accesos {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .pie {
+                grid-template-columns:
+                    1fr;
+
+                text-align:
+                    left;
+            }
+
+            .pie-centro,
+            .pie-derecha {
+                text-align:
+                    left;
+            }
+        }
+
+        @media (
+            max-width: 560px
+        ) {
+            .contenido {
+                padding:
+                    12px;
+            }
+
+            .estacion-principal {
+                min-height:
+                    410px;
+
+                padding:
+                    18px;
+            }
+
+            .temperatura-area {
+                align-items:
+                    flex-start;
+
+                padding-top:
+                    20px;
+            }
+
+            .temperatura {
+                font-size:
+                    48px;
+            }
+
+            .simbolo-tiempo {
+                font-size:
+                    50px;
+            }
+
+            .metricas-estacion {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .metrica-estacion {
+                border-bottom:
+                    1px solid
+                    rgba(255, 255, 255, 0.08);
+            }
+
+            .bloques-medicion {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .camaras {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .accesos {
+                grid-template-columns:
+                    1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pagina">
+
+        <header class="cabecera">
+
+            <a
+                href="#"
+                class="marca"
+            >
+                <div
+                    class="marca-icono"
+                    aria-hidden="true"
+                >
+                    <div class="sol"></div>
+                    <div class="nube"></div>
+                </div>
+
+                <div>
+                    <div class="marca-titulo">
+                        METEO<span>ARCHIDONA</span>
+                    </div>
+
+                    <div class="marca-subtitulo">
+                        El tiempo de nuestra comarca
+                    </div>
+                </div>
+            </a>
+
+            <nav
+                class="navegacion"
+                aria-label="Navegación principal"
+            >
+                <a
+                    href="#actual"
+                    class="activo"
+                >
+                    Actual
+                </a>
+
+                <a href="#historicos">
+                    Históricos
+                </a>
+
+                <a href="#graficos">
+                    Gráficos
+                </a>
+
+                <a href="#camaras">
+                    Cámaras
+                </a>
+
+                <a href="#estaciones">
+                    Estaciones
+                </a>
+
+                <a href="#alertas">
+                    Alertas
+                </a>
+
+                <a href="#acerca">
+                    Acerca de
+                </a>
+            </nav>
+
+            <div class="hora">
+                <div>
+                    <div class="fecha">
+                        02/09/2026
+                    </div>
+
+                    <div class="reloj">
+                        12:45
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <main
+            class="contenido"
+            id="actual"
+        >
+
+            <section class="panel-superior">
+
+                <aside class="tarjeta resumen">
+
+                    <h2 class="seccion-titulo">
+                        Condiciones actuales
+                    </h2>
+
+                    <div class="estado">
+                        <span class="punto"></span>
+                        Actualizado hace 1 min
+                    </div>
+
+                    <div class="estado-grafico">
+                        <div
+                            class="tiempo-icono"
+                            aria-hidden="true"
+                        >
+                            <div class="sol"></div>
+                            <div class="nube"></div>
+                        </div>
+                    </div>
+
+                    <div class="ubicacion">
+                        ⌖ ARCHIDONA
+                    </div>
+
+                    <div class="ubicacion-sub">
+                        Málaga · Andalucía
+                    </div>
+
+                    <div class="sol-horas">
+
+                        <div class="sol-hora">
+                            ☀ 07:45
+
+                            <span>
+                                Amanecer
+                            </span>
+                        </div>
+
+                        <div class="sol-hora">
+                            ☾ 20:44
+
+                            <span>
+                                Atardecer
+                            </span>
+                        </div>
+
+                    </div>
+
+                </aside>
+
+                <article class="tarjeta estacion-principal">
+
+                    <div class="estacion-cabecera">
+
+                        <div>
+                            <h2 class="estacion-nombre">
+                                EL SILO
+                            </h2>
+
+                            <div class="estacion-localidad">
+                                Archidona
+                            </div>
+                        </div>
+
+                        <div class="online">
+                            <span class="punto"></span>
+                            En línea
+                        </div>
+
+                    </div>
+
+                    <div class="temperatura-area">
+
+                        <div>
+                            <div class="temperatura">
+                                27.4<sup>°C</sup>
+                            </div>
+
+                            <div class="sensacion">
+                                Sensación 28.2 °C
+                            </div>
+                        </div>
+
+                        <div class="simbolo-tiempo">
+                            ☀️
+
+                            <span>
+                                Despejado
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="metricas-estacion">
+
+                        <div class="metrica-estacion">
+                            <div class="metrica-label">
+                                💧 Humedad
+                            </div>
+
+                            <div class="metrica-valor">
+                                43 %
+                            </div>
+                        </div>
+
+                        <div class="metrica-estacion">
+                            <div class="metrica-label">
+                                ◇ Punto de rocío
+                            </div>
+
+                            <div class="metrica-valor">
+                                13.7 °C
+                            </div>
+                        </div>
+
+                        <div class="metrica-estacion">
+                            <div class="metrica-label">
+                                ◉ Presión
+                            </div>
+
+                            <div class="metrica-valor">
+                                1016.2 hPa
+                            </div>
+                        </div>
+
+                        <div class="metrica-estacion">
+                            <div class="metrica-label">
+                                ↗ Tendencia
+                            </div>
+
+                            <div class="metrica-valor">
+                                Estable
+                            </div>
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <article class="tarjeta estacion-principal">
+
+                    <div class="estacion-cabecera">
+
+                        <div>
+                            <h2 class="estacion-nombre">
+                                LOS LLANOS
+                            </h2>
+
+                            <div class="estacion-localidad">
+                                Villanueva del Trabuco
+                            </div>
+                        </div>
+
+                        <div class="online">
+                            <span class="punto"></span>
+                            En línea
+                        </div>
+
+                    </div>
+
+                    <div class="temperatura-area">
+
+                        <div>
+                            <div class="temperatura">
+                                25.8<sup>°C</sup>
+                            </div>
+
+                            <div class="sensacion">
+                                Sensación 26.4 °C
+                            </div>
+                        </div>
+
+                        <div class="simbolo-tiempo">
+                            🌤️
+
+                            <span>
+                                Poco nuboso
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="metricas-estacion">
+
+                        <div class="metrica-estacion">
+                            <div class="metrica-label">
+                                💧 Humedad
+                            </div>
+
+                            <div class="metrica-valor">
+                                51 %
+                            </div>
+                        </div>
+
+                        <div class="metrica-estacion">
+                            <div class="metrica-label">
+                                ◇ Punto de rocío
+                            </div>
+
+                            <div class="metrica-valor">
+                                15.0 °C
+                            </div>
+                        </div>
+
+                        <div class="metrica-estacion">
+                            <div class="metrica-label">
+                                ◉ Presión
+                            </div>
+
+                            <div class="metrica-valor">
+                                1015.6 hPa
+                            </div>
+                        </div>
+
+                        <div class="metrica-estacion">
+                            <div class="metrica-label">
+                                ↗ Tendencia
+                            </div>
+
+                            <div class="metrica-valor">
+                                Estable
+                            </div>
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+            <section class="bloques-medicion">
+
+                <article class="tarjeta instrumento">
+
+                    <div class="instrumento-titulo">
+                        Viento actual
+                    </div>
+
+                    <div class="instrumento-contenido">
+
+                        <div class="brujula"></div>
+
+                        <div>
+                            <div class="instrumento-dato">
+                                NE
+                            </div>
+
+                            <div class="instrumento-secundario">
+                                45°
+                            </div>
+
+                            <div class="instrumento-secundario">
+                                Racha 25.3 km/h
+                            </div>
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <article class="tarjeta instrumento">
+
+                    <div class="instrumento-titulo">
+                        Lluvia
+                    </div>
+
+                    <div class="instrumento-contenido">
+
+                        <div class="instrumento-icono">
+                            🌧️
+                        </div>
+
+                        <div>
+                            <div class="instrumento-dato">
+                                0.0
+                                <small>mm</small>
+                            </div>
+
+                            <div class="instrumento-secundario">
+                                Hoy
+                            </div>
+
+                            <div class="instrumento-secundario">
+                                Mes actual 12.6 mm
+                            </div>
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <article class="tarjeta instrumento">
+
+                    <div class="instrumento-titulo">
+                        Presión
+                    </div>
+
+                    <div class="instrumento-contenido">
+
+                        <div class="instrumento-icono">
+                            ◴
+                        </div>
+
+                        <div>
+                            <div class="instrumento-dato">
+                                1016.2
+                                <small>hPa</small>
+                            </div>
+
+                            <div class="instrumento-secundario">
+                                Estable →
+                            </div>
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <article class="tarjeta instrumento">
+
+                    <div class="instrumento-titulo">
+                        Radiación solar
+                    </div>
+
+                    <div class="instrumento-contenido">
+
+                        <div class="instrumento-icono">
+                            ☀️
+                        </div>
+
+                        <div>
+                            <div class="instrumento-dato">
+                                812
+                                <small>W/m²</small>
+                            </div>
+
+                            <div class="instrumento-secundario">
+                                Alta
+                            </div>
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <article class="tarjeta instrumento">
+
+                    <div class="instrumento-titulo">
+                        UVI
+                    </div>
+
+                    <div class="instrumento-contenido">
+
+                        <div class="instrumento-icono">
+                            ◉
+                        </div>
+
+                        <div>
+                            <div class="instrumento-dato">
+                                6
+                            </div>
+
+                            <div
+                                class="instrumento-secundario"
+                                style="color: var(--red);"
+                            >
+                                Alto
+                            </div>
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+            <section
+                class="paneles-graficos"
+                id="graficos"
+            >
+
+                <article class="tarjeta grafico">
+
+                    <div class="grafico-cabecera">
+
+                        <div class="grafico-titulo">
+                            Temperatura · últimas 24 horas
+                        </div>
+
+                        <div class="leyenda">
+                            <span>
+                                El Silo
+                            </span>
+
+                            <span>
+                                Los Llanos
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <svg
+                        class="grafico-svg"
+                        viewBox="0 0 600 190"
+                        preserveAspectRatio="none"
+                        aria-label="Gráfico de temperatura de muestra"
+                    >
+
+                        <line
+                            class="rejilla"
+                            x1="0"
+                            y1="40"
+                            x2="600"
+                            y2="40"
+                        />
+
+                        <line
+                            class="rejilla"
+                            x1="0"
+                            y1="90"
+                            x2="600"
+                            y2="90"
+                        />
+
+                        <line
+                            class="rejilla"
+                            x1="0"
+                            y1="140"
+                            x2="600"
+                            y2="140"
+                        />
+
+                        <polyline
+                            class="linea-silo"
+                            points="
+                                0,85
+                                70,55
+                                140,40
+                                210,48
+                                280,78
+                                350,125
+                                420,142
+                                490,105
+                                550,72
+                                600,68
+                            "
+                        />
+
+                        <polyline
+                            class="linea-llanos"
+                            points="
+                                0,95
+                                70,72
+                                140,60
+                                210,68
+                                280,98
+                                350,140
+                                420,152
+                                490,118
+                                550,88
+                                600,84
+                            "
+                        />
+
+                    </svg>
+
+                </article>
+
+                <article class="tarjeta grafico">
+
+                    <div class="grafico-cabecera">
+
+                        <div class="grafico-titulo">
+                            Lluvia · últimos 7 días
+                        </div>
+
+                    </div>
+
+                    <svg
+                        class="grafico-svg"
+                        viewBox="0 0 500 190"
+                        preserveAspectRatio="none"
+                        aria-label="Gráfico de lluvia de muestra"
+                    >
+
+                        <line
+                            class="rejilla"
+                            x1="0"
+                            y1="40"
+                            x2="500"
+                            y2="40"
+                        />
+
+                        <line
+                            class="rejilla"
+                            x1="0"
+                            y1="90"
+                            x2="500"
+                            y2="90"
+                        />
+
+                        <line
+                            class="rejilla"
+                            x1="0"
+                            y1="140"
+                            x2="500"
+                            y2="140"
+                        />
+
+                        <rect
+                            class="barra"
+                            x="25"
+                            y="135"
+                            width="40"
+                            height="35"
+                        />
+
+                        <rect
+                            class="barra"
+                            x="95"
+                            y="55"
+                            width="40"
+                            height="115"
+                        />
+
+                        <rect
+                            class="barra"
+                            x="165"
+                            y="145"
+                            width="40"
+                            height="25"
+                        />
+
+                        <rect
+                            class="barra"
+                            x="235"
+                            y="166"
+                            width="40"
+                            height="4"
+                        />
+
+                        <rect
+                            class="barra"
+                            x="305"
+                            y="168"
+                            width="40"
+                            height="2"
+                        />
+
+                    </svg>
+
+                </article>
+
+                <article
+                    class="tarjeta grafico"
+                    id="camaras"
+                >
+
+                    <div class="grafico-cabecera">
+
+                        <div class="grafico-titulo">
+                            Cámaras en directo
+                        </div>
+
+                        <div
+                            style="
+                                color: var(--blue);
+                                font-size: 10px;
+                            "
+                        >
+                            Ver todas →
+                        </div>
+
+                    </div>
+
+                    <div class="camaras">
+
+                        <div class="camara">
+
+                            <div class="camara-estado">
+                                🟢 En línea
+                            </div>
+
+                            <div class="camara-nombre">
+                                El Silo · Vista Sur
+                            </div>
+
+                        </div>
+
+                        <div class="camara">
+
+                            <div class="camara-estado">
+                                🟢 En línea
+                            </div>
+
+                            <div class="camara-nombre">
+                                Los Llanos · Vista Norte
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+            <section class="tarjeta accesos">
+
+                <a
+                    href="#historicos"
+                    class="acceso"
+                >
+                    <div class="acceso-icono">
+                        📊
+                    </div>
+
+                    <div>
+                        <div class="acceso-titulo">
+                            HISTÓRICOS
+                        </div>
+
+                        <div class="acceso-subtitulo">
+                            Datos por fecha
+                        </div>
+                    </div>
+                </a>
+
+                <a
+                    href="#graficos"
+                    class="acceso"
+                >
+                    <div class="acceso-icono">
+                        📈
+                    </div>
+
+                    <div>
+                        <div class="acceso-titulo">
+                            GRÁFICOS
+                        </div>
+
+                        <div class="acceso-subtitulo">
+                            Evolución detallada
+                        </div>
+                    </div>
+                </a>
+
+                <a
+                    href="#camaras"
+                    class="acceso"
+                >
+                    <div class="acceso-icono">
+                        📷
+                    </div>
+
+                    <div>
+                        <div class="acceso-titulo">
+                            CÁMARAS
+                        </div>
+
+                        <div class="acceso-subtitulo">
+                            Imágenes en directo
+                        </div>
+                    </div>
+                </a>
+
+                <a
+                    href="#estaciones"
+                    class="acceso"
+                >
+                    <div class="acceso-icono">
+                        📡
+                    </div>
+
+                    <div>
+                        <div class="acceso-titulo">
+                            ESTACIONES
+                        </div>
+
+                        <div class="acceso-subtitulo">
+                            Información técnica
+                        </div>
+                    </div>
+                </a>
+
+                <a
+                    href="#alertas"
+                    class="acceso"
+                >
+                    <div class="acceso-icono">
+                        ⚠️
+                    </div>
+
+                    <div>
+                        <div class="acceso-titulo">
+                            ALERTAS
+                        </div>
+
+                        <div class="acceso-subtitulo">
+                            Avisos meteorológicos
+                        </div>
+                    </div>
+                </a>
+
+                <a
+                    href="#estado"
+                    class="acceso"
+                >
+                    <div class="acceso-icono">
+                        ✅
+                    </div>
+
+                    <div>
+                        <div class="acceso-titulo">
+                            ESTADO SISTEMA
+                        </div>
+
+                        <div class="acceso-subtitulo">
+                            Todo funcionando
+                        </div>
+                    </div>
+                </a>
+
+            </section>
+
+            <footer class="pie">
+
+                <div>
+                    © 2026 MeteoArchidona
+                    <br>
+                    Todos los derechos reservados
+                </div>
+
+                <div class="pie-centro">
+                    🟢 Datos meteorológicos
+                    actualizados automáticamente
+                </div>
+
+                <div class="pie-derecha">
+                    MeteoArchidona · Archidona
+                </div>
+
+            </footer>
+
+        </main>
+
+    </div>
+</body>
+</html>
