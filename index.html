@@ -561,7 +561,7 @@
                 hidden;
 
             min-height:
-                340px;
+                430px;
 
             padding:
                 20px 25px;
@@ -650,7 +650,7 @@
                 center;
 
             min-height:
-                180px;
+                170px;
         }
 
         .temperatura {
@@ -704,6 +704,82 @@
 
             font-size:
                 13px;
+        }
+
+        .lluvia-resumen {
+            position:
+                absolute;
+
+            left:
+                18px;
+
+            right:
+                18px;
+
+            bottom:
+                78px;
+
+            z-index:
+                2;
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap:
+                8px;
+
+            padding:
+                10px 12px;
+
+            border:
+                1px solid
+                rgba(54, 213, 255, 0.14);
+
+            border-radius:
+                8px;
+
+            background:
+                rgba(11, 35, 52, 0.78);
+        }
+
+        .lluvia-resumen-item {
+            min-width:
+                0;
+
+            text-align:
+                center;
+        }
+
+        .lluvia-resumen-label {
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            text-transform:
+                uppercase;
+        }
+
+        .lluvia-resumen-valor {
+            margin-top:
+                4px;
+
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                15px;
+
+            font-weight:
+                600;
+
+            color:
+                var(--cyan);
         }
 
         .metricas-estacion {
@@ -778,7 +854,7 @@
                 grid;
 
             grid-template-columns:
-                repeat(5, 1fr);
+                repeat(3, 1fr);
 
             gap:
                 14px;
@@ -860,6 +936,66 @@
 
             font-size:
                 10px;
+        }
+
+        .lluvia-detalle {
+            display:
+                grid;
+
+            gap:
+                4px;
+
+            min-width:
+                155px;
+        }
+
+        .lluvia-detalle-principal {
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-size:
+                25px;
+
+            font-weight:
+                600;
+        }
+
+        .lluvia-detalle-principal small {
+            font-size:
+                12px;
+
+            font-weight:
+                400;
+        }
+
+        .lluvia-detalle-linea {
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            gap:
+                12px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+        .lluvia-detalle-linea strong {
+            color:
+                var(--text);
+
+            font-family:
+                "JetBrains Mono",
+                monospace;
+
+            font-weight:
+                500;
         }
 
         .brujula {
@@ -1297,7 +1433,7 @@
                     234px;
 
                 grid-template-columns:
-                    repeat(3, 1fr);
+                    repeat(2, 1fr);
             }
 
             .paneles-graficos {
@@ -1353,7 +1489,7 @@
                     0;
 
                 grid-template-columns:
-                    repeat(2, 1fr);
+                    1fr;
             }
 
             .paneles-graficos {
@@ -1396,7 +1532,7 @@
 
             .estacion-principal {
                 min-height:
-                    410px;
+                    530px;
 
                 padding:
                     18px;
@@ -1418,6 +1554,27 @@
             .simbolo-tiempo {
                 font-size:
                     50px;
+            }
+
+            .lluvia-resumen {
+                bottom:
+                    135px;
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+
+                padding:
+                    10px 6px;
+            }
+
+            .lluvia-resumen-label {
+                font-size:
+                    8px;
+            }
+
+            .lluvia-resumen-valor {
+                font-size:
+                    13px;
             }
 
             .metricas-estacion {
@@ -1656,6 +1813,49 @@
 
                     </div>
 
+                    <div class="lluvia-resumen">
+
+                        <div class="lluvia-resumen-item">
+                            <div class="lluvia-resumen-label">
+                                Lluvia hoy
+                            </div>
+
+                            <div
+                                class="lluvia-resumen-valor"
+                                id="lluvia-dia-EL_SILO"
+                            >
+                                -- mm
+                            </div>
+                        </div>
+
+                        <div class="lluvia-resumen-item">
+                            <div class="lluvia-resumen-label">
+                                Este mes
+                            </div>
+
+                            <div
+                                class="lluvia-resumen-valor"
+                                id="lluvia-mes-EL_SILO"
+                            >
+                                -- mm
+                            </div>
+                        </div>
+
+                        <div class="lluvia-resumen-item">
+                            <div class="lluvia-resumen-label">
+                                Año agrícola
+                            </div>
+
+                            <div
+                                class="lluvia-resumen-valor"
+                                id="lluvia-anio-EL_SILO"
+                            >
+                                -- mm
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="metricas-estacion">
 
                         <div class="metrica-estacion">
@@ -1779,6 +1979,49 @@
 
                     </div>
 
+                    <div class="lluvia-resumen">
+
+                        <div class="lluvia-resumen-item">
+                            <div class="lluvia-resumen-label">
+                                Lluvia hoy
+                            </div>
+
+                            <div
+                                class="lluvia-resumen-valor"
+                                id="lluvia-dia-LOS_LLANOS"
+                            >
+                                -- mm
+                            </div>
+                        </div>
+
+                        <div class="lluvia-resumen-item">
+                            <div class="lluvia-resumen-label">
+                                Este mes
+                            </div>
+
+                            <div
+                                class="lluvia-resumen-valor"
+                                id="lluvia-mes-LOS_LLANOS"
+                            >
+                                -- mm
+                            </div>
+                        </div>
+
+                        <div class="lluvia-resumen-item">
+                            <div class="lluvia-resumen-label">
+                                Año agrícola
+                            </div>
+
+                            <div
+                                class="lluvia-resumen-valor"
+                                id="lluvia-anio-LOS_LLANOS"
+                            >
+                                -- mm
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="metricas-estacion">
 
                         <div class="metrica-estacion">
@@ -1872,28 +2115,119 @@
                 <article class="tarjeta instrumento">
 
                     <div class="instrumento-titulo">
-                        Lluvia
+                        Lluvia · El Silo
                     </div>
 
                     <div class="instrumento-contenido">
 
-                        <div class="instrumento-icono">
-                            🌧️
+                        <div
+                            class="instrumento-icono"
+                            id="lluvia-icono-EL_SILO"
+                        >
+                            ☁️
                         </div>
 
-                        <div>
-                            <div class="instrumento-dato">
-                                0.0
+                        <div class="lluvia-detalle">
+
+                            <div
+                                class="lluvia-detalle-principal"
+                                id="lluvia-tarjeta-dia-EL_SILO"
+                            >
+                                --
                                 <small>mm</small>
                             </div>
 
-                            <div class="instrumento-secundario">
-                                Hoy
+                            <div class="lluvia-detalle-linea">
+                                <span>Mes</span>
+
+                                <strong
+                                    id="lluvia-tarjeta-mes-EL_SILO"
+                                >
+                                    -- mm
+                                </strong>
                             </div>
 
-                            <div class="instrumento-secundario">
-                                Mes actual 12.6 mm
+                            <div class="lluvia-detalle-linea">
+                                <span>Año agrícola</span>
+
+                                <strong
+                                    id="lluvia-tarjeta-anio-EL_SILO"
+                                >
+                                    -- mm
+                                </strong>
                             </div>
+
+                            <div class="lluvia-detalle-linea">
+                                <span>Intensidad</span>
+
+                                <strong
+                                    id="lluvia-tasa-EL_SILO"
+                                >
+                                    -- mm/h
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <article class="tarjeta instrumento">
+
+                    <div class="instrumento-titulo">
+                        Lluvia · Los Llanos
+                    </div>
+
+                    <div class="instrumento-contenido">
+
+                        <div
+                            class="instrumento-icono"
+                            id="lluvia-icono-LOS_LLANOS"
+                        >
+                            ☁️
+                        </div>
+
+                        <div class="lluvia-detalle">
+
+                            <div
+                                class="lluvia-detalle-principal"
+                                id="lluvia-tarjeta-dia-LOS_LLANOS"
+                            >
+                                --
+                                <small>mm</small>
+                            </div>
+
+                            <div class="lluvia-detalle-linea">
+                                <span>Mes</span>
+
+                                <strong
+                                    id="lluvia-tarjeta-mes-LOS_LLANOS"
+                                >
+                                    -- mm
+                                </strong>
+                            </div>
+
+                            <div class="lluvia-detalle-linea">
+                                <span>Año agrícola</span>
+
+                                <strong
+                                    id="lluvia-tarjeta-anio-LOS_LLANOS"
+                                >
+                                    -- mm
+                                </strong>
+                            </div>
+
+                            <div class="lluvia-detalle-linea">
+                                <span>Intensidad</span>
+
+                                <strong
+                                    id="lluvia-tasa-LOS_LLANOS"
+                                >
+                                    -- mm/h
+                                </strong>
+                            </div>
+
                         </div>
 
                     </div>
@@ -2379,6 +2713,20 @@
             );
         }
 
+        function obtenerIconoLluvia(
+            tasaLluvia
+        ) {
+            if (
+                tasaLluvia !== null &&
+                tasaLluvia !== undefined &&
+                Number(tasaLluvia) > 0
+            ) {
+                return "🌧️";
+            }
+
+            return "☁️";
+        }
+
         function actualizarReloj() {
             const ahora =
                 new Date();
@@ -2406,6 +2754,73 @@
                 "reloj-actual"
             ).textContent =
                 hora;
+        }
+
+        function mostrarLluvia(
+            codigo,
+            datos
+        ) {
+            const lluviaDia =
+                formatearNumero(
+                    datos.lluvia_dia_mm
+                );
+
+            const lluviaMes =
+                formatearNumero(
+                    datos.lluvia_mes_mm
+                );
+
+            const lluviaAnio =
+                formatearNumero(
+                    datos.lluvia_anio_agricola_mm
+                );
+
+            const tasaLluvia =
+                formatearNumero(
+                    datos.tasa_lluvia_mm_h
+                );
+
+            document.getElementById(
+                `lluvia-dia-${codigo}`
+            ).textContent =
+                `${lluviaDia} mm`;
+
+            document.getElementById(
+                `lluvia-mes-${codigo}`
+            ).textContent =
+                `${lluviaMes} mm`;
+
+            document.getElementById(
+                `lluvia-anio-${codigo}`
+            ).textContent =
+                `${lluviaAnio} mm`;
+
+            document.getElementById(
+                `lluvia-icono-${codigo}`
+            ).textContent =
+                obtenerIconoLluvia(
+                    datos.tasa_lluvia_mm_h
+                );
+
+            document.getElementById(
+                `lluvia-tarjeta-dia-${codigo}`
+            ).innerHTML =
+                `${lluviaDia} <small>mm</small>`;
+
+            document.getElementById(
+                `lluvia-tarjeta-mes-${codigo}`
+            ).textContent =
+                `${lluviaMes} mm`;
+
+            document.getElementById(
+                `lluvia-tarjeta-anio-${codigo}`
+            ).textContent =
+                `${lluviaAnio} mm`;
+
+            document.getElementById(
+                `lluvia-tasa-${codigo}`
+            ).textContent =
+                `${tasaLluvia} mm/h`;
         }
 
         function mostrarDatosEstacion(
@@ -2478,6 +2893,55 @@
                 `estado-${codigo}`
             ).innerHTML =
                 '<span class="punto"></span>En línea';
+
+            mostrarLluvia(
+                codigo,
+                datos
+            );
+        }
+
+        function mostrarErrorLluvia(
+            codigo
+        ) {
+            document.getElementById(
+                `lluvia-dia-${codigo}`
+            ).textContent =
+                "-- mm";
+
+            document.getElementById(
+                `lluvia-mes-${codigo}`
+            ).textContent =
+                "-- mm";
+
+            document.getElementById(
+                `lluvia-anio-${codigo}`
+            ).textContent =
+                "-- mm";
+
+            document.getElementById(
+                `lluvia-icono-${codigo}`
+            ).textContent =
+                "☁️";
+
+            document.getElementById(
+                `lluvia-tarjeta-dia-${codigo}`
+            ).innerHTML =
+                '-- <small>mm</small>';
+
+            document.getElementById(
+                `lluvia-tarjeta-mes-${codigo}`
+            ).textContent =
+                "-- mm";
+
+            document.getElementById(
+                `lluvia-tarjeta-anio-${codigo}`
+            ).textContent =
+                "-- mm";
+
+            document.getElementById(
+                `lluvia-tasa-${codigo}`
+            ).textContent =
+                "-- mm/h";
         }
 
         function mostrarErrorEstacion(
@@ -2522,6 +2986,10 @@
                 `observacion-${codigo}`
             ).textContent =
                 "Observación --:--";
+
+            mostrarErrorLluvia(
+                codigo
+            );
         }
 
         async function cargarEstacion(
