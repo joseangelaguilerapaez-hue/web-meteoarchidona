@@ -554,17 +554,10 @@
         }
 
         .estacion-principal {
-            position:
-                relative;
-
-            overflow:
-                hidden;
+            overflow: hidden;
 
             min-height:
-                430px;
-
-            padding:
-                20px 25px;
+                0;
 
             background:
                 linear-gradient(
@@ -585,16 +578,15 @@
                 );
         }
 
+        .estacion-contenido {
+            padding:
+                20px 25px 0;
+        }
+
         .estacion-cabecera {
             display: flex;
             justify-content: space-between;
             gap: 16px;
-
-            position:
-                relative;
-
-            z-index:
-                2;
         }
 
         .estacion-nombre {
@@ -634,12 +626,6 @@
         }
 
         .temperatura-area {
-            position:
-                relative;
-
-            z-index:
-                2;
-
             display:
                 flex;
 
@@ -651,6 +637,9 @@
 
             min-height:
                 170px;
+
+            gap:
+                20px;
         }
 
         .temperatura {
@@ -707,21 +696,6 @@
         }
 
         .lluvia-resumen {
-            position:
-                absolute;
-
-            left:
-                18px;
-
-            right:
-                18px;
-
-            bottom:
-                78px;
-
-            z-index:
-                2;
-
             display:
                 grid;
 
@@ -731,8 +705,11 @@
             gap:
                 8px;
 
+            margin:
+                0 0 14px;
+
             padding:
-                10px 12px;
+                11px 12px;
 
             border:
                 1px solid
@@ -749,11 +726,35 @@
             min-width:
                 0;
 
-            text-align:
+            display:
+                grid;
+
+            grid-template-columns:
+                auto 1fr;
+
+            grid-template-areas:
+                "icono label"
+                "icono valor";
+
+            align-items:
                 center;
+
+            column-gap:
+                8px;
+        }
+
+        .lluvia-resumen-icono {
+            grid-area:
+                icono;
+
+            font-size:
+                24px;
         }
 
         .lluvia-resumen-label {
+            grid-area:
+                label;
+
             color:
                 var(--muted);
 
@@ -765,8 +766,11 @@
         }
 
         .lluvia-resumen-valor {
+            grid-area:
+                valor;
+
             margin-top:
-                4px;
+                3px;
 
             font-family:
                 "JetBrains Mono",
@@ -788,21 +792,6 @@
 
             grid-template-columns:
                 repeat(4, 1fr);
-
-            position:
-                absolute;
-
-            left:
-                0;
-
-            right:
-                0;
-
-            bottom:
-                0;
-
-            z-index:
-                2;
 
             background:
                 rgba(3, 13, 23, 0.80);
@@ -1530,17 +1519,17 @@
                     12px;
             }
 
-            .estacion-principal {
-                min-height:
-                    530px;
-
+            .estacion-contenido {
                 padding:
-                    18px;
+                    18px 18px 0;
             }
 
             .temperatura-area {
                 align-items:
                     flex-start;
+
+                min-height:
+                    170px;
 
                 padding-top:
                     20px;
@@ -1557,24 +1546,52 @@
             }
 
             .lluvia-resumen {
-                bottom:
-                    135px;
-
                 grid-template-columns:
-                    repeat(3, 1fr);
+                    1fr;
+
+                gap:
+                    7px;
 
                 padding:
-                    10px 6px;
+                    10px;
+            }
+
+            .lluvia-resumen-item {
+                grid-template-columns:
+                    34px 1fr auto;
+
+                grid-template-areas:
+                    "icono label valor";
+
+                column-gap:
+                    8px;
+
+                padding:
+                    4px 0;
+
+                text-align:
+                    left;
+            }
+
+            .lluvia-resumen-icono {
+                font-size:
+                    22px;
             }
 
             .lluvia-resumen-label {
                 font-size:
-                    8px;
+                    9px;
             }
 
             .lluvia-resumen-valor {
+                margin-top:
+                    0;
+
                 font-size:
                     13px;
+
+                text-align:
+                    right;
             }
 
             .metricas-estacion {
@@ -1753,105 +1770,130 @@
                     id="tarjeta-EL_SILO"
                 >
 
-                    <div class="estacion-cabecera">
+                    <div class="estacion-contenido">
 
-                        <div>
-                            <h2
-                                class="estacion-nombre"
-                                id="nombre-EL_SILO"
-                            >
-                                EL SILO
-                            </h2>
+                        <div class="estacion-cabecera">
 
-                            <div class="estacion-localidad">
-                                Archidona
-                            </div>
-                        </div>
+                            <div>
+                                <h2
+                                    class="estacion-nombre"
+                                    id="nombre-EL_SILO"
+                                >
+                                    EL SILO
+                                </h2>
 
-                        <div
-                            class="online"
-                            id="estado-EL_SILO"
-                        >
-                            <span class="punto"></span>
-                            Cargando...
-                        </div>
-
-                    </div>
-
-                    <div class="temperatura-area">
-
-                        <div>
-                            <div
-                                class="temperatura"
-                                id="temperatura-EL_SILO"
-                            >
-                                --<sup>°C</sup>
+                                <div class="estacion-localidad">
+                                    Archidona
+                                </div>
                             </div>
 
                             <div
-                                class="sensacion"
-                                id="sensacion-EL_SILO"
+                                class="online"
+                                id="estado-EL_SILO"
                             >
-                                Sensación -- °C
+                                <span class="punto"></span>
+                                Cargando...
                             </div>
 
-                            <div
-                                class="sensacion"
-                                id="observacion-EL_SILO"
-                            >
-                                Observación --:--
-                            </div>
                         </div>
 
-                        <div class="simbolo-tiempo">
-                            ☀️
+                        <div class="temperatura-area">
 
-                            <span>
-                                Datos actuales
-                            </span>
+                            <div>
+                                <div
+                                    class="temperatura"
+                                    id="temperatura-EL_SILO"
+                                >
+                                    --<sup>°C</sup>
+                                </div>
+
+                                <div
+                                    class="sensacion"
+                                    id="sensacion-EL_SILO"
+                                >
+                                    Sensación -- °C
+                                </div>
+
+                                <div
+                                    class="sensacion"
+                                    id="observacion-EL_SILO"
+                                >
+                                    Observación --:--
+                                </div>
+                            </div>
+
+                            <div class="simbolo-tiempo">
+                                ☀️
+
+                                <span>
+                                    Datos actuales
+                                </span>
+                            </div>
+
                         </div>
 
-                    </div>
+                        <div class="lluvia-resumen">
 
-                    <div class="lluvia-resumen">
+                            <div class="lluvia-resumen-item">
+                                <div
+                                    class="lluvia-resumen-icono"
+                                    id="lluvia-resumen-icono-dia-EL_SILO"
+                                >
+                                    ☁️
+                                </div>
 
-                        <div class="lluvia-resumen-item">
-                            <div class="lluvia-resumen-label">
-                                Lluvia hoy
+                                <div class="lluvia-resumen-label">
+                                    Lluvia hoy
+                                </div>
+
+                                <div
+                                    class="lluvia-resumen-valor"
+                                    id="lluvia-dia-EL_SILO"
+                                >
+                                    -- mm
+                                </div>
                             </div>
 
-                            <div
-                                class="lluvia-resumen-valor"
-                                id="lluvia-dia-EL_SILO"
-                            >
-                                -- mm
-                            </div>
-                        </div>
+                            <div class="lluvia-resumen-item">
+                                <div
+                                    class="lluvia-resumen-icono"
+                                    id="lluvia-resumen-icono-mes-EL_SILO"
+                                >
+                                    ☁️
+                                </div>
 
-                        <div class="lluvia-resumen-item">
-                            <div class="lluvia-resumen-label">
-                                Este mes
-                            </div>
+                                <div class="lluvia-resumen-label">
+                                    Este mes
+                                </div>
 
-                            <div
-                                class="lluvia-resumen-valor"
-                                id="lluvia-mes-EL_SILO"
-                            >
-                                -- mm
-                            </div>
-                        </div>
-
-                        <div class="lluvia-resumen-item">
-                            <div class="lluvia-resumen-label">
-                                Año agrícola
+                                <div
+                                    class="lluvia-resumen-valor"
+                                    id="lluvia-mes-EL_SILO"
+                                >
+                                    -- mm
+                                </div>
                             </div>
 
-                            <div
-                                class="lluvia-resumen-valor"
-                                id="lluvia-anio-EL_SILO"
-                            >
-                                -- mm
+                            <div class="lluvia-resumen-item">
+                                <div
+                                    class="lluvia-resumen-icono"
+                                    id="lluvia-resumen-icono-anio-EL_SILO"
+                                >
+                                    ☁️
+                                </div>
+
+                                <div class="lluvia-resumen-label">
+                                    Año agrícola
+                                </div>
+
+                                <div
+                                    class="lluvia-resumen-valor"
+                                    id="lluvia-anio-EL_SILO"
+                                >
+                                    -- mm
+                                </div>
                             </div>
+
                         </div>
 
                     </div>
@@ -1919,105 +1961,130 @@
                     id="tarjeta-LOS_LLANOS"
                 >
 
-                    <div class="estacion-cabecera">
+                    <div class="estacion-contenido">
 
-                        <div>
-                            <h2
-                                class="estacion-nombre"
-                                id="nombre-LOS_LLANOS"
-                            >
-                                LOS LLANOS
-                            </h2>
+                        <div class="estacion-cabecera">
 
-                            <div class="estacion-localidad">
-                                Villanueva del Trabuco
-                            </div>
-                        </div>
+                            <div>
+                                <h2
+                                    class="estacion-nombre"
+                                    id="nombre-LOS_LLANOS"
+                                >
+                                    LOS LLANOS
+                                </h2>
 
-                        <div
-                            class="online"
-                            id="estado-LOS_LLANOS"
-                        >
-                            <span class="punto"></span>
-                            Cargando...
-                        </div>
-
-                    </div>
-
-                    <div class="temperatura-area">
-
-                        <div>
-                            <div
-                                class="temperatura"
-                                id="temperatura-LOS_LLANOS"
-                            >
-                                --<sup>°C</sup>
+                                <div class="estacion-localidad">
+                                    Villanueva del Trabuco
+                                </div>
                             </div>
 
                             <div
-                                class="sensacion"
-                                id="sensacion-LOS_LLANOS"
+                                class="online"
+                                id="estado-LOS_LLANOS"
                             >
-                                Sensación -- °C
+                                <span class="punto"></span>
+                                Cargando...
                             </div>
 
-                            <div
-                                class="sensacion"
-                                id="observacion-LOS_LLANOS"
-                            >
-                                Observación --:--
-                            </div>
                         </div>
 
-                        <div class="simbolo-tiempo">
-                            🌤️
+                        <div class="temperatura-area">
 
-                            <span>
-                                Datos actuales
-                            </span>
+                            <div>
+                                <div
+                                    class="temperatura"
+                                    id="temperatura-LOS_LLANOS"
+                                >
+                                    --<sup>°C</sup>
+                                </div>
+
+                                <div
+                                    class="sensacion"
+                                    id="sensacion-LOS_LLANOS"
+                                >
+                                    Sensación -- °C
+                                </div>
+
+                                <div
+                                    class="sensacion"
+                                    id="observacion-LOS_LLANOS"
+                                >
+                                    Observación --:--
+                                </div>
+                            </div>
+
+                            <div class="simbolo-tiempo">
+                                🌤️
+
+                                <span>
+                                    Datos actuales
+                                </span>
+                            </div>
+
                         </div>
 
-                    </div>
+                        <div class="lluvia-resumen">
 
-                    <div class="lluvia-resumen">
+                            <div class="lluvia-resumen-item">
+                                <div
+                                    class="lluvia-resumen-icono"
+                                    id="lluvia-resumen-icono-dia-LOS_LLANOS"
+                                >
+                                    ☁️
+                                </div>
 
-                        <div class="lluvia-resumen-item">
-                            <div class="lluvia-resumen-label">
-                                Lluvia hoy
+                                <div class="lluvia-resumen-label">
+                                    Lluvia hoy
+                                </div>
+
+                                <div
+                                    class="lluvia-resumen-valor"
+                                    id="lluvia-dia-LOS_LLANOS"
+                                >
+                                    -- mm
+                                </div>
                             </div>
 
-                            <div
-                                class="lluvia-resumen-valor"
-                                id="lluvia-dia-LOS_LLANOS"
-                            >
-                                -- mm
-                            </div>
-                        </div>
+                            <div class="lluvia-resumen-item">
+                                <div
+                                    class="lluvia-resumen-icono"
+                                    id="lluvia-resumen-icono-mes-LOS_LLANOS"
+                                >
+                                    ☁️
+                                </div>
 
-                        <div class="lluvia-resumen-item">
-                            <div class="lluvia-resumen-label">
-                                Este mes
-                            </div>
+                                <div class="lluvia-resumen-label">
+                                    Este mes
+                                </div>
 
-                            <div
-                                class="lluvia-resumen-valor"
-                                id="lluvia-mes-LOS_LLANOS"
-                            >
-                                -- mm
-                            </div>
-                        </div>
-
-                        <div class="lluvia-resumen-item">
-                            <div class="lluvia-resumen-label">
-                                Año agrícola
+                                <div
+                                    class="lluvia-resumen-valor"
+                                    id="lluvia-mes-LOS_LLANOS"
+                                >
+                                    -- mm
+                                </div>
                             </div>
 
-                            <div
-                                class="lluvia-resumen-valor"
-                                id="lluvia-anio-LOS_LLANOS"
-                            >
-                                -- mm
+                            <div class="lluvia-resumen-item">
+                                <div
+                                    class="lluvia-resumen-icono"
+                                    id="lluvia-resumen-icono-anio-LOS_LLANOS"
+                                >
+                                    ☁️
+                                </div>
+
+                                <div class="lluvia-resumen-label">
+                                    Año agrícola
+                                </div>
+
+                                <div
+                                    class="lluvia-resumen-valor"
+                                    id="lluvia-anio-LOS_LLANOS"
+                                >
+                                    -- mm
+                                </div>
                             </div>
+
                         </div>
 
                     </div>
@@ -2780,6 +2847,11 @@
                     datos.tasa_lluvia_mm_h
                 );
 
+            const icono =
+                obtenerIconoLluvia(
+                    datos.tasa_lluvia_mm_h
+                );
+
             document.getElementById(
                 `lluvia-dia-${codigo}`
             ).textContent =
@@ -2796,11 +2868,24 @@
                 `${lluviaAnio} mm`;
 
             document.getElementById(
+                `lluvia-resumen-icono-dia-${codigo}`
+            ).textContent =
+                icono;
+
+            document.getElementById(
+                `lluvia-resumen-icono-mes-${codigo}`
+            ).textContent =
+                icono;
+
+            document.getElementById(
+                `lluvia-resumen-icono-anio-${codigo}`
+            ).textContent =
+                icono;
+
+            document.getElementById(
                 `lluvia-icono-${codigo}`
             ).textContent =
-                obtenerIconoLluvia(
-                    datos.tasa_lluvia_mm_h
-                );
+                icono;
 
             document.getElementById(
                 `lluvia-tarjeta-dia-${codigo}`
@@ -2917,6 +3002,21 @@
                 `lluvia-anio-${codigo}`
             ).textContent =
                 "-- mm";
+
+            document.getElementById(
+                `lluvia-resumen-icono-dia-${codigo}`
+            ).textContent =
+                "☁️";
+
+            document.getElementById(
+                `lluvia-resumen-icono-mes-${codigo}`
+            ).textContent =
+                "☁️";
+
+            document.getElementById(
+                `lluvia-resumen-icono-anio-${codigo}`
+            ).textContent =
+                "☁️";
 
             document.getElementById(
                 `lluvia-icono-${codigo}`
