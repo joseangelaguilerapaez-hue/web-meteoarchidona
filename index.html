@@ -838,6 +838,222 @@
                 600;
         }
 
+        .patrocinio-lluvia {
+            display:
+                grid;
+
+            grid-template-columns:
+                auto
+                minmax(0, 1fr)
+                auto;
+
+            align-items:
+                center;
+
+            min-height:
+                46px;
+
+            margin-top:
+                14px;
+
+            overflow:
+                hidden;
+
+            border:
+                1px solid
+                rgba(0, 168, 255, 0.48);
+
+            border-radius:
+                10px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #071526,
+                    #0d2035
+                );
+
+            box-shadow:
+                0 8px 24px
+                rgba(0, 0, 0, 0.20);
+        }
+
+        .patrocinio-lluvia-titulo {
+            align-self:
+                stretch;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            padding:
+                0 15px;
+
+            white-space:
+                nowrap;
+
+            border-right:
+                1px solid
+                rgba(0, 168, 255, 0.35);
+
+            background:
+                rgba(255, 255, 255, 0.035);
+
+            color:
+                #ffffff;
+
+            font-size:
+                11px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                0.08em;
+        }
+
+        .patrocinio-lluvia-ventana {
+            min-width:
+                0;
+
+            overflow:
+                hidden;
+
+            -webkit-mask-image:
+                linear-gradient(
+                    to right,
+                    transparent,
+                    black 4%,
+                    black 96%,
+                    transparent
+                );
+
+            mask-image:
+                linear-gradient(
+                    to right,
+                    transparent,
+                    black 4%,
+                    black 96%,
+                    transparent
+                );
+        }
+
+        .patrocinio-lluvia-pista {
+            display:
+                flex;
+
+            width:
+                max-content;
+
+            animation:
+                patrocinio-lluvia-desplazar
+                23s
+                linear
+                infinite;
+
+            will-change:
+                transform;
+        }
+
+        .patrocinio-lluvia-texto {
+            flex:
+                none;
+
+            display:
+                block;
+
+            padding:
+                0 46px;
+
+            white-space:
+                nowrap;
+
+            color:
+                #00a8ff;
+
+            font-size:
+                13px;
+
+            font-weight:
+                600;
+
+            text-shadow:
+                0 0 10px
+                rgba(0, 168, 255, 0.28);
+        }
+
+        .patrocinio-lluvia-texto strong {
+            color:
+                #42c7ff;
+
+            font-weight:
+                800;
+
+            text-shadow:
+                0 0 12px
+                rgba(66, 199, 255, 0.42);
+        }
+
+        .patrocinio-lluvia-control {
+            width:
+                46px;
+
+            min-height:
+                46px;
+
+            border:
+                0;
+
+            border-left:
+                1px solid
+                rgba(0, 168, 255, 0.28);
+
+            background:
+                transparent;
+
+            color:
+                #42c7ff;
+
+            cursor:
+                pointer;
+
+            font-size:
+                13px;
+        }
+
+        .patrocinio-lluvia-control:hover {
+            background:
+                rgba(0, 168, 255, 0.08);
+        }
+
+        .patrocinio-lluvia-control:focus-visible {
+            outline:
+                2px solid #00a8ff;
+
+            outline-offset:
+                -3px;
+        }
+
+        .patrocinio-lluvia.pausado
+        .patrocinio-lluvia-pista {
+            animation-play-state:
+                paused;
+        }
+
+        @keyframes patrocinio-lluvia-desplazar {
+            from {
+                transform:
+                    translateX(0);
+            }
+
+            to {
+                transform:
+                    translateX(-50%);
+            }
+        }
+
         .bloques-medicion {
             display:
                 grid;
@@ -1473,6 +1689,40 @@
                     none;
             }
 
+            .patrocinio-lluvia {
+                grid-template-columns:
+                    1fr auto;
+            }
+
+            .patrocinio-lluvia-titulo {
+                grid-column:
+                    1 / -1;
+
+                min-height:
+                    32px;
+
+                justify-content:
+                    center;
+
+                border-right:
+                    0;
+
+                border-bottom:
+                    1px solid
+                    rgba(0, 168, 255, 0.25);
+            }
+
+            .patrocinio-lluvia-ventana {
+                min-height:
+                    44px;
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+            }
+
             .bloques-medicion {
                 margin-left:
                     0;
@@ -1605,6 +1855,14 @@
                     rgba(255, 255, 255, 0.08);
             }
 
+            .patrocinio-lluvia-texto {
+                padding:
+                    0 32px;
+
+                font-size:
+                    12px;
+            }
+
             .bloques-medicion {
                 grid-template-columns:
                     1fr;
@@ -1618,6 +1876,20 @@
             .accesos {
                 grid-template-columns:
                     1fr;
+            }
+        }
+
+        @media (
+            prefers-reduced-motion: reduce
+        ) {
+            .patrocinio-lluvia-pista {
+                animation:
+                    none;
+            }
+
+            .patrocinio-lluvia-texto:nth-child(2) {
+                display:
+                    none;
             }
         }
     </style>
@@ -2146,6 +2418,61 @@
                     </div>
 
                 </article>
+
+            </section>
+
+            <section
+                class="patrocinio-lluvia"
+                id="patrocinio-lluvia"
+                aria-label="Patrocinadores de los datos de lluvia"
+            >
+
+                <div class="patrocinio-lluvia-titulo">
+                    🌧️ LLUVIA EN VIVO
+                </div>
+
+                <div class="patrocinio-lluvia-ventana">
+
+                    <div class="patrocinio-lluvia-pista">
+
+                        <span class="patrocinio-lluvia-texto">
+                            Datos de lluvia en vivo patrocinados por
+                            <strong>Restaurante San Isidro</strong>
+                            ·
+                            <strong>Bar Central</strong>
+                            ·
+                            <strong>Las Viñas</strong>
+                            ·
+                            <strong>Gestión 95</strong>
+                        </span>
+
+                        <span
+                            class="patrocinio-lluvia-texto"
+                            aria-hidden="true"
+                        >
+                            Datos de lluvia en vivo patrocinados por
+                            <strong>Restaurante San Isidro</strong>
+                            ·
+                            <strong>Bar Central</strong>
+                            ·
+                            <strong>Las Viñas</strong>
+                            ·
+                            <strong>Gestión 95</strong>
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="patrocinio-lluvia-control"
+                    id="patrocinio-lluvia-control"
+                    aria-label="Pausar patrocinio"
+                    aria-pressed="false"
+                >
+                    Ⅱ
+                </button>
 
             </section>
 
@@ -2823,6 +3150,54 @@
                 hora;
         }
 
+        function configurarPatrocinioLluvia() {
+            const patrocinio =
+                document.getElementById(
+                    "patrocinio-lluvia"
+                );
+
+            const control =
+                document.getElementById(
+                    "patrocinio-lluvia-control"
+                );
+
+            if (
+                !patrocinio ||
+                !control
+            ) {
+                return;
+            }
+
+            control.addEventListener(
+                "click",
+                () => {
+                    const pausado =
+                        patrocinio.classList.toggle(
+                            "pausado"
+                        );
+
+                    control.textContent =
+                        pausado
+                            ? "▶"
+                            : "Ⅱ";
+
+                    control.setAttribute(
+                        "aria-pressed",
+                        String(
+                            pausado
+                        )
+                    );
+
+                    control.setAttribute(
+                        "aria-label",
+                        pausado
+                            ? "Reanudar patrocinio"
+                            : "Pausar patrocinio"
+                    );
+                }
+            );
+        }
+
         function mostrarLluvia(
             codigo,
             datos
@@ -3147,6 +3522,8 @@
             actualizarReloj,
             30000
         );
+
+        configurarPatrocinioLluvia();
 
         cargarCondiciones();
     </script>
