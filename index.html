@@ -3515,7 +3515,10 @@
             try {
                 const respuesta =
                     await fetch(
-                        `${API_BASE}/condiciones-actuales/${codigo}`
+                        `${API_BASE}/condiciones-actuales/${codigo}`,
+                        {
+                            cache: "no-store",
+                        }
                     );
 
                 if (
@@ -3568,6 +3571,11 @@
         configurarPatrocinios();
 
         cargarCondiciones();
+
+        setInterval(
+            cargarCondiciones,
+            60000
+        );
     </script>
 </body>
 </html>
