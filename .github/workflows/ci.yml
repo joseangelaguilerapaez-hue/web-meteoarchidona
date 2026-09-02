@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    name: Validar web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Comprobar formato Git
+        run: git diff --check HEAD^ HEAD
+
+      - name: Confirmar estructura inicial
+        run: |
+          echo "Repositorio web-meteoarchidona preparado."
+          echo "La validación HTML, CSS y JavaScript se incorporará"
+          echo "a medida que se añadan los primeros archivos de la web."
