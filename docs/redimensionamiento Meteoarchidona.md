@@ -1,8 +1,8 @@
 # Redimensionamiento de MeteoArchidona mediante nuevos puntos de medición
 
-**Documento de planificación técnica**  
-**Proyecto:** MeteoArchidona  
-**Estado:** propuesta de redimensionamiento / estándar técnico v1  
+**Documento de planificación técnica**
+**Proyecto:** MeteoArchidona
+**Estado:** propuesta de redimensionamiento / estándar técnico v1
 **Última revisión:** 3 de septiembre de 2026
 
 ---
@@ -227,9 +227,9 @@ La separación física entre WS80 y WH40H es una ventaja: cada instrumento puede
   <img src="https://shop.ecowitt.com/cdn/shop/files/GW1200-1.jpg?v=1716887960&amp;width=416" alt="Ecowitt GW1200" width="360">
 </p>
 
-**Fabricante:** Ecowitt  
-**Modelo:** GW1200  
-**Función:** gateway inalámbrico Wi-Fi / concentrador de sensores  
+**Fabricante:** Ecowitt
+**Modelo:** GW1200
+**Función:** gateway inalámbrico Wi-Fi / concentrador de sensores
 **Frecuencia para MeteoArchidona:** 868 MHz Europa
 
 ## Funciones principales
@@ -280,10 +280,10 @@ El paquete incluye:
 
 ## Precio de referencia
 
-**31,99 USD** en la tienda oficial Ecowitt.  
+**31,99 USD** en la tienda oficial Ecowitt.
 Equivalencia de referencia al 03/09/2026: **27,60 EUR**.
 
-Producto oficial:  
+Producto oficial:
 <https://shop.ecowitt.com/es-es/products/gw1200>
 
 ---
@@ -294,9 +294,9 @@ Producto oficial:
   <img src="https://shop.ecowitt.com/cdn/shop/products/jpg_c5785e25-f48f-43fd-8b03-2f2feea438a2.jpg?v=1764918086&amp;width=416" alt="Ecowitt WS80" width="390">
 </p>
 
-**Fabricante:** Ecowitt  
-**Modelo:** WS80  
-**Función:** sensor exterior principal 6 en 1  
+**Fabricante:** Ecowitt
+**Modelo:** WS80
+**Función:** sensor exterior principal 6 en 1
 **Frecuencia para MeteoArchidona:** 868 MHz Europa
 
 ## Variables medidas
@@ -352,10 +352,10 @@ El mástil o estructura general de la instalación dependerá de cada ubicación
 
 ## Precio de referencia
 
-**109,99 USD** en la tienda oficial Ecowitt.  
+**109,99 USD** en la tienda oficial Ecowitt.
 Equivalencia de referencia al 03/09/2026: **94,90 EUR**.
 
-Producto oficial:  
+Producto oficial:
 <https://shop.ecowitt.com/es-es/products/ws80>
 
 ---
@@ -366,9 +366,9 @@ Producto oficial:
   <img src="https://shop.ecowitt.com/cdn/shop/files/1_7d5d8184-99ef-4e46-b05e-b3622bdf201c.jpg?v=1764918086&amp;width=416" alt="Ecowitt WH40H" width="390">
 </p>
 
-**Fabricante:** Ecowitt  
-**Modelo:** WH40H  
-**Función:** pluviómetro inalámbrico independiente con autovaciado  
+**Fabricante:** Ecowitt
+**Modelo:** WH40H
+**Función:** pluviómetro inalámbrico independiente con autovaciado
 **Frecuencia para MeteoArchidona:** 868 MHz Europa
 
 ## Razón de su elección
@@ -412,10 +412,10 @@ El paquete incorpora, entre otros:
 
 ## Precio de referencia
 
-**39,99 USD** en la tienda oficial Ecowitt.  
+**39,99 USD** en la tienda oficial Ecowitt.
 Equivalencia de referencia al 03/09/2026: **34,50 EUR**.
 
-Producto oficial:  
+Producto oficial:
 <https://shop.ecowitt.com/es-es/products/wh40h>
 
 ---
@@ -820,30 +820,30 @@ Fuentes consultadas y verificadas el 03/09/2026:
 
 ### Ecowitt GW1200
 
-- Producto y especificaciones oficiales:  
+- Producto y especificaciones oficiales:
   <https://shop.ecowitt.com/es-es/products/gw1200>
-- Documentación Ecowitt:  
+- Documentación Ecowitt:
   <https://www.ecowitt.com/api/quickstart/product?id=299>
 
 ### Ecowitt WS80
 
-- Producto y especificaciones oficiales:  
+- Producto y especificaciones oficiales:
   <https://shop.ecowitt.com/es-es/products/ws80>
 
 ### Ecowitt WH40H
 
-- Producto y especificaciones oficiales:  
+- Producto y especificaciones oficiales:
   <https://shop.ecowitt.com/es-es/products/wh40h>
 
 ### Referencia local ArchidonaMeteo / Meteoclimatic
 
-- Archidona - Norte:  
+- Archidona - Norte:
   <https://www.meteoclimatic.net/perfil/ESAND2900000029300B>
-- PFV Guadacano:  
+- PFV Guadacano:
   <https://www.meteoclimatic.net/perfil/ESAND2900000029300C>
-- Foro Meteoclimatic, inventario público de equipos de ArchidonaMeteo:  
+- Foro Meteoclimatic, inventario público de equipos de ArchidonaMeteo:
   <https://forum.meteoclimatic.net/index.php?topic=5880.0>
-- Referencia pública al proyecto de varias estaciones en localidad y pedanías:  
+- Referencia pública al proyecto de varias estaciones en localidad y pedanías:
   <https://forum.meteoclimatic.net/index.php?topic=3232.390>
 
 ### Tipo de cambio de referencia
