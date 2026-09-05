@@ -98,78 +98,199 @@
 
         /*
         ============================================================
-        CAPA DE LLUVIA
+        LLUVIA ANIMADA
         ============================================================
         */
 
-        .capa-lluvia {
-            position: fixed;
-            inset: 0;
-
-            z-index: 100;
-
+        .capa-lluvia,
+        .capa-lluvia-ficha {
             display: none;
 
             overflow: hidden;
 
             pointer-events: none;
 
-            transition:
-                background 0.25s ease;
+            --factor-duracion: 1;
+            --factor-longitud: 1;
+            --factor-opacidad: 1;
+            --ancho-gota: 1px;
         }
 
-        .capa-lluvia.activa {
+        .capa-lluvia {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 100;
+        }
+
+        .capa-lluvia-ficha {
+            position: absolute;
+
+            inset: 0;
+
+            z-index: 12;
+
+            border-radius: inherit;
+        }
+
+        .capa-lluvia.activa,
+        .capa-lluvia-ficha.activa {
             display: block;
+        }
+
+        /*
+        LLUVIA DÉBIL
+        */
+
+        .nivel-1 {
+            --factor-duracion: 1.60;
+            --factor-longitud: 0.55;
+            --factor-opacidad: 0.46;
+            --ancho-gota: 0.8px;
         }
 
         .capa-lluvia.nivel-1 {
             background:
-                rgba(8, 22, 34, 0.015);
+                rgba(8, 22, 34, 0.008);
+        }
+
+        .capa-lluvia-ficha.nivel-1 {
+            background:
+                rgba(8, 22, 34, 0.012);
+        }
+
+        .nivel-1
+        .gota-lluvia:nth-child(n + 19) {
+            display: none;
+        }
+
+        /*
+        LLUVIA MODERADA
+        */
+
+        .nivel-2 {
+            --factor-duracion: 1.16;
+            --factor-longitud: 0.85;
+            --factor-opacidad: 0.66;
+            --ancho-gota: 1px;
         }
 
         .capa-lluvia.nivel-2 {
             background:
-                rgba(8, 22, 34, 0.025);
+                rgba(8, 22, 34, 0.020);
+        }
+
+        .capa-lluvia-ficha.nivel-2 {
+            background:
+                rgba(8, 22, 34, 0.030);
+        }
+
+        .nivel-2
+        .gota-lluvia:nth-child(n + 41) {
+            display: none;
+        }
+
+        /*
+        LLUVIA FUERTE
+        */
+
+        .nivel-3 {
+            --factor-duracion: 0.82;
+            --factor-longitud: 1.20;
+            --factor-opacidad: 0.84;
+            --ancho-gota: 1.3px;
         }
 
         .capa-lluvia.nivel-3 {
             background:
-                rgba(8, 22, 34, 0.045);
+                rgba(6, 19, 31, 0.050);
+        }
+
+        .capa-lluvia-ficha.nivel-3 {
+            background:
+                rgba(6, 19, 31, 0.065);
+        }
+
+        .nivel-3
+        .gota-lluvia:nth-child(n + 76) {
+            display: none;
+        }
+
+        /*
+        LLUVIA MUY FUERTE
+        */
+
+        .nivel-4 {
+            --factor-duracion: 0.54;
+            --factor-longitud: 1.70;
+            --factor-opacidad: 1;
+            --ancho-gota: 1.8px;
         }
 
         .capa-lluvia.nivel-4 {
             background:
-                rgba(8, 22, 34, 0.07);
+                rgba(4, 16, 28, 0.095);
+        }
+
+        .capa-lluvia-ficha.nivel-4 {
+            background:
+                rgba(4, 16, 28, 0.125);
+        }
+
+        .nivel-4
+        .gota-lluvia {
+            display: block;
         }
 
         .gota-lluvia {
             position: absolute;
 
-            top: -15vh;
+            top: -20vh;
             left: var(--x);
 
-            width: 1px;
-            height: var(--longitud);
+            width:
+                var(--ancho-gota);
 
-            opacity: var(--opacidad);
+            height:
+                calc(
+                    var(--longitud)
+                    * var(--factor-longitud)
+                );
 
-            border-radius: 999px;
+            opacity:
+                calc(
+                    var(--opacidad)
+                    * var(--factor-opacidad)
+                );
+
+            border-radius:
+                999px;
 
             background:
                 linear-gradient(
                     to bottom,
-                    rgba(180, 226, 255, 0),
-                    rgba(180, 226, 255, 0.88)
+                    rgba(194, 231, 255, 0),
+                    rgba(180, 226, 255, 0.96)
                 );
 
             box-shadow:
-                0 0 3px
-                rgba(116, 201, 255, 0.25);
+                0 0 4px
+                rgba(116, 201, 255, 0.32);
 
-            animation:
-                caer-lluvia
-                var(--duracion)
-                linear
+            animation-name:
+                caer-lluvia;
+
+            animation-duration:
+                calc(
+                    var(--duracion)
+                    * var(--factor-duracion)
+                );
+
+            animation-timing-function:
+                linear;
+
+            animation-iteration-count:
                 infinite;
 
             animation-delay:
@@ -179,45 +300,32 @@
                 transform;
         }
 
-        .capa-lluvia.nivel-1
-        .gota-lluvia:nth-child(n + 21) {
-            display: none;
-        }
-
-        .capa-lluvia.nivel-2
-        .gota-lluvia:nth-child(n + 39) {
-            display: none;
-        }
-
-        .capa-lluvia.nivel-3
-        .gota-lluvia:nth-child(n + 65) {
-            display: none;
-        }
-
-        .capa-lluvia.nivel-4
-        .gota-lluvia {
-            display: block;
+        .nivel-4
+        .gota-lluvia:nth-child(3n) {
+            box-shadow:
+                0 0 6px
+                rgba(166, 222, 255, 0.48);
         }
 
         @keyframes caer-lluvia {
             from {
                 transform:
                     translate3d(
-                        8vw,
-                        -15vh,
+                        10vw,
+                        -18vh,
                         0
                     )
-                    rotate(9deg);
+                    rotate(10deg);
             }
 
             to {
                 transform:
                     translate3d(
-                        -9vw,
-                        125vh,
+                        -11vw,
+                        128vh,
                         0
                     )
-                    rotate(9deg);
+                    rotate(10deg);
             }
         }
 
@@ -229,7 +337,9 @@
 
         .cabecera {
             position: sticky;
+
             top: 0;
+
             z-index: 20;
 
             display: grid;
@@ -261,7 +371,9 @@
 
         .marca {
             display: flex;
+
             align-items: center;
+
             gap: 14px;
         }
 
@@ -383,6 +495,7 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             gap: 30px;
@@ -416,8 +529,7 @@
         }
 
         .navegacion a:hover {
-            color:
-                white;
+            color: white;
         }
 
         .navegacion a.activo {
@@ -448,15 +560,17 @@
             display: flex;
 
             justify-content: flex-end;
+
             align-items: center;
 
-            gap: 16px;
+            gap: 18px;
         }
 
         .hora {
             display: flex;
 
             justify-content: flex-end;
+
             align-items: center;
 
             text-align: right;
@@ -471,8 +585,7 @@
         }
 
         .reloj {
-            margin-top:
-                3px;
+            margin-top: 3px;
 
             font-family:
                 "JetBrains Mono",
@@ -485,17 +598,23 @@
                 600;
         }
 
+        /*
+        ============================================================
+        Y&Z PROJECT
+        ============================================================
+        */
+
         .firma-proyecto {
             position: relative;
 
             display: grid;
+
             place-items: center;
 
             width: 70px;
             height: 70px;
 
-            flex:
-                0 0 auto;
+            flex: 0 0 auto;
 
             padding: 0;
 
@@ -513,17 +632,13 @@
                 0 6px 20px
                 rgba(0, 0, 0, 0.28);
 
-            cursor:
-                pointer;
+            cursor: pointer;
 
-            user-select:
-                none;
+            user-select: none;
 
-            touch-action:
-                manipulation;
+            touch-action: manipulation;
 
-            -webkit-user-select:
-                none;
+            -webkit-user-select: none;
         }
 
         .firma-proyecto img {
@@ -537,14 +652,11 @@
             border-radius:
                 50%;
 
-            pointer-events:
-                none;
+            pointer-events: none;
 
-            user-select:
-                none;
+            user-select: none;
 
-            -webkit-user-drag:
-                none;
+            -webkit-user-drag: none;
         }
 
         .firma-proyecto:hover {
@@ -568,17 +680,16 @@
         .simulacion-global {
             position: absolute;
 
-            right: 50%;
+            left: 50%;
 
             bottom: -8px;
 
             transform:
-                translateX(50%);
+                translateX(-50%);
 
             display: none;
 
-            min-width:
-                max-content;
+            min-width: max-content;
 
             padding:
                 3px 6px;
@@ -608,13 +719,11 @@
             text-transform:
                 uppercase;
 
-            pointer-events:
-                none;
+            pointer-events: none;
         }
 
         .simulacion-global.visible {
-            display:
-                block;
+            display: block;
         }
 
         /*
@@ -624,13 +733,11 @@
         */
 
         .panel-aplicacion {
-            display:
-                none;
+            display: none;
         }
 
         .panel-aplicacion.activo {
-            display:
-                block;
+            display: block;
         }
 
         .contenido {
@@ -654,8 +761,7 @@
                 minmax(0, 1fr)
                 minmax(0, 1fr);
 
-            gap:
-                14px;
+            gap: 14px;
         }
 
         .tarjeta {
@@ -683,8 +789,7 @@
         */
 
         .resumen {
-            padding:
-                20px;
+            padding: 20px;
         }
 
         .seccion-titulo {
@@ -703,7 +808,9 @@
 
         .estado {
             display: flex;
+
             align-items: center;
+
             gap: 7px;
 
             color:
@@ -714,11 +821,8 @@
         }
 
         .punto {
-            width:
-                9px;
-
-            height:
-                9px;
+            width: 9px;
+            height: 9px;
 
             border-radius:
                 50%;
@@ -733,6 +837,7 @@
 
         .estado-grafico {
             display: grid;
+
             place-items: center;
 
             min-height:
@@ -745,11 +850,8 @@
         .tiempo-icono {
             position: relative;
 
-            width:
-                120px;
-
-            height:
-                120px;
+            width: 120px;
+            height: 120px;
 
             border-radius:
                 50%;
@@ -766,34 +868,24 @@
         }
 
         .tiempo-icono .sol {
-            width:
-                42px;
+            width: 42px;
+            height: 42px;
 
-            height:
-                42px;
-
-            left:
-                27px;
-
-            top:
-                24px;
+            left: 27px;
+            top: 24px;
         }
 
         .tiempo-icono .nube {
-            left:
-                43px;
+            left: 43px;
 
-            bottom:
-                25px;
+            bottom: 25px;
 
-            width:
-                61px;
+            width: 61px;
 
             background:
                 #d9e2e9;
 
-            border:
-                none;
+            border: none;
         }
 
         .tiempo-icono .nube::before,
@@ -801,8 +893,7 @@
             background:
                 #d9e2e9;
 
-            border:
-                none;
+            border: none;
         }
 
         .ubicacion {
@@ -814,8 +905,7 @@
         }
 
         .ubicacion-sub {
-            margin-top:
-                4px;
+            margin-top: 4px;
 
             color:
                 var(--muted);
@@ -830,14 +920,11 @@
             grid-template-columns:
                 1fr 1fr;
 
-            gap:
-                10px;
+            gap: 10px;
 
-            margin-top:
-                19px;
+            margin-top: 19px;
 
-            padding-top:
-                16px;
+            padding-top: 16px;
 
             border-top:
                 1px solid var(--border);
@@ -855,8 +942,7 @@
         .sol-hora span {
             display: block;
 
-            margin-top:
-                3px;
+            margin-top: 3px;
 
             color:
                 var(--muted);
@@ -876,10 +962,11 @@
         */
 
         .estacion-principal {
+            position: relative;
+
             overflow: hidden;
 
-            min-height:
-                0;
+            min-height: 0;
 
             background:
                 linear-gradient(
@@ -914,8 +1001,7 @@
             align-items:
                 flex-start;
 
-            gap:
-                14px;
+            gap: 14px;
         }
 
         .estacion-nombre {
@@ -926,8 +1012,7 @@
         }
 
         .estacion-localidad {
-            margin-top:
-                3px;
+            margin-top: 3px;
 
             color:
                 #c7d7e5;
@@ -939,8 +1024,7 @@
         .online {
             display: flex;
 
-            gap:
-                8px;
+            gap: 8px;
 
             align-items:
                 center;
@@ -965,16 +1049,14 @@
             align-items:
                 center;
 
-            gap:
-                18px;
+            gap: 18px;
 
             padding:
                 14px 0;
         }
 
         .temperatura-bloque {
-            min-width:
-                0;
+            min-width: 0;
         }
 
         .temperatura {
@@ -998,29 +1080,25 @@
             letter-spacing:
                 -0.06em;
 
-            line-height:
-                1;
+            line-height: 1;
         }
 
         .temperatura sup {
             font-size:
                 24px;
 
-            letter-spacing:
-                0;
+            letter-spacing: 0;
         }
 
         .sensacion {
-            margin-top:
-                5px;
+            margin-top: 5px;
 
             font-size:
                 12px;
         }
 
         .observacion {
-            margin-top:
-                5px;
+            margin-top: 5px;
 
             color:
                 var(--muted);
@@ -1049,14 +1127,11 @@
             align-items:
                 center;
 
-            gap:
-                12px;
+            gap: 12px;
 
-            min-width:
-                0;
+            min-width: 0;
 
-            padding:
-                10px;
+            padding: 10px;
 
             border:
                 1px solid
@@ -1072,11 +1147,8 @@
         .veleta {
             position: relative;
 
-            width:
-                106px;
-
-            height:
-                106px;
+            width: 106px;
+            height: 106px;
 
             border:
                 2px solid
@@ -1103,14 +1175,12 @@
                     15deg
                 );
 
-            cursor:
-                pointer;
+            cursor: pointer;
 
             touch-action:
                 manipulation;
 
-            user-select:
-                none;
+            user-select: none;
 
             -webkit-user-select:
                 none;
@@ -1119,8 +1189,7 @@
                 inset 0 0 22px
                 rgba(59, 158, 255, 0.08);
 
-            --angulo:
-                0deg;
+            --angulo: 0deg;
         }
 
         .veleta::after {
@@ -1131,11 +1200,8 @@
             left: 50%;
             top: 50%;
 
-            width:
-                8px;
-
-            height:
-                8px;
+            width: 8px;
+            height: 8px;
 
             transform:
                 translate(-50%, -50%);
@@ -1150,8 +1216,7 @@
                 0 0 10px
                 rgba(240, 165, 0, 0.60);
 
-            z-index:
-                5;
+            z-index: 5;
         }
 
         .veleta:hover {
@@ -1184,49 +1249,40 @@
             font-weight:
                 600;
 
-            z-index:
-                4;
+            z-index: 4;
         }
 
         .veleta-n {
-            top:
-                5px;
+            top: 5px;
 
-            left:
-                50%;
+            left: 50%;
 
             transform:
                 translateX(-50%);
         }
 
         .veleta-s {
-            bottom:
-                5px;
+            bottom: 5px;
 
-            left:
-                50%;
+            left: 50%;
 
             transform:
                 translateX(-50%);
         }
 
         .veleta-e {
-            right:
-                6px;
+            right: 6px;
 
-            top:
-                50%;
+            top: 50%;
 
             transform:
                 translateY(-50%);
         }
 
         .veleta-o {
-            left:
-                6px;
+            left: 6px;
 
-            top:
-                50%;
+            top: 50%;
 
             transform:
                 translateY(-50%);
@@ -1235,17 +1291,11 @@
         .veleta-rotor {
             position: absolute;
 
-            left:
-                50%;
+            left: 50%;
+            top: 50%;
 
-            top:
-                50%;
-
-            width:
-                0;
-
-            height:
-                0;
+            width: 0;
+            height: 0;
 
             transform:
                 rotate(
@@ -1257,24 +1307,17 @@
                 0.45s
                 ease;
 
-            z-index:
-                3;
+            z-index: 3;
         }
 
         .veleta-aguja {
             position: absolute;
 
-            left:
-                -1.5px;
+            left: -1.5px;
+            bottom: 0;
 
-            bottom:
-                0;
-
-            width:
-                3px;
-
-            height:
-                36px;
+            width: 3px;
+            height: 36px;
 
             border-radius:
                 3px;
@@ -1296,20 +1339,14 @@
 
             position: absolute;
 
-            top:
-                -7px;
-
-            left:
-                50%;
+            top: -7px;
+            left: 50%;
 
             transform:
                 translateX(-50%);
 
-            width:
-                0;
-
-            height:
-                0;
+            width: 0;
+            height: 0;
 
             border-left:
                 5px solid transparent;
@@ -1317,8 +1354,7 @@
             border-right:
                 5px solid transparent;
 
-            border-bottom:
-                0;
+            border-bottom: 0;
 
             border-top:
                 10px solid
@@ -1326,8 +1362,7 @@
         }
 
         .viento-datos {
-            min-width:
-                0;
+            min-width: 0;
         }
 
         .direccion-principal {
@@ -1336,8 +1371,7 @@
             align-items:
                 baseline;
 
-            gap:
-                6px;
+            gap: 6px;
         }
 
         .direccion-cardinal {
@@ -1368,8 +1402,7 @@
         }
 
         .viento-actual {
-            margin-top:
-                5px;
+            margin-top: 5px;
 
             font-family:
                 "JetBrains Mono",
@@ -1402,13 +1435,11 @@
             gap:
                 4px 8px;
 
-            margin-top:
-                6px;
+            margin-top: 6px;
         }
 
         .viento-secundario {
-            min-width:
-                0;
+            min-width: 0;
 
             color:
                 var(--muted);
@@ -1420,8 +1451,7 @@
         .viento-secundario strong {
             display: block;
 
-            margin-top:
-                1px;
+            margin-top: 1px;
 
             color:
                 var(--text);
@@ -1443,8 +1473,7 @@
         .simulacion-estacion {
             display: none;
 
-            margin-top:
-                7px;
+            margin-top: 7px;
 
             padding:
                 3px 6px;
@@ -1479,8 +1508,7 @@
         }
 
         .simulacion-estacion.visible {
-            display:
-                block;
+            display: block;
         }
 
         /*
@@ -1490,8 +1518,7 @@
         */
 
         .patrocinio-estacion {
-            display:
-                grid;
+            display: grid;
 
             grid-template-columns:
                 auto
@@ -1561,8 +1588,7 @@
         }
 
         .patrocinio-estacion-ventana {
-            min-width:
-                0;
+            min-width: 0;
 
             overflow:
                 hidden;
@@ -1605,8 +1631,7 @@
         .patrocinio-estacion-texto {
             display: block;
 
-            flex:
-                none;
+            flex: none;
 
             padding:
                 0 34px;
@@ -1644,11 +1669,9 @@
             align-self:
                 stretch;
 
-            width:
-                34px;
+            width: 34px;
 
-            border:
-                0;
+            border: 0;
 
             border-left:
                 1px solid
@@ -1674,8 +1697,7 @@
 
         .patrocinio-estacion-control:focus-visible {
             outline:
-                2px solid
-                #00a8ff;
+                2px solid #00a8ff;
 
             outline-offset:
                 -3px;
@@ -1701,7 +1723,7 @@
 
         /*
         ============================================================
-        LLUVIA DE CADA ESTACIÓN
+        LLUVIA DE ESTACIÓN
         ============================================================
         */
 
@@ -1709,10 +1731,9 @@
             display: grid;
 
             grid-template-columns:
-                repeat(4, 1fr);
+                repeat(2, minmax(0, 1fr));
 
-            gap:
-                7px;
+            gap: 7px;
 
             margin:
                 0 0 12px;
@@ -1732,13 +1753,13 @@
         }
 
         .lluvia-resumen-item {
-            min-width:
-                0;
+            min-width: 0;
 
             display: grid;
 
             grid-template-columns:
-                auto 1fr;
+                30px
+                minmax(0, 1fr);
 
             grid-template-areas:
                 "icono label"
@@ -1748,8 +1769,23 @@
             align-items:
                 center;
 
-            column-gap:
-                7px;
+            column-gap: 7px;
+
+            min-height:
+                48px;
+
+            padding:
+                5px 6px;
+
+            border:
+                1px solid
+                rgba(54, 213, 255, 0.07);
+
+            border-radius:
+                6px;
+
+            background:
+                rgba(5, 24, 37, 0.24);
         }
 
         .lluvia-resumen-icono {
@@ -1778,8 +1814,7 @@
             grid-area:
                 valor;
 
-            margin-top:
-                2px;
+            margin-top: 2px;
 
             font-family:
                 "JetBrains Mono",
@@ -1802,8 +1837,7 @@
             grid-area:
                 extra;
 
-            margin-top:
-                1px;
+            margin-top: 1px;
 
             color:
                 var(--muted);
@@ -1814,7 +1848,7 @@
 
         /*
         ============================================================
-        MÉTRICAS DE ESTACIÓN
+        MÉTRICAS
         ============================================================
         */
 
@@ -1833,8 +1867,7 @@
         }
 
         .metrica-estacion {
-            min-width:
-                0;
+            min-width: 0;
 
             padding:
                 11px 13px;
@@ -1849,8 +1882,7 @@
         }
 
         .metrica-estacion:nth-child(3n) {
-            border-right:
-                none;
+            border-right: none;
         }
 
         .metrica-label {
@@ -1862,8 +1894,7 @@
         }
 
         .metrica-valor {
-            margin-top:
-                4px;
+            margin-top: 4px;
 
             font-family:
                 "JetBrains Mono",
@@ -1880,8 +1911,7 @@
         }
 
         .metrica-secundaria {
-            margin-top:
-                3px;
+            margin-top: 3px;
 
             color:
                 var(--muted);
@@ -1892,7 +1922,7 @@
 
         /*
         ============================================================
-        GRÁFICOS Y CÁMARAS
+        GRÁFICOS
         ============================================================
         */
 
@@ -1904,11 +1934,9 @@
                 0.85fr
                 1fr;
 
-            gap:
-                14px;
+            gap: 14px;
 
-            margin-top:
-                14px;
+            margin-top: 14px;
         }
 
         .grafico {
@@ -1928,8 +1956,7 @@
             align-items:
                 center;
 
-            gap:
-                16px;
+            gap: 16px;
 
             margin-bottom:
                 14px;
@@ -1949,8 +1976,7 @@
         .leyenda {
             display: flex;
 
-            gap:
-                14px;
+            gap: 14px;
 
             color:
                 var(--muted);
@@ -1965,11 +1991,8 @@
             display:
                 inline-block;
 
-            width:
-                8px;
-
-            height:
-                8px;
+            width: 8px;
+            height: 8px;
 
             margin-right:
                 5px;
@@ -1987,8 +2010,7 @@
         }
 
         .grafico-svg {
-            width:
-                100%;
+            width: 100%;
 
             height:
                 185px;
@@ -2003,8 +2025,7 @@
         }
 
         .linea-silo {
-            fill:
-                none;
+            fill: none;
 
             stroke:
                 var(--green);
@@ -2014,8 +2035,7 @@
         }
 
         .linea-llanos {
-            fill:
-                none;
+            fill: none;
 
             stroke:
                 var(--blue);
@@ -2035,22 +2055,19 @@
             grid-template-columns:
                 1fr 1fr;
 
-            gap:
-                12px;
+            gap: 12px;
 
             margin-top:
                 15px;
         }
 
         .camara {
-            position:
-                relative;
+            position: relative;
 
             min-height:
                 175px;
 
-            overflow:
-                hidden;
+            overflow: hidden;
 
             border-radius:
                 8px;
@@ -2074,17 +2091,12 @@
 
             position: absolute;
 
-            left:
-                -5%;
+            left: -5%;
+            right: -5%;
 
-            right:
-                -5%;
+            bottom: 32px;
 
-            bottom:
-                32px;
-
-            height:
-                60px;
+            height: 60px;
 
             background:
                 linear-gradient(
@@ -2094,21 +2106,16 @@
                     #223428 54%
                 );
 
-            opacity:
-                0.9;
+            opacity: 0.9;
         }
 
         .camara-estado {
             position: absolute;
 
-            top:
-                8px;
+            top: 8px;
+            left: 8px;
 
-            left:
-                8px;
-
-            z-index:
-                2;
+            z-index: 2;
 
             padding:
                 4px 7px;
@@ -2130,11 +2137,9 @@
             right: 0;
             bottom: 0;
 
-            z-index:
-                2;
+            z-index: 2;
 
-            padding:
-                10px;
+            padding: 10px;
 
             background:
                 rgba(4, 12, 19, 0.88);
@@ -2155,8 +2160,7 @@
             grid-template-columns:
                 repeat(6, 1fr);
 
-            gap:
-                12px;
+            gap: 12px;
 
             margin-top:
                 14px;
@@ -2174,8 +2178,7 @@
             align-items:
                 center;
 
-            gap:
-                13px;
+            gap: 13px;
 
             padding:
                 12px 14px;
@@ -2234,8 +2237,7 @@
             grid-template-columns:
                 1fr 1fr 1fr;
 
-            gap:
-                20px;
+            gap: 20px;
 
             align-items:
                 center;
@@ -2289,11 +2291,9 @@
         }
 
         .panel-futuro-contenido {
-            position:
-                relative;
+            position: relative;
 
-            overflow:
-                hidden;
+            overflow: hidden;
 
             width:
                 min(
@@ -2335,11 +2335,9 @@
 
             position: absolute;
 
-            inset:
-                0;
+            inset: 0;
 
-            pointer-events:
-                none;
+            pointer-events: none;
 
             background:
                 linear-gradient(
@@ -2357,22 +2355,17 @@
         }
 
         .panel-futuro-icono {
-            position:
-                relative;
+            position: relative;
 
-            z-index:
-                1;
+            z-index: 1;
 
             display: grid;
 
             place-items:
                 center;
 
-            width:
-                88px;
-
-            height:
-                88px;
+            width: 88px;
+            height: 88px;
 
             margin:
                 0 auto 24px;
@@ -2392,11 +2385,9 @@
         }
 
         .panel-futuro-etiqueta {
-            position:
-                relative;
+            position: relative;
 
-            z-index:
-                1;
+            z-index: 1;
 
             margin-bottom:
                 12px;
@@ -2419,11 +2410,9 @@
         }
 
         .panel-futuro h1 {
-            position:
-                relative;
+            position: relative;
 
-            z-index:
-                1;
+            z-index: 1;
 
             margin:
                 0 0 16px;
@@ -2440,11 +2429,9 @@
         }
 
         .panel-futuro p {
-            position:
-                relative;
+            position: relative;
 
-            z-index:
-                1;
+            z-index: 1;
 
             max-width:
                 620px;
@@ -2469,14 +2456,11 @@
         */
 
         .panel-en-vivo {
-            width:
-                100%;
+            width: 100%;
 
-            margin:
-                0;
+            margin: 0;
 
-            padding:
-                0;
+            padding: 0;
 
             background:
                 var(--bg);
@@ -2485,8 +2469,7 @@
         .panel-en-vivo iframe {
             display: block;
 
-            width:
-                100%;
+            width: 100%;
 
             height:
                 calc(100vh - 97px);
@@ -2494,8 +2477,7 @@
             min-height:
                 760px;
 
-            border:
-                0;
+            border: 0;
 
             background:
                 var(--bg);
@@ -2522,17 +2504,14 @@
                 grid-column:
                     1 / -1;
 
-                order:
-                    3;
+                order: 3;
 
                 justify-content:
                     center;
 
-                gap:
-                    30px;
+                gap: 30px;
 
-                width:
-                    100%;
+                width: 100%;
 
                 overflow-x:
                     auto;
@@ -2546,8 +2525,7 @@
             }
 
             .navegacion::-webkit-scrollbar {
-                display:
-                    none;
+                display: none;
             }
 
             .navegacion a {
@@ -2556,8 +2534,7 @@
             }
 
             .navegacion a.activo::after {
-                bottom:
-                    6px;
+                bottom: 6px;
             }
 
             .zona-derecha {
@@ -2584,16 +2561,8 @@
             }
 
             .veleta {
-                width:
-                    98px;
-
-                height:
-                    98px;
-            }
-
-            .lluvia-resumen {
-                grid-template-columns:
-                    1fr 1fr;
+                width: 98px;
+                height: 98px;
             }
 
             .paneles-graficos {
@@ -2627,8 +2596,7 @@
             }
 
             .resumen {
-                display:
-                    none;
+                display: none;
             }
         }
 
@@ -2636,45 +2604,46 @@
             max-width: 850px
         ) {
             .cabecera {
-                position:
-                    relative;
+                position: relative;
 
                 grid-template-columns:
                     1fr;
 
-                gap:
-                    9px;
+                gap: 9px;
 
-                padding-bottom:
-                    0;
+                padding-bottom: 0;
             }
 
             .marca {
-                order:
-                    1;
+                order: 1;
             }
 
+            /*
+            En móvil, fecha/hora y Y&Z permanecen
+            expresamente en la misma fila.
+            */
+
             .zona-derecha {
-                order:
-                    2;
+                order: 2;
 
-                flex-direction:
-                    column;
+                display: grid;
 
-                align-items:
-                    flex-start;
+                grid-template-columns:
+                    auto auto;
 
                 justify-content:
-                    flex-start;
+                    start;
 
-                gap:
-                    11px;
+                align-items:
+                    center;
 
-                width:
-                    100%;
+                column-gap:
+                    48px;
 
-                padding-left:
-                    84px;
+                width: 100%;
+
+                padding:
+                    0 12px;
             }
 
             .hora {
@@ -2686,33 +2655,25 @@
             }
 
             .firma-proyecto {
-                width:
-                    82px;
-
-                height:
-                    82px;
+                width: 76px;
+                height: 76px;
             }
 
             .firma-proyecto img {
-                width:
-                    76px;
-
-                height:
-                    76px;
+                width: 70px;
+                height: 70px;
             }
 
             .navegacion {
                 grid-column:
                     auto;
 
-                order:
-                    3;
+                order: 3;
 
                 justify-content:
                     flex-start;
 
-                gap:
-                    24px;
+                gap: 24px;
 
                 margin:
                     4px
@@ -2796,7 +2757,7 @@
                     720px;
 
                 height:
-                    calc(100vh - 260px);
+                    calc(100vh - 245px);
             }
         }
 
@@ -2822,8 +2783,7 @@
                 grid-template-columns:
                     1fr;
 
-                gap:
-                    12px;
+                gap: 12px;
 
                 padding:
                     13px 0;
@@ -2841,11 +2801,8 @@
             }
 
             .veleta {
-                width:
-                    104px;
-
-                height:
-                    104px;
+                width: 104px;
+                height: 104px;
             }
 
             .patrocinio-estacion {
@@ -2866,8 +2823,7 @@
             }
 
             .patrocinio-estacion-control {
-                display:
-                    none;
+                display: none;
             }
 
             .patrocinio-estacion-texto {
@@ -2878,25 +2834,44 @@
                     9px;
             }
 
+            /*
+            Se mantienen DOS columnas también en móvil.
+            */
+
             .lluvia-resumen {
                 grid-template-columns:
-                    1fr 1fr;
+                    repeat(2, minmax(0, 1fr));
 
-                gap:
-                    7px;
+                gap: 7px;
 
-                padding:
-                    9px;
+                padding: 8px;
             }
 
             .lluvia-resumen-item {
                 grid-template-columns:
-                    28px 1fr;
+                    26px
+                    minmax(0, 1fr);
+
+                padding:
+                    5px 3px;
+
+                column-gap:
+                    5px;
             }
 
             .lluvia-resumen-icono {
                 font-size:
-                    19px;
+                    18px;
+            }
+
+            .lluvia-resumen-label {
+                font-size:
+                    7px;
+            }
+
+            .lluvia-resumen-valor {
+                font-size:
+                    11px;
             }
 
             .metricas-estacion {
@@ -2911,8 +2886,7 @@
             }
 
             .metrica-estacion:nth-child(2n) {
-                border-right:
-                    none;
+                border-right: none;
             }
 
             .camaras {
@@ -2931,11 +2905,8 @@
             }
 
             .panel-futuro-icono {
-                width:
-                    72px;
-
-                height:
-                    72px;
+                width: 72px;
+                height: 72px;
 
                 font-size:
                     32px;
@@ -2946,7 +2917,7 @@
                     650px;
 
                 height:
-                    calc(100vh - 280px);
+                    calc(100vh - 265px);
             }
         }
 
@@ -2954,8 +2925,21 @@
             max-width: 390px
         ) {
             .zona-derecha {
-                padding-left:
-                    72px;
+                column-gap:
+                    42px;
+
+                padding:
+                    0 8px;
+            }
+
+            .firma-proyecto {
+                width: 72px;
+                height: 72px;
+            }
+
+            .firma-proyecto img {
+                width: 66px;
+                height: 66px;
             }
 
             .viento-panel {
@@ -2965,16 +2949,12 @@
             }
 
             .veleta {
-                width:
-                    92px;
-
-                height:
-                    92px;
+                width: 92px;
+                height: 92px;
             }
 
             .veleta-aguja {
-                height:
-                    31px;
+                height: 31px;
             }
 
             .direccion-cardinal {
@@ -2987,9 +2967,33 @@
                     14px;
             }
 
+            /*
+            Incluso en pantallas muy estrechas,
+            lluvia continúa en 2 x 2.
+            */
+
             .lluvia-resumen {
                 grid-template-columns:
-                    1fr;
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .lluvia-resumen-item {
+                grid-template-columns:
+                    22px
+                    minmax(0, 1fr);
+
+                column-gap:
+                    4px;
+            }
+
+            .lluvia-resumen-icono {
+                font-size:
+                    16px;
+            }
+
+            .lluvia-resumen-valor {
+                font-size:
+                    10px;
             }
         }
 
@@ -2997,29 +3001,33 @@
             prefers-reduced-motion: reduce
         ) {
             .patrocinio-estacion-pista {
-                animation:
-                    none;
+                animation: none;
             }
 
             .patrocinio-estacion-texto:nth-child(2) {
-                display:
-                    none;
+                display: none;
             }
 
-            .capa-lluvia {
+            .capa-lluvia,
+            .capa-lluvia-ficha {
                 display:
                     none !important;
             }
 
             .veleta-rotor {
-                transition:
-                    none;
+                transition: none;
             }
         }
     </style>
 </head>
 
 <body>
+
+    <!--
+    Lluvia global:
+    lluvia REAL máxima de las estaciones
+    + simulación manual desde Y&Z.
+    -->
 
     <div
         class="capa-lluvia"
@@ -3094,7 +3102,9 @@
             <div class="zona-derecha">
 
                 <div class="hora">
+
                     <div>
+
                         <div
                             class="fecha"
                             id="fecha-actual"
@@ -3108,7 +3118,9 @@
                         >
                             --:--
                         </div>
+
                     </div>
+
                 </div>
 
                 <button
@@ -3129,6 +3141,7 @@
                         class="simulacion-global"
                         id="simulacion-GLOBAL"
                     ></span>
+
                 </button>
 
             </div>
@@ -3212,11 +3225,22 @@
                         id="tarjeta-EL_SILO"
                     >
 
+                        <!--
+                        Simulación LOCAL de lluvia de El Silo.
+                        -->
+
+                        <div
+                            class="capa-lluvia-ficha"
+                            id="capa-lluvia-EL_SILO"
+                            aria-hidden="true"
+                        ></div>
+
                         <div class="estacion-contenido">
 
                             <div class="estacion-cabecera">
 
                                 <div>
+
                                     <h2
                                         class="estacion-nombre"
                                         id="nombre-EL_SILO"
@@ -3227,6 +3251,7 @@
                                     <div class="estacion-localidad">
                                         Archidona
                                     </div>
+
                                 </div>
 
                                 <div
@@ -3277,25 +3302,34 @@
                                         aria-label="Veleta de El Silo"
                                         title="Veleta de El Silo"
                                     >
-                                        <span class="veleta-cardinal veleta-n">
+                                        <span
+                                            class="veleta-cardinal veleta-n"
+                                        >
                                             N
                                         </span>
 
-                                        <span class="veleta-cardinal veleta-e">
+                                        <span
+                                            class="veleta-cardinal veleta-e"
+                                        >
                                             E
                                         </span>
 
-                                        <span class="veleta-cardinal veleta-s">
+                                        <span
+                                            class="veleta-cardinal veleta-s"
+                                        >
                                             S
                                         </span>
 
-                                        <span class="veleta-cardinal veleta-o">
+                                        <span
+                                            class="veleta-cardinal veleta-o"
+                                        >
                                             O
                                         </span>
 
                                         <div class="veleta-rotor">
                                             <div class="veleta-aguja"></div>
                                         </div>
+
                                     </div>
 
                                     <div class="viento-datos">
@@ -3428,7 +3462,35 @@
 
                             </div>
 
+                            <!--
+                            ORDEN 2 x 2:
+                            HOY | INTENSIDAD
+                            MES | AÑO
+                            -->
+
                             <div class="lluvia-resumen">
+
+                                <div class="lluvia-resumen-item">
+
+                                    <div
+                                        class="lluvia-resumen-icono"
+                                        id="lluvia-resumen-icono-dia-EL_SILO"
+                                    >
+                                        ☁️
+                                    </div>
+
+                                    <div class="lluvia-resumen-label">
+                                        Lluvia hoy
+                                    </div>
+
+                                    <div
+                                        class="lluvia-resumen-valor"
+                                        id="lluvia-dia-EL_SILO"
+                                    >
+                                        -- mm
+                                    </div>
+
+                                </div>
 
                                 <div class="lluvia-resumen-item">
 
@@ -3455,28 +3517,6 @@
                                         id="lluvia-estado-EL_SILO"
                                     >
                                         --
-                                    </div>
-
-                                </div>
-
-                                <div class="lluvia-resumen-item">
-
-                                    <div
-                                        class="lluvia-resumen-icono"
-                                        id="lluvia-resumen-icono-dia-EL_SILO"
-                                    >
-                                        ☁️
-                                    </div>
-
-                                    <div class="lluvia-resumen-label">
-                                        Lluvia hoy
-                                    </div>
-
-                                    <div
-                                        class="lluvia-resumen-valor"
-                                        id="lluvia-dia-EL_SILO"
-                                    >
-                                        -- mm
                                     </div>
 
                                 </div>
@@ -3650,6 +3690,16 @@
                         id="tarjeta-LOS_LLANOS"
                     >
 
+                        <!--
+                        Simulación LOCAL de lluvia de Los Llanos.
+                        -->
+
+                        <div
+                            class="capa-lluvia-ficha"
+                            id="capa-lluvia-LOS_LLANOS"
+                            aria-hidden="true"
+                        ></div>
+
                         <div class="estacion-contenido">
 
                             <div class="estacion-cabecera">
@@ -3717,25 +3767,35 @@
                                         aria-label="Veleta de Los Llanos"
                                         title="Veleta de Los Llanos"
                                     >
-                                        <span class="veleta-cardinal veleta-n">
+
+                                        <span
+                                            class="veleta-cardinal veleta-n"
+                                        >
                                             N
                                         </span>
 
-                                        <span class="veleta-cardinal veleta-e">
+                                        <span
+                                            class="veleta-cardinal veleta-e"
+                                        >
                                             E
                                         </span>
 
-                                        <span class="veleta-cardinal veleta-s">
+                                        <span
+                                            class="veleta-cardinal veleta-s"
+                                        >
                                             S
                                         </span>
 
-                                        <span class="veleta-cardinal veleta-o">
+                                        <span
+                                            class="veleta-cardinal veleta-o"
+                                        >
                                             O
                                         </span>
 
                                         <div class="veleta-rotor">
                                             <div class="veleta-aguja"></div>
                                         </div>
+
                                     </div>
 
                                     <div class="viento-datos">
@@ -3868,7 +3928,35 @@
 
                             </div>
 
+                            <!--
+                            ORDEN 2 x 2:
+                            HOY | INTENSIDAD
+                            MES | AÑO
+                            -->
+
                             <div class="lluvia-resumen">
+
+                                <div class="lluvia-resumen-item">
+
+                                    <div
+                                        class="lluvia-resumen-icono"
+                                        id="lluvia-resumen-icono-dia-LOS_LLANOS"
+                                    >
+                                        ☁️
+                                    </div>
+
+                                    <div class="lluvia-resumen-label">
+                                        Lluvia hoy
+                                    </div>
+
+                                    <div
+                                        class="lluvia-resumen-valor"
+                                        id="lluvia-dia-LOS_LLANOS"
+                                    >
+                                        -- mm
+                                    </div>
+
+                                </div>
 
                                 <div class="lluvia-resumen-item">
 
@@ -3895,28 +3983,6 @@
                                         id="lluvia-estado-LOS_LLANOS"
                                     >
                                         --
-                                    </div>
-
-                                </div>
-
-                                <div class="lluvia-resumen-item">
-
-                                    <div
-                                        class="lluvia-resumen-icono"
-                                        id="lluvia-resumen-icono-dia-LOS_LLANOS"
-                                    >
-                                        ☁️
-                                    </div>
-
-                                    <div class="lluvia-resumen-label">
-                                        Lluvia hoy
-                                    </div>
-
-                                    <div
-                                        class="lluvia-resumen-valor"
-                                        id="lluvia-dia-LOS_LLANOS"
-                                    >
-                                        -- mm
                                     </div>
 
                                 </div>
@@ -4083,7 +4149,7 @@
 
                 <!--
                 ======================================================
-                GRÁFICOS DE MUESTRA
+                GRÁFICOS
                 ======================================================
                 -->
 
@@ -4339,6 +4405,7 @@
                         </div>
 
                         <div>
+
                             <div class="acceso-titulo">
                                 HISTÓRICOS
                             </div>
@@ -4346,6 +4413,7 @@
                             <div class="acceso-subtitulo">
                                 Datos por fecha
                             </div>
+
                         </div>
                     </a>
 
@@ -4358,6 +4426,7 @@
                         </div>
 
                         <div>
+
                             <div class="acceso-titulo">
                                 GRÁFICOS
                             </div>
@@ -4365,6 +4434,7 @@
                             <div class="acceso-subtitulo">
                                 Evolución detallada
                             </div>
+
                         </div>
                     </a>
 
@@ -4378,6 +4448,7 @@
                         </div>
 
                         <div>
+
                             <div class="acceso-titulo">
                                 CÁMARAS
                             </div>
@@ -4385,6 +4456,7 @@
                             <div class="acceso-subtitulo">
                                 Imágenes en directo
                             </div>
+
                         </div>
                     </a>
 
@@ -4397,6 +4469,7 @@
                         </div>
 
                         <div>
+
                             <div class="acceso-titulo">
                                 ESTACIONES
                             </div>
@@ -4404,6 +4477,7 @@
                             <div class="acceso-subtitulo">
                                 Información técnica
                             </div>
+
                         </div>
                     </a>
 
@@ -4416,6 +4490,7 @@
                         </div>
 
                         <div>
+
                             <div class="acceso-titulo">
                                 ALERTAS
                             </div>
@@ -4423,6 +4498,7 @@
                             <div class="acceso-subtitulo">
                                 Avisos meteorológicos
                             </div>
+
                         </div>
                     </a>
 
@@ -4435,6 +4511,7 @@
                         </div>
 
                         <div>
+
                             <div class="acceso-titulo">
                                 ESTADO SISTEMA
                             </div>
@@ -4442,6 +4519,7 @@
                             <div class="acceso-subtitulo">
                                 Datos automáticos
                             </div>
+
                         </div>
                     </a>
 
@@ -4597,10 +4675,24 @@
             4: "Muy fuerte",
         };
 
+        /*
+        Lluvia meteorológica REAL.
+        */
+
         const lluviaReal = {
             EL_SILO: 0,
             LOS_LLANOS: 0,
         };
+
+        /*
+        Lluvia de PRUEBA.
+
+        EL_SILO y LOS_LLANOS:
+        solo afectan a su propia ficha.
+
+        GLOBAL:
+        afecta a toda la página.
+        */
 
         const lluviaSimulada = {
             EL_SILO: 0,
@@ -4903,7 +4995,7 @@
 
         /*
         ============================================================
-        LLUVIA REAL Y LLUVIA SIMULADA
+        CLASIFICACIÓN DE LLUVIA
         ============================================================
         */
 
@@ -4978,18 +5070,106 @@
             return "🌧️";
         }
 
-        function nivelEfectivoEstacion(
-            codigo
+        /*
+        ============================================================
+        APLICACIÓN DE NIVEL A UNA CAPA
+        ============================================================
+        */
+
+        function aplicarNivelACapa(
+            capa,
+            nivel
         ) {
-            return Math.max(
-                lluviaReal[
-                    codigo
-                ] || 0,
-                lluviaSimulada[
-                    codigo
-                ] || 0
+            if (
+                !capa
+            ) {
+                return;
+            }
+
+            capa.classList.remove(
+                "activa",
+                "nivel-1",
+                "nivel-2",
+                "nivel-3",
+                "nivel-4"
+            );
+
+            if (
+                nivel <= 0
+            ) {
+                return;
+            }
+
+            capa.classList.add(
+                "activa",
+                `nivel-${nivel}`
             );
         }
+
+        /*
+        ============================================================
+        LLUVIA GLOBAL
+        ============================================================
+
+        La lluvia real sí se representa globalmente.
+
+        La intensidad global real es el máximo de las
+        dos estaciones.
+
+        Y&Z añade una tercera posibilidad manual global.
+        */
+
+        function actualizarLluviaPagina() {
+            const nivelRealPagina =
+                Math.max(
+                    lluviaReal.EL_SILO || 0,
+                    lluviaReal.LOS_LLANOS || 0
+                );
+
+            const nivelPagina =
+                Math.max(
+                    nivelRealPagina,
+                    lluviaSimulada.GLOBAL || 0
+                );
+
+            aplicarNivelACapa(
+                obtenerElemento(
+                    "capa-lluvia"
+                ),
+                nivelPagina
+            );
+        }
+
+        /*
+        ============================================================
+        LLUVIA LOCAL DE FICHA
+        ============================================================
+
+        Las veletas NO afectan a la página completa.
+        Solo activan esta capa dentro de la tarjeta correspondiente.
+        */
+
+        function actualizarLluviaFicha(
+            codigo
+        ) {
+            const nivel =
+                lluviaSimulada[
+                    codigo
+                ] || 0;
+
+            aplicarNivelACapa(
+                obtenerElemento(
+                    `capa-lluvia-${codigo}`
+                ),
+                nivel
+            );
+        }
+
+        /*
+        ============================================================
+        INDICADORES DE SIMULACIÓN
+        ============================================================
+        */
 
         function actualizarIndicadorSimulacion(
             origen
@@ -5023,67 +5203,26 @@
                 return;
             }
 
-            elemento.textContent =
+            if (
                 origen === "GLOBAL"
-                    ? `Prueba ${NOMBRES_NIVEL_LLUVIA[nivel]}`
-                    : `Prueba lluvia · ${NOMBRES_NIVEL_LLUVIA[nivel]}`;
+            ) {
+                elemento.textContent =
+                    `Prueba ${NOMBRES_NIVEL_LLUVIA[nivel]}`;
+            } else {
+                elemento.textContent =
+                    `Prueba lluvia · ${NOMBRES_NIVEL_LLUVIA[nivel]}`;
+            }
 
             elemento.classList.add(
                 "visible"
             );
         }
 
-        function actualizarLluviaPagina() {
-            const nivelSilo =
-                nivelEfectivoEstacion(
-                    "EL_SILO"
-                );
-
-            const nivelLlanos =
-                nivelEfectivoEstacion(
-                    "LOS_LLANOS"
-                );
-
-            const nivelGlobal =
-                lluviaSimulada.GLOBAL || 0;
-
-            const nivelPagina =
-                Math.max(
-                    nivelSilo,
-                    nivelLlanos,
-                    nivelGlobal
-                );
-
-            const capa =
-                obtenerElemento(
-                    "capa-lluvia"
-                );
-
-            if (
-                !capa
-            ) {
-                return;
-            }
-
-            capa.classList.remove(
-                "activa",
-                "nivel-1",
-                "nivel-2",
-                "nivel-3",
-                "nivel-4"
-            );
-
-            if (
-                nivelPagina <= 0
-            ) {
-                return;
-            }
-
-            capa.classList.add(
-                "activa",
-                `nivel-${nivelPagina}`
-            );
-        }
+        /*
+        ============================================================
+        CICLO DE SIMULACIÓN
+        ============================================================
+        */
 
         function avanzarSimulacion(
             origen
@@ -5096,11 +5235,10 @@
             let siguiente;
 
             if (
-                actual === 0 ||
-                actual === 4
+                actual <= 0 ||
+                actual >= 4
             ) {
-                siguiente =
-                    1;
+                siguiente = 1;
             } else {
                 siguiente =
                     actual + 1;
@@ -5115,7 +5253,15 @@
                 origen
             );
 
-            actualizarLluviaPagina();
+            if (
+                origen === "GLOBAL"
+            ) {
+                actualizarLluviaPagina();
+            } else {
+                actualizarLluviaFicha(
+                    origen
+                );
+            }
         }
 
         function desactivarSimulacion(
@@ -5130,19 +5276,30 @@
                 origen
             );
 
-            actualizarLluviaPagina();
+            if (
+                origen === "GLOBAL"
+            ) {
+                actualizarLluviaPagina();
+            } else {
+                actualizarLluviaFicha(
+                    origen
+                );
+            }
         }
 
         /*
         ============================================================
-        GOTAS DE LLUVIA
+        CREACIÓN DE GOTAS
         ============================================================
         */
 
-        function inicializarGotasLluvia() {
+        function inicializarGotasEnCapa(
+            idCapa,
+            totalGotas = 120
+        ) {
             const capa =
                 obtenerElemento(
-                    "capa-lluvia"
+                    idCapa
                 );
 
             if (
@@ -5150,9 +5307,6 @@
             ) {
                 return;
             }
-
-            const totalGotas =
-                96;
 
             for (
                 let indice = 0;
@@ -5168,21 +5322,21 @@
                     "gota-lluvia";
 
                 const x =
-                    Math.random() * 112 - 6;
+                    Math.random() * 116 - 8;
 
                 const longitud =
-                    12 +
-                    Math.random() * 24;
+                    14 +
+                    Math.random() * 25;
 
                 const duracion =
-                    0.55 +
-                    Math.random() * 0.48;
+                    0.54 +
+                    Math.random() * 0.44;
 
                 const retraso =
-                    -Math.random() * 2;
+                    -Math.random() * 2.2;
 
                 const opacidad =
-                    0.30 +
+                    0.38 +
                     Math.random() * 0.55;
 
                 gota.style.setProperty(
@@ -5218,10 +5372,38 @@
             }
         }
 
+        function inicializarLluviaVisual() {
+            inicializarGotasEnCapa(
+                "capa-lluvia",
+                120
+            );
+
+            inicializarGotasEnCapa(
+                "capa-lluvia-EL_SILO",
+                120
+            );
+
+            inicializarGotasEnCapa(
+                "capa-lluvia-LOS_LLANOS",
+                120
+            );
+        }
+
         /*
         ============================================================
-        CONTROLES OCULTOS DE PRUEBA DE LLUVIA
+        GESTOS DE PRUEBA
         ============================================================
+
+        Se utiliza UN SOLO detector basado en Pointer Events.
+
+        Así evitamos que en móvil un doble toque active a la vez
+        pointerup y dblclick y salte de dos en dos niveles.
+
+        Doble toque / doble clic:
+        avanza un nivel.
+
+        Pulsación larga:
+        desactiva el origen.
         */
 
         function configurarControlLluvia(
@@ -5336,19 +5518,12 @@
                         return;
                     }
 
-                    if (
-                        evento.pointerType !== "touch" &&
-                        evento.pointerType !== "pen"
-                    ) {
-                        return;
-                    }
-
                     const ahora =
                         Date.now();
 
                     if (
                         ultimoToque > 0 &&
-                        ahora - ultimoToque < 430
+                        ahora - ultimoToque < 450
                     ) {
                         ultimoToque =
                             0;
@@ -5364,23 +5539,6 @@
 
                     ultimoToque =
                         ahora;
-                }
-            );
-
-            elemento.addEventListener(
-                "dblclick",
-                (evento) => {
-                    if (
-                        evento.pointerType === "touch"
-                    ) {
-                        return;
-                    }
-
-                    evento.preventDefault();
-
-                    avanzarSimulacion(
-                        origen
-                    );
                 }
             );
 
@@ -5504,7 +5662,7 @@
 
         /*
         ============================================================
-        DATOS DE LLUVIA
+        DATOS DE LLUVIA REAL
         ============================================================
         */
 
@@ -5593,6 +5751,11 @@
                 `lluvia-resumen-icono-anio-${codigo}`,
                 icono
             );
+
+            /*
+            Solo la lluvia REAL participa
+            en la lluvia global de las estaciones.
+            */
 
             actualizarLluviaPagina();
         }
@@ -6075,11 +6238,8 @@
             }
 
             window.scrollTo({
-                top:
-                    0,
-
-                behavior:
-                    "auto",
+                top: 0,
+                behavior: "auto",
             });
         }
 
@@ -6175,7 +6335,7 @@
         ============================================================
         */
 
-        inicializarGotasLluvia();
+        inicializarLluviaVisual();
 
         configurarControlesLluvia();
 
