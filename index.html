@@ -103,17 +103,27 @@
         */
 
         .capa-lluvia,
-        .capa-lluvia-ficha {
+        .capa-lluvia-ficha,
+        .capa-gotas-cristal,
+        .capa-gotas-cristal-ficha {
             display: none;
 
             overflow: hidden;
 
             pointer-events: none;
+        }
 
+        .capa-lluvia,
+        .capa-lluvia-ficha {
             --factor-duracion: 1;
             --factor-longitud: 1;
             --factor-opacidad: 1;
             --ancho-gota: 1px;
+
+            --inicio-x: 0px;
+            --final-x: 0px;
+            --recorrido-y: 1200px;
+            --angulo-gota: 0deg;
         }
 
         .capa-lluvia {
@@ -124,55 +134,76 @@
             z-index: 100;
         }
 
-        .capa-lluvia-ficha {
+        .capa-gotas-cristal {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 101;
+        }
+
+        .capa-lluvia-ficha,
+        .capa-gotas-cristal-ficha {
             position: absolute;
 
             inset: 0;
 
-            z-index: 12;
-
             border-radius: inherit;
         }
 
+        .capa-lluvia-ficha {
+            z-index: 12;
+        }
+
+        .capa-gotas-cristal-ficha {
+            z-index: 13;
+        }
+
         .capa-lluvia.activa,
-        .capa-lluvia-ficha.activa {
+        .capa-lluvia-ficha.activa,
+        .capa-gotas-cristal.activa,
+        .capa-gotas-cristal-ficha.activa {
             display: block;
         }
 
         /*
+        ------------------------------------------------------------
         LLUVIA DÉBIL
+        ------------------------------------------------------------
         */
 
         .nivel-1 {
-            --factor-duracion: 1.60;
-            --factor-longitud: 0.55;
-            --factor-opacidad: 0.46;
-            --ancho-gota: 0.8px;
+            --factor-duracion: 1.80;
+            --factor-longitud: 0.52;
+            --factor-opacidad: 0.38;
+            --ancho-gota: 0.7px;
         }
 
         .capa-lluvia.nivel-1 {
             background:
-                rgba(8, 22, 34, 0.008);
+                rgba(8, 22, 34, 0.005);
         }
 
         .capa-lluvia-ficha.nivel-1 {
             background:
-                rgba(8, 22, 34, 0.012);
+                rgba(8, 22, 34, 0.009);
         }
 
         .nivel-1
-        .gota-lluvia:nth-child(n + 19) {
+        .gota-lluvia:nth-child(n + 17) {
             display: none;
         }
 
         /*
+        ------------------------------------------------------------
         LLUVIA MODERADA
+        ------------------------------------------------------------
         */
 
         .nivel-2 {
-            --factor-duracion: 1.16;
-            --factor-longitud: 0.85;
-            --factor-opacidad: 0.66;
+            --factor-duracion: 1.18;
+            --factor-longitud: 0.88;
+            --factor-opacidad: 0.62;
             --ancho-gota: 1px;
         }
 
@@ -187,55 +218,59 @@
         }
 
         .nivel-2
-        .gota-lluvia:nth-child(n + 41) {
+        .gota-lluvia:nth-child(n + 49) {
             display: none;
         }
 
         /*
+        ------------------------------------------------------------
         LLUVIA FUERTE
+        ------------------------------------------------------------
         */
 
         .nivel-3 {
-            --factor-duracion: 0.82;
-            --factor-longitud: 1.20;
+            --factor-duracion: 0.76;
+            --factor-longitud: 1.32;
             --factor-opacidad: 0.84;
-            --ancho-gota: 1.3px;
+            --ancho-gota: 1.4px;
         }
 
         .capa-lluvia.nivel-3 {
             background:
-                rgba(6, 19, 31, 0.050);
+                rgba(6, 19, 31, 0.052);
         }
 
         .capa-lluvia-ficha.nivel-3 {
             background:
-                rgba(6, 19, 31, 0.065);
+                rgba(6, 19, 31, 0.072);
         }
 
         .nivel-3
-        .gota-lluvia:nth-child(n + 76) {
+        .gota-lluvia:nth-child(n + 97) {
             display: none;
         }
 
         /*
+        ------------------------------------------------------------
         LLUVIA MUY FUERTE
+        ------------------------------------------------------------
         */
 
         .nivel-4 {
-            --factor-duracion: 0.54;
-            --factor-longitud: 1.70;
+            --factor-duracion: 0.44;
+            --factor-longitud: 1.90;
             --factor-opacidad: 1;
-            --ancho-gota: 1.8px;
+            --ancho-gota: 2px;
         }
 
         .capa-lluvia.nivel-4 {
             background:
-                rgba(4, 16, 28, 0.095);
+                rgba(4, 16, 28, 0.105);
         }
 
         .capa-lluvia-ficha.nivel-4 {
             background:
-                rgba(4, 16, 28, 0.125);
+                rgba(4, 16, 28, 0.135);
         }
 
         .nivel-4
@@ -243,10 +278,16 @@
             display: block;
         }
 
+        /*
+        ------------------------------------------------------------
+        GOTA DE LLUVIA EN MOVIMIENTO
+        ------------------------------------------------------------
+        */
+
         .gota-lluvia {
             position: absolute;
 
-            top: -20vh;
+            top: -18%;
             left: var(--x);
 
             width:
@@ -271,12 +312,12 @@
                 linear-gradient(
                     to bottom,
                     rgba(194, 231, 255, 0),
-                    rgba(180, 226, 255, 0.96)
+                    rgba(180, 226, 255, 0.98)
                 );
 
             box-shadow:
                 0 0 4px
-                rgba(116, 201, 255, 0.32);
+                rgba(116, 201, 255, 0.34);
 
             animation-name:
                 caer-lluvia;
@@ -303,29 +344,179 @@
         .nivel-4
         .gota-lluvia:nth-child(3n) {
             box-shadow:
-                0 0 6px
-                rgba(166, 222, 255, 0.48);
+                0 0 7px
+                rgba(166, 222, 255, 0.54);
         }
 
         @keyframes caer-lluvia {
             from {
                 transform:
                     translate3d(
-                        10vw,
-                        -18vh,
+                        var(--inicio-x),
+                        -40px,
                         0
                     )
-                    rotate(10deg);
+                    rotate(
+                        var(--angulo-gota)
+                    );
             }
 
             to {
                 transform:
                     translate3d(
-                        -11vw,
-                        128vh,
+                        var(--final-x),
+                        var(--recorrido-y),
                         0
                     )
-                    rotate(10deg);
+                    rotate(
+                        var(--angulo-gota)
+                    );
+            }
+        }
+
+        /*
+        ============================================================
+        GOTAS SOBRE EL "CRISTAL"
+        ============================================================
+
+        Solo aparecen cuando el desplazamiento del viento
+        tiene componente hacia el sur.
+
+        Son pocas, translúcidas y tienen vida limitada para que
+        nunca oculten la información meteorológica.
+        ============================================================
+        */
+
+        .gota-cristal {
+            position: absolute;
+
+            left: var(--x);
+            top: var(--y);
+
+            width: var(--tamano);
+            height:
+                calc(
+                    var(--tamano) * 1.24
+                );
+
+            border-radius:
+                54% 46% 59% 41%
+                /
+                44% 47% 53% 56%;
+
+            border:
+                1px solid
+                rgba(220, 244, 255, 0.18);
+
+            background:
+                radial-gradient(
+                    circle at 32% 24%,
+                    rgba(255, 255, 255, 0.38),
+                    rgba(177, 225, 251, 0.12) 30%,
+                    rgba(86, 161, 205, 0.06) 67%,
+                    rgba(255, 255, 255, 0.02)
+                );
+
+            box-shadow:
+                inset 1px 1px 2px
+                rgba(255, 255, 255, 0.18),
+                0 1px 4px
+                rgba(0, 0, 0, 0.16);
+
+            opacity: 0;
+
+            transform:
+                scale(0.65);
+
+            animation:
+                vida-gota-cristal
+                var(--vida)
+                ease-in-out
+                forwards;
+
+            will-change:
+                transform,
+                opacity;
+        }
+
+        .gota-cristal::after {
+            content: "";
+
+            position: absolute;
+
+            width: 28%;
+            height: 20%;
+
+            left: 20%;
+            top: 17%;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(255, 255, 255, 0.36);
+
+            filter:
+                blur(0.3px);
+        }
+
+        @keyframes vida-gota-cristal {
+            0% {
+                opacity: 0;
+
+                transform:
+                    translate3d(
+                        0,
+                        -3px,
+                        0
+                    )
+                    scale(0.55);
+            }
+
+            12% {
+                opacity:
+                    var(
+                        --opacidad-cristal
+                    );
+
+                transform:
+                    translate3d(
+                        0,
+                        0,
+                        0
+                    )
+                    scale(1);
+            }
+
+            70% {
+                opacity:
+                    calc(
+                        var(
+                            --opacidad-cristal
+                        ) * 0.88
+                    );
+
+                transform:
+                    translate3d(
+                        var(--desvio-x),
+                        calc(
+                            var(--deslizar) * 0.25
+                        ),
+                        0
+                    )
+                    scale(0.98);
+            }
+
+            100% {
+                opacity: 0;
+
+                transform:
+                    translate3d(
+                        var(--desvio-x),
+                        var(--deslizar),
+                        0
+                    )
+                    scale(0.88);
             }
         }
 
@@ -2619,8 +2810,9 @@
             }
 
             /*
-            En móvil, fecha/hora y Y&Z permanecen
-            expresamente en la misma fila.
+            Fecha/hora y Y&Z permanecen en la misma fila.
+            Y&Z gana tamaño y queda desplazado hacia la zona
+            situada sobre "Observaciones".
             */
 
             .zona-derecha {
@@ -2629,20 +2821,19 @@
                 display: grid;
 
                 grid-template-columns:
-                    auto auto;
-
-                justify-content:
-                    start;
+                    1fr
+                    auto;
 
                 align-items:
                     center;
 
                 column-gap:
-                    48px;
+                    20px;
 
                 width: 100%;
 
                 padding:
+                    0 52px
                     0 12px;
             }
 
@@ -2655,13 +2846,13 @@
             }
 
             .firma-proyecto {
-                width: 76px;
-                height: 76px;
+                width: 96px;
+                height: 96px;
             }
 
             .firma-proyecto img {
-                width: 70px;
-                height: 70px;
+                width: 90px;
+                height: 90px;
             }
 
             .navegacion {
@@ -2676,7 +2867,7 @@
                 gap: 24px;
 
                 margin:
-                    4px
+                    1px
                     -20px
                     0;
 
@@ -2834,10 +3025,6 @@
                     9px;
             }
 
-            /*
-            Se mantienen DOS columnas también en móvil.
-            */
-
             .lluvia-resumen {
                 grid-template-columns:
                     repeat(2, minmax(0, 1fr));
@@ -2925,21 +3112,19 @@
             max-width: 390px
         ) {
             .zona-derecha {
-                column-gap:
-                    42px;
-
                 padding:
+                    0 34px
                     0 8px;
             }
 
             .firma-proyecto {
-                width: 72px;
-                height: 72px;
+                width: 90px;
+                height: 90px;
             }
 
             .firma-proyecto img {
-                width: 66px;
-                height: 66px;
+                width: 84px;
+                height: 84px;
             }
 
             .viento-panel {
@@ -2966,11 +3151,6 @@
                 font-size:
                     14px;
             }
-
-            /*
-            Incluso en pantallas muy estrechas,
-            lluvia continúa en 2 x 2.
-            */
 
             .lluvia-resumen {
                 grid-template-columns:
@@ -3009,7 +3189,9 @@
             }
 
             .capa-lluvia,
-            .capa-lluvia-ficha {
+            .capa-lluvia-ficha,
+            .capa-gotas-cristal,
+            .capa-gotas-cristal-ficha {
                 display:
                     none !important;
             }
@@ -3024,14 +3206,24 @@
 <body>
 
     <!--
-    Lluvia global:
-    lluvia REAL máxima de las estaciones
-    + simulación manual desde Y&Z.
+    Capa global de lluvia.
+
+    Se activa cuando:
+    - llueve en las DOS estaciones;
+    - las dos pruebas locales están activas;
+    - una combinación real/prueba hace que ambas estén activas;
+    - o se activa manualmente Y&Z.
     -->
 
     <div
         class="capa-lluvia"
         id="capa-lluvia"
+        aria-hidden="true"
+    ></div>
+
+    <div
+        class="capa-gotas-cristal"
+        id="capa-gotas-cristal"
         aria-hidden="true"
     ></div>
 
@@ -3225,13 +3417,15 @@
                         id="tarjeta-EL_SILO"
                     >
 
-                        <!--
-                        Simulación LOCAL de lluvia de El Silo.
-                        -->
-
                         <div
                             class="capa-lluvia-ficha"
                             id="capa-lluvia-EL_SILO"
+                            aria-hidden="true"
+                        ></div>
+
+                        <div
+                            class="capa-gotas-cristal-ficha"
+                            id="capa-gotas-cristal-EL_SILO"
                             aria-hidden="true"
                         ></div>
 
@@ -3462,12 +3656,6 @@
 
                             </div>
 
-                            <!--
-                            ORDEN 2 x 2:
-                            HOY | INTENSIDAD
-                            MES | AÑO
-                            -->
-
                             <div class="lluvia-resumen">
 
                                 <div class="lluvia-resumen-item">
@@ -3690,13 +3878,15 @@
                         id="tarjeta-LOS_LLANOS"
                     >
 
-                        <!--
-                        Simulación LOCAL de lluvia de Los Llanos.
-                        -->
-
                         <div
                             class="capa-lluvia-ficha"
                             id="capa-lluvia-LOS_LLANOS"
+                            aria-hidden="true"
+                        ></div>
+
+                        <div
+                            class="capa-gotas-cristal-ficha"
+                            id="capa-gotas-cristal-LOS_LLANOS"
                             aria-hidden="true"
                         ></div>
 
@@ -3927,12 +4117,6 @@
                                 </button>
 
                             </div>
-
-                            <!--
-                            ORDEN 2 x 2:
-                            HOY | INTENSIDAD
-                            MES | AÑO
-                            -->
 
                             <div class="lluvia-resumen">
 
@@ -4667,6 +4851,11 @@
         const API_BASE =
             "https://api-meteoarchidona.onrender.com";
 
+        const CODIGOS_ESTACION = [
+            "EL_SILO",
+            "LOS_LLANOS",
+        ];
+
         const NOMBRES_NIVEL_LLUVIA = {
             0: "Sin lluvia",
             1: "Débil",
@@ -4676,7 +4865,9 @@
         };
 
         /*
-        Lluvia meteorológica REAL.
+        ============================================================
+        ESTADO METEOROLÓGICO
+        ============================================================
         */
 
         const lluviaReal = {
@@ -4684,20 +4875,22 @@
             LOS_LLANOS: 0,
         };
 
-        /*
-        Lluvia de PRUEBA.
-
-        EL_SILO y LOS_LLANOS:
-        solo afectan a su propia ficha.
-
-        GLOBAL:
-        afecta a toda la página.
-        */
-
         const lluviaSimulada = {
             EL_SILO: 0,
             LOS_LLANOS: 0,
             GLOBAL: 0,
+        };
+
+        const vientoEstacion = {
+            EL_SILO: {
+                direccion: null,
+                velocidad: 0,
+            },
+
+            LOS_LLANOS: {
+                direccion: null,
+                velocidad: 0,
+            },
         };
 
         /*
@@ -4768,6 +4961,20 @@
                 valor
             ).toFixed(
                 decimales
+            );
+        }
+
+        function limitar(
+            valor,
+            minimo,
+            maximo
+        ) {
+            return Math.min(
+                maximo,
+                Math.max(
+                    minimo,
+                    valor
+                )
             );
         }
 
@@ -4942,6 +5149,194 @@
 
         /*
         ============================================================
+        VECTOR DE DESPLAZAMIENTO DEL VIENTO
+        ============================================================
+
+        WeatherLink usa dirección meteorológica:
+        indica DE DÓNDE viene el viento.
+
+        Para animar las gotas necesitamos saber HACIA DÓNDE
+        se desplaza el aire.
+
+        Por eso:
+            dirección de desplazamiento =
+            dirección meteorológica + 180 grados
+        ============================================================
+        */
+
+        function calcularMovimientoViento(
+            direccionMeteorologica,
+            velocidadKmh,
+            ancho,
+            alto
+        ) {
+            const direccion =
+                normalizarGrados(
+                    direccionMeteorologica
+                );
+
+            const velocidad =
+                Number.isFinite(
+                    Number(
+                        velocidadKmh
+                    )
+                )
+                    ? Math.max(
+                        0,
+                        Number(
+                            velocidadKmh
+                        )
+                    )
+                    : 0;
+
+            /*
+            Sin dirección válida:
+            lluvia prácticamente vertical.
+            */
+
+            if (
+                direccion === null
+            ) {
+                return {
+                    destino: 180,
+                    vectorX: 0,
+                    vectorY: 1,
+                    componenteSur: true,
+                    inicioX: 0,
+                    finalX: 0,
+                    recorridoY:
+                        Math.max(
+                            alto * 1.45,
+                            500
+                        ),
+                    angulo: 0,
+                    fuerza: 0,
+                };
+            }
+
+            const destino =
+                (
+                    direccion + 180
+                ) % 360;
+
+            const radianes =
+                destino *
+                Math.PI /
+                180;
+
+            /*
+            Coordenadas de pantalla:
+
+            +X = derecha / Este
+            -X = izquierda / Oeste
+
+            +Y = abajo / Sur
+            -Y = arriba / Norte
+            */
+
+            const vectorX =
+                Math.sin(
+                    radianes
+                );
+
+            const vectorY =
+                -Math.cos(
+                    radianes
+                );
+
+            /*
+            50 km/h se considera aproximadamente el máximo
+            necesario para la inclinación visual.
+            Por encima no seguimos exagerando el efecto.
+            */
+
+            const fuerza =
+                limitar(
+                    velocidad / 50,
+                    0,
+                    1
+                );
+
+            const derivaBase =
+                ancho *
+                (
+                    0.035 +
+                    fuerza * 0.33
+                );
+
+            const finalX =
+                vectorX *
+                derivaBase;
+
+            const inicioX =
+                -finalX *
+                0.10;
+
+            /*
+            El componente norte/sur también modifica ligeramente
+            la longitud del recorrido vertical.
+
+            El efecto de la gravedad siempre domina.
+            */
+
+            const recorridoBase =
+                Math.max(
+                    alto * 1.45,
+                    500
+                );
+
+            const recorridoY =
+                recorridoBase +
+                (
+                    vectorY *
+                    fuerza *
+                    alto *
+                    0.16
+                );
+
+            /*
+            El ángulo de la raya de lluvia coincide
+            visualmente con la trayectoria.
+            */
+
+            const angulo =
+                Math.atan2(
+                    finalX,
+                    Math.max(
+                        recorridoY,
+                        1
+                    )
+                ) *
+                180 /
+                Math.PI;
+
+            /*
+            Cualquier desplazamiento real con componente
+            positiva hacia el Sur activa el efecto de
+            gotas sobre el cristal.
+
+            El pequeño margen evita que una dirección
+            prácticamente Este/Oeste active el efecto.
+            */
+
+            const componenteSur =
+                vectorY > 0.08;
+
+            return {
+                destino,
+                vectorX,
+                vectorY,
+                componenteSur,
+                inicioX,
+                finalX,
+                recorridoY,
+                angulo,
+                fuerza,
+            };
+        }
+
+        /*
+        ============================================================
         ÍNDICE UV
         ============================================================
         */
@@ -5072,7 +5467,192 @@
 
         /*
         ============================================================
-        APLICACIÓN DE NIVEL A UNA CAPA
+        NIVEL EFECTIVO POR ESTACIÓN
+        ============================================================
+
+        El modo de prueba imita exactamente el comportamiento real.
+
+        La intensidad efectiva es la mayor entre:
+        - lluvia real;
+        - lluvia simulada de esa estación.
+        ============================================================
+        */
+
+        function obtenerNivelEfectivo(
+            codigo
+        ) {
+            return Math.max(
+                lluviaReal[
+                    codigo
+                ] || 0,
+                lluviaSimulada[
+                    codigo
+                ] || 0
+            );
+        }
+
+        /*
+        ============================================================
+        ESTACIÓN DOMINANTE
+        ============================================================
+
+        Cuando llueve en las dos estaciones:
+        - la intensidad global es la mayor;
+        - el viento global corresponde a la estación
+          que tiene esa mayor intensidad.
+
+        En empate gana la estación con mayor velocidad de viento.
+        ============================================================
+        */
+
+        function obtenerEstacionDominante(
+            codigos
+        ) {
+            let dominante =
+                null;
+
+            codigos.forEach(
+                (codigo) => {
+                    if (
+                        dominante === null
+                    ) {
+                        dominante =
+                            codigo;
+
+                        return;
+                    }
+
+                    const nivelCodigo =
+                        obtenerNivelEfectivo(
+                            codigo
+                        );
+
+                    const nivelDominante =
+                        obtenerNivelEfectivo(
+                            dominante
+                        );
+
+                    if (
+                        nivelCodigo >
+                        nivelDominante
+                    ) {
+                        dominante =
+                            codigo;
+
+                        return;
+                    }
+
+                    if (
+                        nivelCodigo ===
+                        nivelDominante
+                    ) {
+                        const velocidadCodigo =
+                            Number(
+                                vientoEstacion[
+                                    codigo
+                                ].velocidad
+                            ) || 0;
+
+                        const velocidadDominante =
+                            Number(
+                                vientoEstacion[
+                                    dominante
+                                ].velocidad
+                            ) || 0;
+
+                        if (
+                            velocidadCodigo >
+                            velocidadDominante
+                        ) {
+                            dominante =
+                                codigo;
+                        }
+                    }
+                }
+            );
+
+            return dominante;
+        }
+
+        function obtenerVientoGlobal(
+            codigosActivos
+        ) {
+            let codigo;
+
+            if (
+                codigosActivos.length > 0
+            ) {
+                codigo =
+                    obtenerEstacionDominante(
+                        codigosActivos
+                    );
+            } else {
+                /*
+                Si Y&Z activa lluvia global sin lluvia
+                en ninguna estación, usamos como referencia
+                la estación que tenga el viento actual más fuerte.
+                */
+
+                codigo =
+                    CODIGOS_ESTACION.reduce(
+                        (
+                            mejor,
+                            actual
+                        ) => {
+                            if (
+                                mejor === null
+                            ) {
+                                return actual;
+                            }
+
+                            const velocidadMejor =
+                                Number(
+                                    vientoEstacion[
+                                        mejor
+                                    ].velocidad
+                                ) || 0;
+
+                            const velocidadActual =
+                                Number(
+                                    vientoEstacion[
+                                        actual
+                                    ].velocidad
+                                ) || 0;
+
+                            return velocidadActual >
+                                velocidadMejor
+                                ? actual
+                                : mejor;
+                        },
+                        null
+                    );
+            }
+
+            if (
+                !codigo
+            ) {
+                return {
+                    direccion: null,
+                    velocidad: 0,
+                };
+            }
+
+            return {
+                direccion:
+                    vientoEstacion[
+                        codigo
+                    ].direccion,
+
+                velocidad:
+                    vientoEstacion[
+                        codigo
+                    ].velocidad,
+            };
+        }
+
+        /*
+        ============================================================
+        APLICAR NIVEL
         ============================================================
         */
 
@@ -5108,60 +5688,303 @@
 
         /*
         ============================================================
-        LLUVIA GLOBAL
+        APLICAR VIENTO A UNA CAPA DE LLUVIA
         ============================================================
-
-        La lluvia real sí se representa globalmente.
-
-        La intensidad global real es el máximo de las
-        dos estaciones.
-
-        Y&Z añade una tercera posibilidad manual global.
         */
 
-        function actualizarLluviaPagina() {
-            const nivelRealPagina =
-                Math.max(
-                    lluviaReal.EL_SILO || 0,
-                    lluviaReal.LOS_LLANOS || 0
+        function aplicarVientoACapa(
+            capa,
+            viento
+        ) {
+            if (
+                !capa
+            ) {
+                return null;
+            }
+
+            let referencia;
+
+            if (
+                capa.classList.contains(
+                    "capa-lluvia-ficha"
+                )
+            ) {
+                referencia =
+                    capa.parentElement;
+            } else {
+                referencia =
+                    document.documentElement;
+            }
+
+            const ancho =
+                referencia?.clientWidth ||
+                window.innerWidth ||
+                360;
+
+            const alto =
+                referencia?.clientHeight ||
+                window.innerHeight ||
+                700;
+
+            const movimiento =
+                calcularMovimientoViento(
+                    viento.direccion,
+                    viento.velocidad,
+                    ancho,
+                    alto
                 );
 
-            const nivelPagina =
-                Math.max(
-                    nivelRealPagina,
-                    lluviaSimulada.GLOBAL || 0
+            capa.style.setProperty(
+                "--inicio-x",
+                `${movimiento.inicioX.toFixed(1)}px`
+            );
+
+            capa.style.setProperty(
+                "--final-x",
+                `${movimiento.finalX.toFixed(1)}px`
+            );
+
+            capa.style.setProperty(
+                "--recorrido-y",
+                `${movimiento.recorridoY.toFixed(1)}px`
+            );
+
+            capa.style.setProperty(
+                "--angulo-gota",
+                `${movimiento.angulo.toFixed(2)}deg`
+            );
+
+            return movimiento;
+        }
+
+        /*
+        ============================================================
+        CAPA DE GOTAS SOBRE CRISTAL
+        ============================================================
+        */
+
+        function configurarCapaCristal(
+            capa,
+            nivel,
+            movimiento
+        ) {
+            if (
+                !capa
+            ) {
+                return;
+            }
+
+            capa.dataset.nivel =
+                String(
+                    nivel
                 );
 
-            aplicarNivelACapa(
-                obtenerElemento(
-                    "capa-lluvia"
-                ),
-                nivelPagina
+            capa.dataset.vectorX =
+                movimiento
+                    ? String(
+                        movimiento.vectorX
+                    )
+                    : "0";
+
+            capa.classList.remove(
+                "activa"
+            );
+
+            if (
+                nivel <= 0 ||
+                !movimiento ||
+                !movimiento.componenteSur
+            ) {
+                return;
+            }
+
+            capa.classList.add(
+                "activa"
             );
         }
 
         /*
         ============================================================
-        LLUVIA LOCAL DE FICHA
+        ACTUALIZACIÓN DE UNA CAPA METEOROLÓGICA
         ============================================================
-
-        Las veletas NO afectan a la página completa.
-        Solo activan esta capa dentro de la tarjeta correspondiente.
         */
 
-        function actualizarLluviaFicha(
-            codigo
+        function actualizarCapaMeteorologica(
+            idLluvia,
+            idCristal,
+            nivel,
+            viento
         ) {
-            const nivel =
-                lluviaSimulada[
-                    codigo
-                ] || 0;
+            const capaLluvia =
+                obtenerElemento(
+                    idLluvia
+                );
+
+            const capaCristal =
+                obtenerElemento(
+                    idCristal
+                );
 
             aplicarNivelACapa(
-                obtenerElemento(
-                    `capa-lluvia-${codigo}`
-                ),
+                capaLluvia,
                 nivel
+            );
+
+            const movimiento =
+                aplicarVientoACapa(
+                    capaLluvia,
+                    viento
+                );
+
+            configurarCapaCristal(
+                capaCristal,
+                nivel,
+                movimiento
+            );
+        }
+
+        /*
+        ============================================================
+        MOTOR CENTRAL DEL SISTEMA DE LLUVIA
+        ============================================================
+
+        REGLAS:
+
+        1. Una sola estación con lluvia:
+           lluvia solo dentro de su ficha.
+
+        2. Dos estaciones con lluvia:
+           lluvia en toda la página.
+
+        3. Intensidad global:
+           máximo de las dos estaciones.
+
+        4. Viento global:
+           estación dominante por intensidad.
+
+        5. Y&Z:
+           añade lluvia global manual.
+
+        6. Las simulaciones locales siguen exactamente
+           las mismas reglas que la lluvia real.
+        ============================================================
+        */
+
+        function actualizarSistemaLluvia() {
+            const nivelSilo =
+                obtenerNivelEfectivo(
+                    "EL_SILO"
+                );
+
+            const nivelLlanos =
+                obtenerNivelEfectivo(
+                    "LOS_LLANOS"
+                );
+
+            const activos = [];
+
+            if (
+                nivelSilo > 0
+            ) {
+                activos.push(
+                    "EL_SILO"
+                );
+            }
+
+            if (
+                nivelLlanos > 0
+            ) {
+                activos.push(
+                    "LOS_LLANOS"
+                );
+            }
+
+            let nivelGlobalAutomatico =
+                0;
+
+            let nivelLocalSilo =
+                0;
+
+            let nivelLocalLlanos =
+                0;
+
+            /*
+            DOS estaciones:
+            todo pasa a global.
+            */
+
+            if (
+                activos.length === 2
+            ) {
+                nivelGlobalAutomatico =
+                    Math.max(
+                        nivelSilo,
+                        nivelLlanos
+                    );
+            }
+
+            /*
+            UNA estación:
+            lluvia local.
+            */
+
+            if (
+                activos.length === 1
+            ) {
+                if (
+                    activos[0] ===
+                    "EL_SILO"
+                ) {
+                    nivelLocalSilo =
+                        nivelSilo;
+                } else {
+                    nivelLocalLlanos =
+                        nivelLlanos;
+                }
+            }
+
+            /*
+            Y&Z siempre puede elevar el nivel global.
+            */
+
+            const nivelGlobal =
+                Math.max(
+                    nivelGlobalAutomatico,
+                    lluviaSimulada.GLOBAL || 0
+                );
+
+            /*
+            Viento de cada ficha.
+            */
+
+            actualizarCapaMeteorologica(
+                "capa-lluvia-EL_SILO",
+                "capa-gotas-cristal-EL_SILO",
+                nivelLocalSilo,
+                vientoEstacion.EL_SILO
+            );
+
+            actualizarCapaMeteorologica(
+                "capa-lluvia-LOS_LLANOS",
+                "capa-gotas-cristal-LOS_LLANOS",
+                nivelLocalLlanos,
+                vientoEstacion.LOS_LLANOS
+            );
+
+            /*
+            Viento global.
+            */
+
+            const vientoGlobal =
+                obtenerVientoGlobal(
+                    activos
+                );
+
+            actualizarCapaMeteorologica(
+                "capa-lluvia",
+                "capa-gotas-cristal",
+                nivelGlobal,
+                vientoGlobal
             );
         }
 
@@ -5253,15 +6076,7 @@
                 origen
             );
 
-            if (
-                origen === "GLOBAL"
-            ) {
-                actualizarLluviaPagina();
-            } else {
-                actualizarLluviaFicha(
-                    origen
-                );
-            }
+            actualizarSistemaLluvia();
         }
 
         function desactivarSimulacion(
@@ -5276,26 +6091,18 @@
                 origen
             );
 
-            if (
-                origen === "GLOBAL"
-            ) {
-                actualizarLluviaPagina();
-            } else {
-                actualizarLluviaFicha(
-                    origen
-                );
-            }
+            actualizarSistemaLluvia();
         }
 
         /*
         ============================================================
-        CREACIÓN DE GOTAS
+        CREACIÓN DE GOTAS DE LLUVIA
         ============================================================
         */
 
         function inicializarGotasEnCapa(
             idCapa,
-            totalGotas = 120
+            totalGotas = 160
         ) {
             const capa =
                 obtenerElemento(
@@ -5325,19 +6132,19 @@
                     Math.random() * 116 - 8;
 
                 const longitud =
-                    14 +
-                    Math.random() * 25;
+                    13 +
+                    Math.random() * 27;
 
                 const duracion =
-                    0.54 +
-                    Math.random() * 0.44;
+                    0.58 +
+                    Math.random() * 0.42;
 
                 const retraso =
-                    -Math.random() * 2.2;
+                    -Math.random() * 2.4;
 
                 const opacidad =
                     0.38 +
-                    Math.random() * 0.55;
+                    Math.random() * 0.57;
 
                 gota.style.setProperty(
                     "--x",
@@ -5375,17 +6182,297 @@
         function inicializarLluviaVisual() {
             inicializarGotasEnCapa(
                 "capa-lluvia",
-                120
+                160
             );
 
             inicializarGotasEnCapa(
                 "capa-lluvia-EL_SILO",
-                120
+                160
             );
 
             inicializarGotasEnCapa(
                 "capa-lluvia-LOS_LLANOS",
-                120
+                160
+            );
+        }
+
+        /*
+        ============================================================
+        GOTAS SOBRE EL CRISTAL
+        ============================================================
+        */
+
+        function obtenerMaximoGotasCristal(
+            nivel,
+            esGlobal
+        ) {
+            const limitesGlobales = {
+                1: 4,
+                2: 7,
+                3: 11,
+                4: 16,
+            };
+
+            const limitesLocales = {
+                1: 3,
+                2: 5,
+                3: 8,
+                4: 11,
+            };
+
+            return esGlobal
+                ? (
+                    limitesGlobales[
+                        nivel
+                    ] || 0
+                )
+                : (
+                    limitesLocales[
+                        nivel
+                    ] || 0
+                );
+        }
+
+        function obtenerProbabilidadGotaCristal(
+            nivel
+        ) {
+            const probabilidades = {
+                1: 0.16,
+                2: 0.34,
+                3: 0.62,
+                4: 0.88,
+            };
+
+            return probabilidades[
+                nivel
+            ] || 0;
+        }
+
+        function crearGotaCristal(
+            capa,
+            nivel
+        ) {
+            if (
+                !capa ||
+                nivel <= 0
+            ) {
+                return;
+            }
+
+            const esGlobal =
+                capa.classList.contains(
+                    "capa-gotas-cristal"
+                );
+
+            const maximo =
+                obtenerMaximoGotasCristal(
+                    nivel,
+                    esGlobal
+                );
+
+            const gotasActuales =
+                capa.querySelectorAll(
+                    ".gota-cristal"
+                ).length;
+
+            if (
+                gotasActuales >=
+                maximo
+            ) {
+                return;
+            }
+
+            const gota =
+                document.createElement(
+                    "span"
+                );
+
+            gota.className =
+                "gota-cristal";
+
+            const x =
+                4 +
+                Math.random() * 92;
+
+            /*
+            Evitamos concentrarlas en la parte inferior
+            y evitamos cubrir permanentemente una zona concreta.
+            */
+
+            const y =
+                4 +
+                Math.random() * 76;
+
+            const baseTamano = {
+                1: 5,
+                2: 6,
+                3: 7,
+                4: 8,
+            }[
+                nivel
+            ];
+
+            const rangoTamano = {
+                1: 4,
+                2: 6,
+                3: 8,
+                4: 10,
+            }[
+                nivel
+            ];
+
+            const tamano =
+                baseTamano +
+                Math.random() *
+                rangoTamano;
+
+            const vida =
+                2600 +
+                Math.random() *
+                3400;
+
+            /*
+            Opacidad deliberadamente baja.
+            Nunca debe impedir leer la página.
+            */
+
+            const opacidad =
+                0.15 +
+                Math.random() *
+                (
+                    0.06 +
+                    nivel * 0.025
+                );
+
+            const deslizar =
+                8 +
+                nivel * 5 +
+                Math.random() * 14;
+
+            const vectorX =
+                Number(
+                    capa.dataset.vectorX
+                ) || 0;
+
+            const desvioX =
+                vectorX *
+                (
+                    3 +
+                    nivel * 2
+                );
+
+            gota.style.setProperty(
+                "--x",
+                `${x}%`
+            );
+
+            gota.style.setProperty(
+                "--y",
+                `${y}%`
+            );
+
+            gota.style.setProperty(
+                "--tamano",
+                `${tamano.toFixed(1)}px`
+            );
+
+            gota.style.setProperty(
+                "--vida",
+                `${Math.round(vida)}ms`
+            );
+
+            gota.style.setProperty(
+                "--opacidad-cristal",
+                opacidad.toFixed(
+                    2
+                )
+            );
+
+            gota.style.setProperty(
+                "--deslizar",
+                `${deslizar.toFixed(1)}px`
+            );
+
+            gota.style.setProperty(
+                "--desvio-x",
+                `${desvioX.toFixed(1)}px`
+            );
+
+            capa.appendChild(
+                gota
+            );
+
+            window.setTimeout(
+                () => {
+                    gota.remove();
+                },
+                vida + 150
+            );
+        }
+
+        function generarGotasCristalActivas() {
+            if (
+                window.matchMedia(
+                    "(prefers-reduced-motion: reduce)"
+                ).matches
+            ) {
+                return;
+            }
+
+            const capas =
+                document.querySelectorAll(
+                    ".capa-gotas-cristal.activa, " +
+                    ".capa-gotas-cristal-ficha.activa"
+                );
+
+            capas.forEach(
+                (capa) => {
+                    const nivel =
+                        Number(
+                            capa.dataset.nivel
+                        ) || 0;
+
+                    if (
+                        nivel <= 0
+                    ) {
+                        return;
+                    }
+
+                    const probabilidad =
+                        obtenerProbabilidadGotaCristal(
+                            nivel
+                        );
+
+                    if (
+                        Math.random() >
+                        probabilidad
+                    ) {
+                        return;
+                    }
+
+                    /*
+                    En lluvia muy fuerte pueden aparecer
+                    dos gotas durante el mismo ciclo,
+                    pero siempre respetando el límite.
+                    */
+
+                    const cantidad =
+                        nivel >= 4 &&
+                        Math.random() > 0.48
+                            ? 2
+                            : 1;
+
+                    for (
+                        let indice = 0;
+                        indice < cantidad;
+                        indice += 1
+                    ) {
+                        crearGotaCristal(
+                            capa,
+                            nivel
+                        );
+                    }
+                }
             );
         }
 
@@ -5394,16 +6481,12 @@
         GESTOS DE PRUEBA
         ============================================================
 
-        Se utiliza UN SOLO detector basado en Pointer Events.
-
-        Así evitamos que en móvil un doble toque active a la vez
-        pointerup y dblclick y salte de dos en dos niveles.
-
         Doble toque / doble clic:
-        avanza un nivel.
+        Débil -> Moderada -> Fuerte -> Muy fuerte -> Débil
 
         Pulsación larga:
-        desactiva el origen.
+        apaga la simulación de ese control.
+        ============================================================
         */
 
         function configurarControlLluvia(
@@ -5752,12 +6835,7 @@
                 icono
             );
 
-            /*
-            Solo la lluvia REAL participa
-            en la lluvia global de las estaciones.
-            */
-
-            actualizarLluviaPagina();
+            actualizarSistemaLluvia();
         }
 
         /*
@@ -5908,6 +6986,31 @@
                 } km/h`
             );
 
+            /*
+            Guardamos el viento actual para que el motor de lluvia
+            pueda calcular trayectoria e inclinación.
+            */
+
+            vientoEstacion[
+                codigo
+            ] = {
+                direccion:
+                    normalizarGrados(
+                        datos.direccion_viento_grados
+                    ),
+
+                velocidad:
+                    Number.isFinite(
+                        Number(
+                            datos.viento_actual_kmh
+                        )
+                    )
+                        ? Number(
+                            datos.viento_actual_kmh
+                        )
+                        : 0,
+            };
+
             actualizarVeleta(
                 codigo,
                 datos.direccion_viento_grados
@@ -5990,12 +7093,19 @@
                 "☁️"
             );
 
-            actualizarLluviaPagina();
+            actualizarSistemaLluvia();
         }
 
         function mostrarErrorEstacion(
             codigo
         ) {
+            vientoEstacion[
+                codigo
+            ] = {
+                direccion: null,
+                velocidad: 0,
+            };
+
             asignarTexto(
                 `estado-${codigo}`,
                 "Sin datos"
@@ -6331,6 +7441,44 @@
 
         /*
         ============================================================
+        REDIMENSIONADO
+        ============================================================
+
+        Si cambia orientación o tamaño de pantalla,
+        recalculamos la trayectoria del viento.
+        ============================================================
+        */
+
+        let temporizadorResize =
+            null;
+
+        window.addEventListener(
+            "resize",
+            () => {
+                if (
+                    temporizadorResize !==
+                    null
+                ) {
+                    clearTimeout(
+                        temporizadorResize
+                    );
+                }
+
+                temporizadorResize =
+                    setTimeout(
+                        () => {
+                            actualizarSistemaLluvia();
+
+                            temporizadorResize =
+                                null;
+                        },
+                        180
+                    );
+            }
+        );
+
+        /*
+        ============================================================
         INICIALIZACIÓN
         ============================================================
         */
@@ -6350,11 +7498,29 @@
 
         configurarPaneles();
 
+        actualizarSistemaLluvia();
+
         cargarCondiciones();
+
+        /*
+        Actualización meteorológica.
+        */
 
         setInterval(
             cargarCondiciones,
             60000
+        );
+
+        /*
+        Generador de gotas temporales sobre el cristal.
+
+        420 ms ofrece movimiento natural sin generar
+        cantidades excesivas de elementos.
+        */
+
+        setInterval(
+            generarGotasCristalActivas,
+            420
         );
     </script>
 
