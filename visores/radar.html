@@ -77,7 +77,7 @@
 <div id="mapa-radar" aria-label="Mapa regional de radares MeteoArchidona"></div>
 <aside class="leyenda">
 <div class="leyenda-titulo">Cobertura regional</div>
-<div class="leyenda-texto">AHR · Málaga y SE · Sevilla. Los anillos cambian automáticamente de escala al acercar o alejar el mapa.</div>
+<div class="leyenda-texto">AHR · Málaga y SE · Sevilla. Anillos adaptativos de medida y alcance nominal de radar de 240 km en vista regional.</div>
 </aside>
 <div class="mensaje" id="mensaje"></div>
 </section>
@@ -115,6 +115,7 @@ const RADAR_ACTIVO="AHR",PRODUCTO="PPI";
 const URL_LOCALIDADES=new URL("../datos/localidades-radar.geojson",window.location.href).href;
 const RADAR_AHR=[36.6133333,-4.6591667],RADAR_SE=[37.6875,-6.3344444];
 const ENCUADRE_REGIONAL=[[35.6,-7.2],[38.6,-3.1]];
+const ALCANCE_NOMINAL_KM=240;
 
 let mapa=null,capaRadar=null,capaAnillos=null,capaLocalidades=null;
 let localidades=[],fotogramas=[],indice=0,reproduciendo=false,temporizador=null,opacidad=.82;
@@ -136,7 +137,7 @@ return[lat2*180/Math.PI,lon2*180/Math.PI];
 }
 
 function crearPanelesMapa(){
-for(const [n,z] of [["radarPane",350],["anillosPane",520],["localidadesPane",620],["radaresPane",630]]){
+for(const[n,z]of[["radarPane",350],["anillosPane",520],["localidadesPane",620],["radaresPane",630]]){
 mapa.createPane(n);mapa.getPane(n).style.zIndex=z;mapa.getPane(n).style.pointerEvents="none";
 }
 mapa.getPane("tooltipPane").style.zIndex="700";
@@ -163,12 +164,37 @@ capaAnillos.addLayer(L.marker(puntoDestino(centro,km,rumbo),{pane:"anillosPane",
 });
 }
 
+/* El alcance nominal NO recorta la imagen radar.
+   Es únicamente una referencia cartográfica. */
+function crearAlcanceNominal(centro){
+capaAnillos.addLayer(L.circle(centro,{
+pane:"anillosPane",
+radius:ALCANCE_NOMINAL_KM*1000,
+fill:false,
+color:"#111",
+weight:1.4,
+opacity:.58,
+dashArray:"9 8",
+interactive:false
+}));
+}
+
 function renderizarAnillos(){
 if(!mapa||!capaAnillos)return;
 capaAnillos.clearLayers();
-const d=escalaAnillosParaZoom(mapa.getZoom());
+
+const zoom=mapa.getZoom();
+const d=escalaAnillosParaZoom(zoom);
+
 crearAnillosRadar("AHR",RADAR_AHR,90,d);
 crearAnillosRadar("SE",RADAR_SE,270,d);
+
+/* Visible en vistas regionales, incluida la vista inicial móvil. */
+if(zoom<=7){
+crearAlcanceNominal(RADAR_AHR);
+crearAlcanceNominal(RADAR_SE);
+}
+
 texto("dato-cobertura",d.join(" · ")+" km");
 }
 
@@ -184,7 +210,6 @@ function claseEtiquetaLocalidad(tipo){
 const p=["capital","ciudad","municipio","pedania","cabecera","estacion"];
 return `etiqueta-localidad etiqueta-${p.includes(tipo)?tipo:"municipio"}`;
 }
-
 function estiloPuntoLocalidad(p){
 if(p.tipo==="capital")return{radius:4.5,color:"#fff",weight:1.5,fill:true,fillColor:"#a8325a",fillOpacity:1,opacity:1};
 if(p.tipo==="ciudad"||p.tipo==="cabecera")return{radius:4,color:"#fff",weight:1.4,fill:true,fillColor:"#a8325a",fillOpacity:1,opacity:1};
@@ -192,7 +217,6 @@ if(p.tipo==="estacion")return{radius:4,color:"#fff",weight:1.5,fill:true,fillCol
 if(p.tipo==="pedania")return{radius:2.8,color:"#fff",weight:1,fill:true,fillColor:"#36d5ff",fillOpacity:1,opacity:1};
 return{radius:3,color:"#fff",weight:1,fill:true,fillColor:"#111",fillOpacity:1,opacity:1};
 }
-
 function direccionEtiquetaLocalidad(p){return p.tipo==="estacion"?"right":"top"}
 function offsetEtiquetaLocalidad(p){if(p.tipo==="estacion")return[7,0];return[0,-7]}
 function nombreEtiquetaLocalidad(p){return p.nombre||""}
@@ -291,18 +315,34 @@ const s=elemento("timeline-slider");s.max=Math.max(0,fotogramas.length-1);s.valu
 
 function mostrarFotograma(nuevoIndice){
 if(!mapa||!fotogramas.length)return;
+
 indice=Math.max(0,Math.min(nuevoIndice,fotogramas.length-1));
 
 const f=fotogramas[indice],b=bounds(f),u=urlAbsoluta(f.url_imagen);
-if(!b||!u){mostrarMensaje("El fotograma no contiene bounds o URL válidos.",true);return}
 
-if(capaRadar){mapa.removeLayer(capaRadar);capaRadar=null}
+if(!b||!u){
+mostrarMensaje("El fotograma no contiene bounds o URL válidos.",true);
+return;
+}
+
+if(capaRadar){
+mapa.removeLayer(capaRadar);
+capaRadar=null;
+}
 
 const url=u+(u.includes("?")?"&":"?")+"_="+encodeURIComponent(f.observado_en);
-capaRadar=L.imageOverlay(url,b,{pane:"radarPane",opacity,interactive:false}).addTo(mapa);
+
+/* Reflectividad completa dentro de los bounds originales del producto.
+   Los anillos no actúan como máscara ni realizan ningún recorte. */
+capaRadar=L.imageOverlay(url,b,{
+pane:"radarPane",
+opacity:opacidad,
+interactive:false
+}).addTo(mapa);
 
 texto("instante-hora",hora(f.observado_en));
 texto("instante-fecha",fecha(f.observado_en));
+
 actualizarControles();
 mostrarMensaje("");
 reajustarMapa();
@@ -316,11 +356,18 @@ mostrarMensaje("Cargando timeline AHR...");
 try{
 const r=await fetch(`${API_BASE}/radar/${RADAR_ACTIVO}/timeline?producto=${PRODUCTO}`,{cache:"no-store"});
 if(!r.ok)throw new Error(`HTTP ${r.status}`);
+
 const d=await r.json();
-if(!Array.isArray(d.fotogramas))throw new Error("Timeline inválida.");
+
+if(!Array.isArray(d.fotogramas)){
+throw new Error("Timeline inválida.");
+}
 
 fotogramas=d.fotogramas.slice().sort((a,b)=>new Date(a.observado_en)-new Date(b.observado_en));
-if(!fotogramas.length)throw new Error("No existen fotogramas.");
+
+if(!fotogramas.length){
+throw new Error("No existen fotogramas.");
+}
 
 indice=fotogramas.length-1;
 texto("dato-fotogramas",fotogramas.length);
@@ -340,7 +387,9 @@ function actualizarBotonPlay(){elemento("reproducir").textContent=reproduciendo?
 function detener(){if(temporizador){clearInterval(temporizador);temporizador=null}reproduciendo=false;actualizarBotonPlay()}
 function reproducir(){
 if(fotogramas.length<2)return;
-detener();reproduciendo=true;actualizarBotonPlay();
+detener();
+reproduciendo=true;
+actualizarBotonPlay();
 temporizador=setInterval(()=>mostrarFotograma(indice+1>=fotogramas.length?0:indice+1),850);
 }
 
@@ -368,8 +417,11 @@ cargarTimeline();
 }));
 }
 
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",iniciar,{once:true});
-else iniciar();
+if(document.readyState==="loading"){
+document.addEventListener("DOMContentLoaded",iniciar,{once:true});
+}else{
+iniciar();
+}
 </script>
 </body>
 </html>
