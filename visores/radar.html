@@ -147,7 +147,7 @@ button,input{font:inherit}
 }
 
 /* ==========================================================
-   LEAFLET ESENCIAL INTEGRADO
+   LEAFLET ESENCIAL
    ========================================================== */
 
 .leaflet-container{
@@ -206,7 +206,6 @@ button,input{font:inherit}
 
 .leaflet-tile{visibility:hidden}
 .leaflet-tile-loaded{visibility:inherit}
-
 .leaflet-zoom-animated{transform-origin:0 0}
 
 .leaflet-zoom-anim .leaflet-zoom-animated{
@@ -302,8 +301,38 @@ button,input{font:inherit}
 
 .leaflet-tooltip::before{display:none}
 
+/* Etiquetas transparentes de localidades */
+
+.leaflet-tooltip.etiqueta-localidad{
+    padding:0;
+    border:none;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+    color:#fff;
+    font-weight:700;
+    letter-spacing:.02em;
+    text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0 0 4px #000,
+         0 0 7px rgba(0,0,0,.95);
+}
+
+.leaflet-tooltip.etiqueta-archidona{
+    font-size:10px;
+    font-weight:700;
+}
+
+.leaflet-tooltip.etiqueta-los-llanos{
+    font-size:8px;
+    font-weight:600;
+}
+
 /* ==========================================================
-   MARCADORES Y ETIQUETAS
+   MARCADORES
    ========================================================== */
 
 .marcador-archidona{
@@ -724,13 +753,24 @@ function texto(id,valor){
 
 function fechaValida(valor){
     const f=new Date(valor);
-    if(Number.isNaN(f.getTime())) return null;
+
+    if(
+        Number.isNaN(
+            f.getTime()
+        )
+    ){
+        return null;
+    }
+
     return f;
 }
 
 function hora(valor){
     const f=fechaValida(valor);
-    if(!f) return "--:--";
+
+    if(!f){
+        return "--:--";
+    }
 
     return f.toLocaleTimeString(
         "es-ES",
@@ -743,7 +783,10 @@ function hora(valor){
 
 function fecha(valor){
     const f=fechaValida(valor);
-    if(!f) return "--";
+
+    if(!f){
+        return "--";
+    }
 
     return f.toLocaleDateString(
         "es-ES",
@@ -756,7 +799,9 @@ function fecha(valor){
 }
 
 function urlAbsoluta(url){
-    if(!url) return null;
+    if(!url){
+        return null;
+    }
 
     if(
         url.startsWith("http://") ||
@@ -765,7 +810,9 @@ function urlAbsoluta(url){
         return url;
     }
 
-    if(url.startsWith("/")){
+    if(
+        url.startsWith("/")
+    ){
         return API_BASE+url;
     }
 
@@ -773,7 +820,10 @@ function urlAbsoluta(url){
 }
 
 function establecerEstado(mensaje,tipo=null){
-    const estado=elemento("estado");
+    const estado=
+        elemento(
+            "estado"
+        );
 
     texto(
         "estado-texto",
@@ -786,12 +836,17 @@ function establecerEstado(mensaje,tipo=null){
     );
 
     if(tipo){
-        estado.classList.add(tipo);
+        estado.classList.add(
+            tipo
+        );
     }
 }
 
 function mostrarMensaje(mensaje,error=false){
-    const nodo=elemento("mensaje");
+    const nodo=
+        elemento(
+            "mensaje"
+        );
 
     if(!mensaje){
         nodo.classList.remove(
@@ -803,14 +858,17 @@ function mostrarMensaje(mensaje,error=false){
         return;
     }
 
-    nodo.textContent=mensaje;
+    nodo.textContent=
+        mensaje;
 
     nodo.classList.toggle(
         "error",
         error
     );
 
-    nodo.classList.add("visible");
+    nodo.classList.add(
+        "visible"
+    );
 }
 
 /* ==========================================================
@@ -818,7 +876,8 @@ function mostrarMensaje(mensaje,error=false){
    ========================================================== */
 
 function puntoDestino(origen,distanciaKm,rumboGrados){
-    const radioTierraKm=6371.0088;
+    const radioTierraKm=
+        6371.0088;
 
     const latitud1=
         origen[0] *
@@ -867,29 +926,33 @@ function puntoDestino(origen,distanciaKm,rumboGrados){
 }
 
 function boundsCoberturaRadar(distanciaKm){
-    const norte=puntoDestino(
-        RADAR_AHR,
-        distanciaKm,
-        0
-    );
+    const norte=
+        puntoDestino(
+            RADAR_AHR,
+            distanciaKm,
+            0
+        );
 
-    const este=puntoDestino(
-        RADAR_AHR,
-        distanciaKm,
-        90
-    );
+    const este=
+        puntoDestino(
+            RADAR_AHR,
+            distanciaKm,
+            90
+        );
 
-    const sur=puntoDestino(
-        RADAR_AHR,
-        distanciaKm,
-        180
-    );
+    const sur=
+        puntoDestino(
+            RADAR_AHR,
+            distanciaKm,
+            180
+        );
 
-    const oeste=puntoDestino(
-        RADAR_AHR,
-        distanciaKm,
-        270
-    );
+    const oeste=
+        puntoDestino(
+            RADAR_AHR,
+            distanciaKm,
+            270
+        );
 
     return L.latLngBounds(
         [
@@ -906,36 +969,53 @@ function boundsCoberturaRadar(distanciaKm){
 }
 
 /* ==========================================================
-   CAPAS DEL VISOR
-   ==========================================================
-
-   Orden visual:
-
-   200  mapa base
-   350  reflectividad radar
-   520  anillos de distancia
-   620  localidades
-   630  radar AHR
-   700  etiquetas
-
+   CAPAS
    ========================================================== */
 
 function crearPanelesMapa(){
-    mapa.createPane("radarPane");
-    mapa.getPane("radarPane").style.zIndex="350";
-    mapa.getPane("radarPane").style.pointerEvents="none";
+    mapa.createPane(
+        "radarPane"
+    );
 
-    mapa.createPane("anillosPane");
-    mapa.getPane("anillosPane").style.zIndex="520";
-    mapa.getPane("anillosPane").style.pointerEvents="none";
+    mapa.getPane(
+        "radarPane"
+    ).style.zIndex="350";
 
-    mapa.createPane("localidadesPane");
-    mapa.getPane("localidadesPane").style.zIndex="620";
+    mapa.getPane(
+        "radarPane"
+    ).style.pointerEvents="none";
 
-    mapa.createPane("ahrPane");
-    mapa.getPane("ahrPane").style.zIndex="630";
+    mapa.createPane(
+        "anillosPane"
+    );
 
-    mapa.getPane("tooltipPane").style.zIndex="700";
+    mapa.getPane(
+        "anillosPane"
+    ).style.zIndex="520";
+
+    mapa.getPane(
+        "anillosPane"
+    ).style.pointerEvents="none";
+
+    mapa.createPane(
+        "localidadesPane"
+    );
+
+    mapa.getPane(
+        "localidadesPane"
+    ).style.zIndex="620";
+
+    mapa.createPane(
+        "ahrPane"
+    );
+
+    mapa.getPane(
+        "ahrPane"
+    ).style.zIndex="630";
+
+    mapa.getPane(
+        "tooltipPane"
+    ).style.zIndex="700";
 }
 
 /* ==========================================================
@@ -976,7 +1056,7 @@ function iconoEtiquetaAnillo(distanciaKm){
 }
 
 /* ==========================================================
-   ANILLOS AHR
+   ANILLOS
    ========================================================== */
 
 function crearAnillosRadar(){
@@ -993,11 +1073,9 @@ function crearAnillosRadar(){
                     opacity:.92,
                     interactive:false
                 }
-            ).addTo(mapa);
-
-            /*
-            Etiqueta situada al este de cada círculo.
-            */
+            ).addTo(
+                mapa
+            );
 
             const posicionEtiqueta=
                 puntoDestino(
@@ -1016,7 +1094,9 @@ function crearAnillosRadar(){
                     interactive:false,
                     keyboard:false
                 }
-            ).addTo(mapa);
+            ).addTo(
+                mapa
+            );
         }
     );
 }
@@ -1034,13 +1114,17 @@ function crearLocalidades(){
             zIndexOffset:1200
         }
     )
-    .addTo(mapa)
+    .addTo(
+        mapa
+    )
     .bindTooltip(
         "ARCHIDONA",
         {
             permanent:true,
             direction:"top",
-            offset:[0,-12]
+            offset:[0,-12],
+            className:
+                "etiqueta-localidad etiqueta-archidona"
         }
     );
 
@@ -1052,13 +1136,17 @@ function crearLocalidades(){
             zIndexOffset:1100
         }
     )
-    .addTo(mapa)
+    .addTo(
+        mapa
+    )
     .bindTooltip(
         "Los Llanos",
         {
             permanent:true,
             direction:"right",
-            offset:[8,0]
+            offset:[8,0],
+            className:
+                "etiqueta-localidad etiqueta-los-llanos"
         }
     );
 }
@@ -1068,12 +1156,6 @@ function crearLocalidades(){
    ========================================================== */
 
 function crearRadarAhr(){
-    /*
-    Marcador deliberadamente discreto.
-
-    Ya no utilizamos el antiguo punto de mira.
-    */
-
     L.circleMarker(
         RADAR_AHR,
         {
@@ -1087,7 +1169,9 @@ function crearRadarAhr(){
             opacity:1
         }
     )
-    .addTo(mapa)
+    .addTo(
+        mapa
+    )
     .bindTooltip(
         "AHR · Alhaurín el Grande",
         {
@@ -1099,11 +1183,14 @@ function crearRadarAhr(){
 }
 
 /* ==========================================================
-   CREACIÓN DEL MAPA
+   MAPA
    ========================================================== */
 
 function crearMapa(){
-    if(typeof L==="undefined"){
+    if(
+        typeof L===
+        "undefined"
+    ){
         establecerEstado(
             "Leaflet no disponible",
             "error"
@@ -1117,34 +1204,41 @@ function crearMapa(){
         return;
     }
 
-    mapa=L.map(
-        "mapa-radar",
-        {
-            center:RADAR_AHR,
-            zoom:8,
-            minZoom:5,
-            maxZoom:16,
-            zoomControl:true
-        }
-    );
+    mapa=
+        L.map(
+            "mapa-radar",
+            {
+                center:
+                    RADAR_AHR,
+
+                zoom:
+                    8,
+
+                minZoom:
+                    5,
+
+                maxZoom:
+                    16,
+
+                zoomControl:
+                    true
+            }
+        );
 
     crearPanelesMapa();
 
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
-            maxZoom:19,
-            attribution:"&copy; OpenStreetMap contributors"
+            maxZoom:
+                19,
+
+            attribution:
+                "&copy; OpenStreetMap contributors"
         }
-    ).addTo(mapa);
-
-    /*
-    Primero referencias de distancia.
-    Después localidades y radar.
-
-    Su pane determina el orden definitivo,
-    independientemente del orden de creación.
-    */
+    ).addTo(
+        mapa
+    );
 
     crearAnillosRadar();
     crearLocalidades();
@@ -1152,22 +1246,26 @@ function crearMapa(){
 
     L.control.scale(
         {
-            metric:true,
-            imperial:false,
-            position:"bottomright"
-        }
-    ).addTo(mapa);
+            metric:
+                true,
 
-    /*
-    Mostramos inicialmente completo el círculo de 100 km.
-    De este modo los anillos se reconocen realmente
-    como circunferencias concéntricas.
-    */
+            imperial:
+                false,
+
+            position:
+                "bottomright"
+        }
+    ).addTo(
+        mapa
+    );
 
     mapa.fitBounds(
-        boundsCoberturaRadar(100),
+        boundsCoberturaRadar(
+            100
+        ),
         {
-            padding:[24,24]
+            padding:
+                [24,24]
         }
     );
 
@@ -1175,11 +1273,13 @@ function crearMapa(){
 }
 
 /* ==========================================================
-   REAJUSTE LEAFLET
+   REAJUSTE
    ========================================================== */
 
 function reajustarMapa(){
-    if(!mapa) return;
+    if(!mapa){
+        return;
+    }
 
     requestAnimationFrame(
         ()=>{
@@ -1208,7 +1308,9 @@ window.addEventListener(
     }
 );
 
-if(window.visualViewport){
+if(
+    window.visualViewport
+){
     window.visualViewport.addEventListener(
         "resize",
         reajustarMapa
@@ -1216,7 +1318,7 @@ if(window.visualViewport){
 }
 
 /* ==========================================================
-   BOUNDS RADAR
+   BOUNDS DEL FOTOGRAMA
    ========================================================== */
 
 function bounds(fotograma){
@@ -1287,7 +1389,9 @@ function actualizarControles(){
             : "--:--"
     );
 
-    if(fotogramas.length>0){
+    if(
+        fotogramas.length>0
+    ){
         texto(
             "timeline-inicio",
             hora(
@@ -1378,12 +1482,15 @@ function mostrarFotograma(nuevoIndice){
         return;
     }
 
-    if(capaRadar){
+    if(
+        capaRadar
+    ){
         mapa.removeLayer(
             capaRadar
         );
 
-        capaRadar=null;
+        capaRadar=
+            null;
     }
 
     const separador=
@@ -1399,25 +1506,19 @@ function mostrarFotograma(nuevoIndice){
             fotograma.observado_en
         );
 
-    /*
-    La reflectividad se introduce exclusivamente
-    en radarPane.
-
-    Por diseño queda debajo de:
-    - anillos;
-    - localidades;
-    - marcador AHR;
-    - tooltips.
-    */
-
     capaRadar=
         L.imageOverlay(
             urlSinCache,
             limites,
             {
-                pane:"radarPane",
-                opacity:opacidad,
-                interactive:false
+                pane:
+                    "radarPane",
+
+                opacity:
+                    opacidad,
+
+                interactive:
+                    false
             }
         );
 
@@ -1441,13 +1542,15 @@ function mostrarFotograma(nuevoIndice){
 
     actualizarControles();
 
-    mostrarMensaje("");
+    mostrarMensaje(
+        ""
+    );
 
     reajustarMapa();
 }
 
 /* ==========================================================
-   CARGA TIMELINE
+   CARGA DE TIMELINE
    ========================================================== */
 
 async function cargarTimeline(){
@@ -1471,11 +1574,14 @@ async function cargarTimeline(){
             await fetch(
                 url,
                 {
-                    cache:"no-store"
+                    cache:
+                        "no-store"
                 }
             );
 
-        if(!respuesta.ok){
+        if(
+            !respuesta.ok
+        ){
             throw new Error(
                 `HTTP ${respuesta.status}`
             );
@@ -1533,7 +1639,9 @@ async function cargarTimeline(){
         );
 
     }catch(error){
-        console.error(error);
+        console.error(
+            error
+        );
 
         fotogramas=[];
 
@@ -1564,15 +1672,19 @@ function actualizarBotonPlay(){
 }
 
 function detener(){
-    if(temporizador){
+    if(
+        temporizador
+    ){
         clearInterval(
             temporizador
         );
 
-        temporizador=null;
+        temporizador=
+            null;
     }
 
-    reproduciendo=false;
+    reproduciendo=
+        false;
 
     actualizarBotonPlay();
 }
@@ -1586,7 +1698,8 @@ function reproducir(){
 
     detener();
 
-    reproduciendo=true;
+    reproduciendo=
+        true;
 
     actualizarBotonPlay();
 
@@ -1600,7 +1713,8 @@ function reproducir(){
                     siguiente>=
                     fotogramas.length
                 ){
-                    siguiente=0;
+                    siguiente=
+                        0;
                 }
 
                 mostrarFotograma(
@@ -1647,7 +1761,9 @@ function instalarEventos(){
     ).addEventListener(
         "click",
         ()=>{
-            if(reproduciendo){
+            if(
+                reproduciendo
+            ){
                 detener();
             }else{
                 reproducir();
@@ -1693,7 +1809,9 @@ function instalarEventos(){
                 `${evento.target.value} %`
             );
 
-            if(capaRadar){
+            if(
+                capaRadar
+            ){
                 capaRadar.setOpacity(
                     opacidad
                 );
