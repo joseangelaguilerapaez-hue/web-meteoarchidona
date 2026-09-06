@@ -4,104 +4,573 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>MeteoArchidona · Visor radar</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#071019;--border:#1b3044;--text:#f5f8fb;--muted:#9db2c4;--cyan:#36d5ff;--blue:#3b9eff;--accent:#f0a500;--green:#22c55e;--red:#ef4444}
+:root{
+    --bg:#071019;
+    --border:#1b3044;
+    --text:#f5f8fb;
+    --muted:#9db2c4;
+    --cyan:#36d5ff;
+    --blue:#3b9eff;
+    --accent:#f0a500;
+    --green:#22c55e;
+    --red:#ef4444;
+}
+
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;min-width:300px;background:var(--bg);color:var(--text);font-family:"Sora",sans-serif}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    min-width:300px;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Sora",sans-serif;
+}
+
 body{overflow:hidden}
 button,input{font:inherit}
-.visor{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;width:100%;height:100vh;height:100dvh;background:var(--bg)}
-.visor-cabecera{display:flex;justify-content:space-between;align-items:center;gap:14px;min-height:70px;padding:12px 15px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#102234,#081522)}
-.visor-titulo{min-width:0}
-.visor-titulo-principal{font-size:15px;font-weight:700;text-transform:uppercase}
-.visor-titulo-secundario{margin-top:4px;color:var(--muted);font-size:9px}
-.visor-derecha{display:flex;align-items:center;gap:14px;flex:0 0 auto}
-.instante{text-align:right;font-family:"JetBrains Mono",monospace}
-.instante-hora{color:var(--accent);font-size:17px;font-weight:600}
-.instante-fecha{margin-top:2px;color:var(--muted);font-size:8px}
-.estado{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:8px;white-space:nowrap}
-.estado-punto{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(240,165,0,.45)}
-.estado.correcto .estado-punto{background:var(--green);box-shadow:0 0 12px rgba(34,197,94,.55)}
-.estado.error .estado-punto{background:var(--red);box-shadow:0 0 12px rgba(239,68,68,.55)}
-.mapa-zona{position:relative;min-width:0;min-height:0;overflow:hidden;background:#091521}
-#mapa-radar{position:absolute;inset:0;width:100%;height:100%;background:#091521}
 
-/* Leaflet esencial integrado */
-.leaflet-container{position:relative;overflow:hidden;outline:0;background:#091521;font-family:"Sora",sans-serif}
-.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
-.leaflet-map-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}
-.leaflet-map-pane canvas{z-index:100}.leaflet-map-pane svg{z-index:200}
-.leaflet-container .leaflet-overlay-pane svg,.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer{max-width:none!important;max-height:none!important}
-.leaflet-container.leaflet-touch-zoom{touch-action:pan-x pan-y}.leaflet-container.leaflet-touch-drag{touch-action:pinch-zoom}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{touch-action:none}
-.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow{user-select:none;-webkit-user-drag:none}
-.leaflet-tile{visibility:hidden}.leaflet-tile-loaded{visibility:inherit}
+/* ==========================================================
+   ESTRUCTURA
+   ========================================================== */
+
+.visor{
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr) auto auto;
+    width:100%;
+    height:100vh;
+    height:100dvh;
+    background:var(--bg);
+}
+
+.visor-cabecera{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    min-height:70px;
+    padding:12px 15px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(135deg,#102234,#081522);
+}
+
+.visor-titulo{min-width:0}
+
+.visor-titulo-principal{
+    font-size:15px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.visor-titulo-secundario{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:9px;
+}
+
+.visor-derecha{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex:0 0 auto;
+}
+
+.estado{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:var(--muted);
+    font-size:8px;
+    white-space:nowrap;
+}
+
+.estado-punto{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 10px rgba(240,165,0,.45);
+}
+
+.estado.correcto .estado-punto{
+    background:var(--green);
+    box-shadow:0 0 12px rgba(34,197,94,.55);
+}
+
+.estado.error .estado-punto{
+    background:var(--red);
+    box-shadow:0 0 12px rgba(239,68,68,.55);
+}
+
+.instante{
+    text-align:right;
+    font-family:"JetBrains Mono",monospace;
+}
+
+.instante-hora{
+    color:var(--accent);
+    font-size:17px;
+    font-weight:600;
+}
+
+.instante-fecha{
+    margin-top:2px;
+    color:var(--muted);
+    font-size:8px;
+}
+
+/* ==========================================================
+   MAPA
+   ========================================================== */
+
+.mapa-zona{
+    position:relative;
+    min-width:0;
+    min-height:0;
+    overflow:hidden;
+    background:#091521;
+}
+
+#mapa-radar{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    background:#091521;
+}
+
+/* ==========================================================
+   LEAFLET ESENCIAL INTEGRADO
+   ========================================================== */
+
+.leaflet-container{
+    position:relative;
+    overflow:hidden;
+    outline:0;
+    background:#091521;
+    font-family:"Sora",sans-serif;
+}
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane>svg,
+.leaflet-pane>canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer{
+    position:absolute;
+    left:0;
+    top:0;
+}
+
+.leaflet-map-pane{z-index:400}
+.leaflet-tile-pane{z-index:200}
+.leaflet-overlay-pane{z-index:400}
+.leaflet-shadow-pane{z-index:500}
+.leaflet-marker-pane{z-index:600}
+.leaflet-tooltip-pane{z-index:650}
+.leaflet-popup-pane{z-index:700}
+
+.leaflet-map-pane canvas{z-index:100}
+.leaflet-map-pane svg{z-index:200}
+
+.leaflet-container .leaflet-overlay-pane svg,
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer{
+    max-width:none!important;
+    max-height:none!important;
+}
+
+.leaflet-container.leaflet-touch-zoom{touch-action:pan-x pan-y}
+.leaflet-container.leaflet-touch-drag{touch-action:pinch-zoom}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{touch-action:none}
+
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow{
+    user-select:none;
+    -webkit-user-drag:none;
+}
+
+.leaflet-tile{visibility:hidden}
+.leaflet-tile-loaded{visibility:inherit}
+
 .leaflet-zoom-animated{transform-origin:0 0}
-.leaflet-zoom-anim .leaflet-zoom-animated{transition:transform .25s cubic-bezier(0,0,.25,1)}
+
+.leaflet-zoom-anim .leaflet-zoom-animated{
+    transition:transform .25s cubic-bezier(0,0,.25,1);
+}
+
 .leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}
-.leaflet-control{position:relative;z-index:800;pointer-events:auto}
-.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}
-.leaflet-control{float:left;clear:both}.leaflet-right .leaflet-control{float:right}
-.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px}
-.leaflet-bar{overflow:hidden;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.35)}
-.leaflet-bar a{display:block;width:32px;height:32px;line-height:32px;text-align:center;text-decoration:none;background:rgba(7,20,31,.94);color:#edf7ff;border-bottom:1px solid var(--border)}
-.leaflet-bar a:last-child{border-bottom:none}.leaflet-bar a:hover{background:#143047;color:var(--cyan)}
-.leaflet-control-zoom-in,.leaflet-control-zoom-out{font-size:20px!important;font-weight:500}
-.leaflet-control-attribution{padding:3px 6px;background:rgba(4,12,19,.78);color:#a9bac8;font-size:7px}.leaflet-control-attribution a{color:#d1e8f6}
-.leaflet-control-scale-line{padding:2px 5px 1px;border:2px solid rgba(255,255,255,.78);border-top:none;background:rgba(5,15,23,.7);color:#fff;font-size:8px;line-height:1.1;white-space:nowrap}
-.leaflet-tooltip{position:absolute;padding:4px 7px;border:1px solid rgba(255,255,255,.16);border-radius:5px;background:rgba(5,16,26,.92);color:#fff;box-shadow:none;font-size:8px;white-space:nowrap;pointer-events:none;user-select:none}
+
+.leaflet-control{
+    position:relative;
+    z-index:800;
+    pointer-events:auto;
+}
+
+.leaflet-top,.leaflet-bottom{
+    position:absolute;
+    z-index:1000;
+    pointer-events:none;
+}
+
+.leaflet-top{top:0}
+.leaflet-right{right:0}
+.leaflet-bottom{bottom:0}
+.leaflet-left{left:0}
+
+.leaflet-control{float:left;clear:both}
+.leaflet-right .leaflet-control{float:right}
+.leaflet-top .leaflet-control{margin-top:10px}
+.leaflet-bottom .leaflet-control{margin-bottom:10px}
+.leaflet-left .leaflet-control{margin-left:10px}
+.leaflet-right .leaflet-control{margin-right:10px}
+
+.leaflet-bar{
+    overflow:hidden;
+    border-radius:6px;
+    box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+
+.leaflet-bar a{
+    display:block;
+    width:32px;
+    height:32px;
+    line-height:32px;
+    text-align:center;
+    text-decoration:none;
+    background:rgba(7,20,31,.94);
+    color:#edf7ff;
+    border-bottom:1px solid var(--border);
+}
+
+.leaflet-bar a:last-child{border-bottom:none}
+.leaflet-bar a:hover{background:#143047;color:var(--cyan)}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out{
+    font-size:20px!important;
+    font-weight:500;
+}
+
+.leaflet-control-attribution{
+    padding:3px 6px;
+    background:rgba(4,12,19,.78);
+    color:#a9bac8;
+    font-size:7px;
+}
+
+.leaflet-control-attribution a{color:#d1e8f6}
+
+.leaflet-control-scale-line{
+    padding:2px 5px 1px;
+    border:2px solid rgba(255,255,255,.78);
+    border-top:none;
+    background:rgba(5,15,23,.70);
+    color:#fff;
+    font-size:8px;
+    line-height:1.1;
+    white-space:nowrap;
+}
+
+.leaflet-tooltip{
+    position:absolute;
+    padding:4px 7px;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:5px;
+    background:rgba(5,16,26,.92);
+    color:#fff;
+    box-shadow:none;
+    font-size:8px;
+    white-space:nowrap;
+    pointer-events:none;
+    user-select:none;
+}
+
 .leaflet-tooltip::before{display:none}
 
-/* Marcadores */
-.marcador-archidona{width:18px;height:18px;border:3px solid #fff;border-radius:50%;background:var(--accent);box-shadow:0 0 0 5px rgba(240,165,0,.18),0 0 18px rgba(240,165,0,.65)}
-.marcador-estacion{width:12px;height:12px;border:2px solid #fff;border-radius:50%;background:var(--blue);box-shadow:0 0 10px rgba(59,158,255,.7)}
-.marcador-ahr{position:relative;width:20px;height:20px;border:2px solid #fff;border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(239,68,68,.18),0 0 18px rgba(239,68,68,.72)}
-.marcador-ahr::before,.marcador-ahr::after{content:"";position:absolute;left:50%;top:50%;background:#fff;transform:translate(-50%,-50%)}
-.marcador-ahr::before{width:26px;height:1px}.marcador-ahr::after{width:1px;height:26px}
-.etiqueta-anillo-radar{display:flex;justify-content:center;align-items:center;background:transparent;border:none}
-.etiqueta-anillo-radar span{display:inline-block;padding:2px 4px;border:1px solid rgba(54,213,255,.32);border-radius:4px;background:rgba(4,15,24,.8);color:var(--cyan);font-family:"JetBrains Mono",monospace;font-size:7px;font-weight:600;white-space:nowrap}
+/* ==========================================================
+   MARCADORES Y ETIQUETAS
+   ========================================================== */
 
-/* Leyenda */
-.leyenda{position:absolute;z-index:800;left:14px;bottom:14px;max-width:235px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:rgba(5,14,23,.88);backdrop-filter:blur(8px);pointer-events:none}
-.leyenda-titulo{color:var(--cyan);font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.leyenda-texto{margin-top:4px;color:#d0dce6;font-size:8px;line-height:1.45}
+.marcador-archidona{
+    width:18px;
+    height:18px;
+    border:3px solid #fff;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:
+        0 0 0 5px rgba(240,165,0,.18),
+        0 0 18px rgba(240,165,0,.65);
+}
 
-/* Controles */
-.controles{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(100px,150px);align-items:center;gap:12px;padding:10px 12px;border-top:1px solid var(--border);background:#091521}
-.botones{display:flex;gap:5px}
-.boton{display:grid;place-items:center;width:34px;height:32px;padding:0;border:1px solid var(--border);border-radius:6px;background:#102337;color:#e9f5ff;cursor:pointer}
-.boton:hover{border-color:var(--blue)}.boton-principal{color:var(--cyan);border-color:rgba(54,213,255,.35)}
-.timeline{min-width:0}.timeline input,.opacidad input{width:100%}
-#timeline-slider{accent-color:var(--accent)}#opacidad-slider{accent-color:var(--cyan)}
-.timeline-textos{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:3px;color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:7px}
-.timeline-textos span:first-child{text-align:left}.timeline-textos span:last-child{text-align:right}
-.timeline-hora-actual{min-width:46px;padding:2px 5px;border-radius:4px;background:rgba(240,165,0,.12);color:var(--accent);font-size:9px;font-weight:600;text-align:center}
-.opacidad-cabecera{display:flex;justify-content:space-between;margin-bottom:2px;color:var(--muted);font-size:7px;text-transform:uppercase}
+.marcador-estacion{
+    width:12px;
+    height:12px;
+    border:2px solid #fff;
+    border-radius:50%;
+    background:var(--blue);
+    box-shadow:0 0 10px rgba(59,158,255,.70);
+}
 
-/* Pie */
-.datos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--border);background:#0b1723}
-.dato{min-width:0;padding:9px 11px;border-right:1px solid var(--border)}.dato:last-child{border-right:none}
-.dato-label{color:var(--muted);font-size:7px;text-transform:uppercase}
-.dato-valor{margin-top:3px;overflow:hidden;color:var(--text);font-family:"JetBrains Mono",monospace;font-size:9px;text-overflow:ellipsis;white-space:nowrap}
-.mensaje{display:none;position:absolute;z-index:1200;left:50%;top:50%;max-width:80%;transform:translate(-50%,-50%);padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:rgba(5,13,21,.94);color:var(--muted);font-size:9px;text-align:center}
-.mensaje.visible{display:block}.mensaje.error{color:#faa;border-color:rgba(239,68,68,.45)}
+.etiqueta-anillo-radar{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:transparent;
+    border:none;
+}
+
+.etiqueta-anillo-radar span{
+    display:inline-block;
+    padding:2px 5px;
+    border:1px solid #111;
+    border-radius:4px;
+    background:rgba(255,255,255,.88);
+    color:#111;
+    font-family:"JetBrains Mono",monospace;
+    font-size:8px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+/* ==========================================================
+   LEYENDA
+   ========================================================== */
+
+.leyenda{
+    position:absolute;
+    z-index:800;
+    left:14px;
+    bottom:14px;
+    max-width:235px;
+    padding:10px 12px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:9px;
+    background:rgba(5,14,23,.88);
+    backdrop-filter:blur(8px);
+    pointer-events:none;
+}
+
+.leyenda-titulo{
+    color:var(--cyan);
+    font-size:8px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+
+.leyenda-texto{
+    margin-top:4px;
+    color:#d0dce6;
+    font-size:8px;
+    line-height:1.45;
+}
+
+/* ==========================================================
+   CONTROLES
+   ========================================================== */
+
+.controles{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr) minmax(100px,150px);
+    align-items:center;
+    gap:12px;
+    padding:10px 12px;
+    border-top:1px solid var(--border);
+    background:#091521;
+}
+
+.botones{
+    display:flex;
+    gap:5px;
+}
+
+.boton{
+    display:grid;
+    place-items:center;
+    width:34px;
+    height:32px;
+    padding:0;
+    border:1px solid var(--border);
+    border-radius:6px;
+    background:#102337;
+    color:#e9f5ff;
+    cursor:pointer;
+}
+
+.boton:hover{border-color:var(--blue)}
+
+.boton-principal{
+    color:var(--cyan);
+    border-color:rgba(54,213,255,.35);
+}
+
+.timeline{min-width:0}
+
+.timeline input,
+.opacidad input{
+    width:100%;
+}
+
+#timeline-slider{accent-color:var(--accent)}
+#opacidad-slider{accent-color:var(--cyan)}
+
+.timeline-textos{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:8px;
+    margin-top:3px;
+    color:var(--muted);
+    font-family:"JetBrains Mono",monospace;
+    font-size:7px;
+}
+
+.timeline-textos span:first-child{text-align:left}
+.timeline-textos span:last-child{text-align:right}
+
+.timeline-hora-actual{
+    min-width:46px;
+    padding:2px 5px;
+    border-radius:4px;
+    background:rgba(240,165,0,.12);
+    color:var(--accent);
+    font-size:9px;
+    font-weight:600;
+    text-align:center;
+}
+
+.opacidad-cabecera{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:2px;
+    color:var(--muted);
+    font-size:7px;
+    text-transform:uppercase;
+}
+
+/* ==========================================================
+   PIE
+   ========================================================== */
+
+.datos{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    border-top:1px solid var(--border);
+    background:#0b1723;
+}
+
+.dato{
+    min-width:0;
+    padding:9px 11px;
+    border-right:1px solid var(--border);
+}
+
+.dato:last-child{border-right:none}
+
+.dato-label{
+    color:var(--muted);
+    font-size:7px;
+    text-transform:uppercase;
+}
+
+.dato-valor{
+    margin-top:3px;
+    overflow:hidden;
+    color:var(--text);
+    font-family:"JetBrains Mono",monospace;
+    font-size:9px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+/* ==========================================================
+   MENSAJES
+   ========================================================== */
+
+.mensaje{
+    display:none;
+    position:absolute;
+    z-index:1200;
+    left:50%;
+    top:50%;
+    max-width:80%;
+    transform:translate(-50%,-50%);
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:rgba(5,13,21,.94);
+    color:var(--muted);
+    font-size:9px;
+    text-align:center;
+}
+
+.mensaje.visible{display:block}
+
+.mensaje.error{
+    color:#faa;
+    border-color:rgba(239,68,68,.45);
+}
+
+/* ==========================================================
+   MÓVIL
+   ========================================================== */
 
 @media(max-width:700px){
-    .visor-cabecera{min-height:62px;padding:9px 10px}
-    .visor-titulo-principal{font-size:12px}.visor-titulo-secundario{font-size:7px}
-    .visor-derecha{gap:8px}.estado{font-size:7px}.instante-hora{font-size:14px}
-    .controles{grid-template-columns:auto minmax(0,1fr);gap:8px;padding:8px}
+    .visor-cabecera{
+        min-height:62px;
+        padding:9px 10px;
+    }
+
+    .visor-titulo-principal{font-size:12px}
+    .visor-titulo-secundario{font-size:7px}
+    .visor-derecha{gap:8px}
+    .estado{font-size:7px}
+    .instante-hora{font-size:14px}
+
+    .controles{
+        grid-template-columns:auto minmax(0,1fr);
+        gap:8px;
+        padding:8px;
+    }
+
     .opacidad{grid-column:1/-1}
-    .datos{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .dato:nth-child(2n){border-right:none}.dato:nth-child(-n+2){border-bottom:1px solid var(--border)}
-    .leyenda{left:10px;bottom:10px;max-width:195px}
+
+    .datos{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .dato:nth-child(2n){border-right:none}
+
+    .dato:nth-child(-n+2){
+        border-bottom:1px solid var(--border);
+    }
+
+    .leyenda{
+        left:10px;
+        bottom:10px;
+        max-width:195px;
+    }
 }
 </style>
 </head>
 
 <body>
+
 <main class="visor">
 
 <header class="visor-cabecera">
@@ -124,20 +593,31 @@ button,input{font:inherit}
 </header>
 
 <section class="mapa-zona">
-    <div id="mapa-radar" aria-label="Mapa radar MeteoArchidona"></div>
+
+    <div
+        id="mapa-radar"
+        aria-label="Mapa radar MeteoArchidona"
+    ></div>
 
     <aside class="leyenda">
         <div class="leyenda-titulo">Reflectividad radar</div>
+
         <div class="leyenda-texto">
-            Ecos originales AEMET georreferenciados sobre cartografía.
-            Anillos de distancia centrados en el radar AHR.
+            Reflectividad AEMET georreferenciada.
+            Las líneas negras indican distancia al radar AHR.
+            Localidades y referencias se dibujan por encima de los ecos.
         </div>
     </aside>
 
-    <div class="mensaje" id="mensaje"></div>
+    <div
+        class="mensaje"
+        id="mensaje"
+    ></div>
+
 </section>
 
 <section class="controles">
+
     <div class="botones">
         <button type="button" class="boton" id="anterior" title="Fotograma anterior">◀</button>
         <button type="button" class="boton boton-principal" id="reproducir" title="Reproducir">▶</button>
@@ -146,7 +626,15 @@ button,input{font:inherit}
     </div>
 
     <div class="timeline">
-        <input type="range" id="timeline-slider" min="0" max="0" value="0" step="1" aria-label="Timeline radar">
+        <input
+            type="range"
+            id="timeline-slider"
+            min="0"
+            max="0"
+            value="0"
+            step="1"
+            aria-label="Timeline radar"
+        >
 
         <div class="timeline-textos">
             <span id="timeline-inicio">--</span>
@@ -161,11 +649,21 @@ button,input{font:inherit}
             <span id="opacidad-valor">82 %</span>
         </div>
 
-        <input type="range" id="opacidad-slider" min="10" max="100" value="82" step="1" aria-label="Opacidad radar">
+        <input
+            type="range"
+            id="opacidad-slider"
+            min="10"
+            max="100"
+            value="82"
+            step="1"
+            aria-label="Opacidad radar"
+        >
     </div>
+
 </section>
 
 <footer class="datos">
+
     <div class="dato">
         <div class="dato-label">Fotogramas disponibles</div>
         <div class="dato-valor" id="dato-fotogramas">--</div>
@@ -183,8 +681,9 @@ button,input{font:inherit}
 
     <div class="dato">
         <div class="dato-label">Anillos AHR</div>
-        <div class="dato-valor">25–200 km</div>
+        <div class="dato-valor">25 · 50 · 75 · 100 km</div>
     </div>
+
 </footer>
 
 </main>
@@ -196,15 +695,11 @@ const API_BASE="https://api-meteoarchidona.onrender.com";
 const RADAR="AHR";
 const PRODUCTO="PPI";
 
-/*
-Radar AHR · Cañada Alta · Alhaurín el Grande.
-*/
 const RADAR_AHR=[36.6136778,-4.6589111];
-
 const ARCHIDONA=[37.094692,-4.3774514];
 const LOS_LLANOS=[37.05918,-4.361634];
 
-const DISTANCIAS_ANILLOS_KM=[25,50,75,100,150,200];
+const DISTANCIAS_ANILLOS_KM=[25,50,75,100];
 
 let mapa=null;
 let capaRadar=null;
@@ -213,6 +708,10 @@ let indice=0;
 let reproduciendo=false;
 let temporizador=null;
 let opacidad=.82;
+
+/* ==========================================================
+   UTILIDADES
+   ========================================================== */
 
 function elemento(id){
     return document.getElementById(id);
@@ -224,207 +723,317 @@ function texto(id,valor){
 }
 
 function fechaValida(valor){
-    const fecha=new Date(valor);
-    if(Number.isNaN(fecha.getTime())) return null;
-    return fecha;
+    const f=new Date(valor);
+    if(Number.isNaN(f.getTime())) return null;
+    return f;
 }
 
 function hora(valor){
     const f=fechaValida(valor);
     if(!f) return "--:--";
-    return f.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
+
+    return f.toLocaleTimeString(
+        "es-ES",
+        {
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    );
 }
 
 function fecha(valor){
     const f=fechaValida(valor);
     if(!f) return "--";
-    return f.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"});
+
+    return f.toLocaleDateString(
+        "es-ES",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric"
+        }
+    );
 }
 
 function urlAbsoluta(url){
     if(!url) return null;
-    if(url.startsWith("http://")||url.startsWith("https://")) return url;
-    if(url.startsWith("/")) return API_BASE+url;
+
+    if(
+        url.startsWith("http://") ||
+        url.startsWith("https://")
+    ){
+        return url;
+    }
+
+    if(url.startsWith("/")){
+        return API_BASE+url;
+    }
+
     return `${API_BASE}/${url}`;
 }
 
 function establecerEstado(mensaje,tipo=null){
     const estado=elemento("estado");
-    texto("estado-texto",mensaje);
-    estado.classList.remove("correcto","error");
-    if(tipo) estado.classList.add(tipo);
+
+    texto(
+        "estado-texto",
+        mensaje
+    );
+
+    estado.classList.remove(
+        "correcto",
+        "error"
+    );
+
+    if(tipo){
+        estado.classList.add(tipo);
+    }
 }
 
 function mostrarMensaje(mensaje,error=false){
     const nodo=elemento("mensaje");
 
     if(!mensaje){
-        nodo.classList.remove("visible","error");
+        nodo.classList.remove(
+            "visible",
+            "error"
+        );
+
         nodo.textContent="";
         return;
     }
 
     nodo.textContent=mensaje;
-    nodo.classList.toggle("error",error);
+
+    nodo.classList.toggle(
+        "error",
+        error
+    );
+
     nodo.classList.add("visible");
 }
 
-/*
-============================================================
-CÁLCULO DE PUNTO GEOGRÁFICO PARA ETIQUETAS DE ANILLO
-============================================================
-*/
+/* ==========================================================
+   CÁLCULO GEOGRÁFICO
+   ========================================================== */
 
 function puntoDestino(origen,distanciaKm,rumboGrados){
     const radioTierraKm=6371.0088;
 
-    const latitud1=origen[0]*Math.PI/180;
-    const longitud1=origen[1]*Math.PI/180;
-    const rumbo=rumboGrados*Math.PI/180;
-    const distanciaAngular=distanciaKm/radioTierraKm;
+    const latitud1=
+        origen[0] *
+        Math.PI /
+        180;
 
-    const latitud2=Math.asin(
-        Math.sin(latitud1)*Math.cos(distanciaAngular)+
-        Math.cos(latitud1)*Math.sin(distanciaAngular)*Math.cos(rumbo)
-    );
+    const longitud1=
+        origen[1] *
+        Math.PI /
+        180;
 
-    const longitud2=longitud1+Math.atan2(
-        Math.sin(rumbo)*Math.sin(distanciaAngular)*Math.cos(latitud1),
-        Math.cos(distanciaAngular)-Math.sin(latitud1)*Math.sin(latitud2)
-    );
+    const rumbo=
+        rumboGrados *
+        Math.PI /
+        180;
+
+    const distanciaAngular=
+        distanciaKm /
+        radioTierraKm;
+
+    const latitud2=
+        Math.asin(
+            Math.sin(latitud1) *
+            Math.cos(distanciaAngular) +
+            Math.cos(latitud1) *
+            Math.sin(distanciaAngular) *
+            Math.cos(rumbo)
+        );
+
+    const longitud2=
+        longitud1 +
+        Math.atan2(
+            Math.sin(rumbo) *
+            Math.sin(distanciaAngular) *
+            Math.cos(latitud1),
+
+            Math.cos(distanciaAngular) -
+            Math.sin(latitud1) *
+            Math.sin(latitud2)
+        );
 
     return [
-        latitud2*180/Math.PI,
-        longitud2*180/Math.PI
+        latitud2 * 180 / Math.PI,
+        longitud2 * 180 / Math.PI
     ];
 }
 
-/*
-============================================================
-ICONOS
-============================================================
-*/
+function boundsCoberturaRadar(distanciaKm){
+    const norte=puntoDestino(
+        RADAR_AHR,
+        distanciaKm,
+        0
+    );
+
+    const este=puntoDestino(
+        RADAR_AHR,
+        distanciaKm,
+        90
+    );
+
+    const sur=puntoDestino(
+        RADAR_AHR,
+        distanciaKm,
+        180
+    );
+
+    const oeste=puntoDestino(
+        RADAR_AHR,
+        distanciaKm,
+        270
+    );
+
+    return L.latLngBounds(
+        [
+            [
+                sur[0],
+                oeste[1]
+            ],
+            [
+                norte[0],
+                este[1]
+            ]
+        ]
+    );
+}
+
+/* ==========================================================
+   CAPAS DEL VISOR
+   ==========================================================
+
+   Orden visual:
+
+   200  mapa base
+   350  reflectividad radar
+   520  anillos de distancia
+   620  localidades
+   630  radar AHR
+   700  etiquetas
+
+   ========================================================== */
+
+function crearPanelesMapa(){
+    mapa.createPane("radarPane");
+    mapa.getPane("radarPane").style.zIndex="350";
+    mapa.getPane("radarPane").style.pointerEvents="none";
+
+    mapa.createPane("anillosPane");
+    mapa.getPane("anillosPane").style.zIndex="520";
+    mapa.getPane("anillosPane").style.pointerEvents="none";
+
+    mapa.createPane("localidadesPane");
+    mapa.getPane("localidadesPane").style.zIndex="620";
+
+    mapa.createPane("ahrPane");
+    mapa.getPane("ahrPane").style.zIndex="630";
+
+    mapa.getPane("tooltipPane").style.zIndex="700";
+}
+
+/* ==========================================================
+   ICONOS
+   ========================================================== */
 
 function iconoArchidona(){
-    return L.divIcon({
-        className:"",
-        html:'<div class="marcador-archidona"></div>',
-        iconSize:[18,18],
-        iconAnchor:[9,9]
-    });
+    return L.divIcon(
+        {
+            className:"",
+            html:'<div class="marcador-archidona"></div>',
+            iconSize:[18,18],
+            iconAnchor:[9,9]
+        }
+    );
 }
 
 function iconoEstacion(){
-    return L.divIcon({
-        className:"",
-        html:'<div class="marcador-estacion"></div>',
-        iconSize:[12,12],
-        iconAnchor:[6,6]
-    });
-}
-
-function iconoRadarAhr(){
-    return L.divIcon({
-        className:"",
-        html:'<div class="marcador-ahr"></div>',
-        iconSize:[28,28],
-        iconAnchor:[14,14]
-    });
+    return L.divIcon(
+        {
+            className:"",
+            html:'<div class="marcador-estacion"></div>',
+            iconSize:[12,12],
+            iconAnchor:[6,6]
+        }
+    );
 }
 
 function iconoEtiquetaAnillo(distanciaKm){
-    return L.divIcon({
-        className:"etiqueta-anillo-radar",
-        html:`<span>${distanciaKm} km</span>`,
-        iconSize:[48,18],
-        iconAnchor:[24,9]
-    });
-}
-
-/*
-============================================================
-ANILLOS DEL RADAR AHR
-============================================================
-*/
-
-function crearAnillosRadar(){
-    DISTANCIAS_ANILLOS_KM.forEach(distanciaKm=>{
-        const esPrincipal=distanciaKm%50===0;
-
-        L.circle(RADAR_AHR,{
-            radius:distanciaKm*1000,
-            fill:false,
-            color:"#36d5ff",
-            weight:esPrincipal?1.25:.8,
-            opacity:esPrincipal?.50:.30,
-            dashArray:esPrincipal?"7 7":"4 7",
-            interactive:false
-        }).addTo(mapa);
-
-        const posicionEtiqueta=puntoDestino(
-            RADAR_AHR,
-            distanciaKm,
-            35
-        );
-
-        L.marker(posicionEtiqueta,{
-            icon:iconoEtiquetaAnillo(distanciaKm),
-            interactive:false,
-            keyboard:false,
-            zIndexOffset:900
-        }).addTo(mapa);
-    });
-}
-
-/*
-============================================================
-MAPA
-============================================================
-*/
-
-function crearMapa(){
-    if(typeof L==="undefined"){
-        establecerEstado("Leaflet no disponible","error");
-        mostrarMensaje("No se ha podido cargar la librería del mapa.",true);
-        return;
-    }
-
-    mapa=L.map("mapa-radar",{
-        center:[36.86,-4.50],
-        zoom:8,
-        minZoom:5,
-        maxZoom:16,
-        zoomControl:true
-    });
-
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    return L.divIcon(
         {
-            maxZoom:19,
-            attribution:"&copy; OpenStreetMap contributors"
-        }
-    ).addTo(mapa);
-
-    L.marker(RADAR_AHR,{
-        icon:iconoRadarAhr(),
-        zIndexOffset:1300
-    })
-    .addTo(mapa)
-    .bindTooltip(
-        "RADAR AHR · Alhaurín el Grande",
-        {
-            permanent:true,
-            direction:"bottom",
-            offset:[0,13]
+            className:"etiqueta-anillo-radar",
+            html:`<span>${distanciaKm} km</span>`,
+            iconSize:[52,18],
+            iconAnchor:[26,9]
         }
     );
+}
 
-    crearAnillosRadar();
+/* ==========================================================
+   ANILLOS AHR
+   ========================================================== */
 
-    L.marker(ARCHIDONA,{
-        icon:iconoArchidona(),
-        zIndexOffset:1200
-    })
+function crearAnillosRadar(){
+    DISTANCIAS_ANILLOS_KM.forEach(
+        distanciaKm=>{
+            L.circle(
+                RADAR_AHR,
+                {
+                    pane:"anillosPane",
+                    radius:distanciaKm*1000,
+                    fill:false,
+                    color:"#111111",
+                    weight:2.4,
+                    opacity:.92,
+                    interactive:false
+                }
+            ).addTo(mapa);
+
+            /*
+            Etiqueta situada al este de cada círculo.
+            */
+
+            const posicionEtiqueta=
+                puntoDestino(
+                    RADAR_AHR,
+                    distanciaKm,
+                    90
+                );
+
+            L.marker(
+                posicionEtiqueta,
+                {
+                    pane:"anillosPane",
+                    icon:iconoEtiquetaAnillo(
+                        distanciaKm
+                    ),
+                    interactive:false,
+                    keyboard:false
+                }
+            ).addTo(mapa);
+        }
+    );
+}
+
+/* ==========================================================
+   LOCALIDADES
+   ========================================================== */
+
+function crearLocalidades(){
+    L.marker(
+        ARCHIDONA,
+        {
+            pane:"localidadesPane",
+            icon:iconoArchidona(),
+            zIndexOffset:1200
+        }
+    )
     .addTo(mapa)
     .bindTooltip(
         "ARCHIDONA",
@@ -435,56 +1044,167 @@ function crearMapa(){
         }
     );
 
-    L.marker(LOS_LLANOS,{
-        icon:iconoEstacion(),
-        zIndexOffset:1100
-    })
+    L.marker(
+        LOS_LLANOS,
+        {
+            pane:"localidadesPane",
+            icon:iconoEstacion(),
+            zIndexOffset:1100
+        }
+    )
     .addTo(mapa)
     .bindTooltip(
         "Los Llanos",
         {
+            permanent:true,
             direction:"right",
             offset:[8,0]
         }
     );
+}
 
-    L.control.scale({
-        metric:true,
-        imperial:false,
-        position:"bottomright"
-    }).addTo(mapa);
+/* ==========================================================
+   RADAR AHR
+   ========================================================== */
+
+function crearRadarAhr(){
+    /*
+    Marcador deliberadamente discreto.
+
+    Ya no utilizamos el antiguo punto de mira.
+    */
+
+    L.circleMarker(
+        RADAR_AHR,
+        {
+            pane:"ahrPane",
+            radius:5,
+            color:"#ffffff",
+            weight:2,
+            fill:true,
+            fillColor:"#111111",
+            fillOpacity:1,
+            opacity:1
+        }
+    )
+    .addTo(mapa)
+    .bindTooltip(
+        "AHR · Alhaurín el Grande",
+        {
+            permanent:true,
+            direction:"bottom",
+            offset:[0,8]
+        }
+    );
+}
+
+/* ==========================================================
+   CREACIÓN DEL MAPA
+   ========================================================== */
+
+function crearMapa(){
+    if(typeof L==="undefined"){
+        establecerEstado(
+            "Leaflet no disponible",
+            "error"
+        );
+
+        mostrarMensaje(
+            "No se ha podido cargar la librería del mapa.",
+            true
+        );
+
+        return;
+    }
+
+    mapa=L.map(
+        "mapa-radar",
+        {
+            center:RADAR_AHR,
+            zoom:8,
+            minZoom:5,
+            maxZoom:16,
+            zoomControl:true
+        }
+    );
+
+    crearPanelesMapa();
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom:19,
+            attribution:"&copy; OpenStreetMap contributors"
+        }
+    ).addTo(mapa);
+
+    /*
+    Primero referencias de distancia.
+    Después localidades y radar.
+
+    Su pane determina el orden definitivo,
+    independientemente del orden de creación.
+    */
+
+    crearAnillosRadar();
+    crearLocalidades();
+    crearRadarAhr();
+
+    L.control.scale(
+        {
+            metric:true,
+            imperial:false,
+            position:"bottomright"
+        }
+    ).addTo(mapa);
+
+    /*
+    Mostramos inicialmente completo el círculo de 100 km.
+    De este modo los anillos se reconocen realmente
+    como circunferencias concéntricas.
+    */
 
     mapa.fitBounds(
-        [
-            RADAR_AHR,
-            ARCHIDONA
-        ],
+        boundsCoberturaRadar(100),
         {
-            padding:[45,45],
-            maxZoom:9
+            padding:[24,24]
         }
     );
 
     reajustarMapa();
 }
 
+/* ==========================================================
+   REAJUSTE LEAFLET
+   ========================================================== */
+
 function reajustarMapa(){
     if(!mapa) return;
 
-    requestAnimationFrame(()=>{
-        mapa.invalidateSize({
-            animate:false,
-            pan:false
-        });
-    });
+    requestAnimationFrame(
+        ()=>{
+            mapa.invalidateSize(
+                {
+                    animate:false,
+                    pan:false
+                }
+            );
+        }
+    );
 }
 
-window.addEventListener("resize",reajustarMapa);
+window.addEventListener(
+    "resize",
+    reajustarMapa
+);
 
 window.addEventListener(
     "orientationchange",
     ()=>{
-        setTimeout(reajustarMapa,150);
+        setTimeout(
+            reajustarMapa,
+            150
+        );
     }
 );
 
@@ -495,55 +1215,84 @@ if(window.visualViewport){
     );
 }
 
-/*
-============================================================
-BOUNDS DEL FOTOGRAMA
-============================================================
-*/
+/* ==========================================================
+   BOUNDS RADAR
+   ========================================================== */
 
 function bounds(fotograma){
-    if(!fotograma||!fotograma.limites) return null;
+    if(
+        !fotograma ||
+        !fotograma.limites
+    ){
+        return null;
+    }
 
-    const oeste=Number(fotograma.limites.oeste);
-    const sur=Number(fotograma.limites.sur);
-    const este=Number(fotograma.limites.este);
-    const norte=Number(fotograma.limites.norte);
+    const oeste=
+        Number(
+            fotograma.limites.oeste
+        );
+
+    const sur=
+        Number(
+            fotograma.limites.sur
+        );
+
+    const este=
+        Number(
+            fotograma.limites.este
+        );
+
+    const norte=
+        Number(
+            fotograma.limites.norte
+        );
 
     if(
-        !Number.isFinite(oeste)||
-        !Number.isFinite(sur)||
-        !Number.isFinite(este)||
+        !Number.isFinite(oeste) ||
+        !Number.isFinite(sur) ||
+        !Number.isFinite(este) ||
         !Number.isFinite(norte)
     ){
         return null;
     }
 
     return [
-        [sur,oeste],
-        [norte,este]
+        [
+            sur,
+            oeste
+        ],
+        [
+            norte,
+            este
+        ]
     ];
 }
 
-/*
-============================================================
-TIMELINE
-============================================================
-*/
+/* ==========================================================
+   TIMELINE
+   ========================================================== */
 
 function actualizarControles(){
-    const fotogramaActual=fotogramas[indice];
+    const actual=
+        fotogramas[
+            indice
+        ];
 
     texto(
         "timeline-posicion",
-        fotogramaActual
-            ? hora(fotogramaActual.observado_en)
+        actual
+            ? hora(
+                actual.observado_en
+            )
             : "--:--"
     );
 
     if(fotogramas.length>0){
         texto(
             "timeline-inicio",
-            hora(fotogramas[0].observado_en)
+            hora(
+                fotogramas[0].observado_en
+            )
         );
 
         texto(
@@ -555,55 +1304,92 @@ function actualizarControles(){
             )
         );
     }else{
-        texto("timeline-inicio","--");
-        texto("timeline-fin","--");
+        texto(
+            "timeline-inicio",
+            "--"
+        );
+
+        texto(
+            "timeline-fin",
+            "--"
+        );
     }
 
-    const slider=elemento("timeline-slider");
+    const slider=
+        elemento(
+            "timeline-slider"
+        );
 
-    slider.max=Math.max(
-        0,
-        fotogramas.length-1
-    );
+    slider.max=
+        Math.max(
+            0,
+            fotogramas.length-1
+        );
 
-    slider.value=indice;
+    slider.value=
+        indice;
 }
 
-/*
-============================================================
-MOSTRAR FOTOGRAMA
-============================================================
-*/
+/* ==========================================================
+   FOTOGRAMA
+   ========================================================== */
 
 function mostrarFotograma(nuevoIndice){
-    if(!mapa||fotogramas.length===0) return;
+    if(
+        !mapa ||
+        fotogramas.length===0
+    ){
+        return;
+    }
 
-    indice=Math.max(
-        0,
-        Math.min(
-            nuevoIndice,
-            fotogramas.length-1
-        )
-    );
+    indice=
+        Math.max(
+            0,
+            Math.min(
+                nuevoIndice,
+                fotogramas.length-1
+            )
+        );
 
-    const fotograma=fotogramas[indice];
-    const limites=bounds(fotograma);
-    const url=urlAbsoluta(fotograma.url_imagen);
+    const fotograma=
+        fotogramas[
+            indice
+        ];
 
-    if(!limites||!url){
+    const limites=
+        bounds(
+            fotograma
+        );
+
+    const url=
+        urlAbsoluta(
+            fotograma.url_imagen
+        );
+
+    if(
+        !limites ||
+        !url
+    ){
         mostrarMensaje(
             "El fotograma no contiene bounds o URL válidos.",
             true
         );
+
         return;
     }
 
     if(capaRadar){
-        mapa.removeLayer(capaRadar);
+        mapa.removeLayer(
+            capaRadar
+        );
+
         capaRadar=null;
     }
 
-    const separador=url.includes("?")?"&":"?";
+    const separador=
+        url.includes("?")
+            ? "&"
+            : "?";
 
     const urlSinCache=
         url+
@@ -613,26 +1399,44 @@ function mostrarFotograma(nuevoIndice){
             fotograma.observado_en
         );
 
-    capaRadar=L.imageOverlay(
-        urlSinCache,
-        limites,
-        {
-            opacity:opacidad,
-            interactive:false,
-            zIndex:420
-        }
-    );
+    /*
+    La reflectividad se introduce exclusivamente
+    en radarPane.
 
-    capaRadar.addTo(mapa);
+    Por diseño queda debajo de:
+    - anillos;
+    - localidades;
+    - marcador AHR;
+    - tooltips.
+    */
+
+    capaRadar=
+        L.imageOverlay(
+            urlSinCache,
+            limites,
+            {
+                pane:"radarPane",
+                opacity:opacidad,
+                interactive:false
+            }
+        );
+
+    capaRadar.addTo(
+        mapa
+    );
 
     texto(
         "instante-hora",
-        hora(fotograma.observado_en)
+        hora(
+            fotograma.observado_en
+        )
     );
 
     texto(
         "instante-fecha",
-        fecha(fotograma.observado_en)
+        fecha(
+            fotograma.observado_en
+        )
     );
 
     actualizarControles();
@@ -642,16 +1446,16 @@ function mostrarFotograma(nuevoIndice){
     reajustarMapa();
 }
 
-/*
-============================================================
-CARGA DE TIMELINE
-============================================================
-*/
+/* ==========================================================
+   CARGA TIMELINE
+   ========================================================== */
 
 async function cargarTimeline(){
     detener();
 
-    establecerEstado("Cargando");
+    establecerEstado(
+        "Cargando"
+    );
 
     mostrarMensaje(
         "Cargando timeline radar..."
@@ -663,12 +1467,13 @@ async function cargarTimeline(){
         `?producto=${PRODUCTO}`;
 
     try{
-        const respuesta=await fetch(
-            url,
-            {
-                cache:"no-store"
-            }
-        );
+        const respuesta=
+            await fetch(
+                url,
+                {
+                    cache:"no-store"
+                }
+            );
 
         if(!respuesta.ok){
             throw new Error(
@@ -694,8 +1499,12 @@ async function cargarTimeline(){
                 .slice()
                 .sort(
                     (a,b)=>
-                        new Date(a.observado_en)-
-                        new Date(b.observado_en)
+                        new Date(
+                            a.observado_en
+                        ) -
+                        new Date(
+                            b.observado_en
+                        )
                 );
 
         if(
@@ -741,17 +1550,17 @@ async function cargarTimeline(){
     }
 }
 
-/*
-============================================================
-ANIMACIÓN
-============================================================
-*/
+/* ==========================================================
+   ANIMACIÓN
+   ========================================================== */
 
 function actualizarBotonPlay(){
-    elemento("reproducir").textContent=
+    elemento(
+        "reproducir"
+    ).textContent=
         reproduciendo
-            ?"Ⅱ"
-            :"▶";
+            ? "Ⅱ"
+            : "▶";
 }
 
 function detener(){
@@ -781,50 +1590,61 @@ function reproducir(){
 
     actualizarBotonPlay();
 
-    temporizador=setInterval(
-        ()=>{
-            let siguiente=
-                indice+1;
+    temporizador=
+        setInterval(
+            ()=>{
+                let siguiente=
+                    indice+1;
 
-            if(
-                siguiente>=
-                fotogramas.length
-            ){
-                siguiente=0;
-            }
+                if(
+                    siguiente>=
+                    fotogramas.length
+                ){
+                    siguiente=0;
+                }
 
-            mostrarFotograma(
-                siguiente
-            );
-        },
-        850
-    );
+                mostrarFotograma(
+                    siguiente
+                );
+            },
+            850
+        );
 }
 
-/*
-============================================================
-EVENTOS
-============================================================
-*/
+/* ==========================================================
+   EVENTOS
+   ========================================================== */
 
 function instalarEventos(){
-    elemento("anterior").addEventListener(
+    elemento(
+        "anterior"
+    ).addEventListener(
         "click",
         ()=>{
             detener();
-            mostrarFotograma(indice-1);
+
+            mostrarFotograma(
+                indice-1
+            );
         }
     );
 
-    elemento("siguiente").addEventListener(
+    elemento(
+        "siguiente"
+    ).addEventListener(
         "click",
         ()=>{
             detener();
-            mostrarFotograma(indice+1);
+
+            mostrarFotograma(
+                indice+1
+            );
         }
     );
 
-    elemento("reproducir").addEventListener(
+    elemento(
+        "reproducir"
+    ).addEventListener(
         "click",
         ()=>{
             if(reproduciendo){
@@ -835,12 +1655,16 @@ function instalarEventos(){
         }
     );
 
-    elemento("recargar").addEventListener(
+    elemento(
+        "recargar"
+    ).addEventListener(
         "click",
         cargarTimeline
     );
 
-    elemento("timeline-slider").addEventListener(
+    elemento(
+        "timeline-slider"
+    ).addEventListener(
         "input",
         evento=>{
             detener();
@@ -853,13 +1677,16 @@ function instalarEventos(){
         }
     );
 
-    elemento("opacidad-slider").addEventListener(
+    elemento(
+        "opacidad-slider"
+    ).addEventListener(
         "input",
         evento=>{
             opacidad=
                 Number(
                     evento.target.value
-                )/100;
+                ) /
+                100;
 
             texto(
                 "opacidad-valor",
@@ -875,11 +1702,9 @@ function instalarEventos(){
     );
 }
 
-/*
-============================================================
-INICIO
-============================================================
-*/
+/* ==========================================================
+   INICIO
+   ========================================================== */
 
 function iniciar(){
     crearMapa();
