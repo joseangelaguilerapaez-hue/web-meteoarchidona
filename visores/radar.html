@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<title>MeteoArchidona · Visor radar</title>
+<title>MeteoArchidona · Visor radar regional</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -301,9 +301,12 @@ button,input{font:inherit}
 
 .leaflet-tooltip::before{display:none}
 
-/* Etiquetas transparentes de localidades */
+/* ==========================================================
+   ETIQUETAS SUPERIORES
+   ========================================================== */
 
-.leaflet-tooltip.etiqueta-localidad{
+.leaflet-tooltip.etiqueta-localidad,
+.leaflet-tooltip.etiqueta-radar{
     padding:0;
     border:none;
     border-radius:0;
@@ -329,6 +332,12 @@ button,input{font:inherit}
 .leaflet-tooltip.etiqueta-los-llanos{
     font-size:8px;
     font-weight:600;
+}
+
+.leaflet-tooltip.etiqueta-radar{
+    font-family:"JetBrains Mono",monospace;
+    font-size:8px;
+    font-weight:700;
 }
 
 /* ==========================================================
@@ -365,13 +374,13 @@ button,input{font:inherit}
 
 .etiqueta-anillo-radar span{
     display:inline-block;
-    padding:2px 5px;
+    padding:2px 4px;
     border:1px solid #111;
     border-radius:4px;
-    background:rgba(255,255,255,.88);
+    background:rgba(255,255,255,.90);
     color:#111;
     font-family:"JetBrains Mono",monospace;
-    font-size:8px;
+    font-size:7px;
     font-weight:700;
     white-space:nowrap;
 }
@@ -385,7 +394,7 @@ button,input{font:inherit}
     z-index:800;
     left:14px;
     bottom:14px;
-    max-width:235px;
+    max-width:245px;
     padding:10px 12px;
     border:1px solid rgba(255,255,255,.12);
     border-radius:9px;
@@ -592,7 +601,7 @@ button,input{font:inherit}
     .leyenda{
         left:10px;
         bottom:10px;
-        max-width:195px;
+        max-width:205px;
     }
 }
 </style>
@@ -603,12 +612,19 @@ button,input{font:inherit}
 <main class="visor">
 
 <header class="visor-cabecera">
+
     <div class="visor-titulo">
-        <div class="visor-titulo-principal">Radar AHR · PPI</div>
-        <div class="visor-titulo-secundario">Reflectividad AEMET · MeteoArchidona</div>
+        <div class="visor-titulo-principal">
+            Visor regional · AHR + SE
+        </div>
+
+        <div class="visor-titulo-secundario">
+            Málaga operativo · Sevilla preparado para incorporación
+        </div>
     </div>
 
     <div class="visor-derecha">
+
         <div class="estado" id="estado">
             <span class="estado-punto"></span>
             <span id="estado-texto">Cargando</span>
@@ -618,23 +634,27 @@ button,input{font:inherit}
             <div class="instante-hora" id="instante-hora">--:--</div>
             <div class="instante-fecha" id="instante-fecha">--</div>
         </div>
+
     </div>
+
 </header>
 
 <section class="mapa-zona">
 
     <div
         id="mapa-radar"
-        aria-label="Mapa radar MeteoArchidona"
+        aria-label="Mapa regional de radares MeteoArchidona"
     ></div>
 
     <aside class="leyenda">
-        <div class="leyenda-titulo">Reflectividad radar</div>
+        <div class="leyenda-titulo">
+            Cobertura regional
+        </div>
 
         <div class="leyenda-texto">
-            Reflectividad AEMET georreferenciada.
-            Las líneas negras indican distancia al radar AHR.
-            Localidades y referencias se dibujan por encima de los ecos.
+            AHR · Málaga y SE · Sevilla.
+            Anillos de 25, 50, 75 y 100 km.
+            La reflectividad mostrada actualmente procede solo de AHR.
         </div>
     </aside>
 
@@ -655,6 +675,7 @@ button,input{font:inherit}
     </div>
 
     <div class="timeline">
+
         <input
             type="range"
             id="timeline-slider"
@@ -670,9 +691,11 @@ button,input{font:inherit}
             <span class="timeline-hora-actual" id="timeline-posicion">--:--</span>
             <span id="timeline-fin">--</span>
         </div>
+
     </div>
 
     <div class="opacidad">
+
         <div class="opacidad-cabecera">
             <span>Opacidad radar</span>
             <span id="opacidad-valor">82 %</span>
@@ -687,6 +710,7 @@ button,input{font:inherit}
             step="1"
             aria-label="Opacidad radar"
         >
+
     </div>
 
 </section>
@@ -694,23 +718,23 @@ button,input{font:inherit}
 <footer class="datos">
 
     <div class="dato">
-        <div class="dato-label">Fotogramas disponibles</div>
+        <div class="dato-label">Fotogramas AHR</div>
         <div class="dato-valor" id="dato-fotogramas">--</div>
     </div>
 
     <div class="dato">
-        <div class="dato-label">Radar</div>
-        <div class="dato-valor">AHR · Alhaurín</div>
+        <div class="dato-label">Radares</div>
+        <div class="dato-valor">AHR · SE</div>
     </div>
 
     <div class="dato">
-        <div class="dato-label">Producto</div>
-        <div class="dato-valor">PPI</div>
+        <div class="dato-label">Producto activo</div>
+        <div class="dato-valor">AHR · PPI</div>
     </div>
 
     <div class="dato">
-        <div class="dato-label">Anillos AHR</div>
-        <div class="dato-valor">25 · 50 · 75 · 100 km</div>
+        <div class="dato-label">Cobertura mostrada</div>
+        <div class="dato-valor">100 km · ambos radares</div>
     </div>
 
 </footer>
@@ -721,14 +745,47 @@ button,input{font:inherit}
 
 <script>
 const API_BASE="https://api-meteoarchidona.onrender.com";
-const RADAR="AHR";
+const RADAR_ACTIVO="AHR";
 const PRODUCTO="PPI";
 
-const RADAR_AHR=[36.6136778,-4.6589111];
-const ARCHIDONA=[37.094692,-4.3774514];
-const LOS_LLANOS=[37.05918,-4.361634];
+/*
+============================================================
+CENTROS DE RADAR
 
-const DISTANCIAS_ANILLOS_KM=[25,50,75,100];
+AHR · Pico Mijas / Alhaurín el Grande
+36°36'48"N · 04°39'33"W
+
+SE · Cañada Alta / El Castillo de las Guardas
+37°41'15"N · 06°20'04"W
+============================================================
+*/
+
+const RADAR_AHR=[
+    36.6133333,
+    -4.6591667
+];
+
+const RADAR_SE=[
+    37.6875000,
+    -6.3344444
+];
+
+const ARCHIDONA=[
+    37.094692,
+    -4.3774514
+];
+
+const LOS_LLANOS=[
+    37.05918,
+    -4.361634
+];
+
+const DISTANCIAS_ANILLOS_KM=[
+    25,
+    50,
+    75,
+    100
+];
 
 let mapa=null;
 let capaRadar=null;
@@ -748,7 +805,10 @@ function elemento(id){
 
 function texto(id,valor){
     const nodo=elemento(id);
-    if(nodo) nodo.textContent=valor;
+
+    if(nodo){
+        nodo.textContent=valor;
+    }
 }
 
 function fechaValida(valor){
@@ -925,31 +985,34 @@ function puntoDestino(origen,distanciaKm,rumboGrados){
     ];
 }
 
-function boundsCoberturaRadar(distanciaKm){
+function boundsCoberturaRadar(
+    centro,
+    distanciaKm
+){
     const norte=
         puntoDestino(
-            RADAR_AHR,
+            centro,
             distanciaKm,
             0
         );
 
     const este=
         puntoDestino(
-            RADAR_AHR,
+            centro,
             distanciaKm,
             90
         );
 
     const sur=
         puntoDestino(
-            RADAR_AHR,
+            centro,
             distanciaKm,
             180
         );
 
     const oeste=
         puntoDestino(
-            RADAR_AHR,
+            centro,
             distanciaKm,
             270
         );
@@ -968,8 +1031,42 @@ function boundsCoberturaRadar(distanciaKm){
     );
 }
 
+function boundsCoberturaRegional(){
+    const boundsAhr=
+        boundsCoberturaRadar(
+            RADAR_AHR,
+            100
+        );
+
+    const boundsSe=
+        boundsCoberturaRadar(
+            RADAR_SE,
+            100
+        );
+
+    const conjunto=
+        L.latLngBounds(
+            boundsAhr
+        );
+
+    conjunto.extend(
+        boundsSe
+    );
+
+    return conjunto;
+}
+
 /* ==========================================================
    CAPAS
+   ==========================================================
+
+   200 mapa base
+   350 reflectividad
+   520 anillos
+   620 localidades
+   630 radares
+   700 etiquetas
+
    ========================================================== */
 
 function crearPanelesMapa(){
@@ -1006,11 +1103,11 @@ function crearPanelesMapa(){
     ).style.zIndex="620";
 
     mapa.createPane(
-        "ahrPane"
+        "radaresPane"
     );
 
     mapa.getPane(
-        "ahrPane"
+        "radaresPane"
     ).style.zIndex="630";
 
     mapa.getPane(
@@ -1026,9 +1123,12 @@ function iconoArchidona(){
     return L.divIcon(
         {
             className:"",
-            html:'<div class="marcador-archidona"></div>',
-            iconSize:[18,18],
-            iconAnchor:[9,9]
+            html:
+                '<div class="marcador-archidona"></div>',
+            iconSize:
+                [18,18],
+            iconAnchor:
+                [9,9]
         }
     );
 }
@@ -1037,20 +1137,33 @@ function iconoEstacion(){
     return L.divIcon(
         {
             className:"",
-            html:'<div class="marcador-estacion"></div>',
-            iconSize:[12,12],
-            iconAnchor:[6,6]
+            html:
+                '<div class="marcador-estacion"></div>',
+            iconSize:
+                [12,12],
+            iconAnchor:
+                [6,6]
         }
     );
 }
 
-function iconoEtiquetaAnillo(distanciaKm){
+function iconoEtiquetaAnillo(
+    codigo,
+    distanciaKm
+){
     return L.divIcon(
         {
-            className:"etiqueta-anillo-radar",
-            html:`<span>${distanciaKm} km</span>`,
-            iconSize:[52,18],
-            iconAnchor:[26,9]
+            className:
+                "etiqueta-anillo-radar",
+
+            html:
+                `<span>${codigo} · ${distanciaKm} km</span>`,
+
+            iconSize:
+                [72,18],
+
+            iconAnchor:
+                [36,9]
         }
     );
 }
@@ -1059,19 +1172,37 @@ function iconoEtiquetaAnillo(distanciaKm){
    ANILLOS
    ========================================================== */
 
-function crearAnillosRadar(){
+function crearAnillosRadar(
+    codigo,
+    centro,
+    rumboEtiquetas
+){
     DISTANCIAS_ANILLOS_KM.forEach(
         distanciaKm=>{
             L.circle(
-                RADAR_AHR,
+                centro,
                 {
-                    pane:"anillosPane",
-                    radius:distanciaKm*1000,
-                    fill:false,
-                    color:"#111111",
-                    weight:2.4,
-                    opacity:.92,
-                    interactive:false
+                    pane:
+                        "anillosPane",
+
+                    radius:
+                        distanciaKm *
+                        1000,
+
+                    fill:
+                        false,
+
+                    color:
+                        "#111111",
+
+                    weight:
+                        2.4,
+
+                    opacity:
+                        .92,
+
+                    interactive:
+                        false
                 }
             ).addTo(
                 mapa
@@ -1079,20 +1210,28 @@ function crearAnillosRadar(){
 
             const posicionEtiqueta=
                 puntoDestino(
-                    RADAR_AHR,
+                    centro,
                     distanciaKm,
-                    90
+                    rumboEtiquetas
                 );
 
             L.marker(
                 posicionEtiqueta,
                 {
-                    pane:"anillosPane",
-                    icon:iconoEtiquetaAnillo(
-                        distanciaKm
-                    ),
-                    interactive:false,
-                    keyboard:false
+                    pane:
+                        "anillosPane",
+
+                    icon:
+                        iconoEtiquetaAnillo(
+                            codigo,
+                            distanciaKm
+                        ),
+
+                    interactive:
+                        false,
+
+                    keyboard:
+                        false
                 }
             ).addTo(
                 mapa
@@ -1102,16 +1241,21 @@ function crearAnillosRadar(){
 }
 
 /* ==========================================================
-   LOCALIDADES
+   LOCALIDADES PROPIAS ACTUALES
    ========================================================== */
 
 function crearLocalidades(){
     L.marker(
         ARCHIDONA,
         {
-            pane:"localidadesPane",
-            icon:iconoArchidona(),
-            zIndexOffset:1200
+            pane:
+                "localidadesPane",
+
+            icon:
+                iconoArchidona(),
+
+            zIndexOffset:
+                1200
         }
     )
     .addTo(
@@ -1120,9 +1264,15 @@ function crearLocalidades(){
     .bindTooltip(
         "ARCHIDONA",
         {
-            permanent:true,
-            direction:"top",
-            offset:[0,-12],
+            permanent:
+                true,
+
+            direction:
+                "top",
+
+            offset:
+                [0,-12],
+
             className:
                 "etiqueta-localidad etiqueta-archidona"
         }
@@ -1131,9 +1281,14 @@ function crearLocalidades(){
     L.marker(
         LOS_LLANOS,
         {
-            pane:"localidadesPane",
-            icon:iconoEstacion(),
-            zIndexOffset:1100
+            pane:
+                "localidadesPane",
+
+            icon:
+                iconoEstacion(),
+
+            zIndexOffset:
+                1100
         }
     )
     .addTo(
@@ -1142,9 +1297,15 @@ function crearLocalidades(){
     .bindTooltip(
         "Los Llanos",
         {
-            permanent:true,
-            direction:"right",
-            offset:[8,0],
+            permanent:
+                true,
+
+            direction:
+                "right",
+
+            offset:
+                [8,0],
+
             className:
                 "etiqueta-localidad etiqueta-los-llanos"
         }
@@ -1152,32 +1313,62 @@ function crearLocalidades(){
 }
 
 /* ==========================================================
-   RADAR AHR
+   CENTROS RADAR
    ========================================================== */
 
-function crearRadarAhr(){
+function crearCentroRadar(
+    codigo,
+    nombre,
+    centro,
+    direccionEtiqueta
+){
     L.circleMarker(
-        RADAR_AHR,
+        centro,
         {
-            pane:"ahrPane",
-            radius:5,
-            color:"#ffffff",
-            weight:2,
-            fill:true,
-            fillColor:"#111111",
-            fillOpacity:1,
-            opacity:1
+            pane:
+                "radaresPane",
+
+            radius:
+                5,
+
+            color:
+                "#ffffff",
+
+            weight:
+                2,
+
+            fill:
+                true,
+
+            fillColor:
+                "#111111",
+
+            fillOpacity:
+                1,
+
+            opacity:
+                1
         }
     )
     .addTo(
         mapa
     )
     .bindTooltip(
-        "AHR · Alhaurín el Grande",
+        `${codigo} · ${nombre}`,
         {
-            permanent:true,
-            direction:"bottom",
-            offset:[0,8]
+            permanent:
+                true,
+
+            direction:
+                direccionEtiqueta,
+
+            offset:
+                direccionEtiqueta==="top"
+                    ? [0,-8]
+                    : [0,8],
+
+            className:
+                "etiqueta-radar"
         }
     );
 }
@@ -1209,10 +1400,13 @@ function crearMapa(){
             "mapa-radar",
             {
                 center:
-                    RADAR_AHR,
+                    [
+                        37.15,
+                        -5.45
+                    ],
 
                 zoom:
-                    8,
+                    7,
 
                 minZoom:
                     5,
@@ -1240,9 +1434,41 @@ function crearMapa(){
         mapa
     );
 
-    crearAnillosRadar();
+    /*
+    Ambos radares comparten el mismo sistema
+    de anillos: 25, 50, 75 y 100 km.
+
+    Las etiquetas se colocan en lados diferentes
+    para reducir solapamientos.
+    */
+
+    crearAnillosRadar(
+        "AHR",
+        RADAR_AHR,
+        90
+    );
+
+    crearAnillosRadar(
+        "SE",
+        RADAR_SE,
+        270
+    );
+
     crearLocalidades();
-    crearRadarAhr();
+
+    crearCentroRadar(
+        "AHR",
+        "Málaga",
+        RADAR_AHR,
+        "bottom"
+    );
+
+    crearCentroRadar(
+        "SE",
+        "Cañada Alta",
+        RADAR_SE,
+        "top"
+    );
 
     L.control.scale(
         {
@@ -1259,13 +1485,17 @@ function crearMapa(){
         mapa
     );
 
+    /*
+    Encuadre regional:
+    unión de las coberturas de 100 km
+    de AHR y SE.
+    */
+
     mapa.fitBounds(
-        boundsCoberturaRadar(
-            100
-        ),
+        boundsCoberturaRegional(),
         {
             padding:
-                [24,24]
+                [22,22]
         }
     );
 
@@ -1285,8 +1515,11 @@ function reajustarMapa(){
         ()=>{
             mapa.invalidateSize(
                 {
-                    animate:false,
-                    pan:false
+                    animate:
+                        false,
+
+                    pan:
+                        false
                 }
             );
         }
@@ -1318,7 +1551,7 @@ if(
 }
 
 /* ==========================================================
-   BOUNDS DEL FOTOGRAMA
+   BOUNDS DEL FOTOGRAMA AHR
    ========================================================== */
 
 function bounds(fotograma){
@@ -1395,7 +1628,9 @@ function actualizarControles(){
         texto(
             "timeline-inicio",
             hora(
-                fotogramas[0].observado_en
+                fotogramas[
+                    0
+                ].observado_en
             )
         );
 
@@ -1435,7 +1670,7 @@ function actualizarControles(){
 }
 
 /* ==========================================================
-   FOTOGRAMA
+   FOTOGRAMA AHR
    ========================================================== */
 
 function mostrarFotograma(nuevoIndice){
@@ -1506,6 +1741,14 @@ function mostrarFotograma(nuevoIndice){
             fotograma.observado_en
         );
 
+    /*
+    De momento esta capa contiene exclusivamente AHR.
+
+    Cuando incorporemos SE, ambos overlays
+    se introducirán por debajo de anillos,
+    localidades y etiquetas.
+    */
+
     capaRadar=
         L.imageOverlay(
             urlSinCache,
@@ -1550,7 +1793,7 @@ function mostrarFotograma(nuevoIndice){
 }
 
 /* ==========================================================
-   CARGA DE TIMELINE
+   CARGA TIMELINE AHR
    ========================================================== */
 
 async function cargarTimeline(){
@@ -1561,12 +1804,12 @@ async function cargarTimeline(){
     );
 
     mostrarMensaje(
-        "Cargando timeline radar..."
+        "Cargando timeline AHR..."
     );
 
     const url=
         `${API_BASE}`+
-        `/radar/${RADAR}/timeline`+
+        `/radar/${RADAR_ACTIVO}/timeline`+
         `?producto=${PRODUCTO}`;
 
     try{
@@ -1630,7 +1873,7 @@ async function cargarTimeline(){
         );
 
         establecerEstado(
-            "Operativo",
+            "AHR operativo",
             "correcto"
         );
 
@@ -1651,7 +1894,7 @@ async function cargarTimeline(){
         );
 
         mostrarMensaje(
-            "No se ha podido cargar el radar: "+
+            "No se ha podido cargar AHR: "+
             error.message,
             true
         );
@@ -1849,7 +2092,8 @@ if(
         "DOMContentLoaded",
         iniciar,
         {
-            once:true
+            once:
+                true
         }
     );
 }else{
