@@ -10,17 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-    --bg:#071019;
-    --border:#1b3044;
-    --text:#f5f8fb;
-    --muted:#9db2c4;
-    --cyan:#36d5ff;
-    --blue:#3b9eff;
-    --accent:#f0a500;
-    --green:#22c55e;
-    --red:#ef4444;
-}
+:root{--bg:#071019;--border:#1b3044;--text:#f5f8fb;--muted:#9db2c4;--cyan:#36d5ff;--blue:#3b9eff;--accent:#f0a500;--green:#22c55e;--red:#ef4444}
 
 *{box-sizing:border-box}
 
@@ -36,10 +26,6 @@ html,body{
 
 body{overflow:hidden}
 button,input{font:inherit}
-
-/* ==========================================================
-   ESTRUCTURA
-   ========================================================== */
 
 .visor{
     display:grid;
@@ -126,10 +112,6 @@ button,input{font:inherit}
     font-size:8px;
 }
 
-/* ==========================================================
-   MAPA
-   ========================================================== */
-
 .mapa-zona{
     position:relative;
     min-width:0;
@@ -146,9 +128,7 @@ button,input{font:inherit}
     background:#091521;
 }
 
-/* ==========================================================
-   LEAFLET ESENCIAL
-   ========================================================== */
+/* Leaflet esencial integrado */
 
 .leaflet-container{
     position:relative;
@@ -301,9 +281,7 @@ button,input{font:inherit}
 
 .leaflet-tooltip::before{display:none}
 
-/* ==========================================================
-   ETIQUETAS SUPERIORES
-   ========================================================== */
+/* Etiquetas superiores */
 
 .leaflet-tooltip.etiqueta-localidad,
 .leaflet-tooltip.etiqueta-radar{
@@ -340,9 +318,7 @@ button,input{font:inherit}
     font-weight:700;
 }
 
-/* ==========================================================
-   MARCADORES
-   ========================================================== */
+/* Marcadores */
 
 .marcador-archidona{
     width:18px;
@@ -385,9 +361,7 @@ button,input{font:inherit}
     white-space:nowrap;
 }
 
-/* ==========================================================
-   LEYENDA
-   ========================================================== */
+/* Leyenda */
 
 .leyenda{
     position:absolute;
@@ -418,9 +392,7 @@ button,input{font:inherit}
     line-height:1.45;
 }
 
-/* ==========================================================
-   CONTROLES
-   ========================================================== */
+/* Controles */
 
 .controles{
     display:grid;
@@ -501,9 +473,7 @@ button,input{font:inherit}
     text-transform:uppercase;
 }
 
-/* ==========================================================
-   PIE
-   ========================================================== */
+/* Pie */
 
 .datos{
     display:grid;
@@ -536,9 +506,7 @@ button,input{font:inherit}
     white-space:nowrap;
 }
 
-/* ==========================================================
-   MENSAJES
-   ========================================================== */
+/* Mensajes */
 
 .mensaje{
     display:none;
@@ -564,9 +532,7 @@ button,input{font:inherit}
     border-color:rgba(239,68,68,.45);
 }
 
-/* ==========================================================
-   MÓVIL
-   ========================================================== */
+/* Móvil */
 
 @media(max-width:700px){
     .visor-cabecera{
@@ -733,8 +699,8 @@ button,input{font:inherit}
     </div>
 
     <div class="dato">
-        <div class="dato-label">Cobertura mostrada</div>
-        <div class="dato-valor">100 km · ambos radares</div>
+        <div class="dato-label">Cobertura</div>
+        <div class="dato-valor">25 · 50 · 75 · 100 km</div>
     </div>
 
 </footer>
@@ -748,43 +714,36 @@ const API_BASE="https://api-meteoarchidona.onrender.com";
 const RADAR_ACTIVO="AHR";
 const PRODUCTO="PPI";
 
+const RADAR_AHR=[36.6133333,-4.6591667];
+const RADAR_SE=[37.6875000,-6.3344444];
+
+const ARCHIDONA=[37.094692,-4.3774514];
+const LOS_LLANOS=[37.05918,-4.361634];
+
+const DISTANCIAS_ANILLOS_KM=[25,50,75,100];
+
 /*
 ============================================================
-CENTROS DE RADAR
+ENCUADRE METEOROLÓGICO INICIAL
 
-AHR · Pico Mijas / Alhaurín el Grande
-36°36'48"N · 04°39'33"W
+Pensado específicamente para MeteoArchidona:
 
-SE · Cañada Alta / El Castillo de las Guardas
-37°41'15"N · 06°20'04"W
+- Andalucía occidental y central.
+- Radar SE al oeste.
+- Radar AHR y Archidona al este.
+- Franja marítima al sur de Málaga para seguir
+  líneas de turbonada que avancen de sur a norte.
+
+Norte:  38.6
+Sur:    35.6
+Oeste: -7.2
+Este:  -3.1
 ============================================================
 */
 
-const RADAR_AHR=[
-    36.6133333,
-    -4.6591667
-];
-
-const RADAR_SE=[
-    37.6875000,
-    -6.3344444
-];
-
-const ARCHIDONA=[
-    37.094692,
-    -4.3774514
-];
-
-const LOS_LLANOS=[
-    37.05918,
-    -4.361634
-];
-
-const DISTANCIAS_ANILLOS_KM=[
-    25,
-    50,
-    75,
-    100
+const ENCUADRE_REGIONAL=[
+    [35.6,-7.2],
+    [38.6,-3.1]
 ];
 
 let mapa=null;
@@ -795,9 +754,7 @@ let reproduciendo=false;
 let temporizador=null;
 let opacidad=.82;
 
-/* ==========================================================
-   UTILIDADES
-   ========================================================== */
+/* Utilidades */
 
 function elemento(id){
     return document.getElementById(id);
@@ -880,10 +837,7 @@ function urlAbsoluta(url){
 }
 
 function establecerEstado(mensaje,tipo=null){
-    const estado=
-        elemento(
-            "estado"
-        );
+    const estado=elemento("estado");
 
     texto(
         "estado-texto",
@@ -896,17 +850,12 @@ function establecerEstado(mensaje,tipo=null){
     );
 
     if(tipo){
-        estado.classList.add(
-            tipo
-        );
+        estado.classList.add(tipo);
     }
 }
 
 function mostrarMensaje(mensaje,error=false){
-    const nodo=
-        elemento(
-            "mensaje"
-        );
+    const nodo=elemento("mensaje");
 
     if(!mensaje){
         nodo.classList.remove(
@@ -918,8 +867,7 @@ function mostrarMensaje(mensaje,error=false){
         return;
     }
 
-    nodo.textContent=
-        mensaje;
+    nodo.textContent=mensaje;
 
     nodo.classList.toggle(
         "error",
@@ -931,13 +879,10 @@ function mostrarMensaje(mensaje,error=false){
     );
 }
 
-/* ==========================================================
-   CÁLCULO GEOGRÁFICO
-   ========================================================== */
+/* Cálculo geográfico */
 
 function puntoDestino(origen,distanciaKm,rumboGrados){
-    const radioTierraKm=
-        6371.0088;
+    const radioTierraKm=6371.0088;
 
     const latitud1=
         origen[0] *
@@ -985,150 +930,35 @@ function puntoDestino(origen,distanciaKm,rumboGrados){
     ];
 }
 
-function boundsCoberturaRadar(
-    centro,
-    distanciaKm
-){
-    const norte=
-        puntoDestino(
-            centro,
-            distanciaKm,
-            0
-        );
-
-    const este=
-        puntoDestino(
-            centro,
-            distanciaKm,
-            90
-        );
-
-    const sur=
-        puntoDestino(
-            centro,
-            distanciaKm,
-            180
-        );
-
-    const oeste=
-        puntoDestino(
-            centro,
-            distanciaKm,
-            270
-        );
-
-    return L.latLngBounds(
-        [
-            [
-                sur[0],
-                oeste[1]
-            ],
-            [
-                norte[0],
-                este[1]
-            ]
-        ]
-    );
-}
-
-function boundsCoberturaRegional(){
-    const boundsAhr=
-        boundsCoberturaRadar(
-            RADAR_AHR,
-            100
-        );
-
-    const boundsSe=
-        boundsCoberturaRadar(
-            RADAR_SE,
-            100
-        );
-
-    const conjunto=
-        L.latLngBounds(
-            boundsAhr
-        );
-
-    conjunto.extend(
-        boundsSe
-    );
-
-    return conjunto;
-}
-
-/* ==========================================================
-   CAPAS
-   ==========================================================
-
-   200 mapa base
-   350 reflectividad
-   520 anillos
-   620 localidades
-   630 radares
-   700 etiquetas
-
-   ========================================================== */
+/* Capas */
 
 function crearPanelesMapa(){
-    mapa.createPane(
-        "radarPane"
-    );
+    mapa.createPane("radarPane");
+    mapa.getPane("radarPane").style.zIndex="350";
+    mapa.getPane("radarPane").style.pointerEvents="none";
 
-    mapa.getPane(
-        "radarPane"
-    ).style.zIndex="350";
+    mapa.createPane("anillosPane");
+    mapa.getPane("anillosPane").style.zIndex="520";
+    mapa.getPane("anillosPane").style.pointerEvents="none";
 
-    mapa.getPane(
-        "radarPane"
-    ).style.pointerEvents="none";
+    mapa.createPane("localidadesPane");
+    mapa.getPane("localidadesPane").style.zIndex="620";
 
-    mapa.createPane(
-        "anillosPane"
-    );
+    mapa.createPane("radaresPane");
+    mapa.getPane("radaresPane").style.zIndex="630";
 
-    mapa.getPane(
-        "anillosPane"
-    ).style.zIndex="520";
-
-    mapa.getPane(
-        "anillosPane"
-    ).style.pointerEvents="none";
-
-    mapa.createPane(
-        "localidadesPane"
-    );
-
-    mapa.getPane(
-        "localidadesPane"
-    ).style.zIndex="620";
-
-    mapa.createPane(
-        "radaresPane"
-    );
-
-    mapa.getPane(
-        "radaresPane"
-    ).style.zIndex="630";
-
-    mapa.getPane(
-        "tooltipPane"
-    ).style.zIndex="700";
+    mapa.getPane("tooltipPane").style.zIndex="700";
 }
 
-/* ==========================================================
-   ICONOS
-   ========================================================== */
+/* Iconos */
 
 function iconoArchidona(){
     return L.divIcon(
         {
             className:"",
-            html:
-                '<div class="marcador-archidona"></div>',
-            iconSize:
-                [18,18],
-            iconAnchor:
-                [9,9]
+            html:'<div class="marcador-archidona"></div>',
+            iconSize:[18,18],
+            iconAnchor:[9,9]
         }
     );
 }
@@ -1137,76 +967,41 @@ function iconoEstacion(){
     return L.divIcon(
         {
             className:"",
-            html:
-                '<div class="marcador-estacion"></div>',
-            iconSize:
-                [12,12],
-            iconAnchor:
-                [6,6]
+            html:'<div class="marcador-estacion"></div>',
+            iconSize:[12,12],
+            iconAnchor:[6,6]
         }
     );
 }
 
-function iconoEtiquetaAnillo(
-    codigo,
-    distanciaKm
-){
+function iconoEtiquetaAnillo(codigo,distanciaKm){
     return L.divIcon(
         {
-            className:
-                "etiqueta-anillo-radar",
-
-            html:
-                `<span>${codigo} · ${distanciaKm} km</span>`,
-
-            iconSize:
-                [72,18],
-
-            iconAnchor:
-                [36,9]
+            className:"etiqueta-anillo-radar",
+            html:`<span>${codigo} · ${distanciaKm} km</span>`,
+            iconSize:[72,18],
+            iconAnchor:[36,9]
         }
     );
 }
 
-/* ==========================================================
-   ANILLOS
-   ========================================================== */
+/* Anillos */
 
-function crearAnillosRadar(
-    codigo,
-    centro,
-    rumboEtiquetas
-){
+function crearAnillosRadar(codigo,centro,rumboEtiquetas){
     DISTANCIAS_ANILLOS_KM.forEach(
         distanciaKm=>{
             L.circle(
                 centro,
                 {
-                    pane:
-                        "anillosPane",
-
-                    radius:
-                        distanciaKm *
-                        1000,
-
-                    fill:
-                        false,
-
-                    color:
-                        "#111111",
-
-                    weight:
-                        2.4,
-
-                    opacity:
-                        .92,
-
-                    interactive:
-                        false
+                    pane:"anillosPane",
+                    radius:distanciaKm*1000,
+                    fill:false,
+                    color:"#111111",
+                    weight:2.4,
+                    opacity:.92,
+                    interactive:false
                 }
-            ).addTo(
-                mapa
-            );
+            ).addTo(mapa);
 
             const posicionEtiqueta=
                 puntoDestino(
@@ -1218,61 +1013,37 @@ function crearAnillosRadar(
             L.marker(
                 posicionEtiqueta,
                 {
-                    pane:
-                        "anillosPane",
-
-                    icon:
-                        iconoEtiquetaAnillo(
-                            codigo,
-                            distanciaKm
-                        ),
-
-                    interactive:
-                        false,
-
-                    keyboard:
-                        false
+                    pane:"anillosPane",
+                    icon:iconoEtiquetaAnillo(
+                        codigo,
+                        distanciaKm
+                    ),
+                    interactive:false,
+                    keyboard:false
                 }
-            ).addTo(
-                mapa
-            );
+            ).addTo(mapa);
         }
     );
 }
 
-/* ==========================================================
-   LOCALIDADES PROPIAS ACTUALES
-   ========================================================== */
+/* Localidades propias actuales */
 
 function crearLocalidades(){
     L.marker(
         ARCHIDONA,
         {
-            pane:
-                "localidadesPane",
-
-            icon:
-                iconoArchidona(),
-
-            zIndexOffset:
-                1200
+            pane:"localidadesPane",
+            icon:iconoArchidona(),
+            zIndexOffset:1200
         }
     )
-    .addTo(
-        mapa
-    )
+    .addTo(mapa)
     .bindTooltip(
         "ARCHIDONA",
         {
-            permanent:
-                true,
-
-            direction:
-                "top",
-
-            offset:
-                [0,-12],
-
+            permanent:true,
+            direction:"top",
+            offset:[0,-12],
             className:
                 "etiqueta-localidad etiqueta-archidona"
         }
@@ -1281,101 +1052,56 @@ function crearLocalidades(){
     L.marker(
         LOS_LLANOS,
         {
-            pane:
-                "localidadesPane",
-
-            icon:
-                iconoEstacion(),
-
-            zIndexOffset:
-                1100
+            pane:"localidadesPane",
+            icon:iconoEstacion(),
+            zIndexOffset:1100
         }
     )
-    .addTo(
-        mapa
-    )
+    .addTo(mapa)
     .bindTooltip(
         "Los Llanos",
         {
-            permanent:
-                true,
-
-            direction:
-                "right",
-
-            offset:
-                [8,0],
-
+            permanent:true,
+            direction:"right",
+            offset:[8,0],
             className:
                 "etiqueta-localidad etiqueta-los-llanos"
         }
     );
 }
 
-/* ==========================================================
-   CENTROS RADAR
-   ========================================================== */
+/* Centros radar */
 
-function crearCentroRadar(
-    codigo,
-    nombre,
-    centro,
-    direccionEtiqueta
-){
+function crearCentroRadar(codigo,nombre,centro,direccionEtiqueta){
     L.circleMarker(
         centro,
         {
-            pane:
-                "radaresPane",
-
-            radius:
-                5,
-
-            color:
-                "#ffffff",
-
-            weight:
-                2,
-
-            fill:
-                true,
-
-            fillColor:
-                "#111111",
-
-            fillOpacity:
-                1,
-
-            opacity:
-                1
+            pane:"radaresPane",
+            radius:5,
+            color:"#ffffff",
+            weight:2,
+            fill:true,
+            fillColor:"#111111",
+            fillOpacity:1,
+            opacity:1
         }
     )
-    .addTo(
-        mapa
-    )
+    .addTo(mapa)
     .bindTooltip(
         `${codigo} · ${nombre}`,
         {
-            permanent:
-                true,
-
-            direction:
-                direccionEtiqueta,
-
+            permanent:true,
+            direction:direccionEtiqueta,
             offset:
                 direccionEtiqueta==="top"
                     ? [0,-8]
                     : [0,8],
-
-            className:
-                "etiqueta-radar"
+            className:"etiqueta-radar"
         }
     );
 }
 
-/* ==========================================================
-   MAPA
-   ========================================================== */
+/* Mapa */
 
 function crearMapa(){
     if(
@@ -1399,23 +1125,11 @@ function crearMapa(){
         L.map(
             "mapa-radar",
             {
-                center:
-                    [
-                        37.15,
-                        -5.45
-                    ],
-
-                zoom:
-                    7,
-
-                minZoom:
-                    5,
-
-                maxZoom:
-                    16,
-
-                zoomControl:
-                    true
+                center:[37.1,-5.15],
+                zoom:7,
+                minZoom:5,
+                maxZoom:16,
+                zoomControl:true
             }
         );
 
@@ -1424,23 +1138,11 @@ function crearMapa(){
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
-            maxZoom:
-                19,
-
+            maxZoom:19,
             attribution:
                 "&copy; OpenStreetMap contributors"
         }
-    ).addTo(
-        mapa
-    );
-
-    /*
-    Ambos radares comparten el mismo sistema
-    de anillos: 25, 50, 75 y 100 km.
-
-    Las etiquetas se colocan en lados diferentes
-    para reducir solapamientos.
-    */
+    ).addTo(mapa);
 
     crearAnillosRadar(
         "AHR",
@@ -1472,39 +1174,31 @@ function crearMapa(){
 
     L.control.scale(
         {
-            metric:
-                true,
-
-            imperial:
-                false,
-
-            position:
-                "bottomright"
+            metric:true,
+            imperial:false,
+            position:"bottomright"
         }
-    ).addTo(
-        mapa
-    );
+    ).addTo(mapa);
 
     /*
-    Encuadre regional:
-    unión de las coberturas de 100 km
-    de AHR y SE.
+    Ya no encuadramos a partir de los círculos
+    completos de 100 km.
+
+    Utilizamos una ventana meteorológica propia
+    centrada en Andalucía occidental-central.
     */
 
     mapa.fitBounds(
-        boundsCoberturaRegional(),
+        ENCUADRE_REGIONAL,
         {
-            padding:
-                [22,22]
+            padding:[4,4]
         }
     );
 
     reajustarMapa();
 }
 
-/* ==========================================================
-   REAJUSTE
-   ========================================================== */
+/* Reajuste */
 
 function reajustarMapa(){
     if(!mapa){
@@ -1515,11 +1209,8 @@ function reajustarMapa(){
         ()=>{
             mapa.invalidateSize(
                 {
-                    animate:
-                        false,
-
-                    pan:
-                        false
+                    animate:false,
+                    pan:false
                 }
             );
         }
@@ -1541,18 +1232,14 @@ window.addEventListener(
     }
 );
 
-if(
-    window.visualViewport
-){
+if(window.visualViewport){
     window.visualViewport.addEventListener(
         "resize",
         reajustarMapa
     );
 }
 
-/* ==========================================================
-   BOUNDS DEL FOTOGRAMA AHR
-   ========================================================== */
+/* Bounds fotograma */
 
 function bounds(fotograma){
     if(
@@ -1592,20 +1279,12 @@ function bounds(fotograma){
     }
 
     return [
-        [
-            sur,
-            oeste
-        ],
-        [
-            norte,
-            este
-        ]
+        [sur,oeste],
+        [norte,este]
     ];
 }
 
-/* ==========================================================
-   TIMELINE
-   ========================================================== */
+/* Timeline */
 
 function actualizarControles(){
     const actual=
@@ -1669,9 +1348,7 @@ function actualizarControles(){
         indice;
 }
 
-/* ==========================================================
-   FOTOGRAMA AHR
-   ========================================================== */
+/* Fotograma AHR */
 
 function mostrarFotograma(nuevoIndice){
     if(
@@ -1717,15 +1394,12 @@ function mostrarFotograma(nuevoIndice){
         return;
     }
 
-    if(
-        capaRadar
-    ){
+    if(capaRadar){
         mapa.removeLayer(
             capaRadar
         );
 
-        capaRadar=
-            null;
+        capaRadar=null;
     }
 
     const separador=
@@ -1741,27 +1415,14 @@ function mostrarFotograma(nuevoIndice){
             fotograma.observado_en
         );
 
-    /*
-    De momento esta capa contiene exclusivamente AHR.
-
-    Cuando incorporemos SE, ambos overlays
-    se introducirán por debajo de anillos,
-    localidades y etiquetas.
-    */
-
     capaRadar=
         L.imageOverlay(
             urlSinCache,
             limites,
             {
-                pane:
-                    "radarPane",
-
-                opacity:
-                    opacidad,
-
-                interactive:
-                    false
+                pane:"radarPane",
+                opacity:opacidad,
+                interactive:false
             }
         );
 
@@ -1785,16 +1446,12 @@ function mostrarFotograma(nuevoIndice){
 
     actualizarControles();
 
-    mostrarMensaje(
-        ""
-    );
+    mostrarMensaje("");
 
     reajustarMapa();
 }
 
-/* ==========================================================
-   CARGA TIMELINE AHR
-   ========================================================== */
+/* Carga timeline AHR */
 
 async function cargarTimeline(){
     detener();
@@ -1817,8 +1474,7 @@ async function cargarTimeline(){
             await fetch(
                 url,
                 {
-                    cache:
-                        "no-store"
+                    cache:"no-store"
                 }
             );
 
@@ -1901,9 +1557,7 @@ async function cargarTimeline(){
     }
 }
 
-/* ==========================================================
-   ANIMACIÓN
-   ========================================================== */
+/* Animación */
 
 function actualizarBotonPlay(){
     elemento(
@@ -1915,19 +1569,15 @@ function actualizarBotonPlay(){
 }
 
 function detener(){
-    if(
-        temporizador
-    ){
+    if(temporizador){
         clearInterval(
             temporizador
         );
 
-        temporizador=
-            null;
+        temporizador=null;
     }
 
-    reproduciendo=
-        false;
+    reproduciendo=false;
 
     actualizarBotonPlay();
 }
@@ -1941,8 +1591,7 @@ function reproducir(){
 
     detener();
 
-    reproduciendo=
-        true;
+    reproduciendo=true;
 
     actualizarBotonPlay();
 
@@ -1956,8 +1605,7 @@ function reproducir(){
                     siguiente>=
                     fotogramas.length
                 ){
-                    siguiente=
-                        0;
+                    siguiente=0;
                 }
 
                 mostrarFotograma(
@@ -1968,9 +1616,7 @@ function reproducir(){
         );
 }
 
-/* ==========================================================
-   EVENTOS
-   ========================================================== */
+/* Eventos */
 
 function instalarEventos(){
     elemento(
@@ -2052,9 +1698,7 @@ function instalarEventos(){
                 `${evento.target.value} %`
             );
 
-            if(
-                capaRadar
-            ){
+            if(capaRadar){
                 capaRadar.setOpacity(
                     opacidad
                 );
@@ -2063,9 +1707,7 @@ function instalarEventos(){
     );
 }
 
-/* ==========================================================
-   INICIO
-   ========================================================== */
+/* Inicio */
 
 function iniciar(){
     crearMapa();
@@ -2092,8 +1734,7 @@ if(
         "DOMContentLoaded",
         iniciar,
         {
-            once:
-                true
+            once:true
         }
     );
 }else{
