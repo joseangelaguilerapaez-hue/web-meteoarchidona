@@ -1,0 +1,38 @@
+# ============================================================
+# MeteoArchidona — configuración del servidor (Hostinger / Apache)
+# ============================================================
+
+RewriteEngine On
+
+# ------------------------------------------------------------
+# Forzar HTTPS
+# ------------------------------------------------------------
+
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ------------------------------------------------------------
+# Cabeceras de seguridad básicas
+# ------------------------------------------------------------
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# ------------------------------------------------------------
+# Rutas limpias (sin #)
+# ------------------------------------------------------------
+#
+# /prediccion, /observaciones, /en-vivo, /radar no son archivos
+# reales: los gestiona index.html con JavaScript (history API).
+# Si la petición no coincide con un archivo o carpeta existente,
+# se sirve index.html para que la ruta cargue bien al entrar
+# directamente o al recargar la página.
+# ------------------------------------------------------------
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
