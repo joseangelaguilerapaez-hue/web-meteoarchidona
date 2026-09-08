@@ -1,0 +1,33 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://meteoarchidona.com/",
+        "https://meteoarchidona.com/pages/prediccion.html",
+        "https://meteoarchidona.com/pages/observaciones.html",
+        "https://meteoarchidona.com/pages/en-vivo.html",
+        "https://meteoarchidona.com/pages/info.html"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "chromeFlags": ["--disable-dev-shm-usage"]
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    },
+    "assert": {
+      "preset": "lighthouse:recommended",
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 0.85 }],
+        "categories:accessibility": ["error", { "minScore": 0.90 }],
+        "categories:best-practices": ["error", { "minScore": 0.85 }],
+        "categories:seo": ["error", { "minScore": 0.90 }],
+        "first-contentful-paint": ["error", { "maxNumericValue": 1500 }],
+        "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
+        "total-blocking-time": ["error", { "maxNumericValue": 300 }]
+      }
+    }
+  }
+}

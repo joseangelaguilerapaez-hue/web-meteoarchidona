@@ -1,0 +1,31 @@
+{
+  "name": "meteoarchidona",
+  "version": "1.0.0",
+  "description": "Plataforma de monitoreo meteorológico en tiempo real para la comarca de Archidona",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint js/ --fix",
+    "format": "prettier --write .",
+    "check": "eslint js/ && prettier --check .",
+    "test": "node tests/utils.test.js && node tests/validation.test.js && node tests/lluvia.test.js && node tests/viento.test.js && node tests/ui.test.js",
+    "test:watch": "nodemon tests/utils.test.js tests/validation.test.js tests/lluvia.test.js tests/viento.test.js tests/ui.test.js",
+    "minify:css": "csso css/estilos.css -o css/estilos.min.css",
+    "minify:js": "terser js/app.js -o js/app.min.js && terser js/utils.js -o js/utils.min.js && terser js/validation.js -o js/validation.min.js",
+    "minify": "npm run minify:css && npm run minify:js",
+    "lighthouse": "lighthouse https://localhost:8123 --view"
+  },
+  "devDependencies": {
+    "csso-cli": "^4.0.2",
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "terser": "^5.51.2"
+  },
+  "keywords": [
+    "weather",
+    "meteorology",
+    "archidona",
+    "monitoring"
+  ],
+  "author": "Y&Z Project",
+  "license": "MIT"
+}
