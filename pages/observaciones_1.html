@@ -1,0 +1,1575 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+        <meta name="description" content="Observaciones meteorológicas de MeteoArchidona." />
+
+        <title>MeteoArchidona · Observaciones</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIINfQ3yn5orwi9pKjMZVAI9dFiSKgU2TDo="
+            crossorigin=""
+        />
+
+        <style>
+            :root {
+                --bg: #080d14;
+                --surface: #0d1520;
+                --card: #111e2e;
+                --border: #1a2d42;
+                --accent: #f0a500;
+                --blue: #3b9eff;
+                --cyan: #36d5ff;
+                --green: #22c55e;
+                --red: #ef4444;
+                --text: #f6f8fb;
+                --muted: #aabdd0;
+                --shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                margin: 0;
+                min-width: 320px;
+                min-height: 100%;
+                background: var(--bg);
+                color: var(--text);
+                font-family: "Sora", sans-serif;
+            }
+
+            body {
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+
+            button,
+            input {
+                font: inherit;
+            }
+
+            button {
+                color: inherit;
+            }
+
+            .pagina {
+                min-height: 100vh;
+                min-height: 100dvh;
+                background: radial-gradient(circle at top, #0b1b2d 0, var(--bg) 42%);
+            }
+
+            /*
+        ============================================================
+        CABECERA
+        ============================================================
+        */
+
+            .cabecera {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                min-height: 76px;
+                padding: 14px clamp(16px, 3vw, 38px);
+                border-bottom: 1px solid var(--border);
+                background: rgba(8, 13, 20, 0.96);
+            }
+
+            .cabecera-marca {
+                min-width: 0;
+            }
+
+            .cabecera-etiqueta {
+                color: var(--cyan);
+                font-family: "JetBrains Mono", monospace;
+                font-size: 10px;
+                font-weight: 600;
+                letter-spacing: 0.12em;
+            }
+
+            .cabecera-titulo {
+                margin-top: 3px;
+                font-size: clamp(19px, 3vw, 28px);
+                font-weight: 700;
+            }
+
+            .cabecera-titulo span {
+                color: var(--accent);
+            }
+
+            .estado-api {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                flex: 0 0 auto;
+                color: var(--muted);
+                font-size: 10px;
+            }
+
+            .estado-punto {
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: var(--accent);
+                box-shadow: 0 0 11px rgba(240, 165, 0, 0.4);
+            }
+
+            .estado-api.correcto .estado-punto {
+                background: var(--green);
+                box-shadow: 0 0 11px rgba(34, 197, 94, 0.48);
+            }
+
+            .estado-api.error .estado-punto {
+                background: var(--red);
+                box-shadow: 0 0 11px rgba(239, 68, 68, 0.48);
+            }
+
+            /*
+        ============================================================
+        SELECTOR
+        ============================================================
+        */
+
+            .selector-producto {
+                display: flex;
+                gap: 8px;
+                padding: 13px clamp(14px, 3vw, 38px);
+                overflow-x: auto;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+                background: rgba(7, 15, 24, 0.84);
+                scrollbar-width: none;
+            }
+
+            .selector-producto::-webkit-scrollbar {
+                display: none;
+            }
+
+            .producto-boton {
+                flex: 0 0 auto;
+                padding: 9px 14px;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                background: rgba(12, 30, 47, 0.88);
+                color: var(--muted);
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                cursor: pointer;
+            }
+
+            .producto-boton.activo {
+                border-color: rgba(54, 213, 255, 0.5);
+                background: rgba(21, 70, 96, 0.42);
+                color: var(--cyan);
+                box-shadow: 0 0 14px rgba(54, 213, 255, 0.1);
+            }
+
+            .producto-boton:disabled {
+                opacity: 0.42;
+                cursor: default;
+            }
+
+            /*
+        ============================================================
+        PANEL
+        ============================================================
+        */
+
+            .contenido {
+                width: min(1600px, 100%);
+                margin: 0 auto;
+                padding: 14px clamp(12px, 2vw, 26px) 26px;
+            }
+
+            .radar-panel {
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: 13px;
+                background: var(--surface);
+                box-shadow: var(--shadow);
+            }
+
+            .radar-cabecera {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 14px;
+                align-items: center;
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--border);
+                background: linear-gradient(135deg, rgba(17, 30, 46, 0.96), rgba(8, 22, 34, 0.96));
+            }
+
+            .radar-titulo {
+                margin: 0;
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+
+            .radar-subtitulo {
+                margin-top: 4px;
+                color: var(--muted);
+                font-size: 9px;
+            }
+
+            .radar-instante {
+                text-align: right;
+                font-family: "JetBrains Mono", monospace;
+            }
+
+            .radar-instante-hora {
+                color: var(--accent);
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .radar-instante-fecha {
+                margin-top: 2px;
+                color: var(--muted);
+                font-size: 8px;
+            }
+
+            /*
+        ============================================================
+        MAPA
+
+        IMPORTANTE:
+        Tanto el contenedor como #mapa-radar tienen dimensiones
+        explícitas. Leaflet recalcula además su tamaño por JavaScript.
+        ============================================================
+        */
+
+            .mapa-contenedor {
+                position: relative;
+                width: 100%;
+                height: min(72vh, 760px);
+                height: min(72dvh, 760px);
+                min-height: 520px;
+                overflow: hidden;
+                background: #08121d;
+            }
+
+            #mapa-radar {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                min-width: 100%;
+                min-height: 100%;
+                z-index: 1;
+                background: #0a1520;
+            }
+
+            .leaflet-container {
+                width: 100% !important;
+                height: 100% !important;
+                background: #0a1520;
+                font-family: "Sora", sans-serif;
+            }
+
+            /*
+        ============================================================
+        LEYENDA
+        ============================================================
+        */
+
+            .leyenda-radar {
+                position: absolute;
+                z-index: 650;
+                left: 12px;
+                bottom: 12px;
+                max-width: 230px;
+                padding: 9px 11px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 8px;
+                background: rgba(5, 13, 21, 0.88);
+                backdrop-filter: blur(8px);
+                pointer-events: none;
+            }
+
+            .leyenda-radar-titulo {
+                color: var(--cyan);
+                font-size: 8px;
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+
+            .leyenda-radar-texto {
+                margin-top: 4px;
+                color: #d5e3ef;
+                font-size: 8px;
+                line-height: 1.45;
+            }
+
+            /*
+        ============================================================
+        CONTROLES
+        ============================================================
+        */
+
+            .controles {
+                display: grid;
+                grid-template-columns: auto minmax(0, 1fr) auto;
+                gap: 12px;
+                align-items: center;
+                padding: 13px 15px;
+                border-top: 1px solid var(--border);
+                background: rgba(7, 18, 29, 0.98);
+            }
+
+            .controles-botones {
+                display: flex;
+                gap: 6px;
+            }
+
+            .control-boton {
+                display: grid;
+                place-items: center;
+                width: 36px;
+                height: 34px;
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                background: rgba(17, 36, 53, 0.92);
+                cursor: pointer;
+                font-size: 12px;
+            }
+
+            .control-boton:hover {
+                border-color: var(--blue);
+            }
+
+            .control-boton-principal {
+                color: var(--cyan);
+                border-color: rgba(54, 213, 255, 0.32);
+            }
+
+            .timeline-bloque {
+                min-width: 0;
+            }
+
+            .timeline-slider,
+            .opacidad-slider {
+                width: 100%;
+            }
+
+            .timeline-slider {
+                accent-color: var(--accent);
+            }
+
+            .opacidad-slider {
+                accent-color: var(--cyan);
+            }
+
+            .timeline-etiquetas {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 3px;
+                color: var(--muted);
+                font-family: "JetBrains Mono", monospace;
+                font-size: 7px;
+            }
+
+            .opacidad-bloque {
+                min-width: 110px;
+            }
+
+            .opacidad-titulo {
+                display: flex;
+                justify-content: space-between;
+                gap: 6px;
+                margin-bottom: 3px;
+                color: var(--muted);
+                font-size: 7px;
+                text-transform: uppercase;
+            }
+
+            /*
+        ============================================================
+        DATOS
+        ============================================================
+        */
+
+            .datos-radar {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                border-top: 1px solid var(--border);
+                background: rgba(8, 19, 30, 0.96);
+            }
+
+            .dato-radar {
+                min-width: 0;
+                padding: 11px 13px;
+                border-right: 1px solid var(--border);
+            }
+
+            .dato-radar:last-child {
+                border-right: none;
+            }
+
+            .dato-radar-label {
+                color: var(--muted);
+                font-size: 7px;
+                text-transform: uppercase;
+            }
+
+            .dato-radar-valor {
+                margin-top: 4px;
+                overflow: hidden;
+                color: var(--text);
+                font-family: "JetBrains Mono", monospace;
+                font-size: 10px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .mensaje {
+                display: none;
+                padding: 11px 14px;
+                border-top: 1px solid var(--border);
+                color: var(--muted);
+                font-size: 9px;
+            }
+
+            .mensaje.visible {
+                display: block;
+            }
+
+            .mensaje.error {
+                color: #ff9e9e;
+            }
+
+            /*
+        ============================================================
+        LEAFLET
+        ============================================================
+        */
+
+            .leaflet-control-zoom a {
+                color: #e8f3fb !important;
+                background: rgba(7, 20, 31, 0.92) !important;
+                border-color: var(--border) !important;
+            }
+
+            .leaflet-control-attribution {
+                padding: 2px 5px !important;
+                background: rgba(6, 14, 23, 0.78) !important;
+                color: #9eb1c2 !important;
+                font-size: 7px !important;
+            }
+
+            .leaflet-control-attribution a {
+                color: #b8d8ee !important;
+            }
+
+            .leaflet-tooltip {
+                padding: 4px 7px;
+                border: 1px solid rgba(255, 255, 255, 0.17);
+                border-radius: 5px;
+                background: rgba(5, 16, 26, 0.91);
+                color: white;
+                box-shadow: none;
+                font-family: "Sora", sans-serif;
+                font-size: 8px;
+            }
+
+            .leaflet-tooltip::before {
+                display: none;
+            }
+
+            /*
+        ============================================================
+        MARCADORES
+        ============================================================
+        */
+
+            .marcador-archidona {
+                width: 18px;
+                height: 18px;
+                border: 3px solid rgba(255, 255, 255, 0.95);
+                border-radius: 50%;
+                background: var(--accent);
+                box-shadow:
+                    0 0 0 5px rgba(240, 165, 0, 0.18),
+                    0 0 18px rgba(240, 165, 0, 0.58);
+            }
+
+            .marcador-estacion {
+                width: 12px;
+                height: 12px;
+                border: 2px solid white;
+                border-radius: 50%;
+                background: var(--blue);
+                box-shadow: 0 0 10px rgba(59, 158, 255, 0.65);
+            }
+
+            /*
+        ============================================================
+        RESPONSIVE
+        ============================================================
+        */
+
+            @media (max-width: 760px) {
+                .cabecera {
+                    min-height: 68px;
+                    padding: 11px 14px;
+                }
+
+                .estado-api {
+                    font-size: 8px;
+                }
+
+                .contenido {
+                    padding: 9px 8px 18px;
+                }
+
+                .radar-panel {
+                    border-radius: 9px;
+                }
+
+                .radar-cabecera {
+                    grid-template-columns: 1fr;
+                    gap: 8px;
+                    padding: 11px 12px;
+                }
+
+                .radar-instante {
+                    text-align: left;
+                }
+
+                .mapa-contenedor {
+                    height: 62vh;
+                    height: 62dvh;
+                    min-height: 470px;
+                    max-height: 680px;
+                }
+
+                .controles {
+                    grid-template-columns: auto minmax(0, 1fr);
+                    gap: 9px 10px;
+                    padding: 10px;
+                }
+
+                .opacidad-bloque {
+                    grid-column: 1 / -1;
+                    min-width: 0;
+                }
+
+                .datos-radar {
+                    grid-template-columns: 1fr 1fr;
+                }
+
+                .dato-radar {
+                    border-bottom: 1px solid var(--border);
+                }
+
+                .dato-radar:nth-child(2n) {
+                    border-right: none;
+                }
+
+                .dato-radar:nth-last-child(-n + 2) {
+                    border-bottom: none;
+                }
+
+                .leyenda-radar {
+                    max-width: 190px;
+                }
+            }
+
+            @media (max-width: 390px) {
+                .cabecera-titulo {
+                    font-size: 18px;
+                }
+
+                .mapa-contenedor {
+                    min-height: 440px;
+                }
+
+                .control-boton {
+                    width: 33px;
+                    height: 32px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="pagina">
+            <header class="cabecera">
+                <div class="cabecera-marca">
+                    <div class="cabecera-etiqueta">METEOARCHIDONA · OBSERVACIONES</div>
+
+                    <div class="cabecera-titulo">
+                        Radar
+                        <span>meteorológico</span>
+                    </div>
+                </div>
+
+                <div class="estado-api" id="estado-api">
+                    <span class="estado-punto"></span>
+
+                    <span id="estado-api-texto">Cargando radar</span>
+                </div>
+            </header>
+
+            <nav class="selector-producto" aria-label="Productos de observación">
+                <button type="button" class="producto-boton activo">🌧️ Radar</button>
+
+                <button type="button" class="producto-boton" disabled title="Próxima fase">
+                    ⚡ Rayos
+                </button>
+
+                <button type="button" class="producto-boton" disabled title="Próxima fase">
+                    🛰️ Satélite
+                </button>
+            </nav>
+
+            <main class="contenido">
+                <section class="radar-panel">
+                    <div class="radar-cabecera">
+                        <div>
+                            <h1 class="radar-titulo">Radar AHR · PPI</h1>
+
+                            <div class="radar-subtitulo">
+                                Reflectividad AEMET procesada por MeteoArchidona
+                            </div>
+                        </div>
+
+                        <div class="radar-instante">
+                            <div class="radar-instante-hora" id="instante-hora">--:--</div>
+
+                            <div class="radar-instante-fecha" id="instante-fecha">--</div>
+                        </div>
+                    </div>
+
+                    <div class="mapa-contenedor" id="mapa-contenedor">
+                        <div
+                            id="mapa-radar"
+                            aria-label="Mapa meteorológico radar de MeteoArchidona"
+                        ></div>
+
+                        <div class="leyenda-radar" aria-hidden="true">
+                            <div class="leyenda-radar-titulo">Reflectividad radar</div>
+
+                            <div class="leyenda-radar-texto">
+                                Ecos originales AEMET sobre cartografía georreferenciada. Centro de
+                                referencia: Archidona.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="controles">
+                        <div class="controles-botones">
+                            <button
+                                type="button"
+                                class="control-boton"
+                                id="boton-anterior"
+                                aria-label="Fotograma anterior"
+                                title="Fotograma anterior"
+                            >
+                                ◀
+                            </button>
+
+                            <button
+                                type="button"
+                                class="control-boton control-boton-principal"
+                                id="boton-reproducir"
+                                aria-label="Reproducir animación"
+                                title="Reproducir animación"
+                            >
+                                ▶
+                            </button>
+
+                            <button
+                                type="button"
+                                class="control-boton"
+                                id="boton-siguiente"
+                                aria-label="Fotograma siguiente"
+                                title="Fotograma siguiente"
+                            >
+                                ▶|
+                            </button>
+
+                            <button
+                                type="button"
+                                class="control-boton"
+                                id="boton-recargar"
+                                aria-label="Recargar timeline"
+                                title="Recargar timeline"
+                            >
+                                ↻
+                            </button>
+                        </div>
+
+                        <div class="timeline-bloque">
+                            <input
+                                type="range"
+                                class="timeline-slider"
+                                id="timeline-slider"
+                                min="0"
+                                max="0"
+                                value="0"
+                                step="1"
+                                aria-label="Timeline radar"
+                            />
+
+                            <div class="timeline-etiquetas">
+                                <span id="timeline-inicio">--</span>
+
+                                <span id="timeline-posicion">0 / 0</span>
+
+                                <span id="timeline-fin">--</span>
+                            </div>
+                        </div>
+
+                        <div class="opacidad-bloque">
+                            <div class="opacidad-titulo">
+                                <span>Radar</span>
+
+                                <span id="opacidad-valor">82 %</span>
+                            </div>
+
+                            <input
+                                type="range"
+                                class="opacidad-slider"
+                                id="opacidad-slider"
+                                min="15"
+                                max="100"
+                                value="82"
+                                step="1"
+                                aria-label="Opacidad del radar"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="datos-radar">
+                        <div class="dato-radar">
+                            <div class="dato-radar-label">Fotogramas</div>
+
+                            <div class="dato-radar-valor" id="dato-fotogramas">--</div>
+                        </div>
+
+                        <div class="dato-radar">
+                            <div class="dato-radar-label">Producto</div>
+
+                            <div class="dato-radar-valor" id="dato-producto">PPI</div>
+                        </div>
+
+                        <div class="dato-radar">
+                            <div class="dato-radar-label">Radar</div>
+
+                            <div class="dato-radar-valor" id="dato-radar">AHR</div>
+                        </div>
+
+                        <div class="dato-radar">
+                            <div class="dato-radar-label">Alcance referencia</div>
+
+                            <div class="dato-radar-valor">10 km · 20 km</div>
+                        </div>
+                    </div>
+
+                    <div class="mensaje" id="mensaje"></div>
+                </section>
+            </main>
+        </div>
+
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""
+        ></script>
+
+        <script>
+            const API_BASE = "https://api-meteoarchidona.onrender.com";
+
+            const RADAR_CODIGO = "AHR";
+
+            const RADAR_PRODUCTO = "PPI";
+
+            const CENTRO_ARCHIDONA = [37.094692, -4.3774514];
+
+            const ESTACIONES = [
+                {
+                    nombre: "El Silo · Archidona",
+
+                    latitud: 37.094692,
+
+                    longitud: -4.3774514,
+                },
+                {
+                    nombre: "Los Llanos · Villanueva del Trabuco",
+
+                    latitud: 37.05918,
+
+                    longitud: -4.361634,
+                },
+            ];
+
+            let mapa = null;
+
+            let capaRadar = null;
+
+            let fotogramas = [];
+
+            let indiceActual = 0;
+
+            let temporizadorAnimacion = null;
+
+            let reproduciendo = false;
+
+            let opacidadRadar = 0.82;
+
+            let observadorTamanoMapa = null;
+
+            /*
+        ============================================================
+        UTILIDADES
+        ============================================================
+        */
+
+            function obtenerElemento(id) {
+                return document.getElementById(id);
+            }
+
+            function asignarTexto(id, texto) {
+                const elemento = obtenerElemento(id);
+
+                if (elemento) {
+                    elemento.textContent = texto;
+                }
+            }
+
+            function mostrarMensaje(texto, esError = false) {
+                const mensaje = obtenerElemento("mensaje");
+
+                if (!mensaje) {
+                    return;
+                }
+
+                if (!texto) {
+                    mensaje.textContent = "";
+
+                    mensaje.classList.remove("visible", "error");
+
+                    return;
+                }
+
+                mensaje.textContent = texto;
+
+                mensaje.classList.toggle("error", esError);
+
+                mensaje.classList.add("visible");
+            }
+
+            function establecerEstadoApi(texto, estado = null) {
+                const elemento = obtenerElemento("estado-api");
+
+                asignarTexto("estado-api-texto", texto);
+
+                if (!elemento) {
+                    return;
+                }
+
+                elemento.classList.remove("correcto", "error");
+
+                if (estado) {
+                    elemento.classList.add(estado);
+                }
+            }
+
+            function normalizarUrl(url) {
+                if (!url) {
+                    return null;
+                }
+
+                if (url.startsWith("http://") || url.startsWith("https://")) {
+                    return url;
+                }
+
+                if (url.startsWith("/")) {
+                    return API_BASE + url;
+                }
+
+                return `${API_BASE}/${url}`;
+            }
+
+            function obtenerFecha(valor) {
+                if (!valor) {
+                    return null;
+                }
+
+                const fecha = new Date(valor);
+
+                if (Number.isNaN(fecha.getTime())) {
+                    return null;
+                }
+
+                return fecha;
+            }
+
+            function formatearHora(valor) {
+                const fecha = obtenerFecha(valor);
+
+                if (!fecha) {
+                    return "--:--";
+                }
+
+                return fecha.toLocaleTimeString("es-ES", {
+                    hour: "2-digit",
+
+                    minute: "2-digit",
+                });
+            }
+
+            function formatearFecha(valor) {
+                const fecha = obtenerFecha(valor);
+
+                if (!fecha) {
+                    return "--";
+                }
+
+                return fecha.toLocaleDateString("es-ES", {
+                    day: "2-digit",
+
+                    month: "2-digit",
+
+                    year: "numeric",
+                });
+            }
+
+            /*
+        ============================================================
+        CORRECCIÓN DE DIMENSIONADO LEAFLET
+
+        Chrome móvil modifica el viewport cuando muestra u oculta sus
+        barras superior e inferior.
+
+        Leaflet puede inicializarse antes de que el navegador haya
+        establecido el tamaño definitivo del panel.
+
+        Por eso usamos:
+
+        - requestAnimationFrame;
+        - varios invalidateSize diferidos;
+        - resize;
+        - orientationchange;
+        - visualViewport;
+        - ResizeObserver.
+
+        ============================================================
+        */
+
+            function invalidarTamanoMapa() {
+                if (!mapa) {
+                    return;
+                }
+
+                mapa.invalidateSize({
+                    animate: false,
+
+                    pan: false,
+                });
+            }
+
+            function invalidarTamanoMapaDiferido() {
+                requestAnimationFrame(() => {
+                    invalidarTamanoMapa();
+
+                    requestAnimationFrame(invalidarTamanoMapa);
+                });
+
+                setTimeout(invalidarTamanoMapa, 100);
+
+                setTimeout(invalidarTamanoMapa, 300);
+
+                setTimeout(invalidarTamanoMapa, 700);
+
+                setTimeout(invalidarTamanoMapa, 1200);
+            }
+
+            function instalarVigilanciaTamanoMapa() {
+                const contenedor = obtenerElemento("mapa-contenedor");
+
+                if (!contenedor) {
+                    return;
+                }
+
+                if ("ResizeObserver" in window) {
+                    observadorTamanoMapa = new ResizeObserver(() => {
+                        invalidarTamanoMapaDiferido();
+                    });
+
+                    observadorTamanoMapa.observe(contenedor);
+                }
+
+                window.addEventListener("resize", invalidarTamanoMapaDiferido, {
+                    passive: true,
+                });
+
+                window.addEventListener("orientationchange", invalidarTamanoMapaDiferido, {
+                    passive: true,
+                });
+
+                if (window.visualViewport) {
+                    window.visualViewport.addEventListener("resize", invalidarTamanoMapaDiferido, {
+                        passive: true,
+                    });
+                }
+            }
+
+            /*
+        ============================================================
+        MAPA
+        ============================================================
+        */
+
+            function crearMapa() {
+                mapa = L.map("mapa-radar", {
+                    center: CENTRO_ARCHIDONA,
+
+                    zoom: 9,
+
+                    minZoom: 5,
+
+                    maxZoom: 15,
+
+                    zoomControl: true,
+                });
+
+                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    maxZoom: 19,
+
+                    attribution: "&copy; OpenStreetMap contributors",
+                }).addTo(mapa);
+
+                crearCentroArchidona();
+
+                crearEstaciones();
+
+                crearAnillosDistancia();
+
+                L.control
+                    .scale({
+                        imperial: false,
+
+                        metric: true,
+
+                        position: "bottomright",
+                    })
+                    .addTo(mapa);
+
+                instalarVigilanciaTamanoMapa();
+
+                invalidarTamanoMapaDiferido();
+            }
+
+            /*
+        ============================================================
+        ARCHIDONA
+        ============================================================
+        */
+
+            function crearCentroArchidona() {
+                const icono = L.divIcon({
+                    className: "",
+
+                    html: '<div class="marcador-archidona"></div>',
+
+                    iconSize: [18, 18],
+
+                    iconAnchor: [9, 9],
+                });
+
+                L.marker(CENTRO_ARCHIDONA, {
+                    icon: icono,
+
+                    zIndexOffset: 1200,
+                })
+                    .addTo(mapa)
+                    .bindTooltip("ARCHIDONA", {
+                        permanent: true,
+
+                        direction: "top",
+
+                        offset: [0, -12],
+                    });
+            }
+
+            /*
+        ============================================================
+        ESTACIONES
+        ============================================================
+        */
+
+            function crearEstaciones() {
+                const icono = L.divIcon({
+                    className: "",
+
+                    html: '<div class="marcador-estacion"></div>',
+
+                    iconSize: [12, 12],
+
+                    iconAnchor: [6, 6],
+                });
+
+                ESTACIONES.forEach((estacion, indice) => {
+                    /*
+                    El Silo coincide prácticamente con Archidona.
+                    No ponemos un segundo marcador encima.
+                    */
+
+                    if (indice === 0) {
+                        return;
+                    }
+
+                    L.marker([estacion.latitud, estacion.longitud], {
+                        icon: icono,
+
+                        zIndexOffset: 1100,
+                    })
+                        .addTo(mapa)
+                        .bindTooltip(estacion.nombre, {
+                            direction: "right",
+
+                            offset: [8, 0],
+                        });
+                });
+            }
+
+            /*
+        ============================================================
+        ANILLOS
+        ============================================================
+        */
+
+            function crearAnillosDistancia() {
+                const configuracionComun = {
+                    fill: false,
+
+                    color: "#f0a500",
+
+                    weight: 1,
+
+                    opacity: 0.62,
+
+                    dashArray: "5 7",
+
+                    interactive: false,
+                };
+
+                const circulo10 = L.circle(CENTRO_ARCHIDONA, {
+                    ...configuracionComun,
+
+                    radius: 10000,
+                }).addTo(mapa);
+
+                const circulo20 = L.circle(CENTRO_ARCHIDONA, {
+                    ...configuracionComun,
+
+                    radius: 20000,
+
+                    opacity: 0.42,
+                }).addTo(mapa);
+
+                circulo10.bindTooltip("10 km");
+
+                circulo20.bindTooltip("20 km");
+            }
+
+            /*
+        ============================================================
+        BOUNDS
+        ============================================================
+        */
+
+            function obtenerBoundsFotograma(fotograma) {
+                if (!fotograma || !fotograma.limites) {
+                    return null;
+                }
+
+                const oeste = Number(fotograma.limites.oeste);
+
+                const sur = Number(fotograma.limites.sur);
+
+                const este = Number(fotograma.limites.este);
+
+                const norte = Number(fotograma.limites.norte);
+
+                if (
+                    !Number.isFinite(oeste) ||
+                    !Number.isFinite(sur) ||
+                    !Number.isFinite(este) ||
+                    !Number.isFinite(norte)
+                ) {
+                    return null;
+                }
+
+                return [
+                    [sur, oeste],
+                    [norte, este],
+                ];
+            }
+
+            /*
+        ============================================================
+        MOSTRAR FOTOGRAMA
+        ============================================================
+        */
+
+            function mostrarFotograma(indice) {
+                if (fotogramas.length === 0) {
+                    return;
+                }
+
+                indiceActual = Math.max(0, Math.min(indice, fotogramas.length - 1));
+
+                const fotograma = fotogramas[indiceActual];
+
+                const bounds = obtenerBoundsFotograma(fotograma);
+
+                const url = normalizarUrl(fotograma.url_imagen);
+
+                if (!bounds || !url) {
+                    mostrarMensaje(
+                        "El fotograma no contiene información suficiente para ser representado.",
+                        true,
+                    );
+
+                    return;
+                }
+
+                if (capaRadar) {
+                    mapa.removeLayer(capaRadar);
+
+                    capaRadar = null;
+                }
+
+                /*
+            Evitamos que Chrome conserve una versión anterior
+            de la imagen procesada.
+            */
+
+                const separador = url.includes("?") ? "&" : "?";
+
+                const urlVisual =
+                    url + separador + "_=" + encodeURIComponent(fotograma.observado_en);
+
+                capaRadar = L.imageOverlay(urlVisual, bounds, {
+                    opacity: opacidadRadar,
+
+                    interactive: false,
+
+                    zIndex: 420,
+                });
+
+                capaRadar.addTo(mapa);
+
+                capaRadar.once("load", () => {
+                    invalidarTamanoMapaDiferido();
+                });
+
+                actualizarInformacionFotograma(fotograma);
+
+                actualizarTimeline();
+
+                mostrarMensaje("");
+
+                invalidarTamanoMapaDiferido();
+            }
+
+            /*
+        ============================================================
+        INFORMACIÓN
+        ============================================================
+        */
+
+            function actualizarInformacionFotograma(fotograma) {
+                asignarTexto("instante-hora", formatearHora(fotograma.observado_en));
+
+                asignarTexto("instante-fecha", formatearFecha(fotograma.observado_en));
+
+                asignarTexto("dato-producto", fotograma.producto || RADAR_PRODUCTO);
+
+                asignarTexto("dato-radar", RADAR_CODIGO);
+            }
+
+            function actualizarTimeline() {
+                const slider = obtenerElemento("timeline-slider");
+
+                if (slider) {
+                    slider.max = Math.max(fotogramas.length - 1, 0);
+
+                    slider.value = indiceActual;
+                }
+
+                asignarTexto("timeline-posicion", `${indiceActual + 1} / ${fotogramas.length}`);
+
+                if (fotogramas.length > 0) {
+                    asignarTexto("timeline-inicio", formatearHora(fotogramas[0].observado_en));
+
+                    asignarTexto(
+                        "timeline-fin",
+                        formatearHora(fotogramas[fotogramas.length - 1].observado_en),
+                    );
+                }
+            }
+
+            /*
+        ============================================================
+        CARGA DE TIMELINE
+        ============================================================
+        */
+
+            async function cargarTimeline() {
+                detenerAnimacion();
+
+                establecerEstadoApi("Cargando radar");
+
+                mostrarMensaje("Solicitando timeline radar a MeteoArchidona...");
+
+                const url =
+                    `${API_BASE}` +
+                    `/radar/${RADAR_CODIGO}` +
+                    `/timeline` +
+                    `?producto=${RADAR_PRODUCTO}`;
+
+                try {
+                    const respuesta = await fetch(url, {
+                        cache: "no-store",
+                    });
+
+                    if (!respuesta.ok) {
+                        throw new Error(`HTTP ${respuesta.status}`);
+                    }
+
+                    const datos = await respuesta.json();
+
+                    if (!Array.isArray(datos.fotogramas)) {
+                        throw new Error("La respuesta no contiene una timeline válida.");
+                    }
+
+                    fotogramas = datos.fotogramas.slice().sort((primero, segundo) => {
+                        return new Date(primero.observado_en) - new Date(segundo.observado_en);
+                    });
+
+                    if (fotogramas.length === 0) {
+                        throw new Error("La timeline no contiene fotogramas.");
+                    }
+
+                    indiceActual = fotogramas.length - 1;
+
+                    asignarTexto("dato-fotogramas", fotogramas.length);
+
+                    establecerEstadoApi("Radar operativo", "correcto");
+
+                    mostrarFotograma(indiceActual);
+
+                    invalidarTamanoMapaDiferido();
+                } catch (error) {
+                    console.error("Error cargando timeline radar:", error);
+
+                    fotogramas = [];
+
+                    establecerEstadoApi("Radar no disponible", "error");
+
+                    mostrarMensaje(
+                        "No se ha podido cargar la timeline radar. " + error.message,
+                        true,
+                    );
+                }
+            }
+
+            /*
+        ============================================================
+        ANIMACIÓN
+        ============================================================
+        */
+
+            function actualizarBotonReproducir() {
+                const boton = obtenerElemento("boton-reproducir");
+
+                if (!boton) {
+                    return;
+                }
+
+                boton.textContent = reproduciendo ? "Ⅱ" : "▶";
+
+                boton.setAttribute(
+                    "aria-label",
+                    reproduciendo ? "Pausar animación" : "Reproducir animación",
+                );
+
+                boton.setAttribute(
+                    "title",
+                    reproduciendo ? "Pausar animación" : "Reproducir animación",
+                );
+            }
+
+            function detenerAnimacion() {
+                if (temporizadorAnimacion) {
+                    clearInterval(temporizadorAnimacion);
+
+                    temporizadorAnimacion = null;
+                }
+
+                reproduciendo = false;
+
+                actualizarBotonReproducir();
+            }
+
+            function iniciarAnimacion() {
+                if (fotogramas.length < 2) {
+                    return;
+                }
+
+                detenerAnimacion();
+
+                reproduciendo = true;
+
+                actualizarBotonReproducir();
+
+                temporizadorAnimacion = setInterval(() => {
+                    let siguiente = indiceActual + 1;
+
+                    if (siguiente >= fotogramas.length) {
+                        siguiente = 0;
+                    }
+
+                    mostrarFotograma(siguiente);
+                }, 850);
+            }
+
+            function alternarAnimacion() {
+                if (reproduciendo) {
+                    detenerAnimacion();
+                } else {
+                    iniciarAnimacion();
+                }
+            }
+
+            /*
+        ============================================================
+        CONTROLES
+        ============================================================
+        */
+
+            function configurarControles() {
+                const botonAnterior = obtenerElemento("boton-anterior");
+
+                const botonSiguiente = obtenerElemento("boton-siguiente");
+
+                const botonReproducir = obtenerElemento("boton-reproducir");
+
+                const botonRecargar = obtenerElemento("boton-recargar");
+
+                const timelineSlider = obtenerElemento("timeline-slider");
+
+                const opacidadSlider = obtenerElemento("opacidad-slider");
+
+                botonAnterior.addEventListener("click", () => {
+                    detenerAnimacion();
+
+                    mostrarFotograma(indiceActual - 1);
+                });
+
+                botonSiguiente.addEventListener("click", () => {
+                    detenerAnimacion();
+
+                    mostrarFotograma(indiceActual + 1);
+                });
+
+                botonReproducir.addEventListener("click", alternarAnimacion);
+
+                botonRecargar.addEventListener("click", cargarTimeline);
+
+                timelineSlider.addEventListener("input", () => {
+                    detenerAnimacion();
+
+                    mostrarFotograma(Number(timelineSlider.value));
+                });
+
+                opacidadSlider.addEventListener("input", () => {
+                    opacidadRadar = Number(opacidadSlider.value) / 100;
+
+                    asignarTexto("opacidad-valor", `${opacidadSlider.value} %`);
+
+                    if (capaRadar) {
+                        capaRadar.setOpacity(opacidadRadar);
+                    }
+                });
+            }
+
+            /*
+        ============================================================
+        INICIALIZACIÓN
+        ============================================================
+        */
+
+            function iniciarAplicacion() {
+                crearMapa();
+
+                configurarControles();
+
+                /*
+            Dejamos que el navegador complete primero el layout.
+            */
+
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        invalidarTamanoMapaDiferido();
+
+                        cargarTimeline();
+                    });
+                });
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", iniciarAplicacion, {
+                    once: true,
+                });
+            } else {
+                iniciarAplicacion();
+            }
+
+            window.addEventListener("load", invalidarTamanoMapaDiferido, {
+                once: true,
+            });
+        </script>
+
+        <style>
+            .radar-viewer {
+                width: 100%;
+                min-height: 600px;
+                border-top: 1px solid var(--border);
+                margin-top: 40px;
+            }
+
+            .radar-viewer iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+        </style>
+
+        <div class="radar-viewer">
+            <iframe src="../visores/radar.html" title="MeteoArchidona · Radar" loading="lazy"></iframe>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Predicción · MeteoArchidona</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <link rel="stylesheet" href="../css/estilos.css" />
+    </head>
+
+    <body>
+        <div class="pagina">
+            <div id="cabecera-contenedor"></div>
+
+            <main class="contenido">
+                <div id="panel-prediccion-contenedor"></div>
+            </main>
+
+            <div id="footer-contenedor"></div>
+        </div>
+
+        <script>
+            async function cargarComponente(selector, url) {
+                const contenedor = document.querySelector(selector);
+
+                if (!contenedor) {
+                    return;
+                }
+
+                try {
+                    const respuesta = await fetch(url, {
+                        cache: "no-store",
+                    });
+
+                    if (!respuesta.ok) {
+                        throw new Error(`HTTP ${respuesta.status}`);
+                    }
+
+                    contenedor.innerHTML = await respuesta.text();
+                } catch (error) {
+                    console.error(`Error cargando componente ${url}:`, error);
+                }
+            }
+
+            async function iniciar() {
+                await cargarComponente("#cabecera-contenedor", "../componentes/cabecera.html");
+
+                await Promise.all([
+                    cargarComponente("#navbar-contenedor", "../componentes/navbar.html"),
+
+                    cargarComponente("#footer-contenedor", "../componentes/footer.html"),
+
+                    cargarComponente("#panel-prediccion-contenedor", "../componentes/panel-prediccion.html"),
+                ]);
+            }
+
+            iniciar();
+        </script>
+    </body>
+</html>
