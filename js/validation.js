@@ -1,0 +1,157 @@
+/* ============================================================
+   VALIDACIÓN - Funciones centralizadas de validación
+   ============================================================ */
+
+const CODIGOS_ESTACION = ["EL_SILO", "LOS_LLANOS"];
+const ZONAS_RADAR = ["AHR"];
+const RANGOS = {
+    temperatura: { min: -50, max: 60 },
+    humedad: { min: 0, max: 100 },
+    presion: { min: 870, max: 1050 },
+    velocidad_viento: { min: 0, max: 200 },
+    direccion_viento: { min: 0, max: 360 },
+    lluvia: { min: 0, max: 500 },
+    indice_uv: { min: 0, max: 20 },
+};
+
+export function esEstacionValida(codigo) {
+    if (typeof codigo !== "string") {
+        return false;
+    }
+    return CODIGOS_ESTACION.includes(codigo.toUpperCase());
+}
+
+export function esZonaValida(zona) {
+    if (typeof zona !== "string") {
+        return false;
+    }
+    return ZONAS_RADAR.includes(zona.toUpperCase());
+}
+
+export function esNumeroValido(valor) {
+    if (valor === null || valor === undefined) {
+        return false;
+    }
+    const num = Number(valor);
+    return !Number.isNaN(num) && isFinite(num);
+}
+
+export function esTemperaturaValida(temp) {
+    if (!esNumeroValido(temp)) {
+        return false;
+    }
+    const num = Number(temp);
+    const { min, max } = RANGOS.temperatura;
+    return num >= min && num <= max;
+}
+
+export function esHumedadValida(humedad) {
+    if (!esNumeroValido(humedad)) {
+        return false;
+    }
+    const num = Number(humedad);
+    const { min, max } = RANGOS.humedad;
+    return num >= min && num <= max;
+}
+
+export function esPresionValida(presion) {
+    if (!esNumeroValido(presion)) {
+        return false;
+    }
+    const num = Number(presion);
+    const { min, max } = RANGOS.presion;
+    return num >= min && num <= max;
+}
+
+export function esVelocidadVientoValida(velocidad) {
+    if (!esNumeroValido(velocidad)) {
+        return false;
+    }
+    const num = Number(velocidad);
+    const { min, max } = RANGOS.velocidad_viento;
+    return num >= min && num <= max;
+}
+
+export function esDireccionVientoValida(direccion) {
+    if (!esNumeroValido(direccion)) {
+        return false;
+    }
+    const num = Number(direccion);
+    const { min, max } = RANGOS.direccion_viento;
+    return num >= min && num <= max;
+}
+
+export function esLluviaValida(lluvia) {
+    if (!esNumeroValido(lluvia)) {
+        return false;
+    }
+    const num = Number(lluvia);
+    const { min, max } = RANGOS.lluvia;
+    return num >= min && num <= max;
+}
+
+export function esIndiceUVValido(uv) {
+    if (!esNumeroValido(uv)) {
+        return false;
+    }
+    const num = Number(uv);
+    const { min, max } = RANGOS.indice_uv;
+    return num >= min && num <= max;
+}
+
+export function validarCondiciones(datos) {
+    if (!datos || typeof datos !== "object") {
+        return { valido: false, errores: ["Datos inválidos"] };
+    }
+
+    const errores = [];
+
+    if (!datos.estacion || !esEstacionValida(datos.estacion)) {
+        errores.push("Estación inválida");
+    }
+
+    if (datos.temperatura_celsius !== undefined && !esTemperaturaValida(datos.temperatura_celsius)) {
+        errores.push("Temperatura fuera de rango");
+    }
+
+    if (datos.humedad_relativa !== undefined && !esHumedadValida(datos.humedad_relativa)) {
+        errores.push("Humedad fuera de rango");
+    }
+
+    if (datos.presion_mb !== undefined && !esPresionValida(datos.presion_mb)) {
+        errores.push("Presión fuera de rango");
+    }
+
+    if (datos.velocidad_viento_kmh !== undefined && !esVelocidadVientoValida(datos.velocidad_viento_kmh)) {
+        errores.push("Velocidad de viento fuera de rango");
+    }
+
+    if (datos.direccion_viento_grados !== undefined && !esDireccionVientoValida(datos.direccion_viento_grados)) {
+        errores.push("Dirección de viento inválida");
+    }
+
+    if (datos.tasa_lluvia_mm_h !== undefined && !esLluviaValida(datos.tasa_lluvia_mm_h)) {
+        errores.push("Lluvia fuera de rango");
+    }
+
+    if (datos.indice_uv !== undefined && !esIndiceUVValido(datos.indice_uv)) {
+        errores.push("Índice UV fuera de rango");
+    }
+
+    return {
+        valido: errores.length === 0,
+        errores: errores,
+    };
+}
+
+export function sanitizarString(texto, maxLength = 255) {
+    if (typeof texto !== "string") {
+        return "";
+    }
+    return texto.substring(0, maxLength).trim();
+}
+
+export function esEmailValido(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}

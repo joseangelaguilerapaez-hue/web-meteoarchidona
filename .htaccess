@@ -1,38 +1,64 @@
 # ============================================================
-# MeteoArchidona — configuración del servidor (Hostinger / Apache)
+# MeteoArchidona — configuración del servidor
 # ============================================================
 
 RewriteEngine On
 
-# ------------------------------------------------------------
-# Forzar HTTPS
-# ------------------------------------------------------------
-
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# ------------------------------------------------------------
-# Cabeceras de seguridad básicas
-# ------------------------------------------------------------
-
+# Cabeceras de seguridad
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-Frame-Options "SAMEORIGIN"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 </IfModule>
 
-# ------------------------------------------------------------
-# Rutas limpias (sin #)
-# ------------------------------------------------------------
-#
-# /prediccion, /observaciones, /en-vivo, /radar no son archivos
-# reales: los gestiona index.html con JavaScript (history API).
-# Si la petición no coincide con un archivo o carpeta existente,
-# se sirve index.html para que la ruta cargue bien al entrar
-# directamente o al recargar la página.
-# ------------------------------------------------------------
+# HTTPS Obligatorio (descomenta en producción)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# CORS Headers para API
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "https://meteoarchidona.com"
+    Header set Access-Control-Allow-Methods "GET, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+    Header set Access-Control-Max-Age "3600"
+</IfModule>
+
+# Compresión de respuestas
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# Cache Control
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType application/json "access plus 1 hour"
+</IfModule>
+
+# Prevenir acceso a archivos sensibles
+<FilesMatch "^\.env|^\.git|\.json$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Redirigir HTML files de raíz a pages/
+RewriteRule ^(index|info|prediccion|en-vivo|observaciones)\.html$ pages/$1.html [L]
+
+# SPA: rutas sin extensión a index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.html [L]
+RewriteRule ^ pages/index.html [L]
