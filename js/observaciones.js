@@ -1,4 +1,4 @@
-         const API_BASE = "https://api-meteoarchidona.onrender.com";
+         const API_BASE = window.API_BASE || "https://api-meteoarchidona.onrender.com";
          const RADAR_ACTIVO = "AHR",
              PRODUCTO = "PPI";
          const URL_LOCALIDADES = new URL(
