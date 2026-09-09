@@ -2,8 +2,13 @@ const API_BASE="https://api-meteoarchidona.onrender.com",PRODUCTO="PPI";
 const RADARES=["AHR","SE","AL","CR"];
 const URL_LOCALIDADES=new URL("../datos/localidades-radar.geojson",window.location.href).href;
 
-const CENTRO_REGIONAL=[36.9,-4.35];
-const ZOOM_REGIONAL=7;
+/*
+ * Encuadre inicial del visor.
+ * No limita ni recorta las capas radar.
+ * Cada radar conserva sus bounds geográficos originales.
+ */
+const CENTRO_REGIONAL=[37.15,-4.25];
+const ZOOM_REGIONAL=8;
 
 let mapa=null,capaLocalidades=null,localidades=[],timelines={},indicesPorRadar={},timelineRegional=[];
 let capasRadar=Object.fromEntries(RADARES.map(c=>[c,null]));
@@ -16,11 +21,32 @@ function marcaTemporal(v){const n=Date.parse(v);return Number.isFinite(n)?n:null
 function hora(v){const f=fechaValida(v);return f?f.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}):"--:--"}
 function fecha(v){const f=fechaValida(v);return f?f.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"}):"--"}
 function urlAbsoluta(u){if(!u)return null;if(/^https?:\/\//.test(u))return u;if(u.startsWith("/"))return API_BASE+u;return`${API_BASE}/${u}`}
-function establecerEstado(m,t=null){const e=elemento("estado");texto("estado-texto",m);e.classList.remove("correcto","error");if(t)e.classList.add(t)}
-function mostrarMensaje(m,error=false){const n=elemento("mensaje");if(!m){n.classList.remove("visible","error");n.textContent="";return}n.textContent=m;n.classList.toggle("error",error);n.classList.add("visible")}
+
+function establecerEstado(m,t=null){
+const e=elemento("estado");
+texto("estado-texto",m);
+e.classList.remove("correcto","error");
+if(t)e.classList.add(t);
+}
+
+function mostrarMensaje(m,error=false){
+const n=elemento("mensaje");
+if(!m){
+n.classList.remove("visible","error");
+n.textContent="";
+return;
+}
+n.textContent=m;
+n.classList.toggle("error",error);
+n.classList.add("visible");
+}
+
 function bounds(f){
 if(!f||!f.limites)return null;
-const o=Number(f.limites.oeste),s=Number(f.limites.sur),e=Number(f.limites.este),n=Number(f.limites.norte);
+const o=Number(f.limites.oeste);
+const s=Number(f.limites.sur);
+const e=Number(f.limites.este);
+const n=Number(f.limites.norte);
 return[o,s,e,n].every(Number.isFinite)?[[s,o],[n,e]]:null;
 }
 
@@ -49,15 +75,39 @@ return`etiqueta-localidad etiqueta-${permitidos.includes(tipo)?tipo:"municipio"}
 }
 
 function estiloPuntoLocalidad(p){
-if(p.tipo==="capital")return{radius:4.5,color:"#fff",weight:1.5,fill:true,fillColor:"#a8325a",fillOpacity:1,opacity:1};
-if(p.tipo==="ciudad"||p.tipo==="cabecera")return{radius:4,color:"#fff",weight:1.4,fill:true,fillColor:"#a8325a",fillOpacity:1,opacity:1};
-if(p.tipo==="estacion")return{radius:4,color:"#fff",weight:1.5,fill:true,fillColor:"#3b9eff",fillOpacity:1,opacity:1};
-if(p.tipo==="pedania")return{radius:2.8,color:"#fff",weight:1,fill:true,fillColor:"#36d5ff",fillOpacity:1,opacity:1};
-return{radius:3,color:"#fff",weight:1,fill:true,fillColor:"#111",fillOpacity:1,opacity:1};
+if(p.tipo==="capital")return{
+radius:4.5,color:"#fff",weight:1.5,fill:true,
+fillColor:"#a8325a",fillOpacity:1,opacity:1
+};
+
+if(p.tipo==="ciudad"||p.tipo==="cabecera")return{
+radius:4,color:"#fff",weight:1.4,fill:true,
+fillColor:"#a8325a",fillOpacity:1,opacity:1
+};
+
+if(p.tipo==="estacion")return{
+radius:4,color:"#fff",weight:1.5,fill:true,
+fillColor:"#3b9eff",fillOpacity:1,opacity:1
+};
+
+if(p.tipo==="pedania")return{
+radius:2.8,color:"#fff",weight:1,fill:true,
+fillColor:"#36d5ff",fillOpacity:1,opacity:1
+};
+
+return{
+radius:3,color:"#fff",weight:1,fill:true,
+fillColor:"#111",fillOpacity:1,opacity:1
+};
 }
 
-function direccionEtiquetaLocalidad(p){return p.tipo==="estacion"?"right":"top"}
-function offsetEtiquetaLocalidad(p){return p.tipo==="estacion"?[7,0]:[0,-7]}
+function direccionEtiquetaLocalidad(p){
+return p.tipo==="estacion"?"right":"top";
+}
+
+function offsetEtiquetaLocalidad(p){
+return p.tipo==="estacion"?[7,0]:[0,-7];
+}
 
 function renderizarLocalidades(){
 if(!mapa||!capaLocalidades)return;
@@ -65,12 +115,14 @@ if(!mapa||!capaLocalidades)return;
 capaLocalidades.clearLayers();
 
 const zoom=mapa.getZoom();
+
 const visibles=localidades
 .filter(f=>zoom>=zoomMinimoLocalidad(f))
 .sort((a,b)=>prioridadLocalidad(b)-prioridadLocalidad(a));
 
 visibles.forEach(f=>{
-const g=f.geometry,p=f.properties||{};
+const g=f.geometry;
+const p=f.properties||{};
 
 if(
 !g||
@@ -79,7 +131,8 @@ g.type!=="Point"||
 g.coordinates.length<2
 )return;
 
-const lon=Number(g.coordinates[0]),lat=Number(g.coordinates[1]);
+const lon=Number(g.coordinates[0]);
+const lat=Number(g.coordinates[1]);
 
 if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
 
@@ -118,10 +171,11 @@ if(d.type!=="FeatureCollection"||!Array.isArray(d.features)){
 throw new Error("GeoJSON de localidades inválido.");
 }
 
-localidades=d.features.filter(f=>f&&f.geometry&&f.geometry.type==="Point");
+localidades=d.features.filter(
+f=>f&&f.geometry&&f.geometry.type==="Point"
+);
 
 texto("dato-localidades",localidades.length);
-
 renderizarLocalidades();
 
 }catch(e){
@@ -178,12 +232,10 @@ function reajustarMapa(){
 if(!mapa)return;
 
 requestAnimationFrame(
-()=>mapa.invalidateSize(
-{
+()=>mapa.invalidateSize({
 animate:false,
 pan:false
-}
-)
+})
 );
 }
 
@@ -216,8 +268,15 @@ actual?hora(actual.observado_en):"--:--"
 );
 
 if(timelineRegional.length){
-texto("timeline-inicio",hora(timelineRegional[0].observado_en));
-texto("timeline-fin",hora(timelineRegional[timelineRegional.length-1].observado_en));
+texto(
+"timeline-inicio",
+hora(timelineRegional[0].observado_en)
+);
+
+texto(
+"timeline-fin",
+hora(timelineRegional[timelineRegional.length-1].observado_en)
+);
 }else{
 texto("timeline-inicio","--");
 texto("timeline-fin","--");
@@ -280,9 +339,7 @@ texto("instante-fecha",fecha(paso.observado_en));
 texto("dato-capas",`${visibles} / 4`);
 
 actualizarControles();
-
 mostrarMensaje("");
-
 reajustarMapa();
 }
 
@@ -348,13 +405,11 @@ async function cargarTimeline(){
 detener();
 
 establecerEstado("Cargando");
-
 mostrarMensaje("Cargando AHR · SE · AL · CR...");
 
 try{
 const resultados=await Promise.all(
-RADARES.map(
-async codigo=>{
+RADARES.map(async codigo=>{
 try{
 return{
 codigo,
@@ -370,8 +425,7 @@ fotogramas:[],
 error
 };
 }
-}
-)
+})
 );
 
 timelines={};
@@ -440,7 +494,6 @@ temporizador=null;
 }
 
 reproduciendo=false;
-
 actualizarBotonPlay();
 }
 
@@ -450,7 +503,6 @@ if(timelineRegional.length<2)return;
 detener();
 
 reproduciendo=true;
-
 actualizarBotonPlay();
 
 temporizador=setInterval(
@@ -510,20 +562,17 @@ texto(
 `${e.target.value} %`
 );
 
-RADARES.forEach(
-codigo=>{
+RADARES.forEach(codigo=>{
 if(capasRadar[codigo]){
 capasRadar[codigo].setOpacity(opacidad);
 }
-}
-);
+});
 }
 );
 }
 
 function iniciar(){
 crearMapa();
-
 instalarEventos();
 
 requestAnimationFrame(
