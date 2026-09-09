@@ -35,7 +35,7 @@ const RUTAS_NAVEGACION = [
     {
         id: "actualidad",
         etiqueta: "Actualidad",
-        pagina: "/index.html",
+        pagina: "/",
         enMenu: true,
     },
 

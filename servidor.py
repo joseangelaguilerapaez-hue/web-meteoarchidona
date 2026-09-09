@@ -29,11 +29,13 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 PUERTO_POR_DEFECTO = 8123
 
 
-PAGINA_PRINCIPAL = "/index.html"
+PAGINA_PRINCIPAL = "/"
 
-# La raíz ya sirve index.html sola. Estas son las rutas de la
-# antigua ubicación, que se mandan a la nueva.
-RAICES = ("/pages/", "/pages", "/pages/index.html")
+# Rutas que llevan a la portada. La dirección buena es "/": si se
+# permite entrar también por "/index.html", el nombre del archivo se
+# queda en la barra y se arrastra a las secciones ("/index.html#info").
+# Las de pages/ son de la ubicación antigua del índice.
+RAICES = ("/index.html", "/pages/", "/pages", "/pages/index.html")
 
 # Intermediario con la API.
 #

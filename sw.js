@@ -2,11 +2,11 @@
    Service Worker - Caché y offline support
    ============================================================ */
 
-const CACHE_NAME = 'meteoarchidona-v6';
+const CACHE_NAME = 'meteoarchidona-v7';
 const API_CACHE = 'meteoarchidona-api-v1';
 
 const ASSETS_TO_CACHE = [
-    '/index.html',
+    '/',
     '/css/estilos.min.css',
     '/js/app.min.js',
     '/js/rutas.js',
@@ -100,7 +100,7 @@ function handleAssetRequest(request) {
             .then(response => guardarEnCache(request, response))
             .catch(() => {
                 return caches.match(request).then(cacheada => {
-                    return cacheada || caches.match('/index.html');
+                    return cacheada || caches.match('/');
                 });
             });
     }
@@ -112,7 +112,7 @@ function handleAssetRequest(request) {
 
         return fetch(request)
             .then(response => guardarEnCache(request, response))
-            .catch(() => caches.match('/index.html'));
+            .catch(() => caches.match('/'));
     });
 }
 
