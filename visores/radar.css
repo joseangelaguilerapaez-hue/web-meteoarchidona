@@ -4,7 +4,7 @@ html,body{margin:0;width:100%;height:100%;min-width:300px;background:var(--bg);c
 body{overflow:hidden}
 button,input{font:inherit}
 
-.visor{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;width:100%;height:100vh;height:100dvh;background:var(--bg)}
+.visor{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto;width:100%;height:100vh;height:100dvh;background:var(--bg)}
 .visor-cabecera{display:flex;justify-content:space-between;align-items:center;gap:14px;min-height:70px;padding:12px 15px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#102234,#081522)}
 .visor-titulo{min-width:0}
 .visor-titulo-principal{font-size:15px;font-weight:700;text-transform:uppercase}
@@ -19,6 +19,21 @@ button,input{font:inherit}
 .instante{text-align:right;font-family:"JetBrains Mono",monospace}
 .instante-hora{color:var(--accent);font-size:17px;font-weight:600}
 .instante-fecha{margin-top:2px;color:var(--muted);font-size:8px}
+
+/* Selector multicapa */
+.selector-capas{display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px;border-bottom:1px solid var(--border);background:linear-gradient(90deg,#081522,#0c1d2c,#081522)}
+.selector-capas-titulo{flex:0 0 auto;color:var(--muted);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.selector-capas-controles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:min(620px,100%)}
+.selector-capa{--capa-color:var(--cyan);position:relative;display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;height:34px;padding:0 12px;border:1px solid color-mix(in srgb,var(--capa-color) 32%,var(--border));border-radius:8px;background:rgba(13,30,45,.80);color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;cursor:pointer;transition:border-color .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease}
+.selector-capa:hover:not(:disabled){border-color:var(--capa-color);color:var(--text);transform:translateY(-1px)}
+.selector-capa::before{content:"";width:8px;height:8px;flex:0 0 auto;border:1px solid var(--capa-color);border-radius:50%;background:transparent;box-shadow:0 0 0 transparent}
+.selector-capa.activa{border-color:var(--capa-color);background:color-mix(in srgb,var(--capa-color) 17%,#071019);color:#fff;box-shadow:0 0 13px color-mix(in srgb,var(--capa-color) 42%,transparent),inset 0 0 12px color-mix(in srgb,var(--capa-color) 10%,transparent)}
+.selector-capa.activa::before{background:var(--capa-color);box-shadow:0 0 10px var(--capa-color)}
+.selector-capa:disabled{cursor:not-allowed;opacity:.42}
+.selector-capa-radar{--capa-color:#36d5ff}
+.selector-capa-satelite{--capa-color:#9b7cff}
+.selector-capa-rayos{--capa-color:#f0a500}
+.selector-capa-estado{font-size:6px;font-weight:500;letter-spacing:0;color:var(--muted);text-transform:none}
 
 .mapa-zona{position:relative;min-width:0;min-height:0;overflow:hidden;background:#091521}
 #mapa-radar{position:absolute;inset:0;width:100%;height:100%;background:#091521}
@@ -114,10 +129,22 @@ button,input{font:inherit}
 .visor-derecha{gap:8px}
 .estado{font-size:7px}
 .instante-hora{font-size:14px}
+.selector-capas{gap:8px;padding:7px 8px}
+.selector-capas-titulo{font-size:7px}
+.selector-capas-controles{gap:5px}
+.selector-capa{height:31px;padding:0 7px;font-size:8px}
+.selector-capa-estado{display:none}
 .controles{grid-template-columns:auto minmax(0,1fr);gap:8px;padding:8px}
 .opacidad{grid-column:1/-1}
 .datos{grid-template-columns:repeat(2,minmax(0,1fr))}
 .dato:nth-child(2n){border-right:0}
 .dato:nth-child(-n+2){border-bottom:1px solid var(--border)}
 .leyenda{left:10px;bottom:10px;max-width:230px}
+}
+
+@media(max-width:430px){
+.selector-capas{display:block;padding:7px 8px 8px}
+.selector-capas-titulo{margin:0 0 5px 2px}
+.selector-capas-controles{width:100%}
+.selector-capa{height:30px;padding:0 5px;font-size:7px}
 }
