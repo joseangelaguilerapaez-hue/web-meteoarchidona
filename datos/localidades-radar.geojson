@@ -9,6 +9,7 @@
     {"type":"Feature","properties":{"nombre":"Málaga","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"costa"},"geometry":{"type":"Point","coordinates":[-4.415,36.72]}},
     {"type":"Feature","properties":{"nombre":"Granada","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"referencia"},"geometry":{"type":"Point","coordinates":[-3.5986,37.1773]}},
     {"type":"Feature","properties":{"nombre":"Jaén","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"referencia"},"geometry":{"type":"Point","coordinates":[-3.7903,37.7796]}},
+    {"type":"Feature","properties":{"nombre":"Almería","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"costa"},"geometry":{"type":"Point","coordinates":[-2.4637,36.834]}},
 
     {"type":"Feature","properties":{"nombre":"Archidona","tipo":"cabecera","prioridad":1,"zoom_min":6,"corredor":"local"},"geometry":{"type":"Point","coordinates":[-4.387,37.095]}},
 
@@ -17,6 +18,24 @@
     {"type":"Feature","properties":{"nombre":"Algeciras","tipo":"ciudad","prioridad":1,"zoom_min":7,"corredor":"costa"},"geometry":{"type":"Point","coordinates":[-5.4562,36.1408]}},
 
     {"type":"Feature","properties":{"nombre":"Ronda","tipo":"ciudad","prioridad":2,"zoom_min":8,"corredor":"referencia"},"geometry":{"type":"Point","coordinates":[-5.1671,36.7423]}},
+
+    {"type":"Feature","properties":{"nombre":"Linares","tipo":"ciudad","prioridad":1,"zoom_min":8,"corredor":"jaen"},"geometry":{"type":"Point","coordinates":[-3.636,38.095]}},
+    {"type":"Feature","properties":{"nombre":"Úbeda","tipo":"ciudad","prioridad":1,"zoom_min":8,"corredor":"jaen"},"geometry":{"type":"Point","coordinates":[-3.371,38.013]}},
+    {"type":"Feature","properties":{"nombre":"Andújar","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"jaen"},"geometry":{"type":"Point","coordinates":[-4.054,38.039]}},
+    {"type":"Feature","properties":{"nombre":"Martos","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"jaen"},"geometry":{"type":"Point","coordinates":[-3.972,37.721]}},
+    {"type":"Feature","properties":{"nombre":"Alcalá la Real","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"jaen"},"geometry":{"type":"Point","coordinates":[-3.928,37.463]}},
+
+    {"type":"Feature","properties":{"nombre":"Motril","tipo":"ciudad","prioridad":1,"zoom_min":8,"corredor":"granada"},"geometry":{"type":"Point","coordinates":[-3.517,36.744]}},
+    {"type":"Feature","properties":{"nombre":"Guadix","tipo":"ciudad","prioridad":1,"zoom_min":8,"corredor":"granada"},"geometry":{"type":"Point","coordinates":[-3.136,37.3]}},
+    {"type":"Feature","properties":{"nombre":"Baza","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"granada"},"geometry":{"type":"Point","coordinates":[-2.771,37.49]}},
+    {"type":"Feature","properties":{"nombre":"Almuñécar","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"granada"},"geometry":{"type":"Point","coordinates":[-3.689,36.733]}},
+
+    {"type":"Feature","properties":{"nombre":"Roquetas de Mar","tipo":"ciudad","prioridad":1,"zoom_min":8,"corredor":"almeria"},"geometry":{"type":"Point","coordinates":[-2.615,36.764]}},
+    {"type":"Feature","properties":{"nombre":"El Ejido","tipo":"ciudad","prioridad":1,"zoom_min":8,"corredor":"almeria"},"geometry":{"type":"Point","coordinates":[-2.814,36.776]}},
+    {"type":"Feature","properties":{"nombre":"Níjar","tipo":"ciudad","prioridad":1,"zoom_min":8,"corredor":"almeria"},"geometry":{"type":"Point","coordinates":[-2.205,36.966]}},
+    {"type":"Feature","properties":{"nombre":"Adra","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"almeria"},"geometry":{"type":"Point","coordinates":[-3.02,36.749]}},
+    {"type":"Feature","properties":{"nombre":"Vera","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"almeria"},"geometry":{"type":"Point","coordinates":[-1.868,37.243]}},
+    {"type":"Feature","properties":{"nombre":"Huércal-Overa","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"almeria"},"geometry":{"type":"Point","coordinates":[-1.943,37.389]}},
 
     {"type":"Feature","properties":{"nombre":"Tarifa","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"costa"},"geometry":{"type":"Point","coordinates":[-5.6044,36.0133]}},
     {"type":"Feature","properties":{"nombre":"Estepona","tipo":"ciudad","prioridad":2,"zoom_min":9,"corredor":"costa"},"geometry":{"type":"Point","coordinates":[-5.1459,36.4276]}},
