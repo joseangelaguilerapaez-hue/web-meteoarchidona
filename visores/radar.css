@@ -1,70 +1,123 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<title>MeteoArchidona · Visor radar regional</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./radar.css">
-</head>
-<body>
-<main class="visor">
+:root{--bg:#071019;--border:#1b3044;--text:#f5f8fb;--muted:#9db2c4;--cyan:#36d5ff;--blue:#3b9eff;--accent:#f0a500;--green:#22c55e;--red:#ef4444;--buganvilla:#a8325a}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;min-width:300px;background:var(--bg);color:var(--text);font-family:"Sora",sans-serif}
+body{overflow:hidden}
+button,input{font:inherit}
 
-<header class="visor-cabecera">
-<div class="visor-titulo">
-<div class="visor-titulo-principal">Visor radar regional · AHR + SE + AL + CR</div>
-<div class="visor-titulo-secundario">Málaga · Sevilla · Almería-Níjar · Ciudad Real-Almagro</div>
-</div>
-<div class="visor-derecha">
-<div class="estado" id="estado"><span class="estado-punto"></span><span id="estado-texto">Cargando</span></div>
-<div class="instante"><div class="instante-hora" id="instante-hora">--:--</div><div class="instante-fecha" id="instante-fecha">--</div></div>
-</div>
-</header>
+.visor{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;width:100%;height:100vh;height:100dvh;background:var(--bg)}
+.visor-cabecera{display:flex;justify-content:space-between;align-items:center;gap:14px;min-height:70px;padding:12px 15px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#102234,#081522)}
+.visor-titulo{min-width:0}
+.visor-titulo-principal{font-size:15px;font-weight:700;text-transform:uppercase}
+.visor-titulo-secundario{margin-top:4px;color:var(--muted);font-size:9px}
+.visor-derecha{display:flex;align-items:center;gap:14px;flex:0 0 auto}
 
-<section class="mapa-zona">
-<div id="mapa-radar" aria-label="Mapa regional de radares MeteoArchidona"></div>
-<aside class="leyenda">
-<div class="leyenda-titulo">Composición radar regional</div>
-<div class="leyenda-texto">AHR · Málaga · SE · Sevilla · AL · Níjar · CR · Almagro. Cada imagen conserva sus límites geográficos originales y se superpone directamente sobre el mapa.</div>
-</aside>
-<div class="mensaje" id="mensaje"></div>
-</section>
+.estado{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:8px;white-space:nowrap}
+.estado-punto{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(240,165,0,.45)}
+.estado.correcto .estado-punto{background:var(--green);box-shadow:0 0 12px rgba(34,197,94,.55)}
+.estado.error .estado-punto{background:var(--red);box-shadow:0 0 12px rgba(239,68,68,.55)}
 
-<section class="controles">
-<div class="botones">
-<button type="button" class="boton" id="anterior" title="Fotograma anterior">◀</button>
-<button type="button" class="boton boton-principal" id="reproducir" title="Reproducir">▶</button>
-<button type="button" class="boton" id="siguiente" title="Fotograma siguiente">▶|</button>
-<button type="button" class="boton" id="recargar" title="Recargar timelines">↻</button>
-</div>
+.instante{text-align:right;font-family:"JetBrains Mono",monospace}
+.instante-hora{color:var(--accent);font-size:17px;font-weight:600}
+.instante-fecha{margin-top:2px;color:var(--muted);font-size:8px}
 
-<div class="timeline">
-<input type="range" id="timeline-slider" min="0" max="0" value="0" step="1" aria-label="Timeline radar regional">
-<div class="timeline-textos">
-<span id="timeline-inicio">--</span>
-<span class="timeline-hora-actual" id="timeline-posicion">--:--</span>
-<span id="timeline-fin">--</span>
-</div>
-</div>
+.mapa-zona{position:relative;min-width:0;min-height:0;overflow:hidden;background:#091521}
+#mapa-radar{position:absolute;inset:0;width:100%;height:100%;background:#091521}
 
-<div class="opacidad">
-<div class="opacidad-cabecera"><span>Opacidad radar</span><span id="opacidad-valor">82 %</span></div>
-<input type="range" id="opacidad-slider" min="10" max="100" value="82" step="1" aria-label="Opacidad radar">
-</div>
-</section>
+.leaflet-container{position:relative;overflow:hidden;outline:0;background:#091521;font-family:"Sora",sans-serif}
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
+.leaflet-map-pane{z-index:400}
+.leaflet-tile-pane{z-index:200}
+.leaflet-overlay-pane{z-index:400}
+.leaflet-shadow-pane{z-index:500}
+.leaflet-marker-pane{z-index:600}
+.leaflet-tooltip-pane{z-index:650}
+.leaflet-popup-pane{z-index:700}
+.leaflet-map-pane canvas{z-index:100}
+.leaflet-map-pane svg{z-index:200}
+.leaflet-container .leaflet-overlay-pane svg,.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer{max-width:none!important;max-height:none!important}
+.leaflet-container.leaflet-touch-zoom{touch-action:pan-x pan-y}
+.leaflet-container.leaflet-touch-drag{touch-action:pinch-zoom}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{touch-action:none}
+.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow{user-select:none;-webkit-user-drag:none}
+.leaflet-tile{visibility:hidden}
+.leaflet-tile-loaded{visibility:inherit}
+.leaflet-zoom-animated{transform-origin:0 0}
+.leaflet-zoom-anim .leaflet-zoom-animated{transition:transform .25s cubic-bezier(0,0,.25,1)}
+.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}
 
-<footer class="datos">
-<div class="dato"><div class="dato-label">Fotogramas regionales</div><div class="dato-valor" id="dato-fotogramas">--</div></div>
-<div class="dato"><div class="dato-label">Radares disponibles</div><div class="dato-valor" id="dato-radares">--</div></div>
-<div class="dato"><div class="dato-label">Localidades</div><div class="dato-valor" id="dato-localidades">--</div></div>
-<div class="dato"><div class="dato-label">Capas en instante</div><div class="dato-valor" id="dato-capas">--</div></div>
-</footer>
+.leaflet-control{position:relative;z-index:800;pointer-events:auto}
+.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}
+.leaflet-top{top:0}
+.leaflet-right{right:0}
+.leaflet-bottom{bottom:0}
+.leaflet-left{left:0}
+.leaflet-control{float:left;clear:both}
+.leaflet-right .leaflet-control{float:right}
+.leaflet-top .leaflet-control{margin-top:10px}
+.leaflet-bottom .leaflet-control{margin-bottom:10px}
+.leaflet-left .leaflet-control{margin-left:10px}
+.leaflet-right .leaflet-control{margin-right:10px}
 
-</main>
+.leaflet-bar{overflow:hidden;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.35)}
+.leaflet-bar a{display:block;width:32px;height:32px;line-height:32px;text-align:center;text-decoration:none;background:rgba(7,20,31,.94);color:#edf7ff;border-bottom:1px solid var(--border)}
+.leaflet-bar a:last-child{border-bottom:none}
+.leaflet-bar a:hover{background:#143047;color:var(--cyan)}
+.leaflet-control-zoom-in,.leaflet-control-zoom-out{font-size:20px!important;font-weight:500}
+.leaflet-control-attribution{padding:3px 6px;background:rgba(4,12,19,.78);color:#a9bac8;font-size:7px}
+.leaflet-control-attribution a{color:#d1e8f6}
+.leaflet-control-scale-line{padding:2px 5px 1px;border:2px solid rgba(255,255,255,.78);border-top:none;background:rgba(5,15,23,.70);color:#fff;font-size:8px;line-height:1.1;white-space:nowrap}
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="./radar.js"></script>
-</body>
-</html>
+.leaflet-tooltip{position:absolute;padding:4px 7px;border:1px solid rgba(255,255,255,.18);border-radius:5px;background:rgba(5,16,26,.92);color:#fff;box-shadow:none;font-size:8px;white-space:nowrap;pointer-events:none;user-select:none}
+.leaflet-tooltip::before{display:none}
+.leaflet-tooltip.etiqueta-localidad{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;text-shadow:none;-webkit-text-stroke:0;letter-spacing:.005em}
+.leaflet-tooltip.etiqueta-capital{color:var(--buganvilla);font-size:15px;font-weight:800;text-transform:uppercase}
+.leaflet-tooltip.etiqueta-ciudad,.leaflet-tooltip.etiqueta-cabecera{color:var(--buganvilla);font-size:14px;font-weight:800}
+.leaflet-tooltip.etiqueta-municipio{color:#111;font-size:11px;font-weight:700}
+.leaflet-tooltip.etiqueta-pedania{color:#111;font-size:9px;font-weight:700}
+.leaflet-tooltip.etiqueta-estacion{color:#111;font-size:10px;font-weight:700}
+
+.leyenda{position:absolute;z-index:800;left:14px;bottom:14px;max-width:285px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:rgba(5,14,23,.88);backdrop-filter:blur(8px);pointer-events:none}
+.leyenda-titulo{color:var(--cyan);font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.leyenda-texto{margin-top:4px;color:#d0dce6;font-size:8px;line-height:1.45}
+
+.controles{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(100px,150px);align-items:center;gap:12px;padding:10px 12px;border-top:1px solid var(--border);background:#091521}
+.botones{display:flex;gap:5px}
+.boton{display:grid;place-items:center;width:34px;height:32px;padding:0;border:1px solid var(--border);border-radius:6px;background:#102337;color:#e9f5ff;cursor:pointer}
+.boton:hover{border-color:var(--blue)}
+.boton-principal{color:var(--cyan);border-color:rgba(54,213,255,.35)}
+
+.timeline{min-width:0}
+.timeline input,.opacidad input{width:100%}
+#timeline-slider{accent-color:var(--accent)}
+#opacidad-slider{accent-color:var(--cyan)}
+.timeline-textos{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:3px;color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:7px}
+.timeline-textos span:first-child{text-align:left}
+.timeline-textos span:last-child{text-align:right}
+.timeline-hora-actual{min-width:46px;padding:2px 5px;border-radius:4px;background:rgba(240,165,0,.12);color:var(--accent);font-size:9px;font-weight:600;text-align:center}
+
+.opacidad-cabecera{display:flex;justify-content:space-between;margin-bottom:2px;color:var(--muted);font-size:7px;text-transform:uppercase}
+
+.datos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--border);background:#0b1723}
+.dato{min-width:0;padding:9px 11px;border-right:1px solid var(--border)}
+.dato:last-child{border-right:0}
+.dato-label{color:var(--muted);font-size:7px;text-transform:uppercase}
+.dato-valor{margin-top:3px;overflow:hidden;color:var(--text);font-family:"JetBrains Mono",monospace;font-size:9px;text-overflow:ellipsis;white-space:nowrap}
+
+.mensaje{display:none;position:absolute;z-index:1200;left:50%;top:50%;max-width:80%;transform:translate(-50%,-50%);padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:rgba(5,13,21,.94);color:var(--muted);font-size:9px;text-align:center}
+.mensaje.visible{display:block}
+.mensaje.error{color:#faa;border-color:rgba(239,68,68,.45)}
+
+@media(max-width:700px){
+.visor-cabecera{min-height:62px;padding:9px 10px}
+.visor-titulo-principal{font-size:12px}
+.visor-titulo-secundario{font-size:7px}
+.visor-derecha{gap:8px}
+.estado{font-size:7px}
+.instante-hora{font-size:14px}
+.controles{grid-template-columns:auto minmax(0,1fr);gap:8px;padding:8px}
+.opacidad{grid-column:1/-1}
+.datos{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dato:nth-child(2n){border-right:0}
+.dato:nth-child(-n+2){border-bottom:1px solid var(--border)}
+.leyenda{left:10px;bottom:10px;max-width:230px}
+}
