@@ -73,9 +73,14 @@ repartía tres líneas de texto en tres columnas.
    Cuerpo
    ------------------------------------------------------------ */
 
+/*
+La marca ocupa una columna algo más ancha y detrás van los tres
+bloques con título, todos del mismo ancho y con la misma separación
+entre ellos.
+*/
 .footer-cuerpo {
     display: grid;
-    grid-template-columns: minmax(240px, 1.6fr) repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(200px, 1.5fr) repeat(3, minmax(0, 1fr));
     gap: 28px clamp(20px, 3vw, 48px);
     padding: 30px clamp(20px, 3vw, 54px) 26px;
 }
@@ -149,16 +154,33 @@ repartía tres líneas de texto en tres columnas.
     color: var(--text);
 }
 
+/*
+Cada estación va en dos líneas: el nombre arriba y debajo su
+localidad y su altitud. Así el dato se lee pegado a la estación
+a la que pertenece, en vez de suelto al otro lado de la columna.
+*/
 .footer-estacion {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    font-size: 12px;
 }
 
 .footer-estacion-lugar {
     display: block;
     margin-top: 2px;
+    color: #7f94a8;
+    font-size: 9px;
+}
+
+.footer-estacion-dato {
+    color: var(--muted);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Aclara de qué son los metros, sin repetirlo en cada línea. */
+.footer-nota {
+    margin: 12px 0 0;
     color: #7f94a8;
     font-size: 9px;
 }
@@ -207,7 +229,23 @@ repartía tres líneas de texto en tres columnas.
    Adaptación a pantallas estrechas
    ------------------------------------------------------------ */
 
+/*
+Cuando las cuatro columnas se estrechan de más, la marca pasa a
+ocupar la fila entera y los tres bloques se reparten debajo,
+manteniendo entre ellos la misma separación.
+*/
 @media (max-width: 900px) {
+    .footer-cuerpo {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .footer-marca {
+        grid-column: 1 / -1;
+        max-width: 46ch;
+    }
+}
+
+@media (max-width: 700px) {
     .footer-cuerpo {
         grid-template-columns: 1fr 1fr;
     }
