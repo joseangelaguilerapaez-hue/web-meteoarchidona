@@ -54,16 +54,16 @@ npm run minify  # Minificar CSS/JS
 ## Testing
 
 ```bash
-npm test                # Ejecutar todos (73 tests)
-npm test:watch         # Modo watch (reload automático)
+npm test                # Ejecutar todas las suites (91 tests)
+npm run test:watch      # Modo watch (necesita nodemon)
 ```
 
-**Tests:** 73 total
-- `tests/utils.test.js` (19 tests)
-- `tests/validation.test.js` (24 tests)
+**Tests:** 91 total
+- `tests/utils.test.js` (15 tests)
+- `tests/validation.test.js` (32 tests)
 - `tests/lluvia.test.js` (17 tests)
-- `tests/viento.test.js` (8 tests)
-- `tests/ui.test.js` (5 tests)
+- `tests/viento.test.js` (15 tests)
+- `tests/ui.test.js` (12 tests)
 
 Ver [TESTING.md](docs/TESTING.md) para detalles.
 
