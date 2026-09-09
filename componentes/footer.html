@@ -1,0 +1,93 @@
+<footer class="footer">
+    <!--
+    Franja de estado. Nace oculta y solo se muestra cuando llegan
+    datos de las estaciones (lo hace app.min.js en index.html); en
+    las páginas sueltas no hay datos, así que no aparece en vez de
+    enseñar una fila de guiones.
+    -->
+    <div class="footer-estado" id="pie-estado">
+        <div class="footer-estado-item">
+            <span class="footer-estado-punto"></span>
+            El Silo
+            <span class="footer-estado-valor" id="pie-temp-EL_SILO">--</span>
+        </div>
+
+        <div class="footer-estado-item">
+            <span class="footer-estado-punto"></span>
+            Los Llanos
+            <span class="footer-estado-valor" id="pie-temp-LOS_LLANOS">--</span>
+        </div>
+
+        <div class="footer-estado-separador"></div>
+
+        <div class="footer-estado-item">
+            Última lectura
+            <span class="footer-estado-valor" id="pie-hora">--:--</span>
+        </div>
+    </div>
+
+    <div class="footer-cuerpo">
+        <div>
+            <div class="footer-marca-titulo">Meteo<span>Archidona</span></div>
+
+            <p class="footer-marca-texto">
+                Red meteorológica propia de la comarca de Archidona. Datos medidos en nuestras
+                estaciones, sin intermediarios.
+            </p>
+
+            <div class="footer-sellos">
+                <span class="footer-sello">Datos propios</span>
+                <span class="footer-sello">Actualización 1 min</span>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="footer-columna-titulo">Secciones</h2>
+
+            <!-- Los enlaces los genera construirNavegacion() desde js/rutas.js -->
+            <ul class="footer-lista navegacion-pie"></ul>
+        </div>
+
+        <div>
+            <h2 class="footer-columna-titulo">Estaciones</h2>
+
+            <ul class="footer-lista">
+                <li class="footer-estacion">
+                    <span>
+                        El Silo
+                        <span class="footer-estacion-lugar">Archidona</span>
+                    </span>
+                </li>
+
+                <li class="footer-estacion">
+                    <span>
+                        Los Llanos
+                        <span class="footer-estacion-lugar">Villanueva del Trabuco</span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="footer-columna-titulo">Proyecto</h2>
+
+            <ul class="footer-lista">
+                <li><a href="/pages/info.html">Información</a></li>
+                <li><a href="/pages/info.html">Contacto</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-barra">
+        <div>&copy; <span id="pie-anio">2026</span> MeteoArchidona</div>
+
+        <div>Archidona · Málaga</div>
+
+        <div class="footer-barra-separador"></div>
+
+        <div class="footer-firma">
+            Un proyecto de
+            <strong>Y&amp;Z Project</strong>
+        </div>
+    </div>
+</footer>

@@ -45,7 +45,7 @@ async function cargarTarjetasEstacion() {
     }
 
     try {
-        const respuesta = await fetch("../componentes/tarjeta-estacion.html", {
+        const respuesta = await fetch("/componentes/tarjeta-estacion.html", {
             cache: "no-store",
         });
 

@@ -1,0 +1,94 @@
+<!doctype html>
+<!--
+============================================================
+PLANTILLA BASE DE PÁGINA
+============================================================
+
+No se publica tal cual: es el punto de partida para crear una
+página nueva. Pasos:
+
+  1. Copiar los tres archivos cambiando "home" por el nombre
+     de la página nueva (por ejemplo "alertas"):
+
+        pages/home.html  ->  pages/alertas.html
+        css/home.css     ->  css/alertas.css
+        js/home.js       ->  js/alertas.js
+
+  2. En la copia del HTML, sustituir las tres referencias a
+     "home" (el <link> del CSS, el <script> del JS y el
+     <title>) por el nombre nuevo.
+
+  3. En la copia del JS, cambiar el id que se le pasa a
+     construirNavegacion() por el id de la sección.
+
+  4. Si la página debe salir en la barra de navegación,
+     añadir su entrada en js/rutas.js.
+
+Reglas de la casa: nada de <style> ni de <script> en línea.
+Los estilos van en css/<pagina>.css y el código en
+js/<pagina>.js.
+============================================================
+-->
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta
+            name="description"
+            content="MeteoArchidona - Información meteorológica de Archidona y su comarca."
+        />
+
+        <!-- Cambiar por el título de la página nueva -->
+        <title>Home · MeteoArchidona</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Estilos comunes del sitio: no tocar -->
+        <link rel="stylesheet" href="../css/estilos.min.css?v=4" />
+
+        <link rel="stylesheet" href="../css/pie.css?v=1" />
+
+        <!-- Estilos propios de esta página: renombrar al copiar -->
+        <link rel="stylesheet" href="../css/home.css" />
+    </head>
+
+    <body>
+        <div class="pagina">
+            <!-- Lo rellena js/home.js con componentes/cabecera.html -->
+            <div id="cabecera-contenedor"></div>
+
+            <main class="contenedor-home">
+                <!--
+                A partir de aquí va el contenido propio de la página.
+                .contenedor-home lo define css/home.css; .tarjeta y
+                .seccion-titulo vienen de la hoja común.
+                -->
+
+                <section class="tarjeta">
+                    <h2 class="seccion-titulo">Título de la sección</h2>
+
+                    <p>Sustituir este bloque por el contenido real de la página.</p>
+                </section>
+            </main>
+
+            <!-- Lo rellena js/home.js con componentes/footer.html -->
+            <div id="footer-contenedor"></div>
+        </div>
+
+        <!-- Configuración de navegación: común a todas las páginas -->
+        <script src="../js/rutas.js?v=4"></script>
+
+        <!-- Código propio de esta página: renombrar al copiar -->
+        <script src="../js/pagina.js?v=7"></script>
+        <script src="../js/home.js?v=2"></script>
+    </body>
+</html>

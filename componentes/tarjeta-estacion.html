@@ -1,0 +1,172 @@
+<article class="tarjeta estacion-principal">
+    <div class="capa-lluvia-ficha" id="capa-lluvia-{{CODIGO}}" aria-hidden="true"></div>
+    <div class="capa-gotas-cristal-ficha" id="capa-gotas-cristal-{{CODIGO}}" aria-hidden="true"></div>
+
+    <div class="estacion-contenido">
+        <div class="estacion-cabecera">
+            <div>
+                <h3 class="estacion-nombre" id="nombre-{{CODIGO}}">{{NOMBRE_LEGIBLE}}</h3>
+                <div class="estacion-localidad">{{LOCALIDAD}}</div>
+            </div>
+
+            <div class="online" id="estado-{{CODIGO}}">
+                <span class="punto"></span>
+                Conectando…
+            </div>
+        </div>
+
+        <div class="lectura-principal">
+            <div class="temperatura-bloque">
+                <div class="temperatura" id="temperatura-{{CODIGO}}">--<sup>°C</sup></div>
+                <div class="sensacion" id="sensacion-{{CODIGO}}">Sensación -- °C</div>
+                <div class="observacion" id="observacion-{{CODIGO}}">Exterior --:--</div>
+                <div class="observacion" id="fecha-{{CODIGO}}">--</div>
+                <div class="simulacion-estacion" id="simulacion-{{CODIGO}}"></div>
+            </div>
+
+            <div class="viento-panel">
+                <div
+                    class="veleta"
+                    id="veleta-{{CODIGO}}"
+                    data-lluvia-control="{{CODIGO}}"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Viento en {{NOMBRE_LEGIBLE}}"
+                >
+                    <span class="veleta-cardinal veleta-n">N</span>
+                    <span class="veleta-cardinal veleta-e">E</span>
+                    <span class="veleta-cardinal veleta-s">S</span>
+                    <span class="veleta-cardinal veleta-o">O</span>
+
+                    <div class="veleta-rotor">
+                        <div class="veleta-aguja"></div>
+                    </div>
+                </div>
+
+                <div class="viento-datos">
+                    <div class="direccion-principal">
+                        <span class="direccion-cardinal" id="direccion-{{CODIGO}}">--</span>
+                        <span class="direccion-grados" id="grados-{{CODIGO}}">--°</span>
+                    </div>
+
+                    <div class="viento-actual" id="viento-actual-{{CODIGO}}">-- <small>km/h</small></div>
+
+                    <div class="viento-secundarios">
+                        <div class="viento-secundario">
+                            Medio 2 min
+                            <strong id="viento-2m-{{CODIGO}}">-- km/h</strong>
+                        </div>
+
+                        <div class="viento-secundario">
+                            Medio 10 min
+                            <strong id="viento-10m-{{CODIGO}}">-- km/h</strong>
+                        </div>
+
+                        <div class="viento-secundario">
+                            Racha 10 min
+                            <strong id="racha-{{CODIGO}}">-- km/h</strong>
+                        </div>
+
+                        <div class="viento-secundario">
+                            Intensidad lluvia
+                            <strong id="lluvia-tasa-{{CODIGO}}">-- mm/h</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="patrocinio-estacion" id="patrocinio-{{CODIGO}}">
+            <div class="patrocinio-estacion-titulo">PATROCINA</div>
+
+            <div class="patrocinio-estacion-ventana">
+                <div class="patrocinio-estacion-pista">
+                    <span class="patrocinio-estacion-texto">
+                        Estación <strong>{{NOMBRE_LEGIBLE}}</strong> · espacio disponible para tu
+                        negocio
+                    </span>
+
+                    <span class="patrocinio-estacion-texto">
+                        Estación <strong>{{NOMBRE_LEGIBLE}}</strong> · espacio disponible para tu
+                        negocio
+                    </span>
+                </div>
+            </div>
+
+            <button
+                type="button"
+                class="patrocinio-estacion-control"
+                data-patrocinio="{{CODIGO}}"
+                aria-pressed="false"
+                aria-label="Pausar patrocinio"
+            >
+                Ⅱ
+            </button>
+        </div>
+
+        <div class="lluvia-resumen">
+            <div class="lluvia-resumen-item">
+                <div class="lluvia-resumen-icono" id="lluvia-icono-actual-{{CODIGO}}">☁️</div>
+                <div class="lluvia-resumen-label">Ahora</div>
+                <div class="lluvia-resumen-valor" id="lluvia-estado-{{CODIGO}}">--</div>
+                <div class="lluvia-resumen-extra">Estado actual</div>
+            </div>
+
+            <div class="lluvia-resumen-item">
+                <div class="lluvia-resumen-icono" id="lluvia-resumen-icono-dia-{{CODIGO}}">☁️</div>
+                <div class="lluvia-resumen-label">Hoy</div>
+                <div class="lluvia-resumen-valor" id="lluvia-dia-{{CODIGO}}">-- mm</div>
+                <div class="lluvia-resumen-extra">Acumulado día</div>
+            </div>
+
+            <div class="lluvia-resumen-item">
+                <div class="lluvia-resumen-icono" id="lluvia-resumen-icono-mes-{{CODIGO}}">☁️</div>
+                <div class="lluvia-resumen-label">Mes</div>
+                <div class="lluvia-resumen-valor" id="lluvia-mes-{{CODIGO}}">-- mm</div>
+                <div class="lluvia-resumen-extra">Acumulado mes</div>
+            </div>
+
+            <div class="lluvia-resumen-item">
+                <div class="lluvia-resumen-icono" id="lluvia-resumen-icono-anio-{{CODIGO}}">☁️</div>
+                <div class="lluvia-resumen-label">Año agrícola</div>
+                <div class="lluvia-resumen-valor" id="lluvia-anio-{{CODIGO}}">-- mm</div>
+                <div class="lluvia-resumen-extra">Desde septiembre</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="metricas-estacion">
+        <div class="metrica-estacion">
+            <div class="metrica-label">Humedad</div>
+            <div class="metrica-valor" id="humedad-{{CODIGO}}">-- %</div>
+        </div>
+
+        <div class="metrica-estacion">
+            <div class="metrica-label">Punto de rocío</div>
+            <div class="metrica-valor" id="rocio-{{CODIGO}}">-- °C</div>
+        </div>
+
+        <div class="metrica-estacion">
+            <div class="metrica-label">Presión</div>
+            <div class="metrica-valor" id="presion-{{CODIGO}}">-- hPa</div>
+            <div class="metrica-secundaria" id="presion-hora-{{CODIGO}}">Barómetro --:--</div>
+        </div>
+
+        <div class="metrica-estacion">
+            <div class="metrica-label">Radiación solar</div>
+            <div class="metrica-valor" id="radiacion-{{CODIGO}}">-- W/m²</div>
+        </div>
+
+        <div class="metrica-estacion">
+            <div class="metrica-label">Índice UV</div>
+            <div class="metrica-valor" id="uv-{{CODIGO}}">--</div>
+            <div class="metrica-secundaria" id="uv-estado-{{CODIGO}}">--</div>
+        </div>
+
+        <div class="metrica-estacion">
+            <div class="metrica-label">Estación</div>
+            <div class="metrica-valor">{{NOMBRE}}</div>
+            <div class="metrica-secundaria">{{LOCALIDAD}}</div>
+        </div>
+    </div>
+</article>

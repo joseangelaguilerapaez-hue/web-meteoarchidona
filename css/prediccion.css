@@ -1,0 +1,92 @@
+/*
+============================================================
+ESTILOS DE LA PÁGINA DE PREDICCIÓN
+============================================================
+
+Se carga después de css/estilos.min.css, así que aquí solo va
+lo propio de esta página: la cabecera, el pie y el bloque
+.panel-futuro ya vienen de la hoja común.
+
+Se usan las variables de color que define :root en la hoja
+común (--bg, --card, --border, --text, --muted, --accent,
+--gold, --teal, --blue, --cyan) en vez de escribir colores
+a mano.
+============================================================
+*/
+
+:root {
+    --borde-prediccion: rgba(54, 213, 255, 0.28);
+    --fondo-icono-prediccion: rgba(54, 213, 255, 0.07);
+}
+
+/* ------------------------------------------------------------
+   Contenedor de la página
+
+   Centra la tarjeta en el hueco que queda entre la cabecera y
+   el pie, y le deja aire alrededor.
+   ------------------------------------------------------------ */
+
+/*
+La página reparte el alto entre cabecera, contenido y pie, en vez
+de reservar una constante para cabecera y pie: así da igual lo que
+midan, y no aparece una barra de scroll cuando alguno crece.
+*/
+.pagina {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.contendor-prediccion {
+    width: min(1500px, calc(100% - 48px));
+    flex: 1;
+    min-height: 0;
+    margin: 38px auto;
+    padding: 40px;
+    display: grid;
+    place-items: center;
+}
+
+/*
+Dentro del iframe del panel "Predicción" de index.html no hay
+cabecera, así que reservar su hueco haría el contenido más alto
+que el iframe y saldría una segunda barra de scroll. La clase
+.embebida la pone js/pagina.js.
+*/
+.embebida .contendor-prediccion {
+    margin: 0 auto;
+}
+
+/* La sección no pinta nada: solo envuelve a la tarjeta. */
+.contendor-prediccion .seccion {
+    width: 100%;
+    display: grid;
+    place-items: center;
+}
+
+/* ------------------------------------------------------------
+   Tarjeta central
+   ------------------------------------------------------------ */
+
+.contendor-prediccion .panel-futuro-icono {
+    border-color: var(--borde-prediccion);
+    background: var(--fondo-icono-prediccion);
+}
+
+.contendor-prediccion .panel-futuro-etiqueta {
+    color: var(--cyan);
+}
+
+/* ------------------------------------------------------------
+   Móvil
+   ------------------------------------------------------------ */
+
+@media (max-width: 850px) {
+    .contendor-prediccion {
+        width: min(100% - 24px, 1500px);
+        min-height: 620px;
+        margin: 20px auto;
+        padding: 10px;
+    }
+}

@@ -4,6 +4,14 @@
 
 RewriteEngine On
 
+# La página principal es index.html, en la raíz. Sin esto, entrar
+# en "/" no encontraría índice y el servidor respondería con el
+# listado del directorio, enseñando todo el repositorio.
+DirectoryIndex index.html
+
+# Y aunque haya índice, nunca listar el contenido de una carpeta.
+Options -Indexes
+
 # Cabeceras de seguridad
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options "nosniff"
@@ -55,10 +63,10 @@ RewriteEngine On
     Deny from all
 </FilesMatch>
 
-# Redirigir HTML files de raíz a pages/
-RewriteRule ^(index|info|prediccion|en-vivo|observaciones)\.html$ pages/$1.html [L]
+# Las páginas de sección viven en pages/; index.html en la raíz
+RewriteRule ^(info|prediccion|en-vivo|observaciones)\.html$ pages/$1.html [L]
 
 # SPA: rutas sin extensión a index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ pages/index.html [L]
+RewriteRule ^ index.html [L]

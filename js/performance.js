@@ -5,9 +5,39 @@
 const API_CACHE = {};
 const CACHE_TTL = 60000; // 1 minuto en ms
 
+/*
+En local no se usa Service Worker: su caché hace que los cambios
+que acabas de guardar no se vean al recargar. Además se
+desregistra el que hubiera quedado de antes y se borran sus
+cachés, para que un navegador que ya visitó el sitio no siga
+sirviendo copias viejas.
+*/
+function esEntornoLocal() {
+    const host = window.location.hostname;
+
+    return host === 'localhost' || host === '127.0.0.1' || host === '';
+}
+
+function limpiarServiceWorkerLocal() {
+    navigator.serviceWorker.getRegistrations().then(registros => {
+        registros.forEach(registro => registro.unregister());
+    });
+
+    if ('caches' in window) {
+        caches.keys().then(nombres => {
+            nombres.forEach(nombre => caches.delete(nombre));
+        });
+    }
+}
+
 export function registrarServiceWorker() {
     if (!('serviceWorker' in navigator)) {
         return Promise.reject(new Error('SW no soportado'));
+    }
+
+    if (esEntornoLocal()) {
+        limpiarServiceWorkerLocal();
+        return Promise.resolve(null);
     }
 
     return navigator.serviceWorker.register('/sw.js')
@@ -61,8 +91,17 @@ export function obtenerCondicionesEnCache(estacion, urlApi) {
     }
 
     return fetch(`${urlApi}/${estacion}`)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}`);
+            }
+            return res.json();
+        })
         .then(datos => {
+            if (!datos || datos.codigo_estacion === undefined) {
+                throw new Error('Respuesta sin datos de estación');
+            }
+
             API_CACHE[cacheKey] = datos;
 
             const bucketAnterior = Math.floor((ahora - CACHE_TTL) / CACHE_TTL);

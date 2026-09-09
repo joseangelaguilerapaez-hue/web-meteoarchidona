@@ -19,6 +19,14 @@ export const lluviaSimulada = { EL_SILO: 0, LOS_LLANOS: 0, GLOBAL: 0 };
 
 export function nivelLluviaDesdeTasa(tasa) {
     const tasaNum = Number(tasa);
+
+    // Sin esta comprobación un dato ausente (undefined, "" o
+    // cualquier cosa no numérica) da NaN, todas las comparaciones
+    // de abajo son falsas y la función acaba devolviendo 4, o sea
+    // "Muy fuerte": una estación sin dato se pintaría como
+    // tormenta.
+    if (!Number.isFinite(tasaNum)) return 0;
+
     if (tasaNum < 0.1) return 0;
     if (tasaNum < 2) return 1;
     if (tasaNum < 10) return 2;

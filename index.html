@@ -21,7 +21,11 @@
             rel="stylesheet"
         />
 
-        <link rel="stylesheet" href="../css/estilos.min.css?v=4" />
+        <link rel="stylesheet" href="css/estilos.min.css?v=4" />
+
+        <link rel="stylesheet" href="css/pie.css?v=1" />
+
+        <link rel="stylesheet" href="css/index.css?v=1" />
     </head>
 
     <body>
@@ -184,7 +188,7 @@
                                 <div class="grafico-titulo">Cámaras en directo</div>
 
                                 <a
-                                    href="./en-vivo.html"
+                                    href="pages/en-vivo.html"
                                     data-panel="en-vivo"
                                     style="color: var(--blue); font-size: 10px"
                                 >
@@ -235,7 +239,7 @@
                             </div>
                         </a>
 
-                        <a href="./en-vivo.html" class="acceso" data-panel="en-vivo">
+                        <a href="pages/en-vivo.html" class="acceso" data-panel="en-vivo">
                             <div class="acceso-icono">📷</div>
 
                             <div>
@@ -276,8 +280,15 @@
                         </div>
                     </section>
 
-                    <div id="footer-contenedor"></div>
                 </main>
+
+                <!--
+                Fuera de <main class="contenido">, que limita el ancho a
+                1800 px: así el pie llega de borde a borde. Sigue dentro
+                del panel de actualidad, porque los demás paneles ocupan
+                la ventana entera con su iframe y no llevan pie.
+                -->
+                <div id="footer-contenedor"></div>
             </section>
 
             <!--
@@ -287,12 +298,16 @@
         -->
 
             <section
-                class="panel-aplicacion"
+                class="panel-aplicacion panel-en-vivo"
                 id="panel-prediccion"
                 data-panel-contenido="prediccion"
                 aria-hidden="true"
             >
-                <div id="panel-prediccion-contenedor"></div>
+                <iframe
+                    src="pages/prediccion.html"
+                    title="MeteoArchidona · Predicción"
+                    loading="lazy"
+                ></iframe>
             </section>
 
             <!--
@@ -308,9 +323,9 @@
                 aria-hidden="true"
             >
                 <iframe
-                    src="./observaciones.html"
+                    src="pages/observaciones.html"
                     title="MeteoArchidona · Observaciones"
-                    loading="eager"
+                    loading="lazy"
                 ></iframe>
             </section>
 
@@ -327,43 +342,36 @@
                 aria-hidden="true"
             >
                 <iframe
-                    src="./en-vivo.html"
+                    src="pages/en-vivo.html"
                     title="MeteoArchidona · En vivo"
-                    loading="eager"
+                    loading="lazy"
                 ></iframe>
             </section>
-        </div>
 
-        <!--
+            <!--
         ============================================================
         INFO
         ============================================================
         -->
 
             <section
-                class="panel-aplicacion panel-info"
+                class="panel-aplicacion panel-en-vivo"
                 id="panel-info"
                 data-panel-contenido="info"
                 aria-hidden="true"
             >
                 <iframe
-                    src="./info.html"
+                    src="pages/info.html"
                     title="MeteoArchidona · Información"
-                    loading="eager"
+                    loading="lazy"
                 ></iframe>
             </section>
         </div>
 
-        <script type="module">
-            import('./app.js?v=5').then(() => {
-                const script1 = document.createElement('script');
-                script1.src = '../js/estaciones.js?v=2';
-                document.body.appendChild(script1);
-
-                const script2 = document.createElement('script');
-                script2.src = '../js/cargador.js?v=2';
-                document.body.appendChild(script2);
-            });
-        </script>
+        <script src="js/rutas.js?v=4"></script>
+        <script src="js/pagina.js?v=7"></script>
+        <script src="js/estaciones.js?v=4"></script>
+        <script type="module" src="js/app.min.js?v=9"></script>
+        <script src="js/cargador.js?v=7"></script>
     </body>
 </html>

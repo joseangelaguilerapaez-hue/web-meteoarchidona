@@ -1,0 +1,233 @@
+/*
+============================================================
+PIE DE PÁGINA
+============================================================
+
+El pie es común a todas las páginas, así que va en su propia
+hoja y se carga después de css/estilos.min.css, que trae la
+paleta (--bg, --border, --accent, --cyan, --blue, --green,
+--text, --muted) y las tipografías.
+
+Sustituye a la regla .footer de la hoja común, que solo
+repartía tres líneas de texto en tres columnas.
+============================================================
+*/
+
+.footer {
+    display: block;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(13, 21, 32, 0.6), rgba(8, 13, 20, 0.95));
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* ------------------------------------------------------------
+   Franja de estado
+
+   Oculta mientras no haya datos: en las páginas sueltas nadie
+   la rellena y enseñaría una fila de guiones.
+   ------------------------------------------------------------ */
+
+.footer-estado {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 22px;
+    padding: 12px clamp(20px, 3vw, 54px);
+    border-bottom: 1px solid var(--border);
+    background: rgba(3, 13, 23, 0.6);
+}
+
+.footer-estado.visible {
+    display: flex;
+}
+
+.footer-estado-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.footer-estado-punto {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.55);
+}
+
+.footer-estado-valor {
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 500;
+}
+
+.footer-estado-separador {
+    flex: 1;
+}
+
+/* ------------------------------------------------------------
+   Cuerpo
+   ------------------------------------------------------------ */
+
+.footer-cuerpo {
+    display: grid;
+    grid-template-columns: minmax(240px, 1.6fr) repeat(3, minmax(0, 1fr));
+    gap: 28px clamp(20px, 3vw, 48px);
+    padding: 30px clamp(20px, 3vw, 54px) 26px;
+}
+
+.footer-marca-titulo {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.footer-marca-titulo span {
+    color: var(--accent);
+}
+
+.footer-marca-texto {
+    max-width: 34ch;
+    margin: 9px 0 0;
+    font-size: 12px;
+    line-height: 1.65;
+}
+
+.footer-sellos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+}
+
+.footer-sello {
+    padding: 3px 9px;
+    border: 1px solid rgba(54, 213, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(54, 213, 255, 0.06);
+    color: var(--cyan);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.footer-columna-titulo {
+    margin: 0 0 12px;
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.footer-lista {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.footer-lista a {
+    color: var(--muted);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.footer-lista a:hover,
+.footer-lista a:focus-visible {
+    color: var(--text);
+}
+
+.footer-estacion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.footer-estacion-lugar {
+    display: block;
+    margin-top: 2px;
+    color: #7f94a8;
+    font-size: 9px;
+}
+
+/* ------------------------------------------------------------
+   Barra inferior
+   ------------------------------------------------------------ */
+
+.footer-barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 18px;
+    padding: 14px clamp(20px, 3vw, 54px);
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+}
+
+.footer-barra-separador {
+    flex: 1;
+}
+
+.footer-barra a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.footer-barra a:hover,
+.footer-barra a:focus-visible {
+    color: var(--text);
+}
+
+.footer-firma {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+}
+
+.footer-firma strong {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+/* ------------------------------------------------------------
+   Adaptación a pantallas estrechas
+   ------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+    .footer-cuerpo {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 620px) {
+    .footer-cuerpo {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 24px 18px 20px;
+    }
+
+    .footer-estado,
+    .footer-barra {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .footer-estado-separador,
+    .footer-barra-separador {
+        display: none;
+    }
+}

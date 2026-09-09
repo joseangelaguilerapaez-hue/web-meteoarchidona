@@ -60,6 +60,14 @@ function runTests() {
     }
 
     console.log(`\n📊 Resultados: ${passed} pasados, ${failed} fallidos`);
+
+    // Sin esto el proceso termina con código 0 aunque fallen
+    // tests, y tanto el && de "npm test" como el workflow de CI
+    // dan la ejecución por buena. Se usa exitCode en vez de
+    // exit(1) para no cortar la salida por pantalla.
+    if (failed > 0 && typeof process !== "undefined") {
+        process.exitCode = 1;
+    }
 }
 
 // ============================================================
@@ -233,8 +241,11 @@ test("sanitizarString: espacios", () => {
 });
 
 test("sanitizarString: trunca longitud", () => {
-    const resultado = sanitizarString("hola mundo", 5);
-    assertEqual(resultado, "hola ", "trunca a 5 caracteres");
+    // Corta a 5 caracteres ("hola ") y después quita los espacios
+    // de los extremos, así que el espacio final no sobrevive.
+    assertEqual(sanitizarString("hola mundo", 5), "hola", "trunca a 5 caracteres y recorta");
+    assertEqual(sanitizarString("archidona", 4), "arch", "trunca sin espacios de por medio");
+    assertEqual(sanitizarString("  hola  "), "hola", "quita los espacios de los extremos");
 });
 
 test("sanitizarString: no string", () => {

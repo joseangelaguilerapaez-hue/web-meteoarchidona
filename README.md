@@ -78,5 +78,6 @@ Ver [TESTING.md](docs/TESTING.md) para detalles.
 
 ## Contacto
 
-- 📧 info@meteoarchidona.com
-- 🔧 soporte@meteoarchidona.com
+- 📧 infometeoarchidona@meteoarchidona.com
+- 🔧 yoseba@meteoarchidona.com
+- 🔧 zonnen69@meteoarchidona.com

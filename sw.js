@@ -2,22 +2,26 @@
    Service Worker - Caché y offline support
    ============================================================ */
 
-const CACHE_NAME = 'meteoarchidona-v1';
+const CACHE_NAME = 'meteoarchidona-v6';
 const API_CACHE = 'meteoarchidona-api-v1';
 
 const ASSETS_TO_CACHE = [
-    '/',
-    '/pages/index.html',
-    '/css/estilos.css',
-    '/js/app.js',
+    '/index.html',
+    '/css/estilos.min.css',
+    '/js/app.min.js',
+    '/js/rutas.js',
+    '/js/pagina.js',
+    '/js/cargador.js',
+    '/js/estaciones.js',
     '/js/utils.js',
     '/js/validation.js',
     '/js/viento.js',
     '/js/lluvia.js',
     '/js/ui.js',
+    '/js/performance.js',
     '/componentes/cabecera.html',
-    '/componentes/navbar.html',
     '/componentes/footer.html',
+    '/componentes/tarjeta-estacion.html',
     '/assets/yz-project.jpg'
 ];
 
@@ -27,6 +31,10 @@ const API_URLS = [
 ];
 
 self.addEventListener('install', event => {
+    // Sin esto un Service Worker nuevo se queda esperando a que se
+    // cierren todas las pestañas antes de entrar en funcionamiento.
+    self.skipWaiting();
+
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
             return cache.addAll(ASSETS_TO_CACHE).catch(err => {
@@ -46,7 +54,7 @@ self.addEventListener('activate', event => {
                     }
                 })
             );
-        })
+        }).then(() => self.clients.claim())
     );
 });
 
@@ -60,27 +68,51 @@ self.addEventListener('fetch', event => {
     }
 });
 
+/*
+Todo lo propio del sitio (HTML, CSS, JS, componentes) va primero
+a red y la caché queda solo como respaldo para cuando no hay
+conexión. Así un cambio publicado se ve en la siguiente recarga,
+sin tener que subir a mano la versión de CACHE_NAME.
+
+La petición se hace con cache: 'no-store' a propósito: sin eso
+el fetch del Service Worker reutiliza la caché HTTP del
+navegador y seguiría sirviendo el archivo viejo.
+
+Lo de terceros (fuentes de Google) sí va primero a caché: no
+cambia y así se ahorra la ida a red.
+*/
+function esDelSitio(request) {
+    return new URL(request.url).origin === self.location.origin;
+}
+
+function guardarEnCache(request, response) {
+    if (response && response.status === 200 && response.type !== 'error') {
+        const copia = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(request, copia));
+    }
+
+    return response;
+}
+
 function handleAssetRequest(request) {
+    if (esDelSitio(request)) {
+        return fetch(request, { cache: 'no-store' })
+            .then(response => guardarEnCache(request, response))
+            .catch(() => {
+                return caches.match(request).then(cacheada => {
+                    return cacheada || caches.match('/index.html');
+                });
+            });
+    }
+
     return caches.match(request).then(response => {
         if (response) {
             return response;
         }
 
-        return fetch(request).then(response => {
-            if (!response || response.status !== 200 || response.type === 'error') {
-                return response;
-            }
-
-            const responseToCache = response.clone();
-
-            caches.open(CACHE_NAME).then(cache => {
-                cache.put(request, responseToCache);
-            });
-
-            return response;
-        }).catch(() => {
-            return caches.match('/pages/index.html');
-        });
+        return fetch(request)
+            .then(response => guardarEnCache(request, response))
+            .catch(() => caches.match('/index.html'));
     });
 }
 

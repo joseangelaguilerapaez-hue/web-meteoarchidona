@@ -407,14 +407,32 @@ if(capaRadar)capaRadar.setOpacity(opacidad);
 });
 }
 
+/*
+Ajustar el mapa necesita que la pagina este pintada: invalidateSize
+mide el contenedor y en una pestana de fondo mediria 0. Se repite en
+cuanto la pestana se muestra.
+*/
+function reajustarMapaCuandoSeVea(){
+reajustarMapa();
+if(!document.hidden)return;
+document.addEventListener("visibilitychange",function alVolver(){
+if(document.hidden)return;
+document.removeEventListener("visibilitychange",alVolver);
+reajustarMapa();
+});
+}
+
 function iniciar(){
 crearMapa();
 instalarEventos();
-requestAnimationFrame(()=>requestAnimationFrame(()=>{
-reajustarMapa();
+/*
+Los datos no van dentro de un requestAnimationFrame: no dependen de
+que se pinte nada, y en una pestana de fondo el navegador no llama a
+rAF, asi que el visor se quedaba sin localidades ni timeline.
+*/
 cargarLocalidades();
 cargarTimeline();
-}));
+reajustarMapaCuandoSeVea();
 }
 
 if(document.readyState==="loading"){

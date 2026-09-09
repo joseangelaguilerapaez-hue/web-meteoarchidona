@@ -1,0 +1,48 @@
+/*
+============================================================
+PLANTILLA BASE DE CSS DE PÁGINA
+============================================================
+
+Acompaña a pages/home.html. Al crear una página nueva se copia
+como css/<pagina>.css.
+
+Va SIEMPRE después de css/estilos.min.css, así que aquí solo
+se escribe lo propio de esta página: la cabecera, el pie, las
+tarjetas y la rejilla ya vienen de la hoja común.
+
+Se usan las variables de color de :root que define la hoja
+común (--bg, --card, --border, --text, --muted, --accent,
+--gold, --teal, --blue, --cyan, --green, --red, --orange)
+en vez de escribir colores a mano.
+============================================================
+*/
+
+/* Ejemplo: contenedor propio de la página. Sustituir o borrar. */
+.contenedor-home {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    padding: 24px clamp(16px, 2vw, 32px);
+}
+
+.contenedor-home .tarjeta {
+    padding: 20px;
+}
+
+.contenedor-home h2 {
+    margin: 0 0 12px;
+    color: var(--accent);
+    font-size: 20px;
+}
+
+.contenedor-home p {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+@media (max-width: 620px) {
+    .contenedor-home {
+        padding: 16px 12px;
+    }
+}

@@ -1,0 +1,50 @@
+/*
+============================================================
+ESTILOS DE LA PORTADA
+============================================================
+
+Se carga después de css/estilos.min.css, así que aquí solo va
+lo propio de esta página.
+
+De momento contiene el ajuste de los paneles que muestran otra
+página dentro de un iframe (Predicción, Observaciones, En vivo
+e Información).
+============================================================
+*/
+
+/*
+Alto que ocupa la cabecera. Lo mide y lo publica
+publicarAltoCabecera() en js/pagina.js; el valor de aquí solo
+se usa mientras la cabecera todavía no está montada.
+*/
+:root {
+    --alto-cabecera: 96px;
+}
+
+/*
+El iframe ocupa justo el hueco que queda bajo la cabecera.
+
+La hoja común restaba una constante (97px) que no coincide con
+lo que mide la cabecera en realidad, y además le ponía un
+min-height de 760px. Entre las dos cosas el iframe acababa
+siendo más alto que la ventana, y salían dos barras de scroll:
+la de la página y la del iframe.
+
+Se usa dvh en vez de vh porque en el móvil la barra del
+navegador aparece y desaparece, y vh no lo tiene en cuenta.
+*/
+.panel-en-vivo iframe,
+.panel-radar iframe {
+    height: calc(100dvh - var(--alto-cabecera));
+    min-height: 0;
+}
+
+/*
+Los paneles con iframe ocupan la ventana entera, así que el
+scroll lo lleva el iframe por dentro y la página no necesita
+el suyo.
+*/
+.panel-aplicacion.panel-en-vivo.activo,
+.panel-aplicacion.panel-radar.activo {
+    overflow: hidden;
+}

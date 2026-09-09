@@ -5,6 +5,7 @@
 import {
     calcularMovimientoViento,
     obtenerVientoGlobal,
+    vientoEstacion,
 } from "../js/viento.js";
 
 const tests = [];
@@ -48,6 +49,14 @@ function runTests() {
     }
 
     console.log(`\n📊 Resultados: ${passed} pasados, ${failed} fallidos`);
+
+    // Sin esto el proceso termina con código 0 aunque fallen
+    // tests, y tanto el && de "npm test" como el workflow de CI
+    // dan la ejecución por buena. Se usa exitCode en vez de
+    // exit(1) para no cortar la salida por pantalla.
+    if (failed > 0 && typeof process !== "undefined") {
+        process.exitCode = 1;
+    }
 }
 
 // ============================================================
@@ -55,108 +64,121 @@ function runTests() {
 // ============================================================
 
 test("calcularMovimientoViento: sin viento", () => {
-    const movimiento = calcularMovimientoViento(0);
-    assertEqual(movimiento, 0, "0 km/h = 0 grados movimiento");
+    const movimiento = calcularMovimientoViento(90, 0, 800, 600);
+    assertEqual(movimiento.dx, 0, "0 km/h no mueve en x");
+    assertEqual(movimiento.dy, 0, "0 km/h no mueve en y");
 });
 
-test("calcularMovimientoViento: viento moderado", () => {
-    const movimiento = calcularMovimientoViento(10);
-    assertTrue(movimiento > 0, "10 km/h > 0 movimiento");
-    assertTrue(movimiento <= 15, "10 km/h <= 15 grados");
-});
-
-test("calcularMovimientoViento: viento fuerte", () => {
-    const movimiento = calcularMovimientoViento(30);
-    assertTrue(movimiento > 0, "30 km/h > 0 movimiento");
-    assertTrue(movimiento <= 45, "30 km/h <= 45 grados");
-});
-
-test("calcularMovimientoViento: viento muy fuerte", () => {
-    const movimiento = calcularMovimientoViento(60);
-    assertTrue(movimiento > 0, "60 km/h > 0 movimiento");
-    assertTrue(movimiento <= 90, "60 km/h <= 90 grados");
-});
-
-test("calcularMovimientoViento: proporcional a velocidad", () => {
-    const mov10 = calcularMovimientoViento(10);
-    const mov20 = calcularMovimientoViento(20);
-    assertTrue(mov20 > mov10, "20 km/h > 10 km/h en movimiento");
-});
-
-test("calcularMovimientoViento: null/undefined", () => {
-    assertEqual(calcularMovimientoViento(null), 0, "null devuelve 0");
-    assertEqual(calcularMovimientoViento(undefined), 0, "undefined devuelve 0");
-});
-
-test("calcularMovimientoViento: negativos", () => {
-    assertEqual(calcularMovimientoViento(-10), 0, "negativos devuelven 0");
-});
-
-test("calcularMovimientoViento: límite máximo", () => {
-    const movimiento = calcularMovimientoViento(200);
-    assertTrue(movimiento > 0, "velocidades altas devuelven movimiento");
-    assertTrue(movimiento <= 180, "movimiento capped en 180");
-});
-
-test("obtenerVientoGlobal: ambas estaciones", () => {
-    const viento = obtenerVientoGlobal();
-    assertTrue(typeof viento === "object", "devuelve objeto");
-    assertTrue("velocidad" in viento, "tiene velocidad");
-    assertTrue("direccion" in viento, "tiene dirección");
-});
-
-test("obtenerVientoGlobal: velocidad es número", () => {
-    const viento = obtenerVientoGlobal();
-    assertTrue(typeof viento.velocidad === "number", "velocidad es número");
-    assertTrue(viento.velocidad >= 0, "velocidad >= 0");
-});
-
-test("obtenerVientoGlobal: dirección en rango", () => {
-    const viento = obtenerVientoGlobal();
-    if (viento.direccion !== null) {
-        assertTrue(viento.direccion >= 0 && viento.direccion <= 360, "dirección en rango");
+test("calcularMovimientoViento: devuelve las cuatro componentes", () => {
+    const movimiento = calcularMovimientoViento(90, 10, 800, 600);
+    for (const clave of ["dx", "dy", "vxProm", "vyProm"]) {
+        assertTrue(clave in movimiento, `incluye ${clave}`);
+        assertTrue(typeof movimiento[clave] === "number", `${clave} es número`);
     }
 });
 
-test("obtenerVientoGlobal: promedio de estaciones", () => {
-    // Simular datos de estaciones
-    const viento = obtenerVientoGlobal();
-    assertTrue(viento.velocidad >= 0, "velocidad >= 0");
+test("calcularMovimientoViento: dirección meteorológica", () => {
+    // 90 grados es viento del este: la lluvia se desplaza hacia el este (+x).
+    const desdeEste = calcularMovimientoViento(90, 20, 800, 600);
+    assertTrue(desdeEste.dx > 0, "viento del este mueve hacia +x");
+    assertCloseTo(desdeEste.dy, 0, 0.001, "viento del este no mueve en y");
+
+    // 180 grados es viento del sur: se desplaza hacia el norte (-y).
+    const desdeSur = calcularMovimientoViento(180, 20, 800, 600);
+    assertCloseTo(desdeSur.dx, 0, 0.001, "viento del sur no mueve en x");
+    assertTrue(desdeSur.dy > 0, "viento del sur mueve hacia +y");
 });
 
-test("calcularMovimientoViento: suave a fuerte", () => {
-    const suave = calcularMovimientoViento(5);
-    const moderado = calcularMovimientoViento(15);
-    const fuerte = calcularMovimientoViento(25);
-
-    assertTrue(suave <= moderado, "suave <= moderado");
-    assertTrue(moderado <= fuerte, "moderado <= fuerte");
+test("calcularMovimientoViento: convierte km/h a píxeles por segundo", () => {
+    const movimiento = calcularMovimientoViento(90, 36, 800, 600);
+    assertCloseTo(movimiento.dx, 10, 0.001, "36 km/h son 10 px/s");
 });
 
-test("calcularMovimientoViento: escala logarítmica", () => {
-    const mov10 = calcularMovimientoViento(10);
-    const mov40 = calcularMovimientoViento(40);
+test("calcularMovimientoViento: proporcional a la velocidad", () => {
+    const lento = calcularMovimientoViento(90, 10, 800, 600);
+    const rapido = calcularMovimientoViento(90, 20, 800, 600);
+    assertTrue(rapido.dx > lento.dx, "más velocidad, más desplazamiento");
+    assertCloseTo(rapido.dx / lento.dx, 2, 0.001, "el doble de velocidad es el doble de dx");
+});
 
-    // 40 es 4x 10, pero movimiento NO debe ser 4x
-    const ratio = mov40 / mov10;
-    assertTrue(ratio < 4, "escala no lineal (logarítmica)");
-    assertTrue(ratio > 1, "ratio > 1");
+test("calcularMovimientoViento: dirección nula", () => {
+    const sinDireccion = calcularMovimientoViento(null, 20, 800, 600);
+    assertEqual(sinDireccion.dx, 0, "sin dirección no hay movimiento en x");
+    assertEqual(sinDireccion.dy, 0, "sin dirección no hay movimiento en y");
+});
+
+test("calcularMovimientoViento: velocidad nula", () => {
+    const sinVelocidad = calcularMovimientoViento(90, null, 800, 600);
+    assertEqual(sinVelocidad.dx, 0, "sin velocidad no hay movimiento en x");
+    assertEqual(sinVelocidad.dy, 0, "sin velocidad no hay movimiento en y");
+});
+
+test("calcularMovimientoViento: grados fuera de rango", () => {
+    // normalizarGrados lleva 450 a 90, así que deben coincidir.
+    const normal = calcularMovimientoViento(90, 20, 800, 600);
+    const fueraDeRango = calcularMovimientoViento(450, 20, 800, 600);
+    assertCloseTo(fueraDeRango.dx, normal.dx, 0.001, "450 grados equivale a 90");
+});
+
+test("obtenerVientoGlobal: sin estaciones activas", () => {
+    const viento = obtenerVientoGlobal([]);
+    assertEqual(viento.direccion, null, "sin estaciones la dirección es null");
+    assertEqual(viento.velocidad, 0, "sin estaciones la velocidad es 0");
+});
+
+test("obtenerVientoGlobal: estaciones sin viento", () => {
+    vientoEstacion.EL_SILO = { direccion: null, velocidad: 0 };
+    vientoEstacion.LOS_LLANOS = { direccion: null, velocidad: 0 };
+
+    const viento = obtenerVientoGlobal(["EL_SILO", "LOS_LLANOS"]);
+    assertEqual(viento.direccion, null, "sin viento la dirección es null");
+    assertEqual(viento.velocidad, 0, "sin viento la velocidad es 0");
+});
+
+test("obtenerVientoGlobal: una sola estación", () => {
+    vientoEstacion.EL_SILO = { direccion: 90, velocidad: 12 };
+    vientoEstacion.LOS_LLANOS = { direccion: null, velocidad: 0 };
+
+    const viento = obtenerVientoGlobal(["EL_SILO", "LOS_LLANOS"]);
+    assertCloseTo(viento.velocidad, 12, 0.001, "toma la velocidad de la única activa");
+    assertCloseTo(viento.direccion, 90, 0.001, "toma su dirección");
+});
+
+test("obtenerVientoGlobal: promedia las dos estaciones", () => {
+    vientoEstacion.EL_SILO = { direccion: 90, velocidad: 10 };
+    vientoEstacion.LOS_LLANOS = { direccion: 90, velocidad: 20 };
+
+    const viento = obtenerVientoGlobal(["EL_SILO", "LOS_LLANOS"]);
+    assertCloseTo(viento.velocidad, 15, 0.001, "velocidad media de 10 y 20");
+    assertCloseTo(viento.direccion, 90, 0.001, "misma dirección en ambas");
+});
+
+test("obtenerVientoGlobal: media circular de direcciones", () => {
+    // La media aritmética de 350 y 10 daría 180, que es el sentido
+    // contrario. La media circular correcta es 0.
+    vientoEstacion.EL_SILO = { direccion: 350, velocidad: 10 };
+    vientoEstacion.LOS_LLANOS = { direccion: 10, velocidad: 10 };
+
+    const viento = obtenerVientoGlobal(["EL_SILO", "LOS_LLANOS"]);
+    assertCloseTo(viento.direccion, 0, 0.001, "350 y 10 promedian 0, no 180");
+});
+
+test("obtenerVientoGlobal: dirección siempre en rango", () => {
+    vientoEstacion.EL_SILO = { direccion: 350, velocidad: 10 };
+    vientoEstacion.LOS_LLANOS = { direccion: 10, velocidad: 10 };
+
+    const viento = obtenerVientoGlobal(["EL_SILO", "LOS_LLANOS"]);
+    assertTrue(viento.direccion >= 0 && viento.direccion < 360, "dirección entre 0 y 360");
 });
 
 test("obtenerVientoGlobal: consistencia", () => {
-    const viento1 = obtenerVientoGlobal();
-    const viento2 = obtenerVientoGlobal();
+    vientoEstacion.EL_SILO = { direccion: 45, velocidad: 8 };
+    vientoEstacion.LOS_LLANOS = { direccion: 45, velocidad: 8 };
 
-    // Debe ser consistente (mismo dato)
-    assertEqual(viento1.velocidad, viento2.velocidad, "velocidad consistente");
-});
-
-test("calcularMovimientoViento: tipos numéricos", () => {
-    const mov1 = calcularMovimientoViento(10);
-    const mov2 = calcularMovimientoViento("10");
-
-    // Debe tolerar string número
-    assertTrue(mov1 > 0 || mov2 > 0, "tolera string número");
+    const primera = obtenerVientoGlobal(["EL_SILO", "LOS_LLANOS"]);
+    const segunda = obtenerVientoGlobal(["EL_SILO", "LOS_LLANOS"]);
+    assertEqual(primera.velocidad, segunda.velocidad, "misma velocidad con los mismos datos");
+    assertEqual(primera.direccion, segunda.direccion, "misma dirección con los mismos datos");
 });
 
 // ============================================================

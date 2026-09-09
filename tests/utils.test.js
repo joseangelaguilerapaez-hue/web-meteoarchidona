@@ -40,6 +40,14 @@ function runTests() {
     }
 
     console.log(`\n📊 Resultados: ${passed} pasados, ${failed} fallidos`);
+
+    // Sin esto el proceso termina con código 0 aunque fallen
+    // tests, y tanto el && de "npm test" como el workflow de CI
+    // dan la ejecución por buena. Se usa exitCode en vez de
+    // exit(1) para no cortar la salida por pantalla.
+    if (failed > 0 && typeof process !== "undefined") {
+        process.exitCode = 1;
+    }
 }
 
 // ============================================================

@@ -1,0 +1,36 @@
+<header class="cabecera">
+    <div class="marca">
+        <div class="marca-icono" aria-hidden="true">
+            <div class="sol"></div>
+            <div class="nube"></div>
+        </div>
+
+        <div>
+            <div class="marca-titulo">Meteo<span>Archidona</span></div>
+            <div class="marca-subtitulo">Red meteorológica de la comarca</div>
+        </div>
+    </div>
+
+    <!-- Los enlaces los genera construirNavegacion() a partir de js/rutas.js -->
+    <nav class="navegacion" aria-label="Navegación principal"></nav>
+
+    <div class="zona-derecha">
+        <div class="hora">
+            <div>
+                <div class="fecha" id="fecha-actual">--/--/----</div>
+                <div class="reloj" id="reloj-actual">--:--</div>
+            </div>
+        </div>
+
+        <div
+            class="firma-proyecto"
+            data-lluvia-control="GLOBAL"
+            role="button"
+            tabindex="0"
+            aria-label="Y&amp;Z Project · control de lluvia"
+        >
+            <img src="/assets/yz-project.jpg" alt="Y&amp;Z Project" />
+            <span class="simulacion-global" id="simulacion-GLOBAL"></span>
+        </div>
+    </div>
+</header>

@@ -1,71 +1,71 @@
 <!doctype html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8" />
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>Predicción · MeteoArchidona</title>
+    <title>Predicción · MeteoArchidona</title>
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
 
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-        <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
 
-        <link rel="stylesheet" href="../css/estilos.css" />
-    </head>
+    <link rel="stylesheet" href="../css/estilos.min.css?v=4" />
 
-    <body>
-        <div class="pagina">
-            <div id="cabecera-contenedor"></div>
+    <link rel="stylesheet" href="../css/pie.css?v=1" />
+    <link rel="stylesheet" href="../css/prediccion.css?v=3" />
+</head>
 
-            <main class="contenido">
-                <div id="panel-prediccion-contenedor"></div>
-            </main>
+<body>
+    <div class="pagina">
+        <div id="cabecera-contenedor"></div>
+        <div class="contendor-prediccion">
+            <section class="seccion">
 
-            <div id="footer-contenedor"></div>
+                
+
+                    <div class="panel-futuro-contenido">
+
+                        <div class="panel-futuro-icono" aria-hidden="true">
+                            🌦️
+                        </div>
+
+                        <div class="panel-futuro-etiqueta">
+                            METEOARCHIDONA · PREDICCIÓN
+                        </div>
+
+                        <h1>
+                            Lo que viene.
+                        </h1>
+
+                        <p>
+                            Aquí construiremos la predicción
+                            meteorológica de MeteoArchidona:
+                            previsión municipal, evolución horaria,
+                            próximos días, alertas y nuestra propia
+                            forma de contar el tiempo.
+                        </p>
+
+                    </div>
+
+                
+
+            </section>    
         </div>
 
-        <script>
-            async function cargarComponente(selector, url) {
-                const contenedor = document.querySelector(selector);
+        
 
-                if (!contenedor) {
-                    return;
-                }
+        <div id="footer-contenedor"></div>
+    </div>
 
-                try {
-                    const respuesta = await fetch(url, {
-                        cache: "no-store",
-                    });
+    <script src="../js/rutas.js?v=4"></script>
+    <script src="../js/pagina.js?v=7"></script>
+    <script src="../js/prediccion.js?v=2"></script>
+</body>
 
-                    if (!respuesta.ok) {
-                        throw new Error(`HTTP ${respuesta.status}`);
-                    }
-
-                    contenedor.innerHTML = await respuesta.text();
-                } catch (error) {
-                    console.error(`Error cargando componente ${url}:`, error);
-                }
-            }
-
-            async function iniciar() {
-                await cargarComponente("#cabecera-contenedor", "../componentes/cabecera.html");
-
-                await Promise.all([
-                    cargarComponente("#navbar-contenedor", "../componentes/navbar.html"),
-
-                    cargarComponente("#footer-contenedor", "../componentes/footer.html"),
-
-                    cargarComponente("#panel-prediccion-contenedor", "../componentes/panel-prediccion.html"),
-                ]);
-            }
-
-            iniciar();
-        </script>
-    </body>
 </html>

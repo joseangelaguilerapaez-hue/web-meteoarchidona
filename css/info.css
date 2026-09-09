@@ -1,0 +1,218 @@
+:root {
+    --fondo: #07111f;
+    --fondo-profundo: #030914;
+
+    --panel: rgba(12, 28, 47, 0.94);
+
+    --panel-claro: rgba(20, 42, 66, 0.88);
+
+    --oro: #f2bf58;
+    --oro-claro: #ffd989;
+
+    --cyan: #36d9ff;
+
+    --verde: #67e8a5;
+
+    --blanco: #f5f8fc;
+    --texto: #c9d6e5;
+    --texto-suave: #8194aa;
+
+    --borde: rgba(255, 255, 255, 0.08);
+
+    --borde-oro: rgba(242, 191, 88, 0.28);
+
+    --borde-cyan: rgba(54, 217, 255, 0.26);
+
+    --sombra: 0 24px 70px rgba(0, 0, 0, 0.38);
+
+    --radio-grande: 28px;
+    --radio: 20px;
+    --radio-pequeno: 14px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family: "Sora", system-ui, sans-serif;
+
+    color: var(--blanco);
+
+    background:
+        radial-gradient(circle at 15% 0%, rgba(54, 217, 255, 0.1), transparent 32%),
+        radial-gradient(circle at 90% 8%, rgba(242, 191, 88, 0.09), transparent 28%),
+        linear-gradient(180deg, var(--fondo) 0%, var(--fondo-profundo) 100%);
+}
+
+button,
+a {
+    font: inherit;
+}
+
+/*
+La página ocupa todo el ancho para que la cabecera y el pie
+lleguen de borde a borde, como en el resto del sitio. Quien
+limita el ancho es el contenido, no el contenedor.
+
+Además reparte el alto en tres: cabecera arriba, pie abajo del
+todo y el contenido centrado en lo que queda. Sin esto, en una
+página corta como esta el pie se quedaba a media pantalla con
+un hueco vacío debajo.
+*/
+.pagina {
+    width: 100%;
+
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    margin: 0;
+
+    padding: 0;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+#cabecera-contenedor {
+    margin-bottom: 48px;
+}
+
+.contenedor-info {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    /*
+    La fila toma el alto de su contenido en vez de estirarse, que
+    es lo que hay que hacer para que align-content pueda centrarla
+    en el espacio libre. Las dos tarjetas siguen igualándose entre
+    sí, porque dentro de la fila se estiran.
+    */
+    grid-auto-rows: min-content;
+
+    align-content: center;
+
+    gap: 48px;
+
+    flex: 1;
+
+    width: min(1500px, calc(100% - 48px));
+
+    margin: 0 auto 72px;
+}
+
+.seccion {
+    background: var(--panel);
+
+    border: 1px solid var(--borde);
+
+    border-radius: var(--radio-grande);
+
+    padding: 42px;
+
+    backdrop-filter: blur(8px);
+}
+
+.seccion h2 {
+    margin: 0 0 24px 0;
+
+    font-size: 28px;
+
+    font-weight: 600;
+
+    color: var(--oro);
+
+    line-height: 1.2;
+}
+
+.seccion p {
+    margin: 0 0 16px 0;
+
+    font-size: 15px;
+
+    color: var(--texto);
+
+    line-height: 1.6;
+
+    font-weight: 400;
+}
+
+.seccion p:last-child {
+    margin-bottom: 0;
+}
+
+.contacto {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+}
+
+.contacto-item {
+    background: var(--panel-claro);
+
+    border: 1px solid var(--borde-cyan);
+
+    border-radius: var(--radio);
+
+    padding: 16px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    text-decoration: none;
+
+    color: var(--cyan);
+
+    transition: all 0.2s ease;
+}
+
+.contacto-item:hover {
+    background: rgba(54, 217, 255, 0.12);
+
+    border-color: var(--cyan);
+
+    transform: translateX(4px);
+}
+
+.contacto-item-icono {
+    font-size: 18px;
+
+    flex-shrink: 0;
+}
+
+.contacto-item-texto {
+    word-break: break-all;
+
+    font-size: 14px;
+
+    font-family: "JetBrains Mono", monospace;
+}
+
+@media (max-width: 900px) {
+    .contenedor-info {
+        grid-template-columns: 1fr;
+    }
+
+    .seccion {
+        padding: 32px;
+    }
+
+    .seccion h2 {
+        font-size: 24px;
+    }
+}
