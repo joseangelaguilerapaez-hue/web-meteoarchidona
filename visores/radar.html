@@ -3,13 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<title>MeteoArchidona · Visor radar regional</title>
-
+<title>MeteoArchidona · Visor meteorológico regional</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="./radar.css?v=20260909-css1">
+<link rel="stylesheet" href="./radar.css?v=20260910-capas1">
 </head>
 
 <body>
@@ -17,52 +15,76 @@
 <main class="visor">
 
 <header class="visor-cabecera">
-
 <div class="visor-titulo">
-<div class="visor-titulo-principal">
-Visor radar regional · AHR + SE + AL + CR
-</div>
-
-<div class="visor-titulo-secundario">
-Málaga · Sevilla · Almería-Níjar · Ciudad Real-Almagro
-</div>
+<div class="visor-titulo-principal">Visor meteorológico regional</div>
+<div class="visor-titulo-secundario">Radar · Satélite · Rayos · MeteoArchidona</div>
 </div>
 
 <div class="visor-derecha">
-
 <div class="estado" id="estado">
 <span class="estado-punto"></span>
 <span id="estado-texto">Cargando</span>
 </div>
-
 <div class="instante">
 <div class="instante-hora" id="instante-hora">--:--</div>
 <div class="instante-fecha" id="instante-fecha">--</div>
 </div>
+</div>
+</header>
+
+<section class="selector-capas" aria-label="Capas meteorológicas">
+<div class="selector-capas-titulo">Capas</div>
+
+<div class="selector-capas-controles">
+
+<button
+type="button"
+class="selector-capa selector-capa-satelite"
+id="capa-satelite"
+data-capa="satelite"
+aria-pressed="false"
+title="Capa de satélite pendiente de integración"
+disabled>
+<span>SATÉLITE</span>
+<span class="selector-capa-estado">Próximamente</span>
+</button>
+
+<button
+type="button"
+class="selector-capa selector-capa-radar activa"
+id="capa-radar"
+data-capa="radar"
+aria-pressed="true"
+title="Mostrar u ocultar capa radar">
+<span>RADAR</span>
+<span class="selector-capa-estado">Activa</span>
+</button>
+
+<button
+type="button"
+class="selector-capa selector-capa-rayos"
+id="capa-rayos"
+data-capa="rayos"
+aria-pressed="false"
+title="Capa de rayos pendiente de integración"
+disabled>
+<span>RAYOS</span>
+<span class="selector-capa-estado">Próximamente</span>
+</button>
 
 </div>
-
-</header>
+</section>
 
 <section class="mapa-zona">
 
-<div
-id="mapa-radar"
-aria-label="Mapa regional de radares MeteoArchidona">
-</div>
+<div id="mapa-radar" aria-label="Mapa meteorológico regional MeteoArchidona"></div>
 
 <aside class="leyenda">
-
-<div class="leyenda-titulo">
-Composición radar regional
-</div>
-
+<div class="leyenda-titulo">Composición radar regional</div>
 <div class="leyenda-texto">
 AHR · Málaga · SE · Sevilla · AL · Níjar · CR · Almagro.
-Cada imagen conserva sus límites geográficos originales y se
-superpone directamente sobre el mapa.
+Cada imagen conserva sus límites geográficos originales y se superpone directamente sobre el mapa.
 </div>
-
 </aside>
 
 <div class="mensaje" id="mensaje"></div>
@@ -72,84 +94,27 @@ superpone directamente sobre el mapa.
 <section class="controles">
 
 <div class="botones">
-
-<button
-type="button"
-class="boton"
-id="anterior"
-title="Fotograma anterior">
-◀
-</button>
-
-<button
-type="button"
-class="boton boton-principal"
-id="reproducir"
-title="Reproducir">
-▶
-</button>
-
-<button
-type="button"
-class="boton"
-id="siguiente"
-title="Fotograma siguiente">
-▶|
-</button>
-
-<button
-type="button"
-class="boton"
-id="recargar"
-title="Recargar timelines">
-↻
-</button>
-
+<button type="button" class="boton" id="anterior" title="Fotograma anterior">◀</button>
+<button type="button" class="boton boton-principal" id="reproducir" title="Reproducir">▶</button>
+<button type="button" class="boton" id="siguiente" title="Fotograma siguiente">▶|</button>
+<button type="button" class="boton" id="recargar" title="Recargar timelines">↻</button>
 </div>
 
 <div class="timeline">
-
-<input
-type="range"
-id="timeline-slider"
-min="0"
-max="0"
-value="0"
-step="1"
-aria-label="Timeline radar regional">
-
+<input type="range" id="timeline-slider" min="0" max="0" value="0" step="1" aria-label="Timeline meteorológica regional">
 <div class="timeline-textos">
-
 <span id="timeline-inicio">--</span>
-
-<span
-class="timeline-hora-actual"
-id="timeline-posicion">
---:--
-</span>
-
+<span class="timeline-hora-actual" id="timeline-posicion">--:--</span>
 <span id="timeline-fin">--</span>
-
 </div>
-
 </div>
 
 <div class="opacidad">
-
 <div class="opacidad-cabecera">
 <span>Opacidad radar</span>
 <span id="opacidad-valor">82 %</span>
 </div>
-
-<input
-type="range"
-id="opacidad-slider"
-min="10"
-max="100"
-value="82"
-step="1"
-aria-label="Opacidad radar">
-
+<input type="range" id="opacidad-slider" min="10" max="100" value="82" step="1" aria-label="Opacidad radar">
 </div>
 
 </section>
