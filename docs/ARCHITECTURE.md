@@ -8,32 +8,40 @@ MeteoArchidona es una SPA (Single Page Application) modular que monitorea condic
 
 ```
 meteoarchidona/
-├── componentes/          # Componentes HTML reutilizables
-│   ├── cabecera.html
-│   ├── navbar.html
-│   ├── footer.html
-│   └── ...
+├── componentes/          # Fragmentos HTML compartidos
+│   ├── cabecera.html     # Cabecera y navegación
+│   ├── footer.html       # Pie de página
+│   └── tarjeta-estacion.html  # Plantilla de ficha de estación
 ├── css/
-│   └── estilos.css       # Estilos globales (3168 líneas)
+│   ├── estilos.min.css   # Estilos comunes del sitio
+│   ├── pie.css           # Pie de página (común)
+│   └── <pagina>.css      # Estilos propios de cada página
 ├── js/                   # JavaScript modular
-│   ├── app.js            # Aplicación principal (2674 líneas)
-│   ├── cargador.js       # Carga de componentes
+│   ├── app.min.js        # Aplicación principal (portada)
+│   ├── rutas.js          # Secciones del sitio (navegación)
+│   ├── pagina.js         # Arranque común: cabecera, pie, reloj
+│   ├── cargador.js       # Carga de componentes en la portada
 │   ├── estaciones.js     # Configuración de estaciones
 │   ├── utils.js          # Funciones genéricas
-│   ├── ui.js             # Interfaz, navegación, reloj
+│   ├── ui.js             # Reloj y navegación entre paneles
 │   ├── viento.js         # Cálculos de viento
-│   └── lluvia.js         # Lógica de lluvia visual
-├── pages/                # Páginas de la aplicación
-│   ├── index.html        # Dashboard principal
+│   ├── lluvia.js         # Lógica de lluvia visual
+│   ├── validation.js     # Validación de datos de la API
+│   ├── performance.js    # Caché de API y Service Worker
+│   └── <pagina>.js       # Código propio de cada página
+├── pages/                # Páginas de sección
 │   ├── info.html         # Información del proyecto
 │   ├── prediccion.html   # Predicción
 │   ├── en-vivo.html      # Cámaras en vivo
-│   └── observaciones.html # Radar interactivo
-├── visores/
-│   └── radar.html        # Visor de radar (Leaflet)
-├── assets/               # Recursos (imágenes, fuentes)
+│   ├── observaciones.html  # Radar interactivo
+│   └── home.html         # Plantilla base para páginas nuevas
+├── assets/               # Recursos (imágenes)
+├── datos/                # GeoJSON de localidades
+├── tests/                # Suites de tests
 ├── docs/                 # Documentación
-├── index.html            # Redirección a pages/index.html
+├── index.html            # Portada (Actualidad)
+├── servidor.py           # Servidor de desarrollo sin caché
+├── sw.js                 # Service Worker
 └── .htaccess             # Configuración Apache
 ```
 
@@ -48,8 +56,9 @@ Funciones genéricas reutilizables:
 ### `ui.js`
 Gestión de interfaz y navegación:
 - Reloj: `actualizarReloj()`, `inicializarReloj()`
-- Navegación: `activarPanel()`, `panelDesdeRuta()`, `inicializarNavegacion()`
-- History API para URLs limpias (sin #)
+- Navegación: `activarPanel()`, `inicializarNavegacion()`
+- Rutas: `hashDesdePanel()`, `panelDesdeHash()`
+- Secciones válidas: `panelesValidos()`, `panelPorDefecto()`, leídas de `rutas.js`
 
 ### `viento.js`
 Lógica de viento:
@@ -63,7 +72,7 @@ Lógica de lluvia visual:
 - Clasificación: `nivelLluviaDesdeTasa()`, `obtenerIconoLluvia()`
 - Capas: `aplicarNivelACapa()`, `actualizarSistemaLluvia()`
 
-### `app.js`
+### `app.min.js`
 Orquestación principal:
 - Importa todos los módulos
 - Gestiona cargas de datos
@@ -76,7 +85,7 @@ Orquestación principal:
    ↓
 2. Carga componentes HTML
    ↓
-3. iniciarAplicacion() en app.js
+3. iniciarAplicacion() en app.min.js
    ↓
 4. Carga datos de API
    ↓
@@ -89,13 +98,16 @@ Orquestación principal:
 
 ## Routing
 
-**Antes**: URLs con hash (`/#actualidad`, `/#prediccion`)
-**Ahora**: URLs limpias (`/actualidad`, `/prediccion`)
+La navegación entre paneles va por hash: `/#actualidad`, `/#prediccion`.
 
-Implementado con History API:
-- `window.history.pushState()` para navegar
-- `popstate` event para botón atrás
-- `.htaccess` rewrite para SPA
+Se probó con rutas limpias (`/prediccion`) mediante `pushState`, pero
+al recargar el navegador pedía una página que no existe y se rompían
+los enlaces relativos de la página. Con hash no hace falta que el
+servidor sepa nada de las secciones.
+
+- `history.replaceState()` al cambiar de panel
+- `popstate` para el botón atrás
+- Las secciones válidas salen de `js/rutas.js`
 
 ## Capas de Lluvia
 
