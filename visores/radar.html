@@ -17,8 +17,6 @@
 .estado-punto{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(240,165,0,.45)}.estado.correcto .estado-punto{background:var(--green);box-shadow:0 0 12px rgba(34,197,94,.55)}.estado.error .estado-punto{background:var(--red);box-shadow:0 0 12px rgba(239,68,68,.55)}
 .instante{text-align:right;font-family:"JetBrains Mono",monospace}.instante-hora{color:var(--accent);font-size:17px;font-weight:600}.instante-fecha{margin-top:2px;color:var(--muted);font-size:8px}
 .mapa-zona{position:relative;min-width:0;min-height:0;overflow:hidden;background:#091521}#mapa-radar{position:absolute;inset:0;width:100%;height:100%;background:#091521}
-
-/* Leaflet esencial */
 .leaflet-container{position:relative;overflow:hidden;outline:0;background:#091521;font-family:"Sora",sans-serif}
 .leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
 .leaflet-map-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}
@@ -34,18 +32,11 @@
 .leaflet-control-attribution{padding:3px 6px;background:rgba(4,12,19,.78);color:#a9bac8;font-size:7px}.leaflet-control-attribution a{color:#d1e8f6}
 .leaflet-control-scale-line{padding:2px 5px 1px;border:2px solid rgba(255,255,255,.78);border-top:none;background:rgba(5,15,23,.70);color:#fff;font-size:8px;line-height:1.1;white-space:nowrap}
 .leaflet-tooltip{position:absolute;padding:4px 7px;border:1px solid rgba(255,255,255,.18);border-radius:5px;background:rgba(5,16,26,.92);color:#fff;box-shadow:none;font-size:8px;white-space:nowrap;pointer-events:none;user-select:none}.leaflet-tooltip::before{display:none}
-
-/* Localidades */
 .leaflet-tooltip.etiqueta-localidad{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;text-shadow:none;-webkit-text-stroke:0;letter-spacing:.005em}
 .leaflet-tooltip.etiqueta-capital{color:var(--buganvilla);font-size:15px;font-weight:800;text-transform:uppercase}
 .leaflet-tooltip.etiqueta-ciudad,.leaflet-tooltip.etiqueta-cabecera{color:var(--buganvilla);font-size:14px;font-weight:800}
-.leaflet-tooltip.etiqueta-municipio{color:#111;font-size:11px;font-weight:700}
-.leaflet-tooltip.etiqueta-pedania{color:#111;font-size:9px;font-weight:700}
-.leaflet-tooltip.etiqueta-estacion{color:#111;font-size:10px;font-weight:700}
-.leaflet-tooltip.etiqueta-radar{padding:0;border:0;background:transparent;box-shadow:none;color:#fff;font-family:"JetBrains Mono",monospace;font-size:8px;font-weight:700;text-shadow:none;-webkit-text-stroke:.5px #000}
-.etiqueta-anillo-radar{display:flex;justify-content:center;align-items:center;background:transparent;border:0}.etiqueta-anillo-radar span{display:inline-block;padding:2px 4px;border:1px solid #111;border-radius:4px;background:rgba(255,255,255,.9);color:#111;font-family:"JetBrains Mono",monospace;font-size:7px;font-weight:700;white-space:nowrap}
-
-.leyenda{position:absolute;z-index:800;left:14px;bottom:14px;max-width:250px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:rgba(5,14,23,.88);backdrop-filter:blur(8px);pointer-events:none}
+.leaflet-tooltip.etiqueta-municipio{color:#111;font-size:11px;font-weight:700}.leaflet-tooltip.etiqueta-pedania{color:#111;font-size:9px;font-weight:700}.leaflet-tooltip.etiqueta-estacion{color:#111;font-size:10px;font-weight:700}
+.leyenda{position:absolute;z-index:800;left:14px;bottom:14px;max-width:285px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:rgba(5,14,23,.88);backdrop-filter:blur(8px);pointer-events:none}
 .leyenda-titulo{color:var(--cyan);font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.leyenda-texto{margin-top:4px;color:#d0dce6;font-size:8px;line-height:1.45}
 .controles{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(100px,150px);align-items:center;gap:12px;padding:10px 12px;border-top:1px solid var(--border);background:#091521}
 .botones{display:flex;gap:5px}.boton{display:grid;place-items:center;width:34px;height:32px;padding:0;border:1px solid var(--border);border-radius:6px;background:#102337;color:#e9f5ff;cursor:pointer}.boton:hover{border-color:var(--blue)}.boton-principal{color:var(--cyan);border-color:rgba(54,213,255,.35)}
@@ -56,29 +47,19 @@
 .datos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--border);background:#0b1723}.dato{min-width:0;padding:9px 11px;border-right:1px solid var(--border)}.dato:last-child{border-right:0}
 .dato-label{color:var(--muted);font-size:7px;text-transform:uppercase}.dato-valor{margin-top:3px;overflow:hidden;color:var(--text);font-family:"JetBrains Mono",monospace;font-size:9px;text-overflow:ellipsis;white-space:nowrap}
 .mensaje{display:none;position:absolute;z-index:1200;left:50%;top:50%;max-width:80%;transform:translate(-50%,-50%);padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:rgba(5,13,21,.94);color:var(--muted);font-size:9px;text-align:center}.mensaje.visible{display:block}.mensaje.error{color:#faa;border-color:rgba(239,68,68,.45)}
-@media(max-width:700px){.visor-cabecera{min-height:62px;padding:9px 10px}.visor-titulo-principal{font-size:12px}.visor-titulo-secundario{font-size:7px}.visor-derecha{gap:8px}.estado{font-size:7px}.instante-hora{font-size:14px}.controles{grid-template-columns:auto minmax(0,1fr);gap:8px;padding:8px}.opacidad{grid-column:1/-1}.datos{grid-template-columns:repeat(2,minmax(0,1fr))}.dato:nth-child(2n){border-right:0}.dato:nth-child(-n+2){border-bottom:1px solid var(--border)}.leyenda{left:10px;bottom:10px;max-width:205px}}
+@media(max-width:700px){.visor-cabecera{min-height:62px;padding:9px 10px}.visor-titulo-principal{font-size:12px}.visor-titulo-secundario{font-size:7px}.visor-derecha{gap:8px}.estado{font-size:7px}.instante-hora{font-size:14px}.controles{grid-template-columns:auto minmax(0,1fr);gap:8px;padding:8px}.opacidad{grid-column:1/-1}.datos{grid-template-columns:repeat(2,minmax(0,1fr))}.dato:nth-child(2n){border-right:0}.dato:nth-child(-n+2){border-bottom:1px solid var(--border)}.leyenda{left:10px;bottom:10px;max-width:230px}}
 </style>
 </head>
 <body>
 <main class="visor">
-
 <header class="visor-cabecera">
-<div class="visor-titulo">
-<div class="visor-titulo-principal">Visor regional · AHR + SE</div>
-<div class="visor-titulo-secundario">Málaga operativo · Sevilla preparado para incorporación</div>
-</div>
-<div class="visor-derecha">
-<div class="estado" id="estado"><span class="estado-punto"></span><span id="estado-texto">Cargando</span></div>
-<div class="instante"><div class="instante-hora" id="instante-hora">--:--</div><div class="instante-fecha" id="instante-fecha">--</div></div>
-</div>
+<div class="visor-titulo"><div class="visor-titulo-principal">Visor radar regional · AHR + SE + AL + CR</div><div class="visor-titulo-secundario">Málaga · Sevilla · Almería-Níjar · Ciudad Real-Almagro</div></div>
+<div class="visor-derecha"><div class="estado" id="estado"><span class="estado-punto"></span><span id="estado-texto">Cargando</span></div><div class="instante"><div class="instante-hora" id="instante-hora">--:--</div><div class="instante-fecha" id="instante-fecha">--</div></div></div>
 </header>
 
 <section class="mapa-zona">
 <div id="mapa-radar" aria-label="Mapa regional de radares MeteoArchidona"></div>
-<aside class="leyenda">
-<div class="leyenda-titulo">Cobertura regional</div>
-<div class="leyenda-texto">AHR · Málaga y SE · Sevilla. Anillos adaptativos de medida y alcance nominal de radar de 240 km en vista regional.</div>
-</aside>
+<aside class="leyenda"><div class="leyenda-titulo">Composición radar regional</div><div class="leyenda-texto">AHR · Málaga · SE · Sevilla · AL · Níjar · CR · Almagro. Cada imagen conserva sus límites geográficos originales y se superpone directamente sobre el mapa.</div></aside>
 <div class="mensaje" id="mensaje"></div>
 </section>
 
@@ -87,129 +68,50 @@
 <button type="button" class="boton" id="anterior" title="Fotograma anterior">◀</button>
 <button type="button" class="boton boton-principal" id="reproducir" title="Reproducir">▶</button>
 <button type="button" class="boton" id="siguiente" title="Fotograma siguiente">▶|</button>
-<button type="button" class="boton" id="recargar" title="Recargar timeline">↻</button>
+<button type="button" class="boton" id="recargar" title="Recargar timelines">↻</button>
 </div>
-<div class="timeline">
-<input type="range" id="timeline-slider" min="0" max="0" value="0" step="1" aria-label="Timeline radar">
-<div class="timeline-textos"><span id="timeline-inicio">--</span><span class="timeline-hora-actual" id="timeline-posicion">--:--</span><span id="timeline-fin">--</span></div>
-</div>
-<div class="opacidad">
-<div class="opacidad-cabecera"><span>Opacidad radar</span><span id="opacidad-valor">82 %</span></div>
-<input type="range" id="opacidad-slider" min="10" max="100" value="82" step="1" aria-label="Opacidad radar">
-</div>
+<div class="timeline"><input type="range" id="timeline-slider" min="0" max="0" value="0" step="1" aria-label="Timeline radar regional"><div class="timeline-textos"><span id="timeline-inicio">--</span><span class="timeline-hora-actual" id="timeline-posicion">--:--</span><span id="timeline-fin">--</span></div></div>
+<div class="opacidad"><div class="opacidad-cabecera"><span>Opacidad radar</span><span id="opacidad-valor">82 %</span></div><input type="range" id="opacidad-slider" min="10" max="100" value="82" step="1" aria-label="Opacidad radar"></div>
 </section>
 
 <footer class="datos">
-<div class="dato"><div class="dato-label">Fotogramas AHR</div><div class="dato-valor" id="dato-fotogramas">--</div></div>
-<div class="dato"><div class="dato-label">Radares</div><div class="dato-valor">AHR · SE</div></div>
+<div class="dato"><div class="dato-label">Fotogramas regionales</div><div class="dato-valor" id="dato-fotogramas">--</div></div>
+<div class="dato"><div class="dato-label">Radares disponibles</div><div class="dato-valor" id="dato-radares">--</div></div>
 <div class="dato"><div class="dato-label">Localidades</div><div class="dato-valor" id="dato-localidades">--</div></div>
-<div class="dato"><div class="dato-label">Escala anillos</div><div class="dato-valor" id="dato-cobertura">--</div></div>
+<div class="dato"><div class="dato-label">Capas en instante</div><div class="dato-valor" id="dato-capas">--</div></div>
 </footer>
-
 </main>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const API_BASE="https://api-meteoarchidona.onrender.com";
-const RADAR_ACTIVO="AHR",PRODUCTO="PPI";
+const API_BASE="https://api-meteoarchidona.onrender.com",PRODUCTO="PPI";
+const RADARES=["AHR","SE","AL","CR"];
 const URL_LOCALIDADES=new URL("../datos/localidades-radar.geojson",window.location.href).href;
-const RADAR_AHR=[36.6133333,-4.6591667],RADAR_SE=[37.6875,-6.3344444];
-const ENCUADRE_REGIONAL=[[35.6,-7.2],[38.6,-3.1]];
-const ALCANCE_NOMINAL_KM=240;
+const ENCUADRE_REGIONAL=[[35.4,-7.5],[39.35,-1.7]];
 
-let mapa=null,capaRadar=null,capaAnillos=null,capaLocalidades=null;
-let localidades=[],fotogramas=[],indice=0,reproduciendo=false,temporizador=null,opacidad=.82;
+let mapa=null,capaLocalidades=null,localidades=[],timelines={},indicesPorRadar={},timelineRegional=[];
+let capasRadar=Object.fromEntries(RADARES.map(c=>[c,null]));
+let indice=0,reproduciendo=false,temporizador=null,opacidad=.82;
 
 function elemento(id){return document.getElementById(id)}
 function texto(id,v){const n=elemento(id);if(n)n.textContent=v}
 function fechaValida(v){const f=new Date(v);return Number.isNaN(f.getTime())?null:f}
+function marcaTemporal(v){const n=Date.parse(v);return Number.isFinite(n)?n:null}
 function hora(v){const f=fechaValida(v);return f?f.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}):"--:--"}
 function fecha(v){const f=fechaValida(v);return f?f.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"}):"--"}
-function urlAbsoluta(u){if(!u)return null;if(/^https?:\/\//.test(u))return u;if(u.startsWith("/"))return API_BASE+u;return `${API_BASE}/${u}`}
+function urlAbsoluta(u){if(!u)return null;if(/^https?:\/\//.test(u))return u;if(u.startsWith("/"))return API_BASE+u;return`${API_BASE}/${u}`}
 function establecerEstado(m,t=null){const e=elemento("estado");texto("estado-texto",m);e.classList.remove("correcto","error");if(t)e.classList.add(t)}
 function mostrarMensaje(m,error=false){const n=elemento("mensaje");if(!m){n.classList.remove("visible","error");n.textContent="";return}n.textContent=m;n.classList.toggle("error",error);n.classList.add("visible")}
-
-function puntoDestino(o,km,rumbo){
-const r=6371.0088,lat1=o[0]*Math.PI/180,lon1=o[1]*Math.PI/180,b=rumbo*Math.PI/180,d=km/r;
-const lat2=Math.asin(Math.sin(lat1)*Math.cos(d)+Math.cos(lat1)*Math.sin(d)*Math.cos(b));
-const lon2=lon1+Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(lat1),Math.cos(d)-Math.sin(lat1)*Math.sin(lat2));
-return[lat2*180/Math.PI,lon2*180/Math.PI];
-}
+function bounds(f){if(!f||!f.limites)return null;const o=Number(f.limites.oeste),s=Number(f.limites.sur),e=Number(f.limites.este),n=Number(f.limites.norte);return[o,s,e,n].every(Number.isFinite)?[[s,o],[n,e]]:null}
 
 function crearPanelesMapa(){
-for(const[n,z]of[["radarPane",350],["anillosPane",520],["localidadesPane",620],["radaresPane",630]]){
-mapa.createPane(n);mapa.getPane(n).style.zIndex=z;mapa.getPane(n).style.pointerEvents="none";
-}
+for(const[n,z]of[["radarPane",350],["localidadesPane",620]]){mapa.createPane(n);mapa.getPane(n).style.zIndex=z;mapa.getPane(n).style.pointerEvents="none"}
 mapa.getPane("tooltipPane").style.zIndex="700";
 }
 
-/* Anillos adaptativos */
-function escalaAnillosParaZoom(z){
-if(z<=6)return[25,50,75,100];
-if(z===7)return[20,40,60,80];
-if(z===8)return[15,30,45,60];
-if(z===9)return[10,20,30,40];
-if(z===10)return[5,10,15,20];
-return[2,4,6,8,10];
-}
-
-function iconoEtiquetaAnillo(codigo,km){
-return L.divIcon({className:"etiqueta-anillo-radar",html:`<span>${codigo} · ${km} km</span>`,iconSize:[72,18],iconAnchor:[36,9]});
-}
-
-function crearAnillosRadar(codigo,centro,rumbo,distancias){
-distancias.forEach(km=>{
-capaAnillos.addLayer(L.circle(centro,{pane:"anillosPane",radius:km*1000,fill:false,color:"#111",weight:2.4,opacity:.92,interactive:false}));
-capaAnillos.addLayer(L.marker(puntoDestino(centro,km,rumbo),{pane:"anillosPane",icon:iconoEtiquetaAnillo(codigo,km),interactive:false,keyboard:false}));
-});
-}
-
-/* El alcance nominal NO recorta la imagen radar.
-   Es únicamente una referencia cartográfica. */
-function crearAlcanceNominal(centro){
-capaAnillos.addLayer(L.circle(centro,{
-pane:"anillosPane",
-radius:ALCANCE_NOMINAL_KM*1000,
-fill:false,
-color:"#111",
-weight:1.4,
-opacity:.58,
-dashArray:"9 8",
-interactive:false
-}));
-}
-
-function renderizarAnillos(){
-if(!mapa||!capaAnillos)return;
-capaAnillos.clearLayers();
-
-const zoom=mapa.getZoom();
-const d=escalaAnillosParaZoom(zoom);
-
-crearAnillosRadar("AHR",RADAR_AHR,90,d);
-crearAnillosRadar("SE",RADAR_SE,270,d);
-
-/* Visible en vistas regionales, incluida la vista inicial móvil. */
-if(zoom<=7){
-crearAlcanceNominal(RADAR_AHR);
-crearAlcanceNominal(RADAR_SE);
-}
-
-texto("dato-cobertura",d.join(" · ")+" km");
-}
-
-function crearCentroRadar(codigo,nombre,centro,direccion){
-L.circleMarker(centro,{pane:"radaresPane",radius:5,color:"#fff",weight:2,fill:true,fillColor:"#111",fillOpacity:1,opacity:1,interactive:false})
-.addTo(mapa).bindTooltip(`${codigo} · ${nombre}`,{permanent:true,direction:direccion,offset:direccion==="top"?[0,-8]:[0,8],className:"etiqueta-radar"});
-}
-
-/* Localidades */
 function prioridadLocalidad(f){const v=Number(f?.properties?.prioridad);return Number.isFinite(v)?v:99}
 function zoomMinimoLocalidad(f){const v=Number(f?.properties?.zoom_min);return Number.isFinite(v)?v:5}
-function claseEtiquetaLocalidad(tipo){
-const p=["capital","ciudad","municipio","pedania","cabecera","estacion"];
-return `etiqueta-localidad etiqueta-${p.includes(tipo)?tipo:"municipio"}`;
-}
+function claseEtiquetaLocalidad(tipo){const p=["capital","ciudad","municipio","pedania","cabecera","estacion"];return`etiqueta-localidad etiqueta-${p.includes(tipo)?tipo:"municipio"}`}
 function estiloPuntoLocalidad(p){
 if(p.tipo==="capital")return{radius:4.5,color:"#fff",weight:1.5,fill:true,fillColor:"#a8325a",fillOpacity:1,opacity:1};
 if(p.tipo==="ciudad"||p.tipo==="cabecera")return{radius:4,color:"#fff",weight:1.4,fill:true,fillColor:"#a8325a",fillOpacity:1,opacity:1};
@@ -218,182 +120,133 @@ if(p.tipo==="pedania")return{radius:2.8,color:"#fff",weight:1,fill:true,fillColo
 return{radius:3,color:"#fff",weight:1,fill:true,fillColor:"#111",fillOpacity:1,opacity:1};
 }
 function direccionEtiquetaLocalidad(p){return p.tipo==="estacion"?"right":"top"}
-function offsetEtiquetaLocalidad(p){if(p.tipo==="estacion")return[7,0];return[0,-7]}
-function nombreEtiquetaLocalidad(p){return p.nombre||""}
+function offsetEtiquetaLocalidad(p){return p.tipo==="estacion"?[7,0]:[0,-7]}
 
 function renderizarLocalidades(){
-if(!mapa||!capaLocalidades)return;
-capaLocalidades.clearLayers();
-const zoom=mapa.getZoom();
-const visibles=localidades.filter(f=>zoom>=zoomMinimoLocalidad(f)).sort((a,b)=>prioridadLocalidad(b)-prioridadLocalidad(a));
-
+if(!mapa||!capaLocalidades)return;capaLocalidades.clearLayers();
+const zoom=mapa.getZoom(),visibles=localidades.filter(f=>zoom>=zoomMinimoLocalidad(f)).sort((a,b)=>prioridadLocalidad(b)-prioridadLocalidad(a));
 visibles.forEach(f=>{
-const g=f.geometry,p=f.properties||{};
-if(!g||g.type!=="Point"||!Array.isArray(g.coordinates)||g.coordinates.length<2)return;
-const lon=Number(g.coordinates[0]),lat=Number(g.coordinates[1]);
-if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
+const g=f.geometry,p=f.properties||{};if(!g||g.type!=="Point"||!Array.isArray(g.coordinates)||g.coordinates.length<2)return;
+const lon=Number(g.coordinates[0]),lat=Number(g.coordinates[1]);if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
 const punto=L.circleMarker([lat,lon],{pane:"localidadesPane",...estiloPuntoLocalidad(p),interactive:false});
-punto.bindTooltip(nombreEtiquetaLocalidad(p),{permanent:true,direction:direccionEtiquetaLocalidad(p),offset:offsetEtiquetaLocalidad(p),className:claseEtiquetaLocalidad(p.tipo)});
+punto.bindTooltip(p.nombre||"",{permanent:true,direction:direccionEtiquetaLocalidad(p),offset:offsetEtiquetaLocalidad(p),className:claseEtiquetaLocalidad(p.tipo)});
 capaLocalidades.addLayer(punto);
 });
 }
 
 async function cargarLocalidades(){
 try{
-const r=await fetch(URL_LOCALIDADES,{cache:"no-store"});
-if(!r.ok)throw new Error(`HTTP ${r.status}`);
-const d=await r.json();
-if(d.type!=="FeatureCollection"||!Array.isArray(d.features))throw new Error("GeoJSON de localidades inválido.");
-localidades=d.features.filter(f=>f&&f.geometry&&f.geometry.type==="Point");
-texto("dato-localidades",localidades.length);
-renderizarLocalidades();
-}catch(e){
-console.error("No se ha podido cargar la capa de localidades:",e);
-localidades=[];texto("dato-localidades","No disponible");
-}
+const r=await fetch(URL_LOCALIDADES,{cache:"no-store"});if(!r.ok)throw new Error(`HTTP ${r.status}`);
+const d=await r.json();if(d.type!=="FeatureCollection"||!Array.isArray(d.features))throw new Error("GeoJSON de localidades inválido.");
+localidades=d.features.filter(f=>f&&f.geometry&&f.geometry.type==="Point");texto("dato-localidades",localidades.length);renderizarLocalidades();
+}catch(e){console.error("No se ha podido cargar la capa de localidades:",e);localidades=[];texto("dato-localidades","No disponible")}
 }
 
-/* Mapa */
 function crearMapa(){
-if(typeof L==="undefined"){
-establecerEstado("Leaflet no disponible","error");
-mostrarMensaje("No se ha podido cargar la librería del mapa.",true);
-return;
-}
-
-mapa=L.map("mapa-radar",{center:[37.1,-5.15],zoom:7,minZoom:5,maxZoom:16,zoomControl:true});
+if(typeof L==="undefined"){establecerEstado("Leaflet no disponible","error");mostrarMensaje("No se ha podido cargar la librería del mapa.",true);return}
+mapa=L.map("mapa-radar",{center:[37.3,-4.6],zoom:7,minZoom:5,maxZoom:16,zoomControl:true});
 crearPanelesMapa();
-
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"}).addTo(mapa);
-
-capaAnillos=L.layerGroup().addTo(mapa);
 capaLocalidades=L.layerGroup().addTo(mapa);
-
-crearCentroRadar("AHR","Málaga",RADAR_AHR,"bottom");
-crearCentroRadar("SE","Cañada Alta",RADAR_SE,"top");
-
 L.control.scale({metric:true,imperial:false,position:"bottomright"}).addTo(mapa);
 mapa.fitBounds(ENCUADRE_REGIONAL,{padding:[4,4]});
-
-mapa.on("zoomend",()=>{
-renderizarAnillos();
-renderizarLocalidades();
-});
-
-renderizarAnillos();
+mapa.on("zoomend",renderizarLocalidades);
 reajustarMapa();
 }
 
-function reajustarMapa(){
-if(!mapa)return;
-requestAnimationFrame(()=>mapa.invalidateSize({animate:false,pan:false}));
-}
-
+function reajustarMapa(){if(mapa)requestAnimationFrame(()=>mapa.invalidateSize({animate:false,pan:false}))}
 window.addEventListener("resize",reajustarMapa);
 window.addEventListener("orientationchange",()=>setTimeout(reajustarMapa,150));
 if(window.visualViewport)window.visualViewport.addEventListener("resize",reajustarMapa);
 
-/* Radar */
-function bounds(f){
-if(!f||!f.limites)return null;
-const o=Number(f.limites.oeste),s=Number(f.limites.sur),e=Number(f.limites.este),n=Number(f.limites.norte);
-if(![o,s,e,n].every(Number.isFinite))return null;
-return[[s,o],[n,e]];
+function limpiarCapasRadar(){
+RADARES.forEach(c=>{if(capasRadar[c]){mapa.removeLayer(capasRadar[c]);capasRadar[c]=null}});
 }
 
 function actualizarControles(){
-const a=fotogramas[indice];
+const a=timelineRegional[indice];
 texto("timeline-posicion",a?hora(a.observado_en):"--:--");
-if(fotogramas.length){
-texto("timeline-inicio",hora(fotogramas[0].observado_en));
-texto("timeline-fin",hora(fotogramas[fotogramas.length-1].observado_en));
-}else{
-texto("timeline-inicio","--");texto("timeline-fin","--");
-}
-const s=elemento("timeline-slider");s.max=Math.max(0,fotogramas.length-1);s.value=indice;
+if(timelineRegional.length){texto("timeline-inicio",hora(timelineRegional[0].observado_en));texto("timeline-fin",hora(timelineRegional[timelineRegional.length-1].observado_en))}
+else{texto("timeline-inicio","--");texto("timeline-fin","--")}
+const s=elemento("timeline-slider");s.max=Math.max(0,timelineRegional.length-1);s.value=indice;
 }
 
 function mostrarFotograma(nuevoIndice){
-if(!mapa||!fotogramas.length)return;
+if(!mapa||!timelineRegional.length)return;
+indice=Math.max(0,Math.min(nuevoIndice,timelineRegional.length-1));
+const paso=timelineRegional[indice];let visibles=0;
 
-indice=Math.max(0,Math.min(nuevoIndice,fotogramas.length-1));
+RADARES.forEach(codigo=>{
+if(capasRadar[codigo]){mapa.removeLayer(capasRadar[codigo]);capasRadar[codigo]=null}
+const f=indicesPorRadar[codigo]?.get(paso.ts);if(!f)return;
+const b=bounds(f),u=urlAbsoluta(f.url_imagen);if(!b||!u)return;
+const url=u+(u.includes("?")?"&":"?")+"_="+encodeURIComponent(`${paso.ts}-${codigo}`);
+capasRadar[codigo]=L.imageOverlay(url,b,{pane:"radarPane",opacity:opacidad,interactive:false}).addTo(mapa);
+visibles++;
+});
 
-const f=fotogramas[indice],b=bounds(f),u=urlAbsoluta(f.url_imagen);
-
-if(!b||!u){
-mostrarMensaje("El fotograma no contiene bounds o URL válidos.",true);
-return;
+texto("instante-hora",hora(paso.observado_en));
+texto("instante-fecha",fecha(paso.observado_en));
+texto("dato-capas",`${visibles} / 4`);
+actualizarControles();mostrarMensaje("");reajustarMapa();
 }
 
-if(capaRadar){
-mapa.removeLayer(capaRadar);
-capaRadar=null;
+function prepararTimelineRegional(){
+indicesPorRadar={};
+RADARES.forEach(codigo=>{
+indicesPorRadar[codigo]=new Map();
+(timelines[codigo]||[]).forEach(f=>{const ts=marcaTemporal(f.observado_en);if(ts!==null)indicesPorRadar[codigo].set(ts,f)});
+});
+const maestro=(timelines.AHR&&timelines.AHR.length)?"AHR":RADARES.find(c=>(timelines[c]||[]).length);
+if(!maestro){timelineRegional=[];return}
+timelineRegional=timelines[maestro].map(f=>({observado_en:f.observado_en,ts:marcaTemporal(f.observado_en)})).filter(x=>x.ts!==null);
 }
 
-const url=u+(u.includes("?")?"&":"?")+"_="+encodeURIComponent(f.observado_en);
-
-/* Reflectividad completa dentro de los bounds originales del producto.
-   Los anillos no actúan como máscara ni realizan ningún recorte. */
-capaRadar=L.imageOverlay(url,b,{
-pane:"radarPane",
-opacity:opacidad,
-interactive:false
-}).addTo(mapa);
-
-texto("instante-hora",hora(f.observado_en));
-texto("instante-fecha",fecha(f.observado_en));
-
-actualizarControles();
-mostrarMensaje("");
-reajustarMapa();
+async function cargarTimelineRadar(codigo){
+const r=await fetch(`${API_BASE}/radar/${codigo}/timeline?producto=${PRODUCTO}`,{cache:"no-store"});
+if(!r.ok)throw new Error(`HTTP ${r.status}`);
+const d=await r.json();if(!Array.isArray(d.fotogramas))throw new Error("Timeline inválida.");
+return d.fotogramas.slice().sort((a,b)=>marcaTemporal(a.observado_en)-marcaTemporal(b.observado_en));
 }
 
 async function cargarTimeline(){
-detener();
-establecerEstado("Cargando");
-mostrarMensaje("Cargando timeline AHR...");
-
+detener();establecerEstado("Cargando");mostrarMensaje("Cargando AHR · SE · AL · CR...");
 try{
-const r=await fetch(`${API_BASE}/radar/${RADAR_ACTIVO}/timeline?producto=${PRODUCTO}`,{cache:"no-store"});
-if(!r.ok)throw new Error(`HTTP ${r.status}`);
+const resultados=await Promise.all(RADARES.map(async codigo=>{
+try{return{codigo,fotogramas:await cargarTimelineRadar(codigo),error:null}}
+catch(error){console.error(`Radar ${codigo}:`,error);return{codigo,fotogramas:[],error}}
+}));
 
-const d=await r.json();
+timelines={};resultados.forEach(r=>timelines[r.codigo]=r.fotogramas);
+const disponibles=RADARES.filter(c=>(timelines[c]||[]).length);
 
-if(!Array.isArray(d.fotogramas)){
-throw new Error("Timeline inválida.");
-}
+if(!disponibles.length)throw new Error("No hay ninguna timeline radar disponible.");
 
-fotogramas=d.fotogramas.slice().sort((a,b)=>new Date(a.observado_en)-new Date(b.observado_en));
+prepararTimelineRegional();
+if(!timelineRegional.length)throw new Error("No se ha podido construir la timeline regional.");
 
-if(!fotogramas.length){
-throw new Error("No existen fotogramas.");
-}
+indice=timelineRegional.length-1;
+texto("dato-fotogramas",timelineRegional.length);
+texto("dato-radares",`${disponibles.length} / 4`);
 
-indice=fotogramas.length-1;
-texto("dato-fotogramas",fotogramas.length);
-establecerEstado("AHR operativo","correcto");
+if(disponibles.length===4)establecerEstado("4 radares operativos","correcto");
+else establecerEstado(`${disponibles.length}/4 radares`);
+
 mostrarFotograma(indice);
-
 }catch(e){
-console.error(e);
-fotogramas=[];
-establecerEstado("No disponible","error");
-mostrarMensaje("No se ha podido cargar AHR: "+e.message,true);
+console.error(e);timelines={};indicesPorRadar={};timelineRegional=[];limpiarCapasRadar();
+texto("dato-fotogramas","--");texto("dato-radares","0 / 4");texto("dato-capas","0 / 4");
+establecerEstado("No disponible","error");mostrarMensaje("No se ha podido cargar el radar regional: "+e.message,true);
 }
 }
 
-/* Animación */
 function actualizarBotonPlay(){elemento("reproducir").textContent=reproduciendo?"Ⅱ":"▶"}
 function detener(){if(temporizador){clearInterval(temporizador);temporizador=null}reproduciendo=false;actualizarBotonPlay()}
 function reproducir(){
-if(fotogramas.length<2)return;
-detener();
-reproduciendo=true;
-actualizarBotonPlay();
-temporizador=setInterval(()=>mostrarFotograma(indice+1>=fotogramas.length?0:indice+1),850);
+if(timelineRegional.length<2)return;detener();reproduciendo=true;actualizarBotonPlay();
+temporizador=setInterval(()=>mostrarFotograma(indice+1>=timelineRegional.length?0:indice+1),850);
 }
 
-/* Eventos */
 function instalarEventos(){
 elemento("anterior").addEventListener("click",()=>{detener();mostrarFotograma(indice-1)});
 elemento("siguiente").addEventListener("click",()=>{detener();mostrarFotograma(indice+1)});
@@ -401,27 +254,17 @@ elemento("reproducir").addEventListener("click",()=>reproduciendo?detener():repr
 elemento("recargar").addEventListener("click",cargarTimeline);
 elemento("timeline-slider").addEventListener("input",e=>{detener();mostrarFotograma(Number(e.target.value))});
 elemento("opacidad-slider").addEventListener("input",e=>{
-opacidad=Number(e.target.value)/100;
-texto("opacidad-valor",`${e.target.value} %`);
-if(capaRadar)capaRadar.setOpacity(opacidad);
+opacidad=Number(e.target.value)/100;texto("opacidad-valor",`${e.target.value} %`);
+RADARES.forEach(c=>{if(capasRadar[c])capasRadar[c].setOpacity(opacidad)});
 });
 }
 
 function iniciar(){
-crearMapa();
-instalarEventos();
-requestAnimationFrame(()=>requestAnimationFrame(()=>{
-reajustarMapa();
-cargarLocalidades();
-cargarTimeline();
-}));
+crearMapa();instalarEventos();
+requestAnimationFrame(()=>requestAnimationFrame(()=>{reajustarMapa();cargarLocalidades();cargarTimeline()}));
 }
 
-if(document.readyState==="loading"){
-document.addEventListener("DOMContentLoaded",iniciar,{once:true});
-}else{
-iniciar();
-}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",iniciar,{once:true});else iniciar();
 </script>
 </body>
 </html>
