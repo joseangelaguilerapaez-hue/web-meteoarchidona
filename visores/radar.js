@@ -7,6 +7,7 @@ let mapa=null,capaLocalidades=null,localidades=[],timelines={},indicesPorRadar={
 let capasRadar=Object.fromEntries(RADARES.map(c=>[c,null]));
 let capasPendientes=Object.fromEntries(RADARES.map(c=>[c,null]));
 let indice=0,reproduciendo=false,temporizador=null,opacidad=.82,secuenciaVisualizacion=0;
+let radarActivo=true,tsCapasRadar=null;
 
 function elemento(id){return document.getElementById(id)}
 function texto(id,v){const n=elemento(id);if(n)n.textContent=v}
@@ -117,15 +118,51 @@ window.addEventListener("resize",reajustarMapa);
 window.addEventListener("orientationchange",()=>setTimeout(reajustarMapa,150));
 if(window.visualViewport)window.visualViewport.addEventListener("resize",reajustarMapa);
 
-function quitarCapa(capa){
- if(capa&&mapa&&mapa.hasLayer(capa))mapa.removeLayer(capa);
-}
+function quitarCapa(capa){if(capa&&mapa&&mapa.hasLayer(capa))mapa.removeLayer(capa)}
 
 function limpiarCapasRadar(){
  RADARES.forEach(codigo=>{
   quitarCapa(capasRadar[codigo]);quitarCapa(capasPendientes[codigo]);
   capasRadar[codigo]=null;capasPendientes[codigo]=null;
  });
+ tsCapasRadar=null;
+}
+
+function ocultarCapasRadar(){
+ RADARES.forEach(codigo=>{
+  quitarCapa(capasRadar[codigo]);quitarCapa(capasPendientes[codigo]);
+  capasPendientes[codigo]=null;
+ });
+}
+
+function contarCapasRadarDisponibles(){
+ return RADARES.reduce((n,codigo)=>n+(capasRadar[codigo]?1:0),0);
+}
+
+function actualizarSelectorRadar(){
+ const b=elemento("capa-radar");if(!b)return;
+ b.classList.toggle("activa",radarActivo);
+ b.setAttribute("aria-pressed",String(radarActivo));
+ const estado=b.querySelector(".selector-capa-estado");
+ if(estado)estado.textContent=radarActivo?"Activa":"Oculta";
+}
+
+function reponerCapasRadar(){
+ if(!mapa||!radarActivo)return 0;
+ let visibles=0;
+ RADARES.forEach(codigo=>{
+  const capa=capasRadar[codigo];
+  if(capa){
+   if(!mapa.hasLayer(capa))capa.addTo(mapa);
+   capa.setOpacity(opacidad);
+   visibles++;
+  }
+ });
+ texto("dato-capas",`${visibles} / 4`);
+ if(visibles===4)establecerEstado("4 radares operativos","correcto");
+ else if(visibles>0)establecerEstado(`${visibles}/4 capas cargadas`);
+ else establecerEstado("Radar sin capas");
+ return visibles;
 }
 
 function actualizarControles(){
@@ -141,18 +178,11 @@ function actualizarControles(){
  slider.max=Math.max(0,timelineRegional.length-1);slider.value=indice;
 }
 
-/* Espera al LOAD real de una imagen Leaflet. */
 function esperarCargaOverlay(overlay,timeout=15000){
  return new Promise((resolve,reject)=>{
   let terminado=false,timer=null;
-  const limpiar=()=>{
-   if(timer)clearTimeout(timer);
-   overlay.off("load",ok);overlay.off("error",error);
-  };
-  const cerrar=(fn,v)=>{
-   if(terminado)return;
-   terminado=true;limpiar();fn(v);
-  };
+  const limpiar=()=>{if(timer)clearTimeout(timer);overlay.off("load",ok);overlay.off("error",error)};
+  const cerrar=(fn,v)=>{if(terminado)return;terminado=true;limpiar();fn(v)};
   const ok=()=>cerrar(resolve,true);
   const error=()=>cerrar(reject,new Error("Error cargando imagen radar"));
   overlay.on("load",ok);overlay.on("error",error);
@@ -161,26 +191,23 @@ function esperarCargaOverlay(overlay,timeout=15000){
  });
 }
 
-/* Carga una imagen radar con reintento real. */
 async function cargarCapaRadar(codigo,fotograma,ts,secuencia,intentos=2){
  const limites=bounds(fotograma),urlBase=urlAbsoluta(fotograma?.url_imagen);
  if(!limites||!urlBase)return false;
-
  let ultimoError=null;
 
  for(let intento=1;intento<=intentos;intento++){
-  if(secuencia!==secuenciaVisualizacion)return false;
+  if(secuencia!==secuenciaVisualizacion||!radarActivo)return false;
 
   const url=urlBase+(urlBase.includes("?")?"&":"?")+
    "_="+encodeURIComponent(`${ts}-${codigo}-${intento}-${Date.now()}`);
-
   const overlay=L.imageOverlay(url,limites,{pane:"radarPane",opacity:opacidad,interactive:false});
   capasPendientes[codigo]=overlay;
 
   try{
    await esperarCargaOverlay(overlay);
 
-   if(secuencia!==secuenciaVisualizacion){
+   if(secuencia!==secuenciaVisualizacion||!radarActivo){
     quitarCapa(overlay);
     if(capasPendientes[codigo]===overlay)capasPendientes[codigo]=null;
     return false;
@@ -191,12 +218,9 @@ async function cargarCapaRadar(codigo,fotograma,ts,secuencia,intentos=2){
    return true;
 
   }catch(e){
-   ultimoError=e;
-   quitarCapa(overlay);
+   ultimoError=e;quitarCapa(overlay);
    if(capasPendientes[codigo]===overlay)capasPendientes[codigo]=null;
-
    console.warn(`Imagen ${codigo}: intento ${intento}/${intentos} fallido`,e);
-
    if(intento<intentos)await esperar(500*intento);
   }
  }
@@ -205,12 +229,6 @@ async function cargarCapaRadar(codigo,fotograma,ts,secuencia,intentos=2){
  return false;
 }
 
-/*
- * Cada instante se compone SECUENCIALMENTE:
- * AHR -> SE -> AL -> CR.
- * "Capas en instante" cuenta únicamente imágenes cuyo LOAD
- * ha terminado correctamente.
- */
 async function mostrarFotograma(nuevoIndice){
  if(!mapa||!timelineRegional.length)return;
 
@@ -218,46 +236,46 @@ async function mostrarFotograma(nuevoIndice){
  indice=Math.max(0,Math.min(nuevoIndice,timelineRegional.length-1));
  const paso=timelineRegional[indice];
 
- limpiarCapasRadar();
-
  texto("instante-hora",hora(paso.observado_en));
  texto("instante-fecha",fecha(paso.observado_en));
- texto("dato-capas","0 / 4");
  actualizarControles();
  mostrarMensaje("");
  reajustarMapa();
 
+ if(!radarActivo){
+  texto("dato-capas","0 / 4");
+  establecerEstado("Radar oculto");
+  return;
+ }
+
+ limpiarCapasRadar();
+ texto("dato-capas","0 / 4");
+
  let visibles=0;
 
  for(let i=0;i<RADARES.length;i++){
-  if(secuencia!==secuenciaVisualizacion)return;
+  if(secuencia!==secuenciaVisualizacion||!radarActivo)return;
 
   const codigo=RADARES[i];
   const fotograma=indicesPorRadar[codigo]?.get(paso.ts);
 
   if(fotograma){
    const cargada=await cargarCapaRadar(codigo,fotograma,paso.ts,secuencia,2);
-
-   if(secuencia!==secuenciaVisualizacion)return;
-
-   if(cargada){
-    visibles++;
-    texto("dato-capas",`${visibles} / 4`);
-   }
+   if(secuencia!==secuenciaVisualizacion||!radarActivo)return;
+   if(cargada){visibles++;texto("dato-capas",`${visibles} / 4`)}
   }
 
   if(i<RADARES.length-1)await esperar(120);
  }
 
- if(secuencia!==secuenciaVisualizacion)return;
+ if(secuencia!==secuenciaVisualizacion||!radarActivo)return;
 
+ tsCapasRadar=paso.ts;
  texto("dato-capas",`${visibles} / 4`);
 
- if(visibles===4){
-  establecerEstado("4 radares operativos","correcto");
- }else if(visibles>0){
-  establecerEstado(`${visibles}/4 capas cargadas`);
- }else{
+ if(visibles===4)establecerEstado("4 radares operativos","correcto");
+ else if(visibles>0)establecerEstado(`${visibles}/4 capas cargadas`);
+ else{
   establecerEstado("Imágenes no disponibles","error");
   mostrarMensaje("No se ha podido cargar ninguna imagen radar para este instante.",true);
  }
@@ -277,7 +295,6 @@ function prepararTimelineRegional(){
  });
 
  const maestro=timelines.AHR&&timelines.AHR.length?"AHR":RADARES.find(c=>(timelines[c]||[]).length);
-
  if(!maestro){timelineRegional=[];return}
 
  timelineRegional=timelines[maestro]
@@ -285,7 +302,6 @@ function prepararTimelineRegional(){
   .filter(p=>p.ts!==null);
 }
 
-/* Timelines: carga secuencial + dos intentos. */
 async function cargarTimelineRadar(codigo,intentos=2){
  let ultimoError=null;
 
@@ -293,7 +309,6 @@ async function cargarTimelineRadar(codigo,intentos=2){
   try{
    const url=`${API_BASE}/radar/${codigo}/timeline?producto=${PRODUCTO}&_=${Date.now()}-${intento}`;
    const r=await fetch(url,{cache:"no-store"});
-
    if(!r.ok)throw new Error(`HTTP ${r.status}`);
 
    const d=await r.json();
@@ -315,6 +330,8 @@ async function cargarTimelineRadar(codigo,intentos=2){
 
 async function cargarTimeline(){
  detener();
+ ++secuenciaVisualizacion;
+ tsCapasRadar=null;
  establecerEstado("Cargando");
  mostrarMensaje("Cargando radares...");
 
@@ -339,21 +356,20 @@ async function cargarTimeline(){
   resultados.forEach(r=>timelines[r.codigo]=r.fotogramas);
 
   const disponibles=RADARES.filter(c=>(timelines[c]||[]).length);
-
   if(!disponibles.length)throw new Error("No hay ninguna timeline radar disponible.");
 
   prepararTimelineRegional();
-
   if(!timelineRegional.length)throw new Error("No se ha podido construir la timeline regional.");
 
   indice=timelineRegional.length-1;
-
   texto("dato-fotogramas",timelineRegional.length);
   texto("dato-radares",`${disponibles.length} / 4`);
   texto("dato-capas","0 / 4");
 
-  if(disponibles.length===4)establecerEstado("4 radares disponibles","correcto");
-  else establecerEstado(`${disponibles.length}/4 radares`);
+  if(radarActivo){
+   if(disponibles.length===4)establecerEstado("4 radares disponibles","correcto");
+   else establecerEstado(`${disponibles.length}/4 radares`);
+  }else establecerEstado("Radar oculto");
 
   await mostrarFotograma(indice);
 
@@ -384,10 +400,6 @@ function detener(){
  actualizarBotonPlay();
 }
 
-/*
- * La animación ya no avanza cada 850 ms a ciegas.
- * Primero termina de cargar el instante completo y después espera.
- */
 function reproducir(){
  if(timelineRegional.length<2)return;
 
@@ -397,14 +409,37 @@ function reproducir(){
 
  const avanzar=async()=>{
   if(!reproduciendo)return;
-
   const siguiente=indice+1>=timelineRegional.length?0:indice+1;
   await mostrarFotograma(siguiente);
-
   if(reproduciendo)temporizador=setTimeout(avanzar,850);
  };
 
  temporizador=setTimeout(avanzar,850);
+}
+
+function alternarRadar(){
+ radarActivo=!radarActivo;
+ actualizarSelectorRadar();
+
+ if(!radarActivo){
+  ++secuenciaVisualizacion;
+  detener();
+  ocultarCapasRadar();
+  texto("dato-capas","0 / 4");
+  establecerEstado("Radar oculto");
+  mostrarMensaje("");
+  reajustarMapa();
+  return;
+ }
+
+ const paso=timelineRegional[indice];
+ if(paso&&tsCapasRadar===paso.ts&&contarCapasRadarDisponibles()>0){
+  reponerCapasRadar();
+  reajustarMapa();
+  return;
+ }
+
+ if(paso)void mostrarFotograma(indice);
 }
 
 function instalarEventos(){
@@ -435,10 +470,14 @@ function instalarEventos(){
    if(capasPendientes[codigo])capasPendientes[codigo].setOpacity(opacidad);
   });
  });
+
+ const selectorRadar=elemento("capa-radar");
+ if(selectorRadar)selectorRadar.addEventListener("click",alternarRadar);
 }
 
 function iniciar(){
  crearMapa();
+ actualizarSelectorRadar();
  instalarEventos();
 
  requestAnimationFrame(()=>requestAnimationFrame(()=>{
