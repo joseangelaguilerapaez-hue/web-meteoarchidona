@@ -627,15 +627,8 @@ button{font:inherit}
 </div>
 
 <div class="camaras">
-<div class="camara">
-<div class="camara-estado">🟢 En línea</div>
-<div class="camara-nombre">El Silo · Vista Sur</div>
-</div>
-
-<div class="camara">
-<div class="camara-estado">🟢 En línea</div>
-<div class="camara-nombre">Los Llanos · Vista Norte</div>
-</div>
+<div class="camara"><div class="camara-estado">🟢 En línea</div><div class="camara-nombre">El Silo · Vista Sur</div></div>
+<div class="camara"><div class="camara-estado">🟢 En línea</div><div class="camara-nombre">Los Llanos · Vista Norte</div></div>
 </div>
 </article>
 
@@ -643,35 +636,12 @@ button{font:inherit}
 
 <section class="tarjeta accesos">
 
-<a href="#historicos" class="acceso">
-<div class="acceso-icono">📊</div>
-<div><div class="acceso-titulo">HISTÓRICOS</div><div class="acceso-subtitulo">Datos por fecha</div></div>
-</a>
-
-<a href="#graficos" class="acceso">
-<div class="acceso-icono">📈</div>
-<div><div class="acceso-titulo">GRÁFICOS</div><div class="acceso-subtitulo">Evolución detallada</div></div>
-</a>
-
-<a href="#en-vivo" class="acceso" data-panel="en-vivo">
-<div class="acceso-icono">📷</div>
-<div><div class="acceso-titulo">CÁMARAS</div><div class="acceso-subtitulo">Imágenes en directo</div></div>
-</a>
-
-<a href="#estaciones" class="acceso">
-<div class="acceso-icono">📡</div>
-<div><div class="acceso-titulo">ESTACIONES</div><div class="acceso-subtitulo">Información técnica</div></div>
-</a>
-
-<a href="#alertas" class="acceso">
-<div class="acceso-icono">⚠️</div>
-<div><div class="acceso-titulo">ALERTAS</div><div class="acceso-subtitulo">Avisos meteorológicos</div></div>
-</a>
-
-<a href="#estado" class="acceso">
-<div class="acceso-icono">✅</div>
-<div><div class="acceso-titulo">ESTADO SISTEMA</div><div class="acceso-subtitulo">Datos automáticos</div></div>
-</a>
+<a href="#historicos" class="acceso"><div class="acceso-icono">📊</div><div><div class="acceso-titulo">HISTÓRICOS</div><div class="acceso-subtitulo">Datos por fecha</div></div></a>
+<a href="#graficos" class="acceso"><div class="acceso-icono">📈</div><div><div class="acceso-titulo">GRÁFICOS</div><div class="acceso-subtitulo">Evolución detallada</div></div></a>
+<a href="#en-vivo" class="acceso" data-panel="en-vivo"><div class="acceso-icono">📷</div><div><div class="acceso-titulo">CÁMARAS</div><div class="acceso-subtitulo">Imágenes en directo</div></div></a>
+<a href="#estaciones" class="acceso"><div class="acceso-icono">📡</div><div><div class="acceso-titulo">ESTACIONES</div><div class="acceso-subtitulo">Información técnica</div></div></a>
+<a href="#alertas" class="acceso"><div class="acceso-icono">⚠️</div><div><div class="acceso-titulo">ALERTAS</div><div class="acceso-subtitulo">Avisos meteorológicos</div></div></a>
+<a href="#estado" class="acceso"><div class="acceso-icono">✅</div><div><div class="acceso-titulo">ESTADO SISTEMA</div><div class="acceso-subtitulo">Datos automáticos</div></div></a>
 
 </section>
 
@@ -696,7 +666,10 @@ button{font:inherit}
 </section>
 
 <section class="panel-aplicacion panel-en-vivo" id="panel-observaciones" data-panel-contenido="observaciones" aria-hidden="true">
-<iframe src="observaciones.html?v=20260909-index1" title="MeteoArchidona · Observaciones" loading="eager"></iframe>
+<iframe
+data-src="observaciones.html?v=20260909-lazy1"
+title="MeteoArchidona · Observaciones"
+></iframe>
 </section>
 
 <section class="panel-aplicacion panel-en-vivo" id="panel-en-vivo" data-panel-contenido="en-vivo" aria-hidden="true">
@@ -720,18 +693,20 @@ LOS_LLANOS:{direccion:null,velocidad:0}
 function obtenerElemento(id){return document.getElementById(id)}
 function asignarTexto(id,texto){const e=obtenerElemento(id);if(e)e.textContent=texto}
 function asignarHtml(id,html){const e=obtenerElemento(id);if(e)e.innerHTML=html}
+
 function formatearNumero(valor,decimales=1){
 if(valor===null||valor===undefined||Number.isNaN(Number(valor)))return"--";
 return Number(valor).toFixed(decimales);
 }
-function limitar(valor,minimo,maximo){return Math.min(maximo,Math.max(minimo,valor))}
+
+function limitar(valor,minimo,maximo){
+return Math.min(maximo,Math.max(minimo,valor));
+}
 
 function actualizarReloj(){
 const ahora=new Date();
-const fecha=ahora.toLocaleDateString("es-ES");
-const hora=ahora.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
-asignarTexto("fecha-actual",fecha);
-asignarTexto("reloj-actual",hora);
+asignarTexto("fecha-actual",ahora.toLocaleDateString("es-ES"));
+asignarTexto("reloj-actual",ahora.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}));
 }
 
 function normalizarGrados(grados){
@@ -759,7 +734,6 @@ return;
 
 asignarTexto(`direccion-${codigo}`,obtenerDireccionCardinal(valor));
 asignarTexto(`grados-${codigo}`,`${Math.round(valor)}°`);
-
 if(veleta)veleta.style.setProperty("--angulo",`${valor}deg`);
 }
 
@@ -769,15 +743,10 @@ const velocidad=Number.isFinite(Number(velocidadKmh))?Math.max(0,Number(velocida
 
 if(direccion===null){
 return{
-destino:180,
-vectorX:0,
-vectorY:1,
-componenteSur:true,
-inicioX:0,
-finalX:0,
+destino:180,vectorX:0,vectorY:1,componenteSur:true,
+inicioX:0,finalX:0,
 recorridoY:Math.max(alto*1.45,500),
-angulo:0,
-fuerza:0
+angulo:0,fuerza:0
 };
 }
 
@@ -837,7 +806,10 @@ if(dominante===null){dominante=codigo;return}
 const nivelCodigo=obtenerNivelEfectivo(codigo);
 const nivelDominante=obtenerNivelEfectivo(dominante);
 
-if(nivelCodigo>nivelDominante){dominante=codigo;return}
+if(nivelCodigo>nivelDominante){
+dominante=codigo;
+return;
+}
 
 if(nivelCodigo===nivelDominante){
 const velocidadCodigo=Number(vientoEstacion[codigo].velocidad)||0;
@@ -920,8 +892,14 @@ const capaLluvia=obtenerElemento(idLluvia);
 const capaCristal=obtenerElemento(idCristal);
 
 aplicarNivelACapa(capaLluvia,nivel);
+
 const movimiento=aplicarVientoACapa(capaLluvia,viento);
-configurarCapaCristal(capaCristal,nivel,movimiento);
+
+configurarCapaCristal(
+capaCristal,
+nivel,
+movimiento
+);
 }
 
 function actualizarSistemaLluvia(){
@@ -941,11 +919,17 @@ nivelGlobalAutomatico=Math.max(nivelSilo,nivelLlanos);
 }
 
 if(activos.length===1){
-if(activos[0]==="EL_SILO")nivelLocalSilo=nivelSilo;
-else nivelLocalLlanos=nivelLlanos;
+if(activos[0]==="EL_SILO"){
+nivelLocalSilo=nivelSilo;
+}else{
+nivelLocalLlanos=nivelLlanos;
+}
 }
 
-const nivelGlobal=Math.max(nivelGlobalAutomatico,lluviaSimulada.GLOBAL||0);
+const nivelGlobal=Math.max(
+nivelGlobalAutomatico,
+lluviaSimulada.GLOBAL||0
+);
 
 actualizarCapaMeteorologica(
 "capa-lluvia-EL_SILO",
@@ -993,7 +977,9 @@ elemento.classList.add("visible");
 function avanzarSimulacion(origen){
 const actual=lluviaSimulada[origen]||0;
 const siguiente=actual<=0||actual>=4?1:actual+1;
+
 lluviaSimulada[origen]=siguiente;
+
 actualizarIndicadorSimulacion(origen);
 actualizarSistemaLluvia();
 }
@@ -1010,6 +996,7 @@ if(!capa)return;
 
 for(let indice=0;indice<totalGotas;indice+=1){
 const gota=document.createElement("span");
+
 gota.className="gota-lluvia";
 
 const x=Math.random()*116-8;
@@ -1037,7 +1024,10 @@ inicializarGotasEnCapa("capa-lluvia-LOS_LLANOS",160);
 function obtenerMaximoGotasCristal(nivel,esGlobal){
 const limitesGlobales={1:4,2:7,3:11,4:16};
 const limitesLocales={1:3,2:5,3:8,4:11};
-return esGlobal?(limitesGlobales[nivel]||0):(limitesLocales[nivel]||0);
+
+return esGlobal
+?(limitesGlobales[nivel]||0)
+:(limitesLocales[nivel]||0);
 }
 
 function obtenerProbabilidadGotaCristal(nivel){
@@ -1054,6 +1044,7 @@ const gotasActuales=capa.querySelectorAll(".gota-cristal").length;
 if(gotasActuales>=maximo)return;
 
 const gota=document.createElement("span");
+
 gota.className="gota-cristal";
 
 const x=4+Math.random()*92;
@@ -1076,11 +1067,19 @@ gota.style.setProperty("--deslizar",`${deslizar.toFixed(1)}px`);
 gota.style.setProperty("--desvio-x",`${desvioX.toFixed(1)}px`);
 
 capa.appendChild(gota);
-window.setTimeout(()=>gota.remove(),vida+150);
+
+window.setTimeout(
+()=>gota.remove(),
+vida+150
+);
 }
 
 function generarGotasCristalActivas(){
-if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+if(
+window.matchMedia(
+"(prefers-reduced-motion: reduce)"
+).matches
+)return;
 
 const capas=document.querySelectorAll(
 ".capa-gotas-cristal.activa, .capa-gotas-cristal-ficha.activa"
@@ -1088,15 +1087,28 @@ const capas=document.querySelectorAll(
 
 capas.forEach(capa=>{
 const nivel=Number(capa.dataset.nivel)||0;
+
 if(nivel<=0)return;
 
-const probabilidad=obtenerProbabilidadGotaCristal(nivel);
+const probabilidad=
+obtenerProbabilidadGotaCristal(nivel);
+
 if(Math.random()>probabilidad)return;
 
-const cantidad=nivel>=4&&Math.random()>.48?2:1;
+const cantidad=
+nivel>=4&&Math.random()>.48
+?2
+:1;
 
-for(let indice=0;indice<cantidad;indice+=1){
-crearGotaCristal(capa,nivel);
+for(
+let indice=0;
+indice<cantidad;
+indice+=1
+){
+crearGotaCristal(
+capa,
+nivel
+);
 }
 });
 }
@@ -1115,31 +1127,55 @@ temporizadorLargo=null;
 }
 }
 
-elemento.addEventListener("pointerdown",evento=>{
+elemento.addEventListener(
+"pointerdown",
+evento=>{
 pulsacionLarga=false;
 inicioX=evento.clientX;
 inicioY=evento.clientY;
+
 cancelarTemporizador();
 
-temporizadorLargo=setTimeout(()=>{
+temporizadorLargo=setTimeout(
+()=>{
 pulsacionLarga=true;
 ultimoToque=0;
 desactivarSimulacion(origen);
-},700);
-});
+},
+700
+);
+}
+);
 
-elemento.addEventListener("pointermove",evento=>{
-const desplazamientoX=Math.abs(evento.clientX-inicioX);
-const desplazamientoY=Math.abs(evento.clientY-inicioY);
-if(desplazamientoX>12||desplazamientoY>12)cancelarTemporizador();
-});
+elemento.addEventListener(
+"pointermove",
+evento=>{
+const desplazamientoX=
+Math.abs(evento.clientX-inicioX);
 
-elemento.addEventListener("pointercancel",()=>{
+const desplazamientoY=
+Math.abs(evento.clientY-inicioY);
+
+if(
+desplazamientoX>12||
+desplazamientoY>12
+){
+cancelarTemporizador();
+}
+}
+);
+
+elemento.addEventListener(
+"pointercancel",
+()=>{
 cancelarTemporizador();
 pulsacionLarga=false;
-});
+}
+);
 
-elemento.addEventListener("pointerup",evento=>{
+elemento.addEventListener(
+"pointerup",
+evento=>{
 cancelarTemporizador();
 
 if(pulsacionLarga){
@@ -1149,7 +1185,10 @@ return;
 
 const ahora=Date.now();
 
-if(ultimoToque>0&&ahora-ultimoToque<450){
+if(
+ultimoToque>0&&
+ahora-ultimoToque<450
+){
 ultimoToque=0;
 avanzarSimulacion(origen);
 evento.preventDefault();
@@ -1157,11 +1196,17 @@ return;
 }
 
 ultimoToque=ahora;
-});
+}
+);
 
-elemento.addEventListener("contextmenu",evento=>evento.preventDefault());
+elemento.addEventListener(
+"contextmenu",
+evento=>evento.preventDefault()
+);
 
-elemento.addEventListener("keydown",evento=>{
+elemento.addEventListener(
+"keydown",
+evento=>{
 if(evento.key==="Enter"){
 evento.preventDefault();
 avanzarSimulacion(origen);
@@ -1171,45 +1216,94 @@ if(evento.key==="Escape"){
 evento.preventDefault();
 desactivarSimulacion(origen);
 }
-});
+}
+);
 }
 
 function configurarControlesLluvia(){
-document.querySelectorAll("[data-lluvia-control]").forEach(control=>{
+document
+.querySelectorAll("[data-lluvia-control]")
+.forEach(control=>{
 const origen=control.dataset.lluviaControl;
-if(origen)configurarControlLluvia(control,origen);
+
+if(origen){
+configurarControlLluvia(
+control,
+origen
+);
+}
 });
 }
 
 function configurarPatrocinios(){
-document.querySelectorAll(".patrocinio-estacion-control").forEach(control=>{
-control.addEventListener("click",()=>{
-const codigo=control.dataset.patrocinio;
-const patrocinio=obtenerElemento(`patrocinio-${codigo}`);
+document
+.querySelectorAll(".patrocinio-estacion-control")
+.forEach(control=>{
+control.addEventListener(
+"click",
+()=>{
+const codigo=
+control.dataset.patrocinio;
+
+const patrocinio=
+obtenerElemento(
+`patrocinio-${codigo}`
+);
+
 if(!patrocinio)return;
 
-const pausado=patrocinio.classList.toggle("pausado");
+const pausado=
+patrocinio.classList.toggle(
+"pausado"
+);
 
-control.textContent=pausado?"▶":"Ⅱ";
-control.setAttribute("aria-pressed",String(pausado));
+control.textContent=
+pausado
+?"▶"
+:"Ⅱ";
+
+control.setAttribute(
+"aria-pressed",
+String(pausado)
+);
+
 control.setAttribute(
 "aria-label",
-pausado?"Reanudar patrocinio":"Pausar patrocinio"
+pausado
+?"Reanudar patrocinio"
+:"Pausar patrocinio"
 );
-});
+}
+);
 });
 }
 
 function mostrarLluvia(codigo,datos){
-const lluviaDia=formatearNumero(datos.lluvia_dia_mm);
-const lluviaMes=formatearNumero(datos.lluvia_mes_mm);
-const lluviaAnio=formatearNumero(datos.lluvia_anio_agricola_mm);
-const tasaLluvia=formatearNumero(datos.tasa_lluvia_mm_h);
-const nivelReal=nivelLluviaDesdeTasa(datos.tasa_lluvia_mm_h);
+const lluviaDia=
+formatearNumero(datos.lluvia_dia_mm);
+
+const lluviaMes=
+formatearNumero(datos.lluvia_mes_mm);
+
+const lluviaAnio=
+formatearNumero(
+datos.lluvia_anio_agricola_mm
+);
+
+const tasaLluvia=
+formatearNumero(
+datos.tasa_lluvia_mm_h
+);
+
+const nivelReal=
+nivelLluviaDesdeTasa(
+datos.tasa_lluvia_mm_h
+);
 
 lluviaReal[codigo]=nivelReal;
 
-const icono=obtenerIconoLluvia(nivelReal);
+const icono=
+obtenerIconoLluvia(nivelReal);
 
 asignarTexto(`lluvia-tasa-${codigo}`,`${tasaLluvia} mm/h`);
 asignarTexto(`lluvia-dia-${codigo}`,`${lluviaDia} mm`);
@@ -1225,7 +1319,10 @@ actualizarSistemaLluvia();
 }
 
 function mostrarDatosEstacion(codigo,datos){
-asignarTexto(`nombre-${codigo}`,datos.nombre_estacion);
+asignarTexto(
+`nombre-${codigo}`,
+datos.nombre_estacion
+);
 
 asignarHtml(
 `temperatura-${codigo}`,
@@ -1283,21 +1380,39 @@ asignarTexto(
 );
 
 vientoEstacion[codigo]={
-direccion:normalizarGrados(datos.direccion_viento_grados),
-velocidad:Number.isFinite(Number(datos.viento_actual_kmh))
+direccion:
+normalizarGrados(
+datos.direccion_viento_grados
+),
+velocidad:
+Number.isFinite(
+Number(
+datos.viento_actual_kmh
+)
+)
 ?Number(datos.viento_actual_kmh)
 :0
 };
 
-actualizarVeleta(codigo,datos.direccion_viento_grados);
+actualizarVeleta(
+codigo,
+datos.direccion_viento_grados
+);
 
-const estado=obtenerElemento(`estado-${codigo}`);
+const estado=
+obtenerElemento(
+`estado-${codigo}`
+);
 
 if(estado){
-estado.innerHTML='<span class="punto"></span>En línea';
+estado.innerHTML=
+'<span class="punto"></span>En línea';
 }
 
-mostrarLluvia(codigo,datos);
+mostrarLluvia(
+codigo,
+datos
+);
 }
 
 function mostrarErrorLluvia(codigo){
@@ -1317,7 +1432,10 @@ actualizarSistemaLluvia();
 }
 
 function mostrarErrorEstacion(codigo){
-vientoEstacion[codigo]={direccion:null,velocidad:0};
+vientoEstacion[codigo]={
+direccion:null,
+velocidad:0
+};
 
 asignarTexto(`estado-${codigo}`,"Sin datos");
 asignarHtml(`temperatura-${codigo}`,"--<sup>°C</sup>");
@@ -1336,27 +1454,47 @@ asignarTexto(`viento-2m-${codigo}`,"-- km/h");
 asignarTexto(`viento-10m-${codigo}`,"-- km/h");
 asignarTexto(`racha-${codigo}`,"-- km/h");
 
-actualizarVeleta(codigo,null);
-mostrarErrorLluvia(codigo);
+actualizarVeleta(
+codigo,
+null
+);
+
+mostrarErrorLluvia(
+codigo
+);
 }
 
 async function cargarEstacion(codigo){
 try{
-const respuesta=await fetch(
+const respuesta=
+await fetch(
 `${API_BASE}/condiciones-actuales/${codigo}`,
 {cache:"no-store"}
 );
 
 if(!respuesta.ok){
-throw new Error(`HTTP ${respuesta.status}`);
+throw new Error(
+`HTTP ${respuesta.status}`
+);
 }
 
-const datos=await respuesta.json();
-mostrarDatosEstacion(codigo,datos);
+const datos=
+await respuesta.json();
+
+mostrarDatosEstacion(
+codigo,
+datos
+);
 
 }catch(error){
-console.error(`Error cargando ${codigo}:`,error);
-mostrarErrorEstacion(codigo);
+console.error(
+`Error cargando ${codigo}:`,
+error
+);
+
+mostrarErrorEstacion(
+codigo
+);
 }
 }
 
@@ -1367,51 +1505,156 @@ cargarEstacion("LOS_LLANOS")
 ]);
 }
 
+function cargarPanelObservaciones(){
+const iframe=
+document.querySelector(
+"#panel-observaciones iframe"
+);
+
+if(!iframe)return;
+
+if(
+iframe.getAttribute("src")
+){
+return;
+}
+
+const destino=
+iframe.dataset.src;
+
+if(!destino)return;
+
+/*
+El panel ya está visible.
+Esperamos al siguiente fotograma del navegador antes
+de crear el documento hijo para que Leaflet conozca
+el tamaño real disponible desde su inicialización.
+*/
+requestAnimationFrame(
+()=>{
+requestAnimationFrame(
+()=>{
+if(
+!iframe.getAttribute("src")
+){
+iframe.setAttribute(
+"src",
+destino
+);
+}
+}
+);
+}
+);
+}
+
 function activarPanel(nombrePanel,actualizarHash=true){
-const paneles=document.querySelectorAll("[data-panel-contenido]");
-const enlaces=document.querySelectorAll(".navegacion [data-panel]");
+const paneles=
+document.querySelectorAll(
+"[data-panel-contenido]"
+);
+
+const enlaces=
+document.querySelectorAll(
+".navegacion [data-panel]"
+);
+
 let panelEncontrado=false;
 
-paneles.forEach(panel=>{
-const activo=panel.dataset.panelContenido===nombrePanel;
+paneles.forEach(
+panel=>{
+const activo=
+panel.dataset.panelContenido===
+nombrePanel;
 
-panel.classList.toggle("activo",activo);
-panel.setAttribute("aria-hidden",String(!activo));
+panel.classList.toggle(
+"activo",
+activo
+);
 
-if(activo)panelEncontrado=true;
-});
+panel.setAttribute(
+"aria-hidden",
+String(!activo)
+);
+
+if(activo){
+panelEncontrado=true;
+}
+}
+);
 
 if(!panelEncontrado)return;
 
-enlaces.forEach(enlace=>{
-const activo=enlace.dataset.panel===nombrePanel;
+/*
+Observaciones se carga únicamente después
+de que su panel haya pasado a display:block.
+*/
+if(
+nombrePanel==="observaciones"
+){
+cargarPanelObservaciones();
+}
 
-enlace.classList.toggle("activo",activo);
+enlaces.forEach(
+enlace=>{
+const activo=
+enlace.dataset.panel===
+nombrePanel;
+
+enlace.classList.toggle(
+"activo",
+activo
+);
 
 if(activo){
-enlace.setAttribute("aria-current","page");
+enlace.setAttribute(
+"aria-current",
+"page"
+);
 }else{
-enlace.removeAttribute("aria-current");
+enlace.removeAttribute(
+"aria-current"
+);
 }
-});
+}
+);
 
 if(actualizarHash){
-history.replaceState(null,"",`#${nombrePanel}`);
+history.replaceState(
+null,
+"",
+`#${nombrePanel}`
+);
 }
 
-window.scrollTo({top:0,behavior:"auto"});
+window.scrollTo({
+top:0,
+behavior:"auto"
+});
 }
 
 function configurarPaneles(){
-document.querySelectorAll("[data-panel]").forEach(control=>{
-control.addEventListener("click",evento=>{
-const nombrePanel=control.dataset.panel;
+document
+.querySelectorAll("[data-panel]")
+.forEach(
+control=>{
+control.addEventListener(
+"click",
+evento=>{
+const nombrePanel=
+control.dataset.panel;
+
 if(!nombrePanel)return;
 
 evento.preventDefault();
-activarPanel(nombrePanel);
-});
-});
+
+activarPanel(
+nombrePanel
+);
+}
+);
+}
+);
 
 const hashInicial=
 window.location.hash
@@ -1425,36 +1668,67 @@ const panelesValidos=[
 "en-vivo"
 ];
 
-if(panelesValidos.includes(hashInicial)){
-activarPanel(hashInicial,false);
+if(
+panelesValidos.includes(
+hashInicial
+)
+){
+activarPanel(
+hashInicial,
+false
+);
 }else{
-activarPanel("actualidad",false);
+activarPanel(
+"actualidad",
+false
+);
 }
 
-window.addEventListener("hashchange",()=>{
+window.addEventListener(
+"hashchange",
+()=>{
 const nombrePanel=
 window.location.hash
 .replace("#","")
 .trim();
 
-if(panelesValidos.includes(nombrePanel)){
-activarPanel(nombrePanel,false);
+if(
+panelesValidos.includes(
+nombrePanel
+)
+){
+activarPanel(
+nombrePanel,
+false
+);
 }
-});
+}
+);
 }
 
 let temporizadorResize=null;
 
-window.addEventListener("resize",()=>{
-if(temporizadorResize!==null){
-clearTimeout(temporizadorResize);
+window.addEventListener(
+"resize",
+()=>{
+if(
+temporizadorResize!==null
+){
+clearTimeout(
+temporizadorResize
+);
 }
 
-temporizadorResize=setTimeout(()=>{
+temporizadorResize=
+setTimeout(
+()=>{
 actualizarSistemaLluvia();
 temporizadorResize=null;
-},180);
-});
+},
+180
+);
+}
+);
 
 inicializarLluviaVisual();
 configurarControlesLluvia();
