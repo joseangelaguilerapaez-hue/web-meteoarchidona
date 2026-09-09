@@ -1,3 +1,204 @@
-<style>
-...
-</style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>MeteoArchidona · Visor radar regional</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="./radar.css">
+</head>
+
+<body>
+
+<main class="visor">
+
+<header class="visor-cabecera">
+
+<div class="visor-titulo">
+<div class="visor-titulo-principal">
+Visor radar regional · AHR + SE + AL + CR
+</div>
+
+<div class="visor-titulo-secundario">
+Málaga · Sevilla · Almería-Níjar · Ciudad Real-Almagro
+</div>
+</div>
+
+<div class="visor-derecha">
+
+<div class="estado" id="estado">
+<span class="estado-punto"></span>
+<span id="estado-texto">Cargando</span>
+</div>
+
+<div class="instante">
+<div class="instante-hora" id="instante-hora">--:--</div>
+<div class="instante-fecha" id="instante-fecha">--</div>
+</div>
+
+</div>
+
+</header>
+
+<section class="mapa-zona">
+
+<div
+id="mapa-radar"
+aria-label="Mapa regional de radares MeteoArchidona">
+</div>
+
+<aside class="leyenda">
+
+<div class="leyenda-titulo">
+Composición radar regional
+</div>
+
+<div class="leyenda-texto">
+AHR · Málaga · SE · Sevilla · AL · Níjar · CR · Almagro.
+Cada imagen conserva sus límites geográficos originales y se
+superpone directamente sobre el mapa.
+</div>
+
+</aside>
+
+<div class="mensaje" id="mensaje"></div>
+
+</section>
+
+<section class="controles">
+
+<div class="botones">
+
+<button
+type="button"
+class="boton"
+id="anterior"
+title="Fotograma anterior">
+◀
+</button>
+
+<button
+type="button"
+class="boton boton-principal"
+id="reproducir"
+title="Reproducir">
+▶
+</button>
+
+<button
+type="button"
+class="boton"
+id="siguiente"
+title="Fotograma siguiente">
+▶|
+</button>
+
+<button
+type="button"
+class="boton"
+id="recargar"
+title="Recargar timelines">
+↻
+</button>
+
+</div>
+
+<div class="timeline">
+
+<input
+type="range"
+id="timeline-slider"
+min="0"
+max="0"
+value="0"
+step="1"
+aria-label="Timeline radar regional">
+
+<div class="timeline-textos">
+
+<span id="timeline-inicio">--</span>
+
+<span
+class="timeline-hora-actual"
+id="timeline-posicion">
+--:--
+</span>
+
+<span id="timeline-fin">--</span>
+
+</div>
+
+</div>
+
+<div class="opacidad">
+
+<div class="opacidad-cabecera">
+<span>Opacidad radar</span>
+<span id="opacidad-valor">82 %</span>
+</div>
+
+<input
+type="range"
+id="opacidad-slider"
+min="10"
+max="100"
+value="82"
+step="1"
+aria-label="Opacidad radar">
+
+</div>
+
+</section>
+
+<footer class="datos">
+
+<div class="dato">
+<div class="dato-label">
+Fotogramas regionales
+</div>
+<div class="dato-valor" id="dato-fotogramas">
+--
+</div>
+</div>
+
+<div class="dato">
+<div class="dato-label">
+Radares disponibles
+</div>
+<div class="dato-valor" id="dato-radares">
+--
+</div>
+</div>
+
+<div class="dato">
+<div class="dato-label">
+Localidades
+</div>
+<div class="dato-valor" id="dato-localidades">
+--
+</div>
+</div>
+
+<div class="dato">
+<div class="dato-label">
+Capas en instante
+</div>
+<div class="dato-valor" id="dato-capas">
+--
+</div>
+</div>
+
+</footer>
+
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="./radar.js?v=20260909-zoom8"></script>
+
+</body>
+</html>
