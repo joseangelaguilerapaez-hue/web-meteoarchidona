@@ -51,15 +51,6 @@ Ver [ARCHITECTURE.md](docs/ARCHITECTURE.md).
 npm run minify  # Minificar CSS/JS
 ```
 
-## API
-
-Endpoints: `https://api-meteoarchidona.onrender.com`
-
-- `GET /condiciones-actuales/:estacion` - Condiciones
-- `GET /radar/:zona/timeline` - Radar
-
-Ver [API.md](docs/API.md) para documentación completa.
-
 ## Testing
 
 ```bash
