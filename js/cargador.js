@@ -8,7 +8,7 @@ paneles estáticos, y solo entonces arranca la aplicación
 (window.iniciarAplicacion), que necesita que existan los
 elementos con id (reloj, veletas, enlaces de navegación...).
 
-app.min.js es un módulo, así que puede evaluarse antes o
+app.js es un módulo, así que puede evaluarse antes o
 después de que terminen estos fetch. Por eso se espera al
 evento "app-lista" si la función aún no está publicada.
 

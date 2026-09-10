@@ -9,16 +9,11 @@
     "check": "eslint js/ && prettier --check .",
     "test": "node tests/ejecutar-todos.js",
     "test:watch": "nodemon tests/ejecutar-todos.js",
-    "minify:css": "csso css/estilos.css -o css/estilos.min.css",
-    "minify:js": "terser js/app.js -o js/app.min.js && terser js/utils.js -o js/utils.min.js && terser js/validation.js -o js/validation.min.js",
-    "minify": "npm run minify:css && npm run minify:js",
     "lighthouse": "lighthouse https://localhost:8123 --view"
   },
   "devDependencies": {
-    "csso-cli": "^4.0.2",
     "eslint": "^9.0.0",
-    "prettier": "^3.0.0",
-    "terser": "^5.51.2"
+    "prettier": "^3.0.0"
   },
   "keywords": [
     "weather",

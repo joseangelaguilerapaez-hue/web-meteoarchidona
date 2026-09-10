@@ -45,16 +45,18 @@ Ver [ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 - [PERFORMANCE.md](docs/PERFORMANCE.md) - Optimizaciones y métricas
 - [OPTIMIZATION_CHECKLIST.md](docs/OPTIMIZATION_CHECKLIST.md) - Guía paso-a-paso
-- [MINIFICATION_RESULT.md](docs/MINIFICATION_RESULT.md) - Resultados minificación (40% reducción)
 
-```bash
-npm run minify  # Minificar CSS/JS
-```
+No hay paso de minificación: los ficheros del repositorio son los que
+se sirven, y `mod_deflate` (ver `.htaccess`) los comprime al enviarlos,
+que es de donde salía casi toda la ganancia. Antes había un
+`npm run minify` que leía `css/estilos.css` y `js/app.js`, ficheros que
+no existían: los editados a mano eran los `.min`, así que el comando
+habría borrado el código bueno.
 
 ## Testing
 
 ```bash
-npm test                # Ejecutar todas las suites (91 tests)
+npm test                # Ejecutar todas las suites (103 tests)
 npm run test:watch      # Modo watch (necesita nodemon)
 ```
 

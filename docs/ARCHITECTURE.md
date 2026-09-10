@@ -13,11 +13,11 @@ meteoarchidona/
 │   ├── footer.html       # Pie de página
 │   └── tarjeta-estacion.html  # Plantilla de ficha de estación
 ├── css/
-│   ├── estilos.min.css   # Estilos comunes del sitio
+│   ├── estilos.css        # Estilos comunes del sitio
 │   ├── pie.css           # Pie de página (común)
 │   └── <pagina>.css      # Estilos propios de cada página
 ├── js/                   # JavaScript modular
-│   ├── app.min.js        # Aplicación principal (portada)
+│   ├── app.js            # Aplicación principal (portada)
 │   ├── rutas.js          # Secciones del sitio (navegación)
 │   ├── pagina.js         # Arranque común: cabecera, pie, reloj
 │   ├── cargador.js       # Carga de componentes en la portada
@@ -72,7 +72,7 @@ Lógica de lluvia visual:
 - Clasificación: `nivelLluviaDesdeTasa()`, `obtenerIconoLluvia()`
 - Capas: `aplicarNivelACapa()`, `actualizarSistemaLluvia()`
 
-### `app.min.js`
+### `app.js`
 Orquestación principal:
 - Importa todos los módulos
 - Gestiona cargas de datos
@@ -85,7 +85,7 @@ Orquestación principal:
    ↓
 2. Carga componentes HTML
    ↓
-3. iniciarAplicacion() en app.min.js
+3. iniciarAplicacion() en app.js
    ↓
 4. Carga datos de API
    ↓
@@ -192,7 +192,7 @@ Tema: Dark mode con acentos de color (oro, cyan)
 
 ## Performance
 
-- CSS: Una sola carga, ~3KB minificado
+- CSS: Una sola carga, ~23KB sin comprimir (mod_deflate lo sirve comprimido)
 - JS: Módulos lazy-loaded según panel
 - API: Cache de 60 segundos
 - Imágenes: Optimizadas, WebP con fallback

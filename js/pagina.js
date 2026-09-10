@@ -16,7 +16,7 @@ pasando el id de la sección en js/rutas.js, o null si la página
 no figura ahí.
 
 El reloj lo lleva js/ui.js, que es el mismo que usa index.html
-a través de app.min.js. Se trae con import() dinámico para no
+a través de app.js. Se trae con import() dinámico para no
 tener dos reloj distintos que puedan acabar divergiendo.
 ============================================================
 */
