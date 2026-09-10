@@ -22,6 +22,7 @@ El puerto por defecto es 8123.
 """
 
 import sys
+import time
 import urllib.error
 import urllib.request
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
@@ -52,9 +53,13 @@ RAICES = ("/index.html", "/pages/", "/pages", "/pages/index.html")
 PREFIJO_API = "/api/"
 API_REMOTA = "https://api-meteoarchidona.onrender.com"
 
-# Render apaga los servicios gratuitos cuando no se usan y tardan un
-# rato largo en volver a arrancar.
+# Render apaga los servicios gratuitos cuando no se usan. La primera
+# petición después de un rato parado despierta el servicio y falla o
+# tarda muchísimo mientras arranca, así que se reintenta en vez de
+# devolver un 502 a la primera.
 ESPERA_API = 60
+INTENTOS_API = 3
+PAUSA_ENTRE_INTENTOS = 2
 
 
 class ManejadorSinCache(SimpleHTTPRequestHandler):
@@ -67,23 +72,56 @@ class ManejadorSinCache(SimpleHTTPRequestHandler):
     def _es_peticion_api(self):
         return self.path.startswith(PREFIJO_API)
 
+    def _pedir_a_api(self, destino):
+        """
+        Una consulta a la API. Devuelve (cuerpo, tipo, codigo) o lanza
+        la excepción para que decida quien llama si reintenta.
+        """
+        peticion = urllib.request.Request(destino, headers={"Accept": "application/json"})
+
+        with urllib.request.urlopen(peticion, timeout=ESPERA_API) as respuesta:
+            return (
+                respuesta.read(),
+                respuesta.headers.get("Content-Type", "application/json"),
+                respuesta.status,
+            )
+
     def _reenviar_a_api(self):
         """Pide el recurso a la API y devuelve su respuesta tal cual."""
         destino = API_REMOTA + self.path[len(PREFIJO_API) - 1 :]
+        ultimo_fallo = None
 
         try:
-            peticion = urllib.request.Request(destino, headers={"Accept": "application/json"})
+            for intento in range(INTENTOS_API):
+                try:
+                    cuerpo, tipo, codigo = self._pedir_a_api(destino)
+                    break
+                except urllib.error.HTTPError as error:
+                    # 502 y 503 son los que devuelve Render mientras el
+                    # servicio arranca: esos sí merecen otro intento. Un
+                    # 404 o un 400 son respuesta de la API y se pasan tal
+                    # cual, sin insistir.
+                    if error.code not in (502, 503, 504) or intento == INTENTOS_API - 1:
+                        cuerpo = error.read()
+                        tipo = error.headers.get("Content-Type", "application/json")
+                        codigo = error.code
+                        break
 
-            with urllib.request.urlopen(peticion, timeout=ESPERA_API) as respuesta:
-                cuerpo = respuesta.read()
-                tipo = respuesta.headers.get("Content-Type", "application/json")
-                codigo = respuesta.status
-        except urllib.error.HTTPError as error:
-            cuerpo = error.read()
-            tipo = error.headers.get("Content-Type", "application/json")
-            codigo = error.code
+                    ultimo_fallo = f"HTTP {error.code}"
+                    time.sleep(PAUSA_ENTRE_INTENTOS)
+                except (urllib.error.URLError, TimeoutError) as error:
+                    if intento == INTENTOS_API - 1:
+                        raise
+
+                    ultimo_fallo = str(error)
+                    time.sleep(PAUSA_ENTRE_INTENTOS)
+
+            if ultimo_fallo is not None and codigo == 200:
+                print(f"  API despierta tras reintento ({ultimo_fallo})", flush=True)
         except Exception as error:
-            cuerpo = f'{{"error": "No se ha podido consultar la API: {error}"}}'.encode("utf-8")
+            cuerpo = (
+                f'{{"error": "La API no responde tras {INTENTOS_API} intentos: {error}"}}'
+            ).encode("utf-8")
             tipo = "application/json"
             codigo = 502
 
