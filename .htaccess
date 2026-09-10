@@ -12,6 +12,16 @@ DirectoryIndex index.html
 # Y aunque haya índice, nunca listar el contenido de una carpeta.
 Options -Indexes
 
+# Nada que empiece por punto se sirve, ni fichero ni carpeta: .git,
+# .env, .github, el propio .htaccess. Va con RewriteRule y no con
+# FilesMatch porque FilesMatch casa nombres de fichero y no rutas, así
+# que ".git" bloqueaba un fichero llamado ".git" pero dejaba pasar
+# "/.git/config", que es justo el que enseña la dirección del
+# repositorio y desde ahí se puede reconstruir el código entero.
+#
+# .well-known se salva: por ahí pasa la renovación del certificado.
+RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
+
 # La dirección de la portada es "/", no "/index.html". Si se deja
 # entrar por las dos, el nombre del archivo se queda en la barra y
 # se arrastra a las secciones ("/index.html#info"), y además la
@@ -63,14 +73,18 @@ RewriteRule ^index\.html$ / [R=301,L]
     ExpiresByType application/json "access plus 1 hour"
 </IfModule>
 
-# Prevenir acceso a archivos sensibles
-<FilesMatch "^\.env|^\.git|\.json$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+# Los .json del proyecto (package.json, package-lock.json) no son
+# contenido del sitio y cuentan las versiones exactas de todo lo que
+# usa. El mapa no cae aquí: datos/localidades-radar.geojson no termina
+# en ".json".
+#
+# Antes esto iba en un FilesMatch con "Order allow,deny", que es
+# sintaxis de Apache 2.2: en un 2.4 sin mod_access_compat el servidor
+# ni arranca la configuración.
+RewriteRule \.json$ - [R=404,L]
 
 # Las páginas de sección viven en pages/; index.html en la raíz
-RewriteRule ^(info|prediccion|en-vivo|observaciones)\.html$ pages/$1.html [L]
+RewriteRule ^(info|prediccion|en-vivo|observaciones|aviso-legal)\.html$ pages/$1.html [L]
 
 # SPA: rutas sin extensión a index.html
 RewriteCond %{REQUEST_FILENAME} !-f
