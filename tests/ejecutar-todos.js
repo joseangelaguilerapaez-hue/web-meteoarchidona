@@ -2,7 +2,7 @@
    LANZADOR DE TESTS
    ============================================================
 
-   Ejecuta las cinco suites y termina con código 1 si falla
+   Ejecuta todas las suites y termina con código 1 si falla
    alguna.
 
    Antes "npm test" encadenaba los cinco ficheros con &&, así
@@ -19,6 +19,7 @@ import "./validation.test.js";
 import "./lluvia.test.js";
 import "./viento.test.js";
 import "./ui.test.js";
+import "./graficos.test.js";
 
 process.on("exit", (codigo) => {
     console.log(

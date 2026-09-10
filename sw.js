@@ -2,7 +2,7 @@
    Service Worker - Caché y offline support
    ============================================================ */
 
-const CACHE_NAME = 'meteoarchidona-v8';
+const CACHE_NAME = 'meteoarchidona-v9';
 const API_CACHE = 'meteoarchidona-api-v1';
 
 const ASSETS_TO_CACHE = [
@@ -20,6 +20,7 @@ const ASSETS_TO_CACHE = [
     '/assets/fuentes/sora-700-latin.woff2',
     '/assets/fuentes/sora-800-latin.woff2',
     '/js/app.min.js',
+    '/js/graficos.js',
     '/js/rutas.js',
     '/js/pagina.js',
     '/js/cargador.js',

@@ -101,11 +101,20 @@
                                 </div>
                             </div>
 
+                            <!--
+                        Los puntos de aquí son de muestra. js/graficos.js los
+                        sustituye por los reales en cuanto la API sirve el
+                        histórico; mientras no lo haga, avisa en
+                        #nota-grafico-temperatura de que lo que se ve es
+                        una muestra.
+                        -->
+
                             <svg
                                 class="grafico-svg"
+                                id="grafico-temperatura"
                                 viewBox="0 0 600 190"
                                 preserveAspectRatio="none"
-                                aria-label="Gráfico de temperatura de muestra"
+                                aria-label="Temperatura de las últimas 24 horas"
                             >
                                 <line class="rejilla" x1="0" y1="40" x2="600" y2="40" />
 
@@ -145,18 +154,25 @@
                                 "
                                 />
                             </svg>
+
+                            <div class="grafico-nota" id="nota-grafico-temperatura"></div>
                         </article>
 
                         <article class="tarjeta grafico">
                             <div class="grafico-cabecera">
                                 <div class="grafico-titulo">Lluvia · últimos 7 días</div>
+
+                                <div class="leyenda leyenda-lluvia">
+                                    <span>El Silo</span>
+                                </div>
                             </div>
 
                             <svg
                                 class="grafico-svg"
+                                id="grafico-lluvia"
                                 viewBox="0 0 500 190"
                                 preserveAspectRatio="none"
-                                aria-label="Gráfico de lluvia de muestra"
+                                aria-label="Lluvia de los últimos 7 días"
                             >
                                 <line class="rejilla" x1="0" y1="40" x2="500" y2="40" />
 
@@ -174,6 +190,10 @@
 
                                 <rect class="barra" x="305" y="168" width="40" height="2" />
                             </svg>
+
+                            <div class="grafico-dias" id="dias-grafico-lluvia"></div>
+
+                            <div class="grafico-nota" id="nota-grafico-lluvia"></div>
                         </article>
 
                         <article class="tarjeta grafico" id="camaras">
@@ -366,6 +386,7 @@
         <script src="js/pagina.js?v=7"></script>
         <script src="js/estaciones.js?v=4"></script>
         <script type="module" src="js/app.min.js?v=9"></script>
+        <script type="module" src="js/graficos.js?v=1"></script>
         <script src="js/cargador.js?v=7"></script>
     </body>
 </html>

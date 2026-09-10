@@ -48,3 +48,47 @@ el suyo.
 .panel-aplicacion.panel-radar.activo {
     overflow: hidden;
 }
+
+/*
+============================================================
+GRÁFICOS
+============================================================
+*/
+
+/*
+Aviso bajo un gráfico. Solo lo rellena js/graficos.js cuando la
+API no da el histórico y lo que se ve es la muestra escrita a
+mano; vacío no ocupa nada, así que no hay que esconderlo.
+*/
+.grafico-nota {
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.grafico-nota:not(:empty) {
+    margin-top: 8px;
+}
+
+/*
+Iniciales de los días bajo las barras de lluvia.
+
+Van en HTML y no dentro del SVG porque el gráfico se dibuja con
+preserveAspectRatio="none": el SVG se estira hasta el ancho de
+la tarjeta y con él se estiraría el texto. Cada etiqueta ocupa
+la misma fracción que su barra, así que quedan alineadas sea
+cual sea el ancho.
+*/
+.grafico-dias {
+    display: grid;
+    margin-top: 4px;
+    color: var(--muted);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    text-align: center;
+}
+
+/* La leyenda de la lluvia es de una sola estación, del color de las barras. */
+.leyenda-lluvia span::before {
+    background: #3b9eff;
+}
