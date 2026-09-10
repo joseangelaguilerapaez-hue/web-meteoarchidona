@@ -2,7 +2,7 @@
    Service Worker - Caché y offline support
    ============================================================ */
 
-const CACHE_NAME = 'meteoarchidona-v10';
+const CACHE_NAME = 'meteoarchidona-v11';
 const API_CACHE = 'meteoarchidona-api-v1';
 
 const ASSETS_TO_CACHE = [
@@ -19,6 +19,9 @@ const ASSETS_TO_CACHE = [
     '/assets/fuentes/sora-600-latin.woff2',
     '/assets/fuentes/sora-700-latin.woff2',
     '/assets/fuentes/sora-800-latin.woff2',
+    '/pages/aviso-legal.html',
+    '/css/legal.css',
+    '/js/legal.js',
     '/js/app.js',
     '/js/graficos.js',
     '/js/rutas.js',
@@ -90,8 +93,10 @@ La petición se hace con cache: 'no-store' a propósito: sin eso
 el fetch del Service Worker reutiliza la caché HTTP del
 navegador y seguiría sirviendo el archivo viejo.
 
-Lo de terceros (fuentes de Google) sí va primero a caché: no
-cambia y así se ahorra la ida a red.
+Lo de terceros sí va primero a caché: hoy son las baldosas del
+mapa de OpenStreetMap, que no cambian, y así se ahorra la ida a
+red. Las tipografías dejaron de estar aquí: se sirven desde el
+propio sitio desde el commit b719aab.
 */
 function esDelSitio(request) {
     return new URL(request.url).origin === self.location.origin;

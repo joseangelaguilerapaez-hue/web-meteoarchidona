@@ -1,0 +1,197 @@
+/*
+============================================================
+AVISO LEGAL Y PRIVACIDAD
+============================================================
+
+Página de texto largo, así que va a una sola columna y con el
+ancho limitado a algo que se pueda leer sin perder el renglón.
+Eso la separa de info.css, que reparte dos tarjetas en rejilla.
+
+Las variables de color son las mismas que en el resto del
+sitio.
+============================================================
+*/
+
+:root {
+    --fondo: #07111f;
+    --fondo-profundo: #030914;
+
+    --panel: rgba(12, 28, 47, 0.94);
+    --panel-claro: rgba(20, 42, 66, 0.88);
+
+    --oro: #f2bf58;
+    --cyan: #36d9ff;
+
+    --blanco: #f5f8fc;
+    --texto: #c9d6e5;
+    --texto-suave: #8194aa;
+
+    --borde: rgba(255, 255, 255, 0.08);
+    --borde-cyan: rgba(54, 217, 255, 0.26);
+
+    --radio-grande: 28px;
+    --radio: 20px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* El fondo, el color y la tipografía los pone css/estilos.css. */
+
+.pagina {
+    width: 100%;
+
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    /* Columna para que el pie se quede abajo con poco texto. */
+    display: flex;
+    flex-direction: column;
+}
+
+#cabecera-contenedor {
+    margin-bottom: 48px;
+}
+
+.contenedor-legal {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    flex: 1;
+
+    /* 78ch: a partir de ahí el ojo pierde el salto de línea. */
+    width: min(78ch, calc(100% - 48px));
+
+    margin: 0 auto 72px;
+}
+
+.legal-entrada {
+    color: var(--texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.legal-entrada strong {
+    color: var(--blanco);
+    font-weight: 600;
+}
+
+.seccion-legal {
+    background: var(--panel);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-grande);
+    padding: 36px 42px;
+    backdrop-filter: blur(8px);
+}
+
+.seccion-legal h2 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--oro);
+    line-height: 1.25;
+}
+
+.seccion-legal h3 {
+    margin: 28px 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--blanco);
+}
+
+.seccion-legal p,
+.seccion-legal li {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--texto);
+}
+
+.seccion-legal p {
+    margin: 0 0 16px 0;
+}
+
+.seccion-legal p:last-child,
+.seccion-legal ul:last-child {
+    margin-bottom: 0;
+}
+
+.seccion-legal ul {
+    margin: 0 0 16px 0;
+    padding-left: 22px;
+}
+
+.seccion-legal li {
+    margin-bottom: 8px;
+}
+
+.seccion-legal a {
+    color: var(--cyan);
+    text-decoration: none;
+    border-bottom: 1px solid var(--borde-cyan);
+}
+
+.seccion-legal a:hover {
+    border-bottom-color: var(--cyan);
+}
+
+/* Los correos, en monoespaciada y sin partirse a medias. */
+.seccion-legal a[href^="mailto:"] {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.tabla-terceros {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 16px 0;
+    font-size: 14px;
+}
+
+.tabla-terceros th,
+.tabla-terceros td {
+    text-align: left;
+    vertical-align: top;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--borde);
+    line-height: 1.6;
+}
+
+.tabla-terceros th {
+    color: var(--texto-suave);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.tabla-terceros tr:last-child td {
+    border-bottom: none;
+}
+
+/*
+La tabla de terceros no cabe en un móvil sin encoger la letra
+hasta lo ilegible, así que se desplaza dentro de su caja en vez
+de estirar la página entera.
+*/
+.tabla-envoltorio {
+    overflow-x: auto;
+}
+
+.legal-fecha {
+    color: var(--texto-suave);
+    font-size: 13px;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .seccion-legal {
+        padding: 28px 24px;
+    }
+
+    .seccion-legal h2 {
+        font-size: 21px;
+    }
+}
