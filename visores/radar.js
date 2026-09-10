@@ -1,6 +1,6 @@
 const API_BASE="https://api-meteoarchidona.onrender.com",PRODUCTO="PPI";
 const RADARES=["AHR","SE","AL","CR"];
-const FONDOS=["politico","fisico","negro"];
+const FONDOS=["satelite","politico","fisico","negro"];
 
 const URL_LOCALIDADES=new URL(
  "../datos/localidades-radar.geojson",
@@ -26,7 +26,7 @@ let timelineRegional=[];
 
 let fondosMapa={};
 let capaFondoActual=null;
-let fondoActivo="politico";
+let fondoActivo="satelite";
 
 let capaLimitesAdministrativos=null;
 let promesaLimitesAdministrativos=null;
@@ -196,11 +196,14 @@ function quitarCapa(capa){
 
    fondo
    límites Andalucía/provincias
-   satélite
+   satélite meteorológico
    radar
    rayos
    localidades
    etiquetas
+
+   SATÉLITE HD es un fondo cartográfico y por tanto
+   permanece en basePane.
 
    Las localidades permanecen siempre por encima de las
    capas meteorológicas.
@@ -464,10 +467,32 @@ function actualizarSelectorFondos(){
 function crearFondosMapa(){
  fondosMapa={
 
+  /*
+   * SATÉLITE HD
+   *
+   * Servicio oficial IGN/CNIG:
+   * Ortoimágenes de Máxima Actualidad.
+   *
+   * A escalas generales utiliza cobertura de satélite
+   * y al acercarnos utiliza ortofotografía PNOA de
+   * máxima resolución disponible.
+   */
+  satelite:L.tileLayer(
+   "https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{-y}.jpeg",
+   {
+    pane:"basePane",
+    maxNativeZoom:19,
+    maxZoom:19,
+    attribution:
+     'Ortoimágenes: &copy; <a href="https://www.ign.es/" target="_blank" rel="noopener">IGN/CNIG</a> · PNOA Máxima Actualidad'
+   }
+  ),
+
   politico:L.tileLayer(
    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
    {
     pane:"basePane",
+    maxNativeZoom:19,
     maxZoom:19,
     attribution:
      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -478,7 +503,8 @@ function crearFondosMapa(){
    "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
    {
     pane:"basePane",
-    maxZoom:17,
+    maxNativeZoom:17,
+    maxZoom:19,
     subdomains:"abc",
     attribution:
      'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)'
@@ -487,7 +513,10 @@ function crearFondosMapa(){
 
  };
 
- cambiarFondo("politico");
+ /*
+  * SATÉLITE HD es el fondo inicial del visor.
+  */
+ cambiarFondo("satelite");
 }
 
 function cambiarFondo(nombre){
@@ -553,14 +582,17 @@ function cambiarFondo(nombre){
  actualizarSelectorFondos();
 
  /*
-  * Los límites administrativos solo aparecen
+  * Los límites administrativos propios solo aparecen
   * en el fondo negro.
   */
  actualizarLimitesAdministrativos();
 
  /*
-  * Se reconstruyen las localidades porque en fondo negro
-  * necesitan colores claros para conservar legibilidad.
+  * Se reconstruyen las localidades.
+  *
+  * Tanto el fondo negro como la fotografía aérea
+  * necesitan colores claros y sombras para conservar
+  * la legibilidad.
   */
  renderizarLocalidades();
 
@@ -610,8 +642,9 @@ function claseEtiquetaLocalidad(tipo){
 }
 
 function estiloPuntoLocalidad(p){
- const negro=
-  fondoActivo==="negro";
+ const fondoOscuro=
+  fondoActivo==="negro"||
+  fondoActivo==="satelite";
 
  if(p.tipo==="capital"){
   return{
@@ -620,7 +653,7 @@ function estiloPuntoLocalidad(p){
    weight:1.5,
    fill:true,
    fillColor:
-    negro
+    fondoOscuro
      ?"#d93f74"
      :"#a8325a",
    fillOpacity:1,
@@ -638,7 +671,7 @@ function estiloPuntoLocalidad(p){
    weight:1.4,
    fill:true,
    fillColor:
-    negro
+    fondoOscuro
      ?"#d93f74"
      :"#a8325a",
    fillOpacity:1,
@@ -676,7 +709,7 @@ function estiloPuntoLocalidad(p){
   weight:1,
   fill:true,
   fillColor:
-   negro
+   fondoOscuro
     ?"#fff"
     :"#111",
   fillOpacity:1,
@@ -686,7 +719,8 @@ function estiloPuntoLocalidad(p){
 
 function colorEtiquetaLocalidad(p){
  if(
-  fondoActivo!=="negro"
+  fondoActivo!=="negro"&&
+  fondoActivo!=="satelite"
  ){
   return null;
  }
@@ -734,7 +768,7 @@ function aplicarColorEtiqueta(
   el.style.color=color;
 
   el.style.textShadow=
-   "0 1px 2px #000,0 0 4px #000";
+   "0 1px 2px #000,0 0 4px #000,0 0 7px #000";
  };
 
  aplicar();
@@ -928,7 +962,7 @@ function crearMapa(){
    center:CENTRO_REGIONAL,
    zoom:ZOOM_REGIONAL,
    minZoom:5,
-   maxZoom:16,
+   maxZoom:19,
    zoomControl:true
   }
  );
