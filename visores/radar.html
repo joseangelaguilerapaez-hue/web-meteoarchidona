@@ -21,10 +21,6 @@ href="./radar.css?v=20260910-fondos1"
 
 <style>
 
-/* =========================================================
-   CUATRO FONDOS CARTOGRÁFICOS
-   ========================================================= */
-
 .selector-fondos-controles{
     grid-template-columns:
         repeat(
@@ -114,10 +110,6 @@ id="instante-fecha"
 </header>
 
 
-<!-- ======================================================
-     FONDOS CARTOGRÁFICOS
-     ====================================================== -->
-
 <section
 class="selector-fondos"
 aria-label="Fondo cartográfico"
@@ -133,10 +125,10 @@ Fondo
 
 <button
 type="button"
-class="selector-fondo selector-fondo-satelite"
+class="selector-fondo selector-fondo-satelite activo"
 id="fondo-satelite"
 data-fondo="satelite"
-aria-pressed="false"
+aria-pressed="true"
 title="Mostrar ortoimagen de satélite y fotografía aérea IGN / PNOA"
 >
 SATÉLITE HD
@@ -145,10 +137,10 @@ SATÉLITE HD
 
 <button
 type="button"
-class="selector-fondo selector-fondo-politico activo"
+class="selector-fondo selector-fondo-politico"
 id="fondo-politico"
 data-fondo="politico"
-aria-pressed="true"
+aria-pressed="false"
 title="Mostrar mapa político"
 >
 POLÍTICO
@@ -183,10 +175,6 @@ NEGRO
 
 </section>
 
-
-<!-- ======================================================
-     CAPAS METEOROLÓGICAS
-     ====================================================== -->
 
 <section
 class="selector-capas"
@@ -268,10 +256,6 @@ Próximamente
 </section>
 
 
-<!-- ======================================================
-     MAPA
-     ====================================================== -->
-
 <section class="mapa-zona">
 
 <div
@@ -288,10 +272,6 @@ id="mensaje"
 
 </section>
 
-
-<!-- ======================================================
-     CONTROLES
-     ====================================================== -->
 
 <section class="controles">
 
@@ -410,10 +390,6 @@ aria-label="Opacidad radar"
 </section>
 
 
-<!-- ======================================================
-     DATOS
-     ====================================================== -->
-
 <footer class="datos">
 
 
@@ -491,7 +467,7 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 ></script>
 
 <script
-src="./radar.js?v=20260910-satelite1"
+src="./radar.js?v=20260910-satelite2"
 ></script>
 
 
