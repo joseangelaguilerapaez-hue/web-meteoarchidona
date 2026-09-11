@@ -435,7 +435,8 @@
             transition:
                 transform 0.08s ease,
                 border-color 0.14s ease,
-                background 0.14s ease;
+                background 0.14s ease,
+                opacity 0.15s ease;
         }
 
         .tecla:hover {
@@ -448,6 +449,11 @@
                 scale(0.95);
             background:
                 #193652;
+        }
+
+        .tecla:disabled {
+            cursor: default;
+            opacity: 0.38;
         }
 
         .tecla-accion {
@@ -510,6 +516,11 @@
         .estado.info {
             color:
                 var(--cyan);
+        }
+
+        .estado.ok {
+            color:
+                #62e69a;
         }
 
         .estado.error {
@@ -622,6 +633,7 @@
         <main class="contenido">
 
             <section
+                id="panelAcceso"
                 class="acceso"
                 aria-labelledby="tituloAcceso"
             >
@@ -659,6 +671,7 @@
                 </div>
 
                 <div
+                    id="tecladoPin"
                     class="teclado"
                     aria-label="Teclado numérico"
                 >
@@ -761,9 +774,9 @@
 
                 <div class="nota-seguridad">
                     El PIN no se almacena en esta página.
-                    La validación definitiva se realizará
-                    exclusivamente en la API de
-                    MeteoArchidona.
+                    Se envía exclusivamente a la API de
+                    MeteoArchidona para obtener una
+                    autorización administrativa temporal.
                 </div>
 
             </section>
@@ -775,7 +788,28 @@
     <script>
         const LONGITUD_PIN = 6;
 
+        const URL_API =
+            "https://api-meteoarchidona.onrender.com";
+
+        const URL_ACCESO =
+            URL_API
+            + "/admin/acceso";
+
+        const CLAVE_TOKEN =
+            "meteoarchidona_admin_token";
+
+        const CLAVE_TIPO_TOKEN =
+            "meteoarchidona_admin_tipo_token";
+
+        const CLAVE_EXPIRACION =
+            "meteoarchidona_admin_expira_en";
+
+        const CLAVE_DURACION =
+            "meteoarchidona_admin_duracion_segundos";
+
         let pinIntroducido = "";
+
+        let solicitudEnCurso = false;
 
         const indicadorPin =
             document.getElementById(
@@ -813,6 +847,11 @@
                 "[data-numero]"
             );
 
+        const teclas =
+            document.querySelectorAll(
+                ".tecla"
+            );
+
 
         function actualizarIndicadorPin() {
 
@@ -830,8 +869,24 @@
             );
 
             botonAcceder.disabled =
-                pinIntroducido.length
-                !== LONGITUD_PIN;
+                solicitudEnCurso
+                || (
+                    pinIntroducido.length
+                    !== LONGITUD_PIN
+                );
+        }
+
+
+        function establecerTecladoBloqueado(
+            bloqueado
+        ) {
+
+            teclas.forEach(
+                tecla => {
+                    tecla.disabled =
+                        bloqueado;
+                }
+            );
         }
 
 
@@ -845,13 +900,29 @@
         }
 
 
+        function mostrarEstado(
+            mensaje,
+            tipo = ""
+        ) {
+
+            estadoAcceso.className =
+                tipo
+                    ? "estado " + tipo
+                    : "estado";
+
+            estadoAcceso.textContent =
+                mensaje;
+        }
+
+
         function agregarNumero(
             numero
         ) {
 
             if (
-                pinIntroducido.length
-                >= LONGITUD_PIN
+                solicitudEnCurso
+                || pinIntroducido.length
+                    >= LONGITUD_PIN
             ) {
                 return;
             }
@@ -867,7 +938,10 @@
 
         function borrarUltimaCifra() {
 
-            if (!pinIntroducido) {
+            if (
+                solicitudEnCurso
+                || !pinIntroducido
+            ) {
                 return;
             }
 
@@ -885,6 +959,10 @@
 
         function limpiarPin() {
 
+            if (solicitudEnCurso) {
+                return;
+            }
+
             pinIntroducido = "";
 
             limpiarEstado();
@@ -893,44 +971,275 @@
         }
 
 
-        function solicitarAcceso() {
+        function eliminarSesionAdministrativa() {
+
+            sessionStorage.removeItem(
+                CLAVE_TOKEN
+            );
+
+            sessionStorage.removeItem(
+                CLAVE_TIPO_TOKEN
+            );
+
+            sessionStorage.removeItem(
+                CLAVE_EXPIRACION
+            );
+
+            sessionStorage.removeItem(
+                CLAVE_DURACION
+            );
+        }
+
+
+        function guardarSesionAdministrativa(
+            datos
+        ) {
+
+            sessionStorage.setItem(
+                CLAVE_TOKEN,
+                datos.token
+            );
 
             if (
-                pinIntroducido.length
-                !== LONGITUD_PIN
+                datos.tipo_token
+                !== null
+                && datos.tipo_token
+                !== undefined
+            ) {
+                sessionStorage.setItem(
+                    CLAVE_TIPO_TOKEN,
+                    String(
+                        datos.tipo_token
+                    )
+                );
+            }
+
+            if (
+                datos.expira_en
+                !== null
+                && datos.expira_en
+                !== undefined
+            ) {
+                sessionStorage.setItem(
+                    CLAVE_EXPIRACION,
+                    String(
+                        datos.expira_en
+                    )
+                );
+            }
+
+            if (
+                datos.duracion_segundos
+                !== null
+                && datos.duracion_segundos
+                !== undefined
+            ) {
+                sessionStorage.setItem(
+                    CLAVE_DURACION,
+                    String(
+                        datos.duracion_segundos
+                    )
+                );
+            }
+        }
+
+
+        function obtenerMensajeError(
+            datos,
+            codigoHttp
+        ) {
+
+            if (
+                datos
+                && typeof datos.detail
+                    === "string"
+                && datos.detail.trim()
+            ) {
+                return datos.detail;
+            }
+
+            if (codigoHttp === 401) {
+                return "PIN incorrecto.";
+            }
+
+            if (codigoHttp === 429) {
+                return (
+                    "Demasiados intentos. "
+                    + "Espera antes de volver a intentarlo."
+                );
+            }
+
+            if (codigoHttp === 503) {
+                return (
+                    "El acceso administrativo "
+                    + "no está disponible temporalmente."
+                );
+            }
+
+            return (
+                "No ha sido posible validar "
+                + "el acceso administrativo."
+            );
+        }
+
+
+        async function solicitarAcceso() {
+
+            if (
+                solicitudEnCurso
+                || pinIntroducido.length
+                    !== LONGITUD_PIN
             ) {
                 return;
             }
 
-            /*
-             * IMPORTANTE:
-             *
-             * El PIN nunca se validará aquí.
-             *
-             * No debe existir:
-             *
-             *     if (pin === "123456")
-             *
-             * ni ninguna constante equivalente
-             * dentro del repositorio web.
-             *
-             * En el siguiente incremento esta
-             * función enviará el PIN a un endpoint
-             * seguro de la API.
-             */
+            const pinSolicitud =
+                pinIntroducido;
 
-            estadoAcceso.className =
-                "estado info";
+            solicitudEnCurso =
+                true;
 
-            estadoAcceso.textContent =
-                "Teclado preparado. "
-                + "La validación segura del PIN "
-                + "se conectará con la API "
-                + "en el siguiente paso.";
+            eliminarSesionAdministrativa();
 
-            pinIntroducido = "";
+            establecerTecladoBloqueado(
+                true
+            );
 
             actualizarIndicadorPin();
+
+            botonAcceder.textContent =
+                "Validando...";
+
+            mostrarEstado(
+                "Comprobando acceso con la API...",
+                "info"
+            );
+
+            try {
+
+                const respuesta =
+                    await fetch(
+                        URL_ACCESO,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body: JSON.stringify(
+                                {
+                                    pin:
+                                        pinSolicitud
+                                }
+                            ),
+                            cache: "no-store"
+                        }
+                    );
+
+                let datos = null;
+
+                try {
+                    datos =
+                        await respuesta.json();
+                } catch {
+                    datos = null;
+                }
+
+                if (!respuesta.ok) {
+
+                    throw {
+                        esRespuestaHttp:
+                            true,
+                        codigoHttp:
+                            respuesta.status,
+                        datos:
+                            datos
+                    };
+                }
+
+                if (
+                    !datos
+                    || typeof datos.token
+                        !== "string"
+                    || !datos.token.trim()
+                ) {
+                    throw new Error(
+                        "La API no ha devuelto "
+                        + "un token administrativo válido."
+                    );
+                }
+
+                guardarSesionAdministrativa(
+                    datos
+                );
+
+                pinIntroducido =
+                    "";
+
+                actualizarIndicadorPin();
+
+                mostrarEstado(
+                    "Acceso autorizado. "
+                    + "Sesión administrativa temporal iniciada.",
+                    "ok"
+                );
+
+                botonAcceder.textContent =
+                    "Acceso autorizado";
+
+                botonAcceder.disabled =
+                    true;
+
+                establecerTecladoBloqueado(
+                    true
+                );
+
+            } catch (error) {
+
+                eliminarSesionAdministrativa();
+
+                pinIntroducido =
+                    "";
+
+                if (
+                    error
+                    && error.esRespuestaHttp
+                ) {
+
+                    mostrarEstado(
+                        obtenerMensajeError(
+                            error.datos,
+                            error.codigoHttp
+                        ),
+                        "error"
+                    );
+
+                } else {
+
+                    mostrarEstado(
+                        "No ha sido posible comunicarse "
+                        + "con la API de MeteoArchidona.",
+                        "error"
+                    );
+                }
+
+                solicitudEnCurso =
+                    false;
+
+                establecerTecladoBloqueado(
+                    false
+                );
+
+                botonAcceder.textContent =
+                    "Acceder";
+
+                actualizarIndicadorPin();
+
+                return;
+            }
+
+            solicitudEnCurso =
+                false;
         }
 
 
@@ -969,6 +1278,10 @@
         document.addEventListener(
             "keydown",
             evento => {
+
+                if (solicitudEnCurso) {
+                    return;
+                }
 
                 if (
                     /^[0-9]$/.test(
