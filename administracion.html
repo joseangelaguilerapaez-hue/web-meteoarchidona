@@ -633,7 +633,6 @@
         <main class="contenido">
 
             <section
-                id="panelAcceso"
                 class="acceso"
                 aria-labelledby="tituloAcceso"
             >
@@ -671,7 +670,6 @@
                 </div>
 
                 <div
-                    id="tecladoPin"
                     class="teclado"
                     aria-label="Teclado numérico"
                 >
@@ -877,7 +875,7 @@
         }
 
 
-        function establecerTecladoBloqueado(
+        function bloquearTeclado(
             bloqueado
         ) {
 
@@ -1101,7 +1099,7 @@
 
             eliminarSesionAdministrativa();
 
-            establecerTecladoBloqueado(
+            bloquearTeclado(
                 true
             );
 
@@ -1122,39 +1120,50 @@
                         URL_ACCESO,
                         {
                             method: "POST",
+
                             headers: {
                                 "Content-Type":
                                     "application/json"
                             },
+
                             body: JSON.stringify(
                                 {
                                     pin:
                                         pinSolicitud
                                 }
                             ),
-                            cache: "no-store"
+
+                            cache:
+                                "no-store"
                         }
                     );
 
                 let datos = null;
 
                 try {
+
                     datos =
                         await respuesta.json();
+
                 } catch {
+
                     datos = null;
                 }
 
                 if (!respuesta.ok) {
 
-                    throw {
-                        esRespuestaHttp:
-                            true,
-                        codigoHttp:
-                            respuesta.status,
-                        datos:
-                            datos
-                    };
+                    const errorHttp =
+                        new Error(
+                            obtenerMensajeError(
+                                datos,
+                                respuesta.status
+                            )
+                        );
+
+                    errorHttp.codigoHttp =
+                        respuesta.status;
+
+                    throw errorHttp;
                 }
 
                 if (
@@ -1173,8 +1182,7 @@
                     datos
                 );
 
-                pinIntroducido =
-                    "";
+                pinIntroducido = "";
 
                 actualizarIndicadorPin();
 
@@ -1190,7 +1198,7 @@
                 botonAcceder.disabled =
                     true;
 
-                establecerTecladoBloqueado(
+                bloquearTeclado(
                     true
                 );
 
@@ -1198,35 +1206,26 @@
 
                 eliminarSesionAdministrativa();
 
-                pinIntroducido =
-                    "";
+                pinIntroducido = "";
 
-                if (
-                    error
-                    && error.esRespuestaHttp
-                ) {
+                const mensaje =
+                    error instanceof Error
+                        && error.message
+                        ? error.message
+                        : (
+                            "No ha sido posible comunicarse "
+                            + "con la API de MeteoArchidona."
+                        );
 
-                    mostrarEstado(
-                        obtenerMensajeError(
-                            error.datos,
-                            error.codigoHttp
-                        ),
-                        "error"
-                    );
-
-                } else {
-
-                    mostrarEstado(
-                        "No ha sido posible comunicarse "
-                        + "con la API de MeteoArchidona.",
-                        "error"
-                    );
-                }
+                mostrarEstado(
+                    mensaje,
+                    "error"
+                );
 
                 solicitudEnCurso =
                     false;
 
-                establecerTecladoBloqueado(
+                bloquearTeclado(
                     false
                 );
 
