@@ -1,9 +1,7 @@
-name: CI
+name: CI Web MeteoArchidona
 
 on:
   push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -20,13 +18,213 @@ jobs:
       - name: Descargar repositorio
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
       - name: Comprobar formato Git
-        run: git diff --check HEAD^ HEAD
-
-      - name: Confirmar estructura inicial
+        shell: bash
         run: |
-          echo "Repositorio web-meteoarchidona preparado."
-          echo "La validación HTML, CSS y JavaScript se incorporará"
-          echo "a medida que se añadan los primeros archivos de la web."
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            git diff --check HEAD^ HEAD
+          else
+            git diff --check
+          fi
+
+      - name: Validar JavaScript externo
+        shell: bash
+        run: |
+          encontrado=0
+
+          while IFS= read -r -d '' archivo
+          do
+            encontrado=1
+            echo "Validando JavaScript: $archivo"
+            node --check "$archivo"
+          done < <(
+            find . \
+              -type f \
+              -name "*.js" \
+              -not -path "./.git/*" \
+              -print0
+          )
+
+          if [ "$encontrado" -eq 0 ]; then
+            echo "No existen archivos JavaScript externos."
+          fi
+
+      - name: Validar JavaScript incluido en HTML
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import subprocess
+          import tempfile
+
+          patron_script = re.compile(
+              r"<script\b(?P<atributos>[^>]*)>"
+              r"(?P<contenido>.*?)"
+              r"</script>",
+              re.IGNORECASE | re.DOTALL,
+          )
+
+          patron_src = re.compile(
+              r"\bsrc\s*=",
+              re.IGNORECASE,
+          )
+
+          patron_tipo = re.compile(
+              r"""\btype\s*=\s*["']([^"']+)["']""",
+              re.IGNORECASE,
+          )
+
+          archivos_html = sorted(
+              ruta
+              for ruta in Path(".").rglob("*.html")
+              if ".git" not in ruta.parts
+          )
+
+          total_scripts = 0
+
+          for archivo in archivos_html:
+              contenido = archivo.read_text(
+                  encoding="utf-8"
+              )
+
+              for indice, coincidencia in enumerate(
+                  patron_script.finditer(contenido),
+                  start=1,
+              ):
+                  atributos = coincidencia.group(
+                      "atributos"
+                  )
+
+                  codigo = coincidencia.group(
+                      "contenido"
+                  )
+
+                  if patron_src.search(
+                      atributos
+                  ):
+                      continue
+
+                  tipo_encontrado = (
+                      patron_tipo.search(
+                          atributos
+                      )
+                  )
+
+                  tipo = (
+                      tipo_encontrado.group(1)
+                      .strip()
+                      .lower()
+                      if tipo_encontrado
+                      else ""
+                  )
+
+                  if tipo not in (
+                      "",
+                      "text/javascript",
+                      "application/javascript",
+                      "module",
+                  ):
+                      continue
+
+                  if not codigo.strip():
+                      continue
+
+                  total_scripts += 1
+
+                  sufijo = (
+                      ".mjs"
+                      if tipo == "module"
+                      else ".js"
+                  )
+
+                  with tempfile.NamedTemporaryFile(
+                      mode="w",
+                      suffix=sufijo,
+                      encoding="utf-8",
+                      delete=False,
+                  ) as temporal:
+                      temporal.write(
+                          codigo
+                      )
+
+                      ruta_temporal = (
+                          temporal.name
+                      )
+
+                  print(
+                      "Validando script interno: "
+                      f"{archivo} #{indice}"
+                  )
+
+                  subprocess.run(
+                      [
+                          "node",
+                          "--check",
+                          ruta_temporal,
+                      ],
+                      check=True,
+                  )
+
+          print(
+              "Scripts internos validados: "
+              f"{total_scripts}"
+          )
+          PY
+
+      - name: Validar JSON y GeoJSON
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          archivos = sorted(
+              ruta
+              for ruta in Path(".").rglob("*")
+              if (
+                  ruta.is_file()
+                  and ruta.suffix.lower()
+                  in {
+                      ".json",
+                      ".geojson",
+                  }
+                  and ".git"
+                  not in ruta.parts
+              )
+          )
+
+          for archivo in archivos:
+              print(
+                  f"Validando datos: {archivo}"
+              )
+
+              with archivo.open(
+                  "r",
+                  encoding="utf-8",
+              ) as fichero:
+                  json.load(
+                      fichero
+                  )
+
+          print(
+              "Archivos JSON/GeoJSON validados: "
+              f"{len(archivos)}"
+          )
+          PY
+
+      - name: Confirmar validación
+        run: |
+          echo "Web MeteoArchidona validada correctamente."
