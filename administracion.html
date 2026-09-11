@@ -43,6 +43,7 @@
             --card: #111e2e;
             --card-soft: #0d1a27;
             --border: #1a2d42;
+            --border-strong: #29435e;
             --accent: #f0a500;
             --gold: #d48800;
             --teal: #00c9a7;
@@ -52,6 +53,7 @@
             --red: #ef4444;
             --text: #f6f8fb;
             --muted: #aabdd0;
+            --muted-dark: #7890a7;
             --shadow:
                 0 18px 50px
                 rgba(0, 0, 0, 0.38);
@@ -81,13 +83,25 @@
         }
 
         button,
+        input,
+        select,
+        textarea,
         a {
             font: inherit;
+        }
+
+        button {
+            touch-action:
+                manipulation;
         }
 
         a {
             color: inherit;
             text-decoration: none;
+        }
+
+        .oculto {
+            display: none !important;
         }
 
         .pagina {
@@ -97,6 +111,9 @@
         }
 
         .cabecera {
+            position: sticky;
+            top: 0;
+            z-index: 50;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -109,7 +126,7 @@
                 1px solid
                 var(--border);
             background:
-                rgba(8, 13, 20, 0.94);
+                rgba(8, 13, 20, 0.96);
             backdrop-filter:
                 blur(16px);
         }
@@ -211,7 +228,14 @@
             font-size: 11px;
         }
 
-        .volver {
+        .cabecera-acciones {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .volver,
+        .boton-cabecera {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -229,19 +253,18 @@
                 var(--muted);
             font-size: 12px;
             font-weight: 700;
-            transition:
-                border-color 0.18s ease,
-                color 0.18s ease;
+            cursor: pointer;
         }
 
-        .volver:hover {
+        .volver:hover,
+        .boton-cabecera:hover {
             border-color:
                 var(--blue);
             color:
                 var(--text);
         }
 
-        .contenido {
+        .contenido-acceso {
             flex: 1;
             display: grid;
             place-items: center;
@@ -304,8 +327,7 @@
                     0,
                     0.45
                 );
-            border-radius:
-                50%;
+            border-radius: 50%;
             background:
                 rgba(
                     240,
@@ -326,10 +348,14 @@
                 );
         }
 
+        h1,
+        h2,
+        h3 {
+            margin-top: 0;
+        }
+
         h1 {
-            margin:
-                0 0
-                8px;
+            margin-bottom: 8px;
             text-align: center;
             font-size:
                 clamp(
@@ -430,12 +456,11 @@
             font-weight: 600;
             cursor: pointer;
             user-select: none;
-            touch-action:
-                manipulation;
             transition:
                 transform 0.08s ease,
                 border-color 0.14s ease,
-                background 0.14s ease;
+                background 0.14s ease,
+                opacity 0.15s ease;
         }
 
         .tecla:hover {
@@ -448,6 +473,11 @@
                 scale(0.95);
             background:
                 #193652;
+        }
+
+        .tecla:disabled {
+            cursor: default;
+            opacity: 0.38;
         }
 
         .tecla-accion {
@@ -482,14 +512,6 @@
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            transition:
-                opacity 0.15s ease,
-                transform 0.08s ease;
-        }
-
-        .acceder:active {
-            transform:
-                scale(0.985);
         }
 
         .acceder:disabled {
@@ -512,6 +534,11 @@
                 var(--cyan);
         }
 
+        .estado.ok {
+            color:
+                #62e69a;
+        }
+
         .estado.error {
             color:
                 #ff8e9d;
@@ -524,10 +551,639 @@
                 1px solid
                 var(--border);
             color:
-                #7890a7;
+                var(--muted-dark);
             text-align: center;
             font-size: 10px;
             line-height: 1.6;
+        }
+
+        .panel-admin {
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding:
+                24px
+                clamp(14px, 3vw, 34px)
+                46px;
+        }
+
+        .cabecera-admin {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .titulo-admin {
+            margin-bottom: 5px;
+            font-size:
+                clamp(
+                    24px,
+                    4vw,
+                    34px
+                );
+        }
+
+        .subtitulo-admin {
+            margin: 0;
+            color:
+                var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .sesion-admin {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .sesion-tiempo {
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            padding:
+                0 12px;
+            border:
+                1px solid
+                rgba(
+                    0,
+                    201,
+                    167,
+                    0.3
+                );
+            border-radius: 999px;
+            background:
+                rgba(
+                    0,
+                    201,
+                    167,
+                    0.08
+                );
+            color:
+                #69efd6;
+            font-family:
+                "JetBrains Mono",
+                monospace;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .boton {
+            min-height: 42px;
+            padding:
+                0 14px;
+            border:
+                1px solid
+                var(--border-strong);
+            border-radius: 10px;
+            background:
+                var(--card-soft);
+            color:
+                var(--text);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .boton:hover {
+            border-color:
+                var(--blue);
+        }
+
+        .boton:disabled {
+            opacity: 0.45;
+            cursor: wait;
+        }
+
+        .boton-principal {
+            border: 0;
+            background:
+                linear-gradient(
+                    135deg,
+                    #0c7b67,
+                    var(--teal)
+                );
+            color:
+                #041e19;
+        }
+
+        .boton-secundario {
+            color:
+                var(--cyan);
+        }
+
+        .boton-peligro {
+            border-color:
+                rgba(
+                    239,
+                    68,
+                    68,
+                    0.4
+                );
+            color:
+                #ff9ba8;
+        }
+
+        .resumen-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    4,
+                    minmax(0, 1fr)
+                );
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .resumen-card {
+            padding: 16px;
+            border:
+                1px solid
+                var(--border);
+            border-radius: 14px;
+            background:
+                linear-gradient(
+                    145deg,
+                    #102136,
+                    #0c1724
+                );
+        }
+
+        .resumen-etiqueta {
+            color:
+                var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing:
+                0.05em;
+        }
+
+        .resumen-valor {
+            margin-top: 7px;
+            font-family:
+                "JetBrains Mono",
+                monospace;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .estado-panel {
+            min-height: 20px;
+            margin-bottom: 16px;
+            padding:
+                0 2px;
+            color:
+                var(--muted);
+            font-size: 12px;
+        }
+
+        .estado-panel.info {
+            color:
+                var(--cyan);
+        }
+
+        .estado-panel.ok {
+            color:
+                #62e69a;
+        }
+
+        .estado-panel.error {
+            color:
+                #ff8e9d;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns:
+                minmax(
+                    320px,
+                    0.85fr
+                )
+                minmax(
+                    450px,
+                    1.4fr
+                );
+            gap: 18px;
+            align-items: start;
+        }
+
+        .panel {
+            border:
+                1px solid
+                var(--border);
+            border-radius: 16px;
+            background:
+                rgba(
+                    13,
+                    26,
+                    39,
+                    0.92
+                );
+            box-shadow:
+                0 12px 34px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.22
+                );
+        }
+
+        .panel-cabecera {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 17px;
+            border-bottom:
+                1px solid
+                var(--border);
+        }
+
+        .panel-titulo {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .panel-cuerpo {
+            padding: 17px;
+        }
+
+        .filtros {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .filtros-dobles {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+            gap: 10px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border:
+                1px solid
+                var(--border-strong);
+            border-radius: 10px;
+            outline: 0;
+            background:
+                #0a1724;
+            color:
+                var(--text);
+            transition:
+                border-color 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+        input,
+        select {
+            min-height: 44px;
+            padding:
+                0 11px;
+        }
+
+        textarea {
+            min-height: 92px;
+            padding: 11px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color:
+                var(--blue);
+            box-shadow:
+                0 0 0 3px
+                rgba(
+                    59,
+                    158,
+                    255,
+                    0.08
+                );
+        }
+
+        input:disabled {
+            color:
+                #8ca0b4;
+            background:
+                #101820;
+        }
+
+        .lista-estaciones {
+            display: grid;
+            gap: 10px;
+            max-height: 650px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+
+        .estacion-card {
+            width: 100%;
+            padding: 14px;
+            border:
+                1px solid
+                var(--border);
+            border-radius: 12px;
+            background:
+                #0c1b2b;
+            color:
+                var(--text);
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .estacion-card:hover {
+            border-color:
+                #35658f;
+        }
+
+        .estacion-card.seleccionada {
+            border-color:
+                var(--cyan);
+            box-shadow:
+                0 0 0 2px
+                rgba(
+                    54,
+                    213,
+                    255,
+                    0.08
+                );
+        }
+
+        .estacion-card-cabecera {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .estacion-codigo {
+            color:
+                var(--cyan);
+            font-family:
+                "JetBrains Mono",
+                monospace;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .estacion-nombre {
+            margin-top: 3px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 25px;
+            padding:
+                0 8px;
+            border:
+                1px solid
+                var(--border-strong);
+            border-radius: 999px;
+            background:
+                rgba(
+                    59,
+                    158,
+                    255,
+                    0.06
+                );
+            color:
+                #b9cce0;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing:
+                0.03em;
+        }
+
+        .chip-activa {
+            border-color:
+                rgba(
+                    34,
+                    197,
+                    94,
+                    0.35
+                );
+            color:
+                #69e897;
+        }
+
+        .chip-inactiva {
+            border-color:
+                rgba(
+                    239,
+                    68,
+                    68,
+                    0.3
+                );
+            color:
+                #ff9ba8;
+        }
+
+        .estacion-localizacion {
+            margin-top: 9px;
+            color:
+                var(--muted);
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .lista-vacia {
+            padding: 26px 10px;
+            color:
+                var(--muted-dark);
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .formulario-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+            gap: 13px;
+        }
+
+        .campo {
+            min-width: 0;
+        }
+
+        .campo-ancho {
+            grid-column:
+                1 / -1;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 6px;
+            color:
+                #b8caDC;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing:
+                0.04em;
+        }
+
+        .campo-ayuda {
+            margin-top: 5px;
+            color:
+                var(--muted-dark);
+            font-size: 9px;
+            line-height: 1.4;
+        }
+
+        .acciones-formulario {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 17px;
+        }
+
+        .estado-formulario {
+            min-height: 20px;
+            margin-top: 12px;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .estado-formulario.info {
+            color:
+                var(--cyan);
+        }
+
+        .estado-formulario.ok {
+            color:
+                #62e69a;
+        }
+
+        .estado-formulario.error {
+            color:
+                #ff8e9d;
+        }
+
+        .metadatos {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+            gap: 10px;
+            margin-top: 19px;
+            padding-top: 17px;
+            border-top:
+                1px solid
+                var(--border);
+        }
+
+        .metadato {
+            min-width: 0;
+            padding: 11px;
+            border:
+                1px solid
+                var(--border);
+            border-radius: 10px;
+            background:
+                rgba(
+                    8,
+                    20,
+                    31,
+                    0.65
+                );
+        }
+
+        .metadato-etiqueta {
+            color:
+                var(--muted-dark);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing:
+                0.04em;
+        }
+
+        .metadato-valor {
+            margin-top: 5px;
+            color:
+                #dce8f4;
+            font-family:
+                "JetBrains Mono",
+                monospace;
+            font-size: 10px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        @media (
+            max-width: 980px
+        ) {
+            .admin-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .lista-estaciones {
+                max-height: 430px;
+            }
+        }
+
+        @media (
+            max-width: 700px
+        ) {
+            .resumen-grid {
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
+            }
+
+            .cabecera-admin {
+                flex-direction: column;
+            }
+
+            .sesion-admin {
+                justify-content:
+                    flex-start;
+            }
+
+            .formulario-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .campo-ancho {
+                grid-column:
+                    auto;
+            }
         }
 
         @media (
@@ -558,7 +1214,7 @@
                 font-size: 11px;
             }
 
-            .contenido {
+            .contenido-acceso {
                 align-items: start;
                 padding-top: 22px;
             }
@@ -571,6 +1227,33 @@
 
             .tecla {
                 min-height: 68px;
+            }
+
+            .panel-admin {
+                padding:
+                    18px 12px
+                    36px;
+            }
+
+            .filtros-dobles,
+            .metadatos {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .panel-cabecera,
+            .panel-cuerpo {
+                padding: 14px;
+            }
+
+            .cabecera-acciones {
+                gap: 6px;
+            }
+
+            .volver,
+            .boton-cabecera {
+                padding:
+                    0 9px;
             }
         }
     </style>
@@ -610,16 +1293,31 @@
 
             </a>
 
-            <a
-                href="index.html"
-                class="volver"
-            >
-                ← Volver
-            </a>
+            <div class="cabecera-acciones">
+
+                <button
+                    id="botonCerrarSesionCabecera"
+                    type="button"
+                    class="boton-cabecera oculto"
+                >
+                    Cerrar sesión
+                </button>
+
+                <a
+                    href="index.html"
+                    class="volver"
+                >
+                    ← Volver
+                </a>
+
+            </div>
 
         </header>
 
-        <main class="contenido">
+        <main
+            id="contenidoAcceso"
+            class="contenido-acceso"
+        >
 
             <section
                 class="acceso"
@@ -648,14 +1346,12 @@
                     class="indicador-pin"
                     aria-label="PIN introducido"
                 >
-
                     <span class="punto-pin"></span>
                     <span class="punto-pin"></span>
                     <span class="punto-pin"></span>
                     <span class="punto-pin"></span>
                     <span class="punto-pin"></span>
                     <span class="punto-pin"></span>
-
                 </div>
 
                 <div
@@ -721,7 +1417,6 @@
                         id="botonLimpiar"
                         type="button"
                         class="tecla tecla-accion"
-                        aria-label="Borrar todo el PIN"
                     >
                         Limpiar
                     </button>
@@ -761,12 +1456,507 @@
 
                 <div class="nota-seguridad">
                     El PIN no se almacena en esta página.
-                    La validación definitiva se realizará
-                    exclusivamente en la API de
-                    MeteoArchidona.
+                    La API valida el acceso y entrega
+                    una autorización temporal de 15 minutos.
                 </div>
 
             </section>
+
+        </main>
+
+        <main
+            id="panelAdministracion"
+            class="panel-admin oculto"
+        >
+
+            <div class="cabecera-admin">
+
+                <div>
+
+                    <h1 class="titulo-admin">
+                        Panel de administración
+                    </h1>
+
+                    <p class="subtitulo-admin">
+                        Gestión estructurada de estaciones
+                        meteorológicas de MeteoArchidona.
+                    </p>
+
+                </div>
+
+                <div class="sesion-admin">
+
+                    <div
+                        id="tiempoSesion"
+                        class="sesion-tiempo"
+                    >
+                        Sesión · --:--
+                    </div>
+
+                    <button
+                        id="botonActualizar"
+                        type="button"
+                        class="boton boton-secundario"
+                    >
+                        Actualizar datos
+                    </button>
+
+                    <button
+                        id="botonCerrarSesion"
+                        type="button"
+                        class="boton boton-peligro"
+                    >
+                        Cerrar sesión
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="resumen-grid">
+
+                <div class="resumen-card">
+                    <div class="resumen-etiqueta">
+                        Estaciones
+                    </div>
+                    <div
+                        id="resumenTotal"
+                        class="resumen-valor"
+                    >
+                        0
+                    </div>
+                </div>
+
+                <div class="resumen-card">
+                    <div class="resumen-etiqueta">
+                        Activas
+                    </div>
+                    <div
+                        id="resumenActivas"
+                        class="resumen-valor"
+                    >
+                        0
+                    </div>
+                </div>
+
+                <div class="resumen-card">
+                    <div class="resumen-etiqueta">
+                        Datos simulados
+                    </div>
+                    <div
+                        id="resumenSimuladas"
+                        class="resumen-valor"
+                    >
+                        0
+                    </div>
+                </div>
+
+                <div class="resumen-card">
+                    <div class="resumen-etiqueta">
+                        En preparación
+                    </div>
+                    <div
+                        id="resumenPreparacion"
+                        class="resumen-valor"
+                    >
+                        0
+                    </div>
+                </div>
+
+            </div>
+
+            <div
+                id="estadoPanel"
+                class="estado-panel"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+            <div class="admin-grid">
+
+                <section class="panel">
+
+                    <div class="panel-cabecera">
+
+                        <h2 class="panel-titulo">
+                            Estaciones
+                        </h2>
+
+                        <button
+                            id="botonNuevaEstacion"
+                            type="button"
+                            class="boton boton-principal"
+                        >
+                            + Nueva
+                        </button>
+
+                    </div>
+
+                    <div class="panel-cuerpo">
+
+                        <div class="filtros">
+
+                            <input
+                                id="filtroTexto"
+                                type="search"
+                                placeholder="Buscar código, nombre o localidad..."
+                                autocomplete="off"
+                            >
+
+                            <div class="filtros-dobles">
+
+                                <select id="filtroEstado">
+                                    <option value="">
+                                        Todos los estados
+                                    </option>
+                                </select>
+
+                                <select id="filtroProveedor">
+                                    <option value="">
+                                        Todos los proveedores
+                                    </option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            id="listaEstaciones"
+                            class="lista-estaciones"
+                        ></div>
+
+                    </div>
+
+                </section>
+
+                <section class="panel">
+
+                    <div class="panel-cabecera">
+
+                        <h2
+                            id="tituloFormulario"
+                            class="panel-titulo"
+                        >
+                            Nueva estación
+                        </h2>
+
+                        <div
+                            id="codigoSeleccionado"
+                            class="estacion-codigo"
+                        ></div>
+
+                    </div>
+
+                    <div class="panel-cuerpo">
+
+                        <form id="formularioEstacion">
+
+                            <div class="formulario-grid">
+
+                                <div class="campo">
+
+                                    <label for="campoCodigo">
+                                        Código
+                                    </label>
+
+                                    <input
+                                        id="campoCodigo"
+                                        name="codigo"
+                                        type="text"
+                                        maxlength="50"
+                                        required
+                                        autocomplete="off"
+                                        placeholder="SALINAS"
+                                    >
+
+                                    <div class="campo-ayuda">
+                                        Identidad funcional estable.
+                                        No podrá modificarse después.
+                                    </div>
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoNombre">
+                                        Nombre público
+                                    </label>
+
+                                    <input
+                                        id="campoNombre"
+                                        name="nombre_publico"
+                                        type="text"
+                                        maxlength="150"
+                                        required
+                                        autocomplete="off"
+                                        placeholder="Salinas"
+                                    >
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoEstado">
+                                        Estado
+                                    </label>
+
+                                    <select
+                                        id="campoEstado"
+                                        name="estado"
+                                        required
+                                    ></select>
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoProveedor">
+                                        Proveedor
+                                    </label>
+
+                                    <select
+                                        id="campoProveedor"
+                                        name="codigo_proveedor"
+                                        required
+                                    ></select>
+
+                                </div>
+
+                                <div class="campo campo-ancho">
+
+                                    <label for="campoDescripcion">
+                                        Descripción
+                                    </label>
+
+                                    <textarea
+                                        id="campoDescripcion"
+                                        name="descripcion"
+                                        placeholder="Descripción funcional de la estación..."
+                                    ></textarea>
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoCiudad">
+                                        Ciudad
+                                    </label>
+
+                                    <input
+                                        id="campoCiudad"
+                                        name="ciudad"
+                                        type="text"
+                                        maxlength="150"
+                                        autocomplete="off"
+                                    >
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoRegion">
+                                        Región
+                                    </label>
+
+                                    <input
+                                        id="campoRegion"
+                                        name="region"
+                                        type="text"
+                                        maxlength="100"
+                                        autocomplete="off"
+                                        placeholder="Andalucía"
+                                    >
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoPais">
+                                        País
+                                    </label>
+
+                                    <input
+                                        id="campoPais"
+                                        name="pais"
+                                        type="text"
+                                        maxlength="100"
+                                        autocomplete="off"
+                                        placeholder="España"
+                                    >
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoZonaHoraria">
+                                        Zona horaria
+                                    </label>
+
+                                    <input
+                                        id="campoZonaHoraria"
+                                        name="zona_horaria"
+                                        type="text"
+                                        maxlength="100"
+                                        autocomplete="off"
+                                        placeholder="Europe/Madrid"
+                                    >
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoLatitud">
+                                        Latitud
+                                    </label>
+
+                                    <input
+                                        id="campoLatitud"
+                                        name="latitud"
+                                        type="number"
+                                        step="any"
+                                        min="-90"
+                                        max="90"
+                                        inputmode="decimal"
+                                        placeholder="37.094692"
+                                    >
+
+                                </div>
+
+                                <div class="campo">
+
+                                    <label for="campoLongitud">
+                                        Longitud
+                                    </label>
+
+                                    <input
+                                        id="campoLongitud"
+                                        name="longitud"
+                                        type="number"
+                                        step="any"
+                                        min="-180"
+                                        max="180"
+                                        inputmode="decimal"
+                                        placeholder="-4.3774514"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                            <div class="acciones-formulario">
+
+                                <button
+                                    id="botonGuardar"
+                                    type="submit"
+                                    class="boton boton-principal"
+                                >
+                                    Crear estación
+                                </button>
+
+                                <button
+                                    id="botonCancelar"
+                                    type="button"
+                                    class="boton"
+                                >
+                                    Limpiar formulario
+                                </button>
+
+                            </div>
+
+                            <div
+                                id="estadoFormulario"
+                                class="estado-formulario"
+                                role="status"
+                                aria-live="polite"
+                            ></div>
+
+                        </form>
+
+                        <div
+                            id="panelMetadatos"
+                            class="metadatos oculto"
+                        >
+
+                            <div class="metadato">
+                                <div class="metadato-etiqueta">
+                                    ID interno
+                                </div>
+                                <div
+                                    id="metaId"
+                                    class="metadato-valor"
+                                >
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="metadato">
+                                <div class="metadato-etiqueta">
+                                    Activa
+                                </div>
+                                <div
+                                    id="metaActiva"
+                                    class="metadato-valor"
+                                >
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="metadato">
+                                <div class="metadato-etiqueta">
+                                    WeatherLink station_id
+                                </div>
+                                <div
+                                    id="metaWeatherLinkId"
+                                    class="metadato-valor"
+                                >
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="metadato">
+                                <div class="metadato-etiqueta">
+                                    Nombre WeatherLink
+                                </div>
+                                <div
+                                    id="metaWeatherLinkNombre"
+                                    class="metadato-valor"
+                                >
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="metadato">
+                                <div class="metadato-etiqueta">
+                                    Creada
+                                </div>
+                                <div
+                                    id="metaCreada"
+                                    class="metadato-valor"
+                                >
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="metadato">
+                                <div class="metadato-etiqueta">
+                                    Actualizada
+                                </div>
+                                <div
+                                    id="metaActualizada"
+                                    class="metadato-valor"
+                                >
+                                    —
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
 
         </main>
 
@@ -775,7 +1965,51 @@
     <script>
         const LONGITUD_PIN = 6;
 
+        const URL_API =
+            "https://api-meteoarchidona.onrender.com";
+
+        const RUTA_ACCESO =
+            "/admin/acceso";
+
+        const RUTA_ESTACIONES =
+            "/admin/estaciones";
+
+        const RUTA_CATALOGOS =
+            "/admin/estaciones/catalogos";
+
+        const CLAVE_TOKEN =
+            "meteoarchidona_admin_token";
+
+        const CLAVE_TIPO_TOKEN =
+            "meteoarchidona_admin_tipo_token";
+
+        const CLAVE_EXPIRACION =
+            "meteoarchidona_admin_expira_en";
+
         let pinIntroducido = "";
+
+        let solicitudEnCurso = false;
+
+        let catalogos = {
+            estados: [],
+            proveedores: []
+        };
+
+        let estaciones = [];
+
+        let codigoEdicion = null;
+
+        let intervaloSesion = null;
+
+        const contenidoAcceso =
+            document.getElementById(
+                "contenidoAcceso"
+            );
+
+        const panelAdministracion =
+            document.getElementById(
+                "panelAdministracion"
+            );
 
         const indicadorPin =
             document.getElementById(
@@ -813,6 +2047,249 @@
                 "[data-numero]"
             );
 
+        const teclas =
+            document.querySelectorAll(
+                ".tecla"
+            );
+
+        const botonCerrarSesion =
+            document.getElementById(
+                "botonCerrarSesion"
+            );
+
+        const botonCerrarSesionCabecera =
+            document.getElementById(
+                "botonCerrarSesionCabecera"
+            );
+
+        const botonActualizar =
+            document.getElementById(
+                "botonActualizar"
+            );
+
+        const botonNuevaEstacion =
+            document.getElementById(
+                "botonNuevaEstacion"
+            );
+
+        const tiempoSesion =
+            document.getElementById(
+                "tiempoSesion"
+            );
+
+        const estadoPanel =
+            document.getElementById(
+                "estadoPanel"
+            );
+
+        const resumenTotal =
+            document.getElementById(
+                "resumenTotal"
+            );
+
+        const resumenActivas =
+            document.getElementById(
+                "resumenActivas"
+            );
+
+        const resumenSimuladas =
+            document.getElementById(
+                "resumenSimuladas"
+            );
+
+        const resumenPreparacion =
+            document.getElementById(
+                "resumenPreparacion"
+            );
+
+        const filtroTexto =
+            document.getElementById(
+                "filtroTexto"
+            );
+
+        const filtroEstado =
+            document.getElementById(
+                "filtroEstado"
+            );
+
+        const filtroProveedor =
+            document.getElementById(
+                "filtroProveedor"
+            );
+
+        const listaEstaciones =
+            document.getElementById(
+                "listaEstaciones"
+            );
+
+        const formularioEstacion =
+            document.getElementById(
+                "formularioEstacion"
+            );
+
+        const tituloFormulario =
+            document.getElementById(
+                "tituloFormulario"
+            );
+
+        const codigoSeleccionado =
+            document.getElementById(
+                "codigoSeleccionado"
+            );
+
+        const campoCodigo =
+            document.getElementById(
+                "campoCodigo"
+            );
+
+        const campoNombre =
+            document.getElementById(
+                "campoNombre"
+            );
+
+        const campoDescripcion =
+            document.getElementById(
+                "campoDescripcion"
+            );
+
+        const campoEstado =
+            document.getElementById(
+                "campoEstado"
+            );
+
+        const campoProveedor =
+            document.getElementById(
+                "campoProveedor"
+            );
+
+        const campoCiudad =
+            document.getElementById(
+                "campoCiudad"
+            );
+
+        const campoPais =
+            document.getElementById(
+                "campoPais"
+            );
+
+        const campoRegion =
+            document.getElementById(
+                "campoRegion"
+            );
+
+        const campoZonaHoraria =
+            document.getElementById(
+                "campoZonaHoraria"
+            );
+
+        const campoLatitud =
+            document.getElementById(
+                "campoLatitud"
+            );
+
+        const campoLongitud =
+            document.getElementById(
+                "campoLongitud"
+            );
+
+        const botonGuardar =
+            document.getElementById(
+                "botonGuardar"
+            );
+
+        const botonCancelar =
+            document.getElementById(
+                "botonCancelar"
+            );
+
+        const estadoFormulario =
+            document.getElementById(
+                "estadoFormulario"
+            );
+
+        const panelMetadatos =
+            document.getElementById(
+                "panelMetadatos"
+            );
+
+        const metaId =
+            document.getElementById(
+                "metaId"
+            );
+
+        const metaActiva =
+            document.getElementById(
+                "metaActiva"
+            );
+
+        const metaWeatherLinkId =
+            document.getElementById(
+                "metaWeatherLinkId"
+            );
+
+        const metaWeatherLinkNombre =
+            document.getElementById(
+                "metaWeatherLinkNombre"
+            );
+
+        const metaCreada =
+            document.getElementById(
+                "metaCreada"
+            );
+
+        const metaActualizada =
+            document.getElementById(
+                "metaActualizada"
+            );
+
+
+        function mostrarEstadoAcceso(
+            mensaje,
+            tipo = ""
+        ) {
+
+            estadoAcceso.className =
+                tipo
+                    ? "estado " + tipo
+                    : "estado";
+
+            estadoAcceso.textContent =
+                mensaje;
+        }
+
+
+        function mostrarEstadoPanel(
+            mensaje,
+            tipo = ""
+        ) {
+
+            estadoPanel.className =
+                tipo
+                    ? "estado-panel " + tipo
+                    : "estado-panel";
+
+            estadoPanel.textContent =
+                mensaje;
+        }
+
+
+        function mostrarEstadoFormulario(
+            mensaje,
+            tipo = ""
+        ) {
+
+            estadoFormulario.className =
+                tipo
+                    ? (
+                        "estado-formulario "
+                        + tipo
+                    )
+                    : "estado-formulario";
+
+            estadoFormulario.textContent =
+                mensaje;
+        }
+
 
         function actualizarIndicadorPin() {
 
@@ -830,18 +2307,24 @@
             );
 
             botonAcceder.disabled =
-                pinIntroducido.length
-                !== LONGITUD_PIN;
+                solicitudEnCurso
+                || (
+                    pinIntroducido.length
+                    !== LONGITUD_PIN
+                );
         }
 
 
-        function limpiarEstado() {
+        function bloquearTeclado(
+            bloqueado
+        ) {
 
-            estadoAcceso.className =
-                "estado";
-
-            estadoAcceso.textContent =
-                "";
+            teclas.forEach(
+                tecla => {
+                    tecla.disabled =
+                        bloqueado;
+                }
+            );
         }
 
 
@@ -850,13 +2333,16 @@
         ) {
 
             if (
-                pinIntroducido.length
-                >= LONGITUD_PIN
+                solicitudEnCurso
+                || pinIntroducido.length
+                    >= LONGITUD_PIN
             ) {
                 return;
             }
 
-            limpiarEstado();
+            mostrarEstadoAcceso(
+                ""
+            );
 
             pinIntroducido +=
                 numero;
@@ -867,11 +2353,16 @@
 
         function borrarUltimaCifra() {
 
-            if (!pinIntroducido) {
+            if (
+                solicitudEnCurso
+                || !pinIntroducido
+            ) {
                 return;
             }
 
-            limpiarEstado();
+            mostrarEstadoAcceso(
+                ""
+            );
 
             pinIntroducido =
                 pinIntroducido.slice(
@@ -885,52 +2376,1625 @@
 
         function limpiarPin() {
 
+            if (solicitudEnCurso) {
+                return;
+            }
+
             pinIntroducido = "";
 
-            limpiarEstado();
+            mostrarEstadoAcceso(
+                ""
+            );
 
             actualizarIndicadorPin();
         }
 
 
-        function solicitarAcceso() {
+        function obtenerToken() {
+
+            return sessionStorage.getItem(
+                CLAVE_TOKEN
+            );
+        }
+
+
+        function obtenerExpiracion() {
+
+            const valor =
+                sessionStorage.getItem(
+                    CLAVE_EXPIRACION
+                );
+
+            if (!valor) {
+                return null;
+            }
+
+            const numero =
+                Number(valor);
 
             if (
-                pinIntroducido.length
-                !== LONGITUD_PIN
+                !Number.isFinite(
+                    numero
+                )
+            ) {
+                return null;
+            }
+
+            return numero;
+        }
+
+
+        function sesionEsValida() {
+
+            const token =
+                obtenerToken();
+
+            const expiraEn =
+                obtenerExpiracion();
+
+            if (
+                !token
+                || !expiraEn
+            ) {
+                return false;
+            }
+
+            const ahora =
+                Math.floor(
+                    Date.now()
+                    / 1000
+                );
+
+            return expiraEn > ahora;
+        }
+
+
+        function guardarSesion(
+            datos
+        ) {
+
+            sessionStorage.setItem(
+                CLAVE_TOKEN,
+                datos.token
+            );
+
+            sessionStorage.setItem(
+                CLAVE_TIPO_TOKEN,
+                datos.tipo_token
+                    || "bearer"
+            );
+
+            sessionStorage.setItem(
+                CLAVE_EXPIRACION,
+                String(
+                    datos.expira_en
+                )
+            );
+        }
+
+
+        function eliminarSesion() {
+
+            sessionStorage.removeItem(
+                CLAVE_TOKEN
+            );
+
+            sessionStorage.removeItem(
+                CLAVE_TIPO_TOKEN
+            );
+
+            sessionStorage.removeItem(
+                CLAVE_EXPIRACION
+            );
+        }
+
+
+        function detenerRelojSesion() {
+
+            if (
+                intervaloSesion
+                !== null
+            ) {
+                clearInterval(
+                    intervaloSesion
+                );
+
+                intervaloSesion = null;
+            }
+        }
+
+
+        function actualizarRelojSesion() {
+
+            const expiraEn =
+                obtenerExpiracion();
+
+            if (!expiraEn) {
+                tiempoSesion.textContent =
+                    "Sesión · --:--";
+
+                return;
+            }
+
+            const ahora =
+                Math.floor(
+                    Date.now()
+                    / 1000
+                );
+
+            const restantes =
+                expiraEn - ahora;
+
+            if (restantes <= 0) {
+
+                cerrarSesion(
+                    "La sesión administrativa ha caducado."
+                );
+
+                return;
+            }
+
+            const minutos =
+                Math.floor(
+                    restantes / 60
+                );
+
+            const segundos =
+                restantes % 60;
+
+            tiempoSesion.textContent =
+                "Sesión · "
+                + String(
+                    minutos
+                ).padStart(
+                    2,
+                    "0"
+                )
+                + ":"
+                + String(
+                    segundos
+                ).padStart(
+                    2,
+                    "0"
+                );
+        }
+
+
+        function iniciarRelojSesion() {
+
+            detenerRelojSesion();
+
+            actualizarRelojSesion();
+
+            intervaloSesion =
+                setInterval(
+                    actualizarRelojSesion,
+                    1000
+                );
+        }
+
+
+        function abrirPanelAdministracion() {
+
+            contenidoAcceso.classList.add(
+                "oculto"
+            );
+
+            panelAdministracion.classList.remove(
+                "oculto"
+            );
+
+            botonCerrarSesionCabecera.classList.remove(
+                "oculto"
+            );
+
+            iniciarRelojSesion();
+        }
+
+
+        function mostrarPantallaAcceso(
+            mensaje = ""
+        ) {
+
+            detenerRelojSesion();
+
+            panelAdministracion.classList.add(
+                "oculto"
+            );
+
+            contenidoAcceso.classList.remove(
+                "oculto"
+            );
+
+            botonCerrarSesionCabecera.classList.add(
+                "oculto"
+            );
+
+            pinIntroducido = "";
+
+            solicitudEnCurso =
+                false;
+
+            bloquearTeclado(
+                false
+            );
+
+            botonAcceder.textContent =
+                "Acceder";
+
+            actualizarIndicadorPin();
+
+            if (mensaje) {
+                mostrarEstadoAcceso(
+                    mensaje,
+                    "info"
+                );
+            } else {
+                mostrarEstadoAcceso(
+                    ""
+                );
+            }
+        }
+
+
+        function cerrarSesion(
+            mensaje = ""
+        ) {
+
+            eliminarSesion();
+
+            estaciones = [];
+
+            catalogos = {
+                estados: [],
+                proveedores: []
+            };
+
+            codigoEdicion = null;
+
+            mostrarPantallaAcceso(
+                mensaje
+            );
+        }
+
+
+        async function leerRespuesta(
+            respuesta
+        ) {
+
+            let datos = null;
+
+            try {
+
+                datos =
+                    await respuesta.json();
+
+            } catch {
+
+                datos = null;
+            }
+
+            if (!respuesta.ok) {
+
+                let mensaje =
+                    "La operación no pudo completarse.";
+
+                if (
+                    datos
+                    && typeof datos.detail
+                        === "string"
+                    && datos.detail.trim()
+                ) {
+                    mensaje =
+                        datos.detail;
+                }
+
+                const error =
+                    new Error(
+                        mensaje
+                    );
+
+                error.codigoHttp =
+                    respuesta.status;
+
+                error.retryAfter =
+                    respuesta.headers.get(
+                        "Retry-After"
+                    );
+
+                throw error;
+            }
+
+            return datos;
+        }
+
+
+        async function peticionAdministrativa(
+            ruta,
+            opciones = {}
+        ) {
+
+            if (!sesionEsValida()) {
+
+                cerrarSesion(
+                    "La sesión administrativa ha caducado."
+                );
+
+                throw new Error(
+                    "Sesión administrativa no disponible."
+                );
+            }
+
+            const token =
+                obtenerToken();
+
+            const headers =
+                new Headers(
+                    opciones.headers
+                    || {}
+                );
+
+            headers.set(
+                "Authorization",
+                "Bearer "
+                    + token
+            );
+
+            if (
+                opciones.body
+                && !headers.has(
+                    "Content-Type"
+                )
+            ) {
+                headers.set(
+                    "Content-Type",
+                    "application/json"
+                );
+            }
+
+            const respuesta =
+                await fetch(
+                    URL_API
+                        + ruta,
+                    {
+                        ...opciones,
+                        headers:
+                            headers,
+                        cache:
+                            "no-store"
+                    }
+                );
+
+            try {
+
+                return await leerRespuesta(
+                    respuesta
+                );
+
+            } catch (error) {
+
+                if (
+                    error.codigoHttp
+                    === 401
+                ) {
+                    cerrarSesion(
+                        "La sesión administrativa ya no es válida."
+                    );
+                }
+
+                throw error;
+            }
+        }
+
+
+        async function solicitarAcceso() {
+
+            if (
+                solicitudEnCurso
+                || pinIntroducido.length
+                    !== LONGITUD_PIN
             ) {
                 return;
             }
 
-            /*
-             * IMPORTANTE:
-             *
-             * El PIN nunca se validará aquí.
-             *
-             * No debe existir:
-             *
-             *     if (pin === "123456")
-             *
-             * ni ninguna constante equivalente
-             * dentro del repositorio web.
-             *
-             * En el siguiente incremento esta
-             * función enviará el PIN a un endpoint
-             * seguro de la API.
-             */
+            const pinSolicitud =
+                pinIntroducido;
 
-            estadoAcceso.className =
-                "estado info";
+            solicitudEnCurso =
+                true;
 
-            estadoAcceso.textContent =
-                "Teclado preparado. "
-                + "La validación segura del PIN "
-                + "se conectará con la API "
-                + "en el siguiente paso.";
-
-            pinIntroducido = "";
+            bloquearTeclado(
+                true
+            );
 
             actualizarIndicadorPin();
+
+            botonAcceder.textContent =
+                "Validando...";
+
+            mostrarEstadoAcceso(
+                "Comprobando acceso con la API...",
+                "info"
+            );
+
+            try {
+
+                const respuesta =
+                    await fetch(
+                        URL_API
+                            + RUTA_ACCESO,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body:
+                                JSON.stringify(
+                                    {
+                                        pin:
+                                            pinSolicitud
+                                    }
+                                ),
+                            cache:
+                                "no-store"
+                        }
+                    );
+
+                const datos =
+                    await leerRespuesta(
+                        respuesta
+                    );
+
+                if (
+                    !datos
+                    || typeof datos.token
+                        !== "string"
+                    || !datos.token
+                    || !datos.expira_en
+                ) {
+                    throw new Error(
+                        "La API no devolvió una sesión válida."
+                    );
+                }
+
+                guardarSesion(
+                    datos
+                );
+
+                pinIntroducido = "";
+
+                abrirPanelAdministracion();
+
+                await cargarDatosAdministracion();
+
+            } catch (error) {
+
+                eliminarSesion();
+
+                pinIntroducido = "";
+
+                solicitudEnCurso =
+                    false;
+
+                bloquearTeclado(
+                    false
+                );
+
+                botonAcceder.textContent =
+                    "Acceder";
+
+                actualizarIndicadorPin();
+
+                let mensaje =
+                    error.message
+                    || (
+                        "No ha sido posible "
+                        + "validar el acceso."
+                    );
+
+                if (
+                    error.codigoHttp
+                    === 429
+                    && error.retryAfter
+                ) {
+                    mensaje +=
+                        " Espera "
+                        + error.retryAfter
+                        + " segundos.";
+                }
+
+                mostrarEstadoAcceso(
+                    mensaje,
+                    "error"
+                );
+
+                return;
+            }
+
+            solicitudEnCurso =
+                false;
+        }
+
+
+        function crearOpcion(
+            valor,
+            texto
+        ) {
+
+            const opcion =
+                document.createElement(
+                    "option"
+                );
+
+            opcion.value =
+                valor;
+
+            opcion.textContent =
+                texto;
+
+            return opcion;
+        }
+
+
+        function etiquetaEstado(
+            valor
+        ) {
+
+            const etiquetas = {
+                PROYECTADA:
+                    "Proyectada",
+                CONSTRUCCION:
+                    "En construcción",
+                DATOS_SIMULADOS:
+                    "Datos simulados",
+                ACTIVA:
+                    "Activa",
+                INACTIVA:
+                    "Inactiva"
+            };
+
+            return etiquetas[valor]
+                || valor;
+        }
+
+
+        function etiquetaProveedor(
+            valor
+        ) {
+
+            const etiquetas = {
+                WEATHERLINK:
+                    "WeatherLink",
+                ECOWITT:
+                    "Ecowitt",
+                SIMULADOR:
+                    "Simulador"
+            };
+
+            return etiquetas[valor]
+                || valor;
+        }
+
+
+        function cargarOpcionesCatalogos() {
+
+            campoEstado.replaceChildren();
+
+            campoProveedor.replaceChildren();
+
+            filtroEstado.replaceChildren(
+                crearOpcion(
+                    "",
+                    "Todos los estados"
+                )
+            );
+
+            filtroProveedor.replaceChildren(
+                crearOpcion(
+                    "",
+                    "Todos los proveedores"
+                )
+            );
+
+            catalogos.estados.forEach(
+                estado => {
+
+                    campoEstado.appendChild(
+                        crearOpcion(
+                            estado,
+                            etiquetaEstado(
+                                estado
+                            )
+                        )
+                    );
+
+                    filtroEstado.appendChild(
+                        crearOpcion(
+                            estado,
+                            etiquetaEstado(
+                                estado
+                            )
+                        )
+                    );
+                }
+            );
+
+            catalogos.proveedores.forEach(
+                proveedor => {
+
+                    campoProveedor.appendChild(
+                        crearOpcion(
+                            proveedor,
+                            etiquetaProveedor(
+                                proveedor
+                            )
+                        )
+                    );
+
+                    filtroProveedor.appendChild(
+                        crearOpcion(
+                            proveedor,
+                            etiquetaProveedor(
+                                proveedor
+                            )
+                        )
+                    );
+                }
+            );
+        }
+
+
+        function actualizarResumen() {
+
+            resumenTotal.textContent =
+                String(
+                    estaciones.length
+                );
+
+            resumenActivas.textContent =
+                String(
+                    estaciones.filter(
+                        estacion =>
+                            estacion.activa
+                    ).length
+                );
+
+            resumenSimuladas.textContent =
+                String(
+                    estaciones.filter(
+                        estacion =>
+                            estacion.estado
+                            === "DATOS_SIMULADOS"
+                    ).length
+                );
+
+            resumenPreparacion.textContent =
+                String(
+                    estaciones.filter(
+                        estacion =>
+                            (
+                                estacion.estado
+                                === "PROYECTADA"
+                            )
+                            || (
+                                estacion.estado
+                                === "CONSTRUCCION"
+                            )
+                    ).length
+                );
+        }
+
+
+        function obtenerTextoLocalizacion(
+            estacion
+        ) {
+
+            const partes = [
+                estacion.ciudad,
+                estacion.region,
+                estacion.pais
+            ].filter(
+                valor =>
+                    valor
+                    && String(valor).trim()
+            );
+
+            if (!partes.length) {
+                return "Ubicación no especificada";
+            }
+
+            return partes.join(
+                " · "
+            );
+        }
+
+
+        function estacionesFiltradas() {
+
+            const texto =
+                filtroTexto.value
+                .trim()
+                .toLocaleLowerCase(
+                    "es"
+                );
+
+            const estado =
+                filtroEstado.value;
+
+            const proveedor =
+                filtroProveedor.value;
+
+            return estaciones.filter(
+                estacion => {
+
+                    if (
+                        estado
+                        && estacion.estado
+                            !== estado
+                    ) {
+                        return false;
+                    }
+
+                    if (
+                        proveedor
+                        && estacion.codigo_proveedor
+                            !== proveedor
+                    ) {
+                        return false;
+                    }
+
+                    if (!texto) {
+                        return true;
+                    }
+
+                    const textoEstacion = [
+                        estacion.codigo,
+                        estacion.nombre_publico,
+                        estacion.ciudad,
+                        estacion.region,
+                        estacion.pais
+                    ]
+                        .filter(
+                            valor =>
+                                valor !== null
+                                && valor !== undefined
+                        )
+                        .join(
+                            " "
+                        )
+                        .toLocaleLowerCase(
+                            "es"
+                        );
+
+                    return textoEstacion.includes(
+                        texto
+                    );
+                }
+            );
+        }
+
+
+        function crearChip(
+            texto,
+            claseExtra = ""
+        ) {
+
+            const chip =
+                document.createElement(
+                    "span"
+                );
+
+            chip.className =
+                claseExtra
+                    ? "chip " + claseExtra
+                    : "chip";
+
+            chip.textContent =
+                texto;
+
+            return chip;
+        }
+
+
+        function renderizarEstaciones() {
+
+            listaEstaciones.replaceChildren();
+
+            const filtradas =
+                estacionesFiltradas();
+
+            if (!filtradas.length) {
+
+                const vacio =
+                    document.createElement(
+                        "div"
+                    );
+
+                vacio.className =
+                    "lista-vacia";
+
+                vacio.textContent =
+                    estaciones.length
+                        ? (
+                            "No hay estaciones "
+                            + "que coincidan con los filtros."
+                        )
+                        : (
+                            "No hay estaciones registradas."
+                        );
+
+                listaEstaciones.appendChild(
+                    vacio
+                );
+
+                return;
+            }
+
+            filtradas.forEach(
+                estacion => {
+
+                    const tarjeta =
+                        document.createElement(
+                            "button"
+                        );
+
+                    tarjeta.type =
+                        "button";
+
+                    tarjeta.className =
+                        "estacion-card";
+
+                    if (
+                        codigoEdicion
+                        === estacion.codigo
+                    ) {
+                        tarjeta.classList.add(
+                            "seleccionada"
+                        );
+                    }
+
+                    const cabecera =
+                        document.createElement(
+                            "div"
+                        );
+
+                    cabecera.className =
+                        "estacion-card-cabecera";
+
+                    const bloqueNombre =
+                        document.createElement(
+                            "div"
+                        );
+
+                    const codigo =
+                        document.createElement(
+                            "div"
+                        );
+
+                    codigo.className =
+                        "estacion-codigo";
+
+                    codigo.textContent =
+                        estacion.codigo;
+
+                    const nombre =
+                        document.createElement(
+                            "div"
+                        );
+
+                    nombre.className =
+                        "estacion-nombre";
+
+                    nombre.textContent =
+                        estacion.nombre_publico;
+
+                    bloqueNombre.append(
+                        codigo,
+                        nombre
+                    );
+
+                    cabecera.appendChild(
+                        bloqueNombre
+                    );
+
+                    const chips =
+                        document.createElement(
+                            "div"
+                        );
+
+                    chips.className =
+                        "chips";
+
+                    chips.appendChild(
+                        crearChip(
+                            etiquetaEstado(
+                                estacion.estado
+                            )
+                        )
+                    );
+
+                    chips.appendChild(
+                        crearChip(
+                            etiquetaProveedor(
+                                estacion.codigo_proveedor
+                            )
+                        )
+                    );
+
+                    chips.appendChild(
+                        crearChip(
+                            estacion.activa
+                                ? "ACTIVA"
+                                : "NO ACTIVA",
+                            estacion.activa
+                                ? "chip-activa"
+                                : "chip-inactiva"
+                        )
+                    );
+
+                    const localizacion =
+                        document.createElement(
+                            "div"
+                        );
+
+                    localizacion.className =
+                        "estacion-localizacion";
+
+                    localizacion.textContent =
+                        obtenerTextoLocalizacion(
+                            estacion
+                        );
+
+                    tarjeta.append(
+                        cabecera,
+                        chips,
+                        localizacion
+                    );
+
+                    tarjeta.addEventListener(
+                        "click",
+                        () => {
+                            seleccionarEstacion(
+                                estacion.codigo
+                            );
+                        }
+                    );
+
+                    listaEstaciones.appendChild(
+                        tarjeta
+                    );
+                }
+            );
+        }
+
+
+        function valorTextoOpcional(
+            valor
+        ) {
+
+            if (
+                valor === null
+                || valor === undefined
+            ) {
+                return "";
+            }
+
+            return String(
+                valor
+            );
+        }
+
+
+        function formatearFecha(
+            valor
+        ) {
+
+            if (!valor) {
+                return "—";
+            }
+
+            const fecha =
+                new Date(
+                    valor
+                );
+
+            if (
+                Number.isNaN(
+                    fecha.getTime()
+                )
+            ) {
+                return String(
+                    valor
+                );
+            }
+
+            return fecha.toLocaleString(
+                "es-ES",
+                {
+                    dateStyle:
+                        "short",
+                    timeStyle:
+                        "medium"
+                }
+            );
+        }
+
+
+        function mostrarMetadatos(
+            estacion
+        ) {
+
+            panelMetadatos.classList.remove(
+                "oculto"
+            );
+
+            metaId.textContent =
+                String(
+                    estacion.id
+                );
+
+            metaActiva.textContent =
+                estacion.activa
+                    ? "Sí"
+                    : "No";
+
+            metaWeatherLinkId.textContent =
+                estacion.weatherlink_station_id
+                ?? "—";
+
+            metaWeatherLinkNombre.textContent =
+                estacion.nombre_weatherlink
+                || "—";
+
+            metaCreada.textContent =
+                formatearFecha(
+                    estacion.creado_en
+                );
+
+            metaActualizada.textContent =
+                formatearFecha(
+                    estacion.actualizado_en
+                );
+        }
+
+
+        function cargarEstacionEnFormulario(
+            estacion
+        ) {
+
+            codigoEdicion =
+                estacion.codigo;
+
+            tituloFormulario.textContent =
+                "Editar estación";
+
+            codigoSeleccionado.textContent =
+                estacion.codigo;
+
+            campoCodigo.value =
+                estacion.codigo;
+
+            campoCodigo.disabled =
+                true;
+
+            campoNombre.value =
+                estacion.nombre_publico
+                || "";
+
+            campoDescripcion.value =
+                valorTextoOpcional(
+                    estacion.descripcion
+                );
+
+            campoEstado.value =
+                estacion.estado;
+
+            campoProveedor.value =
+                estacion.codigo_proveedor;
+
+            campoCiudad.value =
+                valorTextoOpcional(
+                    estacion.ciudad
+                );
+
+            campoPais.value =
+                valorTextoOpcional(
+                    estacion.pais
+                );
+
+            campoRegion.value =
+                valorTextoOpcional(
+                    estacion.region
+                );
+
+            campoZonaHoraria.value =
+                valorTextoOpcional(
+                    estacion.zona_horaria
+                );
+
+            campoLatitud.value =
+                valorTextoOpcional(
+                    estacion.latitud
+                );
+
+            campoLongitud.value =
+                valorTextoOpcional(
+                    estacion.longitud
+                );
+
+            botonGuardar.textContent =
+                "Guardar cambios";
+
+            botonCancelar.textContent =
+                "Cancelar edición";
+
+            mostrarMetadatos(
+                estacion
+            );
+
+            mostrarEstadoFormulario(
+                ""
+            );
+
+            renderizarEstaciones();
+        }
+
+
+        function prepararNuevaEstacion() {
+
+            codigoEdicion =
+                null;
+
+            formularioEstacion.reset();
+
+            campoCodigo.disabled =
+                false;
+
+            tituloFormulario.textContent =
+                "Nueva estación";
+
+            codigoSeleccionado.textContent =
+                "";
+
+            botonGuardar.textContent =
+                "Crear estación";
+
+            botonCancelar.textContent =
+                "Limpiar formulario";
+
+            panelMetadatos.classList.add(
+                "oculto"
+            );
+
+            mostrarEstadoFormulario(
+                ""
+            );
+
+            if (
+                catalogos.estados.length
+                && !campoEstado.value
+            ) {
+                campoEstado.value =
+                    catalogos.estados[0];
+            }
+
+            if (
+                catalogos.proveedores.length
+                && !campoProveedor.value
+            ) {
+                campoProveedor.value =
+                    catalogos.proveedores[0];
+            }
+
+            renderizarEstaciones();
+
+            campoCodigo.focus();
+        }
+
+
+        async function seleccionarEstacion(
+            codigo
+        ) {
+
+            mostrarEstadoFormulario(
+                "Cargando estación...",
+                "info"
+            );
+
+            try {
+
+                const estacion =
+                    await peticionAdministrativa(
+                        RUTA_ESTACIONES
+                            + "/"
+                            + encodeURIComponent(
+                                codigo
+                            ),
+                        {
+                            method: "GET"
+                        }
+                    );
+
+                cargarEstacionEnFormulario(
+                    estacion
+                );
+
+            } catch (error) {
+
+                mostrarEstadoFormulario(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        function textoOpcionalFormulario(
+            elemento
+        ) {
+
+            const valor =
+                elemento.value
+                .trim();
+
+            return valor
+                ? valor
+                : null;
+        }
+
+
+        function numeroOpcionalFormulario(
+            elemento,
+            nombre
+        ) {
+
+            const valor =
+                elemento.value
+                .trim();
+
+            if (!valor) {
+                return null;
+            }
+
+            const numero =
+                Number(
+                    valor
+                );
+
+            if (
+                !Number.isFinite(
+                    numero
+                )
+            ) {
+                throw new Error(
+                    nombre
+                    + " debe ser un número válido."
+                );
+            }
+
+            return numero;
+        }
+
+
+        function construirDatosComunesFormulario() {
+
+            return {
+                nombre_publico:
+                    campoNombre.value.trim(),
+
+                descripcion:
+                    textoOpcionalFormulario(
+                        campoDescripcion
+                    ),
+
+                estado:
+                    campoEstado.value,
+
+                codigo_proveedor:
+                    campoProveedor.value,
+
+                ciudad:
+                    textoOpcionalFormulario(
+                        campoCiudad
+                    ),
+
+                pais:
+                    textoOpcionalFormulario(
+                        campoPais
+                    ),
+
+                region:
+                    textoOpcionalFormulario(
+                        campoRegion
+                    ),
+
+                zona_horaria:
+                    textoOpcionalFormulario(
+                        campoZonaHoraria
+                    ),
+
+                latitud:
+                    numeroOpcionalFormulario(
+                        campoLatitud,
+                        "La latitud"
+                    ),
+
+                longitud:
+                    numeroOpcionalFormulario(
+                        campoLongitud,
+                        "La longitud"
+                    )
+            };
+        }
+
+
+        async function guardarEstacion(
+            evento
+        ) {
+
+            evento.preventDefault();
+
+            if (
+                !formularioEstacion
+                    .reportValidity()
+            ) {
+                return;
+            }
+
+            botonGuardar.disabled =
+                true;
+
+            mostrarEstadoFormulario(
+                codigoEdicion
+                    ? "Guardando cambios..."
+                    : "Creando estación...",
+                "info"
+            );
+
+            try {
+
+                const datos =
+                    construirDatosComunesFormulario();
+
+                let estacionGuardada;
+
+                if (codigoEdicion) {
+
+                    estacionGuardada =
+                        await peticionAdministrativa(
+                            RUTA_ESTACIONES
+                                + "/"
+                                + encodeURIComponent(
+                                    codigoEdicion
+                                ),
+                            {
+                                method: "PATCH",
+                                body:
+                                    JSON.stringify(
+                                        datos
+                                    )
+                            }
+                        );
+
+                } else {
+
+                    datos.codigo =
+                        campoCodigo.value
+                        .trim();
+
+                    estacionGuardada =
+                        await peticionAdministrativa(
+                            RUTA_ESTACIONES,
+                            {
+                                method: "POST",
+                                body:
+                                    JSON.stringify(
+                                        datos
+                                    )
+                            }
+                        );
+                }
+
+                mostrarEstadoFormulario(
+                    codigoEdicion
+                        ? "Estación actualizada correctamente."
+                        : "Estación creada correctamente.",
+                    "ok"
+                );
+
+                await cargarEstaciones(
+                    false
+                );
+
+                cargarEstacionEnFormulario(
+                    estacionGuardada
+                );
+
+            } catch (error) {
+
+                mostrarEstadoFormulario(
+                    error.message,
+                    "error"
+                );
+
+            } finally {
+
+                botonGuardar.disabled =
+                    false;
+            }
+        }
+
+
+        async function cargarEstaciones(
+            mostrarMensaje = true
+        ) {
+
+            if (mostrarMensaje) {
+                mostrarEstadoPanel(
+                    "Cargando estaciones...",
+                    "info"
+                );
+            }
+
+            const resultado =
+                await peticionAdministrativa(
+                    RUTA_ESTACIONES,
+                    {
+                        method: "GET"
+                    }
+                );
+
+            estaciones =
+                Array.isArray(
+                    resultado
+                )
+                    ? resultado
+                    : [];
+
+            actualizarResumen();
+
+            renderizarEstaciones();
+
+            if (mostrarMensaje) {
+                mostrarEstadoPanel(
+                    "Datos actualizados correctamente.",
+                    "ok"
+                );
+            }
+        }
+
+
+        async function cargarDatosAdministracion() {
+
+            botonActualizar.disabled =
+                true;
+
+            mostrarEstadoPanel(
+                "Cargando administración...",
+                "info"
+            );
+
+            try {
+
+                const [
+                    catalogosRespuesta,
+                    estacionesRespuesta
+                ] = await Promise.all(
+                    [
+                        peticionAdministrativa(
+                            RUTA_CATALOGOS,
+                            {
+                                method: "GET"
+                            }
+                        ),
+
+                        peticionAdministrativa(
+                            RUTA_ESTACIONES,
+                            {
+                                method: "GET"
+                            }
+                        )
+                    ]
+                );
+
+                catalogos = {
+                    estados:
+                        Array.isArray(
+                            catalogosRespuesta.estados
+                        )
+                            ? catalogosRespuesta.estados
+                            : [],
+
+                    proveedores:
+                        Array.isArray(
+                            catalogosRespuesta.proveedores
+                        )
+                            ? catalogosRespuesta.proveedores
+                            : []
+                };
+
+                estaciones =
+                    Array.isArray(
+                        estacionesRespuesta
+                    )
+                        ? estacionesRespuesta
+                        : [];
+
+                cargarOpcionesCatalogos();
+
+                actualizarResumen();
+
+                prepararNuevaEstacion();
+
+                renderizarEstaciones();
+
+                mostrarEstadoPanel(
+                    "Administración cargada correctamente.",
+                    "ok"
+                );
+
+            } catch (error) {
+
+                if (
+                    !panelAdministracion.classList
+                        .contains(
+                            "oculto"
+                        )
+                ) {
+                    mostrarEstadoPanel(
+                        error.message,
+                        "error"
+                    );
+                }
+
+            } finally {
+
+                botonActualizar.disabled =
+                    false;
+            }
+        }
+
+
+        async function actualizarDatos() {
+
+            botonActualizar.disabled =
+                true;
+
+            try {
+
+                await cargarEstaciones(
+                    true
+                );
+
+                if (codigoEdicion) {
+
+                    const existente =
+                        estaciones.find(
+                            estacion =>
+                                estacion.codigo
+                                === codigoEdicion
+                        );
+
+                    if (existente) {
+                        cargarEstacionEnFormulario(
+                            existente
+                        );
+                    }
+                }
+
+            } catch (error) {
+
+                mostrarEstadoPanel(
+                    error.message,
+                    "error"
+                );
+
+            } finally {
+
+                botonActualizar.disabled =
+                    false;
+            }
         }
 
 
@@ -966,9 +4030,85 @@
         );
 
 
+        botonCerrarSesion.addEventListener(
+            "click",
+            () => {
+                cerrarSesion(
+                    "Sesión cerrada correctamente."
+                );
+            }
+        );
+
+
+        botonCerrarSesionCabecera.addEventListener(
+            "click",
+            () => {
+                cerrarSesion(
+                    "Sesión cerrada correctamente."
+                );
+            }
+        );
+
+
+        botonActualizar.addEventListener(
+            "click",
+            actualizarDatos
+        );
+
+
+        botonNuevaEstacion.addEventListener(
+            "click",
+            prepararNuevaEstacion
+        );
+
+
+        botonCancelar.addEventListener(
+            "click",
+            prepararNuevaEstacion
+        );
+
+
+        formularioEstacion.addEventListener(
+            "submit",
+            guardarEstacion
+        );
+
+
+        filtroTexto.addEventListener(
+            "input",
+            renderizarEstaciones
+        );
+
+
+        filtroEstado.addEventListener(
+            "change",
+            renderizarEstaciones
+        );
+
+
+        filtroProveedor.addEventListener(
+            "change",
+            renderizarEstaciones
+        );
+
+
         document.addEventListener(
             "keydown",
             evento => {
+
+                if (
+                    !panelAdministracion
+                        .classList
+                        .contains(
+                            "oculto"
+                        )
+                ) {
+                    return;
+                }
+
+                if (solicitudEnCurso) {
+                    return;
+                }
 
                 if (
                     /^[0-9]$/.test(
@@ -1011,7 +4151,26 @@
         );
 
 
-        actualizarIndicadorPin();
+        function iniciarPagina() {
+
+            actualizarIndicadorPin();
+
+            if (sesionEsValida()) {
+
+                abrirPanelAdministracion();
+
+                cargarDatosAdministracion();
+
+                return;
+            }
+
+            eliminarSesion();
+
+            mostrarPantallaAcceso();
+        }
+
+
+        iniciarPagina();
     </script>
 
 </body>
