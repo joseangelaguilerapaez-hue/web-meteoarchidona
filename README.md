@@ -39,6 +39,7 @@ pages/                una página por sección
   observaciones.html    marco del visor de radar
   prediccion.html       en construcción
   en-vivo.html          cámaras
+  informacion.html      el proyecto, las estaciones, fuentes y contacto
   administracion.html   panel privado, con PIN
 componentes/
   cabecera.html         la navegación, en un solo sitio
@@ -59,6 +60,7 @@ Las direcciones que ve el visitante:
 | `/observaciones` | `pages/observaciones.html` |
 | `/prediccion` | `pages/prediccion.html` |
 | `/en-vivo` | `pages/en-vivo.html` |
+| `/informacion` | `pages/informacion.html` |
 | `/administracion` | `pages/administracion.html` |
 
 Las viejas (`/index.html`, `/en-vivo.html`, `/pages/en-vivo.html`…)
@@ -80,6 +82,7 @@ a medias:
 1. `.htaccess`, para que la dirección limpia lleve al fichero.
 2. La lista `SECCIONES` de `servidor.py`, para poder probarla en local.
 3. `componentes/cabecera.html`, para que salga en el menú.
+4. `sitemap.xml`, si es una página pública.
 
 **Al publicar hay que subir el `?v=` de los enlaces.** Las hojas y los
 scripts se cachean una semana (ver `.htaccess`); sin cambiar ese número,

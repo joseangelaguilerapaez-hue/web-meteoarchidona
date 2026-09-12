@@ -150,10 +150,18 @@ RewriteRule ^ /prediccion [R=301,L]
 
 
 # ------------------------------------------------------------
+# Información
+# ------------------------------------------------------------
+
+RewriteCond %{THE_REQUEST} \s/+pages/informacion\.html[\s?] [NC]
+RewriteRule ^ /informacion [R=301,L]
+
+
+# ------------------------------------------------------------
 # Reescritura interna de direcciones limpias
 # ------------------------------------------------------------
 
-RewriteRule ^(observaciones|prediccion|en-vivo|administracion)/?$ pages/$1.html [L]
+RewriteRule ^(observaciones|prediccion|en-vivo|administracion|informacion)/?$ pages/$1.html [L]
 
 
 # ============================================================

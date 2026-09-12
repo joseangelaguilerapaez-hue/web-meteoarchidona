@@ -46,6 +46,7 @@ SECCIONES = (
     "prediccion",
     "en-vivo",
     "administracion",
+    "informacion",
 )
 
 # La portada es Actualidad, servida en "/" sin redirigir.

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Qué es MeteoArchidona, sus estaciones meteorológicas, de dónde salen los datos que no medimos y cómo contactar."
+>
+
+<title>
+    Información · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="canonical" href="https://meteoarchidona.com/informacion">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Información · MeteoArchidona">
+<meta property="og:description" content="Qué es MeteoArchidona, sus estaciones meteorológicas, de dónde salen los datos que no medimos y cómo contactar.">
+<meta property="og:url" content="https://meteoarchidona.com/informacion">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-informacion1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-informacion1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20260913-informacion1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/informacion.css?v=20260913-informacion1"
+>
+
+
+<script
+    src="../js/cabecera.js?v=20260913-informacion1"
+    defer
+></script>
+
+<script
+    src="../js/api.js?v=20260913-informacion1"
+    defer
+></script>
+
+<script
+    src="../js/informacion.js?v=20260913-informacion1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="informacion">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="informacion">
+
+
+<header class="informacion-cabecera">
+
+    <div class="informacion-etiqueta">
+        METEOARCHIDONA · INFORMACIÓN
+    </div>
+
+    <h1>
+        El tiempo de nuestra comarca, medido aquí.
+    </h1>
+
+</header>
+
+
+<!-- ========================================================
+     QUÉ ES
+     ======================================================== -->
+
+<section
+    class="informacion-bloque"
+    aria-labelledby="titulo-que-es"
+>
+
+    <h2 id="titulo-que-es">
+        Qué es MeteoArchidona
+    </h2>
+
+    <p>
+        MeteoArchidona publica en tiempo real las lecturas de
+        estaciones meteorológicas propias situadas en Archidona y su
+        comarca, junto con el radar de precipitación y cámaras en
+        directo.
+    </p>
+
+    <p>
+        Es de acceso libre y gratuito, y no hace falta registrarse. Es
+        un proyecto de Y&amp;Z Project.
+    </p>
+
+</section>
+
+
+<!-- ========================================================
+     ESTACIONES
+     ======================================================== -->
+
+<section
+    class="informacion-bloque"
+    aria-labelledby="titulo-estaciones"
+>
+
+    <h2 id="titulo-estaciones">
+        Nuestras estaciones
+    </h2>
+
+    <p>
+        La lista sale en directo de nuestra propia API: cuando una
+        estación se incorpora a la red o cambia de estado, aparece aquí
+        sin tocar esta página.
+    </p>
+
+    <!--
+        La rellena js/informacion.js. Mientras llega, o si la API no
+        responde, se queda con el aviso de dentro.
+    -->
+    <div
+        class="estaciones-lista"
+        id="estaciones-lista"
+        aria-live="polite"
+    >
+        <p class="estaciones-aviso">
+            Cargando estaciones…
+        </p>
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="informacion-bloque"
+    aria-labelledby="titulo-fuentes"
+>
+
+    <h2 id="titulo-fuentes">
+        De dónde salen los datos
+    </h2>
+
+    <p>
+        Las lecturas de temperatura, viento, lluvia y demás variables
+        son de nuestras estaciones. Lo que no medimos nosotros viene de
+        estas fuentes:
+    </p>
+
+    <ul class="fuentes-lista">
+
+        <li>
+            <span class="fuente-que">Radar de precipitación</span>
+            <span class="fuente-quien">
+                <a href="https://www.aemet.es" target="_blank" rel="noopener noreferrer">AEMET</a>,
+                Agencia Estatal de Meteorología
+            </span>
+        </li>
+
+        <li>
+            <span class="fuente-que">Ortofotos del mapa</span>
+            <span class="fuente-quien">
+                <a href="https://www.ign.es" target="_blank" rel="noopener noreferrer">IGN/CNIG</a>,
+                PNOA Máxima Actualidad
+            </span>
+        </li>
+
+        <li>
+            <span class="fuente-que">Mapa físico</span>
+            <span class="fuente-quien">
+                <a href="https://opentopomap.org" target="_blank" rel="noopener noreferrer">OpenTopoMap</a>
+                (CC-BY-SA), con datos de OpenStreetMap y SRTM
+            </span>
+        </li>
+
+        <li>
+            <span class="fuente-que">Límites y mapa político</span>
+            <span class="fuente-quien">
+                &copy;
+                <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">colaboradores de OpenStreetMap</a>
+            </span>
+        </li>
+
+        <li>
+            <span class="fuente-que">Cámaras de Sierra Nevada</span>
+            <span class="fuente-quien">
+                sus propietarios, enlazados en cada cámara de
+                <a href="/en-vivo">En vivo</a>
+            </span>
+        </li>
+
+    </ul>
+
+</section>
+
+
+<!-- ========================================================
+     CONTACTO
+     ======================================================== -->
+
+<section
+    class="informacion-bloque"
+    aria-labelledby="titulo-contacto"
+>
+
+    <h2 id="titulo-contacto">
+        Contacto
+    </h2>
+
+    <ul class="contacto-lista">
+
+        <li>
+            <span class="contacto-quien">Consultas generales</span>
+            <a href="mailto:infometeoarchidona@meteoarchidona.com">infometeoarchidona@meteoarchidona.com</a>
+        </li>
+
+        <li>
+            <span class="contacto-quien">Yoseba · Y&amp;Z Project</span>
+            <a href="mailto:yoseba@meteoarchidona.com">yoseba@meteoarchidona.com</a>
+        </li>
+
+        <li>
+            <span class="contacto-quien">Zonnen69 · Y&amp;Z Project</span>
+            <a href="mailto:zonnen69@meteoarchidona.com">zonnen69@meteoarchidona.com</a>
+        </li>
+
+    </ul>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/informacion.html -->
