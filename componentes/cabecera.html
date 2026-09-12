@@ -103,6 +103,21 @@
 <div class="zona-derecha">
 
 
+<!--
+    Hueco para los controles propios de una página. Administración
+    mete aquí su botón de cerrar sesión: lo declara en su HTML con
+    data-en-cabecera y js/cabecera.js lo trae al montar.
+
+    Va así y no dentro de este fichero porque el botón tiene que
+    existir desde el primer momento: js/administracion.js lo busca
+    por su id nada más arrancar, y la cabecera llega después.
+-->
+<div
+    class="cabecera-acciones"
+    id="cabecera-acciones"
+></div>
+
+
 <div class="hora">
 
     <div>

@@ -18,8 +18,11 @@
 
 const LONGITUD_PIN=6;
 
-const URL_API=
-    "https://api-meteoarchidona.onrender.com";
+/*
+ * La dirección la decide js/api.js, que se carga antes: en local
+ * apunta al proxy de servidor.py y en producción a la API en Render.
+ */
+const URL_API=window.API_BASE;
 
 const RUTA_ACCESO=
     "/admin/acceso";

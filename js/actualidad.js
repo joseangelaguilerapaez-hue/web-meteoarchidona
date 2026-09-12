@@ -43,8 +43,12 @@
  */
 
 
-const API_BASE =
-    "https://api-meteoarchidona.onrender.com";
+/*
+ * La dirección la decide js/api.js, que se carga antes: en local
+ * apunta al proxy de servidor.py y en producción a la API en Render.
+ * Ver el comentario de ese fichero.
+ */
+const API_BASE = window.API_BASE;
 
 
 const INTERVALO_CONDICIONES_MS =

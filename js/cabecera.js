@@ -14,7 +14,19 @@
  * página de verdad con su propia dirección.
  */
 
+
+/*
+ * Todo va dentro de una función anónima para no dejar nada en el
+ * ámbito global. No es manía: js/administracion.js tiene su propio
+ * actualizarReloj —el de la caducidad de la sesión— y, al cargarse
+ * después, se quedaba con el nombre. El reloj de la cabecera se
+ * paraba en --:-- en esa página.
+ */
+
+(function () {
+
 "use strict";
+
 
 
 const RUTA_CABECERA = "/componentes/cabecera.html";
@@ -88,6 +100,34 @@ function marcarSeccionActual() {
 }
 
 
+function recogerControlesDePagina() {
+
+    /*
+     * Los controles propios de una página —hoy solo el botón de
+     * cerrar sesión de Administración— se declaran en su HTML con
+     * data-en-cabecera y se traen aquí al montar.
+     *
+     * No van en componentes/cabecera.html porque tienen que existir
+     * desde el primer momento: js/administracion.js busca su botón
+     * por id nada más arrancar, y la cabecera llega después.
+     */
+
+    const hueco = document.getElementById("cabecera-acciones");
+
+    if (!hueco) {
+
+        return;
+
+    }
+
+
+    document
+        .querySelectorAll("[data-en-cabecera]")
+        .forEach((control) => hueco.appendChild(control));
+
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -136,6 +176,8 @@ async function montarCabecera() {
 
     marcarSeccionActual();
 
+    recogerControlesDePagina();
+
     actualizarReloj();
 
     window.setInterval(actualizarReloj, 30000);
@@ -144,6 +186,8 @@ async function montarCabecera() {
 
 
 montarCabecera();
+
+})();
 
 
 // Fin de fichero: js/cabecera.js

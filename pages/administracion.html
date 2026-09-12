@@ -10,87 +10,35 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="../css/administracion.css?v=20260912-extraccion1">
+<link rel="stylesheet" href="../css/cabecera.css?v=20260912-paginas3">
+<link rel="stylesheet" href="../css/administracion.css?v=20260912-paginas3">
 
-<script src="../js/administracion.js?v=20260912-extraccion1" defer></script>
+<script src="../js/cabecera.js?v=20260912-paginas3" defer></script>
+<script src="../js/api.js?v=20260912-paginas3" defer></script>
+<script src="../js/administracion.js?v=20260912-paginas3" defer></script>
 </head>
 
 <body data-seccion="administracion">
 
 <div class="pagina">
 
-<header class="cabecera">
+<div id="cabecera"></div>
 
-<a
-    href="/"
-    class="marca"
-    aria-label="MeteoArchidona · Actualidad"
+
+<!--
+    El botón de cerrar sesión vive aquí y no en
+    componentes/cabecera.html porque js/administracion.js lo busca
+    por su id nada más arrancar, y la cabecera se monta después.
+    js/cabecera.js lo traslada a su hueco al terminar.
+-->
+<button
+    id="botonCerrarSesionCabecera"
+    type="button"
+    class="boton-cabecera oculto"
+    data-en-cabecera
 >
-    <div
-        class="marca-icono"
-        aria-hidden="true"
-    >
-        <div class="sol"></div>
-        <div class="nube"></div>
-    </div>
-
-    <div>
-        <div class="marca-titulo">
-            METEO<span>ARCHIDONA</span>
-        </div>
-
-        <div class="marca-subtitulo">
-            El tiempo de nuestra comarca
-        </div>
-    </div>
-</a>
-
-
-<nav
-    class="navegacion-principal"
-    aria-label="Navegación principal"
->
-
-    <a href="/">
-        Actualidad
-    </a>
-
-    <a href="/observaciones">
-        Observaciones
-    </a>
-
-    <a href="/prediccion">
-        Predicción
-    </a>
-
-    <a href="/en-vivo">
-        En vivo
-    </a>
-
-    <a
-        href="/administracion"
-        class="activo"
-        aria-current="page"
-    >
-        Administración
-    </a>
-
-</nav>
-
-
-<div class="cabecera-acciones">
-
-    <button
-        id="botonCerrarSesionCabecera"
-        type="button"
-        class="boton-cabecera oculto"
-    >
-        Cerrar sesión
-    </button>
-
-</div>
-
-</header>
+    Cerrar sesión
+</button>
 
 
 <main

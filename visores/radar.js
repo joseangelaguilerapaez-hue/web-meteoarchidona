@@ -1,4 +1,5 @@
-const API_BASE="https://api-meteoarchidona.onrender.com",PRODUCTO="PPI";
+/* API_BASE lo decide ../js/api.js, que se carga antes que este fichero. */
+const API_BASE=window.API_BASE,PRODUCTO="PPI";
 const RADARES=["AHR","SE","AL","CR"];
 const FONDOS=["satelite","politico","fisico","negro"];
 
