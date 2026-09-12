@@ -65,7 +65,7 @@ const zonas={
                     "imagen-local",
 
                 src:
-                    "assets/camaras/el-silo-provisional.jpg",
+                    "../assets/camaras/el-silo-provisional.jpg",
 
                 alt:
                     "Vista provisional de la futura cámara de El Silo",
@@ -101,7 +101,7 @@ const zonas={
                     "imagen-local",
 
                 src:
-                    "assets/camaras/los-llanos-provisional.jpg",
+                    "../assets/camaras/los-llanos-provisional.jpg",
 
                 alt:
                     "Vista provisional de la futura cámara de Los Llanos",

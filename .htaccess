@@ -1,0 +1,33 @@
+# ============================================================
+# MeteoArchidona — configuración del servidor
+# ============================================================
+#
+# Esto solo lo lee Apache. Si el sitio acabara servido por otra
+# cosa (Nginx, GitHub Pages), el fichero es papel mojado y las
+# redirecciones de abajo hay que rehacerlas donde toque.
+
+RewriteEngine On
+
+# La portada es index.html, en la raíz.
+DirectoryIndex index.html
+
+# Nunca listar el contenido de una carpeta: sin esto, entrar en
+# /assets/ o /js/ enseñaría el árbol entero del sitio.
+Options -Indexes
+
+# ------------------------------------------------------------
+# Las páginas se mudaron a pages/
+# ------------------------------------------------------------
+#
+# Hasta el 12-9-2026 vivían en la raíz. Quien tenga guardado un
+# enlace viejo, o quien llegue desde un buscador, se encontraría
+# un 404. El 301 dice "esto se ha mudado para siempre", que es lo
+# que hace que el buscador cambie la dirección en su índice en vez
+# de dejar la vieja rota.
+#
+# Cuando lleven un tiempo largo puestas y no aparezcan en los
+# registros del servidor, se pueden quitar.
+
+Redirect 301 /en-vivo.html         /pages/en-vivo.html
+Redirect 301 /observaciones.html   /pages/observaciones.html
+Redirect 301 /administracion.html  /pages/administracion.html
