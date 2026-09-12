@@ -1,0 +1,335 @@
+/*
+ * MeteoArchidona
+ * Página Predicción
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/prediccion.html
+ *
+ * Es la sección todavía por hacer: de momento solo el cartel de "Lo
+ * que viene". Venía de css/index.css, donde Predicción era un panel
+ * dentro del index.
+ *
+ * La paleta y los estilos base están en css/cabecera.css, que esta
+ * página también carga.
+ */
+
+
+/* ==========================================================
+   PANEL PROVISIONAL DE PREDICCIÓN
+   ========================================================== */
+
+
+.panel-futuro {
+    width:
+        min(
+            1500px,
+            calc(
+                100%
+                -
+                48px
+            )
+        );
+
+    margin:
+        38px auto;
+
+    min-height:
+        calc(
+            100vh
+            -
+            170px
+        );
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    padding:
+        40px;
+}
+
+
+.panel-futuro-contenido {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    width:
+        min(
+            800px,
+            100%
+        );
+
+    padding:
+        58px 46px;
+
+    text-align:
+        center;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        24px;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(
+                54,
+                213,
+                255,
+                0.08
+            ),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(
+                17,
+                30,
+                46,
+                0.98
+            ),
+            rgba(
+                7,
+                17,
+                28,
+                0.98
+            )
+        );
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.panel-futuro-contenido::before {
+    content: "";
+
+    position:
+        absolute;
+
+    inset: 0;
+
+    pointer-events:
+        none;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(
+                54,
+                213,
+                255,
+                0.025
+            )
+            1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            rgba(
+                54,
+                213,
+                255,
+                0.025
+            )
+            1px,
+            transparent 1px
+        );
+
+    background-size:
+        36px 36px;
+}
+
+
+.panel-futuro-icono {
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    width:
+        88px;
+
+    height:
+        88px;
+
+    margin:
+        0 auto 24px;
+
+    border:
+        1px solid
+        rgba(
+            240,
+            165,
+            0,
+            0.28
+        );
+
+    border-radius:
+        24px;
+
+    background:
+        rgba(
+            240,
+            165,
+            0,
+            0.07
+        );
+
+    font-size:
+        40px;
+}
+
+
+.panel-futuro-etiqueta {
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    margin-bottom:
+        12px;
+
+    color:
+        var(--cyan);
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+
+    letter-spacing:
+        0.12em;
+}
+
+
+.panel-futuro h1 {
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    margin:
+        0 0 16px;
+
+    font-size:
+        clamp(
+            30px,
+            4vw,
+            54px
+        );
+
+    letter-spacing:
+        -0.045em;
+}
+
+
+.panel-futuro p {
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    max-width:
+        620px;
+
+    margin:
+        0 auto;
+
+    color:
+        var(--muted);
+
+    line-height:
+        1.75;
+
+    font-size:
+        14px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+
+@media (
+    max-width: 850px
+) {
+
+    .panel-futuro {
+        width:
+            min(
+                calc(
+                    100%
+                    -
+                    24px
+                ),
+                1500px
+            );
+
+        margin:
+            20px auto;
+
+        min-height:
+            620px;
+
+        padding:
+            10px;
+    }
+
+
+    .panel-futuro-contenido {
+        padding:
+            42px 24px;
+    }
+
+}
+
+@media (
+    max-width: 620px
+) {
+
+    .panel-futuro {
+        min-height:
+            540px;
+    }
+
+
+    .panel-futuro-icono {
+        width:
+            72px;
+
+        height:
+            72px;
+
+        font-size:
+            32px;
+    }
+
+}
+
+
+/* Fin de fichero: css/prediccion.css */

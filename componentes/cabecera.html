@@ -1,0 +1,150 @@
+<!--
+    MeteoArchidona · Cabecera común
+
+    Único sitio donde se define la navegación del sitio. La inserta
+    js/cabecera.js en el <div id="cabecera"> de cada página, y se
+    estiliza con css/cabecera.css.
+
+    Para añadir una sección: un <a> más aquí, con su data-seccion, y
+    en la página nueva <body data-seccion="loquesea"> para que el
+    enlace salga marcado.
+
+    Las direcciones van sin .html y desde la raíz: las páginas viven
+    en pages/ pero se sirven como /en-vivo, /observaciones... Ver el
+    .htaccess.
+-->
+
+<header class="cabecera">
+
+<a
+    href="/"
+    class="marca"
+    aria-label="Ir a Actualidad"
+>
+
+    <div
+        class="marca-icono"
+        aria-hidden="true"
+    >
+
+        <div class="sol"></div>
+
+        <div class="nube"></div>
+
+    </div>
+
+
+    <div>
+
+        <div class="marca-titulo">
+
+            METEO<span>ARCHIDONA</span>
+
+        </div>
+
+        <div class="marca-subtitulo">
+
+            El tiempo de nuestra comarca
+
+        </div>
+
+    </div>
+
+</a>
+
+
+<nav
+    class="navegacion"
+    aria-label="Navegación principal"
+>
+
+<a
+    href="/"
+    data-seccion="actualidad"
+>
+    Actualidad
+</a>
+
+
+<a
+    href="/observaciones"
+    data-seccion="observaciones"
+>
+    Observaciones
+</a>
+
+
+<a
+    href="/prediccion"
+    data-seccion="prediccion"
+>
+    Predicción
+</a>
+
+
+<a
+    href="/en-vivo"
+    data-seccion="en-vivo"
+>
+    En vivo
+</a>
+
+
+<a
+    href="/administracion"
+    data-seccion="administracion"
+>
+    Administración
+</a>
+
+</nav>
+
+
+<div class="zona-derecha">
+
+
+<div class="hora">
+
+    <div>
+
+        <div
+            class="fecha"
+            id="fecha-actual"
+        >
+            --
+        </div>
+
+        <div
+            class="reloj"
+            id="reloj-actual"
+        >
+            --:--
+        </div>
+
+    </div>
+
+</div>
+
+
+<a
+    href="/"
+    class="firma-proyecto"
+    aria-label="Y&Z Project · Ir a Actualidad"
+    title="Y&Z Project"
+>
+
+    <img
+        src="/assets/yz-project.jpg"
+        alt="Y&Z Project"
+        draggable="false"
+    >
+
+</a>
+
+
+</div>
+
+
+</header>
+
+<!-- Fin de fichero: componentes/cabecera.html -->

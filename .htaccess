@@ -12,29 +12,61 @@
 
 RewriteEngine On
 
-# La portada es index.html, en la raíz.
-DirectoryIndex index.html
+# Al entrar en "/" sale Actualidad. No es una redirección: se sirve
+# esa página directamente, así que la dirección de la portada es
+# meteoarchidona.com y no meteoarchidona.com/actualidad.
+DirectoryIndex pages/actualidad.html
 
 # Nunca listar el contenido de una carpeta: sin esto, entrar en
 # /assets/ o /js/ enseñaría el árbol entero del sitio.
 Options -Indexes
 
 # ------------------------------------------------------------
-# Las páginas se mudaron a pages/
+# Direcciones limpias
 # ------------------------------------------------------------
 #
-# Hasta el 12-9-2026 vivían en la raíz. Quien tenga guardado un
-# enlace viejo, o quien llegue desde un buscador, se encontraría
-# un 404. El 301 dice "esto se ha mudado para siempre", que es lo
-# que hace que el buscador cambie la dirección en su índice en vez
-# de dejar la vieja rota.
+# Las páginas viven en pages/ y se sirven sin carpeta y sin
+# extensión: /en-vivo, /observaciones, /prediccion, /administracion.
+# La barra del navegador enseña eso y no la ruta del fichero.
 #
-# Cuando lleven un tiempo largo puestas y no aparezcan en los
-# registros del servidor, se pueden quitar.
+# Es una reescritura interna, no una redirección: el visitante pide
+# /en-vivo y el servidor le da pages/en-vivo.html sin más viajes.
+#
+# Las redirecciones de las direcciones viejas van antes, y todas
+# miran THE_REQUEST, que es la línea que mandó el navegador. Si
+# miraran la ruta a secas entrarían en bucle: la reescritura interna
+# convierte /en-vivo en pages/en-vivo.html, eso vuelve a pasar por
+# estas reglas, y pages/en-vivo.html redirige otra vez a /en-vivo.
 
-Redirect 301 /en-vivo.html         /pages/en-vivo.html
-Redirect 301 /observaciones.html   /pages/observaciones.html
-Redirect 301 /administracion.html  /pages/administracion.html
+# --- Direcciones viejas, a la nueva con un 301 permanente ---
+#
+# Todo lo que ya circula por ahí —enlaces guardados, resultados de
+# buscador— tiene que acabar en la dirección buena. El 301 es lo que
+# hace que el buscador cambie su índice en vez de dejar la vieja
+# rota.
+#
+# Actualidad es la portada, así que su dirección buena es "/". Que
+# además exista /actualidad repartiría el crédito entre dos
+# direcciones para la misma página, así que también redirige.
+
+RewriteCond %{THE_REQUEST} \s/+(?:index\.html|actualidad|pages/actualidad\.html)[\s?] [NC]
+RewriteRule ^ / [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+(?:pages/)?en-vivo\.html[\s?] [NC]
+RewriteRule ^ /en-vivo [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+(?:pages/)?observaciones\.html[\s?] [NC]
+RewriteRule ^ /observaciones [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+(?:pages/)?administracion\.html[\s?] [NC]
+RewriteRule ^ /administracion [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+pages/prediccion\.html[\s?] [NC]
+RewriteRule ^ /prediccion [R=301,L]
+
+# --- Y la reescritura interna de las direcciones limpias ---
+
+RewriteRule ^(observaciones|prediccion|en-vivo|administracion)/?$ pages/$1.html [L]
 
 
 # ------------------------------------------------------------
