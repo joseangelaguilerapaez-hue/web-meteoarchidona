@@ -1,0 +1,684 @@
+/*
+ * MeteoArchidona
+ * Página En vivo
+ *
+ * Estilos exclusivos de:
+ *
+ *     en-vivo.html
+ *
+ * Salieron de un <style> dentro de esa página. Su cabecera es propia
+ * (.cabecera-en-vivo) y no la comparte con el resto del sitio.
+ */
+
+:root{
+    --fondo:#07111f;
+    --fondo-profundo:#030914;
+    --panel:rgba(12,28,47,.94);
+    --oro:#f2bf58;
+    --oro-claro:#ffd989;
+    --cyan:#36d9ff;
+    --verde:#67e8a5;
+    --blanco:#f5f8fc;
+    --texto:#c9d6e5;
+    --texto-suave:#8194aa;
+    --borde:rgba(255,255,255,.08);
+    --borde-oro:rgba(242,191,88,.28);
+    --borde-cyan:rgba(54,217,255,.26);
+    --sombra:0 24px 70px rgba(0,0,0,.38);
+    --radio-grande:28px;
+    --radio:20px;
+    --radio-pequeno:14px;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:"Sora",system-ui,sans-serif;
+    color:var(--blanco);
+    background:
+        radial-gradient(circle at 15% 0%,rgba(54,217,255,.10),transparent 32%),
+        radial-gradient(circle at 90% 8%,rgba(242,191,88,.09),transparent 28%),
+        linear-gradient(180deg,var(--fondo) 0%,var(--fondo-profundo) 100%);
+}
+
+button,
+select,
+a{
+    font:inherit;
+}
+
+.pagina{
+    width:min(1500px,calc(100% - 48px));
+    margin:0 auto;
+    padding:42px 0 72px;
+}
+
+/* =========================================================
+   CABECERA
+   ========================================================= */
+
+.cabecera-en-vivo{
+    position:relative;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+    gap:38px;
+    align-items:center;
+    min-height:300px;
+    padding:44px;
+    border:1px solid var(--borde);
+    border-radius:var(--radio-grande);
+    background:linear-gradient(
+        135deg,
+        rgba(14,31,53,.96),
+        rgba(7,19,35,.96)
+    );
+    box-shadow:var(--sombra);
+}
+
+.cabecera-en-vivo::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(54,217,255,.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            rgba(54,217,255,.035) 1px,
+            transparent 1px
+        );
+    background-size:44px 44px;
+    mask-image:linear-gradient(to right,black,transparent 72%);
+}
+
+.cabecera-texto{
+    position:relative;
+    z-index:2;
+}
+
+.eyebrow{
+    display:inline-flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:16px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.78rem;
+    font-weight:600;
+    letter-spacing:.14em;
+    color:var(--cyan);
+}
+
+.punto-directo{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--cyan);
+    box-shadow:
+        0 0 0 7px rgba(54,217,255,.09),
+        0 0 20px rgba(54,217,255,.65);
+    animation:pulso 2s ease-in-out infinite;
+}
+
+.cabecera-en-vivo h1{
+    max-width:760px;
+    margin:0 0 18px;
+    font-size:clamp(2.7rem,5vw,5.2rem);
+    line-height:.95;
+    letter-spacing:-.055em;
+}
+
+.cabecera-en-vivo h1 span{
+    color:var(--oro);
+}
+
+.cabecera-en-vivo p{
+    max-width:760px;
+    margin:0;
+    font-size:clamp(1rem,1.4vw,1.15rem);
+    line-height:1.75;
+    color:var(--texto);
+}
+
+.cabecera-dibujo{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:220px;
+}
+
+.escena{
+    position:relative;
+    width:290px;
+    height:220px;
+}
+
+.radar{
+    position:absolute;
+    width:190px;
+    height:190px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border:1px solid rgba(54,217,255,.22);
+    border-radius:50%;
+}
+
+.radar::before,
+.radar::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    border:1px solid rgba(54,217,255,.18);
+}
+
+.radar::before{
+    width:125px;
+    height:125px;
+}
+
+.radar::after{
+    width:65px;
+    height:65px;
+}
+
+.barrido{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:95px;
+    height:95px;
+    transform-origin:0 0;
+    background:linear-gradient(
+        35deg,
+        rgba(54,217,255,.34),
+        transparent 70%
+    );
+    clip-path:polygon(0 0,100% 0,0 100%);
+    animation:barrido 4.6s linear infinite;
+}
+
+.camara-dibujo{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:114px;
+    height:76px;
+    border:2px solid var(--oro);
+    border-radius:19px;
+    background:linear-gradient(145deg,#192f48,#091726);
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.36),
+        0 0 35px rgba(242,191,88,.10);
+}
+
+.camara-dibujo::before{
+    content:"";
+    position:absolute;
+    left:18px;
+    top:50%;
+    width:44px;
+    height:44px;
+    transform:translateY(-50%);
+    border:5px solid #07111f;
+    border-radius:50%;
+    background:radial-gradient(
+        circle at 38% 35%,
+        var(--cyan) 0 7%,
+        #223d5d 8% 28%,
+        #050d17 29% 62%,
+        var(--oro) 63% 68%,
+        #081421 69%
+    );
+}
+
+.camara-dibujo::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    top:19px;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--verde);
+    box-shadow:0 0 15px rgba(103,232,165,.75);
+}
+
+.soporte-camara{
+    position:absolute;
+    width:10px;
+    height:54px;
+    left:50%;
+    bottom:17px;
+    transform:translateX(-50%);
+    background:linear-gradient(
+        var(--oro),
+        rgba(242,191,88,.35)
+    );
+    border-radius:6px;
+}
+
+.soporte-camara::after{
+    content:"";
+    position:absolute;
+    width:80px;
+    height:8px;
+    left:50%;
+    bottom:-2px;
+    transform:translateX(-50%);
+    border-radius:10px;
+    background:var(--oro);
+}
+
+/* =========================================================
+   SELECTOR
+   ========================================================= */
+
+.selector-panel{
+    margin-top:30px;
+    padding:24px;
+    border:1px solid var(--borde);
+    border-radius:var(--radio-grande);
+    background:var(--panel);
+    box-shadow:var(--sombra);
+}
+
+.selector-contenido{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(280px,440px);
+    gap:24px;
+    align-items:end;
+}
+
+.selector-texto h2{
+    margin:0 0 8px;
+    font-size:clamp(1.25rem,2vw,1.7rem);
+    letter-spacing:-.035em;
+}
+
+.selector-texto p{
+    margin:0;
+    color:var(--texto-suave);
+    line-height:1.65;
+}
+
+.selector-control label{
+    display:block;
+    margin-bottom:8px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.74rem;
+    font-weight:600;
+    letter-spacing:.08em;
+    color:var(--oro);
+}
+
+.selector-control select{
+    width:100%;
+    appearance:none;
+    padding:15px 48px 15px 16px;
+    border:1px solid var(--borde-cyan);
+    border-radius:var(--radio-pequeno);
+    color:var(--blanco);
+    outline:none;
+    cursor:pointer;
+
+    background:
+        linear-gradient(45deg,transparent 50%,var(--cyan) 50%)
+            calc(100% - 21px) calc(50% - 2px) / 6px 6px no-repeat,
+        linear-gradient(135deg,var(--cyan) 50%,transparent 50%)
+            calc(100% - 15px) calc(50% - 2px) / 6px 6px no-repeat,
+        linear-gradient(
+            180deg,
+            rgba(19,43,67,.98),
+            rgba(10,28,46,.98)
+        );
+}
+
+.selector-control select:focus{
+    border-color:var(--cyan);
+    box-shadow:0 0 0 4px rgba(54,217,255,.10);
+}
+
+/* =========================================================
+   ZONA
+   ========================================================= */
+
+.seccion-camaras{
+    margin-top:38px;
+}
+
+.cabecera-zona{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-end;
+    margin:0 4px 18px;
+}
+
+.cabecera-zona h2{
+    margin:0;
+    font-size:clamp(1.6rem,2.3vw,2.15rem);
+    letter-spacing:-.04em;
+}
+
+.cabecera-zona p{
+    max-width:760px;
+    margin:8px 0 0;
+    color:var(--texto-suave);
+    line-height:1.65;
+}
+
+.contador-zona{
+    flex:0 0 auto;
+    padding:8px 12px;
+    border:1px solid var(--borde-oro);
+    border-radius:999px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.72rem;
+    color:var(--oro);
+}
+
+/* =========================================================
+   TARJETAS
+   ========================================================= */
+
+.rejilla-camaras{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:22px;
+}
+
+.tarjeta-camara{
+    overflow:hidden;
+    border:1px solid var(--borde);
+    border-radius:var(--radio-grande);
+    background:var(--panel);
+    box-shadow:var(--sombra);
+}
+
+.visor-camara{
+    position:relative;
+    overflow:hidden;
+    width:100%;
+    aspect-ratio:16/9;
+    background:#050b12;
+}
+
+.visor-camara iframe,
+.visor-camara img{
+    display:block;
+    width:100%;
+    height:100%;
+    border:0;
+    object-fit:cover;
+}
+
+.estado-visor{
+    position:absolute;
+    z-index:5;
+    left:16px;
+    top:16px;
+    display:inline-flex;
+    gap:8px;
+    align-items:center;
+    padding:8px 11px;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.69rem;
+    font-weight:600;
+    letter-spacing:.06em;
+    color:var(--blanco);
+    background:rgba(3,9,20,.80);
+    backdrop-filter:blur(10px);
+    pointer-events:none;
+}
+
+.estado-visor::before{
+    content:"";
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--cyan);
+    box-shadow:0 0 12px rgba(54,217,255,.75);
+}
+
+.estado-visor.imagen::before{
+    background:var(--oro);
+    box-shadow:0 0 12px rgba(242,191,88,.70);
+}
+
+.estado-visor.proximamente::before{
+    background:var(--verde);
+    box-shadow:0 0 12px rgba(103,232,165,.70);
+}
+
+.media-error{
+    position:absolute;
+    inset:0;
+    z-index:3;
+    display:none;
+    place-items:center;
+    padding:28px;
+    text-align:center;
+    color:var(--texto);
+    background:linear-gradient(145deg,#0d2033,#050b12);
+}
+
+.media-error.visible{
+    display:grid;
+}
+
+.media-error strong{
+    display:block;
+    margin-bottom:7px;
+    color:var(--blanco);
+}
+
+.cuerpo-camara{
+    padding:22px 22px 24px;
+}
+
+.fila-titulo{
+    display:flex;
+    justify-content:space-between;
+    gap:18px;
+    align-items:flex-start;
+}
+
+.titulo-camara h3{
+    margin:0;
+    font-size:clamp(1.15rem,1.7vw,1.45rem);
+    letter-spacing:-.035em;
+}
+
+.ubicacion-camara{
+    margin-top:6px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.77rem;
+    color:var(--cyan);
+}
+
+.tipo-camara{
+    flex:0 0 auto;
+    padding:7px 10px;
+    border:1px solid var(--borde-oro);
+    border-radius:999px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:.68rem;
+    color:var(--oro);
+}
+
+.descripcion-camara{
+    margin:17px 0 0;
+    color:var(--texto);
+    line-height:1.65;
+}
+
+.pie-camara{
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    align-items:center;
+    margin-top:20px;
+    padding-top:16px;
+    border-top:1px solid var(--borde);
+}
+
+.fuente{
+    color:var(--texto-suave);
+    font-size:.82rem;
+}
+
+.fuente strong{
+    color:var(--texto);
+}
+
+.fuente a{
+    color:var(--oro-claro);
+    text-decoration:none;
+}
+
+.fuente a:hover,
+.fuente a:focus-visible{
+    text-decoration:underline;
+}
+
+.nota-proveedor{
+    margin-top:24px;
+    padding:16px 18px;
+    border:1px solid var(--borde);
+    border-radius:var(--radio);
+    color:var(--texto-suave);
+    background:rgba(10,24,40,.72);
+    font-size:.84rem;
+    line-height:1.65;
+}
+
+.nota-proveedor strong{
+    color:var(--texto);
+}
+
+/* =========================================================
+   ANIMACIONES
+   ========================================================= */
+
+@keyframes pulso{
+    0%,100%{opacity:1}
+    50%{opacity:.55}
+}
+
+@keyframes barrido{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:980px){
+    .cabecera-en-vivo{
+        grid-template-columns:1fr;
+        padding:34px;
+    }
+
+    .cabecera-dibujo{
+        display:none;
+    }
+
+    .selector-contenido{
+        grid-template-columns:1fr;
+    }
+
+    .rejilla-camaras{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:640px){
+    .pagina{
+        width:calc(100% - 24px);
+        padding:18px 0 44px;
+    }
+
+    .cabecera-en-vivo{
+        min-height:0;
+        padding:26px 22px;
+        border-radius:22px;
+    }
+
+    .cabecera-en-vivo h1{
+        font-size:clamp(2.35rem,13vw,3.5rem);
+    }
+
+    .selector-panel{
+        margin-top:18px;
+        padding:18px;
+        border-radius:22px;
+    }
+
+    .seccion-camaras{
+        margin-top:28px;
+    }
+
+    .cabecera-zona{
+        display:block;
+    }
+
+    .contador-zona{
+        display:inline-flex;
+        margin-top:13px;
+    }
+
+    .rejilla-camaras{
+        gap:18px;
+    }
+
+    .tarjeta-camara{
+        border-radius:22px;
+    }
+
+    .estado-visor{
+        left:12px;
+        top:12px;
+        padding:7px 9px;
+    }
+
+    .cuerpo-camara{
+        padding:18px;
+    }
+
+    .fila-titulo{
+        display:block;
+    }
+
+    .tipo-camara{
+        display:inline-flex;
+        margin-top:12px;
+    }
+
+    .pie-camara{
+        display:block;
+    }
+}
+
+
+/* Fin de fichero: css/en-vivo.css */
