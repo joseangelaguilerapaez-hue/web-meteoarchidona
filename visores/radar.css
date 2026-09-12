@@ -659,3 +659,37 @@ font-size:7px
 }
 
 }
+
+
+/* =========================================================
+   AJUSTES DEL SELECTOR DE FONDOS
+
+   Venían en un <style> dentro de radar.html, después del enlace a
+   esta hoja. Al ir aquí al final mandan igual que antes.
+   ========================================================= */
+
+.selector-fondos-controles{
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
+
+    width:min(760px,100%);
+}
+
+.selector-fondo-satelite{
+    --fondo-color:#9b7cff;
+}
+
+@media(max-width:430px){
+
+    .selector-fondos-controles{
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+    }
+
+}

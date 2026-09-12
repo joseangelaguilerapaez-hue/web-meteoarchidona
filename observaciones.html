@@ -5,67 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="description" content="Observaciones meteorológicas multicapa de MeteoArchidona: satélite, lluvia y rayos.">
 <title>MeteoArchidona · Satélite, lluvia y rayos</title>
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;background:#071019}
-body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;font-family:Arial,sans-serif;color:#fff}
-
-.cabecera-observaciones{
-flex:0 0 auto;
-width:100%;
-padding:15px 20px 14px;
-background:linear-gradient(90deg,#091725 0,#0c2032 50%,#091725 100%);
-border-top:1px solid rgba(54,213,255,.12);
-border-bottom:1px solid rgba(54,213,255,.28);
-box-shadow:0 5px 18px rgba(0,0,0,.22)
-}
-
-.cabecera-observaciones h1{
-margin:0;
-font-size:clamp(21px,4.8vw,34px);
-font-weight:800;
-line-height:1.08;
-letter-spacing:.025em;
-text-transform:uppercase
-}
-
-.cabecera-observaciones h1 span{color:#36d5ff}
-
-.cabecera-observaciones p{
-margin:6px 0 0;
-color:#aabdd0;
-font-size:clamp(11px,2.8vw,14px);
-line-height:1.35
-}
-
-.visor-contenedor{flex:1 1 auto;min-height:0;width:100%;background:#071019}
-
-.observaciones{display:block;width:100%;height:100%;border:0;background:#071019}
-
-.sin-js{
-display:grid;
-place-items:center;
-width:100%;
-height:100%;
-padding:24px;
-color:#fff;
-background:#071019;
-text-align:center
-}
-
-.sin-js a{color:#36d5ff}
-
-@media(max-width:600px){
-.cabecera-observaciones{padding:13px 18px 12px}
-.cabecera-observaciones h1{font-size:22px}
-}
-
-@media(max-width:380px){
-.cabecera-observaciones{padding:11px 14px 10px}
-.cabecera-observaciones h1{font-size:19px}
-.cabecera-observaciones p{font-size:10px}
-}
-</style>
+<link rel="stylesheet" href="css/observaciones.css">
 </head>
 
 <body>
