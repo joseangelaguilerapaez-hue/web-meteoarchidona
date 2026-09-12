@@ -5,494 +5,5631 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="MeteoArchidona - Información meteorológica de Archidona y su comarca.">
 <title>MeteoArchidona</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#080d14;--surface:#0d1520;--card:#111e2e;--card-soft:#0d1a27;--border:#1a2d42;--accent:#f0a500;--gold:#d48800;--teal:#00c9a7;--blue:#3b9eff;--cyan:#36d5ff;--green:#22c55e;--red:#ef4444;--orange:#f97316;--text:#f6f8fb;--muted:#aabdd0;--shadow:0 12px 35px rgba(0,0,0,.28)}
-*{box-sizing:border-box}
-html{min-width:320px}
-body{margin:0;background:radial-gradient(circle at top,#0b1b2d 0,var(--bg) 38%);color:var(--text);font-family:"Sora",sans-serif}
-a{color:inherit;text-decoration:none}
-button{font:inherit}
-.pagina{min-height:100vh}
-.capa-lluvia,.capa-lluvia-ficha,.capa-gotas-cristal,.capa-gotas-cristal-ficha{display:none;overflow:hidden;pointer-events:none}
-.capa-lluvia,.capa-lluvia-ficha{--factor-duracion:1;--factor-longitud:1;--factor-opacidad:1;--ancho-gota:1px;--inicio-x:0px;--final-x:0px;--recorrido-y:1200px;--angulo-gota:0deg}
-.capa-lluvia{position:fixed;inset:0;z-index:100}
-.capa-gotas-cristal{position:fixed;inset:0;z-index:101}
-.capa-lluvia-ficha,.capa-gotas-cristal-ficha{position:absolute;inset:0;border-radius:inherit}
-.capa-lluvia-ficha{z-index:12}
-.capa-gotas-cristal-ficha{z-index:13}
-.capa-lluvia.activa,.capa-lluvia-ficha.activa,.capa-gotas-cristal.activa,.capa-gotas-cristal-ficha.activa{display:block}
-.nivel-1{--factor-duracion:1.80;--factor-longitud:.52;--factor-opacidad:.38;--ancho-gota:.7px}
-.capa-lluvia.nivel-1{background:rgba(8,22,34,.005)}
-.capa-lluvia-ficha.nivel-1{background:rgba(8,22,34,.009)}
-.nivel-1 .gota-lluvia:nth-child(n+17){display:none}
-.nivel-2{--factor-duracion:1.18;--factor-longitud:.88;--factor-opacidad:.62;--ancho-gota:1px}
-.capa-lluvia.nivel-2{background:rgba(8,22,34,.020)}
-.capa-lluvia-ficha.nivel-2{background:rgba(8,22,34,.030)}
-.nivel-2 .gota-lluvia:nth-child(n+49){display:none}
-.nivel-3{--factor-duracion:.76;--factor-longitud:1.32;--factor-opacidad:.84;--ancho-gota:1.4px}
-.capa-lluvia.nivel-3{background:rgba(6,19,31,.052)}
-.capa-lluvia-ficha.nivel-3{background:rgba(6,19,31,.072)}
-.nivel-3 .gota-lluvia:nth-child(n+97){display:none}
-.nivel-4{--factor-duracion:.44;--factor-longitud:1.90;--factor-opacidad:1;--ancho-gota:2px}
-.capa-lluvia.nivel-4{background:rgba(4,16,28,.105)}
-.capa-lluvia-ficha.nivel-4{background:rgba(4,16,28,.135)}
-.nivel-4 .gota-lluvia{display:block}
-.gota-lluvia{position:absolute;top:-18%;left:var(--x);width:var(--ancho-gota);height:calc(var(--longitud)*var(--factor-longitud));opacity:calc(var(--opacidad)*var(--factor-opacidad));border-radius:999px;background:linear-gradient(to bottom,rgba(194,231,255,0),rgba(180,226,255,.98));box-shadow:0 0 4px rgba(116,201,255,.34);animation-name:caer-lluvia;animation-duration:calc(var(--duracion)*var(--factor-duracion));animation-timing-function:linear;animation-iteration-count:infinite;animation-delay:var(--retraso);will-change:transform}
-.nivel-4 .gota-lluvia:nth-child(3n){box-shadow:0 0 7px rgba(166,222,255,.54)}
-@keyframes caer-lluvia{from{transform:translate3d(var(--inicio-x),-40px,0) rotate(var(--angulo-gota))}to{transform:translate3d(var(--final-x),var(--recorrido-y),0) rotate(var(--angulo-gota))}}
-.gota-cristal{position:absolute;left:var(--x);top:var(--y);width:var(--tamano);height:calc(var(--tamano)*1.24);border-radius:54% 46% 59% 41%/44% 47% 53% 56%;border:1px solid rgba(220,244,255,.18);background:radial-gradient(circle at 32% 24%,rgba(255,255,255,.38),rgba(177,225,251,.12) 30%,rgba(86,161,205,.06) 67%,rgba(255,255,255,.02));box-shadow:inset 1px 1px 2px rgba(255,255,255,.18),0 1px 4px rgba(0,0,0,.16);opacity:0;transform:scale(.65);animation:vida-gota-cristal var(--vida) ease-in-out forwards;will-change:transform,opacity}
-.gota-cristal::after{content:"";position:absolute;width:28%;height:20%;left:20%;top:17%;border-radius:50%;background:rgba(255,255,255,.36);filter:blur(.3px)}
-@keyframes vida-gota-cristal{0%{opacity:0;transform:translate3d(0,-3px,0) scale(.55)}12%{opacity:var(--opacidad-cristal);transform:translate3d(0,0,0) scale(1)}70%{opacity:calc(var(--opacidad-cristal)*.88);transform:translate3d(var(--desvio-x),calc(var(--deslizar)*.25),0) scale(.98)}100%{opacity:0;transform:translate3d(var(--desvio-x),var(--deslizar),0) scale(.88)}}
-.cabecera{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:minmax(260px,1fr) auto minmax(230px,.7fr);align-items:center;gap:24px;min-height:96px;padding:12px clamp(20px,3vw,54px);background:rgba(8,13,20,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(16px)}
-.marca{display:flex;align-items:center;gap:14px}
-.marca-icono{position:relative;width:70px;height:54px;flex:0 0 auto}
-.sol{position:absolute;top:3px;left:25px;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ffd44f,var(--accent));box-shadow:0 0 24px rgba(240,165,0,.28)}
-.nube{position:absolute;left:10px;bottom:7px;width:52px;height:23px;border:2px solid #e5edf5;border-radius:22px;background:var(--bg)}
-.nube::before,.nube::after{content:"";position:absolute;background:var(--bg);border:2px solid #e5edf5;border-bottom:0;border-radius:50% 50% 0 0}
-.nube::before{width:21px;height:17px;left:7px;top:-13px}
-.nube::after{width:25px;height:21px;left:23px;top:-17px}
-.marca-titulo{font-size:clamp(19px,1.6vw,26px);font-weight:700;letter-spacing:.02em}
-.marca-titulo span{color:var(--accent)}
-.marca-subtitulo{margin-top:3px;color:var(--muted);font-size:12px}
-.navegacion{display:flex;align-items:center;justify-content:center;gap:12px;height:100%}
-.navegacion a{position:relative;padding:12px 16px;color:#102014;background:#b7ff5a;border:1px solid rgba(201,255,132,.92);border-radius:10px;font-size:12px;font-weight:700;text-transform:uppercase;white-space:nowrap;box-shadow:0 0 14px rgba(183,255,90,.15);transition:background .18s ease,box-shadow .18s ease,transform .18s ease}
-.navegacion a:hover{color:#071109;background:#caff83;box-shadow:0 0 18px rgba(183,255,90,.28);transform:translateY(-1px)}
-.navegacion a.activo{color:#fff;background:radial-gradient(circle at 50% 18%,#ffabab 0,#ff5757 22%,#f01f1f 43%,#c50000 72%,#780000 100%);border-color:#ff7373;box-shadow:0 0 8px rgba(255,80,80,.95),0 0 22px rgba(255,0,0,.62),0 0 38px rgba(255,0,0,.28),inset 0 1px 6px rgba(255,255,255,.40);text-shadow:0 1px 3px rgba(0,0,0,.55)}
-.navegacion a.activo::after{display:none}
-.zona-derecha{display:flex;justify-content:flex-end;align-items:center;gap:18px}
-.hora{display:flex;justify-content:flex-end;align-items:center;text-align:right}
-.fecha{color:var(--muted);font-size:11px}
-.reloj{margin-top:3px;font-family:"JetBrains Mono",monospace;font-size:27px;font-weight:600}
-.firma-proyecto{position:relative;display:grid;place-items:center;width:70px;height:70px;flex:0 0 auto;padding:0;border:1px solid rgba(59,158,255,.28);border-radius:50%;background:rgba(8,18,29,.78);box-shadow:0 6px 20px rgba(0,0,0,.28);cursor:pointer;user-select:none;touch-action:manipulation;-webkit-user-select:none}
-.firma-proyecto img{display:block;width:64px;height:64px;object-fit:cover;border-radius:50%;pointer-events:none;user-select:none;-webkit-user-drag:none}
-.firma-proyecto:hover{border-color:rgba(59,158,255,.62);box-shadow:0 0 22px rgba(59,158,255,.18)}
-.firma-proyecto:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
-.simulacion-global{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);display:none;min-width:max-content;padding:3px 6px;border-radius:999px;border:1px solid rgba(54,213,255,.32);background:rgba(6,22,35,.96);color:var(--cyan);font-size:7px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;pointer-events:none}
-.simulacion-global.visible{display:block}
-.panel-aplicacion{display:none}
-.panel-aplicacion.activo{display:block}
-.contenido{width:min(1800px,100%);margin:0 auto;padding:18px clamp(18px,2vw,34px) 28px}
-.panel-superior{display:grid;grid-template-columns:250px minmax(0,1fr) minmax(0,1fr);gap:14px}
-.tarjeta{background:linear-gradient(145deg,rgba(17,30,46,.98),rgba(9,22,34,.98));border:1px solid var(--border);border-radius:11px;box-shadow:var(--shadow)}
-.resumen{padding:20px}
-.seccion-titulo{margin:0 0 8px;font-size:14px;font-weight:700;text-transform:uppercase}
-.estado{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px}
-.punto{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(34,197,94,.5)}
-.estado-grafico{display:grid;place-items:center;min-height:160px;margin:13px 0}
-.tiempo-icono{position:relative;width:120px;height:120px;border-radius:50%;border:2px solid #244567;background:radial-gradient(circle,#163354,#0b1724 70%)}
-.tiempo-icono .sol{width:42px;height:42px;left:27px;top:24px}
-.tiempo-icono .nube{left:43px;bottom:25px;width:61px;background:#d9e2e9;border:none}
-.tiempo-icono .nube::before,.tiempo-icono .nube::after{background:#d9e2e9;border:none}
-.ubicacion{font-size:18px;font-weight:600}
-.ubicacion-sub{margin-top:4px;color:var(--muted);font-size:12px}
-.sol-horas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:19px;padding-top:16px;border-top:1px solid var(--border)}
-.sol-hora{font-family:"JetBrains Mono",monospace;font-size:12px}
-.sol-hora span{display:block;margin-top:3px;color:var(--muted);font-family:"Sora",sans-serif;font-size:10px}
-.estacion-principal{position:relative;overflow:hidden;min-height:0;background:linear-gradient(to bottom,rgba(4,29,57,.35),rgba(3,13,23,.94)),radial-gradient(circle at 70% 0%,rgba(59,158,255,.28),transparent 48%),linear-gradient(135deg,#0d2c49,#101c27 60%,#07111c)}
-.estacion-contenido{padding:18px 20px 0}
-.estacion-cabecera{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
-.estacion-nombre{margin:0;font-size:21px}
-.estacion-localidad{margin-top:3px;color:#c7d7e5;font-size:12px}
-.online{display:flex;gap:8px;align-items:center;color:var(--green);font-size:11px;white-space:nowrap}
-.lectura-principal{display:grid;grid-template-columns:minmax(0,1fr) minmax(225px,.72fr);align-items:center;gap:18px;padding:14px 0}
-.temperatura-bloque{min-width:0}
-.temperatura{font-family:"JetBrains Mono",monospace;font-size:clamp(45px,4.4vw,68px);font-weight:600;color:#85c948;letter-spacing:-.06em;line-height:1}
-.temperatura sup{font-size:24px;letter-spacing:0}
-.sensacion{margin-top:5px;font-size:12px}
-.observacion{margin-top:5px;color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:10px}
-.viento-panel{display:grid;grid-template-columns:108px minmax(0,1fr);align-items:center;gap:12px;min-width:0;padding:10px;border:1px solid rgba(59,158,255,.20);border-radius:10px;background:rgba(3,17,29,.58)}
-.veleta{position:relative;width:106px;height:106px;border:2px solid #315878;border-radius:50%;background:radial-gradient(circle at center,rgba(31,73,108,.45),rgba(5,17,27,.90) 68%),repeating-conic-gradient(from 0deg,rgba(142,195,232,.22) 0deg,rgba(142,195,232,.22) 1deg,transparent 1deg,transparent 15deg);cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;box-shadow:inset 0 0 22px rgba(59,158,255,.08);--angulo:0deg}
-.veleta::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;transform:translate(-50%,-50%);border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(240,165,0,.60);z-index:5}
-.veleta:hover{border-color:var(--blue)}
-.veleta:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.veleta-cardinal{position:absolute;color:#dce9f5;font-family:"JetBrains Mono",monospace;font-size:9px;font-weight:600;z-index:4}
-.veleta-n{top:5px;left:50%;transform:translateX(-50%)}
-.veleta-s{bottom:5px;left:50%;transform:translateX(-50%)}
-.veleta-e{right:6px;top:50%;transform:translateY(-50%)}
-.veleta-o{left:6px;top:50%;transform:translateY(-50%)}
-.veleta-rotor{position:absolute;left:50%;top:50%;width:0;height:0;transform:rotate(var(--angulo));transition:transform .45s ease;z-index:3}
-.veleta-aguja{position:absolute;left:-1.5px;bottom:0;width:3px;height:36px;border-radius:3px;background:linear-gradient(to top,#f0a500,#ffd257);box-shadow:0 0 7px rgba(240,165,0,.40)}
-.veleta-aguja::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:0;border-top:10px solid #ffd257}
-.viento-datos{min-width:0}
-.direccion-principal{display:flex;align-items:baseline;gap:6px}
-.direccion-cardinal{font-family:"JetBrains Mono",monospace;font-size:23px;font-weight:700;color:var(--accent)}
-.direccion-grados{color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:11px}
-.viento-actual{margin-top:5px;font-family:"JetBrains Mono",monospace;font-size:16px;font-weight:600}
-.viento-actual small{color:var(--muted);font-size:9px;font-weight:400}
-.viento-secundarios{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:6px}
-.viento-secundario{min-width:0;color:var(--muted);font-size:8px}
-.viento-secundario strong{display:block;margin-top:1px;color:var(--text);font-family:"JetBrains Mono",monospace;font-size:9px;font-weight:500;white-space:nowrap}
-.simulacion-estacion{display:none;margin-top:7px;padding:3px 6px;width:fit-content;border:1px solid rgba(54,213,255,.30);border-radius:999px;background:rgba(3,29,43,.82);color:var(--cyan);font-size:7px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
-.simulacion-estacion.visible{display:block}
-.patrocinio-estacion{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;min-height:34px;margin:0 0 8px;overflow:hidden;border:1px solid rgba(0,168,255,.42);border-radius:7px;background:linear-gradient(90deg,rgba(7,21,38,.96),rgba(13,32,53,.96))}
-.patrocinio-estacion-titulo{align-self:stretch;display:flex;align-items:center;padding:0 10px;white-space:nowrap;border-right:1px solid rgba(0,168,255,.30);color:#fff;font-size:9px;font-weight:800;letter-spacing:.07em;background:rgba(255,255,255,.025)}
-.patrocinio-estacion-ventana{min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}
-.patrocinio-estacion-pista{display:flex;width:max-content;animation:patrocinio-estacion-desplazar 21s linear infinite;will-change:transform}
-.patrocinio-estacion-texto{display:block;flex:none;padding:0 34px;white-space:nowrap;color:#00a8ff;font-size:10px;font-weight:600;text-shadow:0 0 8px rgba(0,168,255,.28)}
-.patrocinio-estacion-texto strong{color:#42c7ff;font-weight:800;text-shadow:0 0 10px rgba(66,199,255,.38)}
-.patrocinio-estacion-control{align-self:stretch;width:34px;border:0;border-left:1px solid rgba(0,168,255,.25);background:transparent;color:#42c7ff;cursor:pointer;font-size:10px}
-.patrocinio-estacion-control:hover{background:rgba(0,168,255,.07)}
-.patrocinio-estacion-control:focus-visible{outline:2px solid #00a8ff;outline-offset:-3px}
-.patrocinio-estacion.pausado .patrocinio-estacion-pista{animation-play-state:paused}
-@keyframes patrocinio-estacion-desplazar{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.lluvia-resumen{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:0 0 12px;padding:9px 10px;border:1px solid rgba(54,213,255,.14);border-radius:8px;background:rgba(11,35,52,.78)}
-.lluvia-resumen-item{min-width:0;display:grid;grid-template-columns:30px minmax(0,1fr);grid-template-areas:"icono label" "icono valor" "icono extra";align-items:center;column-gap:7px;min-height:48px;padding:5px 6px;border:1px solid rgba(54,213,255,.07);border-radius:6px;background:rgba(5,24,37,.24)}
-.lluvia-resumen-icono{grid-area:icono;font-size:21px}
-.lluvia-resumen-label{grid-area:label;color:var(--muted);font-size:8px;text-transform:uppercase}
-.lluvia-resumen-valor{grid-area:valor;margin-top:2px;font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:600;color:var(--cyan);white-space:nowrap}
-.lluvia-resumen-extra{grid-area:extra;margin-top:1px;color:var(--muted);font-size:7px}
-.metricas-estacion{display:grid;grid-template-columns:repeat(3,1fr);background:rgba(3,13,23,.80);border-top:1px solid rgba(255,255,255,.08)}
-.metrica-estacion{min-width:0;padding:11px 13px;border-right:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.06)}
-.metrica-estacion:nth-child(3n){border-right:none}
-.metrica-label{color:var(--muted);font-size:9px}
-.metrica-valor{margin-top:4px;font-family:"JetBrains Mono",monospace;font-size:14px;font-weight:600;white-space:nowrap}
-.metrica-secundaria{margin-top:3px;color:var(--muted);font-size:8px}
-.paneles-graficos{display:grid;grid-template-columns:1.1fr .85fr 1fr;gap:14px;margin-top:14px}
-.grafico{min-height:270px;padding:18px}
-.grafico-cabecera{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px}
-.grafico-titulo{font-size:12px;font-weight:700;text-transform:uppercase}
-.leyenda{display:flex;gap:14px;color:var(--muted);font-size:10px}
-.leyenda span::before{content:"";display:inline-block;width:8px;height:8px;margin-right:5px;border-radius:50%;background:var(--green)}
-.leyenda span:last-child::before{background:var(--blue)}
-.grafico-svg{width:100%;height:185px}
-.rejilla{stroke:#183149;stroke-width:1}
-.linea-silo{fill:none;stroke:var(--green);stroke-width:3}
-.linea-llanos{fill:none;stroke:var(--blue);stroke-width:3}
-.barra{fill:#3b9eff}
-.camaras{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
-.camara{position:relative;min-height:175px;overflow:hidden;border-radius:8px;border:1px solid var(--border);background:linear-gradient(to bottom,#286ca2 0%,#7dbbda 36%,#6c8e69 37%,#34452f 70%,#18251c 100%)}
-.camara::before{content:"";position:absolute;left:-5%;right:-5%;bottom:32px;height:60px;background:linear-gradient(160deg,transparent 35%,#334e35 36% 53%,#223428 54%);opacity:.9}
-.camara-estado{position:absolute;top:8px;left:8px;z-index:2;padding:4px 7px;border-radius:4px;background:rgba(6,20,31,.75);font-size:9px}
-.camara-nombre{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:10px;background:rgba(4,12,19,.88);font-size:10px}
-.accesos{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:14px;padding:18px}
-.acceso{min-height:76px;display:flex;align-items:center;gap:13px;padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:rgba(12,28,43,.8)}
-.acceso:hover{border-color:#315579;transform:translateY(-1px)}
-.acceso-icono{font-size:26px}
-.acceso-titulo{font-size:11px;font-weight:700}
-.acceso-subtitulo{margin-top:4px;color:var(--muted);font-size:9px}
-.pie{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:center;padding:20px 5px 5px;color:var(--muted);font-size:10px}
-.pie-centro{text-align:center}
-.pie-derecha{text-align:right}
-.panel-futuro{width:min(1500px,calc(100% - 48px));margin:38px auto;min-height:calc(100vh - 170px);display:grid;place-items:center;padding:40px}
-.panel-futuro-contenido{position:relative;overflow:hidden;width:min(800px,100%);padding:58px 46px;text-align:center;border:1px solid var(--border);border-radius:24px;background:radial-gradient(circle at top,rgba(54,213,255,.08),transparent 45%),linear-gradient(145deg,rgba(17,30,46,.98),rgba(7,17,28,.98));box-shadow:var(--shadow)}
-.panel-futuro-contenido::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(54,213,255,.025) 1px,transparent 1px),linear-gradient(rgba(54,213,255,.025) 1px,transparent 1px);background-size:36px 36px}
-.panel-futuro-icono{position:relative;z-index:1;display:grid;place-items:center;width:88px;height:88px;margin:0 auto 24px;border:1px solid rgba(240,165,0,.28);border-radius:24px;background:rgba(240,165,0,.07);font-size:40px}
-.panel-futuro-etiqueta{position:relative;z-index:1;margin-bottom:12px;color:var(--cyan);font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.12em}
-.panel-futuro h1{position:relative;z-index:1;margin:0 0 16px;font-size:clamp(30px,4vw,54px);letter-spacing:-.045em}
-.panel-futuro p{position:relative;z-index:1;max-width:620px;margin:0 auto;color:var(--muted);line-height:1.75;font-size:14px}
-.panel-en-vivo{width:100%;margin:0;padding:0;background:var(--bg)}
-.panel-en-vivo iframe{display:block;width:100%;height:calc(100vh - 97px);min-height:760px;border:0;background:var(--bg)}
+:root{
+    --bg:#080d14;
+    --surface:#0d1520;
+    --card:#111e2e;
+    --card-soft:#0d1a27;
+    --border:#1a2d42;
+    --accent:#f0a500;
+    --gold:#d48800;
+    --teal:#00c9a7;
+    --blue:#3b9eff;
+    --cyan:#36d5ff;
+    --green:#22c55e;
+    --red:#ef4444;
+    --orange:#f97316;
+    --text:#f6f8fb;
+    --muted:#aabdd0;
+    --shadow:0 12px 35px rgba(0,0,0,.28)
+}
+
+*{
+    box-sizing:border-box
+}
+
+html{
+    min-width:320px
+}
+
+body{
+    margin:0;
+    background:radial-gradient(
+        circle at top,
+        #0b1b2d 0,
+        var(--bg) 38%
+    );
+    color:var(--text);
+    font-family:"Sora",sans-serif
+}
+
+a{
+    color:inherit;
+    text-decoration:none
+}
+
+button{
+    font:inherit
+}
+
+.pagina{
+    min-height:100vh
+}
+
+.capa-lluvia,
+.capa-lluvia-ficha,
+.capa-gotas-cristal,
+.capa-gotas-cristal-ficha{
+    display:none;
+    overflow:hidden;
+    pointer-events:none
+}
+
+.capa-lluvia,
+.capa-lluvia-ficha{
+    --factor-duracion:1;
+    --factor-longitud:1;
+    --factor-opacidad:1;
+    --ancho-gota:1px;
+    --inicio-x:0px;
+    --final-x:0px;
+    --recorrido-y:1200px;
+    --angulo-gota:0deg
+}
+
+.capa-lluvia{
+    position:fixed;
+    inset:0;
+    z-index:100
+}
+
+.capa-gotas-cristal{
+    position:fixed;
+    inset:0;
+    z-index:101
+}
+
+.capa-lluvia-ficha,
+.capa-gotas-cristal-ficha{
+    position:absolute;
+    inset:0;
+    border-radius:inherit
+}
+
+.capa-lluvia-ficha{
+    z-index:12
+}
+
+.capa-gotas-cristal-ficha{
+    z-index:13
+}
+
+.capa-lluvia.activa,
+.capa-lluvia-ficha.activa,
+.capa-gotas-cristal.activa,
+.capa-gotas-cristal-ficha.activa{
+    display:block
+}
+
+.nivel-1{
+    --factor-duracion:1.80;
+    --factor-longitud:.52;
+    --factor-opacidad:.38;
+    --ancho-gota:.7px
+}
+
+.capa-lluvia.nivel-1{
+    background:rgba(8,22,34,.005)
+}
+
+.capa-lluvia-ficha.nivel-1{
+    background:rgba(8,22,34,.009)
+}
+
+.nivel-1 .gota-lluvia:nth-child(n+17){
+    display:none
+}
+
+.nivel-2{
+    --factor-duracion:1.18;
+    --factor-longitud:.88;
+    --factor-opacidad:.62;
+    --ancho-gota:1px
+}
+
+.capa-lluvia.nivel-2{
+    background:rgba(8,22,34,.020)
+}
+
+.capa-lluvia-ficha.nivel-2{
+    background:rgba(8,22,34,.030)
+}
+
+.nivel-2 .gota-lluvia:nth-child(n+49){
+    display:none
+}
+
+.nivel-3{
+    --factor-duracion:.76;
+    --factor-longitud:1.32;
+    --factor-opacidad:.84;
+    --ancho-gota:1.4px
+}
+
+.capa-lluvia.nivel-3{
+    background:rgba(6,19,31,.052)
+}
+
+.capa-lluvia-ficha.nivel-3{
+    background:rgba(6,19,31,.072)
+}
+
+.nivel-3 .gota-lluvia:nth-child(n+97){
+    display:none
+}
+
+.nivel-4{
+    --factor-duracion:.44;
+    --factor-longitud:1.90;
+    --factor-opacidad:1;
+    --ancho-gota:2px
+}
+
+.capa-lluvia.nivel-4{
+    background:rgba(4,16,28,.105)
+}
+
+.capa-lluvia-ficha.nivel-4{
+    background:rgba(4,16,28,.135)
+}
+
+.nivel-4 .gota-lluvia{
+    display:block
+}
+
+.gota-lluvia{
+    position:absolute;
+    top:-18%;
+    left:var(--x);
+    width:var(--ancho-gota);
+    height:calc(var(--longitud)*var(--factor-longitud));
+    opacity:calc(var(--opacidad)*var(--factor-opacidad));
+    border-radius:999px;
+    background:linear-gradient(
+        to bottom,
+        rgba(194,231,255,0),
+        rgba(180,226,255,.98)
+    );
+    box-shadow:0 0 4px rgba(116,201,255,.34);
+    animation-name:caer-lluvia;
+    animation-duration:calc(
+        var(--duracion)*var(--factor-duracion)
+    );
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+    animation-delay:var(--retraso);
+    will-change:transform
+}
+
+.nivel-4 .gota-lluvia:nth-child(3n){
+    box-shadow:0 0 7px rgba(166,222,255,.54)
+}
+
+@keyframes caer-lluvia{
+    from{
+        transform:
+            translate3d(var(--inicio-x),-40px,0)
+            rotate(var(--angulo-gota))
+    }
+
+    to{
+        transform:
+            translate3d(
+                var(--final-x),
+                var(--recorrido-y),
+                0
+            )
+            rotate(var(--angulo-gota))
+    }
+}
+
+.gota-cristal{
+    position:absolute;
+    left:var(--x);
+    top:var(--y);
+    width:var(--tamano);
+    height:calc(var(--tamano)*1.24);
+    border-radius:54% 46% 59% 41%/44% 47% 53% 56%;
+    border:1px solid rgba(220,244,255,.18);
+    background:
+        radial-gradient(
+            circle at 32% 24%,
+            rgba(255,255,255,.38),
+            rgba(177,225,251,.12) 30%,
+            rgba(86,161,205,.06) 67%,
+            rgba(255,255,255,.02)
+        );
+    box-shadow:
+        inset 1px 1px 2px rgba(255,255,255,.18),
+        0 1px 4px rgba(0,0,0,.16);
+    opacity:0;
+    transform:scale(.65);
+    animation:
+        vida-gota-cristal
+        var(--vida)
+        ease-in-out
+        forwards;
+    will-change:transform,opacity
+}
+
+.gota-cristal::after{
+    content:"";
+    position:absolute;
+    width:28%;
+    height:20%;
+    left:20%;
+    top:17%;
+    border-radius:50%;
+    background:rgba(255,255,255,.36);
+    filter:blur(.3px)
+}
+
+@keyframes vida-gota-cristal{
+    0%{
+        opacity:0;
+        transform:translate3d(0,-3px,0) scale(.55)
+    }
+
+    12%{
+        opacity:var(--opacidad-cristal);
+        transform:translate3d(0,0,0) scale(1)
+    }
+
+    70%{
+        opacity:calc(var(--opacidad-cristal)*.88);
+        transform:
+            translate3d(
+                var(--desvio-x),
+                calc(var(--deslizar)*.25),
+                0
+            )
+            scale(.98)
+    }
+
+    100%{
+        opacity:0;
+        transform:
+            translate3d(
+                var(--desvio-x),
+                var(--deslizar),
+                0
+            )
+            scale(.88)
+    }
+}
+
+
+/* ==========================================================
+   CABECERA Y NAVEGACIÓN
+   ========================================================== */
+
+.cabecera{
+    position:sticky;
+    top:0;
+    z-index:20;
+    display:grid;
+    grid-template-columns:
+        minmax(260px,.9fr)
+        minmax(460px,1.45fr)
+        minmax(230px,.75fr);
+    align-items:center;
+    gap:18px;
+    min-height:96px;
+    padding:12px clamp(20px,3vw,54px);
+    background:rgba(8,13,20,.94);
+    border-bottom:1px solid var(--border);
+    backdrop-filter:blur(16px)
+}
+
+.marca{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-width:0
+}
+
+.marca-icono{
+    position:relative;
+    width:70px;
+    height:54px;
+    flex:0 0 auto
+}
+
+.sol{
+    position:absolute;
+    top:3px;
+    left:25px;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:
+        linear-gradient(
+            135deg,
+            #ffd44f,
+            var(--accent)
+        );
+    box-shadow:0 0 24px rgba(240,165,0,.28)
+}
+
+.nube{
+    position:absolute;
+    left:10px;
+    bottom:7px;
+    width:52px;
+    height:23px;
+    border:2px solid #e5edf5;
+    border-radius:22px;
+    background:var(--bg)
+}
+
+.nube::before,
+.nube::after{
+    content:"";
+    position:absolute;
+    background:var(--bg);
+    border:2px solid #e5edf5;
+    border-bottom:0;
+    border-radius:50% 50% 0 0
+}
+
+.nube::before{
+    width:21px;
+    height:17px;
+    left:7px;
+    top:-13px
+}
+
+.nube::after{
+    width:25px;
+    height:21px;
+    left:23px;
+    top:-17px
+}
+
+.marca-titulo{
+    font-size:clamp(19px,1.6vw,26px);
+    font-weight:700;
+    letter-spacing:.02em;
+    white-space:nowrap
+}
+
+.marca-titulo span{
+    color:var(--accent)
+}
+
+.marca-subtitulo{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:12px;
+    white-space:nowrap
+}
+
+.navegacion{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    width:min(720px,100%);
+    height:auto
+}
+
+.navegacion a{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-width:0;
+    min-height:34px;
+    padding:7px 10px;
+    color:#102014;
+    background:#b7ff5a;
+    border:1px solid rgba(201,255,132,.92);
+    border-radius:9px;
+    font-size:10px;
+    font-weight:700;
+    line-height:1.15;
+    text-align:center;
+    text-transform:uppercase;
+    white-space:normal;
+    box-shadow:0 0 14px rgba(183,255,90,.15);
+    transition:
+        background .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease
+}
+
+.navegacion a:hover{
+    color:#071109;
+    background:#caff83;
+    box-shadow:0 0 18px rgba(183,255,90,.28);
+    transform:translateY(-1px)
+}
+
+.navegacion a.activo{
+    color:#fff;
+    background:
+        radial-gradient(
+            circle at 50% 18%,
+            #ffabab 0,
+            #ff5757 22%,
+            #f01f1f 43%,
+            #c50000 72%,
+            #780000 100%
+        );
+    border-color:#ff7373;
+    box-shadow:
+        0 0 8px rgba(255,80,80,.95),
+        0 0 22px rgba(255,0,0,.62),
+        0 0 38px rgba(255,0,0,.28),
+        inset 0 1px 6px rgba(255,255,255,.40);
+    text-shadow:0 1px 3px rgba(0,0,0,.55)
+}
+
+.navegacion a.activo::after{
+    display:none
+}
+
+.zona-derecha{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:18px
+}
+
+.hora{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    text-align:right
+}
+
+.fecha{
+    color:var(--muted);
+    font-size:11px
+}
+
+.reloj{
+    margin-top:3px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:27px;
+    font-weight:600
+}
+
+.firma-proyecto{
+    position:relative;
+    display:grid;
+    place-items:center;
+    width:70px;
+    height:70px;
+    flex:0 0 auto;
+    padding:0;
+    border:1px solid rgba(59,158,255,.28);
+    border-radius:50%;
+    background:rgba(8,18,29,.78);
+    box-shadow:0 6px 20px rgba(0,0,0,.28);
+    cursor:pointer;
+    user-select:none;
+    touch-action:manipulation;
+    -webkit-user-select:none
+}
+
+.firma-proyecto img{
+    display:block;
+    width:64px;
+    height:64px;
+    object-fit:cover;
+    border-radius:50%;
+    pointer-events:none;
+    user-select:none;
+    -webkit-user-drag:none
+}
+
+.firma-proyecto:hover{
+    border-color:rgba(59,158,255,.62);
+    box-shadow:0 0 22px rgba(59,158,255,.18)
+}
+
+.firma-proyecto:focus-visible{
+    outline:2px solid var(--blue);
+    outline-offset:3px
+}
+
+.simulacion-global{
+    position:absolute;
+    left:50%;
+    bottom:-8px;
+    transform:translateX(-50%);
+    display:none;
+    min-width:max-content;
+    padding:3px 6px;
+    border-radius:999px;
+    border:1px solid rgba(54,213,255,.32);
+    background:rgba(6,22,35,.96);
+    color:var(--cyan);
+    font-size:7px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    pointer-events:none
+}
+
+.simulacion-global.visible{
+    display:block
+}
+
+.panel-aplicacion{
+    display:none
+}
+
+.panel-aplicacion.activo{
+    display:block
+}
+
+.contenido{
+    width:min(1800px,100%);
+    margin:0 auto;
+    padding:18px clamp(18px,2vw,34px) 28px
+}
+
+.panel-superior{
+    display:grid;
+    grid-template-columns:
+        250px
+        minmax(0,1fr)
+        minmax(0,1fr);
+    gap:14px
+}
+
+.tarjeta{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17,30,46,.98),
+            rgba(9,22,34,.98)
+        );
+    border:1px solid var(--border);
+    border-radius:11px;
+    box-shadow:var(--shadow)
+}
+
+.resumen{
+    padding:20px
+}
+
+.seccion-titulo{
+    margin:0 0 8px;
+    font-size:14px;
+    font-weight:700;
+    text-transform:uppercase
+}
+
+.estado{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:var(--muted);
+    font-size:12px
+}
+
+.punto{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 12px rgba(34,197,94,.5)
+}
+
+.estado-grafico{
+    display:grid;
+    place-items:center;
+    min-height:160px;
+    margin:13px 0
+}
+
+.tiempo-icono{
+    position:relative;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    border:2px solid #244567;
+    background:
+        radial-gradient(
+            circle,
+            #163354,
+            #0b1724 70%
+        )
+}
+
+.tiempo-icono .sol{
+    width:42px;
+    height:42px;
+    left:27px;
+    top:24px
+}
+
+.tiempo-icono .nube{
+    left:43px;
+    bottom:25px;
+    width:61px;
+    background:#d9e2e9;
+    border:none
+}
+
+.tiempo-icono .nube::before,
+.tiempo-icono .nube::after{
+    background:#d9e2e9;
+    border:none
+}
+
+.ubicacion{
+    font-size:18px;
+    font-weight:600
+}
+
+.ubicacion-sub{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:12px
+}
+
+.sol-horas{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:19px;
+    padding-top:16px;
+    border-top:1px solid var(--border)
+}
+
+.sol-hora{
+    font-family:"JetBrains Mono",monospace;
+    font-size:12px
+}
+
+.sol-hora span{
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+    font-family:"Sora",sans-serif;
+    font-size:10px
+}
+
+.estacion-principal{
+    position:relative;
+    overflow:hidden;
+    min-height:0;
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(4,29,57,.35),
+            rgba(3,13,23,.94)
+        ),
+        radial-gradient(
+            circle at 70% 0%,
+            rgba(59,158,255,.28),
+            transparent 48%
+        ),
+        linear-gradient(
+            135deg,
+            #0d2c49,
+            #101c27 60%,
+            #07111c
+        )
+}
+
+.estacion-contenido{
+    padding:18px 20px 0
+}
+
+.estacion-cabecera{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:14px
+}
+
+.estacion-nombre{
+    margin:0;
+    font-size:21px
+}
+
+.estacion-localidad{
+    margin-top:3px;
+    color:#c7d7e5;
+    font-size:12px
+}
+
+.online{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    color:var(--green);
+    font-size:11px;
+    white-space:nowrap
+}
+
+.lectura-principal{
+    display:grid;
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(225px,.72fr);
+    align-items:center;
+    gap:18px;
+    padding:14px 0
+}
+
+.temperatura-bloque{
+    min-width:0
+}
+
+.temperatura{
+    font-family:"JetBrains Mono",monospace;
+    font-size:clamp(45px,4.4vw,68px);
+    font-weight:600;
+    color:#85c948;
+    letter-spacing:-.06em;
+    line-height:1
+}
+
+.temperatura sup{
+    font-size:24px;
+    letter-spacing:0
+}
+
+.sensacion{
+    margin-top:5px;
+    font-size:12px
+}
+
+.observacion{
+    margin-top:5px;
+    color:var(--muted);
+    font-family:"JetBrains Mono",monospace;
+    font-size:10px
+}
+
+.viento-panel{
+    display:grid;
+    grid-template-columns:108px minmax(0,1fr);
+    align-items:center;
+    gap:12px;
+    min-width:0;
+    padding:10px;
+    border:1px solid rgba(59,158,255,.20);
+    border-radius:10px;
+    background:rgba(3,17,29,.58)
+}
+
+.veleta{
+    position:relative;
+    width:106px;
+    height:106px;
+    border:2px solid #315878;
+    border-radius:50%;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(31,73,108,.45),
+            rgba(5,17,27,.90) 68%
+        ),
+        repeating-conic-gradient(
+            from 0deg,
+            rgba(142,195,232,.22) 0deg,
+            rgba(142,195,232,.22) 1deg,
+            transparent 1deg,
+            transparent 15deg
+        );
+    cursor:pointer;
+    touch-action:manipulation;
+    user-select:none;
+    -webkit-user-select:none;
+    box-shadow:inset 0 0 22px rgba(59,158,255,.08);
+    --angulo:0deg
+}
+
+.veleta::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:8px;
+    height:8px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 10px rgba(240,165,0,.60);
+    z-index:5
+}
+
+.veleta:hover{
+    border-color:var(--blue)
+}
+
+.veleta:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:3px
+}
+
+.veleta-cardinal{
+    position:absolute;
+    color:#dce9f5;
+    font-family:"JetBrains Mono",monospace;
+    font-size:9px;
+    font-weight:600;
+    z-index:4
+}
+
+.veleta-n{
+    top:5px;
+    left:50%;
+    transform:translateX(-50%)
+}
+
+.veleta-s{
+    bottom:5px;
+    left:50%;
+    transform:translateX(-50%)
+}
+
+.veleta-e{
+    right:6px;
+    top:50%;
+    transform:translateY(-50%)
+}
+
+.veleta-o{
+    left:6px;
+    top:50%;
+    transform:translateY(-50%)
+}
+
+.veleta-rotor{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:0;
+    height:0;
+    transform:rotate(var(--angulo));
+    transition:transform .45s ease;
+    z-index:3
+}
+
+.veleta-aguja{
+    position:absolute;
+    left:-1.5px;
+    bottom:0;
+    width:3px;
+    height:36px;
+    border-radius:3px;
+    background:linear-gradient(
+        to top,
+        #f0a500,
+        #ffd257
+    );
+    box-shadow:0 0 7px rgba(240,165,0,.40)
+}
+
+.veleta-aguja::before{
+    content:"";
+    position:absolute;
+    top:-7px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;
+    height:0;
+    border-left:5px solid transparent;
+    border-right:5px solid transparent;
+    border-bottom:0;
+    border-top:10px solid #ffd257
+}
+
+.viento-datos{
+    min-width:0
+}
+
+.direccion-principal{
+    display:flex;
+    align-items:baseline;
+    gap:6px
+}
+
+.direccion-cardinal{
+    font-family:"JetBrains Mono",monospace;
+    font-size:23px;
+    font-weight:700;
+    color:var(--accent)
+}
+
+.direccion-grados{
+    color:var(--muted);
+    font-family:"JetBrains Mono",monospace;
+    font-size:11px
+}
+
+.viento-actual{
+    margin-top:5px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:16px;
+    font-weight:600
+}
+
+.viento-actual small{
+    color:var(--muted);
+    font-size:9px;
+    font-weight:400
+}
+
+.viento-secundarios{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:4px 8px;
+    margin-top:6px
+}
+
+.viento-secundario{
+    min-width:0;
+    color:var(--muted);
+    font-size:8px
+}
+
+.viento-secundario strong{
+    display:block;
+    margin-top:1px;
+    color:var(--text);
+    font-family:"JetBrains Mono",monospace;
+    font-size:9px;
+    font-weight:500;
+    white-space:nowrap
+}
+
+.simulacion-estacion{
+    display:none;
+    margin-top:7px;
+    padding:3px 6px;
+    width:fit-content;
+    border:1px solid rgba(54,213,255,.30);
+    border-radius:999px;
+    background:rgba(3,29,43,.82);
+    color:var(--cyan);
+    font-size:7px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase
+}
+
+.simulacion-estacion.visible{
+    display:block
+}
+
+.patrocinio-estacion{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    align-items:center;
+    min-height:34px;
+    margin:0 0 8px;
+    overflow:hidden;
+    border:1px solid rgba(0,168,255,.42);
+    border-radius:7px;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(7,21,38,.96),
+            rgba(13,32,53,.96)
+        )
+}
+
+.patrocinio-estacion-titulo{
+    align-self:stretch;
+    display:flex;
+    align-items:center;
+    padding:0 10px;
+    white-space:nowrap;
+    border-right:1px solid rgba(0,168,255,.30);
+    color:#fff;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.07em;
+    background:rgba(255,255,255,.025)
+}
+
+.patrocinio-estacion-ventana{
+    min-width:0;
+    overflow:hidden;
+    -webkit-mask-image:
+        linear-gradient(
+            to right,
+            transparent,
+            #000 5%,
+            #000 95%,
+            transparent
+        );
+    mask-image:
+        linear-gradient(
+            to right,
+            transparent,
+            #000 5%,
+            #000 95%,
+            transparent
+        )
+}
+
+.patrocinio-estacion-pista{
+    display:flex;
+    width:max-content;
+    animation:
+        patrocinio-estacion-desplazar
+        21s
+        linear
+        infinite;
+    will-change:transform
+}
+
+.patrocinio-estacion-texto{
+    display:block;
+    flex:none;
+    padding:0 34px;
+    white-space:nowrap;
+    color:#00a8ff;
+    font-size:10px;
+    font-weight:600;
+    text-shadow:0 0 8px rgba(0,168,255,.28)
+}
+
+.patrocinio-estacion-texto strong{
+    color:#42c7ff;
+    font-weight:800;
+    text-shadow:0 0 10px rgba(66,199,255,.38)
+}
+
+.patrocinio-estacion-control{
+    align-self:stretch;
+    width:34px;
+    border:0;
+    border-left:1px solid rgba(0,168,255,.25);
+    background:transparent;
+    color:#42c7ff;
+    cursor:pointer;
+    font-size:10px
+}
+
+.patrocinio-estacion-control:hover{
+    background:rgba(0,168,255,.07)
+}
+
+.patrocinio-estacion-control:focus-visible{
+    outline:2px solid #00a8ff;
+    outline-offset:-3px
+}
+
+.patrocinio-estacion.pausado
+.patrocinio-estacion-pista{
+    animation-play-state:paused
+}
+
+@keyframes patrocinio-estacion-desplazar{
+    from{
+        transform:translateX(0)
+    }
+
+    to{
+        transform:translateX(-50%)
+    }
+}
+
+.lluvia-resumen{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    margin:0 0 12px;
+    padding:9px 10px;
+    border:1px solid rgba(54,213,255,.14);
+    border-radius:8px;
+    background:rgba(11,35,52,.78)
+}
+
+.lluvia-resumen-item{
+    min-width:0;
+    display:grid;
+    grid-template-columns:30px minmax(0,1fr);
+    grid-template-areas:
+        "icono label"
+        "icono valor"
+        "icono extra";
+    align-items:center;
+    column-gap:7px;
+    min-height:48px;
+    padding:5px 6px;
+    border:1px solid rgba(54,213,255,.07);
+    border-radius:6px;
+    background:rgba(5,24,37,.24)
+}
+
+.lluvia-resumen-icono{
+    grid-area:icono;
+    font-size:21px
+}
+
+.lluvia-resumen-label{
+    grid-area:label;
+    color:var(--muted);
+    font-size:8px;
+    text-transform:uppercase
+}
+
+.lluvia-resumen-valor{
+    grid-area:valor;
+    margin-top:2px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:12px;
+    font-weight:600;
+    color:var(--cyan);
+    white-space:nowrap
+}
+
+.lluvia-resumen-extra{
+    grid-area:extra;
+    margin-top:1px;
+    color:var(--muted);
+    font-size:7px
+}
+
+.metricas-estacion{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    background:rgba(3,13,23,.80);
+    border-top:1px solid rgba(255,255,255,.08)
+}
+
+.metrica-estacion{
+    min-width:0;
+    padding:11px 13px;
+    border-right:1px solid rgba(255,255,255,.08);
+    border-bottom:1px solid rgba(255,255,255,.06)
+}
+
+.metrica-estacion:nth-child(3n){
+    border-right:none
+}
+
+.metrica-label{
+    color:var(--muted);
+    font-size:9px
+}
+
+.metrica-valor{
+    margin-top:4px;
+    font-family:"JetBrains Mono",monospace;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap
+}
+
+.metrica-secundaria{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:8px
+}
+
+.paneles-graficos{
+    display:grid;
+    grid-template-columns:1.1fr .85fr 1fr;
+    gap:14px;
+    margin-top:14px
+}
+
+.grafico{
+    min-height:270px;
+    padding:18px
+}
+
+.grafico-cabecera{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    margin-bottom:14px
+}
+
+.grafico-titulo{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase
+}
+
+.leyenda{
+    display:flex;
+    gap:14px;
+    color:var(--muted);
+    font-size:10px
+}
+
+.leyenda span::before{
+    content:"";
+    display:inline-block;
+    width:8px;
+    height:8px;
+    margin-right:5px;
+    border-radius:50%;
+    background:var(--green)
+}
+
+.leyenda span:last-child::before{
+    background:var(--blue)
+}
+
+.grafico-svg{
+    width:100%;
+    height:185px
+}
+
+.rejilla{
+    stroke:#183149;
+    stroke-width:1
+}
+
+.linea-silo{
+    fill:none;
+    stroke:var(--green);
+    stroke-width:3
+}
+
+.linea-llanos{
+    fill:none;
+    stroke:var(--blue);
+    stroke-width:3
+}
+
+.barra{
+    fill:#3b9eff
+}
+
+.camaras{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:15px
+}
+
+.camara{
+    position:relative;
+    min-height:175px;
+    overflow:hidden;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:
+        linear-gradient(
+            to bottom,
+            #286ca2 0%,
+            #7dbbda 36%,
+            #6c8e69 37%,
+            #34452f 70%,
+            #18251c 100%
+        )
+}
+
+.camara::before{
+    content:"";
+    position:absolute;
+    left:-5%;
+    right:-5%;
+    bottom:32px;
+    height:60px;
+    background:
+        linear-gradient(
+            160deg,
+            transparent 35%,
+            #334e35 36% 53%,
+            #223428 54%
+        );
+    opacity:.9
+}
+
+.camara-estado{
+    position:absolute;
+    top:8px;
+    left:8px;
+    z-index:2;
+    padding:4px 7px;
+    border-radius:4px;
+    background:rgba(6,20,31,.75);
+    font-size:9px
+}
+
+.camara-nombre{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:2;
+    padding:10px;
+    background:rgba(4,12,19,.88);
+    font-size:10px
+}
+
+.accesos{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:12px;
+    margin-top:14px;
+    padding:18px
+}
+
+.acceso{
+    min-height:76px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:rgba(12,28,43,.8)
+}
+
+.acceso:hover{
+    border-color:#315579;
+    transform:translateY(-1px)
+}
+
+.acceso-icono{
+    font-size:26px
+}
+
+.acceso-titulo{
+    font-size:11px;
+    font-weight:700
+}
+
+.acceso-subtitulo{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:9px
+}
+
+.pie{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:20px;
+    align-items:center;
+    padding:20px 5px 5px;
+    color:var(--muted);
+    font-size:10px
+}
+
+.pie-centro{
+    text-align:center
+}
+
+.pie-derecha{
+    text-align:right
+}
+
+.panel-futuro{
+    width:min(1500px,calc(100% - 48px));
+    margin:38px auto;
+    min-height:calc(100vh - 170px);
+    display:grid;
+    place-items:center;
+    padding:40px
+}
+
+.panel-futuro-contenido{
+    position:relative;
+    overflow:hidden;
+    width:min(800px,100%);
+    padding:58px 46px;
+    text-align:center;
+    border:1px solid var(--border);
+    border-radius:24px;
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(54,213,255,.08),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(17,30,46,.98),
+            rgba(7,17,28,.98)
+        );
+    box-shadow:var(--shadow)
+}
+
+.panel-futuro-contenido::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(54,213,255,.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            rgba(54,213,255,.025) 1px,
+            transparent 1px
+        );
+    background-size:36px 36px
+}
+
+.panel-futuro-icono{
+    position:relative;
+    z-index:1;
+    display:grid;
+    place-items:center;
+    width:88px;
+    height:88px;
+    margin:0 auto 24px;
+    border:1px solid rgba(240,165,0,.28);
+    border-radius:24px;
+    background:rgba(240,165,0,.07);
+    font-size:40px
+}
+
+.panel-futuro-etiqueta{
+    position:relative;
+    z-index:1;
+    margin-bottom:12px;
+    color:var(--cyan);
+    font-family:"JetBrains Mono",monospace;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.12em
+}
+
+.panel-futuro h1{
+    position:relative;
+    z-index:1;
+    margin:0 0 16px;
+    font-size:clamp(30px,4vw,54px);
+    letter-spacing:-.045em
+}
+
+.panel-futuro p{
+    position:relative;
+    z-index:1;
+    max-width:620px;
+    margin:0 auto;
+    color:var(--muted);
+    line-height:1.75;
+    font-size:14px
+}
+
+.panel-en-vivo{
+    width:100%;
+    margin:0;
+    padding:0;
+    background:var(--bg)
+}
+
+.panel-en-vivo iframe{
+    display:block;
+    width:100%;
+    height:calc(100vh - 97px);
+    min-height:760px;
+    border:0;
+    background:var(--bg)
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
 @media(max-width:1250px){
-.cabecera{grid-template-columns:1fr auto;gap:8px 20px}
-.navegacion{grid-column:1/-1;order:3;justify-content:center;gap:10px;width:100%;padding:8px 0;overflow-x:auto;scrollbar-width:none;border-top:1px solid rgba(255,255,255,.04)}
-.navegacion::-webkit-scrollbar{display:none}
-.navegacion a{padding:10px 13px}
-.zona-derecha{justify-content:flex-end}
-.panel-superior{grid-template-columns:210px 1fr 1fr}
-.lectura-principal{grid-template-columns:1fr}
-.viento-panel{grid-template-columns:100px 1fr}
-.veleta{width:98px;height:98px}
-.paneles-graficos{grid-template-columns:1fr 1fr}
-.paneles-graficos .grafico:last-child{grid-column:1/-1}
-.accesos{grid-template-columns:repeat(3,1fr)}
-.panel-en-vivo iframe{height:calc(100vh - 150px)}
+
+    .cabecera{
+        grid-template-columns:1fr auto;
+        gap:8px 20px
+    }
+
+    .navegacion{
+        grid-column:1/-1;
+        order:3;
+        display:grid;
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        justify-content:stretch;
+        gap:8px;
+        width:min(900px,100%);
+        margin:0 auto;
+        padding:7px 0;
+        overflow:visible;
+        border-top:1px solid rgba(255,255,255,.04)
+    }
+
+    .navegacion a{
+        min-height:34px;
+        padding:7px 9px;
+        font-size:10px
+    }
+
+    .zona-derecha{
+        justify-content:flex-end
+    }
+
+    .panel-superior{
+        grid-template-columns:210px 1fr 1fr
+    }
+
+    .lectura-principal{
+        grid-template-columns:1fr
+    }
+
+    .viento-panel{
+        grid-template-columns:100px 1fr
+    }
+
+    .veleta{
+        width:98px;
+        height:98px
+    }
+
+    .paneles-graficos{
+        grid-template-columns:1fr 1fr
+    }
+
+    .paneles-graficos .grafico:last-child{
+        grid-column:1/-1
+    }
+
+    .accesos{
+        grid-template-columns:repeat(3,1fr)
+    }
+
+    .panel-en-vivo iframe{
+        height:calc(100vh - 150px)
+    }
 }
+
 @media(max-width:1020px){
-.panel-superior{grid-template-columns:1fr 1fr}
-.resumen{display:none}
+
+    .panel-superior{
+        grid-template-columns:1fr 1fr
+    }
+
+    .resumen{
+        display:none
+    }
 }
+
 @media(max-width:850px){
-.cabecera{position:relative;grid-template-columns:1fr;gap:9px;padding-bottom:0}
-.marca{order:1}
-.zona-derecha{order:2;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:20px;width:100%;padding:0 52px 0 12px}
-.hora{justify-content:flex-start;text-align:left}
-.firma-proyecto{width:96px;height:96px}
-.firma-proyecto img{width:90px;height:90px}
-.navegacion{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(42px,auto);grid-column:auto;order:3;justify-content:stretch;gap:8px;width:auto;margin:1px -20px 0;padding:9px 20px;overflow:visible}
-.navegacion a{display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:42px;padding:10px 8px;font-size:11px;white-space:normal;text-align:center}
-.panel-superior{grid-template-columns:1fr}
-.lectura-principal{grid-template-columns:minmax(0,1fr) minmax(230px,.8fr)}
-.paneles-graficos{grid-template-columns:1fr}
-.paneles-graficos .grafico:last-child{grid-column:auto}
-.accesos{grid-template-columns:repeat(2,1fr)}
-.pie{grid-template-columns:1fr;text-align:left}
-.pie-centro,.pie-derecha{text-align:left}
-.panel-futuro{width:min(calc(100% - 24px),1500px);margin:20px auto;min-height:620px;padding:10px}
-.panel-futuro-contenido{padding:42px 24px}
-.panel-en-vivo iframe{min-height:720px;height:calc(100vh - 245px)}
-#panel-observaciones iframe{min-height:920px}
+
+    .cabecera{
+        position:relative;
+        grid-template-columns:1fr;
+        gap:9px;
+        padding-bottom:0
+    }
+
+    .marca{
+        order:1
+    }
+
+    .zona-derecha{
+        order:2;
+        display:grid;
+        grid-template-columns:1fr auto;
+        align-items:center;
+        column-gap:20px;
+        width:100%;
+        padding:0 52px 0 12px
+    }
+
+    .hora{
+        justify-content:flex-start;
+        text-align:left
+    }
+
+    .firma-proyecto{
+        width:96px;
+        height:96px
+    }
+
+    .firma-proyecto img{
+        width:90px;
+        height:90px
+    }
+
+    .navegacion{
+        display:grid;
+        grid-template-columns:repeat(3,minmax(0,1fr));
+        grid-auto-rows:minmax(36px,auto);
+        grid-column:auto;
+        order:3;
+        justify-content:stretch;
+        gap:7px;
+        width:auto;
+        margin:1px -20px 0;
+        padding:8px 20px;
+        overflow:visible
+    }
+
+    .navegacion a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        width:100%;
+        min-width:0;
+        min-height:36px;
+        padding:7px 5px;
+        font-size:9px;
+        line-height:1.15;
+        white-space:normal;
+        text-align:center
+    }
+
+    .panel-superior{
+        grid-template-columns:1fr
+    }
+
+    .lectura-principal{
+        grid-template-columns:
+            minmax(0,1fr)
+            minmax(230px,.8fr)
+    }
+
+    .paneles-graficos{
+        grid-template-columns:1fr
+    }
+
+    .paneles-graficos .grafico:last-child{
+        grid-column:auto
+    }
+
+    .accesos{
+        grid-template-columns:repeat(2,1fr)
+    }
+
+    .pie{
+        grid-template-columns:1fr;
+        text-align:left
+    }
+
+    .pie-centro,
+    .pie-derecha{
+        text-align:left
+    }
+
+    .panel-futuro{
+        width:min(calc(100% - 24px),1500px);
+        margin:20px auto;
+        min-height:620px;
+        padding:10px
+    }
+
+    .panel-futuro-contenido{
+        padding:42px 24px
+    }
+
+    .panel-en-vivo iframe{
+        min-height:720px;
+        height:calc(100vh - 245px)
+    }
+
+    #panel-observaciones iframe{
+        min-height:920px
+    }
 }
+
 @media(max-width:620px){
-.contenido{padding:12px}
-.estacion-contenido{padding:16px 16px 0}
-.estacion-nombre{font-size:19px}
-.lectura-principal{grid-template-columns:1fr;gap:12px;padding:13px 0}
-.temperatura{font-size:47px}
-.viento-panel{grid-template-columns:106px minmax(0,1fr)}
-.veleta{width:104px;height:104px}
-.patrocinio-estacion{grid-template-columns:auto minmax(0,1fr);min-height:32px}
-.patrocinio-estacion-titulo{padding:0 8px;font-size:8px}
-.patrocinio-estacion-control{display:none}
-.patrocinio-estacion-texto{padding:0 26px;font-size:9px}
-.lluvia-resumen{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px}
-.lluvia-resumen-item{grid-template-columns:26px minmax(0,1fr);padding:5px 3px;column-gap:5px}
-.lluvia-resumen-icono{font-size:18px}
-.lluvia-resumen-label{font-size:7px}
-.lluvia-resumen-valor{font-size:11px}
-.metricas-estacion{grid-template-columns:1fr 1fr}
-.metrica-estacion:nth-child(3n){border-right:1px solid rgba(255,255,255,.08)}
-.metrica-estacion:nth-child(2n){border-right:none}
-.camaras{grid-template-columns:1fr}
-.accesos{grid-template-columns:1fr}
-.panel-futuro{min-height:540px}
-.panel-futuro-icono{width:72px;height:72px;font-size:32px}
-.panel-en-vivo iframe{min-height:650px;height:calc(100vh - 265px)}
+
+    .contenido{
+        padding:12px
+    }
+
+    .estacion-contenido{
+        padding:16px 16px 0
+    }
+
+    .estacion-nombre{
+        font-size:19px
+    }
+
+    .lectura-principal{
+        grid-template-columns:1fr;
+        gap:12px;
+        padding:13px 0
+    }
+
+    .temperatura{
+        font-size:47px
+    }
+
+    .viento-panel{
+        grid-template-columns:106px minmax(0,1fr)
+    }
+
+    .veleta{
+        width:104px;
+        height:104px
+    }
+
+    .patrocinio-estacion{
+        grid-template-columns:auto minmax(0,1fr);
+        min-height:32px
+    }
+
+    .patrocinio-estacion-titulo{
+        padding:0 8px;
+        font-size:8px
+    }
+
+    .patrocinio-estacion-control{
+        display:none
+    }
+
+    .patrocinio-estacion-texto{
+        padding:0 26px;
+        font-size:9px
+    }
+
+    .lluvia-resumen{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:7px;
+        padding:8px
+    }
+
+    .lluvia-resumen-item{
+        grid-template-columns:26px minmax(0,1fr);
+        padding:5px 3px;
+        column-gap:5px
+    }
+
+    .lluvia-resumen-icono{
+        font-size:18px
+    }
+
+    .lluvia-resumen-label{
+        font-size:7px
+    }
+
+    .lluvia-resumen-valor{
+        font-size:11px
+    }
+
+    .metricas-estacion{
+        grid-template-columns:1fr 1fr
+    }
+
+    .metrica-estacion:nth-child(3n){
+        border-right:1px solid rgba(255,255,255,.08)
+    }
+
+    .metrica-estacion:nth-child(2n){
+        border-right:none
+    }
+
+    .camaras{
+        grid-template-columns:1fr
+    }
+
+    .accesos{
+        grid-template-columns:1fr
+    }
+
+    .panel-futuro{
+        min-height:540px
+    }
+
+    .panel-futuro-icono{
+        width:72px;
+        height:72px;
+        font-size:32px
+    }
+
+    .panel-en-vivo iframe{
+        min-height:650px;
+        height:calc(100vh - 265px)
+    }
 }
+
 @media(max-width:390px){
-.zona-derecha{padding:0 34px 0 8px}
-.firma-proyecto{width:90px;height:90px}
-.firma-proyecto img{width:84px;height:84px}
-.navegacion{gap:7px;padding-left:12px;padding-right:12px}
-.navegacion a{padding:9px 7px;font-size:10px}
-.viento-panel{grid-template-columns:94px minmax(0,1fr)}
-.veleta{width:92px;height:92px}
-.veleta-aguja{height:31px}
-.direccion-cardinal{font-size:20px}
-.viento-actual{font-size:14px}
-.lluvia-resumen{grid-template-columns:repeat(2,minmax(0,1fr))}
-.lluvia-resumen-item{grid-template-columns:22px minmax(0,1fr);column-gap:4px}
-.lluvia-resumen-icono{font-size:16px}
-.lluvia-resumen-valor{font-size:10px}
+
+    .zona-derecha{
+        padding:0 34px 0 8px
+    }
+
+    .firma-proyecto{
+        width:90px;
+        height:90px
+    }
+
+    .firma-proyecto img{
+        width:84px;
+        height:84px
+    }
+
+    .navegacion{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+        gap:6px;
+        padding-left:8px;
+        padding-right:8px
+    }
+
+    .navegacion a{
+        min-height:34px;
+        padding:6px 3px;
+        font-size:8px
+    }
+
+    .viento-panel{
+        grid-template-columns:94px minmax(0,1fr)
+    }
+
+    .veleta{
+        width:92px;
+        height:92px
+    }
+
+    .veleta-aguja{
+        height:31px
+    }
+
+    .direccion-cardinal{
+        font-size:20px
+    }
+
+    .viento-actual{
+        font-size:14px
+    }
+
+    .lluvia-resumen{
+        grid-template-columns:repeat(2,minmax(0,1fr))
+    }
+
+    .lluvia-resumen-item{
+        grid-template-columns:22px minmax(0,1fr);
+        column-gap:4px
+    }
+
+    .lluvia-resumen-icono{
+        font-size:16px
+    }
+
+    .lluvia-resumen-valor{
+        font-size:10px
+    }
 }
+
 @media(prefers-reduced-motion:reduce){
-.patrocinio-estacion-pista{animation:none}
-.patrocinio-estacion-texto:nth-child(2){display:none}
-.capa-lluvia,.capa-lluvia-ficha,.capa-gotas-cristal,.capa-gotas-cristal-ficha{display:none!important}
-.veleta-rotor{transition:none}
+
+    .patrocinio-estacion-pista{
+        animation:none
+    }
+
+    .patrocinio-estacion-texto:nth-child(2){
+        display:none
+    }
+
+    .capa-lluvia,
+    .capa-lluvia-ficha,
+    .capa-gotas-cristal,
+    .capa-gotas-cristal-ficha{
+        display:none!important
+    }
+
+    .veleta-rotor{
+        transition:none
+    }
 }
 </style>
 </head>
+
 <body>
-<div class="capa-lluvia" id="capa-lluvia" aria-hidden="true"></div>
-<div class="capa-gotas-cristal" id="capa-gotas-cristal" aria-hidden="true"></div>
+
+<div
+    class="capa-lluvia"
+    id="capa-lluvia"
+    aria-hidden="true"
+></div>
+
+<div
+    class="capa-gotas-cristal"
+    id="capa-gotas-cristal"
+    aria-hidden="true"
+></div>
+
 <div class="pagina">
+
 <header class="cabecera">
-<a href="#actualidad" class="marca" data-panel="actualidad" aria-label="Ir a Actualidad">
-<div class="marca-icono" aria-hidden="true"><div class="sol"></div><div class="nube"></div></div>
-<div><div class="marca-titulo">METEO<span>ARCHIDONA</span></div><div class="marca-subtitulo">El tiempo de nuestra comarca</div></div>
+
+<a
+    href="#actualidad"
+    class="marca"
+    data-panel="actualidad"
+    aria-label="Ir a Actualidad"
+>
+    <div class="marca-icono" aria-hidden="true">
+        <div class="sol"></div>
+        <div class="nube"></div>
+    </div>
+
+    <div>
+        <div class="marca-titulo">
+            METEO<span>ARCHIDONA</span>
+        </div>
+
+        <div class="marca-subtitulo">
+            El tiempo de nuestra comarca
+        </div>
+    </div>
 </a>
-<nav class="navegacion" aria-label="Navegación principal">
-<a href="#actualidad" class="activo" data-panel="actualidad" aria-current="page">Actualidad</a>
-<a href="#observaciones" data-panel="observaciones">Observaciones</a>
-<a href="#prediccion" data-panel="prediccion">Predicción</a>
-<a href="#en-vivo" data-panel="en-vivo">En vivo</a>
-<a href="administracion.html">Administración</a>
+
+<nav
+    class="navegacion"
+    aria-label="Navegación principal"
+>
+    <a
+        href="#actualidad"
+        class="activo"
+        data-panel="actualidad"
+        aria-current="page"
+    >
+        Actualidad
+    </a>
+
+    <a
+        href="#observaciones"
+        data-panel="observaciones"
+    >
+        Observaciones
+    </a>
+
+    <a
+        href="#prediccion"
+        data-panel="prediccion"
+    >
+        Predicción
+    </a>
+
+    <a
+        href="#en-vivo"
+        data-panel="en-vivo"
+    >
+        En vivo
+    </a>
+
+    <a href="administracion.html">
+        Administración
+    </a>
 </nav>
+
 <div class="zona-derecha">
-<div class="hora"><div><div class="fecha" id="fecha-actual">--</div><div class="reloj" id="reloj-actual">--:--</div></div></div>
-<button type="button" class="firma-proyecto" id="firma-proyecto" data-lluvia-control="GLOBAL" aria-label="Y&Z Project" title="Y&Z Project">
-<img src="assets/yz-project.jpg" alt="Y&Z Project" draggable="false">
-<span class="simulacion-global" id="simulacion-GLOBAL"></span>
-</button>
+
+    <div class="hora">
+        <div>
+            <div
+                class="fecha"
+                id="fecha-actual"
+            >
+                --
+            </div>
+
+            <div
+                class="reloj"
+                id="reloj-actual"
+            >
+                --:--
+            </div>
+        </div>
+    </div>
+
+    <button
+        type="button"
+        class="firma-proyecto"
+        id="firma-proyecto"
+        data-lluvia-control="GLOBAL"
+        aria-label="Y&Z Project"
+        title="Y&Z Project"
+    >
+        <img
+            src="assets/yz-project.jpg"
+            alt="Y&Z Project"
+            draggable="false"
+        >
+
+        <span
+            class="simulacion-global"
+            id="simulacion-GLOBAL"
+        ></span>
+    </button>
+
 </div>
 </header>
 
-<section class="panel-aplicacion activo" id="panel-actualidad" data-panel-contenido="actualidad">
-<main class="contenido" id="actual">
+
+<section
+    class="panel-aplicacion activo"
+    id="panel-actualidad"
+    data-panel-contenido="actualidad"
+>
+
+<main
+    class="contenido"
+    id="actual"
+>
+
 <section class="panel-superior">
+
 <aside class="tarjeta resumen">
-<h2 class="seccion-titulo">Condiciones actuales</h2>
-<div class="estado"><span class="punto"></span>Datos MeteoArchidona</div>
-<div class="estado-grafico"><div class="tiempo-icono" aria-hidden="true"><div class="sol"></div><div class="nube"></div></div></div>
-<div class="ubicacion">⌖ ARCHIDONA</div>
-<div class="ubicacion-sub">Málaga · Andalucía</div>
-<div class="sol-horas"><div class="sol-hora">☀ 07:45<span>Amanecer</span></div><div class="sol-hora">☾ 20:44<span>Atardecer</span></div></div>
+
+<h2 class="seccion-titulo">
+    Condiciones actuales
+</h2>
+
+<div class="estado">
+    <span class="punto"></span>
+    Datos MeteoArchidona
+</div>
+
+<div class="estado-grafico">
+    <div
+        class="tiempo-icono"
+        aria-hidden="true"
+    >
+        <div class="sol"></div>
+        <div class="nube"></div>
+    </div>
+</div>
+
+<div class="ubicacion">
+    ⌖ ARCHIDONA
+</div>
+
+<div class="ubicacion-sub">
+    Málaga · Andalucía
+</div>
+
+<div class="sol-horas">
+
+    <div class="sol-hora">
+        ☀ 07:45
+        <span>Amanecer</span>
+    </div>
+
+    <div class="sol-hora">
+        ☾ 20:44
+        <span>Atardecer</span>
+    </div>
+
+</div>
+
 </aside>
 
-<article class="tarjeta estacion-principal" id="tarjeta-EL_SILO">
-<div class="capa-lluvia-ficha" id="capa-lluvia-EL_SILO" aria-hidden="true"></div>
-<div class="capa-gotas-cristal-ficha" id="capa-gotas-cristal-EL_SILO" aria-hidden="true"></div>
+
+<article
+    class="tarjeta estacion-principal"
+    id="tarjeta-EL_SILO"
+>
+
+<div
+    class="capa-lluvia-ficha"
+    id="capa-lluvia-EL_SILO"
+    aria-hidden="true"
+></div>
+
+<div
+    class="capa-gotas-cristal-ficha"
+    id="capa-gotas-cristal-EL_SILO"
+    aria-hidden="true"
+></div>
+
 <div class="estacion-contenido">
-<div class="estacion-cabecera"><div><h2 class="estacion-nombre" id="nombre-EL_SILO">EL SILO</h2><div class="estacion-localidad">Archidona</div></div><div class="online" id="estado-EL_SILO"><span class="punto"></span>Cargando...</div></div>
+
+<div class="estacion-cabecera">
+
+    <div>
+        <h2
+            class="estacion-nombre"
+            id="nombre-EL_SILO"
+        >
+            EL SILO
+        </h2>
+
+        <div class="estacion-localidad">
+            Archidona
+        </div>
+    </div>
+
+    <div
+        class="online"
+        id="estado-EL_SILO"
+    >
+        <span class="punto"></span>
+        Cargando...
+    </div>
+
+</div>
+
+
 <div class="lectura-principal">
-<div class="temperatura-bloque"><div class="temperatura" id="temperatura-EL_SILO">--<sup>°C</sup></div><div class="sensacion" id="sensacion-EL_SILO">Sensación -- °C</div><div class="observacion" id="observacion-EL_SILO">Exterior --:--</div></div>
+
+<div class="temperatura-bloque">
+
+    <div
+        class="temperatura"
+        id="temperatura-EL_SILO"
+    >
+        --<sup>°C</sup>
+    </div>
+
+    <div
+        class="sensacion"
+        id="sensacion-EL_SILO"
+    >
+        Sensación -- °C
+    </div>
+
+    <div
+        class="observacion"
+        id="observacion-EL_SILO"
+    >
+        Exterior --:--
+    </div>
+
+</div>
+
+
 <div class="viento-panel">
-<div class="veleta" id="veleta-EL_SILO" data-lluvia-control="EL_SILO" tabindex="0" role="button" aria-label="Veleta de El Silo" title="Veleta de El Silo"><span class="veleta-cardinal veleta-n">N</span><span class="veleta-cardinal veleta-e">E</span><span class="veleta-cardinal veleta-s">S</span><span class="veleta-cardinal veleta-o">O</span><div class="veleta-rotor"><div class="veleta-aguja"></div></div></div>
+
+<div
+    class="veleta"
+    id="veleta-EL_SILO"
+    data-lluvia-control="EL_SILO"
+    tabindex="0"
+    role="button"
+    aria-label="Veleta de El Silo"
+    title="Veleta de El Silo"
+>
+    <span class="veleta-cardinal veleta-n">N</span>
+    <span class="veleta-cardinal veleta-e">E</span>
+    <span class="veleta-cardinal veleta-s">S</span>
+    <span class="veleta-cardinal veleta-o">O</span>
+
+    <div class="veleta-rotor">
+        <div class="veleta-aguja"></div>
+    </div>
+</div>
+
 <div class="viento-datos">
-<div class="direccion-principal"><div class="direccion-cardinal" id="direccion-EL_SILO">--</div><div class="direccion-grados" id="grados-EL_SILO">--°</div></div>
-<div class="viento-actual" id="viento-actual-EL_SILO">-- <small>km/h</small></div>
-<div class="viento-secundarios"><div class="viento-secundario">Media 2 min<strong id="viento-2m-EL_SILO">-- km/h</strong></div><div class="viento-secundario">Media 10 min<strong id="viento-10m-EL_SILO">-- km/h</strong></div><div class="viento-secundario">Racha 10 min<strong id="racha-EL_SILO">-- km/h</strong></div></div>
-<div class="simulacion-estacion" id="simulacion-EL_SILO"></div>
+
+    <div class="direccion-principal">
+
+        <div
+            class="direccion-cardinal"
+            id="direccion-EL_SILO"
+        >
+            --
+        </div>
+
+        <div
+            class="direccion-grados"
+            id="grados-EL_SILO"
+        >
+            --°
+        </div>
+
+    </div>
+
+    <div
+        class="viento-actual"
+        id="viento-actual-EL_SILO"
+    >
+        -- <small>km/h</small>
+    </div>
+
+    <div class="viento-secundarios">
+
+        <div class="viento-secundario">
+            Media 2 min
+            <strong id="viento-2m-EL_SILO">
+                -- km/h
+            </strong>
+        </div>
+
+        <div class="viento-secundario">
+            Media 10 min
+            <strong id="viento-10m-EL_SILO">
+                -- km/h
+            </strong>
+        </div>
+
+        <div class="viento-secundario">
+            Racha 10 min
+            <strong id="racha-EL_SILO">
+                -- km/h
+            </strong>
+        </div>
+
+    </div>
+
+    <div
+        class="simulacion-estacion"
+        id="simulacion-EL_SILO"
+    ></div>
+
 </div>
 </div>
 </div>
-<div class="patrocinio-estacion" id="patrocinio-EL_SILO" aria-label="Patrocinadores de los datos de lluvia de El Silo">
-<div class="patrocinio-estacion-titulo">🌧️ LLUVIA EN VIVO</div>
-<div class="patrocinio-estacion-ventana"><div class="patrocinio-estacion-pista"><span class="patrocinio-estacion-texto">Datos patrocinados por <strong>Restaurante San Isidro</strong> · <strong>Bar Central</strong> · <strong>Las Viñas</strong> · <strong>Gestión 95</strong></span><span class="patrocinio-estacion-texto" aria-hidden="true">Datos patrocinados por <strong>Restaurante San Isidro</strong> · <strong>Bar Central</strong> · <strong>Las Viñas</strong> · <strong>Gestión 95</strong></span></div></div>
-<button type="button" class="patrocinio-estacion-control" data-patrocinio="EL_SILO" aria-label="Pausar patrocinio" aria-pressed="false">Ⅱ</button>
+
+
+<div
+    class="patrocinio-estacion"
+    id="patrocinio-EL_SILO"
+    aria-label="Patrocinadores de los datos de lluvia de El Silo"
+>
+
+    <div class="patrocinio-estacion-titulo">
+        🌧️ LLUVIA EN VIVO
+    </div>
+
+    <div class="patrocinio-estacion-ventana">
+
+        <div class="patrocinio-estacion-pista">
+
+            <span class="patrocinio-estacion-texto">
+                Datos patrocinados por
+                <strong>Restaurante San Isidro</strong>
+                ·
+                <strong>Bar Central</strong>
+                ·
+                <strong>Las Viñas</strong>
+                ·
+                <strong>Gestión 95</strong>
+            </span>
+
+            <span
+                class="patrocinio-estacion-texto"
+                aria-hidden="true"
+            >
+                Datos patrocinados por
+                <strong>Restaurante San Isidro</strong>
+                ·
+                <strong>Bar Central</strong>
+                ·
+                <strong>Las Viñas</strong>
+                ·
+                <strong>Gestión 95</strong>
+            </span>
+
+        </div>
+
+    </div>
+
+    <button
+        type="button"
+        class="patrocinio-estacion-control"
+        data-patrocinio="EL_SILO"
+        aria-label="Pausar patrocinio"
+        aria-pressed="false"
+    >
+        Ⅱ
+    </button>
+
 </div>
+
+
 <div class="lluvia-resumen">
-<div class="lluvia-resumen-item"><div class="lluvia-resumen-icono" id="lluvia-resumen-icono-dia-EL_SILO">☁️</div><div class="lluvia-resumen-label">Lluvia hoy</div><div class="lluvia-resumen-valor" id="lluvia-dia-EL_SILO">-- mm</div></div>
-<div class="lluvia-resumen-item"><div class="lluvia-resumen-icono" id="lluvia-icono-actual-EL_SILO">☁️</div><div class="lluvia-resumen-label">Intensidad</div><div class="lluvia-resumen-valor" id="lluvia-tasa-EL_SILO">-- mm/h</div><div class="lluvia-resumen-extra" id="lluvia-estado-EL_SILO">--</div></div>
-<div class="lluvia-resumen-item"><div class="lluvia-resumen-icono" id="lluvia-resumen-icono-mes-EL_SILO">☁️</div><div class="lluvia-resumen-label">Este mes</div><div class="lluvia-resumen-valor" id="lluvia-mes-EL_SILO">-- mm</div></div>
-<div class="lluvia-resumen-item"><div class="lluvia-resumen-icono" id="lluvia-resumen-icono-anio-EL_SILO">☁️</div><div class="lluvia-resumen-label">Año agrícola</div><div class="lluvia-resumen-valor" id="lluvia-anio-EL_SILO">-- mm</div></div>
+
+<div class="lluvia-resumen-item">
+
+    <div
+        class="lluvia-resumen-icono"
+        id="lluvia-resumen-icono-dia-EL_SILO"
+    >
+        ☁️
+    </div>
+
+    <div class="lluvia-resumen-label">
+        Lluvia hoy
+    </div>
+
+    <div
+        class="lluvia-resumen-valor"
+        id="lluvia-dia-EL_SILO"
+    >
+        -- mm
+    </div>
+
 </div>
+
+
+<div class="lluvia-resumen-item">
+
+    <div
+        class="lluvia-resumen-icono"
+        id="lluvia-icono-actual-EL_SILO"
+    >
+        ☁️
+    </div>
+
+    <div class="lluvia-resumen-label">
+        Intensidad
+    </div>
+
+    <div
+        class="lluvia-resumen-valor"
+        id="lluvia-tasa-EL_SILO"
+    >
+        -- mm/h
+    </div>
+
+    <div
+        class="lluvia-resumen-extra"
+        id="lluvia-estado-EL_SILO"
+    >
+        --
+    </div>
+
 </div>
+
+
+<div class="lluvia-resumen-item">
+
+    <div
+        class="lluvia-resumen-icono"
+        id="lluvia-resumen-icono-mes-EL_SILO"
+    >
+        ☁️
+    </div>
+
+    <div class="lluvia-resumen-label">
+        Este mes
+    </div>
+
+    <div
+        class="lluvia-resumen-valor"
+        id="lluvia-mes-EL_SILO"
+    >
+        -- mm
+    </div>
+
+</div>
+
+
+<div class="lluvia-resumen-item">
+
+    <div
+        class="lluvia-resumen-icono"
+        id="lluvia-resumen-icono-anio-EL_SILO"
+    >
+        ☁️
+    </div>
+
+    <div class="lluvia-resumen-label">
+        Año agrícola
+    </div>
+
+    <div
+        class="lluvia-resumen-valor"
+        id="lluvia-anio-EL_SILO"
+    >
+        -- mm
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+
 <div class="metricas-estacion">
-<div class="metrica-estacion"><div class="metrica-label">💧 Humedad</div><div class="metrica-valor" id="humedad-EL_SILO">-- %</div></div>
-<div class="metrica-estacion"><div class="metrica-label">◇ Punto de rocío</div><div class="metrica-valor" id="rocio-EL_SILO">-- °C</div></div>
-<div class="metrica-estacion"><div class="metrica-label">◉ Presión</div><div class="metrica-valor" id="presion-EL_SILO">-- hPa</div><div class="metrica-secundaria" id="presion-hora-EL_SILO">Barómetro --:--</div></div>
-<div class="metrica-estacion"><div class="metrica-label">☀ Radiación solar</div><div class="metrica-valor" id="radiacion-EL_SILO">-- W/m²</div></div>
-<div class="metrica-estacion"><div class="metrica-label">◉ Índice UV</div><div class="metrica-valor" id="uv-EL_SILO">--</div><div class="metrica-secundaria" id="uv-estado-EL_SILO">--</div></div>
-<div class="metrica-estacion"><div class="metrica-label">◷ Observación exterior</div><div class="metrica-valor" id="fecha-EL_SILO">--</div></div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        💧 Humedad
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="humedad-EL_SILO"
+    >
+        -- %
+    </div>
 </div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ◇ Punto de rocío
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="rocio-EL_SILO"
+    >
+        -- °C
+    </div>
+</div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ◉ Presión
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="presion-EL_SILO"
+    >
+        -- hPa
+    </div>
+
+    <div
+        class="metrica-secundaria"
+        id="presion-hora-EL_SILO"
+    >
+        Barómetro --:--
+    </div>
+</div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ☀ Radiación solar
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="radiacion-EL_SILO"
+    >
+        -- W/m²
+    </div>
+</div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ◉ Índice UV
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="uv-EL_SILO"
+    >
+        --
+    </div>
+
+    <div
+        class="metrica-secundaria"
+        id="uv-estado-EL_SILO"
+    >
+        --
+    </div>
+</div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ◷ Observación exterior
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="fecha-EL_SILO"
+    >
+        --
+    </div>
+</div>
+
+</div>
+
 </article>
 
-<article class="tarjeta estacion-principal" id="tarjeta-LOS_LLANOS">
-<div class="capa-lluvia-ficha" id="capa-lluvia-LOS_LLANOS" aria-hidden="true"></div>
-<div class="capa-gotas-cristal-ficha" id="capa-gotas-cristal-LOS_LLANOS" aria-hidden="true"></div>
+
+<article
+    class="tarjeta estacion-principal"
+    id="tarjeta-LOS_LLANOS"
+>
+
+<div
+    class="capa-lluvia-ficha"
+    id="capa-lluvia-LOS_LLANOS"
+    aria-hidden="true"
+></div>
+
+<div
+    class="capa-gotas-cristal-ficha"
+    id="capa-gotas-cristal-LOS_LLANOS"
+    aria-hidden="true"
+></div>
+
 <div class="estacion-contenido">
-<div class="estacion-cabecera"><div><h2 class="estacion-nombre" id="nombre-LOS_LLANOS">LOS LLANOS</h2><div class="estacion-localidad">Villanueva del Trabuco</div></div><div class="online" id="estado-LOS_LLANOS"><span class="punto"></span>Cargando...</div></div>
+
+<div class="estacion-cabecera">
+
+    <div>
+
+        <h2
+            class="estacion-nombre"
+            id="nombre-LOS_LLANOS"
+        >
+            LOS LLANOS
+        </h2>
+
+        <div class="estacion-localidad">
+            Villanueva del Trabuco
+        </div>
+
+    </div>
+
+    <div
+        class="online"
+        id="estado-LOS_LLANOS"
+    >
+        <span class="punto"></span>
+        Cargando...
+    </div>
+
+</div>
+
+
 <div class="lectura-principal">
-<div class="temperatura-bloque"><div class="temperatura" id="temperatura-LOS_LLANOS">--<sup>°C</sup></div><div class="sensacion" id="sensacion-LOS_LLANOS">Sensación -- °C</div><div class="observacion" id="observacion-LOS_LLANOS">Exterior --:--</div></div>
+
+<div class="temperatura-bloque">
+
+    <div
+        class="temperatura"
+        id="temperatura-LOS_LLANOS"
+    >
+        --<sup>°C</sup>
+    </div>
+
+    <div
+        class="sensacion"
+        id="sensacion-LOS_LLANOS"
+    >
+        Sensación -- °C
+    </div>
+
+    <div
+        class="observacion"
+        id="observacion-LOS_LLANOS"
+    >
+        Exterior --:--
+    </div>
+
+</div>
+
+
 <div class="viento-panel">
-<div class="veleta" id="veleta-LOS_LLANOS" data-lluvia-control="LOS_LLANOS" tabindex="0" role="button" aria-label="Veleta de Los Llanos" title="Veleta de Los Llanos"><span class="veleta-cardinal veleta-n">N</span><span class="veleta-cardinal veleta-e">E</span><span class="veleta-cardinal veleta-s">S</span><span class="veleta-cardinal veleta-o">O</span><div class="veleta-rotor"><div class="veleta-aguja"></div></div></div>
+
+<div
+    class="veleta"
+    id="veleta-LOS_LLANOS"
+    data-lluvia-control="LOS_LLANOS"
+    tabindex="0"
+    role="button"
+    aria-label="Veleta de Los Llanos"
+    title="Veleta de Los Llanos"
+>
+    <span class="veleta-cardinal veleta-n">N</span>
+    <span class="veleta-cardinal veleta-e">E</span>
+    <span class="veleta-cardinal veleta-s">S</span>
+    <span class="veleta-cardinal veleta-o">O</span>
+
+    <div class="veleta-rotor">
+        <div class="veleta-aguja"></div>
+    </div>
+</div>
+
 <div class="viento-datos">
-<div class="direccion-principal"><div class="direccion-cardinal" id="direccion-LOS_LLANOS">--</div><div class="direccion-grados" id="grados-LOS_LLANOS">--°</div></div>
-<div class="viento-actual" id="viento-actual-LOS_LLANOS">-- <small>km/h</small></div>
-<div class="viento-secundarios"><div class="viento-secundario">Media 2 min<strong id="viento-2m-LOS_LLANOS">-- km/h</strong></div><div class="viento-secundario">Media 10 min<strong id="viento-10m-LOS_LLANOS">-- km/h</strong></div><div class="viento-secundario">Racha 10 min<strong id="racha-LOS_LLANOS">-- km/h</strong></div></div>
-<div class="simulacion-estacion" id="simulacion-LOS_LLANOS"></div>
+
+    <div class="direccion-principal">
+
+        <div
+            class="direccion-cardinal"
+            id="direccion-LOS_LLANOS"
+        >
+            --
+        </div>
+
+        <div
+            class="direccion-grados"
+            id="grados-LOS_LLANOS"
+        >
+            --°
+        </div>
+
+    </div>
+
+    <div
+        class="viento-actual"
+        id="viento-actual-LOS_LLANOS"
+    >
+        -- <small>km/h</small>
+    </div>
+
+    <div class="viento-secundarios">
+
+        <div class="viento-secundario">
+            Media 2 min
+            <strong id="viento-2m-LOS_LLANOS">
+                -- km/h
+            </strong>
+        </div>
+
+        <div class="viento-secundario">
+            Media 10 min
+            <strong id="viento-10m-LOS_LLANOS">
+                -- km/h
+            </strong>
+        </div>
+
+        <div class="viento-secundario">
+            Racha 10 min
+            <strong id="racha-LOS_LLANOS">
+                -- km/h
+            </strong>
+        </div>
+
+    </div>
+
+    <div
+        class="simulacion-estacion"
+        id="simulacion-LOS_LLANOS"
+    ></div>
+
 </div>
 </div>
 </div>
-<div class="patrocinio-estacion" id="patrocinio-LOS_LLANOS" aria-label="Patrocinadores de los datos de lluvia de Los Llanos">
-<div class="patrocinio-estacion-titulo">🌧️ LLUVIA EN VIVO</div>
-<div class="patrocinio-estacion-ventana"><div class="patrocinio-estacion-pista"><span class="patrocinio-estacion-texto">Datos patrocinados por <strong>Restaurante San Isidro</strong> · <strong>Bar Central</strong> · <strong>Las Viñas</strong> · <strong>Gestión 95</strong></span><span class="patrocinio-estacion-texto" aria-hidden="true">Datos patrocinados por <strong>Restaurante San Isidro</strong> · <strong>Bar Central</strong> · <strong>Las Viñas</strong> · <strong>Gestión 95</strong></span></div></div>
-<button type="button" class="patrocinio-estacion-control" data-patrocinio="LOS_LLANOS" aria-label="Pausar patrocinio" aria-pressed="false">Ⅱ</button>
+
+
+<div
+    class="patrocinio-estacion"
+    id="patrocinio-LOS_LLANOS"
+    aria-label="Patrocinadores de los datos de lluvia de Los Llanos"
+>
+
+    <div class="patrocinio-estacion-titulo">
+        🌧️ LLUVIA EN VIVO
+    </div>
+
+    <div class="patrocinio-estacion-ventana">
+
+        <div class="patrocinio-estacion-pista">
+
+            <span class="patrocinio-estacion-texto">
+                Datos patrocinados por
+                <strong>Restaurante San Isidro</strong>
+                ·
+                <strong>Bar Central</strong>
+                ·
+                <strong>Las Viñas</strong>
+                ·
+                <strong>Gestión 95</strong>
+            </span>
+
+            <span
+                class="patrocinio-estacion-texto"
+                aria-hidden="true"
+            >
+                Datos patrocinados por
+                <strong>Restaurante San Isidro</strong>
+                ·
+                <strong>Bar Central</strong>
+                ·
+                <strong>Las Viñas</strong>
+                ·
+                <strong>Gestión 95</strong>
+            </span>
+
+        </div>
+
+    </div>
+
+    <button
+        type="button"
+        class="patrocinio-estacion-control"
+        data-patrocinio="LOS_LLANOS"
+        aria-label="Pausar patrocinio"
+        aria-pressed="false"
+    >
+        Ⅱ
+    </button>
+
 </div>
+
+
 <div class="lluvia-resumen">
-<div class="lluvia-resumen-item"><div class="lluvia-resumen-icono" id="lluvia-resumen-icono-dia-LOS_LLANOS">☁️</div><div class="lluvia-resumen-label">Lluvia hoy</div><div class="lluvia-resumen-valor" id="lluvia-dia-LOS_LLANOS">-- mm</div></div>
-<div class="lluvia-resumen-item"><div class="lluvia-resumen-icono" id="lluvia-icono-actual-LOS_LLANOS">☁️</div><div class="lluvia-resumen-label">Intensidad</div><div class="lluvia-resumen-valor" id="lluvia-tasa-LOS_LLANOS">-- mm/h</div><div class="lluvia-resumen-extra" id="lluvia-estado-LOS_LLANOS">--</div></div>
-<div class="lluvia-resumen-item"><div class="lluvia-resumen-icono" id="lluvia-resumen-icono-mes-LOS_LLANOS">☁️</div><div class="lluvia-resumen-label">Este mes</div><div class="lluvia-resumen-valor" id="lluvia-mes-LOS_LLANOS">-- mm</div></div>
-<div class="lluvia-resumen-item"><div class="lluvia-resumen-icono" id="lluvia-resumen-icono-anio-LOS_LLANOS">☁️</div><div class="lluvia-resumen-label">Año agrícola</div><div class="lluvia-resumen-valor" id="lluvia-anio-LOS_LLANOS">-- mm</div></div>
+
+<div class="lluvia-resumen-item">
+
+    <div
+        class="lluvia-resumen-icono"
+        id="lluvia-resumen-icono-dia-LOS_LLANOS"
+    >
+        ☁️
+    </div>
+
+    <div class="lluvia-resumen-label">
+        Lluvia hoy
+    </div>
+
+    <div
+        class="lluvia-resumen-valor"
+        id="lluvia-dia-LOS_LLANOS"
+    >
+        -- mm
+    </div>
+
 </div>
+
+
+<div class="lluvia-resumen-item">
+
+    <div
+        class="lluvia-resumen-icono"
+        id="lluvia-icono-actual-LOS_LLANOS"
+    >
+        ☁️
+    </div>
+
+    <div class="lluvia-resumen-label">
+        Intensidad
+    </div>
+
+    <div
+        class="lluvia-resumen-valor"
+        id="lluvia-tasa-LOS_LLANOS"
+    >
+        -- mm/h
+    </div>
+
+    <div
+        class="lluvia-resumen-extra"
+        id="lluvia-estado-LOS_LLANOS"
+    >
+        --
+    </div>
+
 </div>
+
+
+<div class="lluvia-resumen-item">
+
+    <div
+        class="lluvia-resumen-icono"
+        id="lluvia-resumen-icono-mes-LOS_LLANOS"
+    >
+        ☁️
+    </div>
+
+    <div class="lluvia-resumen-label">
+        Este mes
+    </div>
+
+    <div
+        class="lluvia-resumen-valor"
+        id="lluvia-mes-LOS_LLANOS"
+    >
+        -- mm
+    </div>
+
+</div>
+
+
+<div class="lluvia-resumen-item">
+
+    <div
+        class="lluvia-resumen-icono"
+        id="lluvia-resumen-icono-anio-LOS_LLANOS"
+    >
+        ☁️
+    </div>
+
+    <div class="lluvia-resumen-label">
+        Año agrícola
+    </div>
+
+    <div
+        class="lluvia-resumen-valor"
+        id="lluvia-anio-LOS_LLANOS"
+    >
+        -- mm
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+
 <div class="metricas-estacion">
-<div class="metrica-estacion"><div class="metrica-label">💧 Humedad</div><div class="metrica-valor" id="humedad-LOS_LLANOS">-- %</div></div>
-<div class="metrica-estacion"><div class="metrica-label">◇ Punto de rocío</div><div class="metrica-valor" id="rocio-LOS_LLANOS">-- °C</div></div>
-<div class="metrica-estacion"><div class="metrica-label">◉ Presión</div><div class="metrica-valor" id="presion-LOS_LLANOS">-- hPa</div><div class="metrica-secundaria" id="presion-hora-LOS_LLANOS">Barómetro --:--</div></div>
-<div class="metrica-estacion"><div class="metrica-label">☀ Radiación solar</div><div class="metrica-valor" id="radiacion-LOS_LLANOS">-- W/m²</div></div>
-<div class="metrica-estacion"><div class="metrica-label">◉ Índice UV</div><div class="metrica-valor" id="uv-LOS_LLANOS">--</div><div class="metrica-secundaria" id="uv-estado-LOS_LLANOS">--</div></div>
-<div class="metrica-estacion"><div class="metrica-label">◷ Observación exterior</div><div class="metrica-valor" id="fecha-LOS_LLANOS">--</div></div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        💧 Humedad
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="humedad-LOS_LLANOS"
+    >
+        -- %
+    </div>
 </div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ◇ Punto de rocío
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="rocio-LOS_LLANOS"
+    >
+        -- °C
+    </div>
+</div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ◉ Presión
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="presion-LOS_LLANOS"
+    >
+        -- hPa
+    </div>
+
+    <div
+        class="metrica-secundaria"
+        id="presion-hora-LOS_LLANOS"
+    >
+        Barómetro --:--
+    </div>
+</div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ☀ Radiación solar
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="radiacion-LOS_LLANOS"
+    >
+        -- W/m²
+    </div>
+</div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ◉ Índice UV
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="uv-LOS_LLANOS"
+    >
+        --
+    </div>
+
+    <div
+        class="metrica-secundaria"
+        id="uv-estado-LOS_LLANOS"
+    >
+        --
+    </div>
+</div>
+
+<div class="metrica-estacion">
+    <div class="metrica-label">
+        ◷ Observación exterior
+    </div>
+
+    <div
+        class="metrica-valor"
+        id="fecha-LOS_LLANOS"
+    >
+        --
+    </div>
+</div>
+
+</div>
+
 </article>
+
 </section>
 
-<section class="paneles-graficos" id="graficos">
+
+<section
+    class="paneles-graficos"
+    id="graficos"
+>
+
 <article class="tarjeta grafico">
-<div class="grafico-cabecera"><div class="grafico-titulo">Temperatura · últimas 24 horas</div><div class="leyenda"><span>El Silo</span><span>Los Llanos</span></div></div>
-<svg class="grafico-svg" viewBox="0 0 600 190" preserveAspectRatio="none" aria-label="Gráfico de temperatura de muestra"><line class="rejilla" x1="0" y1="40" x2="600" y2="40"/><line class="rejilla" x1="0" y1="90" x2="600" y2="90"/><line class="rejilla" x1="0" y1="140" x2="600" y2="140"/><polyline class="linea-silo" points="0,85 70,55 140,40 210,48 280,78 350,125 420,142 490,105 550,72 600,68"/><polyline class="linea-llanos" points="0,95 70,72 140,60 210,68 280,98 350,140 420,152 490,118 550,88 600,84"/></svg>
+
+    <div class="grafico-cabecera">
+
+        <div class="grafico-titulo">
+            Temperatura · últimas 24 horas
+        </div>
+
+        <div class="leyenda">
+            <span>El Silo</span>
+            <span>Los Llanos</span>
+        </div>
+
+    </div>
+
+    <svg
+        class="grafico-svg"
+        viewBox="0 0 600 190"
+        preserveAspectRatio="none"
+        aria-label="Gráfico de temperatura de muestra"
+    >
+        <line
+            class="rejilla"
+            x1="0"
+            y1="40"
+            x2="600"
+            y2="40"
+        />
+
+        <line
+            class="rejilla"
+            x1="0"
+            y1="90"
+            x2="600"
+            y2="90"
+        />
+
+        <line
+            class="rejilla"
+            x1="0"
+            y1="140"
+            x2="600"
+            y2="140"
+        />
+
+        <polyline
+            class="linea-silo"
+            points="0,85 70,55 140,40 210,48 280,78 350,125 420,142 490,105 550,72 600,68"
+        />
+
+        <polyline
+            class="linea-llanos"
+            points="0,95 70,72 140,60 210,68 280,98 350,140 420,152 490,118 550,88 600,84"
+        />
+    </svg>
+
 </article>
+
+
 <article class="tarjeta grafico">
-<div class="grafico-cabecera"><div class="grafico-titulo">Lluvia · últimos 7 días</div></div>
-<svg class="grafico-svg" viewBox="0 0 500 190" preserveAspectRatio="none" aria-label="Gráfico de lluvia de muestra"><line class="rejilla" x1="0" y1="40" x2="500" y2="40"/><line class="rejilla" x1="0" y1="90" x2="500" y2="90"/><line class="rejilla" x1="0" y1="140" x2="500" y2="140"/><rect class="barra" x="25" y="135" width="40" height="35"/><rect class="barra" x="95" y="55" width="40" height="115"/><rect class="barra" x="165" y="145" width="40" height="25"/><rect class="barra" x="235" y="166" width="40" height="4"/><rect class="barra" x="305" y="168" width="40" height="2"/></svg>
+
+    <div class="grafico-cabecera">
+
+        <div class="grafico-titulo">
+            Lluvia · últimos 7 días
+        </div>
+
+    </div>
+
+    <svg
+        class="grafico-svg"
+        viewBox="0 0 500 190"
+        preserveAspectRatio="none"
+        aria-label="Gráfico de lluvia de muestra"
+    >
+        <line
+            class="rejilla"
+            x1="0"
+            y1="40"
+            x2="500"
+            y2="40"
+        />
+
+        <line
+            class="rejilla"
+            x1="0"
+            y1="90"
+            x2="500"
+            y2="90"
+        />
+
+        <line
+            class="rejilla"
+            x1="0"
+            y1="140"
+            x2="500"
+            y2="140"
+        />
+
+        <rect
+            class="barra"
+            x="25"
+            y="135"
+            width="40"
+            height="35"
+        />
+
+        <rect
+            class="barra"
+            x="95"
+            y="55"
+            width="40"
+            height="115"
+        />
+
+        <rect
+            class="barra"
+            x="165"
+            y="145"
+            width="40"
+            height="25"
+        />
+
+        <rect
+            class="barra"
+            x="235"
+            y="166"
+            width="40"
+            height="4"
+        />
+
+        <rect
+            class="barra"
+            x="305"
+            y="168"
+            width="40"
+            height="2"
+        />
+    </svg>
+
 </article>
-<article class="tarjeta grafico" id="camaras">
-<div class="grafico-cabecera"><div class="grafico-titulo">Cámaras en directo</div><a href="#en-vivo" data-panel="en-vivo" style="color:var(--blue);font-size:10px">Ver todas →</a></div>
-<div class="camaras"><div class="camara"><div class="camara-estado">🟢 En línea</div><div class="camara-nombre">El Silo · Vista Sur</div></div><div class="camara"><div class="camara-estado">🟢 En línea</div><div class="camara-nombre">Los Llanos · Vista Norte</div></div></div>
+
+
+<article
+    class="tarjeta grafico"
+    id="camaras"
+>
+
+<div class="grafico-cabecera">
+
+    <div class="grafico-titulo">
+        Cámaras en directo
+    </div>
+
+    <a
+        href="#en-vivo"
+        data-panel="en-vivo"
+        style="color:var(--blue);font-size:10px"
+    >
+        Ver todas →
+    </a>
+
+</div>
+
+<div class="camaras">
+
+    <div class="camara">
+
+        <div class="camara-estado">
+            🟢 En línea
+        </div>
+
+        <div class="camara-nombre">
+            El Silo · Vista Sur
+        </div>
+
+    </div>
+
+    <div class="camara">
+
+        <div class="camara-estado">
+            🟢 En línea
+        </div>
+
+        <div class="camara-nombre">
+            Los Llanos · Vista Norte
+        </div>
+
+    </div>
+
+</div>
+
 </article>
+
 </section>
+
 
 <section class="tarjeta accesos">
-<a href="#historicos" class="acceso"><div class="acceso-icono">📊</div><div><div class="acceso-titulo">HISTÓRICOS</div><div class="acceso-subtitulo">Datos por fecha</div></div></a>
-<a href="#graficos" class="acceso"><div class="acceso-icono">📈</div><div><div class="acceso-titulo">GRÁFICOS</div><div class="acceso-subtitulo">Evolución detallada</div></div></a>
-<a href="#en-vivo" class="acceso" data-panel="en-vivo"><div class="acceso-icono">📷</div><div><div class="acceso-titulo">CÁMARAS</div><div class="acceso-subtitulo">Imágenes en directo</div></div></a>
-<a href="#estaciones" class="acceso"><div class="acceso-icono">📡</div><div><div class="acceso-titulo">ESTACIONES</div><div class="acceso-subtitulo">Información técnica</div></div></a>
-<a href="#alertas" class="acceso"><div class="acceso-icono">⚠️</div><div><div class="acceso-titulo">ALERTAS</div><div class="acceso-subtitulo">Avisos meteorológicos</div></div></a>
-<a href="#estado" class="acceso"><div class="acceso-icono">✅</div><div><div class="acceso-titulo">ESTADO SISTEMA</div><div class="acceso-subtitulo">Datos automáticos</div></div></a>
+
+<a
+    href="#historicos"
+    class="acceso"
+>
+    <div class="acceso-icono">
+        📊
+    </div>
+
+    <div>
+        <div class="acceso-titulo">
+            HISTÓRICOS
+        </div>
+
+        <div class="acceso-subtitulo">
+            Datos por fecha
+        </div>
+    </div>
+</a>
+
+
+<a
+    href="#graficos"
+    class="acceso"
+>
+    <div class="acceso-icono">
+        📈
+    </div>
+
+    <div>
+        <div class="acceso-titulo">
+            GRÁFICOS
+        </div>
+
+        <div class="acceso-subtitulo">
+            Evolución detallada
+        </div>
+    </div>
+</a>
+
+
+<a
+    href="#en-vivo"
+    class="acceso"
+    data-panel="en-vivo"
+>
+    <div class="acceso-icono">
+        📷
+    </div>
+
+    <div>
+        <div class="acceso-titulo">
+            CÁMARAS
+        </div>
+
+        <div class="acceso-subtitulo">
+            Imágenes en directo
+        </div>
+    </div>
+</a>
+
+
+<a
+    href="#estaciones"
+    class="acceso"
+>
+    <div class="acceso-icono">
+        📡
+    </div>
+
+    <div>
+        <div class="acceso-titulo">
+            ESTACIONES
+        </div>
+
+        <div class="acceso-subtitulo">
+            Información técnica
+        </div>
+    </div>
+</a>
+
+
+<a
+    href="#alertas"
+    class="acceso"
+>
+    <div class="acceso-icono">
+        ⚠️
+    </div>
+
+    <div>
+        <div class="acceso-titulo">
+            ALERTAS
+        </div>
+
+        <div class="acceso-subtitulo">
+            Avisos meteorológicos
+        </div>
+    </div>
+</a>
+
+
+<a
+    href="#estado"
+    class="acceso"
+>
+    <div class="acceso-icono">
+        ✅
+    </div>
+
+    <div>
+        <div class="acceso-titulo">
+            ESTADO SISTEMA
+        </div>
+
+        <div class="acceso-subtitulo">
+            Datos automáticos
+        </div>
+    </div>
+</a>
+
 </section>
-<footer class="pie"><div>© 2026 MeteoArchidona<br>Todos los derechos reservados</div><div class="pie-centro">🟢 Datos meteorológicos actualizados automáticamente</div><div class="pie-derecha">MeteoArchidona · Archidona</div></footer>
+
+
+<footer class="pie">
+
+    <div>
+        © 2026 MeteoArchidona
+        <br>
+        Todos los derechos reservados
+    </div>
+
+    <div class="pie-centro">
+        🟢 Datos meteorológicos actualizados automáticamente
+    </div>
+
+    <div class="pie-derecha">
+        MeteoArchidona · Archidona
+    </div>
+
+</footer>
+
 </main>
 </section>
 
-<section class="panel-aplicacion" id="panel-prediccion" data-panel-contenido="prediccion" aria-hidden="true">
-<main class="panel-futuro"><div class="panel-futuro-contenido"><div class="panel-futuro-icono" aria-hidden="true">🌦️</div><div class="panel-futuro-etiqueta">METEOARCHIDONA · PREDICCIÓN</div><h1>Lo que viene.</h1><p>Aquí construiremos la predicción meteorológica de MeteoArchidona: previsión municipal, evolución horaria, próximos días, alertas y nuestra propia forma de contar el tiempo.</p></div></main>
-</section>
 
-<section class="panel-aplicacion panel-en-vivo" id="panel-observaciones" data-panel-contenido="observaciones" aria-hidden="true">
-<iframe data-src="observaciones.html?v=20260909-lazy1" title="MeteoArchidona · Observaciones"></iframe>
-</section>
+<section
+    class="panel-aplicacion"
+    id="panel-prediccion"
+    data-panel-contenido="prediccion"
+    aria-hidden="true"
+>
 
-<section class="panel-aplicacion panel-en-vivo" id="panel-en-vivo" data-panel-contenido="en-vivo" aria-hidden="true">
-<iframe src="en-vivo.html" title="MeteoArchidona · En vivo" loading="eager"></iframe>
-</section>
+<main class="panel-futuro">
+
+<div class="panel-futuro-contenido">
+
+    <div
+        class="panel-futuro-icono"
+        aria-hidden="true"
+    >
+        🌦️
+    </div>
+
+    <div class="panel-futuro-etiqueta">
+        METEOARCHIDONA · PREDICCIÓN
+    </div>
+
+    <h1>
+        Lo que viene.
+    </h1>
+
+    <p>
+        Aquí construiremos la predicción meteorológica
+        de MeteoArchidona: previsión municipal,
+        evolución horaria, próximos días, alertas y
+        nuestra propia forma de contar el tiempo.
+    </p>
+
 </div>
 
+</main>
+</section>
+
+
+<section
+    class="panel-aplicacion panel-en-vivo"
+    id="panel-observaciones"
+    data-panel-contenido="observaciones"
+    aria-hidden="true"
+>
+
+<iframe
+    data-src="observaciones.html?v=20260909-lazy1"
+    title="MeteoArchidona · Observaciones"
+></iframe>
+
+</section>
+
+
+<section
+    class="panel-aplicacion panel-en-vivo"
+    id="panel-en-vivo"
+    data-panel-contenido="en-vivo"
+    aria-hidden="true"
+>
+
+<iframe
+    src="en-vivo.html"
+    title="MeteoArchidona · En vivo"
+    loading="eager"
+></iframe>
+
+</section>
+
+</div>
+
+
 <script>
-const API_BASE="https://api-meteoarchidona.onrender.com";
-const CODIGOS_ESTACION=["EL_SILO","LOS_LLANOS"];
-const NOMBRES_NIVEL_LLUVIA={0:"Sin lluvia",1:"Débil",2:"Moderada",3:"Fuerte",4:"Muy fuerte"};
-const lluviaReal={EL_SILO:0,LOS_LLANOS:0};
-const lluviaSimulada={EL_SILO:0,LOS_LLANOS:0,GLOBAL:0};
-const vientoEstacion={EL_SILO:{direccion:null,velocidad:0},LOS_LLANOS:{direccion:null,velocidad:0}};
-function obtenerElemento(id){return document.getElementById(id)}
-function asignarTexto(id,texto){const e=obtenerElemento(id);if(e)e.textContent=texto}
-function asignarHtml(id,html){const e=obtenerElemento(id);if(e)e.innerHTML=html}
-function formatearNumero(valor,decimales=1){if(valor===null||valor===undefined||Number.isNaN(Number(valor)))return"--";return Number(valor).toFixed(decimales)}
-function limitar(valor,minimo,maximo){return Math.min(maximo,Math.max(minimo,valor))}
-function actualizarReloj(){const ahora=new Date();asignarTexto("fecha-actual",ahora.toLocaleDateString("es-ES"));asignarTexto("reloj-actual",ahora.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}))}
-function normalizarGrados(grados){if(grados===null||grados===undefined||Number.isNaN(Number(grados)))return null;return((Number(grados)%360)+360)%360}
-function obtenerDireccionCardinal(grados){const valor=normalizarGrados(grados);if(valor===null)return"--";const d=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSO","SO","OSO","O","ONO","NO","NNO"];return d[Math.round(valor/22.5)%16]}
-function actualizarVeleta(codigo,grados){const valor=normalizarGrados(grados),veleta=obtenerElemento(`veleta-${codigo}`);if(valor===null){asignarTexto(`direccion-${codigo}`,"--");asignarTexto(`grados-${codigo}`,"--°");if(veleta)veleta.style.setProperty("--angulo","0deg");return}asignarTexto(`direccion-${codigo}`,obtenerDireccionCardinal(valor));asignarTexto(`grados-${codigo}`,`${Math.round(valor)}°`);if(veleta)veleta.style.setProperty("--angulo",`${valor}deg`)}
-function calcularMovimientoViento(direccionMeteorologica,velocidadKmh,ancho,alto){const direccion=normalizarGrados(direccionMeteorologica),velocidad=Number.isFinite(Number(velocidadKmh))?Math.max(0,Number(velocidadKmh)):0;if(direccion===null)return{destino:180,vectorX:0,vectorY:1,componenteSur:true,inicioX:0,finalX:0,recorridoY:Math.max(alto*1.45,500),angulo:0,fuerza:0};const destino=(direccion+180)%360,radianes=destino*Math.PI/180,vectorX=Math.sin(radianes),vectorY=-Math.cos(radianes),fuerza=limitar(velocidad/50,0,1),derivaBase=ancho*(.035+fuerza*.33),finalX=vectorX*derivaBase,inicioX=-finalX*.10,recorridoBase=Math.max(alto*1.45,500),recorridoY=recorridoBase+(vectorY*fuerza*alto*.16),angulo=Math.atan2(finalX,Math.max(recorridoY,1))*180/Math.PI,componenteSur=vectorY>.08;return{destino,vectorX,vectorY,componenteSur,inicioX,finalX,recorridoY,angulo,fuerza}}
-function clasificarUv(valor){if(valor===null||valor===undefined||Number.isNaN(Number(valor)))return"--";const uv=Number(valor);if(uv<3)return"Bajo";if(uv<6)return"Moderado";if(uv<8)return"Alto";if(uv<11)return"Muy alto";return"Extremo"}
-function nivelLluviaDesdeTasa(tasa){if(tasa===null||tasa===undefined||Number.isNaN(Number(tasa)))return 0;const v=Number(tasa);if(v<=0)return 0;if(v<.5)return 1;if(v<2)return 2;if(v<10)return 3;return 4}
-function obtenerIconoLluvia(nivel){if(nivel<=0)return"☁️";if(nivel===1)return"🌦️";if(nivel===4)return"⛈️";return"🌧️"}
-function obtenerNivelEfectivo(codigo){return Math.max(lluviaReal[codigo]||0,lluviaSimulada[codigo]||0)}
-function obtenerEstacionDominante(codigos){let dominante=null;codigos.forEach(codigo=>{if(dominante===null){dominante=codigo;return}const a=obtenerNivelEfectivo(codigo),b=obtenerNivelEfectivo(dominante);if(a>b){dominante=codigo;return}if(a===b&&(Number(vientoEstacion[codigo].velocidad)||0)>(Number(vientoEstacion[dominante].velocidad)||0))dominante=codigo});return dominante}
-function obtenerVientoGlobal(codigosActivos){let codigo;if(codigosActivos.length>0)codigo=obtenerEstacionDominante(codigosActivos);else codigo=CODIGOS_ESTACION.reduce((mejor,actual)=>{if(mejor===null)return actual;return(Number(vientoEstacion[actual].velocidad)||0)>(Number(vientoEstacion[mejor].velocidad)||0)?actual:mejor},null);if(!codigo)return{direccion:null,velocidad:0};return{direccion:vientoEstacion[codigo].direccion,velocidad:vientoEstacion[codigo].velocidad}}
-function aplicarNivelACapa(capa,nivel){if(!capa)return;capa.classList.remove("activa","nivel-1","nivel-2","nivel-3","nivel-4");if(nivel>0)capa.classList.add("activa",`nivel-${nivel}`)}
-function aplicarVientoACapa(capa,viento){if(!capa)return null;const referencia=capa.classList.contains("capa-lluvia-ficha")?capa.parentElement:document.documentElement,ancho=referencia?.clientWidth||window.innerWidth||360,alto=referencia?.clientHeight||window.innerHeight||700,m=calcularMovimientoViento(viento.direccion,viento.velocidad,ancho,alto);capa.style.setProperty("--inicio-x",`${m.inicioX.toFixed(1)}px`);capa.style.setProperty("--final-x",`${m.finalX.toFixed(1)}px`);capa.style.setProperty("--recorrido-y",`${m.recorridoY.toFixed(1)}px`);capa.style.setProperty("--angulo-gota",`${m.angulo.toFixed(2)}deg`);return m}
-function configurarCapaCristal(capa,nivel,movimiento){if(!capa)return;capa.dataset.nivel=String(nivel);capa.dataset.vectorX=movimiento?String(movimiento.vectorX):"0";capa.classList.remove("activa");if(nivel>0&&movimiento&&movimiento.componenteSur)capa.classList.add("activa")}
-function actualizarCapaMeteorologica(idLluvia,idCristal,nivel,viento){const l=obtenerElemento(idLluvia),c=obtenerElemento(idCristal);aplicarNivelACapa(l,nivel);configurarCapaCristal(c,nivel,aplicarVientoACapa(l,viento))}
-function actualizarSistemaLluvia(){const silo=obtenerNivelEfectivo("EL_SILO"),llanos=obtenerNivelEfectivo("LOS_LLANOS"),activos=[];if(silo>0)activos.push("EL_SILO");if(llanos>0)activos.push("LOS_LLANOS");let global=0,localSilo=0,localLlanos=0;if(activos.length===2)global=Math.max(silo,llanos);if(activos.length===1){if(activos[0]==="EL_SILO")localSilo=silo;else localLlanos=llanos}global=Math.max(global,lluviaSimulada.GLOBAL||0);actualizarCapaMeteorologica("capa-lluvia-EL_SILO","capa-gotas-cristal-EL_SILO",localSilo,vientoEstacion.EL_SILO);actualizarCapaMeteorologica("capa-lluvia-LOS_LLANOS","capa-gotas-cristal-LOS_LLANOS",localLlanos,vientoEstacion.LOS_LLANOS);actualizarCapaMeteorologica("capa-lluvia","capa-gotas-cristal",global,obtenerVientoGlobal(activos))}
-function actualizarIndicadorSimulacion(origen){const e=obtenerElemento(`simulacion-${origen}`);if(!e)return;const nivel=lluviaSimulada[origen]||0;if(nivel<=0){e.classList.remove("visible");e.textContent="";return}e.textContent=origen==="GLOBAL"?`Prueba ${NOMBRES_NIVEL_LLUVIA[nivel]}`:`Prueba lluvia · ${NOMBRES_NIVEL_LLUVIA[nivel]}`;e.classList.add("visible")}
-function avanzarSimulacion(origen){const actual=lluviaSimulada[origen]||0;lluviaSimulada[origen]=actual<=0||actual>=4?1:actual+1;actualizarIndicadorSimulacion(origen);actualizarSistemaLluvia()}
-function desactivarSimulacion(origen){lluviaSimulada[origen]=0;actualizarIndicadorSimulacion(origen);actualizarSistemaLluvia()}
-function inicializarGotasEnCapa(idCapa,totalGotas=160){const capa=obtenerElemento(idCapa);if(!capa)return;for(let i=0;i<totalGotas;i+=1){const gota=document.createElement("span");gota.className="gota-lluvia";gota.style.setProperty("--x",`${Math.random()*116-8}%`);gota.style.setProperty("--longitud",`${13+Math.random()*27}px`);gota.style.setProperty("--duracion",`${.58+Math.random()*.42}s`);gota.style.setProperty("--retraso",`${-Math.random()*2.4}s`);gota.style.setProperty("--opacidad",(.38+Math.random()*.57).toFixed(2));capa.appendChild(gota)}}
-function inicializarLluviaVisual(){inicializarGotasEnCapa("capa-lluvia");inicializarGotasEnCapa("capa-lluvia-EL_SILO");inicializarGotasEnCapa("capa-lluvia-LOS_LLANOS")}
-function obtenerMaximoGotasCristal(nivel,esGlobal){const g={1:4,2:7,3:11,4:16},l={1:3,2:5,3:8,4:11};return esGlobal?(g[nivel]||0):(l[nivel]||0)}
-function obtenerProbabilidadGotaCristal(nivel){return({1:.16,2:.34,3:.62,4:.88})[nivel]||0}
-function crearGotaCristal(capa,nivel){if(!capa||nivel<=0)return;const esGlobal=capa.classList.contains("capa-gotas-cristal"),maximo=obtenerMaximoGotasCristal(nivel,esGlobal);if(capa.querySelectorAll(".gota-cristal").length>=maximo)return;const gota=document.createElement("span"),base=({1:5,2:6,3:7,4:8})[nivel],rango=({1:4,2:6,3:8,4:10})[nivel],tamano=base+Math.random()*rango,vida=2600+Math.random()*3400,opacidad=.15+Math.random()*(.06+nivel*.025),deslizar=8+nivel*5+Math.random()*14,vectorX=Number(capa.dataset.vectorX)||0;gota.className="gota-cristal";gota.style.setProperty("--x",`${4+Math.random()*92}%`);gota.style.setProperty("--y",`${4+Math.random()*76}%`);gota.style.setProperty("--tamano",`${tamano.toFixed(1)}px`);gota.style.setProperty("--vida",`${Math.round(vida)}ms`);gota.style.setProperty("--opacidad-cristal",opacidad.toFixed(2));gota.style.setProperty("--deslizar",`${deslizar.toFixed(1)}px`);gota.style.setProperty("--desvio-x",`${(vectorX*(3+nivel*2)).toFixed(1)}px`);capa.appendChild(gota);window.setTimeout(()=>gota.remove(),vida+150)}
-function generarGotasCristalActivas(){if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;document.querySelectorAll(".capa-gotas-cristal.activa, .capa-gotas-cristal-ficha.activa").forEach(capa=>{const nivel=Number(capa.dataset.nivel)||0;if(nivel<=0||Math.random()>obtenerProbabilidadGotaCristal(nivel))return;const cantidad=nivel>=4&&Math.random()>.48?2:1;for(let i=0;i<cantidad;i+=1)crearGotaCristal(capa,nivel)})}
-function configurarControlLluvia(elemento,origen){let temporizadorLargo=null,pulsacionLarga=false,ultimoToque=0,inicioX=0,inicioY=0;function cancelar(){if(temporizadorLargo!==null){clearTimeout(temporizadorLargo);temporizadorLargo=null}}elemento.addEventListener("pointerdown",e=>{pulsacionLarga=false;inicioX=e.clientX;inicioY=e.clientY;cancelar();temporizadorLargo=setTimeout(()=>{pulsacionLarga=true;ultimoToque=0;desactivarSimulacion(origen)},700)});elemento.addEventListener("pointermove",e=>{if(Math.abs(e.clientX-inicioX)>12||Math.abs(e.clientY-inicioY)>12)cancelar()});elemento.addEventListener("pointercancel",()=>{cancelar();pulsacionLarga=false});elemento.addEventListener("pointerup",e=>{cancelar();if(pulsacionLarga){pulsacionLarga=false;return}const ahora=Date.now();if(ultimoToque>0&&ahora-ultimoToque<450){ultimoToque=0;avanzarSimulacion(origen);e.preventDefault();return}ultimoToque=ahora});elemento.addEventListener("contextmenu",e=>e.preventDefault());elemento.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();avanzarSimulacion(origen)}if(e.key==="Escape"){e.preventDefault();desactivarSimulacion(origen)}})}
-function configurarControlesLluvia(){document.querySelectorAll("[data-lluvia-control]").forEach(c=>{if(c.dataset.lluviaControl)configurarControlLluvia(c,c.dataset.lluviaControl)})}
-function configurarPatrocinios(){document.querySelectorAll(".patrocinio-estacion-control").forEach(control=>{control.addEventListener("click",()=>{const codigo=control.dataset.patrocinio,p=obtenerElemento(`patrocinio-${codigo}`);if(!p)return;const pausado=p.classList.toggle("pausado");control.textContent=pausado?"▶":"Ⅱ";control.setAttribute("aria-pressed",String(pausado));control.setAttribute("aria-label",pausado?"Reanudar patrocinio":"Pausar patrocinio")})})}
-function mostrarLluvia(codigo,datos){const dia=formatearNumero(datos.lluvia_dia_mm),mes=formatearNumero(datos.lluvia_mes_mm),anio=formatearNumero(datos.lluvia_anio_agricola_mm),tasa=formatearNumero(datos.tasa_lluvia_mm_h),nivel=nivelLluviaDesdeTasa(datos.tasa_lluvia_mm_h),icono=obtenerIconoLluvia(nivel);lluviaReal[codigo]=nivel;asignarTexto(`lluvia-tasa-${codigo}`,`${tasa} mm/h`);asignarTexto(`lluvia-dia-${codigo}`,`${dia} mm`);asignarTexto(`lluvia-mes-${codigo}`,`${mes} mm`);asignarTexto(`lluvia-anio-${codigo}`,`${anio} mm`);asignarTexto(`lluvia-estado-${codigo}`,NOMBRES_NIVEL_LLUVIA[nivel]);asignarTexto(`lluvia-icono-actual-${codigo}`,icono);asignarTexto(`lluvia-resumen-icono-dia-${codigo}`,icono);asignarTexto(`lluvia-resumen-icono-mes-${codigo}`,icono);asignarTexto(`lluvia-resumen-icono-anio-${codigo}`,icono);actualizarSistemaLluvia()}
-function mostrarDatosEstacion(codigo,datos){asignarTexto(`nombre-${codigo}`,datos.nombre_estacion);asignarHtml(`temperatura-${codigo}`,`${formatearNumero(datos.temperatura_c)}<sup>°C</sup>`);asignarTexto(`sensacion-${codigo}`,`Sensación ${formatearNumero(datos.indice_calor_c)} °C`);const horaExterior=datos.hora_observacion_exterior||datos.hora_observacion||"--:--",fechaExterior=datos.fecha_observacion_exterior||datos.fecha_observacion||"--",horaBarometro=datos.hora_observacion_barometro||datos.hora_observacion||"--:--";asignarTexto(`observacion-${codigo}`,`Exterior ${horaExterior}`);asignarTexto(`fecha-${codigo}`,fechaExterior);asignarTexto(`humedad-${codigo}`,`${formatearNumero(datos.humedad_pct)} %`);asignarTexto(`rocio-${codigo}`,`${formatearNumero(datos.punto_rocio_c)} °C`);asignarTexto(`presion-${codigo}`,`${formatearNumero(datos.presion_hpa)} hPa`);asignarTexto(`presion-hora-${codigo}`,`Barómetro ${horaBarometro}`);asignarTexto(`radiacion-${codigo}`,`${formatearNumero(datos.radiacion_solar_w_m2,0)} W/m²`);asignarTexto(`uv-${codigo}`,formatearNumero(datos.indice_uv));asignarTexto(`uv-estado-${codigo}`,clasificarUv(datos.indice_uv));asignarHtml(`viento-actual-${codigo}`,`${formatearNumero(datos.viento_actual_kmh)} <small>km/h</small>`);asignarTexto(`viento-2m-${codigo}`,`${formatearNumero(datos.viento_medio_2_min_kmh)} km/h`);asignarTexto(`viento-10m-${codigo}`,`${formatearNumero(datos.viento_medio_10_min_kmh)} km/h`);asignarTexto(`racha-${codigo}`,`${formatearNumero(datos.racha_10_min_kmh)} km/h`);vientoEstacion[codigo]={direccion:normalizarGrados(datos.direccion_viento_grados),velocidad:Number.isFinite(Number(datos.viento_actual_kmh))?Number(datos.viento_actual_kmh):0};actualizarVeleta(codigo,datos.direccion_viento_grados);const estado=obtenerElemento(`estado-${codigo}`);if(estado)estado.innerHTML='<span class="punto"></span>En línea';mostrarLluvia(codigo,datos)}
-function mostrarErrorLluvia(codigo){lluviaReal[codigo]=0;asignarTexto(`lluvia-tasa-${codigo}`,"-- mm/h");asignarTexto(`lluvia-dia-${codigo}`,"-- mm");asignarTexto(`lluvia-mes-${codigo}`,"-- mm");asignarTexto(`lluvia-anio-${codigo}`,"-- mm");asignarTexto(`lluvia-estado-${codigo}`,"--");asignarTexto(`lluvia-icono-actual-${codigo}`,"☁️");asignarTexto(`lluvia-resumen-icono-dia-${codigo}`,"☁️");asignarTexto(`lluvia-resumen-icono-mes-${codigo}`,"☁️");asignarTexto(`lluvia-resumen-icono-anio-${codigo}`,"☁️");actualizarSistemaLluvia()}
-function mostrarErrorEstacion(codigo){vientoEstacion[codigo]={direccion:null,velocidad:0};asignarTexto(`estado-${codigo}`,"Sin datos");asignarHtml(`temperatura-${codigo}`,"--<sup>°C</sup>");asignarTexto(`sensacion-${codigo}`,"Sensación -- °C");asignarTexto(`observacion-${codigo}`,"Exterior --:--");asignarTexto(`humedad-${codigo}`,"-- %");asignarTexto(`rocio-${codigo}`,"-- °C");asignarTexto(`presion-${codigo}`,"-- hPa");asignarTexto(`presion-hora-${codigo}`,"Barómetro --:--");asignarTexto(`radiacion-${codigo}`,"-- W/m²");asignarTexto(`uv-${codigo}`,"--");asignarTexto(`uv-estado-${codigo}`,"--");asignarTexto(`fecha-${codigo}`,"--");asignarHtml(`viento-actual-${codigo}`,'-- <small>km/h</small>');asignarTexto(`viento-2m-${codigo}`,"-- km/h");asignarTexto(`viento-10m-${codigo}`,"-- km/h");asignarTexto(`racha-${codigo}`,"-- km/h");actualizarVeleta(codigo,null);mostrarErrorLluvia(codigo)}
-async function cargarEstacion(codigo){try{const respuesta=await fetch(`${API_BASE}/condiciones-actuales/${codigo}`,{cache:"no-store"});if(!respuesta.ok)throw new Error(`HTTP ${respuesta.status}`);mostrarDatosEstacion(codigo,await respuesta.json())}catch(error){console.error(`Error cargando ${codigo}:`,error);mostrarErrorEstacion(codigo)}}
-async function cargarCondiciones(){await Promise.all([cargarEstacion("EL_SILO"),cargarEstacion("LOS_LLANOS")])}
-function cargarPanelObservaciones(){const iframe=document.querySelector("#panel-observaciones iframe");if(!iframe||iframe.getAttribute("src")||!iframe.dataset.src)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!iframe.getAttribute("src"))iframe.setAttribute("src",iframe.dataset.src)}))}
-function activarPanel(nombrePanel,actualizarHash=true){const paneles=document.querySelectorAll("[data-panel-contenido]"),enlaces=document.querySelectorAll(".navegacion [data-panel]");let encontrado=false;paneles.forEach(panel=>{const activo=panel.dataset.panelContenido===nombrePanel;panel.classList.toggle("activo",activo);panel.setAttribute("aria-hidden",String(!activo));if(activo)encontrado=true});if(!encontrado)return;if(nombrePanel==="observaciones")cargarPanelObservaciones();enlaces.forEach(enlace=>{const activo=enlace.dataset.panel===nombrePanel;enlace.classList.toggle("activo",activo);if(activo)enlace.setAttribute("aria-current","page");else enlace.removeAttribute("aria-current")});if(actualizarHash)history.replaceState(null,"",`#${nombrePanel}`);window.scrollTo({top:0,behavior:"auto"})}
-function configurarPaneles(){document.querySelectorAll("[data-panel]").forEach(control=>{control.addEventListener("click",evento=>{const nombrePanel=control.dataset.panel;if(!nombrePanel)return;evento.preventDefault();activarPanel(nombrePanel)})});const hashInicial=window.location.hash.replace("#","").trim(),panelesValidos=["actualidad","observaciones","prediccion","en-vivo"];if(panelesValidos.includes(hashInicial))activarPanel(hashInicial,false);else activarPanel("actualidad",false);window.addEventListener("hashchange",()=>{const nombrePanel=window.location.hash.replace("#","").trim();if(panelesValidos.includes(nombrePanel))activarPanel(nombrePanel,false)})}
+const API_BASE=
+    "https://api-meteoarchidona.onrender.com";
+
+const CODIGOS_ESTACION=[
+    "EL_SILO",
+    "LOS_LLANOS"
+];
+
+const NOMBRES_NIVEL_LLUVIA={
+    0:"Sin lluvia",
+    1:"Débil",
+    2:"Moderada",
+    3:"Fuerte",
+    4:"Muy fuerte"
+};
+
+const lluviaReal={
+    EL_SILO:0,
+    LOS_LLANOS:0
+};
+
+const lluviaSimulada={
+    EL_SILO:0,
+    LOS_LLANOS:0,
+    GLOBAL:0
+};
+
+const vientoEstacion={
+    EL_SILO:{
+        direccion:null,
+        velocidad:0
+    },
+    LOS_LLANOS:{
+        direccion:null,
+        velocidad:0
+    }
+};
+
+
+function obtenerElemento(id){
+    return document.getElementById(id)
+}
+
+
+function asignarTexto(
+    id,
+    texto
+){
+    const e=obtenerElemento(id);
+
+    if(e){
+        e.textContent=texto
+    }
+}
+
+
+function asignarHtml(
+    id,
+    html
+){
+    const e=obtenerElemento(id);
+
+    if(e){
+        e.innerHTML=html
+    }
+}
+
+
+function formatearNumero(
+    valor,
+    decimales=1
+){
+    if(
+        valor===null
+        ||
+        valor===undefined
+        ||
+        Number.isNaN(
+            Number(valor)
+        )
+    ){
+        return "--"
+    }
+
+    return Number(valor).toFixed(
+        decimales
+    )
+}
+
+
+function limitar(
+    valor,
+    minimo,
+    maximo
+){
+    return Math.min(
+        maximo,
+        Math.max(
+            minimo,
+            valor
+        )
+    )
+}
+
+
+function actualizarReloj(){
+    const ahora=new Date();
+
+    asignarTexto(
+        "fecha-actual",
+        ahora.toLocaleDateString(
+            "es-ES"
+        )
+    );
+
+    asignarTexto(
+        "reloj-actual",
+        ahora.toLocaleTimeString(
+            "es-ES",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        )
+    )
+}
+
+
+function normalizarGrados(
+    grados
+){
+    if(
+        grados===null
+        ||
+        grados===undefined
+        ||
+        Number.isNaN(
+            Number(grados)
+        )
+    ){
+        return null
+    }
+
+    return (
+        (
+            Number(grados)%360
+        )
+        +
+        360
+    )%360
+}
+
+
+function obtenerDireccionCardinal(
+    grados
+){
+    const valor=
+        normalizarGrados(
+            grados
+        );
+
+    if(valor===null){
+        return "--"
+    }
+
+    const direcciones=[
+        "N",
+        "NNE",
+        "NE",
+        "ENE",
+        "E",
+        "ESE",
+        "SE",
+        "SSE",
+        "S",
+        "SSO",
+        "SO",
+        "OSO",
+        "O",
+        "ONO",
+        "NO",
+        "NNO"
+    ];
+
+    return direcciones[
+        Math.round(
+            valor/22.5
+        )%16
+    ]
+}
+
+
+function actualizarVeleta(
+    codigo,
+    grados
+){
+    const valor=
+        normalizarGrados(
+            grados
+        );
+
+    const veleta=
+        obtenerElemento(
+            `veleta-${codigo}`
+        );
+
+    if(valor===null){
+
+        asignarTexto(
+            `direccion-${codigo}`,
+            "--"
+        );
+
+        asignarTexto(
+            `grados-${codigo}`,
+            "--°"
+        );
+
+        if(veleta){
+            veleta.style.setProperty(
+                "--angulo",
+                "0deg"
+            )
+        }
+
+        return
+    }
+
+    asignarTexto(
+        `direccion-${codigo}`,
+        obtenerDireccionCardinal(
+            valor
+        )
+    );
+
+    asignarTexto(
+        `grados-${codigo}`,
+        `${Math.round(valor)}°`
+    );
+
+    if(veleta){
+        veleta.style.setProperty(
+            "--angulo",
+            `${valor}deg`
+        )
+    }
+}
+
+
+function calcularMovimientoViento(
+    direccionMeteorologica,
+    velocidadKmh,
+    ancho,
+    alto
+){
+    const direccion=
+        normalizarGrados(
+            direccionMeteorologica
+        );
+
+    const velocidad=
+        Number.isFinite(
+            Number(velocidadKmh)
+        )
+        ?
+        Math.max(
+            0,
+            Number(velocidadKmh)
+        )
+        :
+        0;
+
+    if(direccion===null){
+        return {
+            destino:180,
+            vectorX:0,
+            vectorY:1,
+            componenteSur:true,
+            inicioX:0,
+            finalX:0,
+            recorridoY:Math.max(
+                alto*1.45,
+                500
+            ),
+            angulo:0,
+            fuerza:0
+        }
+    }
+
+    const destino=
+        (
+            direccion+180
+        )%360;
+
+    const radianes=
+        destino*Math.PI/180;
+
+    const vectorX=
+        Math.sin(
+            radianes
+        );
+
+    const vectorY=
+        -Math.cos(
+            radianes
+        );
+
+    const fuerza=
+        limitar(
+            velocidad/50,
+            0,
+            1
+        );
+
+    const derivaBase=
+        ancho*(
+            .035
+            +
+            fuerza*.33
+        );
+
+    const finalX=
+        vectorX*derivaBase;
+
+    const inicioX=
+        -finalX*.10;
+
+    const recorridoBase=
+        Math.max(
+            alto*1.45,
+            500
+        );
+
+    const recorridoY=
+        recorridoBase
+        +
+        (
+            vectorY
+            *
+            fuerza
+            *
+            alto
+            *
+            .16
+        );
+
+    const angulo=
+        Math.atan2(
+            finalX,
+            Math.max(
+                recorridoY,
+                1
+            )
+        )
+        *
+        180
+        /
+        Math.PI;
+
+    const componenteSur=
+        vectorY>.08;
+
+    return {
+        destino,
+        vectorX,
+        vectorY,
+        componenteSur,
+        inicioX,
+        finalX,
+        recorridoY,
+        angulo,
+        fuerza
+    }
+}
+
+
+function clasificarUv(
+    valor
+){
+    if(
+        valor===null
+        ||
+        valor===undefined
+        ||
+        Number.isNaN(
+            Number(valor)
+        )
+    ){
+        return "--"
+    }
+
+    const uv=
+        Number(valor);
+
+    if(uv<3){
+        return "Bajo"
+    }
+
+    if(uv<6){
+        return "Moderado"
+    }
+
+    if(uv<8){
+        return "Alto"
+    }
+
+    if(uv<11){
+        return "Muy alto"
+    }
+
+    return "Extremo"
+}
+
+
+function nivelLluviaDesdeTasa(
+    tasa
+){
+    if(
+        tasa===null
+        ||
+        tasa===undefined
+        ||
+        Number.isNaN(
+            Number(tasa)
+        )
+    ){
+        return 0
+    }
+
+    const valor=
+        Number(tasa);
+
+    if(valor<=0){
+        return 0
+    }
+
+    if(valor<.5){
+        return 1
+    }
+
+    if(valor<2){
+        return 2
+    }
+
+    if(valor<10){
+        return 3
+    }
+
+    return 4
+}
+
+
+function obtenerIconoLluvia(
+    nivel
+){
+    if(nivel<=0){
+        return "☁️"
+    }
+
+    if(nivel===1){
+        return "🌦️"
+    }
+
+    if(nivel===4){
+        return "⛈️"
+    }
+
+    return "🌧️"
+}
+
+
+function obtenerNivelEfectivo(
+    codigo
+){
+    return Math.max(
+        lluviaReal[codigo]||0,
+        lluviaSimulada[codigo]||0
+    )
+}
+
+
+function obtenerEstacionDominante(
+    codigos
+){
+    let dominante=null;
+
+    codigos.forEach(
+        codigo=>{
+            if(dominante===null){
+                dominante=codigo;
+                return
+            }
+
+            const a=
+                obtenerNivelEfectivo(
+                    codigo
+                );
+
+            const b=
+                obtenerNivelEfectivo(
+                    dominante
+                );
+
+            if(a>b){
+                dominante=codigo;
+                return
+            }
+
+            if(
+                a===b
+                &&
+                (
+                    Number(
+                        vientoEstacion[codigo]
+                            .velocidad
+                    )
+                    ||
+                    0
+                )
+                >
+                (
+                    Number(
+                        vientoEstacion[dominante]
+                            .velocidad
+                    )
+                    ||
+                    0
+                )
+            ){
+                dominante=codigo
+            }
+        }
+    );
+
+    return dominante
+}
+
+
+function obtenerVientoGlobal(
+    codigosActivos
+){
+    let codigo;
+
+    if(codigosActivos.length>0){
+        codigo=
+            obtenerEstacionDominante(
+                codigosActivos
+            )
+    }else{
+        codigo=
+            CODIGOS_ESTACION.reduce(
+                (
+                    mejor,
+                    actual
+                )=>{
+                    if(mejor===null){
+                        return actual
+                    }
+
+                    return (
+                        Number(
+                            vientoEstacion[actual]
+                                .velocidad
+                        )
+                        ||
+                        0
+                    )
+                    >
+                    (
+                        Number(
+                            vientoEstacion[mejor]
+                                .velocidad
+                        )
+                        ||
+                        0
+                    )
+                    ?
+                    actual
+                    :
+                    mejor
+                },
+                null
+            )
+    }
+
+    if(!codigo){
+        return {
+            direccion:null,
+            velocidad:0
+        }
+    }
+
+    return {
+        direccion:
+            vientoEstacion[codigo]
+                .direccion,
+
+        velocidad:
+            vientoEstacion[codigo]
+                .velocidad
+    }
+}
+
+
+function aplicarNivelACapa(
+    capa,
+    nivel
+){
+    if(!capa){
+        return
+    }
+
+    capa.classList.remove(
+        "activa",
+        "nivel-1",
+        "nivel-2",
+        "nivel-3",
+        "nivel-4"
+    );
+
+    if(nivel>0){
+        capa.classList.add(
+            "activa",
+            `nivel-${nivel}`
+        )
+    }
+}
+
+
+function aplicarVientoACapa(
+    capa,
+    viento
+){
+    if(!capa){
+        return null
+    }
+
+    const referencia=
+        capa.classList.contains(
+            "capa-lluvia-ficha"
+        )
+        ?
+        capa.parentElement
+        :
+        document.documentElement;
+
+    const ancho=
+        referencia?.clientWidth
+        ||
+        window.innerWidth
+        ||
+        360;
+
+    const alto=
+        referencia?.clientHeight
+        ||
+        window.innerHeight
+        ||
+        700;
+
+    const movimiento=
+        calcularMovimientoViento(
+            viento.direccion,
+            viento.velocidad,
+            ancho,
+            alto
+        );
+
+    capa.style.setProperty(
+        "--inicio-x",
+        `${movimiento.inicioX.toFixed(1)}px`
+    );
+
+    capa.style.setProperty(
+        "--final-x",
+        `${movimiento.finalX.toFixed(1)}px`
+    );
+
+    capa.style.setProperty(
+        "--recorrido-y",
+        `${movimiento.recorridoY.toFixed(1)}px`
+    );
+
+    capa.style.setProperty(
+        "--angulo-gota",
+        `${movimiento.angulo.toFixed(2)}deg`
+    );
+
+    return movimiento
+}
+
+
+function configurarCapaCristal(
+    capa,
+    nivel,
+    movimiento
+){
+    if(!capa){
+        return
+    }
+
+    capa.dataset.nivel=
+        String(nivel);
+
+    capa.dataset.vectorX=
+        movimiento
+        ?
+        String(
+            movimiento.vectorX
+        )
+        :
+        "0";
+
+    capa.classList.remove(
+        "activa"
+    );
+
+    if(
+        nivel>0
+        &&
+        movimiento
+        &&
+        movimiento.componenteSur
+    ){
+        capa.classList.add(
+            "activa"
+        )
+    }
+}
+
+
+function actualizarCapaMeteorologica(
+    idLluvia,
+    idCristal,
+    nivel,
+    viento
+){
+    const capaLluvia=
+        obtenerElemento(
+            idLluvia
+        );
+
+    const capaCristal=
+        obtenerElemento(
+            idCristal
+        );
+
+    aplicarNivelACapa(
+        capaLluvia,
+        nivel
+    );
+
+    configurarCapaCristal(
+        capaCristal,
+        nivel,
+        aplicarVientoACapa(
+            capaLluvia,
+            viento
+        )
+    )
+}
+
+
+function actualizarSistemaLluvia(){
+
+    const silo=
+        obtenerNivelEfectivo(
+            "EL_SILO"
+        );
+
+    const llanos=
+        obtenerNivelEfectivo(
+            "LOS_LLANOS"
+        );
+
+    const activos=[];
+
+    if(silo>0){
+        activos.push(
+            "EL_SILO"
+        )
+    }
+
+    if(llanos>0){
+        activos.push(
+            "LOS_LLANOS"
+        )
+    }
+
+    let global=0;
+    let localSilo=0;
+    let localLlanos=0;
+
+    if(activos.length===2){
+        global=
+            Math.max(
+                silo,
+                llanos
+            )
+    }
+
+    if(activos.length===1){
+
+        if(
+            activos[0]
+            ===
+            "EL_SILO"
+        ){
+            localSilo=silo
+        }else{
+            localLlanos=llanos
+        }
+    }
+
+    global=
+        Math.max(
+            global,
+            lluviaSimulada.GLOBAL||0
+        );
+
+    actualizarCapaMeteorologica(
+        "capa-lluvia-EL_SILO",
+        "capa-gotas-cristal-EL_SILO",
+        localSilo,
+        vientoEstacion.EL_SILO
+    );
+
+    actualizarCapaMeteorologica(
+        "capa-lluvia-LOS_LLANOS",
+        "capa-gotas-cristal-LOS_LLANOS",
+        localLlanos,
+        vientoEstacion.LOS_LLANOS
+    );
+
+    actualizarCapaMeteorologica(
+        "capa-lluvia",
+        "capa-gotas-cristal",
+        global,
+        obtenerVientoGlobal(
+            activos
+        )
+    )
+}
+
+
+function actualizarIndicadorSimulacion(
+    origen
+){
+    const elemento=
+        obtenerElemento(
+            `simulacion-${origen}`
+        );
+
+    if(!elemento){
+        return
+    }
+
+    const nivel=
+        lluviaSimulada[origen]
+        ||
+        0;
+
+    if(nivel<=0){
+        elemento.classList.remove(
+            "visible"
+        );
+
+        elemento.textContent="";
+
+        return
+    }
+
+    elemento.textContent=
+        origen==="GLOBAL"
+        ?
+        `Prueba ${NOMBRES_NIVEL_LLUVIA[nivel]}`
+        :
+        `Prueba lluvia · ${NOMBRES_NIVEL_LLUVIA[nivel]}`;
+
+    elemento.classList.add(
+        "visible"
+    )
+}
+
+
+function avanzarSimulacion(
+    origen
+){
+    const actual=
+        lluviaSimulada[origen]
+        ||
+        0;
+
+    lluviaSimulada[origen]=
+        actual<=0
+        ||
+        actual>=4
+        ?
+        1
+        :
+        actual+1;
+
+    actualizarIndicadorSimulacion(
+        origen
+    );
+
+    actualizarSistemaLluvia()
+}
+
+
+function desactivarSimulacion(
+    origen
+){
+    lluviaSimulada[origen]=0;
+
+    actualizarIndicadorSimulacion(
+        origen
+    );
+
+    actualizarSistemaLluvia()
+}
+
+
+function inicializarGotasEnCapa(
+    idCapa,
+    totalGotas=160
+){
+    const capa=
+        obtenerElemento(
+            idCapa
+        );
+
+    if(!capa){
+        return
+    }
+
+    for(
+        let i=0;
+        i<totalGotas;
+        i+=1
+    ){
+        const gota=
+            document.createElement(
+                "span"
+            );
+
+        gota.className=
+            "gota-lluvia";
+
+        gota.style.setProperty(
+            "--x",
+            `${Math.random()*116-8}%`
+        );
+
+        gota.style.setProperty(
+            "--longitud",
+            `${13+Math.random()*27}px`
+        );
+
+        gota.style.setProperty(
+            "--duracion",
+            `${.58+Math.random()*.42}s`
+        );
+
+        gota.style.setProperty(
+            "--retraso",
+            `${-Math.random()*2.4}s`
+        );
+
+        gota.style.setProperty(
+            "--opacidad",
+            (
+                .38
+                +
+                Math.random()*.57
+            ).toFixed(2)
+        );
+
+        capa.appendChild(
+            gota
+        )
+    }
+}
+
+
+function inicializarLluviaVisual(){
+
+    inicializarGotasEnCapa(
+        "capa-lluvia"
+    );
+
+    inicializarGotasEnCapa(
+        "capa-lluvia-EL_SILO"
+    );
+
+    inicializarGotasEnCapa(
+        "capa-lluvia-LOS_LLANOS"
+    )
+}
+
+
+function obtenerMaximoGotasCristal(
+    nivel,
+    esGlobal
+){
+    const globales={
+        1:4,
+        2:7,
+        3:11,
+        4:16
+    };
+
+    const locales={
+        1:3,
+        2:5,
+        3:8,
+        4:11
+    };
+
+    return esGlobal
+        ?
+        (
+            globales[nivel]
+            ||
+            0
+        )
+        :
+        (
+            locales[nivel]
+            ||
+            0
+        )
+}
+
+
+function obtenerProbabilidadGotaCristal(
+    nivel
+){
+    return (
+        {
+            1:.16,
+            2:.34,
+            3:.62,
+            4:.88
+        }[nivel]
+        ||
+        0
+    )
+}
+
+
+function crearGotaCristal(
+    capa,
+    nivel
+){
+    if(
+        !capa
+        ||
+        nivel<=0
+    ){
+        return
+    }
+
+    const esGlobal=
+        capa.classList.contains(
+            "capa-gotas-cristal"
+        );
+
+    const maximo=
+        obtenerMaximoGotasCristal(
+            nivel,
+            esGlobal
+        );
+
+    if(
+        capa.querySelectorAll(
+            ".gota-cristal"
+        ).length
+        >=
+        maximo
+    ){
+        return
+    }
+
+    const gota=
+        document.createElement(
+            "span"
+        );
+
+    const base=
+        {
+            1:5,
+            2:6,
+            3:7,
+            4:8
+        }[nivel];
+
+    const rango=
+        {
+            1:4,
+            2:6,
+            3:8,
+            4:10
+        }[nivel];
+
+    const tamano=
+        base
+        +
+        Math.random()*rango;
+
+    const vida=
+        2600
+        +
+        Math.random()*3400;
+
+    const opacidad=
+        .15
+        +
+        Math.random()
+        *
+        (
+            .06
+            +
+            nivel*.025
+        );
+
+    const deslizar=
+        8
+        +
+        nivel*5
+        +
+        Math.random()*14;
+
+    const vectorX=
+        Number(
+            capa.dataset.vectorX
+        )
+        ||
+        0;
+
+    gota.className=
+        "gota-cristal";
+
+    gota.style.setProperty(
+        "--x",
+        `${4+Math.random()*92}%`
+    );
+
+    gota.style.setProperty(
+        "--y",
+        `${4+Math.random()*76}%`
+    );
+
+    gota.style.setProperty(
+        "--tamano",
+        `${tamano.toFixed(1)}px`
+    );
+
+    gota.style.setProperty(
+        "--vida",
+        `${Math.round(vida)}ms`
+    );
+
+    gota.style.setProperty(
+        "--opacidad-cristal",
+        opacidad.toFixed(2)
+    );
+
+    gota.style.setProperty(
+        "--deslizar",
+        `${deslizar.toFixed(1)}px`
+    );
+
+    gota.style.setProperty(
+        "--desvio-x",
+        `${
+            (
+                vectorX
+                *
+                (
+                    3
+                    +
+                    nivel*2
+                )
+            ).toFixed(1)
+        }px`
+    );
+
+    capa.appendChild(
+        gota
+    );
+
+    window.setTimeout(
+        ()=>{
+            gota.remove()
+        },
+        vida+150
+    )
+}
+
+
+function generarGotasCristalActivas(){
+
+    if(
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches
+    ){
+        return
+    }
+
+    document.querySelectorAll(
+        ".capa-gotas-cristal.activa, .capa-gotas-cristal-ficha.activa"
+    ).forEach(
+        capa=>{
+
+            const nivel=
+                Number(
+                    capa.dataset.nivel
+                )
+                ||
+                0;
+
+            if(
+                nivel<=0
+                ||
+                Math.random()
+                >
+                obtenerProbabilidadGotaCristal(
+                    nivel
+                )
+            ){
+                return
+            }
+
+            const cantidad=
+                nivel>=4
+                &&
+                Math.random()>.48
+                ?
+                2
+                :
+                1;
+
+            for(
+                let i=0;
+                i<cantidad;
+                i+=1
+            ){
+                crearGotaCristal(
+                    capa,
+                    nivel
+                )
+            }
+        }
+    )
+}
+
+
+function configurarControlLluvia(
+    elemento,
+    origen
+){
+    let temporizadorLargo=null;
+    let pulsacionLarga=false;
+    let ultimoToque=0;
+    let inicioX=0;
+    let inicioY=0;
+
+    function cancelar(){
+
+        if(
+            temporizadorLargo
+            !==
+            null
+        ){
+            clearTimeout(
+                temporizadorLargo
+            );
+
+            temporizadorLargo=null
+        }
+    }
+
+    elemento.addEventListener(
+        "pointerdown",
+        evento=>{
+
+            pulsacionLarga=false;
+
+            inicioX=
+                evento.clientX;
+
+            inicioY=
+                evento.clientY;
+
+            cancelar();
+
+            temporizadorLargo=
+                setTimeout(
+                    ()=>{
+                        pulsacionLarga=true;
+                        ultimoToque=0;
+
+                        desactivarSimulacion(
+                            origen
+                        )
+                    },
+                    700
+                )
+        }
+    );
+
+    elemento.addEventListener(
+        "pointermove",
+        evento=>{
+
+            if(
+                Math.abs(
+                    evento.clientX
+                    -
+                    inicioX
+                )
+                >
+                12
+                ||
+                Math.abs(
+                    evento.clientY
+                    -
+                    inicioY
+                )
+                >
+                12
+            ){
+                cancelar()
+            }
+        }
+    );
+
+    elemento.addEventListener(
+        "pointercancel",
+        ()=>{
+            cancelar();
+            pulsacionLarga=false
+        }
+    );
+
+    elemento.addEventListener(
+        "pointerup",
+        evento=>{
+
+            cancelar();
+
+            if(pulsacionLarga){
+                pulsacionLarga=false;
+                return
+            }
+
+            const ahora=
+                Date.now();
+
+            if(
+                ultimoToque>0
+                &&
+                ahora-ultimoToque
+                <
+                450
+            ){
+                ultimoToque=0;
+
+                avanzarSimulacion(
+                    origen
+                );
+
+                evento.preventDefault();
+
+                return
+            }
+
+            ultimoToque=ahora
+        }
+    );
+
+    elemento.addEventListener(
+        "contextmenu",
+        evento=>
+            evento.preventDefault()
+    );
+
+    elemento.addEventListener(
+        "keydown",
+        evento=>{
+
+            if(evento.key==="Enter"){
+                evento.preventDefault();
+
+                avanzarSimulacion(
+                    origen
+                )
+            }
+
+            if(evento.key==="Escape"){
+                evento.preventDefault();
+
+                desactivarSimulacion(
+                    origen
+                )
+            }
+        }
+    )
+}
+
+
+function configurarControlesLluvia(){
+
+    document.querySelectorAll(
+        "[data-lluvia-control]"
+    ).forEach(
+        control=>{
+
+            if(
+                control.dataset
+                    .lluviaControl
+            ){
+                configurarControlLluvia(
+                    control,
+                    control.dataset
+                        .lluviaControl
+                )
+            }
+        }
+    )
+}
+
+
+function configurarPatrocinios(){
+
+    document.querySelectorAll(
+        ".patrocinio-estacion-control"
+    ).forEach(
+        control=>{
+
+            control.addEventListener(
+                "click",
+                ()=>{
+
+                    const codigo=
+                        control.dataset
+                            .patrocinio;
+
+                    const patrocinio=
+                        obtenerElemento(
+                            `patrocinio-${codigo}`
+                        );
+
+                    if(!patrocinio){
+                        return
+                    }
+
+                    const pausado=
+                        patrocinio.classList.toggle(
+                            "pausado"
+                        );
+
+                    control.textContent=
+                        pausado
+                        ?
+                        "▶"
+                        :
+                        "Ⅱ";
+
+                    control.setAttribute(
+                        "aria-pressed",
+                        String(pausado)
+                    );
+
+                    control.setAttribute(
+                        "aria-label",
+                        pausado
+                        ?
+                        "Reanudar patrocinio"
+                        :
+                        "Pausar patrocinio"
+                    )
+                }
+            )
+        }
+    )
+}
+
+
+function mostrarLluvia(
+    codigo,
+    datos
+){
+    const dia=
+        formatearNumero(
+            datos.lluvia_dia_mm
+        );
+
+    const mes=
+        formatearNumero(
+            datos.lluvia_mes_mm
+        );
+
+    const anio=
+        formatearNumero(
+            datos.lluvia_anio_agricola_mm
+        );
+
+    const tasa=
+        formatearNumero(
+            datos.tasa_lluvia_mm_h
+        );
+
+    const nivel=
+        nivelLluviaDesdeTasa(
+            datos.tasa_lluvia_mm_h
+        );
+
+    const icono=
+        obtenerIconoLluvia(
+            nivel
+        );
+
+    lluviaReal[codigo]=nivel;
+
+    asignarTexto(
+        `lluvia-tasa-${codigo}`,
+        `${tasa} mm/h`
+    );
+
+    asignarTexto(
+        `lluvia-dia-${codigo}`,
+        `${dia} mm`
+    );
+
+    asignarTexto(
+        `lluvia-mes-${codigo}`,
+        `${mes} mm`
+    );
+
+    asignarTexto(
+        `lluvia-anio-${codigo}`,
+        `${anio} mm`
+    );
+
+    asignarTexto(
+        `lluvia-estado-${codigo}`,
+        NOMBRES_NIVEL_LLUVIA[nivel]
+    );
+
+    asignarTexto(
+        `lluvia-icono-actual-${codigo}`,
+        icono
+    );
+
+    asignarTexto(
+        `lluvia-resumen-icono-dia-${codigo}`,
+        icono
+    );
+
+    asignarTexto(
+        `lluvia-resumen-icono-mes-${codigo}`,
+        icono
+    );
+
+    asignarTexto(
+        `lluvia-resumen-icono-anio-${codigo}`,
+        icono
+    );
+
+    actualizarSistemaLluvia()
+}
+
+
+function mostrarDatosEstacion(
+    codigo,
+    datos
+){
+    asignarTexto(
+        `nombre-${codigo}`,
+        datos.nombre_estacion
+    );
+
+    asignarHtml(
+        `temperatura-${codigo}`,
+        `${
+            formatearNumero(
+                datos.temperatura_c
+            )
+        }<sup>°C</sup>`
+    );
+
+    asignarTexto(
+        `sensacion-${codigo}`,
+        `Sensación ${
+            formatearNumero(
+                datos.indice_calor_c
+            )
+        } °C`
+    );
+
+    const horaExterior=
+        datos.hora_observacion_exterior
+        ||
+        datos.hora_observacion
+        ||
+        "--:--";
+
+    const fechaExterior=
+        datos.fecha_observacion_exterior
+        ||
+        datos.fecha_observacion
+        ||
+        "--";
+
+    const horaBarometro=
+        datos.hora_observacion_barometro
+        ||
+        datos.hora_observacion
+        ||
+        "--:--";
+
+    asignarTexto(
+        `observacion-${codigo}`,
+        `Exterior ${horaExterior}`
+    );
+
+    asignarTexto(
+        `fecha-${codigo}`,
+        fechaExterior
+    );
+
+    asignarTexto(
+        `humedad-${codigo}`,
+        `${
+            formatearNumero(
+                datos.humedad_pct
+            )
+        } %`
+    );
+
+    asignarTexto(
+        `rocio-${codigo}`,
+        `${
+            formatearNumero(
+                datos.punto_rocio_c
+            )
+        } °C`
+    );
+
+    asignarTexto(
+        `presion-${codigo}`,
+        `${
+            formatearNumero(
+                datos.presion_hpa
+            )
+        } hPa`
+    );
+
+    asignarTexto(
+        `presion-hora-${codigo}`,
+        `Barómetro ${horaBarometro}`
+    );
+
+    asignarTexto(
+        `radiacion-${codigo}`,
+        `${
+            formatearNumero(
+                datos.radiacion_solar_w_m2,
+                0
+            )
+        } W/m²`
+    );
+
+    asignarTexto(
+        `uv-${codigo}`,
+        formatearNumero(
+            datos.indice_uv
+        )
+    );
+
+    asignarTexto(
+        `uv-estado-${codigo}`,
+        clasificarUv(
+            datos.indice_uv
+        )
+    );
+
+    asignarHtml(
+        `viento-actual-${codigo}`,
+        `${
+            formatearNumero(
+                datos.viento_actual_kmh
+            )
+        } <small>km/h</small>`
+    );
+
+    asignarTexto(
+        `viento-2m-${codigo}`,
+        `${
+            formatearNumero(
+                datos.viento_medio_2_min_kmh
+            )
+        } km/h`
+    );
+
+    asignarTexto(
+        `viento-10m-${codigo}`,
+        `${
+            formatearNumero(
+                datos.viento_medio_10_min_kmh
+            )
+        } km/h`
+    );
+
+    asignarTexto(
+        `racha-${codigo}`,
+        `${
+            formatearNumero(
+                datos.racha_10_min_kmh
+            )
+        } km/h`
+    );
+
+    vientoEstacion[codigo]={
+        direccion:
+            normalizarGrados(
+                datos.direccion_viento_grados
+            ),
+
+        velocidad:
+            Number.isFinite(
+                Number(
+                    datos.viento_actual_kmh
+                )
+            )
+            ?
+            Number(
+                datos.viento_actual_kmh
+            )
+            :
+            0
+    };
+
+    actualizarVeleta(
+        codigo,
+        datos.direccion_viento_grados
+    );
+
+    const estado=
+        obtenerElemento(
+            `estado-${codigo}`
+        );
+
+    if(estado){
+        estado.innerHTML=
+            '<span class="punto"></span>En línea'
+    }
+
+    mostrarLluvia(
+        codigo,
+        datos
+    )
+}
+
+
+function mostrarErrorLluvia(
+    codigo
+){
+    lluviaReal[codigo]=0;
+
+    asignarTexto(
+        `lluvia-tasa-${codigo}`,
+        "-- mm/h"
+    );
+
+    asignarTexto(
+        `lluvia-dia-${codigo}`,
+        "-- mm"
+    );
+
+    asignarTexto(
+        `lluvia-mes-${codigo}`,
+        "-- mm"
+    );
+
+    asignarTexto(
+        `lluvia-anio-${codigo}`,
+        "-- mm"
+    );
+
+    asignarTexto(
+        `lluvia-estado-${codigo}`,
+        "--"
+    );
+
+    asignarTexto(
+        `lluvia-icono-actual-${codigo}`,
+        "☁️"
+    );
+
+    asignarTexto(
+        `lluvia-resumen-icono-dia-${codigo}`,
+        "☁️"
+    );
+
+    asignarTexto(
+        `lluvia-resumen-icono-mes-${codigo}`,
+        "☁️"
+    );
+
+    asignarTexto(
+        `lluvia-resumen-icono-anio-${codigo}`,
+        "☁️"
+    );
+
+    actualizarSistemaLluvia()
+}
+
+
+function mostrarErrorEstacion(
+    codigo
+){
+    vientoEstacion[codigo]={
+        direccion:null,
+        velocidad:0
+    };
+
+    asignarTexto(
+        `estado-${codigo}`,
+        "Sin datos"
+    );
+
+    asignarHtml(
+        `temperatura-${codigo}`,
+        "--<sup>°C</sup>"
+    );
+
+    asignarTexto(
+        `sensacion-${codigo}`,
+        "Sensación -- °C"
+    );
+
+    asignarTexto(
+        `observacion-${codigo}`,
+        "Exterior --:--"
+    );
+
+    asignarTexto(
+        `humedad-${codigo}`,
+        "-- %"
+    );
+
+    asignarTexto(
+        `rocio-${codigo}`,
+        "-- °C"
+    );
+
+    asignarTexto(
+        `presion-${codigo}`,
+        "-- hPa"
+    );
+
+    asignarTexto(
+        `presion-hora-${codigo}`,
+        "Barómetro --:--"
+    );
+
+    asignarTexto(
+        `radiacion-${codigo}`,
+        "-- W/m²"
+    );
+
+    asignarTexto(
+        `uv-${codigo}`,
+        "--"
+    );
+
+    asignarTexto(
+        `uv-estado-${codigo}`,
+        "--"
+    );
+
+    asignarTexto(
+        `fecha-${codigo}`,
+        "--"
+    );
+
+    asignarHtml(
+        `viento-actual-${codigo}`,
+        '-- <small>km/h</small>'
+    );
+
+    asignarTexto(
+        `viento-2m-${codigo}`,
+        "-- km/h"
+    );
+
+    asignarTexto(
+        `viento-10m-${codigo}`,
+        "-- km/h"
+    );
+
+    asignarTexto(
+        `racha-${codigo}`,
+        "-- km/h"
+    );
+
+    actualizarVeleta(
+        codigo,
+        null
+    );
+
+    mostrarErrorLluvia(
+        codigo
+    )
+}
+
+
+async function cargarEstacion(
+    codigo
+){
+    try{
+
+        const respuesta=
+            await fetch(
+                `${API_BASE}/condiciones-actuales/${codigo}`,
+                {
+                    cache:"no-store"
+                }
+            );
+
+        if(!respuesta.ok){
+            throw new Error(
+                `HTTP ${respuesta.status}`
+            )
+        }
+
+        mostrarDatosEstacion(
+            codigo,
+            await respuesta.json()
+        )
+
+    }catch(error){
+
+        console.error(
+            `Error cargando ${codigo}:`,
+            error
+        );
+
+        mostrarErrorEstacion(
+            codigo
+        )
+    }
+}
+
+
+async function cargarCondiciones(){
+
+    await Promise.all(
+        [
+            cargarEstacion(
+                "EL_SILO"
+            ),
+
+            cargarEstacion(
+                "LOS_LLANOS"
+            )
+        ]
+    )
+}
+
+
+function cargarPanelObservaciones(){
+
+    const iframe=
+        document.querySelector(
+            "#panel-observaciones iframe"
+        );
+
+    if(
+        !iframe
+        ||
+        iframe.getAttribute(
+            "src"
+        )
+        ||
+        !iframe.dataset.src
+    ){
+        return
+    }
+
+    requestAnimationFrame(
+        ()=>
+            requestAnimationFrame(
+                ()=>{
+                    if(
+                        !iframe.getAttribute(
+                            "src"
+                        )
+                    ){
+                        iframe.setAttribute(
+                            "src",
+                            iframe.dataset.src
+                        )
+                    }
+                }
+            )
+    )
+}
+
+
+function activarPanel(
+    nombrePanel,
+    actualizarHash=true
+){
+    const paneles=
+        document.querySelectorAll(
+            "[data-panel-contenido]"
+        );
+
+    const enlaces=
+        document.querySelectorAll(
+            ".navegacion [data-panel]"
+        );
+
+    let encontrado=false;
+
+    paneles.forEach(
+        panel=>{
+
+            const activo=
+                panel.dataset
+                    .panelContenido
+                ===
+                nombrePanel;
+
+            panel.classList.toggle(
+                "activo",
+                activo
+            );
+
+            panel.setAttribute(
+                "aria-hidden",
+                String(!activo)
+            );
+
+            if(activo){
+                encontrado=true
+            }
+        }
+    );
+
+    if(!encontrado){
+        return
+    }
+
+    if(
+        nombrePanel
+        ===
+        "observaciones"
+    ){
+        cargarPanelObservaciones()
+    }
+
+    enlaces.forEach(
+        enlace=>{
+
+            const activo=
+                enlace.dataset.panel
+                ===
+                nombrePanel;
+
+            enlace.classList.toggle(
+                "activo",
+                activo
+            );
+
+            if(activo){
+
+                enlace.setAttribute(
+                    "aria-current",
+                    "page"
+                )
+
+            }else{
+
+                enlace.removeAttribute(
+                    "aria-current"
+                )
+            }
+        }
+    );
+
+    if(actualizarHash){
+        history.replaceState(
+            null,
+            "",
+            `#${nombrePanel}`
+        )
+    }
+
+    window.scrollTo(
+        {
+            top:0,
+            behavior:"auto"
+        }
+    )
+}
+
+
+function configurarPaneles(){
+
+    document.querySelectorAll(
+        "[data-panel]"
+    ).forEach(
+        control=>{
+
+            control.addEventListener(
+                "click",
+                evento=>{
+
+                    const nombrePanel=
+                        control.dataset.panel;
+
+                    if(!nombrePanel){
+                        return
+                    }
+
+                    evento.preventDefault();
+
+                    activarPanel(
+                        nombrePanel
+                    )
+                }
+            )
+        }
+    );
+
+    const hashInicial=
+        window.location.hash
+            .replace(
+                "#",
+                ""
+            )
+            .trim();
+
+    const panelesValidos=[
+        "actualidad",
+        "observaciones",
+        "prediccion",
+        "en-vivo"
+    ];
+
+    if(
+        panelesValidos.includes(
+            hashInicial
+        )
+    ){
+        activarPanel(
+            hashInicial,
+            false
+        )
+    }else{
+        activarPanel(
+            "actualidad",
+            false
+        )
+    }
+
+    window.addEventListener(
+        "hashchange",
+        ()=>{
+
+            const nombrePanel=
+                window.location.hash
+                    .replace(
+                        "#",
+                        ""
+                    )
+                    .trim();
+
+            if(
+                panelesValidos.includes(
+                    nombrePanel
+                )
+            ){
+                activarPanel(
+                    nombrePanel,
+                    false
+                )
+            }
+        }
+    )
+}
+
+
 let temporizadorResize=null;
-window.addEventListener("resize",()=>{if(temporizadorResize!==null)clearTimeout(temporizadorResize);temporizadorResize=setTimeout(()=>{actualizarSistemaLluvia();temporizadorResize=null},180)});
+
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        if(
+            temporizadorResize
+            !==
+            null
+        ){
+            clearTimeout(
+                temporizadorResize
+            )
+        }
+
+        temporizadorResize=
+            setTimeout(
+                ()=>{
+                    actualizarSistemaLluvia();
+                    temporizadorResize=null
+                },
+                180
+            )
+    }
+);
+
+
 inicializarLluviaVisual();
+
 configurarControlesLluvia();
+
 actualizarReloj();
-setInterval(actualizarReloj,30000);
+
+setInterval(
+    actualizarReloj,
+    30000
+);
+
 configurarPatrocinios();
+
 configurarPaneles();
+
 actualizarSistemaLluvia();
+
 cargarCondiciones();
-setInterval(cargarCondiciones,60000);
-setInterval(generarGotasCristalActivas,420);
+
+setInterval(
+    cargarCondiciones,
+    60000
+);
+
+setInterval(
+    generarGotasCristalActivas,
+    420
+);
 </script>
+
 </body>
 </html>
 
