@@ -71,4 +71,14 @@ text-align:center
 }
 
 
+/*
+ * En móvil el título "Satélite, lluvia y rayos" se quita: repetía lo
+ * que ya dice la sección y le robaba altura al mapa del visor, que es
+ * lo que se viene a ver. Mismo corte que visores/radar.css.
+ */
+@media(max-width:700px){
+.cabecera-observaciones{display:none}
+}
+
+
 /* Fin de fichero: css/observaciones.css */

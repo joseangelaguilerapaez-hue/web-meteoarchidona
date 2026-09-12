@@ -1274,6 +1274,11 @@ summary{
         font-size:22px
     }
 
+    /* "Limpiar" y borrar tienen su propia letra; la de arriba se la pisaba. */
+    .tecla-accion{
+        font-size:14px
+    }
+
 }
 
 

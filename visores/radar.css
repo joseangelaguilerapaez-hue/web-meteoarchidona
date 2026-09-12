@@ -701,3 +701,52 @@ font-size:7px
     }
 
 }
+
+
+/* =========================================================
+   MÓVIL: QUE SE VEA EL MAPA
+
+   El visor reparte su altura en seis bandas y el mapa se queda con lo
+   que sobra (minmax(0,1fr)). En un teléfono no sobraba casi nada: el
+   mapa era una franja de un dedo y el rótulo de Leaflet tapaba los
+   pueblos. Aquí se le garantiza un mínimo y se quita lo prescindible.
+
+   - El visor deja de medir exactamente la pantalla y se desplaza por
+     dentro si no cabe todo: mejor desplazarse hasta los controles que
+     no ver el mapa.
+   - Fuera la tabla de datos (fotogramas, radares, localidades, capas).
+   - Fuera el título de la cabecera del visor: el de la página, en
+     observaciones.html, ya dice lo mismo. Se quedan el estado de los
+     radares y la hora del fotograma.
+   ========================================================= */
+
+@media(max-width:700px){
+
+    html,
+    body{
+        height:auto;
+        overflow:auto
+    }
+
+    .visor{
+        height:auto;
+        min-height:100vh;
+        min-height:100dvh;
+        grid-template-rows:auto auto auto minmax(320px,1fr) auto auto
+    }
+
+    .datos{
+        display:none
+    }
+
+    .visor-cabecera{
+        min-height:0;
+        padding:8px 10px;
+        justify-content:flex-end
+    }
+
+    .visor-titulo{
+        display:none
+    }
+
+}
