@@ -514,6 +514,42 @@ button {
 }
 
 
+/*
+ * Disposición dinámica.
+ *
+ * Estas reglas solo entran en funcionamiento cuando JavaScript
+ * activa la clase panel-superior-dinamico.
+ *
+ * Hasta entonces se conserva exactamente el diseño anterior.
+ */
+
+.panel-superior-dinamico {
+    grid-template-columns:
+        250px
+        minmax(0, 1fr);
+    align-items: start;
+}
+
+
+.rejilla-estaciones {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+    align-items: start;
+    gap: 14px;
+    min-width: 0;
+}
+
+
+.rejilla-estaciones
+.estacion-principal {
+    min-width: 0;
+}
+
+
 .tarjeta {
     background:
         linear-gradient(
@@ -713,6 +749,11 @@ button {
     margin-top: 3px;
     color: #c7d7e5;
     font-size: 12px;
+}
+
+
+.estacion-localidad:empty {
+    display: none;
 }
 
 
@@ -1689,6 +1730,13 @@ button {
     }
 
 
+    .panel-superior-dinamico {
+        grid-template-columns:
+            210px
+            minmax(0, 1fr);
+    }
+
+
     .lectura-principal {
         grid-template-columns: 1fr;
     }
@@ -1738,6 +1786,21 @@ button {
     }
 
 
+    .panel-superior-dinamico {
+        grid-template-columns: 1fr;
+    }
+
+
+    .panel-superior-dinamico
+    .rejilla-estaciones {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
     .resumen {
         display: none;
     }
@@ -1748,6 +1811,12 @@ button {
 @media (max-width: 850px) {
 
     .panel-superior {
+        grid-template-columns: 1fr;
+    }
+
+
+    .panel-superior-dinamico
+    .rejilla-estaciones {
         grid-template-columns: 1fr;
     }
 
