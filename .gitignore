@@ -1,0 +1,52 @@
+# ============================================================
+# MeteoArchidona — lo que no se guarda en el repositorio
+# ============================================================
+#
+# Aquí solo va el sitio: HTML, CSS, JS, imágenes y datos. Lo que
+# genera cada máquina o cada editor, no.
+
+# --- Python ---
+#
+# servidor.py es lo único de Python del proyecto, pero al
+# ejecutarlo deja su caché compilada al lado.
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# --- Secretos ---
+#
+# Hoy no hay ninguno en la web (la clave de administración vive en
+# la API), pero si algún día aparece un .env que no acabe subido
+# por descuido.
+.env
+.env.*
+!.env.example
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Editores ---
+.vscode/
+.idea/
+*.swp
+*~
+
+# --- Herramientas ---
+#
+# El proyecto no usa npm hoy. Si algún día se añade, que la carpeta
+# de dependencias no entre: son miles de ficheros que se reinstalan
+# con un comando.
+node_modules/
+*.log
+
+# --- Copias y descargas ---
+#
+# El sitio se ha bajado alguna vez como .zip desde GitHub, y esas
+# copias no tienen por qué volver dentro.
+*.zip
+*.bak
+*.orig
+*.rej
