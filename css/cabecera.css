@@ -960,4 +960,29 @@ button {
 }
 
 
+/* ==========================================================
+   SOLO PARA LECTORES DE PANTALLA
+   ========================================================== */
+
+/*
+ * Texto que no se ve pero que leen los lectores de pantalla y los
+ * buscadores. Lo usa el <h1> de la portada: el diseño no tiene un
+ * título visible, pero la página necesita decir de qué va.
+ *
+ * No vale display:none ni visibility:hidden, que lo ocultan también a
+ * quien sí debe leerlo.
+ */
+.solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
 /* Fin de fichero: css/cabecera.css */

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!--
+    MeteoArchidona · icono de la pestaña
+
+    El mismo sol y la misma nube que la marca de la cabecera
+    (.sol y .nube en css/cabecera.css), con sus colores.
+  -->
+  <defs>
+    <linearGradient id="sol" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd44f"/>
+      <stop offset="1" stop-color="#f0a500"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#080d14"/>
+  <circle cx="38" cy="22" r="12" fill="url(#sol)"/>
+  <path
+    d="M14 50 h34 a9 9 0 0 0 0 -18 a12 12 0 0 0 -22 -3 a9 9 0 0 0 -12 21 z"
+    fill="#080d14"
+    stroke="#e5edf5"
+    stroke-width="3.5"
+    stroke-linejoin="round"
+  />
+</svg>

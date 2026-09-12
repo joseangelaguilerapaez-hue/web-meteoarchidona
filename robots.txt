@@ -1,0 +1,11 @@
+# MeteoArchidona
+#
+# Todo el sitio es público salvo la administración, que no pinta nada
+# en un buscador. Ojo: esto no la protege —robots.txt es público y
+# cualquiera puede leerlo—; la protege el PIN y el token de la API.
+
+User-agent: *
+Disallow: /administracion
+Disallow: /pages/administracion.html
+
+Sitemap: https://meteoarchidona.com/sitemap.xml
