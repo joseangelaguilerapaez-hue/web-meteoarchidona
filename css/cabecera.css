@@ -562,6 +562,42 @@ button {
 }
 
 
+
+/*
+ * El aviso de "Prueba llovizna", "Prueba chubasco"... que sale bajo el
+ * logotipo mientras la lluvia de prueba está encendida. Lo escribe
+ * actualizarIndicadorSimulacion(), en js/actualidad.js.
+ */
+.simulacion-global {
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    transform: translateX(-50%);
+
+    display: none;
+
+    min-width: max-content;
+    padding: 3px 6px;
+
+    border: 1px solid rgba(54, 213, 255, 0.32);
+    border-radius: 999px;
+    background: rgba(6, 22, 35, 0.96);
+
+    color: var(--cyan);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    pointer-events: none;
+}
+
+
+.simulacion-global.visible {
+    display: block;
+}
+
+
 .firma-proyecto img {
     display:
         block;

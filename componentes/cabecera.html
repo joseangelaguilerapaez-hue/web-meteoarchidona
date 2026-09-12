@@ -141,10 +141,22 @@
 </div>
 
 
-<a
-    href="/"
+<!--
+    El logotipo de Y&Z es el mando de la lluvia de prueba: dos toques
+    seguidos suben de nivel y una pulsación larga la apagan. Lo lleva
+    configurarControlLluvia() de js/actualidad.js, que lo reconoce por
+    data-lluvia-control.
+
+    Es un botón y no un enlace a propósito: siendo enlace, el primer
+    toque navegaría y nunca llegaría el segundo. Para volver a la
+    portada está el nombre del sitio, a la izquierda.
+-->
+<button
+    type="button"
     class="firma-proyecto"
-    aria-label="Y&Z Project · Ir a Actualidad"
+    id="firma-proyecto"
+    data-lluvia-control="GLOBAL"
+    aria-label="Y&Z Project · lluvia de prueba"
     title="Y&Z Project"
 >
 
@@ -154,7 +166,12 @@
         draggable="false"
     >
 
-</a>
+    <span
+        class="simulacion-global"
+        id="simulacion-GLOBAL"
+    ></span>
+
+</button>
 
 
 </div>

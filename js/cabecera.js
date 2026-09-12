@@ -178,6 +178,17 @@ async function montarCabecera() {
 
     recogerControlesDePagina();
 
+    /*
+     * La cabecera llega después que el JS de la página, así que lo
+     * que haya dentro y necesite configurarse —hoy el logotipo, que
+     * es el mando de la lluvia de prueba— no estaba cuando esa
+     * página repasó el documento. Se avisa para que lo repase otra
+     * vez.
+     */
+    document.dispatchEvent(
+        new CustomEvent("cabecera:montada")
+    );
+
     actualizarReloj();
 
     window.setInterval(actualizarReloj, 30000);

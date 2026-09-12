@@ -3024,4 +3024,26 @@ if (
 }
 
 
+/*
+ * El logotipo de Y&Z es el mando de la lluvia de prueba (GLOBAL),
+ * pero vive en componentes/cabecera.html y lo inserta js/cabecera.js
+ * cuando esta página ya ha repasado el documento. Al avisar de que la
+ * cabecera está montada, se repasa otra vez y el mando queda
+ * conectado.
+ */
+document.addEventListener(
+    "cabecera:montada",
+    () => {
+        configurarControlesLluvia();
+
+        actualizarIndicadorSimulacion(
+            "GLOBAL"
+        );
+    },
+    {
+        once: true
+    }
+);
+
+
 // Fin de fichero: js/actualidad.js
