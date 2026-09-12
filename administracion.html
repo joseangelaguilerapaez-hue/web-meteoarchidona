@@ -18,7 +18,7 @@
     --shadow:0 18px 50px rgba(0,0,0,.38)
 }
 *{box-sizing:border-box}
-html{min-width:320px}
+html{min-width:320px;scroll-behavior:smooth}
 body{
     min-height:100vh;margin:0;
     background:radial-gradient(circle at top,#0b1b2d 0,var(--bg) 42%);
@@ -93,16 +93,11 @@ h1,h2,h3{margin-top:0}
 .tecla:disabled{opacity:.38}
 .tecla-accion{color:var(--muted);font-family:"Sora",sans-serif;font-size:14px}
 .tecla-borrar{color:var(--cyan)}
-.acceder{
-    width:100%;min-height:54px;margin-top:18px;border:0;border-radius:12px;
-    background:linear-gradient(135deg,#0c7b67,var(--teal));color:#041e19;font-weight:700;cursor:pointer
-}
-.acceder:disabled{opacity:.32}
 .estado{min-height:22px;margin-top:14px;color:var(--muted);font-size:12px;line-height:1.5}
 .acceso .estado{text-align:center}
-.estado.info,.estado-panel.info,.estado-formulario.info{color:var(--cyan)}
-.estado.ok,.estado-panel.ok,.estado-formulario.ok{color:#62e69a}
-.estado.error,.estado-panel.error,.estado-formulario.error{color:#ff8e9d}
+.estado.info,.estado-panel.info,.estado-formulario.info,.estado-reglas.info{color:var(--cyan)}
+.estado.ok,.estado-panel.ok,.estado-formulario.ok,.estado-reglas.ok{color:#62e69a}
+.estado.error,.estado-panel.error,.estado-formulario.error,.estado-reglas.error{color:#ff8e9d}
 .nota-seguridad{
     margin-top:24px;padding-top:18px;border-top:1px solid var(--border);
     color:var(--muted-dark);text-align:center;font-size:10px;line-height:1.6
@@ -143,7 +138,10 @@ button.resumen-card{color:var(--text);text-align:left;cursor:pointer}
 }
 .panel-titulo{margin:0;font-size:14px}
 .panel-cuerpo{padding:17px}
-.estado-panel{min-height:22px;margin-bottom:12px;color:var(--muted);font-size:11px}
+.estado-panel{
+    min-height:34px;margin:2px 0 16px;padding:4px 2px;
+    color:var(--muted);font-size:16px;font-weight:700;line-height:1.5
+}
 .admin-grid{display:grid;grid-template-columns:minmax(300px,.85fr) minmax(0,1.55fr);gap:14px}
 .filtros{display:grid;gap:10px;margin-bottom:13px}
 .filtros-dobles,.formulario-grid,.metadatos,.dos-columnas{
@@ -182,6 +180,32 @@ input:disabled{color:#8ca0b4;background:#101820}
 .metadato{padding:11px;border:1px solid var(--border);border-radius:10px;background:rgba(8,20,31,.65)}
 .metadato-etiqueta{color:var(--muted-dark);font-size:9px;font-weight:700;text-transform:uppercase}
 .metadato-valor{margin-top:5px;color:#dce8f4;font-family:"JetBrains Mono",monospace;font-size:10px;overflow-wrap:anywhere}
+#panelFormularioEstacion{scroll-margin-top:100px}
+.reglas-seccion{margin-top:22px;padding-top:20px;border-top:1px solid var(--border)}
+.reglas-cabecera{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.reglas-titulo{margin:0;font-size:15px}
+.reglas-subtitulo{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
+.estado-reglas{min-height:20px;margin:8px 0 12px;font-size:11px}
+.lista-reglas{display:grid;gap:12px}
+.regla-card{padding:14px;border:1px solid var(--border-strong);border-radius:12px;background:#0a1724}
+.regla-card.inactiva{opacity:.78;border-color:rgba(239,68,68,.35)}
+.regla-cabecera{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.regla-variable{color:var(--cyan);font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700}
+.regla-descripcion{margin:9px 0 0;color:#dce8f4;font-size:11px;line-height:1.55}
+.regla-datos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.regla-dato{padding:9px;border:1px solid var(--border);border-radius:9px;background:rgba(7,19,31,.7)}
+.regla-dato-etiqueta{color:var(--muted-dark);font-size:8px;font-weight:700;text-transform:uppercase}
+.regla-dato-valor{margin-top:4px;color:#dce8f4;font-family:"JetBrains Mono",monospace;font-size:10px;overflow-wrap:anywhere}
+.origenes-bloque{margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.origenes-titulo{margin-bottom:9px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase}
+.origen-lista{display:grid;gap:8px}
+.origen-card{padding:10px;border:1px solid var(--border);border-radius:9px;background:#0b1d2d}
+.origen-card.inactivo{opacity:.72}
+.origen-superior{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.origen-estacion{color:#f6f8fb;font-size:11px;font-weight:700}
+.origen-codigo{color:var(--cyan);font-family:"JetBrains Mono",monospace;font-size:9px}
+.origen-detalle{margin-top:7px;color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:9px;line-height:1.5}
+.sin-reglas,.sin-origenes{padding:18px;border:1px dashed var(--border-strong);border-radius:10px;color:var(--muted);font-size:11px;text-align:center}
 .modulo-intro{margin:0 0 14px;color:var(--muted);font-size:12px;line-height:1.6}
 .tabla-contenedor{width:100%;overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:640px}
@@ -222,13 +246,14 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
     .cabecera-admin{flex-direction:column}
     .resumen-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .modulos{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .formulario-grid,.filtros-dobles,.metadatos,.dos-columnas{grid-template-columns:1fr}
+    .formulario-grid,.filtros-dobles,.metadatos,.dos-columnas,.regla-datos{grid-template-columns:1fr}
     .campo-ancho{grid-column:auto}
 }
 @media(max-width:520px){
     .cabecera{padding:10px 12px}.marca-subtitulo{display:none}
     .panel-admin{padding:16px 10px 32px}.panel-cabecera,.panel-cuerpo{padding:13px}
     .tarjetas-meteo{grid-template-columns:1fr 1fr}.tecla{min-height:66px}
+    .estado-panel{font-size:15px}
 }
 </style>
 </head>
@@ -252,7 +277,7 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
 <section class="acceso">
     <div class="candado" aria-hidden="true">🔒</div>
     <h1>Administración</h1>
-    <p class="descripcion">Introduce tu PIN de seis cifras para acceder al área privada de MeteoArchidona.</p>
+    <p class="descripcion">Introduce tu PIN de seis cifras. La validación se realizará automáticamente al introducir la sexta cifra.</p>
     <div id="indicadorPin" class="indicador-pin" aria-label="PIN introducido">
         <span class="punto-pin"></span><span class="punto-pin"></span><span class="punto-pin"></span>
         <span class="punto-pin"></span><span class="punto-pin"></span><span class="punto-pin"></span>
@@ -271,7 +296,6 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
         <button type="button" class="tecla" data-numero="0">0</button>
         <button id="botonBorrar" type="button" class="tecla tecla-borrar" aria-label="Borrar última cifra">⌫</button>
     </div>
-    <button id="botonAcceder" type="button" class="acceder" disabled>Acceder</button>
     <div id="estadoAcceso" class="estado" role="status" aria-live="polite"></div>
     <div class="nota-seguridad">
         El PIN no se almacena en esta página. La API valida el acceso y entrega una autorización temporal de 15 minutos.
@@ -304,50 +328,21 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
 
     <section id="modulo-resumen" class="modulo activo">
         <div class="resumen-grid">
-            <div class="resumen-card">
-                <div class="resumen-etiqueta">Estaciones</div>
-                <div id="resumenTotal" class="resumen-valor">0</div>
-            </div>
-            <div class="resumen-card">
-                <div class="resumen-etiqueta">Activas</div>
-                <div id="resumenActivas" class="resumen-valor">0</div>
-            </div>
-            <div class="resumen-card">
-                <div class="resumen-etiqueta">Datos simulados</div>
-                <div id="resumenSimuladas" class="resumen-valor">0</div>
-            </div>
-            <div class="resumen-card">
-                <div class="resumen-etiqueta">En preparación</div>
-                <div id="resumenPreparacion" class="resumen-valor">0</div>
-            </div>
+            <div class="resumen-card"><div class="resumen-etiqueta">Estaciones</div><div id="resumenTotal" class="resumen-valor">0</div></div>
+            <div class="resumen-card"><div class="resumen-etiqueta">Activas</div><div id="resumenActivas" class="resumen-valor">0</div></div>
+            <div class="resumen-card"><div class="resumen-etiqueta">Datos simulados</div><div id="resumenSimuladas" class="resumen-valor">0</div></div>
+            <div class="resumen-card"><div class="resumen-etiqueta">En preparación</div><div id="resumenPreparacion" class="resumen-valor">0</div></div>
         </div>
 
         <section class="panel">
-            <div class="panel-cabecera">
-                <h2 class="panel-titulo">Centro de administración</h2>
-            </div>
+            <div class="panel-cabecera"><h2 class="panel-titulo">Centro de administración</h2></div>
             <div class="panel-cuerpo">
-                <p class="modulo-intro">
-                    La misma sesión temporal obtenida con el PIN se utiliza para estaciones,
-                    WeatherLink y SQL. EUMETSAT mantiene su diagnóstico visual independiente.
-                </p>
+                <p class="modulo-intro">La misma sesión temporal obtenida con el PIN se utiliza para estaciones, WeatherLink y SQL. EUMETSAT mantiene su diagnóstico visual independiente.</p>
                 <div class="resumen-grid">
-                    <button type="button" class="resumen-card" data-ir-modulo="estaciones">
-                        <div class="resumen-etiqueta">Gestión</div>
-                        <div class="resumen-valor">Estaciones</div>
-                    </button>
-                    <button type="button" class="resumen-card" data-ir-modulo="weatherlink">
-                        <div class="resumen-etiqueta">Proveedor</div>
-                        <div class="resumen-valor">WeatherLink</div>
-                    </button>
-                    <button type="button" class="resumen-card" data-ir-modulo="eumetsat">
-                        <div class="resumen-etiqueta">Diagnóstico</div>
-                        <div class="resumen-valor">EUMETSAT</div>
-                    </button>
-                    <button type="button" class="resumen-card" data-ir-modulo="sql">
-                        <div class="resumen-etiqueta">PostgreSQL</div>
-                        <div class="resumen-valor">SQL</div>
-                    </button>
+                    <button type="button" class="resumen-card" data-ir-modulo="estaciones"><div class="resumen-etiqueta">Gestión</div><div class="resumen-valor">Estaciones</div></button>
+                    <button type="button" class="resumen-card" data-ir-modulo="weatherlink"><div class="resumen-etiqueta">Proveedor</div><div class="resumen-valor">WeatherLink</div></button>
+                    <button type="button" class="resumen-card" data-ir-modulo="eumetsat"><div class="resumen-etiqueta">Diagnóstico</div><div class="resumen-valor">EUMETSAT</div></button>
+                    <button type="button" class="resumen-card" data-ir-modulo="sql"><div class="resumen-etiqueta">PostgreSQL</div><div class="resumen-valor">SQL</div></button>
                 </div>
             </div>
         </section>
@@ -372,7 +367,7 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
                 </div>
             </section>
 
-            <section class="panel">
+            <section id="panelFormularioEstacion" class="panel">
                 <div class="panel-cabecera">
                     <h2 id="tituloFormulario" class="panel-titulo">Nueva estación</h2>
                     <div id="codigoSeleccionado" class="estacion-codigo"></div>
@@ -426,10 +421,12 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
                                 <input id="campoLongitud" type="number" step="any" min="-180" max="180" inputmode="decimal">
                             </div>
                         </div>
+
                         <div class="acciones-formulario">
                             <button id="botonGuardar" type="submit" class="boton boton-principal">Crear estación</button>
                             <button id="botonCancelar" type="button" class="boton">Limpiar formulario</button>
                         </div>
+
                         <div id="estadoFormulario" class="estado-formulario" role="status" aria-live="polite"></div>
                     </form>
 
@@ -441,6 +438,19 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
                         <div class="metadato"><div class="metadato-etiqueta">Creada</div><div id="metaCreada" class="metadato-valor">—</div></div>
                         <div class="metadato"><div class="metadato-etiqueta">Actualizada</div><div id="metaActualizada" class="metadato-valor">—</div></div>
                     </div>
+
+                    <section id="panelReglasEstacion" class="reglas-seccion oculto">
+                        <div class="reglas-cabecera">
+                            <div>
+                                <h3 class="reglas-titulo">Reglas de simulación</h3>
+                                <p class="reglas-subtitulo">Detalle de reglas y de las estaciones de referencia utilizadas por cada una.</p>
+                            </div>
+                            <div id="contadorReglas" class="estacion-codigo"></div>
+                        </div>
+
+                        <div id="estadoReglas" class="estado-reglas" role="status" aria-live="polite"></div>
+                        <div id="listaReglasEstacion" class="lista-reglas"></div>
+                    </section>
                 </div>
             </section>
         </div>
@@ -452,20 +462,27 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
                 <h2 class="panel-titulo">WeatherLink</h2>
                 <button id="botonWeatherlinkEstaciones" type="button" class="boton boton-principal">Consultar estaciones</button>
             </div>
+
             <div class="panel-cuerpo">
-                <p class="modulo-intro">
-                    Diagnóstico directo contra WeatherLink API v2 utilizando la sesión administrativa temporal.
-                </p>
+                <p class="modulo-intro">Diagnóstico directo contra WeatherLink API v2 utilizando la sesión administrativa temporal.</p>
                 <div id="estadoWeatherlink" class="estado"></div>
+
                 <div id="panelWeatherlinkEstaciones" class="oculto">
                     <div class="tabla-contenedor">
                         <table>
                             <thead>
-                                <tr><th>station_id</th><th>Nombre</th><th>Zona horaria</th><th>Privada</th><th>Acción</th></tr>
+                                <tr>
+                                    <th>station_id</th>
+                                    <th>Nombre</th>
+                                    <th>Zona horaria</th>
+                                    <th>Privada</th>
+                                    <th>Acción</th>
+                                </tr>
                             </thead>
                             <tbody id="tablaWeatherlinkEstaciones"></tbody>
                         </table>
                     </div>
+
                     <details>
                         <summary>Ver JSON de estaciones</summary>
                         <pre id="jsonWeatherlinkEstaciones"></pre>
@@ -475,13 +492,17 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
         </section>
 
         <section class="panel">
-            <div class="panel-cabecera"><h2 class="panel-titulo">Consulta de estación</h2></div>
+            <div class="panel-cabecera">
+                <h2 class="panel-titulo">Consulta de estación</h2>
+            </div>
+
             <div class="panel-cuerpo">
                 <div class="dos-columnas">
                     <div class="campo">
                         <label for="weatherlinkStationId">station_id</label>
                         <input id="weatherlinkStationId" type="number" inputmode="numeric" placeholder="221936">
                     </div>
+
                     <div class="campo">
                         <label>Operaciones</label>
                         <div class="acciones">
@@ -490,14 +511,19 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
                         </div>
                     </div>
                 </div>
+
                 <div id="estadoWeatherlinkEstacion" class="estado"></div>
             </div>
         </section>
 
         <section id="panelWeatherlinkCondiciones" class="panel oculto">
-            <div class="panel-cabecera"><h2 class="panel-titulo">Condiciones actuales</h2></div>
+            <div class="panel-cabecera">
+                <h2 class="panel-titulo">Condiciones actuales</h2>
+            </div>
+
             <div class="panel-cuerpo">
                 <div id="tarjetasWeatherlink" class="tarjetas-meteo"></div>
+
                 <details>
                     <summary>Ver JSON completo</summary>
                     <pre id="jsonWeatherlinkCondiciones"></pre>
@@ -510,8 +536,10 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
                 <h2 class="panel-titulo">Histórico · últimas 24 horas</h2>
                 <button id="botonDescargarHistorico" type="button" class="boton boton-secundario">Descargar JSON</button>
             </div>
+
             <div class="panel-cuerpo">
                 <div id="resumenWeatherlinkHistorico" class="nota"></div>
+
                 <details>
                     <summary>Ver JSON completo</summary>
                     <pre id="jsonWeatherlinkHistorico"></pre>
@@ -522,11 +550,13 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
 
     <section id="modulo-eumetsat" class="modulo">
         <section class="panel">
-            <div class="panel-cabecera"><h2 class="panel-titulo">EUMETSAT · LI AFA</h2></div>
+            <div class="panel-cabecera">
+                <h2 class="panel-titulo">EUMETSAT · LI AFA</h2>
+            </div>
+
             <div class="panel-cuerpo">
-                <p class="modulo-intro">
-                    Diagnóstico visual del último producto Lightning Imager disponible en EUMETView.
-                </p>
+                <p class="modulo-intro">Diagnóstico visual del último producto Lightning Imager disponible en EUMETView.</p>
+
                 <div class="dos-columnas">
                     <div class="campo">
                         <label for="eumetsatZona">Zona</label>
@@ -539,6 +569,7 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
                             <option value="sahel_foco">Foco actual · Sahel occidental</option>
                         </select>
                     </div>
+
                     <div class="campo">
                         <label>Operaciones</label>
                         <div class="acciones">
@@ -547,10 +578,12 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
                         </div>
                     </div>
                 </div>
+
                 <div id="estadoEumetsat" class="estado"></div>
                 <div id="metaEumetsat" class="nota">Todavía no se ha realizado ninguna consulta.</div>
             </div>
         </section>
+
         <section class="panel">
             <div class="panel-cuerpo">
                 <div class="visor-eumetsat">
@@ -562,37 +595,44 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
 
     <section id="modulo-sql" class="modulo">
         <section class="panel">
-            <div class="panel-cabecera"><h2 class="panel-titulo">SQL Admin</h2></div>
+            <div class="panel-cabecera">
+                <h2 class="panel-titulo">SQL Admin</h2>
+            </div>
+
             <div class="panel-cuerpo">
                 <p class="modulo-intro">
                     Consola PostgreSQL administrativa. La sesión PIN actual autoriza la operación.
                     Las modificaciones normales del esquema deben continuar realizándose mediante Alembic.
                 </p>
+
                 <div class="campo">
                     <label for="sqlSentencia">Sentencia SQL</label>
                     <textarea id="sqlSentencia" class="sql-editor" spellcheck="false" placeholder="SELECT * FROM estaciones ORDER BY id;"></textarea>
                 </div>
+
                 <div class="confirmacion">
                     <label>
                         <input id="sqlConfirmarDestructiva" type="checkbox">
-                        <span>
-                            Confirmo expresamente la ejecución de operaciones destructivas como
-                            DELETE, DROP, TRUNCATE o ALTER.
-                        </span>
+                        <span>Confirmo expresamente la ejecución de operaciones destructivas como DELETE, DROP, TRUNCATE o ALTER.</span>
                     </label>
                 </div>
+
                 <div class="acciones-formulario">
                     <button id="botonSqlEjecutar" type="button" class="boton boton-principal">Ejecutar SQL</button>
                     <button id="botonSqlExportar" type="button" class="boton boton-secundario">Descargar CSV</button>
                     <button id="botonSqlEjemplo" type="button" class="boton">Consulta de estaciones</button>
                     <button id="botonSqlLimpiar" type="button" class="boton">Limpiar</button>
                 </div>
+
                 <div id="estadoSql" class="estado"></div>
             </div>
         </section>
 
         <section id="panelResultadoSql" class="panel oculto">
-            <div class="panel-cabecera"><h2 class="panel-titulo">Resultado</h2></div>
+            <div class="panel-cabecera">
+                <h2 class="panel-titulo">Resultado</h2>
+            </div>
+
             <div class="panel-cuerpo">
                 <div id="resumenSql" class="nota"></div>
                 <div id="tablaSql" class="tabla-contenedor"></div>
@@ -603,7 +643,6 @@ details{margin-top:12px}summary{color:var(--cyan);font-size:11px;font-weight:700
 </div>
 
 <script>
-
 const LONGITUD_PIN=6;
 const URL_API="https://api-meteoarchidona.onrender.com";
 const RUTA_ACCESO="/admin/acceso";
@@ -626,31 +665,39 @@ let catalogos={estados:[],proveedores:[]};
 let estaciones=[];
 
 const $=id=>document.getElementById(id);
+
 const contenidoAcceso=$("contenidoAcceso");
 const panelAdministracion=$("panelAdministracion");
 const indicadorPin=$("indicadorPin");
-const puntosPin=Array.from(indicadorPin.querySelectorAll(".punto-pin"));
-const botonAcceder=$("botonAcceder");
+const puntosPin=Array.from(
+    indicadorPin.querySelectorAll(".punto-pin")
+);
 const botonBorrar=$("botonBorrar");
 const botonLimpiar=$("botonLimpiar");
 const estadoAcceso=$("estadoAcceso");
 const teclas=document.querySelectorAll(".tecla");
+
 const botonCerrarSesion=$("botonCerrarSesion");
 const botonCerrarSesionCabecera=$("botonCerrarSesionCabecera");
 const botonActualizar=$("botonActualizar");
 const tiempoSesion=$("tiempoSesion");
 const estadoPanel=$("estadoPanel");
+
 const resumenTotal=$("resumenTotal");
 const resumenActivas=$("resumenActivas");
 const resumenSimuladas=$("resumenSimuladas");
 const resumenPreparacion=$("resumenPreparacion");
+
 const filtroTexto=$("filtroTexto");
 const filtroEstado=$("filtroEstado");
 const filtroProveedor=$("filtroProveedor");
 const listaEstaciones=$("listaEstaciones");
+
+const panelFormularioEstacion=$("panelFormularioEstacion");
 const formularioEstacion=$("formularioEstacion");
 const tituloFormulario=$("tituloFormulario");
 const codigoSeleccionado=$("codigoSeleccionado");
+
 const campoCodigo=$("campoCodigo");
 const campoNombre=$("campoNombre");
 const campoDescripcion=$("campoDescripcion");
@@ -662,8 +709,10 @@ const campoPais=$("campoPais");
 const campoZonaHoraria=$("campoZonaHoraria");
 const campoLatitud=$("campoLatitud");
 const campoLongitud=$("campoLongitud");
+
 const botonGuardar=$("botonGuardar");
 const estadoFormulario=$("estadoFormulario");
+
 const panelMetadatos=$("panelMetadatos");
 const metaId=$("metaId");
 const metaActiva=$("metaActiva");
@@ -672,789 +721,3392 @@ const metaWeatherLinkNombre=$("metaWeatherLinkNombre");
 const metaCreada=$("metaCreada");
 const metaActualizada=$("metaActualizada");
 
-function mostrarEstado(elemento,mensaje,tipo=""){
-    elemento.className=tipo?"estado "+tipo:"estado";
+const panelReglasEstacion=$("panelReglasEstacion");
+const listaReglasEstacion=$("listaReglasEstacion");
+const contadorReglas=$("contadorReglas");
+const estadoReglas=$("estadoReglas");
+
+
+function mostrarEstado(
+    elemento,
+    mensaje,
+    tipo=""
+){
+    elemento.className=tipo
+        ?"estado "+tipo
+        :"estado";
+
     elemento.textContent=mensaje;
 }
-function mostrarEstadoPanel(mensaje,tipo=""){
-    estadoPanel.className=tipo?"estado-panel "+tipo:"estado-panel";
+
+
+function mostrarEstadoPanel(
+    mensaje,
+    tipo=""
+){
+    estadoPanel.className=tipo
+        ?"estado-panel "+tipo
+        :"estado-panel";
+
     estadoPanel.textContent=mensaje;
 }
-function mostrarEstadoFormulario(mensaje,tipo=""){
-    estadoFormulario.className=tipo?"estado-formulario "+tipo:"estado-formulario";
+
+
+function mostrarEstadoFormulario(
+    mensaje,
+    tipo=""
+){
+    estadoFormulario.className=tipo
+        ?"estado-formulario "+tipo
+        :"estado-formulario";
+
     estadoFormulario.textContent=mensaje;
 }
+
+
+function mostrarEstadoReglas(
+    mensaje,
+    tipo=""
+){
+    estadoReglas.className=tipo
+        ?"estado-reglas "+tipo
+        :"estado-reglas";
+
+    estadoReglas.textContent=mensaje;
+}
+
+
 function actualizarIndicadorPin(){
-    puntosPin.forEach((punto,indice)=>{
-        punto.classList.toggle("activo",indice<pinIntroducido.length);
-    });
-    botonAcceder.disabled=solicitudEnCurso||pinIntroducido.length!==LONGITUD_PIN;
+    puntosPin.forEach(
+        (
+            punto,
+            indice
+        )=>{
+            punto.classList.toggle(
+                "activo",
+                indice<pinIntroducido.length
+            );
+        }
+    );
 }
-function bloquearTeclado(bloqueado){
-    teclas.forEach(tecla=>{tecla.disabled=bloqueado;});
+
+
+function bloquearTeclado(
+    bloqueado
+){
+    teclas.forEach(
+        tecla=>{
+            tecla.disabled=bloqueado;
+        }
+    );
 }
-function agregarNumero(numero){
-    if(solicitudEnCurso||pinIntroducido.length>=LONGITUD_PIN)return;
-    mostrarEstado(estadoAcceso,"");
+
+
+function agregarNumero(
+    numero
+){
+    if(
+        solicitudEnCurso
+        ||pinIntroducido.length>=LONGITUD_PIN
+    ){
+        return;
+    }
+
+    mostrarEstado(
+        estadoAcceso,
+        ""
+    );
+
     pinIntroducido+=numero;
+
     actualizarIndicadorPin();
+
+    if(
+        pinIntroducido.length===LONGITUD_PIN
+    ){
+        void solicitarAcceso();
+    }
 }
+
+
 function borrarUltimaCifra(){
-    if(solicitudEnCurso||!pinIntroducido)return;
-    pinIntroducido=pinIntroducido.slice(0,-1);
+    if(
+        solicitudEnCurso
+        ||!pinIntroducido
+    ){
+        return;
+    }
+
+    pinIntroducido=pinIntroducido.slice(
+        0,
+        -1
+    );
+
     actualizarIndicadorPin();
 }
+
+
 function limpiarPin(){
-    if(solicitudEnCurso)return;
+    if(
+        solicitudEnCurso
+    ){
+        return;
+    }
+
     pinIntroducido="";
-    mostrarEstado(estadoAcceso,"");
+
+    mostrarEstado(
+        estadoAcceso,
+        ""
+    );
+
     actualizarIndicadorPin();
 }
-function obtenerToken(){return sessionStorage.getItem(CLAVE_TOKEN);}
-function obtenerExpiracion(){
-    const numero=Number(sessionStorage.getItem(CLAVE_EXPIRACION));
-    return Number.isFinite(numero)?numero:null;
+
+
+function obtenerToken(){
+    return sessionStorage.getItem(
+        CLAVE_TOKEN
+    );
 }
+
+
+function obtenerExpiracion(){
+    const numero=Number(
+        sessionStorage.getItem(
+            CLAVE_EXPIRACION
+        )
+    );
+
+    return Number.isFinite(
+        numero
+    )
+        ?numero
+        :null;
+}
+
+
 function sesionEsValida(){
     const token=obtenerToken();
+
     const expiraEn=obtenerExpiracion();
-    if(!token||!expiraEn)return false;
-    return expiraEn>Math.floor(Date.now()/1000);
+
+    if(
+        !token
+        ||!expiraEn
+    ){
+        return false;
+    }
+
+    return expiraEn>Math.floor(
+        Date.now()/1000
+    );
 }
-function guardarSesion(datos){
-    sessionStorage.setItem(CLAVE_TOKEN,datos.token);
-    sessionStorage.setItem(CLAVE_TIPO_TOKEN,datos.tipo_token||"bearer");
-    sessionStorage.setItem(CLAVE_EXPIRACION,String(datos.expira_en));
+
+
+function guardarSesion(
+    datos
+){
+    sessionStorage.setItem(
+        CLAVE_TOKEN,
+        datos.token
+    );
+
+    sessionStorage.setItem(
+        CLAVE_TIPO_TOKEN,
+        datos.tipo_token||"bearer"
+    );
+
+    sessionStorage.setItem(
+        CLAVE_EXPIRACION,
+        String(
+            datos.expira_en
+        )
+    );
 }
+
+
 function eliminarSesion(){
-    sessionStorage.removeItem(CLAVE_TOKEN);
-    sessionStorage.removeItem(CLAVE_TIPO_TOKEN);
-    sessionStorage.removeItem(CLAVE_EXPIRACION);
+    sessionStorage.removeItem(
+        CLAVE_TOKEN
+    );
+
+    sessionStorage.removeItem(
+        CLAVE_TIPO_TOKEN
+    );
+
+    sessionStorage.removeItem(
+        CLAVE_EXPIRACION
+    );
 }
+
+
 function detenerRelojSesion(){
-    if(intervaloSesion!==null){
-        clearInterval(intervaloSesion);
+    if(
+        intervaloSesion!==null
+    ){
+        clearInterval(
+            intervaloSesion
+        );
+
         intervaloSesion=null;
     }
 }
+
+
 function actualizarRelojSesion(){
     const expiraEn=obtenerExpiracion();
-    if(!expiraEn){
-        tiempoSesion.textContent="Sesión · --:--";
+
+    if(
+        !expiraEn
+    ){
+        tiempoSesion.textContent=
+            "Sesión · --:--";
+
         return;
     }
-    const restantes=expiraEn-Math.floor(Date.now()/1000);
-    if(restantes<=0){
-        cerrarSesion("La sesión administrativa ha caducado.");
+
+    const restantes=
+        expiraEn
+        -Math.floor(
+            Date.now()/1000
+        );
+
+    if(
+        restantes<=0
+    ){
+        cerrarSesion(
+            "La sesión administrativa ha caducado."
+        );
+
         return;
     }
-    const minutos=Math.floor(restantes/60);
-    const segundos=restantes%60;
-    tiempoSesion.textContent="Sesión · "+String(minutos).padStart(2,"0")+":"+String(segundos).padStart(2,"0");
+
+    const minutos=Math.floor(
+        restantes/60
+    );
+
+    const segundos=
+        restantes%60;
+
+    tiempoSesion.textContent=
+        "Sesión · "
+        +String(
+            minutos
+        ).padStart(
+            2,
+            "0"
+        )
+        +":"
+        +String(
+            segundos
+        ).padStart(
+            2,
+            "0"
+        );
 }
+
+
 function iniciarRelojSesion(){
     detenerRelojSesion();
+
     actualizarRelojSesion();
-    intervaloSesion=setInterval(actualizarRelojSesion,1000);
+
+    intervaloSesion=setInterval(
+        actualizarRelojSesion,
+        1000
+    );
 }
+
+
 function abrirPanelAdministracion(){
-    contenidoAcceso.classList.add("oculto");
-    panelAdministracion.classList.remove("oculto");
-    botonCerrarSesionCabecera.classList.remove("oculto");
+    contenidoAcceso.classList.add(
+        "oculto"
+    );
+
+    panelAdministracion.classList.remove(
+        "oculto"
+    );
+
+    botonCerrarSesionCabecera.classList.remove(
+        "oculto"
+    );
+
     iniciarRelojSesion();
 }
-function mostrarPantallaAcceso(mensaje=""){
+
+
+function mostrarPantallaAcceso(
+    mensaje=""
+){
     detenerRelojSesion();
-    panelAdministracion.classList.add("oculto");
-    contenidoAcceso.classList.remove("oculto");
-    botonCerrarSesionCabecera.classList.add("oculto");
+
+    panelAdministracion.classList.add(
+        "oculto"
+    );
+
+    contenidoAcceso.classList.remove(
+        "oculto"
+    );
+
+    botonCerrarSesionCabecera.classList.add(
+        "oculto"
+    );
+
     pinIntroducido="";
     solicitudEnCurso=false;
-    bloquearTeclado(false);
-    botonAcceder.textContent="Acceder";
+
+    bloquearTeclado(
+        false
+    );
+
     actualizarIndicadorPin();
-    mostrarEstado(estadoAcceso,mensaje,mensaje?"info":"");
+
+    mostrarEstado(
+        estadoAcceso,
+        mensaje,
+        mensaje
+            ?"info"
+            :""
+    );
 }
+
+
+function limpiarDetalleReglas(){
+    panelReglasEstacion.classList.add(
+        "oculto"
+    );
+
+    listaReglasEstacion.replaceChildren();
+
+    contadorReglas.textContent="";
+
+    mostrarEstadoReglas(
+        ""
+    );
+}
+
+
 function limpiarDatosSesion(){
     estaciones=[];
-    catalogos={estados:[],proveedores:[]};
+
+    catalogos={
+        estados:[],
+        proveedores:[]
+    };
+
     codigoEdicion=null;
+
     historicoWeatherlinkActual=null;
+
+    limpiarDetalleReglas();
+
     limpiarEumetsat();
 }
-function cerrarSesion(mensaje=""){
+
+
+function cerrarSesion(
+    mensaje=""
+){
     eliminarSesion();
+
     limpiarDatosSesion();
-    mostrarPantallaAcceso(mensaje);
+
+    mostrarPantallaAcceso(
+        mensaje
+    );
 }
-async function extraerDetalleError(respuesta){
+
+
+async function extraerDetalleError(
+    respuesta
+){
     try{
-        const datos=await respuesta.clone().json();
-        if(datos&&typeof datos.detail==="string"&&datos.detail.trim())return datos.detail;
+        const datos=
+            await respuesta
+                .clone()
+                .json();
+
+        if(
+            datos
+            &&typeof datos.detail==="string"
+            &&datos.detail.trim()
+        ){
+            return datos.detail;
+        }
+
     }catch{}
-    return "La operación no pudo completarse. HTTP "+respuesta.status+".";
+
+    return (
+        "La operación no pudo completarse. HTTP "
+        +respuesta.status
+        +"."
+    );
 }
-async function comprobarRespuesta(respuesta){
-    if(respuesta.ok)return respuesta;
-    const error=new Error(await extraerDetalleError(respuesta));
-    error.codigoHttp=respuesta.status;
-    error.retryAfter=respuesta.headers.get("Retry-After");
+
+
+async function comprobarRespuesta(
+    respuesta
+){
+    if(
+        respuesta.ok
+    ){
+        return respuesta;
+    }
+
+    const error=new Error(
+        await extraerDetalleError(
+            respuesta
+        )
+    );
+
+    error.codigoHttp=
+        respuesta.status;
+
+    error.retryAfter=
+        respuesta.headers.get(
+            "Retry-After"
+        );
+
     throw error;
 }
-async function peticionAdministrativa(ruta,opciones={}){
-    if(!sesionEsValida()){
-        cerrarSesion("La sesión administrativa ha caducado.");
-        throw new Error("Sesión administrativa no disponible.");
+
+
+async function peticionAdministrativa(
+    ruta,
+    opciones={}
+){
+    if(
+        !sesionEsValida()
+    ){
+        cerrarSesion(
+            "La sesión administrativa ha caducado."
+        );
+
+        throw new Error(
+            "Sesión administrativa no disponible."
+        );
     }
-    const headers=new Headers(opciones.headers||{});
-    headers.set("Authorization","Bearer "+obtenerToken());
-    const cuerpo=opciones.body;
-    if(cuerpo&&!(cuerpo instanceof FormData)&&!headers.has("Content-Type")){
-        headers.set("Content-Type","application/json");
+
+    const headers=new Headers(
+        opciones.headers||{}
+    );
+
+    headers.set(
+        "Authorization",
+        "Bearer "
+        +obtenerToken()
+    );
+
+    const cuerpo=
+        opciones.body;
+
+    if(
+        cuerpo
+        &&!(cuerpo instanceof FormData)
+        &&!headers.has(
+            "Content-Type"
+        )
+    ){
+        headers.set(
+            "Content-Type",
+            "application/json"
+        );
     }
-    const respuesta=await fetch(URL_API+ruta,{...opciones,headers,cache:"no-store"});
+
+    const respuesta=
+        await fetch(
+            URL_API+ruta,
+            {
+                ...opciones,
+                headers,
+                cache:"no-store"
+            }
+        );
+
     try{
-        return await comprobarRespuesta(respuesta);
+        return await comprobarRespuesta(
+            respuesta
+        );
+
     }catch(error){
-        if(error.codigoHttp===401)cerrarSesion("La sesión administrativa ya no es válida.");
+
+        if(
+            error.codigoHttp===401
+        ){
+            cerrarSesion(
+                "La sesión administrativa ya no es válida."
+            );
+        }
+
         throw error;
     }
 }
-async function peticionJson(ruta,opciones={}){
-    return (await peticionAdministrativa(ruta,opciones)).json();
+
+
+async function peticionJson(
+    ruta,
+    opciones={}
+){
+    return (
+        await peticionAdministrativa(
+            ruta,
+            opciones
+        )
+    ).json();
 }
+
+
 async function solicitarAcceso(){
-    if(solicitudEnCurso||pinIntroducido.length!==LONGITUD_PIN)return;
+    if(
+        solicitudEnCurso
+        ||pinIntroducido.length!==LONGITUD_PIN
+    ){
+        return;
+    }
+
+    const pinSolicitud=
+        pinIntroducido;
+
     solicitudEnCurso=true;
-    bloquearTeclado(true);
-    actualizarIndicadorPin();
-    botonAcceder.textContent="Validando...";
-    mostrarEstado(estadoAcceso,"Comprobando acceso con la API...","info");
+
+    bloquearTeclado(
+        true
+    );
+
+    mostrarEstado(
+        estadoAcceso,
+        "Comprobando acceso con la API...",
+        "info"
+    );
+
     try{
-        const respuesta=await fetch(URL_API+RUTA_ACCESO,{
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({pin:pinIntroducido}),
-            cache:"no-store"
-        });
-        await comprobarRespuesta(respuesta);
-        const datos=await respuesta.json();
-        if(!datos||typeof datos.token!=="string"||!datos.token||!datos.expira_en){
-            throw new Error("La API no devolvió una sesión válida.");
+        const respuesta=
+            await fetch(
+                URL_API+RUTA_ACCESO,
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:JSON.stringify(
+                        {
+                            pin:pinSolicitud
+                        }
+                    ),
+                    cache:"no-store"
+                }
+            );
+
+        await comprobarRespuesta(
+            respuesta
+        );
+
+        const datos=
+            await respuesta.json();
+
+        if(
+            !datos
+            ||typeof datos.token!=="string"
+            ||!datos.token
+            ||!datos.expira_en
+        ){
+            throw new Error(
+                "La API no devolvió una sesión válida."
+            );
         }
-        guardarSesion(datos);
+
+        guardarSesion(
+            datos
+        );
+
         pinIntroducido="";
-        abrirPanelAdministracion();
-        await cargarDatosAdministracion();
-        activarModulo("resumen");
-    }catch(error){
-        eliminarSesion();
-        let mensaje=error.message||"No ha sido posible validar el acceso.";
-        if(error.codigoHttp===429&&error.retryAfter)mensaje+=" Espera "+error.retryAfter+" segundos.";
-        mostrarEstado(estadoAcceso,mensaje,"error");
-    }finally{
-        solicitudEnCurso=false;
-        bloquearTeclado(false);
-        botonAcceder.textContent="Acceder";
+
         actualizarIndicadorPin();
+
+        abrirPanelAdministracion();
+
+        await cargarDatosAdministracion();
+
+        activarModulo(
+            "resumen"
+        );
+
+    }catch(error){
+
+        eliminarSesion();
+
+        pinIntroducido="";
+
+        actualizarIndicadorPin();
+
+        let mensaje=
+            error.message
+            ||"No ha sido posible validar el acceso.";
+
+        if(
+            error.codigoHttp===429
+            &&error.retryAfter
+        ){
+            mensaje+=
+                " Espera "
+                +error.retryAfter
+                +" segundos.";
+        }
+
+        mostrarEstado(
+            estadoAcceso,
+            mensaje,
+            "error"
+        );
+
+    }finally{
+
+        solicitudEnCurso=false;
+
+        bloquearTeclado(
+            false
+        );
     }
 }
-function activarModulo(nombre){
-    document.querySelectorAll(".modulo").forEach(modulo=>{
-        modulo.classList.toggle("activo",modulo.id==="modulo-"+nombre);
-    });
-    document.querySelectorAll(".modulo-boton").forEach(boton=>{
-        boton.classList.toggle("activo",boton.dataset.modulo===nombre);
-    });
+
+
+function activarModulo(
+    nombre
+){
+    document.querySelectorAll(
+        ".modulo"
+    ).forEach(
+        modulo=>{
+            modulo.classList.toggle(
+                "activo",
+                modulo.id
+                ==="modulo-"+nombre
+            );
+        }
+    );
+
+    document.querySelectorAll(
+        ".modulo-boton"
+    ).forEach(
+        boton=>{
+            boton.classList.toggle(
+                "activo",
+                boton.dataset.modulo
+                ===nombre
+            );
+        }
+    );
 }
-function crearOpcion(valor,texto){
-    const opcion=document.createElement("option");
-    opcion.value=valor;opcion.textContent=texto;
+
+
+function crearOpcion(
+    valor,
+    texto
+){
+    const opcion=
+        document.createElement(
+            "option"
+        );
+
+    opcion.value=valor;
+    opcion.textContent=texto;
+
     return opcion;
 }
-function etiquetaEstado(valor){
+
+
+function etiquetaEstado(
+    valor
+){
     const etiquetas={
-        PROYECTADA:"Proyectada",CONSTRUCCION:"En construcción",
-        DATOS_SIMULADOS:"Datos simulados",ACTIVA:"Activa",INACTIVA:"Inactiva"
+        PROYECTADA:"Proyectada",
+        CONSTRUCCION:"En construcción",
+        DATOS_SIMULADOS:"Datos simulados",
+        ACTIVA:"Activa",
+        INACTIVA:"Inactiva"
     };
-    return etiquetas[valor]||valor;
+
+    return etiquetas[valor]
+        ||valor;
 }
-function etiquetaProveedor(valor){
-    const etiquetas={WEATHERLINK:"WeatherLink",ECOWITT:"Ecowitt",SIMULADOR:"Simulador"};
-    return etiquetas[valor]||valor;
+
+
+function etiquetaProveedor(
+    valor
+){
+    const etiquetas={
+        WEATHERLINK:"WeatherLink",
+        ECOWITT:"Ecowitt",
+        SIMULADOR:"Simulador"
+    };
+
+    return etiquetas[valor]
+        ||valor;
 }
+
+
 function cargarOpcionesCatalogos(){
     campoEstado.replaceChildren();
+
     campoProveedor.replaceChildren();
-    filtroEstado.replaceChildren(crearOpcion("","Todos los estados"));
-    filtroProveedor.replaceChildren(crearOpcion("","Todos los proveedores"));
-    catalogos.estados.forEach(estado=>{
-        campoEstado.appendChild(crearOpcion(estado,etiquetaEstado(estado)));
-        filtroEstado.appendChild(crearOpcion(estado,etiquetaEstado(estado)));
-    });
-    catalogos.proveedores.forEach(proveedor=>{
-        campoProveedor.appendChild(crearOpcion(proveedor,etiquetaProveedor(proveedor)));
-        filtroProveedor.appendChild(crearOpcion(proveedor,etiquetaProveedor(proveedor)));
-    });
-}
-function actualizarResumen(){
-    resumenTotal.textContent=String(estaciones.length);
-    resumenActivas.textContent=String(estaciones.filter(e=>e.activa).length);
-    resumenSimuladas.textContent=String(estaciones.filter(e=>e.estado==="DATOS_SIMULADOS").length);
-    resumenPreparacion.textContent=String(estaciones.filter(e=>e.estado==="PROYECTADA"||e.estado==="CONSTRUCCION").length);
-}
-function obtenerTextoLocalizacion(estacion){
-    const partes=[estacion.ciudad,estacion.region,estacion.pais].filter(v=>v&&String(v).trim());
-    return partes.length?partes.join(" · "):"Ubicación no especificada";
-}
-function estacionesFiltradas(){
-    const texto=filtroTexto.value.trim().toLocaleLowerCase("es");
-    const estado=filtroEstado.value;
-    const proveedor=filtroProveedor.value;
-    return estaciones.filter(estacion=>{
-        if(estado&&estacion.estado!==estado)return false;
-        if(proveedor&&estacion.codigo_proveedor!==proveedor)return false;
-        if(!texto)return true;
-        const contenido=[
-            estacion.codigo,estacion.nombre_publico,estacion.ciudad,
-            estacion.region,estacion.pais
-        ].filter(v=>v!==null&&v!==undefined).join(" ").toLocaleLowerCase("es");
-        return contenido.includes(texto);
-    });
-}
-function crearChip(texto,claseExtra=""){
-    const chip=document.createElement("span");
-    chip.className=claseExtra?"chip "+claseExtra:"chip";
-    chip.textContent=texto;
-    return chip;
-}
-function renderizarEstaciones(){
-    listaEstaciones.replaceChildren();
-    const filtradas=estacionesFiltradas();
-    if(!filtradas.length){
-        const vacio=document.createElement("div");
-        vacio.className="lista-vacia";
-        vacio.textContent="No hay estaciones que coincidan con los filtros.";
-        listaEstaciones.appendChild(vacio);
-        return;
-    }
-    filtradas.forEach(estacion=>{
-        const boton=document.createElement("button");
-        boton.type="button";
-        boton.className="estacion-card";
-        if(codigoEdicion===estacion.codigo)boton.classList.add("seleccionada");
-        const codigo=document.createElement("div");
-        codigo.className="estacion-codigo";codigo.textContent=estacion.codigo;
-        const nombre=document.createElement("div");
-        nombre.className="estacion-nombre";nombre.textContent=estacion.nombre_publico;
-        const chips=document.createElement("div");
-        chips.className="chips";
-        chips.appendChild(crearChip(etiquetaEstado(estacion.estado)));
-        chips.appendChild(crearChip(etiquetaProveedor(estacion.codigo_proveedor)));
-        chips.appendChild(crearChip(estacion.activa?"Activa":"No activa",estacion.activa?"chip-activa":"chip-inactiva"));
-        const ubicacion=document.createElement("div");
-        ubicacion.className="estacion-localizacion";
-        ubicacion.textContent=obtenerTextoLocalizacion(estacion);
-        boton.append(codigo,nombre,chips,ubicacion);
-        boton.addEventListener("click",()=>seleccionarEstacion(estacion.codigo));
-        listaEstaciones.appendChild(boton);
-    });
-}
-function valorTexto(elemento){
-    const valor=elemento.value.trim();
-    return valor?valor:null;
-}
-function valorNumero(elemento){
-    const valor=elemento.value.trim();
-    return valor?Number(valor):null;
-}
-function construirDatosFormulario(){
-    return{
-        codigo:campoCodigo.value.trim().toUpperCase(),
-        nombre_publico:campoNombre.value.trim(),
-        descripcion:valorTexto(campoDescripcion),
-        estado:campoEstado.value,
-        codigo_proveedor:campoProveedor.value,
-        ciudad:valorTexto(campoCiudad),
-        pais:valorTexto(campoPais),
-        region:valorTexto(campoRegion),
-        zona_horaria:valorTexto(campoZonaHoraria),
-        latitud:valorNumero(campoLatitud),
-        longitud:valorNumero(campoLongitud)
-    };
-}
-function formatearFecha(valor){
-    if(!valor)return "—";
-    const fecha=new Date(valor);
-    return Number.isNaN(fecha.getTime())?String(valor):fecha.toLocaleString("es-ES");
-}
-function mostrarMetadatos(estacion){
-    panelMetadatos.classList.remove("oculto");
-    metaId.textContent=estacion.id??"—";
-    metaActiva.textContent=estacion.activa?"Sí":"No";
-    metaWeatherLinkId.textContent=estacion.weatherlink_station_id??"—";
-    metaWeatherLinkNombre.textContent=estacion.nombre_weatherlink??"—";
-    metaCreada.textContent=formatearFecha(estacion.creado_en);
-    metaActualizada.textContent=formatearFecha(estacion.actualizado_en);
-}
-function limpiarFormulario(){
-    formularioEstacion.reset();
-    codigoEdicion=null;
-    campoCodigo.disabled=false;
-    tituloFormulario.textContent="Nueva estación";
-    codigoSeleccionado.textContent="";
-    botonGuardar.textContent="Crear estación";
-    panelMetadatos.classList.add("oculto");
-    mostrarEstadoFormulario("");
-    if(catalogos.estados.length)campoEstado.value=catalogos.estados[0];
-    if(catalogos.proveedores.length)campoProveedor.value=catalogos.proveedores[0];
-    renderizarEstaciones();
-}
-async function seleccionarEstacion(codigo){
-    mostrarEstadoFormulario("Cargando estación...","info");
-    try{
-        const estacion=await peticionJson(RUTA_ESTACIONES+"/"+encodeURIComponent(codigo));
-        codigoEdicion=estacion.codigo;
-        campoCodigo.value=estacion.codigo;campoCodigo.disabled=true;
-        campoNombre.value=estacion.nombre_publico??"";
-        campoDescripcion.value=estacion.descripcion??"";
-        campoEstado.value=estacion.estado;
-        campoProveedor.value=estacion.codigo_proveedor;
-        campoCiudad.value=estacion.ciudad??"";
-        campoPais.value=estacion.pais??"";
-        campoRegion.value=estacion.region??"";
-        campoZonaHoraria.value=estacion.zona_horaria??"";
-        campoLatitud.value=estacion.latitud??"";
-        campoLongitud.value=estacion.longitud??"";
-        tituloFormulario.textContent="Editar estación";
-        codigoSeleccionado.textContent=estacion.codigo;
-        botonGuardar.textContent="Guardar cambios";
-        mostrarMetadatos(estacion);
-        mostrarEstadoFormulario("");
-        renderizarEstaciones();
-    }catch(error){
-        mostrarEstadoFormulario(error.message,"error");
-    }
-}
-async function guardarEstacion(evento){
-    evento.preventDefault();
-    const datos=construirDatosFormulario();
-    if(!datos.codigo||!datos.nombre_publico||!datos.estado||!datos.codigo_proveedor){
-        mostrarEstadoFormulario("Completa los campos obligatorios.","error");
-        return;
-    }
-    botonGuardar.disabled=true;
-    mostrarEstadoFormulario("Guardando...","info");
-    try{
-        let estacion;
-        if(codigoEdicion){
-            const {codigo,...actualizacion}=datos;
-            estacion=await peticionJson(
-                RUTA_ESTACIONES+"/"+encodeURIComponent(codigoEdicion),
-                {method:"PATCH",body:JSON.stringify(actualizacion)}
+
+    filtroEstado.replaceChildren(
+        crearOpcion(
+            "",
+            "Todos los estados"
+        )
+    );
+
+    filtroProveedor.replaceChildren(
+        crearOpcion(
+            "",
+            "Todos los proveedores"
+        )
+    );
+
+    catalogos.estados.forEach(
+        estado=>{
+            campoEstado.appendChild(
+                crearOpcion(
+                    estado,
+                    etiquetaEstado(
+                        estado
+                    )
+                )
             );
-        }else{
-            estacion=await peticionJson(
-                RUTA_ESTACIONES,
-                {method:"POST",body:JSON.stringify(datos)}
+
+            filtroEstado.appendChild(
+                crearOpcion(
+                    estado,
+                    etiquetaEstado(
+                        estado
+                    )
+                )
             );
         }
-        await cargarEstaciones();
-        await seleccionarEstacion(estacion.codigo);
-        mostrarEstadoFormulario("Estación guardada correctamente.","ok");
+    );
+
+    catalogos.proveedores.forEach(
+        proveedor=>{
+            campoProveedor.appendChild(
+                crearOpcion(
+                    proveedor,
+                    etiquetaProveedor(
+                        proveedor
+                    )
+                )
+            );
+
+            filtroProveedor.appendChild(
+                crearOpcion(
+                    proveedor,
+                    etiquetaProveedor(
+                        proveedor
+                    )
+                )
+            );
+        }
+    );
+}
+
+
+function actualizarResumen(){
+    resumenTotal.textContent=
+        String(
+            estaciones.length
+        );
+
+    resumenActivas.textContent=
+        String(
+            estaciones.filter(
+                estacion=>
+                    estacion.activa
+            ).length
+        );
+
+    resumenSimuladas.textContent=
+        String(
+            estaciones.filter(
+                estacion=>
+                    estacion.estado
+                    ==="DATOS_SIMULADOS"
+            ).length
+        );
+
+    resumenPreparacion.textContent=
+        String(
+            estaciones.filter(
+                estacion=>
+                    estacion.estado
+                        ==="PROYECTADA"
+                    ||estacion.estado
+                        ==="CONSTRUCCION"
+            ).length
+        );
+}
+
+
+function obtenerTextoLocalizacion(
+    estacion
+){
+    const partes=[
+        estacion.ciudad,
+        estacion.region,
+        estacion.pais
+    ].filter(
+        valor=>
+            valor
+            &&String(
+                valor
+            ).trim()
+    );
+
+    return partes.length
+        ?partes.join(
+            " · "
+        )
+        :"Ubicación no especificada";
+}
+
+
+function estacionesFiltradas(){
+    const texto=
+        filtroTexto
+            .value
+            .trim()
+            .toLocaleLowerCase(
+                "es"
+            );
+
+    const estado=
+        filtroEstado.value;
+
+    const proveedor=
+        filtroProveedor.value;
+
+    return estaciones.filter(
+        estacion=>{
+            if(
+                estado
+                &&estacion.estado!==estado
+            ){
+                return false;
+            }
+
+            if(
+                proveedor
+                &&estacion.codigo_proveedor
+                    !==proveedor
+            ){
+                return false;
+            }
+
+            if(
+                !texto
+            ){
+                return true;
+            }
+
+            const contenido=[
+                estacion.codigo,
+                estacion.nombre_publico,
+                estacion.ciudad,
+                estacion.region,
+                estacion.pais
+            ]
+                .filter(
+                    valor=>
+                        valor!==null
+                        &&valor!==undefined
+                )
+                .join(
+                    " "
+                )
+                .toLocaleLowerCase(
+                    "es"
+                );
+
+            return contenido.includes(
+                texto
+            );
+        }
+    );
+}
+
+
+function crearChip(
+    texto,
+    claseExtra=""
+){
+    const chip=
+        document.createElement(
+            "span"
+        );
+
+    chip.className=
+        claseExtra
+            ?"chip "+claseExtra
+            :"chip";
+
+    chip.textContent=
+        texto;
+
+    return chip;
+}
+
+
+function renderizarEstaciones(){
+    listaEstaciones.replaceChildren();
+
+    const filtradas=
+        estacionesFiltradas();
+
+    if(
+        !filtradas.length
+    ){
+        const vacio=
+            document.createElement(
+                "div"
+            );
+
+        vacio.className=
+            "lista-vacia";
+
+        vacio.textContent=
+            "No hay estaciones que coincidan con los filtros.";
+
+        listaEstaciones.appendChild(
+            vacio
+        );
+
+        return;
+    }
+
+    filtradas.forEach(
+        estacion=>{
+            const boton=
+                document.createElement(
+                    "button"
+                );
+
+            boton.type=
+                "button";
+
+            boton.className=
+                "estacion-card";
+
+            if(
+                codigoEdicion
+                ===estacion.codigo
+            ){
+                boton.classList.add(
+                    "seleccionada"
+                );
+            }
+
+            const codigo=
+                document.createElement(
+                    "div"
+                );
+
+            codigo.className=
+                "estacion-codigo";
+
+            codigo.textContent=
+                estacion.codigo;
+
+            const nombre=
+                document.createElement(
+                    "div"
+                );
+
+            nombre.className=
+                "estacion-nombre";
+
+            nombre.textContent=
+                estacion.nombre_publico;
+
+            const chips=
+                document.createElement(
+                    "div"
+                );
+
+            chips.className=
+                "chips";
+
+            chips.appendChild(
+                crearChip(
+                    etiquetaEstado(
+                        estacion.estado
+                    )
+                )
+            );
+
+            chips.appendChild(
+                crearChip(
+                    etiquetaProveedor(
+                        estacion.codigo_proveedor
+                    )
+                )
+            );
+
+            chips.appendChild(
+                crearChip(
+                    estacion.activa
+                        ?"Activa"
+                        :"No activa",
+                    estacion.activa
+                        ?"chip-activa"
+                        :"chip-inactiva"
+                )
+            );
+
+            const ubicacion=
+                document.createElement(
+                    "div"
+                );
+
+            ubicacion.className=
+                "estacion-localizacion";
+
+            ubicacion.textContent=
+                obtenerTextoLocalizacion(
+                    estacion
+                );
+
+            boton.append(
+                codigo,
+                nombre,
+                chips,
+                ubicacion
+            );
+
+            boton.addEventListener(
+                "click",
+                ()=>{
+                    seleccionarEstacion(
+                        estacion.codigo
+                    );
+                }
+            );
+
+            listaEstaciones.appendChild(
+                boton
+            );
+        }
+    );
+}
+
+
+function valorTexto(
+    elemento
+){
+    const valor=
+        elemento.value.trim();
+
+    return valor
+        ?valor
+        :null;
+}
+
+
+function valorNumero(
+    elemento
+){
+    const valor=
+        elemento.value.trim();
+
+    return valor
+        ?Number(
+            valor
+        )
+        :null;
+}
+
+
+function construirDatosFormulario(){
+    return{
+        codigo:
+            campoCodigo
+                .value
+                .trim()
+                .toUpperCase(),
+
+        nombre_publico:
+            campoNombre
+                .value
+                .trim(),
+
+        descripcion:
+            valorTexto(
+                campoDescripcion
+            ),
+
+        estado:
+            campoEstado.value,
+
+        codigo_proveedor:
+            campoProveedor.value,
+
+        ciudad:
+            valorTexto(
+                campoCiudad
+            ),
+
+        pais:
+            valorTexto(
+                campoPais
+            ),
+
+        region:
+            valorTexto(
+                campoRegion
+            ),
+
+        zona_horaria:
+            valorTexto(
+                campoZonaHoraria
+            ),
+
+        latitud:
+            valorNumero(
+                campoLatitud
+            ),
+
+        longitud:
+            valorNumero(
+                campoLongitud
+            )
+    };
+}
+
+
+function formatearFecha(
+    valor
+){
+    if(
+        !valor
+    ){
+        return "—";
+    }
+
+    const fecha=
+        new Date(
+            valor
+        );
+
+    return Number.isNaN(
+        fecha.getTime()
+    )
+        ?String(
+            valor
+        )
+        :fecha.toLocaleString(
+            "es-ES"
+        );
+}
+
+
+function mostrarMetadatos(
+    estacion
+){
+    panelMetadatos.classList.remove(
+        "oculto"
+    );
+
+    metaId.textContent=
+        estacion.id
+        ??"—";
+
+    metaActiva.textContent=
+        estacion.activa
+            ?"Sí"
+            :"No";
+
+    metaWeatherLinkId.textContent=
+        estacion.weatherlink_station_id
+        ??"—";
+
+    metaWeatherLinkNombre.textContent=
+        estacion.nombre_weatherlink
+        ??"—";
+
+    metaCreada.textContent=
+        formatearFecha(
+            estacion.creado_en
+        );
+
+    metaActualizada.textContent=
+        formatearFecha(
+            estacion.actualizado_en
+        );
+}
+
+
+function textoNullable(
+    valor
+){
+    return (
+        valor===null
+        ||valor===undefined
+        ||valor===""
+    )
+        ?"—"
+        :String(
+            valor
+        );
+}
+
+
+function crearDatoRegla(
+    etiqueta,
+    valor
+){
+    const contenedor=
+        document.createElement(
+            "div"
+        );
+
+    contenedor.className=
+        "regla-dato";
+
+    const titulo=
+        document.createElement(
+            "div"
+        );
+
+    titulo.className=
+        "regla-dato-etiqueta";
+
+    titulo.textContent=
+        etiqueta;
+
+    const dato=
+        document.createElement(
+            "div"
+        );
+
+    dato.className=
+        "regla-dato-valor";
+
+    dato.textContent=
+        textoNullable(
+            valor
+        );
+
+    contenedor.append(
+        titulo,
+        dato
+    );
+
+    return contenedor;
+}
+
+
+function renderizarOrigenes(
+    origenes
+){
+    const bloque=
+        document.createElement(
+            "div"
+        );
+
+    bloque.className=
+        "origenes-bloque";
+
+    const titulo=
+        document.createElement(
+            "div"
+        );
+
+    titulo.className=
+        "origenes-titulo";
+
+    titulo.textContent=
+        "Estaciones de referencia";
+
+    bloque.appendChild(
+        titulo
+    );
+
+    if(
+        !origenes.length
+    ){
+        const vacio=
+            document.createElement(
+                "div"
+            );
+
+        vacio.className=
+            "sin-origenes";
+
+        vacio.textContent=
+            "Esta regla no tiene estaciones de referencia configuradas.";
+
+        bloque.appendChild(
+            vacio
+        );
+
+        return bloque;
+    }
+
+    const lista=
+        document.createElement(
+            "div"
+        );
+
+    lista.className=
+        "origen-lista";
+
+    origenes.forEach(
+        origen=>{
+            const tarjeta=
+                document.createElement(
+                    "div"
+                );
+
+            tarjeta.className=
+                "origen-card"
+                +(
+                    origen.activa
+                        ?""
+                        :" inactivo"
+                );
+
+            const superior=
+                document.createElement(
+                    "div"
+                );
+
+            superior.className=
+                "origen-superior";
+
+            const nombre=
+                document.createElement(
+                    "div"
+                );
+
+            const estacion=
+                document.createElement(
+                    "div"
+                );
+
+            estacion.className=
+                "origen-estacion";
+
+            estacion.textContent=
+                origen.nombre_publico_estacion_origen
+                ||origen.codigo_estacion_origen;
+
+            const codigo=
+                document.createElement(
+                    "div"
+                );
+
+            codigo.className=
+                "origen-codigo";
+
+            codigo.textContent=
+                origen.codigo_estacion_origen
+                ||(
+                    "ID "
+                    +origen.estacion_origen_id
+                );
+
+            nombre.append(
+                estacion,
+                codigo
+            );
+
+            superior.append(
+                nombre,
+                crearChip(
+                    origen.activa
+                        ?"Activa"
+                        :"Inactiva",
+                    origen.activa
+                        ?"chip-activa"
+                        :"chip-inactiva"
+                )
+            );
+
+            const detalle=
+                document.createElement(
+                    "div"
+                );
+
+            detalle.className=
+                "origen-detalle";
+
+            detalle.textContent=
+                "Variable: "
+                +textoNullable(
+                    origen.variable_origen
+                )
+                +" · Peso: "
+                +textoNullable(
+                    origen.peso
+                )
+                +" · Orden: "
+                +textoNullable(
+                    origen.orden
+                );
+
+            tarjeta.append(
+                superior,
+                detalle
+            );
+
+            lista.appendChild(
+                tarjeta
+            );
+        }
+    );
+
+    bloque.appendChild(
+        lista
+    );
+
+    return bloque;
+}
+
+
+function renderizarReglas(
+    datos
+){
+    panelReglasEstacion.classList.remove(
+        "oculto"
+    );
+
+    listaReglasEstacion.replaceChildren();
+
+    mostrarEstadoReglas(
+        ""
+    );
+
+    const reglas=
+        Array.isArray(
+            datos?.reglas
+        )
+            ?datos.reglas
+            :[];
+
+    contadorReglas.textContent=
+        reglas.length
+        +" regla"
+        +(
+            reglas.length===1
+                ?""
+                :"s"
+        );
+
+    if(
+        !reglas.length
+    ){
+        const vacio=
+            document.createElement(
+                "div"
+            );
+
+        vacio.className=
+            "sin-reglas";
+
+        vacio.textContent=
+            "Esta estación no tiene reglas de simulación configuradas.";
+
+        listaReglasEstacion.appendChild(
+            vacio
+        );
+
+        return;
+    }
+
+    reglas.forEach(
+        regla=>{
+            const tarjeta=
+                document.createElement(
+                    "article"
+                );
+
+            tarjeta.className=
+                "regla-card"
+                +(
+                    regla.activa
+                        ?""
+                        :" inactiva"
+                );
+
+            const cabecera=
+                document.createElement(
+                    "div"
+                );
+
+            cabecera.className=
+                "regla-cabecera";
+
+            const variable=
+                document.createElement(
+                    "div"
+                );
+
+            variable.className=
+                "regla-variable";
+
+            variable.textContent=
+                regla.variable_destino
+                ||(
+                    "Regla "
+                    +regla.id
+                );
+
+            cabecera.append(
+                variable,
+                crearChip(
+                    regla.activa
+                        ?"Activa"
+                        :"Inactiva",
+                    regla.activa
+                        ?"chip-activa"
+                        :"chip-inactiva"
+                )
+            );
+
+            tarjeta.appendChild(
+                cabecera
+            );
+
+            if(
+                regla.descripcion
+            ){
+                const descripcion=
+                    document.createElement(
+                        "p"
+                    );
+
+                descripcion.className=
+                    "regla-descripcion";
+
+                descripcion.textContent=
+                    regla.descripcion;
+
+                tarjeta.appendChild(
+                    descripcion
+                );
+            }
+
+            const datosRegla=
+                document.createElement(
+                    "div"
+                );
+
+            datosRegla.className=
+                "regla-datos";
+
+            datosRegla.append(
+                crearDatoRegla(
+                    "Operación",
+                    regla.operacion
+                ),
+                crearDatoRegla(
+                    "Valor",
+                    regla.valor
+                ),
+                crearDatoRegla(
+                    "Prioridad",
+                    regla.prioridad
+                ),
+                crearDatoRegla(
+                    "Estacionalidad",
+                    regla.estacionalidad
+                ),
+                crearDatoRegla(
+                    "Franja del día",
+                    regla.franja_dia
+                ),
+                crearDatoRegla(
+                    "ID regla",
+                    regla.id
+                )
+            );
+
+            tarjeta.append(
+                datosRegla,
+                renderizarOrigenes(
+                    Array.isArray(
+                        regla.origenes
+                    )
+                        ?regla.origenes
+                        :[]
+                )
+            );
+
+            listaReglasEstacion.appendChild(
+                tarjeta
+            );
+        }
+    );
+}
+
+
+async function cargarReglasEstacion(
+    codigo
+){
+    panelReglasEstacion.classList.remove(
+        "oculto"
+    );
+
+    listaReglasEstacion.replaceChildren();
+
+    contadorReglas.textContent="";
+
+    mostrarEstadoReglas(
+        "Cargando reglas de simulación...",
+        "info"
+    );
+
+    try{
+        const datos=
+            await peticionJson(
+                RUTA_ESTACIONES
+                +"/"
+                +encodeURIComponent(
+                    codigo
+                )
+                +"/reglas"
+            );
+
+        renderizarReglas(
+            datos
+        );
+
     }catch(error){
-        mostrarEstadoFormulario(error.message,"error");
+
+        listaReglasEstacion.replaceChildren();
+
+        contadorReglas.textContent="";
+
+        mostrarEstadoReglas(
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+function limpiarFormulario(){
+    formularioEstacion.reset();
+
+    codigoEdicion=null;
+
+    campoCodigo.disabled=false;
+
+    tituloFormulario.textContent=
+        "Nueva estación";
+
+    codigoSeleccionado.textContent="";
+
+    botonGuardar.textContent=
+        "Crear estación";
+
+    panelMetadatos.classList.add(
+        "oculto"
+    );
+
+    limpiarDetalleReglas();
+
+    mostrarEstadoFormulario(
+        ""
+    );
+
+    if(
+        catalogos.estados.length
+    ){
+        campoEstado.value=
+            catalogos.estados[0];
+    }
+
+    if(
+        catalogos.proveedores.length
+    ){
+        campoProveedor.value=
+            catalogos.proveedores[0];
+    }
+
+    renderizarEstaciones();
+}
+
+
+async function seleccionarEstacion(
+    codigo
+){
+    mostrarEstadoFormulario(
+        "Cargando estación...",
+        "info"
+    );
+
+    try{
+        const estacion=
+            await peticionJson(
+                RUTA_ESTACIONES
+                +"/"
+                +encodeURIComponent(
+                    codigo
+                )
+            );
+
+        codigoEdicion=
+            estacion.codigo;
+
+        campoCodigo.value=
+            estacion.codigo;
+
+        campoCodigo.disabled=
+            true;
+
+        campoNombre.value=
+            estacion.nombre_publico
+            ??"";
+
+        campoDescripcion.value=
+            estacion.descripcion
+            ??"";
+
+        campoEstado.value=
+            estacion.estado;
+
+        campoProveedor.value=
+            estacion.codigo_proveedor;
+
+        campoCiudad.value=
+            estacion.ciudad
+            ??"";
+
+        campoPais.value=
+            estacion.pais
+            ??"";
+
+        campoRegion.value=
+            estacion.region
+            ??"";
+
+        campoZonaHoraria.value=
+            estacion.zona_horaria
+            ??"";
+
+        campoLatitud.value=
+            estacion.latitud
+            ??"";
+
+        campoLongitud.value=
+            estacion.longitud
+            ??"";
+
+        tituloFormulario.textContent=
+            "Editar estación";
+
+        codigoSeleccionado.textContent=
+            estacion.codigo;
+
+        botonGuardar.textContent=
+            "Guardar cambios";
+
+        mostrarMetadatos(
+            estacion
+        );
+
+        mostrarEstadoFormulario(
+            ""
+        );
+
+        renderizarEstaciones();
+
+        void cargarReglasEstacion(
+            estacion.codigo
+        );
+
+        requestAnimationFrame(
+            ()=>{
+                panelFormularioEstacion.scrollIntoView(
+                    {
+                        behavior:"smooth",
+                        block:"start"
+                    }
+                );
+            }
+        );
+
+    }catch(error){
+
+        mostrarEstadoFormulario(
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+async function guardarEstacion(
+    evento
+){
+    evento.preventDefault();
+
+    const datos=
+        construirDatosFormulario();
+
+    if(
+        !datos.codigo
+        ||!datos.nombre_publico
+        ||!datos.estado
+        ||!datos.codigo_proveedor
+    ){
+        mostrarEstadoFormulario(
+            "Completa los campos obligatorios.",
+            "error"
+        );
+
+        return;
+    }
+
+    botonGuardar.disabled=true;
+
+    mostrarEstadoFormulario(
+        "Guardando...",
+        "info"
+    );
+
+    try{
+        let estacion;
+
+        if(
+            codigoEdicion
+        ){
+            const {
+                codigo,
+                ...actualizacion
+            }=datos;
+
+            estacion=
+                await peticionJson(
+                    RUTA_ESTACIONES
+                    +"/"
+                    +encodeURIComponent(
+                        codigoEdicion
+                    ),
+                    {
+                        method:"PATCH",
+                        body:JSON.stringify(
+                            actualizacion
+                        )
+                    }
+                );
+
+        }else{
+
+            estacion=
+                await peticionJson(
+                    RUTA_ESTACIONES,
+                    {
+                        method:"POST",
+                        body:JSON.stringify(
+                            datos
+                        )
+                    }
+                );
+        }
+
+        await cargarEstaciones();
+
+        await seleccionarEstacion(
+            estacion.codigo
+        );
+
+        mostrarEstadoFormulario(
+            "Estación guardada correctamente.",
+            "ok"
+        );
+
+    }catch(error){
+
+        mostrarEstadoFormulario(
+            error.message,
+            "error"
+        );
+
     }finally{
+
         botonGuardar.disabled=false;
     }
 }
+
+
 async function cargarCatalogos(){
-    catalogos=await peticionJson(RUTA_CATALOGOS);
+    catalogos=
+        await peticionJson(
+            RUTA_CATALOGOS
+        );
+
     cargarOpcionesCatalogos();
 }
+
+
 async function cargarEstaciones(){
-    estaciones=await peticionJson(RUTA_ESTACIONES);
+    estaciones=
+        await peticionJson(
+            RUTA_ESTACIONES
+        );
+
     actualizarResumen();
+
     renderizarEstaciones();
 }
+
+
 async function cargarDatosAdministracion(){
-    mostrarEstadoPanel("Actualizando administración...","info");
-    botonActualizar.disabled=true;
+    mostrarEstadoPanel(
+        "Actualizando administración...",
+        "info"
+    );
+
+    botonActualizar.disabled=
+        true;
+
     try{
-        await Promise.all([cargarCatalogos(),cargarEstaciones()]);
-        mostrarEstadoPanel("Datos administrativos actualizados.","ok");
+        await Promise.all(
+            [
+                cargarCatalogos(),
+                cargarEstaciones()
+            ]
+        );
+
+        mostrarEstadoPanel(
+            "Datos administrativos actualizados.",
+            "ok"
+        );
+
     }catch(error){
-        mostrarEstadoPanel(error.message,"error");
+
+        mostrarEstadoPanel(
+            error.message,
+            "error"
+        );
+
     }finally{
-        botonActualizar.disabled=false;
+
+        botonActualizar.disabled=
+            false;
     }
 }
 
-function formatearValor(valor){
-    if(valor===null||valor===undefined)return "NULL";
-    if(typeof valor==="object")return JSON.stringify(valor);
-    return String(valor);
+
+function formatearValor(
+    valor
+){
+    if(
+        valor===null
+        ||valor===undefined
+    ){
+        return "NULL";
+    }
+
+    if(
+        typeof valor==="object"
+    ){
+        return JSON.stringify(
+            valor
+        );
+    }
+
+    return String(
+        valor
+    );
 }
-function obtenerRegistroWeatherlink(weatherlink,tipo){
-    const sensor=(weatherlink.sensors||[]).find(item=>item.data_structure_type===tipo);
-    return sensor&&sensor.data&&sensor.data.length?sensor.data[0]:{};
+
+
+function obtenerRegistroWeatherlink(
+    weatherlink,
+    tipo
+){
+    const sensor=
+        (
+            weatherlink.sensors
+            ||[]
+        ).find(
+            item=>
+                item.data_structure_type
+                ===tipo
+        );
+
+    return (
+        sensor
+        &&sensor.data
+        &&sensor.data.length
+    )
+        ?sensor.data[0]
+        :{};
 }
-function fahrenheitACelsius(valor){
-    return valor===null||valor===undefined?null:(Number(valor)-32)*5/9;
+
+
+function fahrenheitACelsius(
+    valor
+){
+    return (
+        valor===null
+        ||valor===undefined
+    )
+        ?null
+        :(Number(valor)-32)*5/9;
 }
-function mphAKmh(valor){
-    return valor===null||valor===undefined?null:Number(valor)*1.609344;
+
+
+function mphAKmh(
+    valor
+){
+    return (
+        valor===null
+        ||valor===undefined
+    )
+        ?null
+        :Number(valor)*1.609344;
 }
-function inHgAHpa(valor){
-    return valor===null||valor===undefined?null:Number(valor)*33.8638866667;
+
+
+function inHgAHpa(
+    valor
+){
+    return (
+        valor===null
+        ||valor===undefined
+    )
+        ?null
+        :Number(valor)*33.8638866667;
 }
-function textoMetrica(valor,unidad="",decimales=1){
-    if(valor===null||valor===undefined||Number.isNaN(Number(valor)))return "Sin dato";
-    return Number(valor).toFixed(decimales)+(unidad?" "+unidad:"");
+
+
+function textoMetrica(
+    valor,
+    unidad="",
+    decimales=1
+){
+    if(
+        valor===null
+        ||valor===undefined
+        ||Number.isNaN(
+            Number(
+                valor
+            )
+        )
+    ){
+        return "Sin dato";
+    }
+
+    return (
+        Number(
+            valor
+        ).toFixed(
+            decimales
+        )
+        +(
+            unidad
+                ?" "+unidad
+                :""
+        )
+    );
 }
-function crearTarjetaMeteo(etiqueta,valor){
-    const tarjeta=document.createElement("div");
-    tarjeta.className="tarjeta";
-    const titulo=document.createElement("div");
-    titulo.className="tarjeta-etiqueta";titulo.textContent=etiqueta;
-    const contenido=document.createElement("div");
-    contenido.className="tarjeta-valor";contenido.textContent=valor;
-    tarjeta.append(titulo,contenido);
+
+
+function crearTarjetaMeteo(
+    etiqueta,
+    valor
+){
+    const tarjeta=
+        document.createElement(
+            "div"
+        );
+
+    tarjeta.className=
+        "tarjeta";
+
+    const titulo=
+        document.createElement(
+            "div"
+        );
+
+    titulo.className=
+        "tarjeta-etiqueta";
+
+    titulo.textContent=
+        etiqueta;
+
+    const contenido=
+        document.createElement(
+            "div"
+        );
+
+    contenido.className=
+        "tarjeta-valor";
+
+    contenido.textContent=
+        valor;
+
+    tarjeta.append(
+        titulo,
+        contenido
+    );
+
     return tarjeta;
 }
-function renderizarCondicionesWeatherlink(datos){
-    const weatherlink=datos.weatherlink||{};
-    const exterior=obtenerRegistroWeatherlink(weatherlink,23);
-    const interior=obtenerRegistroWeatherlink(weatherlink,21);
-    const barometro=obtenerRegistroWeatherlink(weatherlink,19);
-    const racha=exterior.wind_speed_hi_last_10_min??exterior.wind_speed_hi_last_2_min??exterior.wind_speed_last;
+
+
+function renderizarCondicionesWeatherlink(
+    datos
+){
+    const weatherlink=
+        datos.weatherlink
+        ||{};
+
+    const exterior=
+        obtenerRegistroWeatherlink(
+            weatherlink,
+            23
+        );
+
+    const interior=
+        obtenerRegistroWeatherlink(
+            weatherlink,
+            21
+        );
+
+    const barometro=
+        obtenerRegistroWeatherlink(
+            weatherlink,
+            19
+        );
+
+    const racha=
+        exterior.wind_speed_hi_last_10_min
+        ??exterior.wind_speed_hi_last_2_min
+        ??exterior.wind_speed_last;
+
     const metricas=[
-        ["Temperatura exterior",textoMetrica(fahrenheitACelsius(exterior.temp),"°C")],
-        ["Humedad exterior",textoMetrica(exterior.hum,"%")],
-        ["Viento",textoMetrica(mphAKmh(exterior.wind_speed_last),"km/h")],
-        ["Racha",textoMetrica(mphAKmh(racha),"km/h")],
-        ["Presión",textoMetrica(inHgAHpa(barometro.bar_sea_level),"hPa")],
-        ["Lluvia hoy",textoMetrica(exterior.rainfall_day_mm,"mm")],
-        ["Radiación",textoMetrica(exterior.solar_rad,"W/m²",0)],
-        ["Índice UV",textoMetrica(exterior.uv_index,"",1)],
-        ["Temperatura interior",textoMetrica(fahrenheitACelsius(interior.temp_in),"°C")],
-        ["Humedad interior",textoMetrica(interior.hum_in,"%")]
+        [
+            "Temperatura exterior",
+            textoMetrica(
+                fahrenheitACelsius(
+                    exterior.temp
+                ),
+                "°C"
+            )
+        ],
+        [
+            "Humedad exterior",
+            textoMetrica(
+                exterior.hum,
+                "%"
+            )
+        ],
+        [
+            "Viento",
+            textoMetrica(
+                mphAKmh(
+                    exterior.wind_speed_last
+                ),
+                "km/h"
+            )
+        ],
+        [
+            "Racha",
+            textoMetrica(
+                mphAKmh(
+                    racha
+                ),
+                "km/h"
+            )
+        ],
+        [
+            "Presión",
+            textoMetrica(
+                inHgAHpa(
+                    barometro.bar_sea_level
+                ),
+                "hPa"
+            )
+        ],
+        [
+            "Lluvia hoy",
+            textoMetrica(
+                exterior.rainfall_day_mm,
+                "mm"
+            )
+        ],
+        [
+            "Radiación",
+            textoMetrica(
+                exterior.solar_rad,
+                "W/m²",
+                0
+            )
+        ],
+        [
+            "Índice UV",
+            textoMetrica(
+                exterior.uv_index,
+                "",
+                1
+            )
+        ],
+        [
+            "Temperatura interior",
+            textoMetrica(
+                fahrenheitACelsius(
+                    interior.temp_in
+                ),
+                "°C"
+            )
+        ],
+        [
+            "Humedad interior",
+            textoMetrica(
+                interior.hum_in,
+                "%"
+            )
+        ]
     ];
-    const tarjetas=$("tarjetasWeatherlink");
+
+    const tarjetas=
+        $("tarjetasWeatherlink");
+
     tarjetas.replaceChildren();
-    metricas.forEach(([etiqueta,valor])=>tarjetas.appendChild(crearTarjetaMeteo(etiqueta,valor)));
-    $("jsonWeatherlinkCondiciones").textContent=JSON.stringify(datos,null,2);
-    $("panelWeatherlinkCondiciones").classList.remove("oculto");
+
+    metricas.forEach(
+        (
+            [
+                etiqueta,
+                valor
+            ]
+        )=>{
+            tarjetas.appendChild(
+                crearTarjetaMeteo(
+                    etiqueta,
+                    valor
+                )
+            );
+        }
+    );
+
+    $("jsonWeatherlinkCondiciones").textContent=
+        JSON.stringify(
+            datos,
+            null,
+            2
+        );
+
+    $("panelWeatherlinkCondiciones").classList.remove(
+        "oculto"
+    );
 }
+
+
 async function consultarEstacionesWeatherlink(){
-    const boton=$("botonWeatherlinkEstaciones");
-    const estado=$("estadoWeatherlink");
+    const boton=
+        $("botonWeatherlinkEstaciones");
+
+    const estado=
+        $("estadoWeatherlink");
+
     boton.disabled=true;
-    mostrarEstado(estado,"Consultando WeatherLink...","info");
+
+    mostrarEstado(
+        estado,
+        "Consultando WeatherLink...",
+        "info"
+    );
+
     try{
-        const datos=await peticionJson(RUTA_WEATHERLINK+"/estaciones");
-        const estacionesProveedor=datos.weatherlink?.stations||[];
-        const cuerpo=$("tablaWeatherlinkEstaciones");
+        const datos=
+            await peticionJson(
+                RUTA_WEATHERLINK
+                +"/estaciones"
+            );
+
+        const estacionesProveedor=
+            datos.weatherlink?.stations
+            ||[];
+
+        const cuerpo=
+            $("tablaWeatherlinkEstaciones");
+
         cuerpo.replaceChildren();
-        estacionesProveedor.forEach(estacion=>{
-            const fila=document.createElement("tr");
-            [estacion.station_id,estacion.station_name,estacion.time_zone,estacion.private].forEach(valor=>{
-                const celda=document.createElement("td");
-                celda.textContent=formatearValor(valor);
-                fila.appendChild(celda);
-            });
-            const celdaAccion=document.createElement("td");
-            const botonUsar=document.createElement("button");
-            botonUsar.type="button";
-            botonUsar.className="boton boton-secundario";
-            botonUsar.textContent="Usar";
-            botonUsar.addEventListener("click",()=>{
-                $("weatherlinkStationId").value=estacion.station_id;
-                consultarCondicionesWeatherlink();
-            });
-            celdaAccion.appendChild(botonUsar);
-            fila.appendChild(celdaAccion);
-            cuerpo.appendChild(fila);
-        });
-        $("jsonWeatherlinkEstaciones").textContent=JSON.stringify(datos,null,2);
-        $("panelWeatherlinkEstaciones").classList.remove("oculto");
-        mostrarEstado(estado,"Estaciones devueltas: "+estacionesProveedor.length+".","ok");
+
+        estacionesProveedor.forEach(
+            estacion=>{
+                const fila=
+                    document.createElement(
+                        "tr"
+                    );
+
+                [
+                    estacion.station_id,
+                    estacion.station_name,
+                    estacion.time_zone,
+                    estacion.private
+                ].forEach(
+                    valor=>{
+                        const celda=
+                            document.createElement(
+                                "td"
+                            );
+
+                        celda.textContent=
+                            formatearValor(
+                                valor
+                            );
+
+                        fila.appendChild(
+                            celda
+                        );
+                    }
+                );
+
+                const celdaAccion=
+                    document.createElement(
+                        "td"
+                    );
+
+                const botonUsar=
+                    document.createElement(
+                        "button"
+                    );
+
+                botonUsar.type=
+                    "button";
+
+                botonUsar.className=
+                    "boton boton-secundario";
+
+                botonUsar.textContent=
+                    "Usar";
+
+                botonUsar.addEventListener(
+                    "click",
+                    ()=>{
+                        $("weatherlinkStationId").value=
+                            estacion.station_id;
+
+                        consultarCondicionesWeatherlink();
+                    }
+                );
+
+                celdaAccion.appendChild(
+                    botonUsar
+                );
+
+                fila.appendChild(
+                    celdaAccion
+                );
+
+                cuerpo.appendChild(
+                    fila
+                );
+            }
+        );
+
+        $("jsonWeatherlinkEstaciones").textContent=
+            JSON.stringify(
+                datos,
+                null,
+                2
+            );
+
+        $("panelWeatherlinkEstaciones").classList.remove(
+            "oculto"
+        );
+
+        mostrarEstado(
+            estado,
+            "Estaciones devueltas: "
+            +estacionesProveedor.length
+            +".",
+            "ok"
+        );
+
     }catch(error){
-        mostrarEstado(estado,error.message,"error");
+
+        mostrarEstado(
+            estado,
+            error.message,
+            "error"
+        );
+
     }finally{
+
         boton.disabled=false;
     }
 }
+
+
 function obtenerWeatherlinkStationId(){
-    const valor=$("weatherlinkStationId").value.trim();
-    if(!valor)throw new Error("Introduce un station_id.");
+    const valor=
+        $("weatherlinkStationId")
+            .value
+            .trim();
+
+    if(
+        !valor
+    ){
+        throw new Error(
+            "Introduce un station_id."
+        );
+    }
+
     return valor;
 }
+
+
 async function consultarCondicionesWeatherlink(){
-    const estado=$("estadoWeatherlinkEstacion");
-    const boton=$("botonWeatherlinkCondiciones");
+    const estado=
+        $("estadoWeatherlinkEstacion");
+
+    const boton=
+        $("botonWeatherlinkCondiciones");
+
     boton.disabled=true;
+
     try{
-        const stationId=obtenerWeatherlinkStationId();
-        mostrarEstado(estado,"Consultando condiciones...","info");
-        const datos=await peticionJson(RUTA_WEATHERLINK+"/condiciones/"+encodeURIComponent(stationId));
-        renderizarCondicionesWeatherlink(datos);
-        mostrarEstado(estado,"Condiciones obtenidas correctamente.","ok");
+        const stationId=
+            obtenerWeatherlinkStationId();
+
+        mostrarEstado(
+            estado,
+            "Consultando condiciones...",
+            "info"
+        );
+
+        const datos=
+            await peticionJson(
+                RUTA_WEATHERLINK
+                +"/condiciones/"
+                +encodeURIComponent(
+                    stationId
+                )
+            );
+
+        renderizarCondicionesWeatherlink(
+            datos
+        );
+
+        mostrarEstado(
+            estado,
+            "Condiciones obtenidas correctamente.",
+            "ok"
+        );
+
     }catch(error){
-        mostrarEstado(estado,error.message,"error");
+
+        mostrarEstado(
+            estado,
+            error.message,
+            "error"
+        );
+
     }finally{
+
         boton.disabled=false;
     }
 }
+
+
 async function consultarHistoricoWeatherlink(){
-    const estado=$("estadoWeatherlinkEstacion");
-    const boton=$("botonWeatherlinkHistorico");
+    const estado=
+        $("estadoWeatherlinkEstacion");
+
+    const boton=
+        $("botonWeatherlinkHistorico");
+
     boton.disabled=true;
+
     try{
-        const stationId=obtenerWeatherlinkStationId();
-        mostrarEstado(estado,"Consultando histórico...","info");
-        const datos=await peticionJson(RUTA_WEATHERLINK+"/historico/"+encodeURIComponent(stationId));
-        historicoWeatherlinkActual=datos;
-        const sensores=datos.weatherlink?.sensors||[];
-        const totalRegistros=sensores.reduce((total,sensor)=>total+(sensor.data?.length||0),0);
+        const stationId=
+            obtenerWeatherlinkStationId();
+
+        mostrarEstado(
+            estado,
+            "Consultando histórico...",
+            "info"
+        );
+
+        const datos=
+            await peticionJson(
+                RUTA_WEATHERLINK
+                +"/historico/"
+                +encodeURIComponent(
+                    stationId
+                )
+            );
+
+        historicoWeatherlinkActual=
+            datos;
+
+        const sensores=
+            datos.weatherlink?.sensors
+            ||[];
+
+        const totalRegistros=
+            sensores.reduce(
+                (
+                    total,
+                    sensor
+                )=>
+                    total
+                    +(
+                        sensor.data?.length
+                        ||0
+                    ),
+                0
+            );
+
         $("resumenWeatherlinkHistorico").textContent=
-            "station_id "+datos.station_id+
-            " · sensores "+sensores.length+
-            " · registros "+totalRegistros+
-            " · ventana Unix "+datos.start_timestamp+" → "+datos.end_timestamp;
-        $("jsonWeatherlinkHistorico").textContent=JSON.stringify(datos,null,2);
-        $("panelWeatherlinkHistorico").classList.remove("oculto");
-        mostrarEstado(estado,"Histórico de 24 horas obtenido correctamente.","ok");
+            "station_id "
+            +datos.station_id
+            +" · sensores "
+            +sensores.length
+            +" · registros "
+            +totalRegistros
+            +" · ventana Unix "
+            +datos.start_timestamp
+            +" → "
+            +datos.end_timestamp;
+
+        $("jsonWeatherlinkHistorico").textContent=
+            JSON.stringify(
+                datos,
+                null,
+                2
+            );
+
+        $("panelWeatherlinkHistorico").classList.remove(
+            "oculto"
+        );
+
+        mostrarEstado(
+            estado,
+            "Histórico de 24 horas obtenido correctamente.",
+            "ok"
+        );
+
     }catch(error){
-        historicoWeatherlinkActual=null;
-        mostrarEstado(estado,error.message,"error");
+
+        historicoWeatherlinkActual=
+            null;
+
+        mostrarEstado(
+            estado,
+            error.message,
+            "error"
+        );
+
     }finally{
+
         boton.disabled=false;
     }
 }
+
+
 function descargarHistoricoWeatherlink(){
-    const estado=$("estadoWeatherlinkEstacion");
-    if(!historicoWeatherlinkActual){
-        mostrarEstado(estado,"Primero consulta el histórico.","error");
+    const estado=
+        $("estadoWeatherlinkEstacion");
+
+    if(
+        !historicoWeatherlinkActual
+    ){
+        mostrarEstado(
+            estado,
+            "Primero consulta el histórico.",
+            "error"
+        );
+
         return;
     }
-    const blob=new Blob(
-        [JSON.stringify(historicoWeatherlinkActual,null,2)],
-        {type:"application/json;charset=utf-8"}
+
+    const blob=
+        new Blob(
+            [
+                JSON.stringify(
+                    historicoWeatherlinkActual,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:
+                    "application/json;charset=utf-8"
+            }
+        );
+
+    const url=
+        URL.createObjectURL(
+            blob
+        );
+
+    const enlace=
+        document.createElement(
+            "a"
+        );
+
+    enlace.href=
+        url;
+
+    enlace.download=
+        "weatherlink_historico_"
+        +(
+            historicoWeatherlinkActual.station_id
+            ??"estacion"
+        )
+        +".json";
+
+    document.body.appendChild(
+        enlace
     );
-    const url=URL.createObjectURL(blob);
-    const enlace=document.createElement("a");
-    enlace.href=url;
-    enlace.download="weatherlink_historico_"+(historicoWeatherlinkActual.station_id??"estacion")+".json";
-    document.body.appendChild(enlace);
+
     enlace.click();
+
     enlace.remove();
-    URL.revokeObjectURL(url);
+
+    URL.revokeObjectURL(
+        url
+    );
 }
+
+
 function limpiarEumetsat(){
-    const imagen=$("imagenEumetsat");
-    if(imagen){
+    const imagen=
+        $("imagenEumetsat");
+
+    if(
+        imagen
+    ){
         imagen.hidden=true;
-        imagen.removeAttribute("src");
+
+        imagen.removeAttribute(
+            "src"
+        );
     }
-    if(urlImagenEumetsat){
-        URL.revokeObjectURL(urlImagenEumetsat);
+
+    if(
+        urlImagenEumetsat
+    ){
+        URL.revokeObjectURL(
+            urlImagenEumetsat
+        );
+
         urlImagenEumetsat=null;
     }
-    if($("metaEumetsat"))$("metaEumetsat").textContent="Todavía no se ha realizado ninguna consulta.";
-    if($("estadoEumetsat"))mostrarEstado($("estadoEumetsat"),"");
-}
-async function cargarEumetsat(){
-    const boton=$("botonEumetsatCargar");
-    const estado=$("estadoEumetsat");
-    const selector=$("eumetsatZona");
-    const zona=selector.value;
-    const nombreZona=selector.options[selector.selectedIndex]?.textContent.trim()||zona;
-    boton.disabled=true;
-    mostrarEstado(estado,"Consultando EUMETView...","info");
-    try{
-        const respuesta=await fetch(
-            URL_API+RUTA_EUMETSAT+"/imagen?zona="+encodeURIComponent(zona),
-            {method:"GET",cache:"no-store"}
-        );
-        await comprobarRespuesta(respuesta);
-        const blob=await respuesta.blob();
-        if(urlImagenEumetsat)URL.revokeObjectURL(urlImagenEumetsat);
-        urlImagenEumetsat=URL.createObjectURL(blob);
-        const imagen=$("imagenEumetsat");
-        imagen.src=urlImagenEumetsat;
-        imagen.hidden=false;
-        const timestamp=respuesta.headers.get("X-MeteoArchidona-Eumetsat-Tiempo");
-        const bbox=respuesta.headers.get("X-MeteoArchidona-Eumetsat-Bbox");
-        const dimensiones=respuesta.headers.get("X-MeteoArchidona-Eumetsat-Dimensiones");
+
+    if(
+        $("metaEumetsat")
+    ){
         $("metaEumetsat").textContent=
-            "Zona: "+nombreZona+
-            " · timestamp: "+(timestamp||"no expuesto por CORS")+
-            " · BBOX: "+(bbox||"no expuesto por CORS")+
-            " · dimensiones: "+(dimensiones||"no expuestas por CORS")+
-            " · "+blob.size+" bytes";
-        mostrarEstado(estado,"PNG LI AFA obtenido correctamente.","ok");
+            "Todavía no se ha realizado ninguna consulta.";
+    }
+
+    if(
+        $("estadoEumetsat")
+    ){
+        mostrarEstado(
+            $("estadoEumetsat"),
+            ""
+        );
+    }
+}
+
+
+async function cargarEumetsat(){
+    const boton=
+        $("botonEumetsatCargar");
+
+    const estado=
+        $("estadoEumetsat");
+
+    const selector=
+        $("eumetsatZona");
+
+    const zona=
+        selector.value;
+
+    const nombreZona=
+        selector.options[
+            selector.selectedIndex
+        ]?.textContent.trim()
+        ||zona;
+
+    boton.disabled=true;
+
+    mostrarEstado(
+        estado,
+        "Consultando EUMETView...",
+        "info"
+    );
+
+    try{
+        const respuesta=
+            await fetch(
+                URL_API
+                +RUTA_EUMETSAT
+                +"/imagen?zona="
+                +encodeURIComponent(
+                    zona
+                ),
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
+            );
+
+        await comprobarRespuesta(
+            respuesta
+        );
+
+        const blob=
+            await respuesta.blob();
+
+        if(
+            urlImagenEumetsat
+        ){
+            URL.revokeObjectURL(
+                urlImagenEumetsat
+            );
+        }
+
+        urlImagenEumetsat=
+            URL.createObjectURL(
+                blob
+            );
+
+        const imagen=
+            $("imagenEumetsat");
+
+        imagen.src=
+            urlImagenEumetsat;
+
+        imagen.hidden=false;
+
+        const timestamp=
+            respuesta.headers.get(
+                "X-MeteoArchidona-Eumetsat-Tiempo"
+            );
+
+        const bbox=
+            respuesta.headers.get(
+                "X-MeteoArchidona-Eumetsat-Bbox"
+            );
+
+        const dimensiones=
+            respuesta.headers.get(
+                "X-MeteoArchidona-Eumetsat-Dimensiones"
+            );
+
+        $("metaEumetsat").textContent=
+            "Zona: "
+            +nombreZona
+            +" · timestamp: "
+            +(
+                timestamp
+                ||"no expuesto por CORS"
+            )
+            +" · BBOX: "
+            +(
+                bbox
+                ||"no expuesto por CORS"
+            )
+            +" · dimensiones: "
+            +(
+                dimensiones
+                ||"no expuestas por CORS"
+            )
+            +" · "
+            +blob.size
+            +" bytes";
+
+        mostrarEstado(
+            estado,
+            "PNG LI AFA obtenido correctamente.",
+            "ok"
+        );
+
     }catch(error){
-        mostrarEstado(estado,error.message,"error");
+
+        mostrarEstado(
+            estado,
+            error.message,
+            "error"
+        );
+
     }finally{
+
         boton.disabled=false;
     }
 }
+
+
 function limpiarSql(){
     $("sqlSentencia").value="";
+
     $("sqlConfirmarDestructiva").checked=false;
-    $("panelResultadoSql").classList.add("oculto");
+
+    $("panelResultadoSql").classList.add(
+        "oculto"
+    );
+
     $("tablaSql").replaceChildren();
+
     $("resumenSql").textContent="";
-    mostrarEstado($("estadoSql"),"");
+
+    mostrarEstado(
+        $("estadoSql"),
+        ""
+    );
 }
+
+
 function ponerEjemploSql(){
-    $("sqlSentencia").value="SELECT *\nFROM estaciones\nORDER BY id;";
+    $("sqlSentencia").value=
+        "SELECT * FROM estaciones\n"
+        +"ORDER BY id;";
 }
-function construirTablaSql(datos){
-    const contenedor=$("tablaSql");
+
+
+function construirTablaSql(
+    datos
+){
+    const contenedor=
+        $("tablaSql");
+
     contenedor.replaceChildren();
-    const columnas=datos.columnas||[];
-    const filas=datos.filas||[];
-    if(!columnas.length)return;
-    const tabla=document.createElement("table");
-    const thead=document.createElement("thead");
-    const trCabecera=document.createElement("tr");
-    columnas.forEach(columna=>{
-        const th=document.createElement("th");
-        th.textContent=columna;
-        trCabecera.appendChild(th);
-    });
-    thead.appendChild(trCabecera);
-    const tbody=document.createElement("tbody");
-    filas.forEach(fila=>{
-        const tr=document.createElement("tr");
-        columnas.forEach(columna=>{
-            const td=document.createElement("td");
-            const valor=fila[columna];
-            td.textContent=valor===null||valor===undefined?"NULL":String(valor);
-            tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-    });
-    tabla.append(thead,tbody);
-    contenedor.appendChild(tabla);
-}
-async function ejecutarSql(){
-    const estado=$("estadoSql");
-    const boton=$("botonSqlEjecutar");
-    const sentencia=$("sqlSentencia").value.trim();
-    if(!sentencia){
-        mostrarEstado(estado,"Introduce una sentencia SQL.","error");
+
+    const columnas=
+        datos.columnas
+        ||[];
+
+    const filas=
+        datos.filas
+        ||[];
+
+    if(
+        !columnas.length
+    ){
         return;
     }
-    const formulario=new FormData();
-    formulario.append("sentencia",sentencia);
-    formulario.append("confirmar_destructiva",$("sqlConfirmarDestructiva").checked?"true":"false");
-    boton.disabled=true;
-    mostrarEstado(estado,"Ejecutando SQL...","info");
-    try{
-        const datos=await peticionJson(
-            RUTA_SQL+"/ejecutar",
-            {method:"POST",body:formulario}
+
+    const tabla=
+        document.createElement(
+            "table"
         );
-        let resumen="Tipo: "+datos.tipo;
-        if(datos.devuelve_filas){
-            resumen+=" · filas devueltas: "+datos.numero_filas;
-            if(datos.filas_truncadas)resumen+=" · resultado truncado";
-        }else if(datos.filas_afectadas!==null&&datos.filas_afectadas!==undefined){
-            resumen+=" · filas afectadas: "+datos.filas_afectadas;
+
+    const thead=
+        document.createElement(
+            "thead"
+        );
+
+    const trCabecera=
+        document.createElement(
+            "tr"
+        );
+
+    columnas.forEach(
+        columna=>{
+            const th=
+                document.createElement(
+                    "th"
+                );
+
+            th.textContent=
+                columna;
+
+            trCabecera.appendChild(
+                th
+            );
         }
-        $("resumenSql").textContent=resumen;
-        construirTablaSql(datos);
-        $("panelResultadoSql").classList.remove("oculto");
-        mostrarEstado(estado,"Sentencia ejecutada correctamente.","ok");
-    }catch(error){
-        mostrarEstado(estado,error.message,"error");
-    }finally{
-        boton.disabled=false;
-    }
+    );
+
+    thead.appendChild(
+        trCabecera
+    );
+
+    const tbody=
+        document.createElement(
+            "tbody"
+        );
+
+    filas.forEach(
+        fila=>{
+            const tr=
+                document.createElement(
+                    "tr"
+                );
+
+            columnas.forEach(
+                columna=>{
+                    const td=
+                        document.createElement(
+                            "td"
+                        );
+
+                    const valor=
+                        fila[columna];
+
+                    td.textContent=
+                        valor===null
+                        ||valor===undefined
+                            ?"NULL"
+                            :String(
+                                valor
+                            );
+
+                    tr.appendChild(
+                        td
+                    );
+                }
+            );
+
+            tbody.appendChild(
+                tr
+            );
+        }
+    );
+
+    tabla.append(
+        thead,
+        tbody
+    );
+
+    contenedor.appendChild(
+        tabla
+    );
 }
-async function exportarSql(){
-    const estado=$("estadoSql");
-    const boton=$("botonSqlExportar");
-    const sentencia=$("sqlSentencia").value.trim();
-    if(!sentencia){
-        mostrarEstado(estado,"Introduce una consulta SQL.","error");
+
+
+async function ejecutarSql(){
+    const estado=
+        $("estadoSql");
+
+    const boton=
+        $("botonSqlEjecutar");
+
+    const sentencia=
+        $("sqlSentencia")
+            .value
+            .trim();
+
+    if(
+        !sentencia
+    ){
+        mostrarEstado(
+            estado,
+            "Introduce una sentencia SQL.",
+            "error"
+        );
+
         return;
     }
-    const formulario=new FormData();
-    formulario.append("sentencia",sentencia);
+
+    const formulario=
+        new FormData();
+
+    formulario.append(
+        "sentencia",
+        sentencia
+    );
+
+    formulario.append(
+        "confirmar_destructiva",
+        $("sqlConfirmarDestructiva").checked
+            ?"true"
+            :"false"
+    );
+
     boton.disabled=true;
-    mostrarEstado(estado,"Generando CSV...","info");
+
+    mostrarEstado(
+        estado,
+        "Ejecutando SQL...",
+        "info"
+    );
+
     try{
-        const respuesta=await peticionAdministrativa(
-            RUTA_SQL+"/exportar",
-            {method:"POST",body:formulario}
+        const datos=
+            await peticionJson(
+                RUTA_SQL
+                +"/ejecutar",
+                {
+                    method:"POST",
+                    body:formulario
+                }
+            );
+
+        let resumen=
+            "Tipo: "
+            +datos.tipo;
+
+        if(
+            datos.devuelve_filas
+        ){
+            resumen+=
+                " · filas devueltas: "
+                +datos.numero_filas;
+
+            if(
+                datos.filas_truncadas
+            ){
+                resumen+=
+                    " · resultado truncado";
+            }
+
+        }else if(
+            datos.filas_afectadas!==null
+            &&datos.filas_afectadas!==undefined
+        ){
+            resumen+=
+                " · filas afectadas: "
+                +datos.filas_afectadas;
+        }
+
+        $("resumenSql").textContent=
+            resumen;
+
+        construirTablaSql(
+            datos
         );
-        const blob=await respuesta.blob();
-        const url=URL.createObjectURL(blob);
-        const enlace=document.createElement("a");
-        enlace.href=url;
-        enlace.download="resultado_sql.csv";
-        document.body.appendChild(enlace);
-        enlace.click();
-        enlace.remove();
-        URL.revokeObjectURL(url);
-        mostrarEstado(estado,"CSV generado correctamente.","ok");
+
+        $("panelResultadoSql").classList.remove(
+            "oculto"
+        );
+
+        mostrarEstado(
+            estado,
+            "Sentencia ejecutada correctamente.",
+            "ok"
+        );
+
     }catch(error){
-        mostrarEstado(estado,error.message,"error");
+
+        mostrarEstado(
+            estado,
+            error.message,
+            "error"
+        );
+
     }finally{
+
         boton.disabled=false;
     }
 }
 
-document.querySelectorAll("[data-numero]").forEach(boton=>{
-    boton.addEventListener("click",()=>agregarNumero(boton.dataset.numero));
-});
-botonBorrar.addEventListener("click",borrarUltimaCifra);
-botonLimpiar.addEventListener("click",limpiarPin);
-botonAcceder.addEventListener("click",solicitarAcceso);
-botonCerrarSesion.addEventListener("click",()=>cerrarSesion());
-botonCerrarSesionCabecera.addEventListener("click",()=>cerrarSesion());
-botonActualizar.addEventListener("click",cargarDatosAdministracion);
 
-$("botonNuevaEstacion").addEventListener("click",()=>{
-    limpiarFormulario();
-    activarModulo("estaciones");
-});
-$("botonCancelar").addEventListener("click",limpiarFormulario);
-formularioEstacion.addEventListener("submit",guardarEstacion);
+async function exportarSql(){
+    const estado=
+        $("estadoSql");
 
-[filtroTexto,filtroEstado,filtroProveedor].forEach(control=>{
-    control.addEventListener("input",renderizarEstaciones);
-    control.addEventListener("change",renderizarEstaciones);
-});
+    const boton=
+        $("botonSqlExportar");
 
-document.querySelectorAll(".modulo-boton").forEach(boton=>{
-    boton.addEventListener("click",()=>activarModulo(boton.dataset.modulo));
-});
-document.querySelectorAll("[data-ir-modulo]").forEach(boton=>{
-    boton.addEventListener("click",()=>activarModulo(boton.dataset.irModulo));
-});
+    const sentencia=
+        $("sqlSentencia")
+            .value
+            .trim();
 
-$("botonWeatherlinkEstaciones").addEventListener("click",consultarEstacionesWeatherlink);
-$("botonWeatherlinkCondiciones").addEventListener("click",consultarCondicionesWeatherlink);
-$("botonWeatherlinkHistorico").addEventListener("click",consultarHistoricoWeatherlink);
-$("botonDescargarHistorico").addEventListener("click",descargarHistoricoWeatherlink);
-$("botonEumetsatCargar").addEventListener("click",cargarEumetsat);
-$("botonEumetsatLimpiar").addEventListener("click",limpiarEumetsat);
-$("botonSqlEjecutar").addEventListener("click",ejecutarSql);
-$("botonSqlExportar").addEventListener("click",exportarSql);
-$("botonSqlEjemplo").addEventListener("click",ponerEjemploSql);
-$("botonSqlLimpiar").addEventListener("click",limpiarSql);
+    if(
+        !sentencia
+    ){
+        mostrarEstado(
+            estado,
+            "Introduce una consulta SQL.",
+            "error"
+        );
 
-if(sesionEsValida()){
+        return;
+    }
+
+    const formulario=
+        new FormData();
+
+    formulario.append(
+        "sentencia",
+        sentencia
+    );
+
+    boton.disabled=true;
+
+    mostrarEstado(
+        estado,
+        "Generando CSV...",
+        "info"
+    );
+
+    try{
+        const respuesta=
+            await peticionAdministrativa(
+                RUTA_SQL
+                +"/exportar",
+                {
+                    method:"POST",
+                    body:formulario
+                }
+            );
+
+        const blob=
+            await respuesta.blob();
+
+        const url=
+            URL.createObjectURL(
+                blob
+            );
+
+        const enlace=
+            document.createElement(
+                "a"
+            );
+
+        enlace.href=
+            url;
+
+        enlace.download=
+            "resultado_sql.csv";
+
+        document.body.appendChild(
+            enlace
+        );
+
+        enlace.click();
+
+        enlace.remove();
+
+        URL.revokeObjectURL(
+            url
+        );
+
+        mostrarEstado(
+            estado,
+            "CSV generado correctamente.",
+            "ok"
+        );
+
+    }catch(error){
+
+        mostrarEstado(
+            estado,
+            error.message,
+            "error"
+        );
+
+    }finally{
+
+        boton.disabled=false;
+    }
+}
+
+
+document.querySelectorAll(
+    "[data-numero]"
+).forEach(
+    boton=>{
+        boton.addEventListener(
+            "click",
+            ()=>{
+                agregarNumero(
+                    boton.dataset.numero
+                );
+            }
+        );
+    }
+);
+
+
+botonBorrar.addEventListener(
+    "click",
+    borrarUltimaCifra
+);
+
+
+botonLimpiar.addEventListener(
+    "click",
+    limpiarPin
+);
+
+
+botonCerrarSesion.addEventListener(
+    "click",
+    ()=>{
+        cerrarSesion();
+    }
+);
+
+
+botonCerrarSesionCabecera.addEventListener(
+    "click",
+    ()=>{
+        cerrarSesion();
+    }
+);
+
+
+botonActualizar.addEventListener(
+    "click",
+    cargarDatosAdministracion
+);
+
+
+$("botonNuevaEstacion").addEventListener(
+    "click",
+    ()=>{
+        limpiarFormulario();
+
+        activarModulo(
+            "estaciones"
+        );
+
+        requestAnimationFrame(
+            ()=>{
+                panelFormularioEstacion.scrollIntoView(
+                    {
+                        behavior:"smooth",
+                        block:"start"
+                    }
+                );
+            }
+        );
+    }
+);
+
+
+$("botonCancelar").addEventListener(
+    "click",
+    limpiarFormulario
+);
+
+
+formularioEstacion.addEventListener(
+    "submit",
+    guardarEstacion
+);
+
+
+[
+    filtroTexto,
+    filtroEstado,
+    filtroProveedor
+].forEach(
+    control=>{
+        control.addEventListener(
+            "input",
+            renderizarEstaciones
+        );
+
+        control.addEventListener(
+            "change",
+            renderizarEstaciones
+        );
+    }
+);
+
+
+document.querySelectorAll(
+    ".modulo-boton"
+).forEach(
+    boton=>{
+        boton.addEventListener(
+            "click",
+            ()=>{
+                activarModulo(
+                    boton.dataset.modulo
+                );
+            }
+        );
+    }
+);
+
+
+document.querySelectorAll(
+    "[data-ir-modulo]"
+).forEach(
+    boton=>{
+        boton.addEventListener(
+            "click",
+            ()=>{
+                activarModulo(
+                    boton.dataset.irModulo
+                );
+            }
+        );
+    }
+);
+
+
+$("botonWeatherlinkEstaciones").addEventListener(
+    "click",
+    consultarEstacionesWeatherlink
+);
+
+$("botonWeatherlinkCondiciones").addEventListener(
+    "click",
+    consultarCondicionesWeatherlink
+);
+
+$("botonWeatherlinkHistorico").addEventListener(
+    "click",
+    consultarHistoricoWeatherlink
+);
+
+$("botonDescargarHistorico").addEventListener(
+    "click",
+    descargarHistoricoWeatherlink
+);
+
+$("botonEumetsatCargar").addEventListener(
+    "click",
+    cargarEumetsat
+);
+
+$("botonEumetsatLimpiar").addEventListener(
+    "click",
+    limpiarEumetsat
+);
+
+$("botonSqlEjecutar").addEventListener(
+    "click",
+    ejecutarSql
+);
+
+$("botonSqlExportar").addEventListener(
+    "click",
+    exportarSql
+);
+
+$("botonSqlEjemplo").addEventListener(
+    "click",
+    ponerEjemploSql
+);
+
+$("botonSqlLimpiar").addEventListener(
+    "click",
+    limpiarSql
+);
+
+
+if(
+    sesionEsValida()
+){
     abrirPanelAdministracion();
+
     cargarDatosAdministracion();
-    activarModulo("resumen");
+
+    activarModulo(
+        "resumen"
+    );
+
 }else{
     eliminarSesion();
+
     mostrarPantallaAcceso();
 }
 </script>
