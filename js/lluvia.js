@@ -7,13 +7,23 @@
  * Muy fuerte y vuelta a empezar) y una pulsación larga la apaga. Con
  * teclado, Intro sube y Escape apaga.
  *
- * Actualidad tiene su propio motor en js/actualidad.js, que además
- * responde a la lluvia real y al viento de cada estación. Este fichero
- * es para el resto de páginas, que no tienen datos: solo hace la lluvia
- * de prueba, cayendo recta, con las mismas gotas, niveles y gestos que
- * Actualidad. Actualidad no lo carga.
+ * Este fichero se carga en todas las páginas y trabaja de dos formas:
  *
- * Los estilos están en css/lluvia.css.
+ * - En Actualidad solo RECUERDA. Allí manda su propio motor
+ *   (js/actualidad.js), que además responde a la lluvia real y al
+ *   viento de cada estación. Aquí solo se restaura el nivel guardado
+ *   usando su mando, y se guarda cada cambio mirando el cartel
+ *   "Prueba ..." del logotipo. Su código no se toca.
+ *
+ * - En el resto de páginas, que no tienen datos, hace la lluvia
+ *   entera: las mismas gotas, niveles y gestos que Actualidad, cayendo
+ *   recta. Los estilos están en css/lluvia.css.
+ *
+ * El nivel se guarda en sessionStorage para que la lluvia siga al
+ * cambiar de página. Se borra solo al cerrar la pestaña, y no es un
+ * dato personal: es una preferencia que pide el propio usuario al tocar
+ * el logotipo. Si el navegador no deja guardar (modo privado de algunos
+ * navegadores), la lluvia funciona igual, solo que sin recordar.
  */
 
 (function () {
@@ -21,13 +31,7 @@
 "use strict";
 
 
-// Por si algún día se carga en Actualidad: allí manda su propio motor.
-if (typeof window.avanzarSimulacion === "function") {
-
-    return;
-
-}
-
+const CLAVE_NIVEL = "meteoarchidona:lluvia-prueba";
 
 const NOMBRES_NIVEL = {
     1: "Débil",
@@ -35,6 +39,128 @@ const NOMBRES_NIVEL = {
     3: "Fuerte",
     4: "Muy fuerte"
 };
+
+
+/* ==========================================================
+   RECUERDO DEL NIVEL
+   ========================================================== */
+
+
+function leerNivelGuardado() {
+
+    try {
+
+        const valor = Number(window.sessionStorage.getItem(CLAVE_NIVEL));
+
+        return Number.isInteger(valor) && valor >= 0 && valor <= 4 ? valor : 0;
+
+    } catch (error) {
+
+        return 0;
+
+    }
+
+}
+
+
+function guardarNivel(nivel) {
+
+    try {
+
+        if (nivel > 0) {
+
+            window.sessionStorage.setItem(CLAVE_NIVEL, String(nivel));
+
+        } else {
+
+            window.sessionStorage.removeItem(CLAVE_NIVEL);
+
+        }
+
+    } catch (error) {
+
+        // Sin almacenamiento disponible: se sigue sin recordar.
+
+    }
+
+}
+
+
+/*
+ * Espera a que la cabecera esté montada, que es cuando existen el
+ * logotipo y su cartel. Si ya lo está, sigue directamente.
+ */
+function cuandoHayaCabecera(accion) {
+
+    if (document.querySelector('[data-lluvia-control="GLOBAL"]')) {
+
+        accion();
+
+    } else {
+
+        document.addEventListener("cabecera:montada", accion, { once: true });
+
+    }
+
+}
+
+
+/* ==========================================================
+   ACTUALIDAD: SOLO RECORDAR
+   ========================================================== */
+
+
+if (typeof window.avanzarSimulacion === "function") {
+
+    cuandoHayaCabecera(() => {
+
+        /*
+         * Restaurar con su propio mando: avanzarSimulacion sube un nivel
+         * cada vez, empezando en 1. Si las gotas aún no existen, su motor
+         * las crea al cargar el catálogo y respeta el nivel ya puesto.
+         */
+        const guardado = leerNivelGuardado();
+
+        for (let i = 0; i < guardado; i += 1) {
+
+            window.avanzarSimulacion("GLOBAL");
+
+        }
+
+
+        // Y guardar lo que diga el cartel cada vez que cambie.
+        const cartel = document.getElementById("simulacion-GLOBAL");
+
+        if (!cartel) {
+
+            return;
+
+        }
+
+        const nivelDelCartel = () => {
+
+            const texto = cartel.textContent.replace(/^Prueba\s+/, "").trim();
+
+            const encontrado = Object.keys(NOMBRES_NIVEL).find((n) => NOMBRES_NIVEL[n] === texto);
+
+            return encontrado ? Number(encontrado) : 0;
+
+        };
+
+        new MutationObserver(() => guardarNivel(nivelDelCartel()))
+            .observe(cartel, { childList: true, characterData: true, subtree: true });
+
+    });
+
+    return;
+
+}
+
+
+/* ==========================================================
+   RESTO DE PÁGINAS: LLUVIA COMPLETA
+   ========================================================== */
+
 
 const TOTAL_GOTAS = 160;
 
@@ -61,11 +187,6 @@ let capaLluvia = null;
 let capaCristal = null;
 
 let temporizadorCristal = null;
-
-
-/* ==========================================================
-   CAPAS
-   ========================================================== */
 
 
 function crearCapas() {
@@ -118,11 +239,6 @@ function ajustarRecorrido() {
     capaLluvia.style.setProperty("--angulo-gota", "0deg");
 
 }
-
-
-/* ==========================================================
-   GOTAS SOBRE EL CRISTAL
-   ========================================================== */
 
 
 function crearGotaCristal() {
@@ -187,14 +303,17 @@ function turnoCristal() {
 }
 
 
-/* ==========================================================
-   NIVEL
-   ========================================================== */
-
-
 function aplicarNivel() {
 
+    guardarNivel(nivel);
+
     if (!capaLluvia) {
+
+        if (nivel === 0) {
+
+            return;
+
+        }
 
         crearCapas();
 
@@ -257,11 +376,6 @@ function apagar() {
     aplicarNivel();
 
 }
-
-
-/* ==========================================================
-   MANDO: EL LOGOTIPO
-   ========================================================== */
 
 
 /*
@@ -407,22 +521,22 @@ function conectarMando() {
 
     });
 
-}
 
+    // Si se venía de otra página con lluvia, seguir con ella.
+    const guardado = leerNivelGuardado();
 
-/*
- * El logotipo llega con la cabecera, que js/cabecera.js monta después.
- * Si ya estuviera, se conecta directamente.
- */
-if (document.querySelector('[data-lluvia-control="GLOBAL"]')) {
+    if (guardado > 0) {
 
-    conectarMando();
+        nivel = guardado;
 
-} else {
+        aplicarNivel();
 
-    document.addEventListener("cabecera:montada", conectarMando, { once: true });
+    }
 
 }
+
+
+cuandoHayaCabecera(conectarMando);
 
 })();
 
