@@ -67,6 +67,13 @@ button {
 
 
 .cabecera {
+    /*
+     * La cabecera fija su propia letra en vez de heredarla del <body>:
+     * alguna página cambia la del body (Observaciones usa Arial) y la
+     * cabecera común tiene que verse igual en todas.
+     */
+    font-family: "Sora", sans-serif;
+
     position: sticky;
     top: 0;
     z-index: 100;

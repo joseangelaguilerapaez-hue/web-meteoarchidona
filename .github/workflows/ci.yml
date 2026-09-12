@@ -225,6 +225,14 @@ jobs:
           )
           PY
 
+      - name: Pruebas de la web
+        shell: bash
+        run: |
+          # tests/: reglas de estructura del sitio y direcciones de
+          # servidor.py. Solo biblioteca estándar de Python, sin
+          # instalar nada ni salir a internet.
+          python -m unittest discover -s tests -v
+
       - name: Confirmar validación
         run: |
           echo "Web MeteoArchidona validada correctamente."

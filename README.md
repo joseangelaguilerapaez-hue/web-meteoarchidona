@@ -94,11 +94,27 @@ sitio: `/api` en local, la API en Render en producción.
 ## Qué se comprueba solo
 
 `.github/workflows/ci.yml` valida en cada empujón la sintaxis de todo el
-JavaScript, el del repositorio y el que hubiera dentro de un HTML, y que
-no entren espacios en blanco al final de línea.
+JavaScript y del JSON, que no entren espacios en blanco al final de
+línea, y ejecuta las pruebas de `tests/`:
 
-Lo que **no** hay todavía: pruebas de verdad. Están pendientes, junto
-con el Service Worker para que el sitio abra sin conexión.
+```bash
+python -m unittest discover -s tests -v
+```
+
+Solo necesitan Python; no instalan nada ni salen a internet.
+
+- **`tests/test_estructura.py`** vigila las reglas de esta página: que
+  cada sección esté dada de alta en `.htaccess`, `servidor.py`, la
+  cabecera y el `sitemap.xml`; que cada página cargue fuentes, paleta y
+  cabecera en ese orden, con su lluvia y su pie donde tocan; que no haya
+  CSS ni JS dentro del HTML ni nada pedido a Google Fonts o a un CDN; y
+  que todo lo enlazado exista y lleve `?v=`.
+- **`tests/test_servidor.py`** arranca `servidor.py` y comprueba que las
+  direcciones limpias sirven su página, las viejas redirigen con 301,
+  las carpetas no se listan y no se cachea nada.
+
+Lo que **no** cubren: el código de cada página (Actualidad, En vivo,
+Administración...) ni cómo se ve. Eso sigue probándose en el navegador.
 
 ## Al desplegar
 
