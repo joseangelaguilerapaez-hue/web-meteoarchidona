@@ -128,6 +128,117 @@ function recogerControlesDePagina() {
 }
 
 
+/* ==========================================================
+   MENÚ DESPLEGABLE (MÓVIL)
+   ========================================================== */
+
+
+/*
+ * En pantallas de hasta 850 px el menú se esconde tras un botón para
+ * que la cabecera no se coma media pantalla. Aquí solo se cambia la
+ * clase .menu-abierto y el aria-expanded; lo que se ve lo decide
+ * css/cabecera.css, así que en escritorio el botón ni aparece.
+ */
+
+const ANCHO_MENU_MOVIL = 850;
+
+
+function configurarMenu() {
+
+    const cabecera = document.querySelector(".cabecera");
+
+    const boton = document.querySelector(".boton-menu");
+
+    const menu = document.getElementById("navegacion-principal");
+
+
+    if (!cabecera || !boton || !menu) {
+
+        return;
+
+    }
+
+
+    function abrir(abierto) {
+
+        cabecera.classList.toggle("menu-abierto", abierto);
+
+        boton.setAttribute("aria-expanded", String(abierto));
+
+        boton.setAttribute(
+            "aria-label",
+            abierto ? "Cerrar menú" : "Abrir menú"
+        );
+
+    }
+
+
+    boton.addEventListener("click", () => {
+
+        abrir(!cabecera.classList.contains("menu-abierto"));
+
+    });
+
+
+    // Al elegir una sección se navega; no tiene sentido dejarlo abierto.
+    menu.addEventListener("click", (evento) => {
+
+        if (evento.target.closest("a")) {
+
+            abrir(false);
+
+        }
+
+    });
+
+
+    // Escape lo cierra y devuelve el foco al botón.
+    document.addEventListener("keydown", (evento) => {
+
+        if (
+            evento.key === "Escape"
+            && cabecera.classList.contains("menu-abierto")
+        ) {
+
+            abrir(false);
+
+            boton.focus();
+
+        }
+
+    });
+
+
+    // Tocar fuera de la cabecera también lo cierra.
+    document.addEventListener("click", (evento) => {
+
+        if (
+            cabecera.classList.contains("menu-abierto")
+            && !cabecera.contains(evento.target)
+        ) {
+
+            abrir(false);
+
+        }
+
+    });
+
+
+    // Si se gira el móvil o se ensancha la ventana a escritorio, se
+    // cierra: ahí el menú ya está a la vista y la clase sobra.
+    window.addEventListener("resize", () => {
+
+        if (window.innerWidth > ANCHO_MENU_MOVIL) {
+
+            abrir(false);
+
+        }
+
+    });
+
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -175,6 +286,8 @@ async function montarCabecera() {
 
 
     marcarSeccionActual();
+
+    configurarMenu();
 
     recogerControlesDePagina();
 

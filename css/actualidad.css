@@ -27,6 +27,7 @@ html {
 
 body {
     min-height: 100vh;
+    min-height: 100dvh;
     margin: 0;
     background:
         radial-gradient(
@@ -862,6 +863,8 @@ button {
         inset 0 0 22px
         rgba(59, 158, 255, 0.08);
     --angulo: 0deg;
+
+    -webkit-touch-callout: none;
 }
 
 
@@ -886,8 +889,10 @@ button {
 }
 
 
+@media (hover: hover) {
 .veleta:hover {
     border-color: var(--blue);
+}
 }
 
 
@@ -1232,6 +1237,7 @@ button {
 }
 
 
+@media (hover: hover) {
 .patrocinio-estacion-control:hover {
     background:
         rgba(
@@ -1240,6 +1246,7 @@ button {
             255,
             0.07
         );
+}
 }
 
 
@@ -1466,6 +1473,17 @@ button {
 }
 
 
+/*
+ * "Ver todas →" de la tarjeta de cámaras. Llevaba el color y el tamaño
+ * escritos en el propio HTML, y un style en línea manda sobre
+ * cualquier hoja: en móvil no había forma de agrandarlo.
+ */
+.grafico-enlace {
+    color: var(--blue);
+    font-size: 10px;
+}
+
+
 .leyenda {
     display: flex;
     gap: 14px;
@@ -1647,9 +1665,11 @@ button {
 }
 
 
+@media (hover: hover) {
 .acceso:hover {
     border-color: #315579;
     transform: translateY(-1px);
+}
 }
 
 
@@ -2058,6 +2078,53 @@ button {
 
     .veleta-rotor {
         transition: none;
+    }
+
+}
+
+
+/* ==========================================================
+   MÓVIL: LETRA LEGIBLE
+   ========================================================== */
+
+/*
+ * En 375 px había etiquetas de 7, 8 y 9 px ("Lluvia hoy", "Media 2
+ * min", "km/h", los puntos de la veleta...). Por debajo de 11 px no se
+ * lee en un teléfono, y menos al sol. Va al final para mandar sobre
+ * las reglas anteriores, también las de los @media de 620 px.
+ */
+@media (max-width: 620px) {
+
+    .lluvia-resumen-label,
+    .lluvia-resumen-extra,
+    .viento-secundario,
+    .viento-actual small,
+    .metrica-label,
+    .metrica-secundaria,
+    .veleta-cardinal,
+    .patrocinio-estacion-titulo,
+    .patrocinio-estacion-texto,
+    .acceso-subtitulo,
+    .camara-estado,
+    .camara-nombre,
+    .observacion,
+    .pie,
+    .grafico-cabecera .leyenda span,
+    .grafico-enlace {
+        font-size: 11px;
+    }
+
+    /* Son datos, no etiquetas: un punto más. En 390 px bajaban a 10. */
+    .lluvia-resumen-valor {
+        font-size: 12px;
+    }
+
+    .viento-secundario strong {
+        font-size: 12px;
+    }
+
+    .patrocinio-estacion {
+        min-height: 38px;
     }
 
 }

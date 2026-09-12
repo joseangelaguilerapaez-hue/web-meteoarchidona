@@ -73,10 +73,12 @@ cursor:pointer;
 transition:border-color .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease
 }
 
+@media (hover: hover) {
 .selector-fondo:hover{
 border-color:var(--fondo-color);
 color:var(--text);
 transform:translateY(-1px)
+}
 }
 
 .selector-fondo::before{
@@ -159,10 +161,12 @@ cursor:pointer;
 transition:border-color .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease
 }
 
+@media (hover: hover) {
 .selector-capa:hover:not(:disabled){
 border-color:var(--capa-color);
 color:var(--text);
 transform:translateY(-1px)
+}
 }
 
 .selector-capa::before{
@@ -287,7 +291,9 @@ border-bottom:1px solid var(--border)
 }
 
 .leaflet-bar a:last-child{border-bottom:none}
+@media (hover: hover) {
 .leaflet-bar a:hover{background:#143047;color:var(--cyan)}
+}
 
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out{
@@ -441,7 +447,9 @@ color:#e9f5ff;
 cursor:pointer
 }
 
+@media (hover: hover) {
 .boton:hover{border-color:var(--blue)}
+}
 
 .boton-principal{
 color:var(--cyan);

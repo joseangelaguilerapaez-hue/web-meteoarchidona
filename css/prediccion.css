@@ -41,6 +41,13 @@
             170px
         );
 
+    min-height:
+        calc(
+            100dvh
+            -
+            170px
+        );
+
     display:
         grid;
 

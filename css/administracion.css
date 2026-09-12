@@ -22,6 +22,7 @@ html{
 
 body{
     min-height:100vh;
+    min-height:100dvh;
     margin:0;
     background:
         radial-gradient(
@@ -55,7 +56,8 @@ a{
 }
 
 .pagina{
-    min-height:100vh
+    min-height:100vh;
+    min-height:100dvh
 }
 
 
@@ -110,9 +112,11 @@ a{
     border-color:rgba(239,68,68,.38)
 }
 
+@media (hover: hover) {
 .boton-cabecera:hover,
 .boton:hover{
     border-color:var(--blue)
+}
 }
 
 .boton:disabled,
@@ -156,6 +160,7 @@ a{
     display:grid;
     place-items:center;
     min-height:calc(100vh - 96px);
+    min-height:calc(100dvh - 96px);
     padding:28px 16px 42px
 }
 
@@ -382,9 +387,11 @@ h3{
     cursor:pointer
 }
 
+@media (hover: hover) {
 .modulo-boton:hover{
     color:var(--text);
     background:rgba(59,158,255,.06)
+}
 }
 
 .modulo-boton.activo{
@@ -1211,6 +1218,62 @@ summary{
         align-items:stretch;
         flex-direction:column
     }
+}
+
+
+/* ==========================================================
+   MÓVIL: QUE EL TECLADO DEL PIN QUEPA EN PANTALLA
+   ========================================================== */
+
+/*
+ * En 375x812 el teclado acababa a 1045 px: la fila 7-8-9 salía cortada
+ * y el 0 fuera de pantalla, así que había que desplazarse a mitad del
+ * PIN. Se compactan candado, textos y teclas; estas siguen midiendo
+ * 54 px de alto, de sobra para el dedo.
+ */
+@media(max-width:520px){
+
+    .contenido-acceso{
+        align-items:start;
+        min-height:0;
+        padding:14px 12px 24px
+    }
+
+    .acceso{
+        padding:20px 18px
+    }
+
+    .candado{
+        width:52px;
+        height:52px;
+        margin-bottom:10px;
+        font-size:24px
+    }
+
+    .acceso h1{
+        margin-bottom:6px;
+        font-size:22px
+    }
+
+    .descripcion{
+        margin-bottom:14px;
+        font-size:12px;
+        line-height:1.5
+    }
+
+    .indicador-pin{
+        margin-bottom:14px
+    }
+
+    .teclado{
+        gap:9px
+    }
+
+    .tecla{
+        min-height:54px;
+        font-size:22px
+    }
+
 }
 
 

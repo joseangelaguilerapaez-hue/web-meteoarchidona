@@ -53,8 +53,27 @@
 </a>
 
 
+<!--
+    Botón del menú desplegable. Solo se ve en pantallas de hasta
+    850 px (ver css/cabecera.css); en escritorio el menú está siempre
+    a la vista. Lo abre y lo cierra js/cabecera.js.
+-->
+<button
+    type="button"
+    class="boton-menu"
+    aria-controls="navegacion-principal"
+    aria-expanded="false"
+    aria-label="Abrir menú"
+>
+    <span class="boton-menu-raya"></span>
+    <span class="boton-menu-raya"></span>
+    <span class="boton-menu-raya"></span>
+</button>
+
+
 <nav
     class="navegacion"
+    id="navegacion-principal"
     aria-label="Navegación principal"
 >
 

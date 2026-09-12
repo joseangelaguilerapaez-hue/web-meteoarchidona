@@ -29,6 +29,7 @@ html {
 
 body {
     min-height: 100vh;
+    min-height: 100dvh;
     margin: 0;
     background:
         radial-gradient(
@@ -56,6 +57,7 @@ button {
 
 .pagina {
     min-height: 100vh;
+    min-height: 100dvh;
 }
 
 
@@ -342,6 +344,7 @@ button {
 }
 
 
+@media (hover: hover) {
 .navegacion a:hover {
     color:
         #071109;
@@ -360,6 +363,7 @@ button {
 
     transform:
         translateY(-1px);
+}
 }
 
 
@@ -545,6 +549,8 @@ button {
 
     -webkit-user-select:
         none;
+
+    -webkit-touch-callout: none;
 }
 
 
@@ -608,6 +614,7 @@ button {
 }
 
 
+@media (hover: hover) {
 .firma-proyecto:hover {
     border-color:
         rgba(
@@ -625,6 +632,7 @@ button {
             255,
             0.18
         );
+}
 }
 
 
@@ -968,6 +976,140 @@ button {
     clip: rect(0 0 0 0);
     white-space: nowrap;
     border: 0;
+}
+
+
+/* ==========================================================
+   HUECO DE CONTROLES DE PÁGINA
+   ========================================================== */
+
+/*
+ * En móvil .zona-derecha es una rejilla de dos columnas, y este hueco
+ * vacío ocupaba una casilla y mandaba el logotipo a otra fila: la
+ * cabecera medía 342 px en vez de 195. Solo Administración lo llena.
+ */
+.cabecera-acciones:empty {
+    display: none;
+}
+
+
+/* ==========================================================
+   BOTÓN DEL MENÚ (en escritorio no se ve)
+   ========================================================== */
+
+.boton-menu {
+    display: none;
+}
+
+
+/* ==========================================================
+   MÓVIL: MENÚ DESPLEGABLE
+   ========================================================== */
+
+/*
+ * Va al final del fichero para mandar sobre las reglas de
+ * .navegacion de los @media anteriores.
+ *
+ * Primera fila: la marca y el botón del menú. Segunda: fecha, hora y
+ * logotipo. El menú, cerrado, no ocupa nada; abierto, baja como una
+ * lista de enlaces de 48 px de alto, cómodos para el dedo.
+ */
+@media (max-width: 850px) {
+
+    .cabecera {
+        grid-template-columns: 1fr auto;
+        row-gap: 8px;
+        padding-bottom: 10px;
+    }
+
+    .marca {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .boton-menu {
+        display: inline-grid;
+        grid-column: 2;
+        grid-row: 1;
+        align-self: center;
+        place-content: center;
+        gap: 5px;
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(13, 21, 32, 0.9);
+        cursor: pointer;
+        touch-action: manipulation;
+    }
+
+    .boton-menu-raya {
+        display: block;
+        width: 22px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--text);
+        transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .menu-abierto .boton-menu-raya:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-abierto .boton-menu-raya:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-abierto .boton-menu-raya:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .boton-menu:focus-visible {
+        outline: 2px solid var(--cyan);
+        outline-offset: 2px;
+    }
+
+    .zona-derecha {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        padding: 0 4px;
+    }
+
+    .firma-proyecto {
+        width: 60px;
+        height: 60px;
+    }
+
+    .firma-proyecto img {
+        width: 56px;
+        height: 56px;
+    }
+
+    .navegacion {
+        display: none;
+        grid-column: 1 / -1;
+        grid-row: 3;
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+        gap: 6px;
+        width: 100%;
+        margin: 0;
+        padding: 4px 0 2px;
+    }
+
+    .menu-abierto .navegacion {
+        display: grid;
+    }
+
+    .navegacion a {
+        justify-content: flex-start;
+        min-height: 48px;
+        padding: 0 16px;
+        font-size: 14px;
+        text-align: left;
+    }
+
 }
 
 
