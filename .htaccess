@@ -2,9 +2,13 @@
 # MeteoArchidona — configuración del servidor
 # ============================================================
 #
-# Esto solo lo lee Apache. Si el sitio acabara servido por otra
-# cosa (Nginx, GitHub Pages), el fichero es papel mojado y las
-# redirecciones de abajo hay que rehacerlas donde toque.
+# El sitio está en Hostinger, que sirve con LiteSpeed y lee este
+# fichero con la misma sintaxis que Apache. Si algún día se mudara a
+# Nginx o a GitHub Pages, esto sería papel mojado y habría que
+# rehacerlo donde toque.
+#
+# Nada de esto se puede probar en local: el servidor de pruebas de
+# Python ignora el .htaccess. Se comprueba desplegado.
 
 RewriteEngine On
 
@@ -31,3 +35,82 @@ Options -Indexes
 Redirect 301 /en-vivo.html         /pages/en-vivo.html
 Redirect 301 /observaciones.html   /pages/observaciones.html
 Redirect 301 /administracion.html  /pages/administracion.html
+
+
+# ------------------------------------------------------------
+# Ficheros que no son del sitio
+# ------------------------------------------------------------
+#
+# Nada que empiece por punto se sirve, ni fichero ni carpeta: .git,
+# .github, el propio .htaccess. Va sobre la ruta y no con FilesMatch
+# porque FilesMatch casa nombres de fichero y no rutas, así que
+# bloquearía un fichero llamado ".git" pero dejaría pasar
+# "/.git/config", que da la dirección del repositorio y con ella todo
+# el código.
+#
+# .well-known se salva: por ahí pasa la renovación del certificado.
+
+RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
+
+
+# ------------------------------------------------------------
+# Cabeceras de seguridad
+# ------------------------------------------------------------
+#
+# Strict-Transport-Security obliga al navegador a entrar por HTTPS
+# durante un año, incluso escribiendo http:// a mano. Con el
+# certificado de Hostinger puesto es lo correcto, pero conviene
+# saberlo: si el sitio se quedara sin HTTPS, quien ya haya entrado no
+# podría volver hasta que caduque el plazo.
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+
+# ------------------------------------------------------------
+# Compresión
+# ------------------------------------------------------------
+#
+# Texto plano comprimido al vuelo. Es de donde sale casi toda la
+# ganancia de peso: css/administracion.css y js/administracion.js
+# suman más de 100 KB y son texto repetitivo.
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+
+# ------------------------------------------------------------
+# Caché del navegador
+# ------------------------------------------------------------
+#
+# El HTML caduca en una hora, así que un cambio se ve pronto. Las
+# hojas y los scripts duran una semana, y por eso sus enlaces llevan
+# "?v=" en el HTML: al publicar hay que subir ese número, o el
+# visitante seguirá con la versión vieja hasta que caduque.
+#
+# Las imágenes duran un mes: no cambian, y si cambian se sube una con
+# otro nombre.
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
