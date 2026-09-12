@@ -543,6 +543,21 @@ textarea{
     line-height:1.5
 }
 
+/*
+ * La lista desplegada la dibuja el sistema y no hereda el fondo de
+ * la hoja. Aquí el <select> lleva un color plano y suele bastar, pero
+ * se deja escrito para no depender de eso: con letra clara y fondo
+ * del sistema, las opciones se quedarían en blanco sobre blanco.
+ */
+select option{
+    background:#0a1724;
+    color:var(--text)
+}
+
+select option:checked{
+    background:#16324c
+}
+
 input:focus,
 select:focus,
 textarea:focus{

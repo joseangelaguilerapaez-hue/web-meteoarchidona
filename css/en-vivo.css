@@ -351,6 +351,22 @@ a{
         );
 }
 
+/*
+ * La lista desplegada la dibuja el sistema, no esta hoja: hereda el
+ * color del <select> —blanco— pero no su fondo, así que en Windows
+ * salían letras blancas sobre blanco y no se leía ninguna opción.
+ * Cada <option> lleva por eso su propio par de colores.
+ */
+.selector-control select option{
+    background:#0f2438;
+    color:var(--blanco);
+}
+
+.selector-control select option:checked{
+    background:#16324c;
+    color:var(--cyan);
+}
+
 .selector-control select:focus{
     border-color:var(--cyan);
     box-shadow:0 0 0 4px rgba(54,217,255,.10);
