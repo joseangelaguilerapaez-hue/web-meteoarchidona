@@ -10,6 +10,7 @@
  *
  * Responsabilidades:
  *
+ * - descubrir dinámicamente las estaciones públicas;
  * - consultar las condiciones actuales de las estaciones;
  * - representar temperatura, humedad, presión, radiación y UV;
  * - representar viento y dirección;
@@ -19,6 +20,17 @@
  * - permitir la simulación visual manual de lluvia;
  * - gestionar los controles de patrocinio;
  * - actualizar periódicamente los datos meteorológicos.
+ *
+ * Las estaciones visibles se obtienen mediante:
+ *
+ *     GET /estaciones
+ *
+ * La página no mantiene una lista fija de códigos de estación.
+ *
+ * El endpoint público determina qué estaciones pueden participar:
+ *
+ * - ACTIVA;
+ * - DATOS_SIMULADOS.
  *
  * No pertenece a este fichero:
  *
@@ -35,10 +47,12 @@ const API_BASE =
     "https://api-meteoarchidona.onrender.com";
 
 
-const CODIGOS_ESTACION = [
-    "EL_SILO",
-    "LOS_LLANOS"
-];
+const INTERVALO_CONDICIONES_MS =
+    60_000;
+
+
+const INTERVALO_CATALOGO_MS =
+    300_000;
 
 
 const NOMBRES_NIVEL_LLUVIA = {
@@ -50,30 +64,34 @@ const NOMBRES_NIVEL_LLUVIA = {
 };
 
 
-const lluviaReal = {
-    EL_SILO: 0,
-    LOS_LLANOS: 0
-};
+/*
+ * Catálogo público recibido desde la API.
+ *
+ * estacionesPublicas contiene los metadatos.
+ *
+ * codigosEstacion contiene únicamente los códigos funcionales y
+ * constituye la lista utilizada por las rutinas meteorológicas.
+ */
 
+let estacionesPublicas = [];
+
+let codigosEstacion = [];
+
+
+/*
+ * Los estados meteorológicos se crean dinámicamente.
+ *
+ * No existe ninguna entrada fija para EL_SILO, LOS_LLANOS ni para
+ * cualquier estación futura.
+ */
+
+const lluviaReal = {};
 
 const lluviaSimulada = {
-    EL_SILO: 0,
-    LOS_LLANOS: 0,
     GLOBAL: 0
 };
 
-
-const vientoEstacion = {
-    EL_SILO: {
-        direccion: null,
-        velocidad: 0
-    },
-
-    LOS_LLANOS: {
-        direccion: null,
-        velocidad: 0
-    }
-};
+const vientoEstacion = {};
 
 
 /* ==========================================================
@@ -160,6 +178,395 @@ function limitar(
             valor
         )
     );
+}
+
+
+function normalizarCodigoEstacion(
+    codigo
+) {
+    if (
+        codigo === null
+        ||
+        codigo === undefined
+    ) {
+        return "";
+    }
+
+    return String(
+        codigo
+    )
+        .trim()
+        .toUpperCase();
+}
+
+
+function obtenerMetadatosEstacion(
+    codigo
+) {
+    const codigoNormalizado =
+        normalizarCodigoEstacion(
+            codigo
+        );
+
+    return (
+        estacionesPublicas.find(
+            estacion =>
+                estacion.codigo
+                ===
+                codigoNormalizado
+        )
+        ||
+        null
+    );
+}
+
+
+function estacionTieneFicha(
+    codigo
+) {
+    return Boolean(
+        obtenerElemento(
+            `tarjeta-${codigo}`
+        )
+    );
+}
+
+
+function obtenerCodigosConFicha() {
+    return codigosEstacion.filter(
+        codigo =>
+            estacionTieneFicha(
+                codigo
+            )
+    );
+}
+
+
+/*
+ * Compatibilidad temporal durante la transición.
+ *
+ * Mientras pages/actualidad.html todavía contiene las dos fichas
+ * antiguas, sus códigos pueden recuperarse desde las veletas.
+ *
+ * Cuando las fichas se creen dinámicamente esta función seguirá siendo
+ * válida, aunque normalmente no será necesaria porque el catálogo
+ * procederá de GET /estaciones.
+ */
+
+function obtenerCodigosDesdeDom() {
+    const codigos =
+        new Set();
+
+    document.querySelectorAll(
+        "[data-lluvia-control]"
+    ).forEach(
+        elemento => {
+            const codigo =
+                normalizarCodigoEstacion(
+                    elemento.dataset
+                        .lluviaControl
+                );
+
+            if (
+                codigo
+            ) {
+                codigos.add(
+                    codigo
+                );
+            }
+        }
+    );
+
+    return Array.from(
+        codigos
+    );
+}
+
+
+/* ==========================================================
+   CATÁLOGO PÚBLICO DE ESTACIONES
+   ========================================================== */
+
+
+function crearEstadoInicialEstacion(
+    codigo
+) {
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            lluviaReal,
+            codigo
+        )
+    ) {
+        lluviaReal[
+            codigo
+        ] =
+            0;
+    }
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            lluviaSimulada,
+            codigo
+        )
+    ) {
+        lluviaSimulada[
+            codigo
+        ] =
+            0;
+    }
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            vientoEstacion,
+            codigo
+        )
+    ) {
+        vientoEstacion[
+            codigo
+        ] = {
+            direccion: null,
+            velocidad: 0
+        };
+    }
+}
+
+
+function eliminarEstadoEstacionesAusentes(
+    codigosValidos
+) {
+    const permitidos =
+        new Set(
+            codigosValidos
+        );
+
+    Object.keys(
+        lluviaReal
+    ).forEach(
+        codigo => {
+            if (
+                !permitidos.has(
+                    codigo
+                )
+            ) {
+                delete lluviaReal[
+                    codigo
+                ];
+            }
+        }
+    );
+
+    Object.keys(
+        lluviaSimulada
+    ).forEach(
+        codigo => {
+            if (
+                codigo !== "GLOBAL"
+                &&
+                !permitidos.has(
+                    codigo
+                )
+            ) {
+                delete lluviaSimulada[
+                    codigo
+                ];
+            }
+        }
+    );
+
+    Object.keys(
+        vientoEstacion
+    ).forEach(
+        codigo => {
+            if (
+                !permitidos.has(
+                    codigo
+                )
+            ) {
+                delete vientoEstacion[
+                    codigo
+                ];
+            }
+        }
+    );
+}
+
+
+function establecerCatalogoEstaciones(
+    estaciones
+) {
+    const normalizadas = [];
+
+    const codigosVistos =
+        new Set();
+
+    estaciones.forEach(
+        estacion => {
+            const codigo =
+                normalizarCodigoEstacion(
+                    estacion?.codigo
+                );
+
+            if (
+                !codigo
+                ||
+                codigosVistos.has(
+                    codigo
+                )
+            ) {
+                return;
+            }
+
+            codigosVistos.add(
+                codigo
+            );
+
+            normalizadas.push(
+                {
+                    codigo,
+
+                    nombre_publico:
+                        estacion?.nombre_publico
+                        ||
+                        codigo,
+
+                    estado:
+                        estacion?.estado
+                        ||
+                        null,
+
+                    ciudad:
+                        estacion?.ciudad
+                        ??
+                        null,
+
+                    region:
+                        estacion?.region
+                        ??
+                        null,
+
+                    pais:
+                        estacion?.pais
+                        ??
+                        null
+                }
+            );
+        }
+    );
+
+    estacionesPublicas =
+        normalizadas;
+
+    codigosEstacion =
+        normalizadas.map(
+            estacion =>
+                estacion.codigo
+        );
+
+    eliminarEstadoEstacionesAusentes(
+        codigosEstacion
+    );
+
+    codigosEstacion.forEach(
+        codigo => {
+            crearEstadoInicialEstacion(
+                codigo
+            );
+        }
+    );
+
+    actualizarSistemaLluvia();
+}
+
+
+function establecerCatalogoDesdeDom() {
+    const codigos =
+        obtenerCodigosDesdeDom();
+
+    establecerCatalogoEstaciones(
+        codigos.map(
+            codigo => ({
+                codigo,
+                nombre_publico:
+                    codigo,
+                estado:
+                    null,
+                ciudad:
+                    null,
+                region:
+                    null,
+                pais:
+                    null
+            })
+        )
+    );
+}
+
+
+async function cargarCatalogoEstaciones() {
+    try {
+        const respuesta =
+            await fetch(
+                `${API_BASE}/estaciones`,
+                {
+                    cache: "no-store"
+                }
+            );
+
+        if (
+            !respuesta.ok
+        ) {
+            throw new Error(
+                `HTTP ${respuesta.status}`
+            );
+        }
+
+        const datos =
+            await respuesta.json();
+
+        if (
+            !datos
+            ||
+            !Array.isArray(
+                datos.estaciones
+            )
+        ) {
+            throw new Error(
+                "Respuesta de catálogo de estaciones no válida."
+            );
+        }
+
+        establecerCatalogoEstaciones(
+            datos.estaciones
+        );
+
+        return true;
+
+    } catch (
+        error
+    ) {
+        console.error(
+            "Error cargando catálogo público de estaciones:",
+            error
+        );
+
+        /*
+         * Si ya existe un catálogo válido mantenemos el último estado.
+         *
+         * Si todavía no disponemos de ninguno, utilizamos las fichas
+         * actualmente presentes en el DOM como mecanismo temporal de
+         * respaldo.
+         */
+
+        if (
+            codigosEstacion.length
+            ===
+            0
+        ) {
+            establecerCatalogoDesdeDom();
+        }
+
+        return false;
+    }
 }
 
 
@@ -639,18 +1046,20 @@ function obtenerEstacionDominante(
                 return;
             }
 
-            const a =
+            const nivelActual =
                 obtenerNivelEfectivo(
                     codigo
                 );
 
-            const b =
+            const nivelDominante =
                 obtenerNivelEfectivo(
                     dominante
                 );
 
             if (
-                a > b
+                nivelActual
+                >
+                nivelDominante
             ) {
                 dominante =
                     codigo;
@@ -658,28 +1067,32 @@ function obtenerEstacionDominante(
                 return;
             }
 
+            const velocidadActual =
+                Number(
+                    vientoEstacion[
+                        codigo
+                    ]?.velocidad
+                )
+                ||
+                0;
+
+            const velocidadDominante =
+                Number(
+                    vientoEstacion[
+                        dominante
+                    ]?.velocidad
+                )
+                ||
+                0;
+
             if (
-                a === b
+                nivelActual
+                ===
+                nivelDominante
                 &&
-                (
-                    Number(
-                        vientoEstacion[
-                            codigo
-                        ].velocidad
-                    )
-                    ||
-                    0
-                )
+                velocidadActual
                 >
-                (
-                    Number(
-                        vientoEstacion[
-                            dominante
-                        ].velocidad
-                    )
-                    ||
-                    0
-                )
+                velocidadDominante
             ) {
                 dominante =
                     codigo;
@@ -692,9 +1105,11 @@ function obtenerEstacionDominante(
 
 
 function obtenerVientoGlobal(
-    codigosActivos
+    codigosActivos,
+    codigosDisponibles = codigosEstacion
 ) {
-    let codigo;
+    let codigo =
+        null;
 
     if (
         codigosActivos.length
@@ -705,9 +1120,10 @@ function obtenerVientoGlobal(
             obtenerEstacionDominante(
                 codigosActivos
             );
+
     } else {
         codigo =
-            CODIGOS_ESTACION.reduce(
+            codigosDisponibles.reduce(
                 (
                     mejor,
                     actual
@@ -718,24 +1134,28 @@ function obtenerVientoGlobal(
                         return actual;
                     }
 
-                    return (
+                    const velocidadActual =
                         Number(
                             vientoEstacion[
                                 actual
-                            ].velocidad
+                            ]?.velocidad
                         )
                         ||
-                        0
-                    )
-                    >
-                    (
+                        0;
+
+                    const velocidadMejor =
                         Number(
                             vientoEstacion[
                                 mejor
-                            ].velocidad
+                            ]?.velocidad
                         )
                         ||
-                        0
+                        0;
+
+                    return (
+                        velocidadActual
+                        >
+                        velocidadMejor
                     )
                     ?
                     actual
@@ -759,12 +1179,16 @@ function obtenerVientoGlobal(
         direccion:
             vientoEstacion[
                 codigo
-            ].direccion,
+            ]?.direccion
+            ??
+            null,
 
         velocidad:
             vientoEstacion[
                 codigo
-            ].velocidad
+            ]?.velocidad
+            ??
+            0
     };
 }
 
@@ -838,8 +1262,14 @@ function aplicarVientoACapa(
 
     const movimiento =
         calcularMovimientoViento(
-            viento.direccion,
-            viento.velocidad,
+            viento?.direccion
+            ??
+            null,
+
+            viento?.velocidad
+            ??
+            0,
+
             ancho,
             alto
         );
@@ -944,104 +1374,94 @@ function actualizarCapaMeteorologica(
 
 
 function actualizarSistemaLluvia() {
-    const silo =
-        obtenerNivelEfectivo(
-            "EL_SILO"
-        );
+    /*
+     * Durante la transición únicamente participan visualmente las
+     * estaciones que ya tengan una ficha en el DOM.
+     *
+     * En el siguiente paso todas las estaciones del catálogo tendrán
+     * una ficha generada dinámicamente.
+     */
 
-    const llanos =
-        obtenerNivelEfectivo(
-            "LOS_LLANOS"
-        );
+    const codigosRenderizados =
+        obtenerCodigosConFicha();
 
     const activos =
-        [];
-
-    if (
-        silo > 0
-    ) {
-        activos.push(
-            "EL_SILO"
+        codigosRenderizados.filter(
+            codigo =>
+                obtenerNivelEfectivo(
+                    codigo
+                )
+                >
+                0
         );
-    }
 
-    if (
-        llanos > 0
-    ) {
-        activos.push(
-            "LOS_LLANOS"
-        );
-    }
-
-    let global =
-        0;
-
-    let localSilo =
-        0;
-
-    let localLlanos =
+    let nivelGlobal =
         0;
 
     if (
         activos.length
-        ===
+        >=
         2
     ) {
-        global =
+        nivelGlobal =
             Math.max(
-                silo,
-                llanos
+                ...activos.map(
+                    codigo =>
+                        obtenerNivelEfectivo(
+                            codigo
+                        )
+                )
             );
     }
 
-    if (
-        activos.length
-        ===
-        1
-    ) {
-        if (
-            activos[
-                0
-            ]
-            ===
-            "EL_SILO"
-        ) {
-            localSilo =
-                silo;
-        } else {
-            localLlanos =
-                llanos;
-        }
-    }
+    codigosRenderizados.forEach(
+        codigo => {
+            let nivelLocal =
+                0;
 
-    global =
+            if (
+                activos.length
+                ===
+                1
+                &&
+                activos[
+                    0
+                ]
+                ===
+                codigo
+            ) {
+                nivelLocal =
+                    obtenerNivelEfectivo(
+                        codigo
+                    );
+            }
+
+            actualizarCapaMeteorologica(
+                `capa-lluvia-${codigo}`,
+                `capa-gotas-cristal-${codigo}`,
+                nivelLocal,
+                vientoEstacion[
+                    codigo
+                ]
+            );
+        }
+    );
+
+    nivelGlobal =
         Math.max(
-            global,
+            nivelGlobal,
             lluviaSimulada.GLOBAL
             ||
             0
         );
 
     actualizarCapaMeteorologica(
-        "capa-lluvia-EL_SILO",
-        "capa-gotas-cristal-EL_SILO",
-        localSilo,
-        vientoEstacion.EL_SILO
-    );
-
-    actualizarCapaMeteorologica(
-        "capa-lluvia-LOS_LLANOS",
-        "capa-gotas-cristal-LOS_LLANOS",
-        localLlanos,
-        vientoEstacion.LOS_LLANOS
-    );
-
-    actualizarCapaMeteorologica(
         "capa-lluvia",
         "capa-gotas-cristal",
-        global,
+        nivelGlobal,
         obtenerVientoGlobal(
-            activos
+            activos,
+            codigosRenderizados
         )
     );
 }
@@ -1102,6 +1522,14 @@ function actualizarIndicadorSimulacion(
 function avanzarSimulacion(
     origen
 ) {
+    if (
+        origen !== "GLOBAL"
+    ) {
+        crearEstadoInicialEstacion(
+            origen
+        );
+    }
+
     const actual =
         lluviaSimulada[
             origen
@@ -1164,6 +1592,26 @@ function inicializarGotasEnCapa(
         return;
     }
 
+    /*
+     * La función puede invocarse varias veces.
+     *
+     * Esta marca evita duplicar 160 gotas si una ficha dinámica se
+     * vuelve a configurar.
+     */
+
+    if (
+        capa.dataset
+            .gotasLluviaInicializadas
+        ===
+        "1"
+    ) {
+        return;
+    }
+
+    capa.dataset
+        .gotasLluviaInicializadas =
+        "1";
+
     for (
         let i = 0;
         i < totalGotas;
@@ -1222,12 +1670,23 @@ function inicializarLluviaVisual() {
         "capa-lluvia"
     );
 
-    inicializarGotasEnCapa(
-        "capa-lluvia-EL_SILO"
+    document.querySelectorAll(
+        ".capa-lluvia-ficha[id]"
+    ).forEach(
+        capa => {
+            inicializarGotasEnCapa(
+                capa.id
+            );
+        }
     );
+}
 
+
+function inicializarLluviaVisualEstacion(
+    codigo
+) {
     inicializarGotasEnCapa(
-        "capa-lluvia-LOS_LLANOS"
+        `capa-lluvia-${codigo}`
     );
 }
 
@@ -1532,6 +1991,19 @@ function configurarControlLluvia(
     elemento,
     origen
 ) {
+    if (
+        elemento.dataset
+            .controlLluviaConfigurado
+        ===
+        "1"
+    ) {
+        return;
+    }
+
+    elemento.dataset
+        .controlLluviaConfigurado =
+        "1";
+
     let temporizadorLargo =
         null;
 
@@ -1716,19 +2188,25 @@ function configurarControlLluvia(
 }
 
 
-function configurarControlesLluvia() {
-    document.querySelectorAll(
+function configurarControlesLluvia(
+    raiz = document
+) {
+    raiz.querySelectorAll(
         "[data-lluvia-control]"
     ).forEach(
         control => {
+            const codigo =
+                normalizarCodigoEstacion(
+                    control.dataset
+                        .lluviaControl
+                );
+
             if (
-                control.dataset
-                    .lluviaControl
+                codigo
             ) {
                 configurarControlLluvia(
                     control,
-                    control.dataset
-                        .lluviaControl
+                    codigo
                 );
             }
         }
@@ -1741,17 +2219,34 @@ function configurarControlesLluvia() {
    ========================================================== */
 
 
-function configurarPatrocinios() {
-    document.querySelectorAll(
+function configurarPatrocinios(
+    raiz = document
+) {
+    raiz.querySelectorAll(
         ".patrocinio-estacion-control"
     ).forEach(
         control => {
+            if (
+                control.dataset
+                    .patrocinioConfigurado
+                ===
+                "1"
+            ) {
+                return;
+            }
+
+            control.dataset
+                .patrocinioConfigurado =
+                "1";
+
             control.addEventListener(
                 "click",
                 () => {
                     const codigo =
-                        control.dataset
-                            .patrocinio;
+                        normalizarCodigoEstacion(
+                            control.dataset
+                                .patrocinio
+                        );
 
                     const patrocinio =
                         obtenerElemento(
@@ -1807,6 +2302,10 @@ function mostrarLluvia(
     codigo,
     datos
 ) {
+    crearEstadoInicialEstacion(
+        codigo
+    );
+
     const dia =
         formatearNumero(
             datos.lluvia_dia_mm
@@ -1902,9 +2401,25 @@ function mostrarDatosEstacion(
     codigo,
     datos
 ) {
+    crearEstadoInicialEstacion(
+        codigo
+    );
+
+    const metadatos =
+        obtenerMetadatosEstacion(
+            codigo
+        );
+
+    const nombre =
+        datos.nombre_estacion
+        ||
+        metadatos?.nombre_publico
+        ||
+        codigo;
+
     asignarTexto(
         `nombre-${codigo}`,
-        datos.nombre_estacion
+        nombre
     );
 
     asignarHtml(
@@ -2102,6 +2617,10 @@ function mostrarDatosEstacion(
 function mostrarErrorLluvia(
     codigo
 ) {
+    crearEstadoInicialEstacion(
+        codigo
+    );
+
     lluviaReal[
         codigo
     ] =
@@ -2159,6 +2678,10 @@ function mostrarErrorLluvia(
 function mostrarErrorEstacion(
     codigo
 ) {
+    crearEstadoInicialEstacion(
+        codigo
+    );
+
     vientoEstacion[
         codigo
     ] = {
@@ -2265,10 +2788,37 @@ function mostrarErrorEstacion(
 async function cargarEstacion(
     codigo
 ) {
+    /*
+     * Mientras las fichas antiguas sigan en el HTML no intentamos
+     * representar una estación que todavía no tenga tarjeta.
+     *
+     * Así este commit puede desplegarse sin modificar la apariencia
+     * actual.
+     *
+     * Cuando en el siguiente paso generemos las fichas dinámicamente,
+     * esta condición será cierta para todas las estaciones públicas.
+     */
+
+    if (
+        !estacionTieneFicha(
+            codigo
+        )
+    ) {
+        return;
+    }
+
+    crearEstadoInicialEstacion(
+        codigo
+    );
+
+    inicializarLluviaVisualEstacion(
+        codigo
+    );
+
     try {
         const respuesta =
             await fetch(
-                `${API_BASE}/condiciones-actuales/${codigo}`,
+                `${API_BASE}/condiciones-actuales/${encodeURIComponent(codigo)}`,
                 {
                     cache: "no-store"
                 }
@@ -2306,17 +2856,46 @@ async function cargarEstacion(
 
 
 async function cargarCondiciones() {
-    await Promise.all(
-        [
-            cargarEstacion(
-                "EL_SILO"
-            ),
+    const codigos =
+        obtenerCodigosConFicha();
 
-            cargarEstacion(
-                "LOS_LLANOS"
-            )
-        ]
+    if (
+        codigos.length
+        ===
+        0
+    ) {
+        return;
+    }
+
+    await Promise.all(
+        codigos.map(
+            codigo =>
+                cargarEstacion(
+                    codigo
+                )
+        )
     );
+}
+
+
+async function refrescarCatalogo() {
+    await cargarCatalogoEstaciones();
+
+    /*
+     * En la siguiente fase este punto será también el responsable de
+     * sincronizar las fichas del DOM con el catálogo.
+     *
+     * Actualmente únicamente refresca las condiciones de las fichas
+     * que ya existen.
+     */
+
+    configurarControlesLluvia();
+
+    configurarPatrocinios();
+
+    inicializarLluviaVisual();
+
+    await cargarCondiciones();
 }
 
 
@@ -2361,20 +2940,59 @@ window.addEventListener(
    ========================================================== */
 
 
-function inicializarActualidad() {
+async function inicializarActualidad() {
+    /*
+     * Primero se inicializan las capas ya existentes para que la
+     * transición no modifique el comportamiento visual actual.
+     */
+
     inicializarLluviaVisual();
 
     configurarControlesLluvia();
 
     configurarPatrocinios();
 
+    /*
+     * Después se obtiene el catálogo público real.
+     *
+     * En este momento, por ejemplo, puede devolver:
+     *
+     * - 29300;
+     * - EL_SILO;
+     * - LOS_LLANOS.
+     *
+     * Ninguno de esos códigos está escrito aquí.
+     */
+
+    await cargarCatalogoEstaciones();
+
     actualizarSistemaLluvia();
 
-    cargarCondiciones();
+    await cargarCondiciones();
+
+    /*
+     * Las condiciones meteorológicas cambian con frecuencia.
+     */
 
     window.setInterval(
         cargarCondiciones,
-        60000
+        INTERVALO_CONDICIONES_MS
+    );
+
+    /*
+     * El catálogo también se refresca periódicamente.
+     *
+     * De este modo una estación que cambie entre PROYECTADA,
+     * DATOS_SIMULADOS, ACTIVA o INACTIVA podrá ser detectada sin
+     * mantener un catálogo permanente en el navegador.
+     *
+     * La creación/eliminación visual de fichas se añadirá en el
+     * siguiente paso.
+     */
+
+    window.setInterval(
+        refrescarCatalogo,
+        INTERVALO_CATALOGO_MS
     );
 
     window.setInterval(
@@ -2396,6 +3014,7 @@ if (
             once: true
         }
     );
+
 } else {
     inicializarActualidad();
 }
