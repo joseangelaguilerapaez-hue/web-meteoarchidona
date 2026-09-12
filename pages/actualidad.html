@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Actualidad meteorológica de MeteoArchidona."
+>
+
+<title>
+    Actualidad · MeteoArchidona
+</title>
+
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+
+<link
+    rel="stylesheet"
+    href="../assets/actualidad.css"
+>
+
+
+<script
+    src="../js/actualidad.js"
+    defer
+></script>
+
+</head>
+
+
+<body>
+
+
+<div
+    class="capa-lluvia"
+    id="capa-lluvia"
+    aria-hidden="true"
+></div>
+
+
+<div
+    class="capa-gotas-cristal"
+    id="capa-gotas-cristal"
+    aria-hidden="true"
+></div>
+
+
+<main
+    class="contenido"
+    id="actual"
+>
+
+
+<section class="panel-superior">
+
+
+<aside class="tarjeta resumen">
+
+
+<h2 class="seccion-titulo">
+    Condiciones actuales
+</h2>
+
+
+<div class="estado">
+
+    <span class="punto"></span>
+
+    Datos MeteoArchidona
+
+</div>
+
+
+<div class="estado-grafico">
+
+    <div
+        class="tiempo-icono"
+        aria-hidden="true"
+    >
+
+        <div class="sol"></div>
+
+        <div class="nube"></div>
+
+    </div>
+
+</div>
+
+
+<div class="ubicacion">
+    ⌖ ARCHIDONA
+</div>
+
+
+<div class="ubicacion-sub">
+    Málaga · Andalucía
+</div>
+
+
+<div class="sol-horas">
+
+
+    <div class="sol-hora">
+
+        ☀ 07:45
+
+        <span>
+            Amanecer
+        </span>
+
+    </div>
+
+
+    <div class="sol-hora">
+
+        ☾ 20:44
+
+        <span>
+            Atardecer
+        </span>
+
+    </div>
+
+
+</div>
+
+
+</aside>
+
+
+
+<article
+    class="tarjeta estacion-principal"
+    id="tarjeta-EL_SILO"
+>
+
+
+<div
+    class="capa-lluvia-ficha"
+    id="capa-lluvia-EL_SILO"
+    aria-hidden="true"
+></div>
+
+
+<div
+    class="capa-gotas-cristal-ficha"
+    id="capa-gotas-cristal-EL_SILO"
+    aria-hidden="true"
+></div>
+
+
+<div class="estacion-contenido">
+
+
+<div class="estacion-cabecera">
+
+
+<div>
+
+    <h2
+        class="estacion-nombre"
+        id="nombre-EL_SILO"
+    >
+        EL SILO
+    </h2>
+
+    <div class="estacion-localidad">
+        Archidona
+    </div>
+
+</div>
+
+
+<div
+    class="online"
+    id="estado-EL_SILO"
+>
+
+    <span class="punto"></span>
+
+    Cargando...
+
+</div>
+
+
+</div>
+
+
+
+<div class="lectura-principal">
+
+
+<div class="temperatura-bloque">
+
+
+<div
+    class="temperatura"
+    id="temperatura-EL_SILO"
+>
+    --<sup>°C</sup>
+</div>
+
+
+<div
+    class="sensacion"
+    id="sensacion-EL_SILO"
+>
+    Sensación -- °C
+</div>
+
+
+<div
+    class="observacion"
+    id="observacion-EL_SILO"
+>
+    Exterior --:--
+</div>
+
+
+</div>
+
+
+
+<div class="viento-panel">
+
+
+<div
+    class="veleta"
+    id="veleta-EL_SILO"
+    data-lluvia-control="EL_SILO"
+    tabindex="0"
+    role="button"
+    aria-label="Veleta de El Silo"
+    title="Veleta de El Silo"
+>
+
+    <span class="veleta-cardinal veleta-n">
+        N
+    </span>
+
+    <span class="veleta-cardinal veleta-e">
+        E
+    </span>
+
+    <span class="veleta-cardinal veleta-s">
+        S
+    </span>
+
+    <span class="veleta-cardinal veleta-o">
+        O
+    </span>
+
+
+    <div class="veleta-rotor">
+
+        <div class="veleta-aguja"></div>
+
+    </div>
+
+</div>
+
+
+
+<div class="viento-datos">
+
+
+<div class="direccion-principal">
+
+
+<div
+    class="direccion-cardinal"
+    id="direccion-EL_SILO"
+>
+    --
+</div>
+
+
+<div
+    class="direccion-grados"
+    id="grados-EL_SILO"
+>
+    --°
+</div>
+
+
+</div>
+
+
+<div
+    class="viento-actual"
+    id="viento-actual-EL_SILO"
+>
+    --
+    <small>
+        km/h
+    </small>
+</div>
+
+
+<div class="viento-secundarios">
+
+
+<div class="viento-secundario">
+
+    Media 2 min
+
+    <strong id="viento-2m-EL_SILO">
+        -- km/h
+    </strong>
+
+</div>
+
+
+<div class="viento-secundario">
+
+    Media 10 min
+
+    <strong id="viento-10m-EL_SILO">
+        -- km/h
+    </strong>
+
+</div>
+
+
+<div class="viento-secundario">
+
+    Racha 10 min
+
+    <strong id="racha-EL_SILO">
+        -- km/h
+    </strong>
+
+</div>
+
+
+</div>
+
+
+<div
+    class="simulacion-estacion"
+    id="simulacion-EL_SILO"
+></div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div
+    class="patrocinio-estacion"
+    id="patrocinio-EL_SILO"
+    aria-label="Patrocinadores de los datos de lluvia de El Silo"
+>
+
+
+<div class="patrocinio-estacion-titulo">
+    🌧️ LLUVIA EN VIVO
+</div>
+
+
+<div class="patrocinio-estacion-ventana">
+
+
+<div class="patrocinio-estacion-pista">
+
+
+<span class="patrocinio-estacion-texto">
+
+    Datos patrocinados por
+
+    <strong>
+        Restaurante San Isidro
+    </strong>
+
+    ·
+
+    <strong>
+        Bar Central
+    </strong>
+
+    ·
+
+    <strong>
+        Las Viñas
+    </strong>
+
+    ·
+
+    <strong>
+        Gestión 95
+    </strong>
+
+</span>
+
+
+<span
+    class="patrocinio-estacion-texto"
+    aria-hidden="true"
+>
+
+    Datos patrocinados por
+
+    <strong>
+        Restaurante San Isidro
+    </strong>
+
+    ·
+
+    <strong>
+        Bar Central
+    </strong>
+
+    ·
+
+    <strong>
+        Las Viñas
+    </strong>
+
+    ·
+
+    <strong>
+        Gestión 95
+    </strong>
+
+</span>
+
+
+</div>
+
+</div>
+
+
+<button
+    type="button"
+    class="patrocinio-estacion-control"
+    data-patrocinio="EL_SILO"
+    aria-label="Pausar patrocinio"
+    aria-pressed="false"
+>
+    Ⅱ
+</button>
+
+
+</div>
+
+
+
+<div class="lluvia-resumen">
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-dia-EL_SILO"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Lluvia hoy
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-dia-EL_SILO"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-icono-actual-EL_SILO"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Intensidad
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-tasa-EL_SILO"
+>
+    -- mm/h
+</div>
+
+
+<div
+    class="lluvia-resumen-extra"
+    id="lluvia-estado-EL_SILO"
+>
+    --
+</div>
+
+
+</div>
+
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-mes-EL_SILO"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Este mes
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-mes-EL_SILO"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-anio-EL_SILO"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Año agrícola
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-anio-EL_SILO"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="metricas-estacion">
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    💧 Humedad
+</div>
+
+<div
+    class="metrica-valor"
+    id="humedad-EL_SILO"
+>
+    -- %
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◇ Punto de rocío
+</div>
+
+<div
+    class="metrica-valor"
+    id="rocio-EL_SILO"
+>
+    -- °C
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◉ Presión
+</div>
+
+<div
+    class="metrica-valor"
+    id="presion-EL_SILO"
+>
+    -- hPa
+</div>
+
+<div
+    class="metrica-secundaria"
+    id="presion-hora-EL_SILO"
+>
+    Barómetro --:--
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ☀ Radiación solar
+</div>
+
+<div
+    class="metrica-valor"
+    id="radiacion-EL_SILO"
+>
+    -- W/m²
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◉ Índice UV
+</div>
+
+<div
+    class="metrica-valor"
+    id="uv-EL_SILO"
+>
+    --
+</div>
+
+<div
+    class="metrica-secundaria"
+    id="uv-estado-EL_SILO"
+>
+    --
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◷ Observación exterior
+</div>
+
+<div
+    class="metrica-valor"
+    id="fecha-EL_SILO"
+>
+    --
+</div>
+
+</div>
+
+
+</div>
+
+
+</article>
+
+
+
+<article
+    class="tarjeta estacion-principal"
+    id="tarjeta-LOS_LLANOS"
+>
+
+
+<div
+    class="capa-lluvia-ficha"
+    id="capa-lluvia-LOS_LLANOS"
+    aria-hidden="true"
+></div>
+
+
+<div
+    class="capa-gotas-cristal-ficha"
+    id="capa-gotas-cristal-LOS_LLANOS"
+    aria-hidden="true"
+></div>
+
+
+<div class="estacion-contenido">
+
+
+<div class="estacion-cabecera">
+
+
+<div>
+
+    <h2
+        class="estacion-nombre"
+        id="nombre-LOS_LLANOS"
+    >
+        LOS LLANOS
+    </h2>
+
+    <div class="estacion-localidad">
+        Villanueva del Trabuco
+    </div>
+
+</div>
+
+
+<div
+    class="online"
+    id="estado-LOS_LLANOS"
+>
+
+    <span class="punto"></span>
+
+    Cargando...
+
+</div>
+
+
+</div>
+
+
+
+<div class="lectura-principal">
+
+
+<div class="temperatura-bloque">
+
+
+<div
+    class="temperatura"
+    id="temperatura-LOS_LLANOS"
+>
+    --<sup>°C</sup>
+</div>
+
+
+<div
+    class="sensacion"
+    id="sensacion-LOS_LLANOS"
+>
+    Sensación -- °C
+</div>
+
+
+<div
+    class="observacion"
+    id="observacion-LOS_LLANOS"
+>
+    Exterior --:--
+</div>
+
+
+</div>
+
+
+
+<div class="viento-panel">
+
+
+<div
+    class="veleta"
+    id="veleta-LOS_LLANOS"
+    data-lluvia-control="LOS_LLANOS"
+    tabindex="0"
+    role="button"
+    aria-label="Veleta de Los Llanos"
+    title="Veleta de Los Llanos"
+>
+
+    <span class="veleta-cardinal veleta-n">
+        N
+    </span>
+
+    <span class="veleta-cardinal veleta-e">
+        E
+    </span>
+
+    <span class="veleta-cardinal veleta-s">
+        S
+    </span>
+
+    <span class="veleta-cardinal veleta-o">
+        O
+    </span>
+
+
+    <div class="veleta-rotor">
+
+        <div class="veleta-aguja"></div>
+
+    </div>
+
+</div>
+
+
+
+<div class="viento-datos">
+
+
+<div class="direccion-principal">
+
+
+<div
+    class="direccion-cardinal"
+    id="direccion-LOS_LLANOS"
+>
+    --
+</div>
+
+
+<div
+    class="direccion-grados"
+    id="grados-LOS_LLANOS"
+>
+    --°
+</div>
+
+
+</div>
+
+
+<div
+    class="viento-actual"
+    id="viento-actual-LOS_LLANOS"
+>
+    --
+    <small>
+        km/h
+    </small>
+</div>
+
+
+<div class="viento-secundarios">
+
+
+<div class="viento-secundario">
+
+    Media 2 min
+
+    <strong id="viento-2m-LOS_LLANOS">
+        -- km/h
+    </strong>
+
+</div>
+
+
+<div class="viento-secundario">
+
+    Media 10 min
+
+    <strong id="viento-10m-LOS_LLANOS">
+        -- km/h
+    </strong>
+
+</div>
+
+
+<div class="viento-secundario">
+
+    Racha 10 min
+
+    <strong id="racha-LOS_LLANOS">
+        -- km/h
+    </strong>
+
+</div>
+
+
+</div>
+
+
+<div
+    class="simulacion-estacion"
+    id="simulacion-LOS_LLANOS"
+></div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div
+    class="patrocinio-estacion"
+    id="patrocinio-LOS_LLANOS"
+    aria-label="Patrocinadores de los datos de lluvia de Los Llanos"
+>
+
+
+<div class="patrocinio-estacion-titulo">
+    🌧️ LLUVIA EN VIVO
+</div>
+
+
+<div class="patrocinio-estacion-ventana">
+
+
+<div class="patrocinio-estacion-pista">
+
+
+<span class="patrocinio-estacion-texto">
+
+    Datos patrocinados por
+
+    <strong>
+        Restaurante San Isidro
+    </strong>
+
+    ·
+
+    <strong>
+        Bar Central
+    </strong>
+
+    ·
+
+    <strong>
+        Las Viñas
+    </strong>
+
+    ·
+
+    <strong>
+        Gestión 95
+    </strong>
+
+</span>
+
+
+<span
+    class="patrocinio-estacion-texto"
+    aria-hidden="true"
+>
+
+    Datos patrocinados por
+
+    <strong>
+        Restaurante San Isidro
+    </strong>
+
+    ·
+
+    <strong>
+        Bar Central
+    </strong>
+
+    ·
+
+    <strong>
+        Las Viñas
+    </strong>
+
+    ·
+
+    <strong>
+        Gestión 95
+    </strong>
+
+</span>
+
+
+</div>
+
+</div>
+
+
+<button
+    type="button"
+    class="patrocinio-estacion-control"
+    data-patrocinio="LOS_LLANOS"
+    aria-label="Pausar patrocinio"
+    aria-pressed="false"
+>
+    Ⅱ
+</button>
+
+
+</div>
+
+
+
+<div class="lluvia-resumen">
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-dia-LOS_LLANOS"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Lluvia hoy
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-dia-LOS_LLANOS"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-icono-actual-LOS_LLANOS"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Intensidad
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-tasa-LOS_LLANOS"
+>
+    -- mm/h
+</div>
+
+
+<div
+    class="lluvia-resumen-extra"
+    id="lluvia-estado-LOS_LLANOS"
+>
+    --
+</div>
+
+
+</div>
+
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-mes-LOS_LLANOS"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Este mes
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-mes-LOS_LLANOS"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-anio-LOS_LLANOS"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Año agrícola
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-anio-LOS_LLANOS"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="metricas-estacion">
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    💧 Humedad
+</div>
+
+<div
+    class="metrica-valor"
+    id="humedad-LOS_LLANOS"
+>
+    -- %
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◇ Punto de rocío
+</div>
+
+<div
+    class="metrica-valor"
+    id="rocio-LOS_LLANOS"
+>
+    -- °C
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◉ Presión
+</div>
+
+<div
+    class="metrica-valor"
+    id="presion-LOS_LLANOS"
+>
+    -- hPa
+</div>
+
+<div
+    class="metrica-secundaria"
+    id="presion-hora-LOS_LLANOS"
+>
+    Barómetro --:--
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ☀ Radiación solar
+</div>
+
+<div
+    class="metrica-valor"
+    id="radiacion-LOS_LLANOS"
+>
+    -- W/m²
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◉ Índice UV
+</div>
+
+<div
+    class="metrica-valor"
+    id="uv-LOS_LLANOS"
+>
+    --
+</div>
+
+<div
+    class="metrica-secundaria"
+    id="uv-estado-LOS_LLANOS"
+>
+    --
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◷ Observación exterior
+</div>
+
+<div
+    class="metrica-valor"
+    id="fecha-LOS_LLANOS"
+>
+    --
+</div>
+
+</div>
+
+
+</div>
+
+
+</article>
+
+
+</section>
+
+
+
+<section
+    class="paneles-graficos"
+    id="graficos"
+>
+
+
+<article class="tarjeta grafico">
+
+
+<div class="grafico-cabecera">
+
+
+<div class="grafico-titulo">
+    Temperatura · últimas 24 horas
+</div>
+
+
+<div class="leyenda">
+
+    <span>
+        El Silo
+    </span>
+
+    <span>
+        Los Llanos
+    </span>
+
+</div>
+
+
+</div>
+
+
+<svg
+    class="grafico-svg"
+    viewBox="0 0 600 190"
+    preserveAspectRatio="none"
+    aria-label="Gráfico de temperatura de muestra"
+>
+
+
+<line
+    class="rejilla"
+    x1="0"
+    y1="40"
+    x2="600"
+    y2="40"
+/>
+
+
+<line
+    class="rejilla"
+    x1="0"
+    y1="90"
+    x2="600"
+    y2="90"
+/>
+
+
+<line
+    class="rejilla"
+    x1="0"
+    y1="140"
+    x2="600"
+    y2="140"
+/>
+
+
+<polyline
+    class="linea-silo"
+    points="0,85 70,55 140,40 210,48 280,78 350,125 420,142 490,105 550,72 600,68"
+/>
+
+
+<polyline
+    class="linea-llanos"
+    points="0,95 70,72 140,60 210,68 280,98 350,140 420,152 490,118 550,88 600,84"
+/>
+
+
+</svg>
+
+
+</article>
+
+
+
+<article class="tarjeta grafico">
+
+
+<div class="grafico-cabecera">
+
+
+<div class="grafico-titulo">
+    Lluvia · últimos 7 días
+</div>
+
+
+</div>
+
+
+<svg
+    class="grafico-svg"
+    viewBox="0 0 500 190"
+    preserveAspectRatio="none"
+    aria-label="Gráfico de lluvia de muestra"
+>
+
+
+<line
+    class="rejilla"
+    x1="0"
+    y1="40"
+    x2="500"
+    y2="40"
+/>
+
+
+<line
+    class="rejilla"
+    x1="0"
+    y1="90"
+    x2="500"
+    y2="90"
+/>
+
+
+<line
+    class="rejilla"
+    x1="0"
+    y1="140"
+    x2="500"
+    y2="140"
+/>
+
+
+<rect
+    class="barra"
+    x="25"
+    y="135"
+    width="40"
+    height="35"
+/>
+
+
+<rect
+    class="barra"
+    x="95"
+    y="55"
+    width="40"
+    height="115"
+/>
+
+
+<rect
+    class="barra"
+    x="165"
+    y="145"
+    width="40"
+    height="25"
+/>
+
+
+<rect
+    class="barra"
+    x="235"
+    y="166"
+    width="40"
+    height="4"
+/>
+
+
+<rect
+    class="barra"
+    x="305"
+    y="168"
+    width="40"
+    height="2"
+/>
+
+
+</svg>
+
+
+</article>
+
+
+
+<article
+    class="tarjeta grafico"
+    id="camaras"
+>
+
+
+<div class="grafico-cabecera">
+
+
+<div class="grafico-titulo">
+    Cámaras en directo
+</div>
+
+
+<a
+    href="../index.html#en-vivo"
+    target="_parent"
+    style="color:var(--blue);font-size:10px"
+>
+    Ver todas →
+</a>
+
+
+</div>
+
+
+<div class="camaras">
+
+
+<div class="camara">
+
+
+<div class="camara-estado">
+    🟢 En línea
+</div>
+
+
+<div class="camara-nombre">
+    El Silo · Vista Sur
+</div>
+
+
+</div>
+
+
+
+<div class="camara">
+
+
+<div class="camara-estado">
+    🟢 En línea
+</div>
+
+
+<div class="camara-nombre">
+    Los Llanos · Vista Norte
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</article>
+
+
+</section>
+
+
+
+<section class="tarjeta accesos">
+
+
+<a
+    href="#historicos"
+    class="acceso"
+>
+
+<div class="acceso-icono">
+    📊
+</div>
+
+
+<div>
+
+<div class="acceso-titulo">
+    HISTÓRICOS
+</div>
+
+<div class="acceso-subtitulo">
+    Datos por fecha
+</div>
+
+</div>
+
+</a>
+
+
+
+<a
+    href="#graficos"
+    class="acceso"
+>
+
+<div class="acceso-icono">
+    📈
+</div>
+
+
+<div>
+
+<div class="acceso-titulo">
+    GRÁFICOS
+</div>
+
+<div class="acceso-subtitulo">
+    Evolución detallada
+</div>
+
+</div>
+
+</a>
+
+
+
+<a
+    href="../index.html#en-vivo"
+    target="_parent"
+    class="acceso"
+>
+
+<div class="acceso-icono">
+    📷
+</div>
+
+
+<div>
+
+<div class="acceso-titulo">
+    CÁMARAS
+</div>
+
+<div class="acceso-subtitulo">
+    Imágenes en directo
+</div>
+
+</div>
+
+</a>
+
+
+
+<a
+    href="#estaciones"
+    class="acceso"
+>
+
+<div class="acceso-icono">
+    📡
+</div>
+
+
+<div>
+
+<div class="acceso-titulo">
+    ESTACIONES
+</div>
+
+<div class="acceso-subtitulo">
+    Información técnica
+</div>
+
+</div>
+
+</a>
+
+
+
+<a
+    href="#alertas"
+    class="acceso"
+>
+
+<div class="acceso-icono">
+    ⚠️
+</div>
+
+
+<div>
+
+<div class="acceso-titulo">
+    ALERTAS
+</div>
+
+<div class="acceso-subtitulo">
+    Avisos meteorológicos
+</div>
+
+</div>
+
+</a>
+
+
+
+<a
+    href="#estado"
+    class="acceso"
+>
+
+<div class="acceso-icono">
+    ✅
+</div>
+
+
+<div>
+
+<div class="acceso-titulo">
+    ESTADO SISTEMA
+</div>
+
+<div class="acceso-subtitulo">
+    Datos automáticos
+</div>
+
+</div>
+
+</a>
+
+
+</section>
+
+
+
+<footer class="pie">
+
+
+<div>
+
+    © 2026 MeteoArchidona
+
+    <br>
+
+    Todos los derechos reservados
+
+</div>
+
+
+<div class="pie-centro">
+    🟢 Datos meteorológicos actualizados automáticamente
+</div>
+
+
+<div class="pie-derecha">
+    MeteoArchidona · Archidona
+</div>
+
+
+</footer>
+
+
+</main>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/actualidad.html -->
