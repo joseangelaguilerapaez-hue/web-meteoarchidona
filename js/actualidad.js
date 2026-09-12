@@ -11,6 +11,7 @@
  * Responsabilidades:
  *
  * - descubrir dinámicamente las estaciones públicas;
+ * - crear y retirar dinámicamente sus fichas;
  * - consultar las condiciones actuales de las estaciones;
  * - representar temperatura, humedad, presión, radiación y UV;
  * - representar viento y dirección;
@@ -31,22 +32,12 @@
  *
  * - ACTIVA;
  * - DATOS_SIMULADOS.
- *
- * No pertenece a este fichero:
- *
- * - el reloj general de MeteoArchidona;
- * - la fecha general;
- * - la navegación principal;
- * - el cambio entre pestañas;
- * - la carga de Observaciones;
- * - la carga de En vivo.
  */
 
 
 /*
  * La dirección la decide js/api.js, que se carga antes: en local
  * apunta al proxy de servidor.py y en producción a la API en Render.
- * Ver el comentario de ese fichero.
  */
 const API_BASE = window.API_BASE;
 
@@ -68,26 +59,10 @@ const NOMBRES_NIVEL_LLUVIA = {
 };
 
 
-/*
- * Catálogo público recibido desde la API.
- *
- * estacionesPublicas contiene los metadatos.
- *
- * codigosEstacion contiene únicamente los códigos funcionales y
- * constituye la lista utilizada por las rutinas meteorológicas.
- */
-
 let estacionesPublicas = [];
 
 let codigosEstacion = [];
 
-
-/*
- * Los estados meteorológicos se crean dinámicamente.
- *
- * No existe ninguna entrada fija para EL_SILO, LOS_LLANOS ni para
- * cualquier estación futura.
- */
 
 const lluviaReal = {};
 
@@ -96,6 +71,19 @@ const lluviaSimulada = {
 };
 
 const vientoEstacion = {};
+
+
+/*
+ * Mientras terminamos la refactorización del HTML, la primera ficha
+ * existente se usa únicamente como plantilla estructural.
+ *
+ * Todas las fichas visibles se reconstruyen después desde el catálogo
+ * público. En un paso posterior esta plantilla pasará a ser un
+ * <template> neutro en pages/actualidad.html.
+ */
+let plantillaFichaEstacion = null;
+
+let codigoPlantillaFicha = null;
 
 
 /* ==========================================================
@@ -246,17 +234,6 @@ function obtenerCodigosConFicha() {
 }
 
 
-/*
- * Compatibilidad temporal durante la transición.
- *
- * Mientras pages/actualidad.html todavía contiene las dos fichas
- * antiguas, sus códigos pueden recuperarse desde las veletas.
- *
- * Cuando las fichas se creen dinámicamente esta función seguirá siendo
- * válida, aunque normalmente no será necesaria porque el catálogo
- * procederá de GET /estaciones.
- */
-
 function obtenerCodigosDesdeDom() {
     const codigos =
         new Set();
@@ -284,6 +261,552 @@ function obtenerCodigosDesdeDom() {
     return Array.from(
         codigos
     );
+}
+
+
+/* ==========================================================
+   PLANTILLA Y FICHAS DINÁMICAS
+   ========================================================== */
+
+
+function capturarPlantillaFichaEstacion() {
+    const panel =
+        document.querySelector(
+            ".panel-superior"
+        );
+
+    if (
+        !panel
+    ) {
+        return false;
+    }
+
+    const template =
+        obtenerElemento(
+            "plantilla-estacion"
+        );
+
+    let ficha =
+        null;
+
+    if (
+        template
+        &&
+        template.tagName
+        ===
+        "TEMPLATE"
+    ) {
+        ficha =
+            template.content
+                .querySelector(
+                    ".estacion-principal"
+                );
+    }
+
+    if (
+        !ficha
+    ) {
+        ficha =
+            Array.from(
+                panel.children
+            ).find(
+                elemento =>
+                    elemento.classList
+                        .contains(
+                            "estacion-principal"
+                        )
+            )
+            ||
+            null;
+    }
+
+    if (
+        !ficha
+    ) {
+        return false;
+    }
+
+    const codigo =
+        normalizarCodigoEstacion(
+            ficha.id.replace(
+                /^tarjeta-/,
+                ""
+            )
+        );
+
+    if (
+        !codigo
+    ) {
+        return false;
+    }
+
+    plantillaFichaEstacion =
+        ficha.cloneNode(
+            true
+        );
+
+    codigoPlantillaFicha =
+        codigo;
+
+    plantillaFichaEstacion
+        .querySelectorAll(
+            ".gota-lluvia, .gota-cristal"
+        )
+        .forEach(
+            elemento =>
+                elemento.remove()
+        );
+
+    plantillaFichaEstacion
+        .querySelectorAll(
+            "*"
+        )
+        .forEach(
+            elemento => {
+                delete elemento.dataset
+                    .gotasLluviaInicializadas;
+
+                delete elemento.dataset
+                    .controlLluviaConfigurado;
+
+                delete elemento.dataset
+                    .patrocinioConfigurado;
+            }
+        );
+
+    return true;
+}
+
+
+function sustituirCodigoEnFicha(
+    ficha,
+    codigoOrigen,
+    codigoDestino
+) {
+    const elementos = [
+        ficha,
+        ...ficha.querySelectorAll(
+            "*"
+        )
+    ];
+
+    elementos.forEach(
+        elemento => {
+            if (
+                elemento.id
+                &&
+                elemento.id.endsWith(
+                    `-${codigoOrigen}`
+                )
+            ) {
+                elemento.id =
+                    `${
+                        elemento.id.slice(
+                            0,
+                            -(
+                                codigoOrigen.length
+                                +
+                                1
+                            )
+                        )
+                    }-${codigoDestino}`;
+            }
+
+            if (
+                elemento.dataset
+                    .lluviaControl
+                ===
+                codigoOrigen
+            ) {
+                elemento.dataset
+                    .lluviaControl =
+                    codigoDestino;
+            }
+
+            if (
+                elemento.dataset
+                    .patrocinio
+                ===
+                codigoOrigen
+            ) {
+                elemento.dataset
+                    .patrocinio =
+                    codigoDestino;
+            }
+
+            delete elemento.dataset
+                .gotasLluviaInicializadas;
+
+            delete elemento.dataset
+                .controlLluviaConfigurado;
+
+            delete elemento.dataset
+                .patrocinioConfigurado;
+        }
+    );
+}
+
+
+function obtenerLocalidadEstacion(
+    estacion
+) {
+    if (
+        estacion?.ciudad
+    ) {
+        return estacion.ciudad;
+    }
+
+    const partes = [
+        estacion?.region,
+        estacion?.pais
+    ].filter(
+        Boolean
+    );
+
+    return partes.join(
+        " · "
+    );
+}
+
+
+function actualizarMetadatosFicha(
+    ficha,
+    estacion
+) {
+    const codigo =
+        estacion.codigo;
+
+    const nombre =
+        estacion.nombre_publico
+        ||
+        codigo;
+
+    const localidad =
+        obtenerLocalidadEstacion(
+            estacion
+        );
+
+    const nombreElemento =
+        ficha.querySelector(
+            ".estacion-nombre"
+        );
+
+    if (
+        nombreElemento
+    ) {
+        nombreElemento.textContent =
+            nombre;
+    }
+
+    const localidadElemento =
+        ficha.querySelector(
+            ".estacion-localidad"
+        );
+
+    if (
+        localidadElemento
+    ) {
+        localidadElemento.textContent =
+            localidad;
+    }
+
+    const veleta =
+        ficha.querySelector(
+            "[data-lluvia-control]"
+        );
+
+    if (
+        veleta
+    ) {
+        veleta.setAttribute(
+            "aria-label",
+            `Veleta de ${nombre}`
+        );
+
+        veleta.setAttribute(
+            "title",
+            `Veleta de ${nombre}`
+        );
+    }
+
+    const patrocinio =
+        ficha.querySelector(
+            ".patrocinio-estacion"
+        );
+
+    if (
+        patrocinio
+    ) {
+        patrocinio.setAttribute(
+            "aria-label",
+            `Patrocinadores de los datos de lluvia de ${nombre}`
+        );
+    }
+}
+
+
+function prepararFichaNueva(
+    ficha,
+    estacion
+) {
+    const codigo =
+        estacion.codigo;
+
+    ficha.dataset
+        .estacionDinamica =
+        "1";
+
+    ficha.dataset
+        .codigoEstacion =
+        codigo;
+
+    const localidad =
+        ficha.querySelector(
+            ".estacion-localidad"
+        );
+
+    if (
+        localidad
+    ) {
+        localidad.id =
+            `localidad-${codigo}`;
+    }
+
+    const estado =
+        ficha.querySelector(
+            ".online"
+        );
+
+    if (
+        estado
+    ) {
+        estado.innerHTML =
+            '<span class="punto"></span>Cargando...';
+    }
+
+    const simulacion =
+        ficha.querySelector(
+            ".simulacion-estacion"
+        );
+
+    if (
+        simulacion
+    ) {
+        simulacion.classList.remove(
+            "visible"
+        );
+
+        simulacion.textContent =
+            "";
+    }
+
+    actualizarMetadatosFicha(
+        ficha,
+        estacion
+    );
+}
+
+
+function crearFichaEstacion(
+    estacion
+) {
+    if (
+        !plantillaFichaEstacion
+        ||
+        !codigoPlantillaFicha
+    ) {
+        return null;
+    }
+
+    const ficha =
+        plantillaFichaEstacion
+            .cloneNode(
+                true
+            );
+
+    sustituirCodigoEnFicha(
+        ficha,
+        codigoPlantillaFicha,
+        estacion.codigo
+    );
+
+    prepararFichaNueva(
+        ficha,
+        estacion
+    );
+
+    return ficha;
+}
+
+
+function obtenerOCrearRejillaEstaciones() {
+    const panel =
+        document.querySelector(
+            ".panel-superior"
+        );
+
+    if (
+        !panel
+    ) {
+        return null;
+    }
+
+    let rejilla =
+        obtenerElemento(
+            "rejilla-estaciones"
+        );
+
+    if (
+        rejilla
+    ) {
+        return rejilla;
+    }
+
+    if (
+        !plantillaFichaEstacion
+    ) {
+        return null;
+    }
+
+    rejilla =
+        document.createElement(
+            "div"
+        );
+
+    rejilla.id =
+        "rejilla-estaciones";
+
+    rejilla.className =
+        "rejilla-estaciones";
+
+    Array.from(
+        panel.children
+    ).forEach(
+        elemento => {
+            if (
+                elemento.classList
+                    .contains(
+                        "estacion-principal"
+                    )
+            ) {
+                elemento.remove();
+            }
+        }
+    );
+
+    panel.classList.add(
+        "panel-superior-dinamico"
+    );
+
+    panel.appendChild(
+        rejilla
+    );
+
+    return rejilla;
+}
+
+
+function sincronizarFichasEstaciones() {
+    if (
+        !plantillaFichaEstacion
+    ) {
+        return false;
+    }
+
+    const rejilla =
+        obtenerOCrearRejillaEstaciones();
+
+    if (
+        !rejilla
+    ) {
+        return false;
+    }
+
+    const codigosValidos =
+        new Set(
+            codigosEstacion
+        );
+
+    rejilla.querySelectorAll(
+        ".estacion-principal[data-estacion-dinamica='1']"
+    ).forEach(
+        ficha => {
+            const codigo =
+                normalizarCodigoEstacion(
+                    ficha.dataset
+                        .codigoEstacion
+                );
+
+            if (
+                !codigosValidos.has(
+                    codigo
+                )
+            ) {
+                ficha.remove();
+            }
+        }
+    );
+
+    estacionesPublicas.forEach(
+        estacion => {
+            let ficha =
+                obtenerElemento(
+                    `tarjeta-${estacion.codigo}`
+                );
+
+            if (
+                !ficha
+            ) {
+                ficha =
+                    crearFichaEstacion(
+                        estacion
+                    );
+
+                if (
+                    !ficha
+                ) {
+                    return;
+                }
+
+                rejilla.appendChild(
+                    ficha
+                );
+
+                crearEstadoInicialEstacion(
+                    estacion.codigo
+                );
+
+                inicializarLluviaVisualEstacion(
+                    estacion.codigo
+                );
+
+                configurarControlesLluvia(
+                    ficha
+                );
+
+                configurarPatrocinios(
+                    ficha
+                );
+
+            } else {
+                actualizarMetadatosFicha(
+                    ficha,
+                    estacion
+                );
+            }
+
+            /*
+             * Reinsertar mantiene el orden devuelto por el catálogo.
+             */
+            rejilla.appendChild(
+                ficha
+            );
+        }
+    );
+
+    actualizarSistemaLluvia();
+
+    return true;
 }
 
 
@@ -552,14 +1075,6 @@ async function cargarCatalogoEstaciones() {
             "Error cargando catálogo público de estaciones:",
             error
         );
-
-        /*
-         * Si ya existe un catálogo válido mantenemos el último estado.
-         *
-         * Si todavía no disponemos de ninguno, utilizamos las fichas
-         * actualmente presentes en el DOM como mecanismo temporal de
-         * respaldo.
-         */
 
         if (
             codigosEstacion.length
@@ -1378,14 +1893,6 @@ function actualizarCapaMeteorologica(
 
 
 function actualizarSistemaLluvia() {
-    /*
-     * Durante la transición únicamente participan visualmente las
-     * estaciones que ya tengan una ficha en el DOM.
-     *
-     * En el siguiente paso todas las estaciones del catálogo tendrán
-     * una ficha generada dinámicamente.
-     */
-
     const codigosRenderizados =
         obtenerCodigosConFicha();
 
@@ -1595,13 +2102,6 @@ function inicializarGotasEnCapa(
     ) {
         return;
     }
-
-    /*
-     * La función puede invocarse varias veces.
-     *
-     * Esta marca evita duplicar 160 gotas si una ficha dinámica se
-     * vuelve a configurar.
-     */
 
     if (
         capa.dataset
@@ -2693,10 +3193,17 @@ function mostrarErrorEstacion(
         velocidad: 0
     };
 
-    asignarTexto(
-        `estado-${codigo}`,
-        "Sin datos"
-    );
+    const estado =
+        obtenerElemento(
+            `estado-${codigo}`
+        );
+
+    if (
+        estado
+    ) {
+        estado.textContent =
+            "Sin datos";
+    }
 
     asignarHtml(
         `temperatura-${codigo}`,
@@ -2792,17 +3299,6 @@ function mostrarErrorEstacion(
 async function cargarEstacion(
     codigo
 ) {
-    /*
-     * Mientras las fichas antiguas sigan en el HTML no intentamos
-     * representar una estación que todavía no tenga tarjeta.
-     *
-     * Así este commit puede desplegarse sin modificar la apariencia
-     * actual.
-     *
-     * Cuando en el siguiente paso generemos las fichas dinámicamente,
-     * esta condición será cierta para todas las estaciones públicas.
-     */
-
     if (
         !estacionTieneFicha(
             codigo
@@ -2883,15 +3379,14 @@ async function cargarCondiciones() {
 
 
 async function refrescarCatalogo() {
-    await cargarCatalogoEstaciones();
+    const cargado =
+        await cargarCatalogoEstaciones();
 
-    /*
-     * En la siguiente fase este punto será también el responsable de
-     * sincronizar las fichas del DOM con el catálogo.
-     *
-     * Actualmente únicamente refresca las condiciones de las fichas
-     * que ya existen.
-     */
+    if (
+        cargado
+    ) {
+        sincronizarFichasEstaciones();
+    }
 
     configurarControlesLluvia();
 
@@ -2945,54 +3440,46 @@ window.addEventListener(
 
 
 async function inicializarActualidad() {
-    /*
-     * Primero se inicializan las capas ya existentes para que la
-     * transición no modifique el comportamiento visual actual.
-     */
+    const plantillaDisponible =
+        capturarPlantillaFichaEstacion();
 
+    if (
+        !plantillaDisponible
+    ) {
+        console.error(
+            "No se ha encontrado una ficha base para construir las estaciones dinámicas."
+        );
+    }
+
+    const catalogoCargado =
+        await cargarCatalogoEstaciones();
+
+    if (
+        catalogoCargado
+        &&
+        plantillaDisponible
+    ) {
+        sincronizarFichasEstaciones();
+    }
+
+    /*
+     * Si el catálogo no estuviera disponible, se conservan las fichas
+     * heredadas del HTML como respaldo temporal.
+     */
     inicializarLluviaVisual();
 
     configurarControlesLluvia();
 
     configurarPatrocinios();
 
-    /*
-     * Después se obtiene el catálogo público real.
-     *
-     * En este momento, por ejemplo, puede devolver:
-     *
-     * - 29300;
-     * - EL_SILO;
-     * - LOS_LLANOS.
-     *
-     * Ninguno de esos códigos está escrito aquí.
-     */
-
-    await cargarCatalogoEstaciones();
-
     actualizarSistemaLluvia();
 
     await cargarCondiciones();
-
-    /*
-     * Las condiciones meteorológicas cambian con frecuencia.
-     */
 
     window.setInterval(
         cargarCondiciones,
         INTERVALO_CONDICIONES_MS
     );
-
-    /*
-     * El catálogo también se refresca periódicamente.
-     *
-     * De este modo una estación que cambie entre PROYECTADA,
-     * DATOS_SIMULADOS, ACTIVA o INACTIVA podrá ser detectada sin
-     * mantener un catálogo permanente en el navegador.
-     *
-     * La creación/eliminación visual de fichas se añadirá en el
-     * siguiente paso.
-     */
 
     window.setInterval(
         refrescarCatalogo,
@@ -3022,28 +3509,6 @@ if (
 } else {
     inicializarActualidad();
 }
-
-
-/*
- * El logotipo de Y&Z es el mando de la lluvia de prueba (GLOBAL),
- * pero vive en componentes/cabecera.html y lo inserta js/cabecera.js
- * cuando esta página ya ha repasado el documento. Al avisar de que la
- * cabecera está montada, se repasa otra vez y el mando queda
- * conectado.
- */
-document.addEventListener(
-    "cabecera:montada",
-    () => {
-        configurarControlesLluvia();
-
-        actualizarIndicadorSimulacion(
-            "GLOBAL"
-        );
-    },
-    {
-        once: true
-    }
-);
 
 
 // Fin de fichero: js/actualidad.js
