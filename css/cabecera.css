@@ -13,21 +13,7 @@
  */
 
 
-:root {
-    --bg: #080d14;
-    --surface: #0d1520;
-    --card: #111e2e;
-    --border: #1a2d42;
-    --accent: #f0a500;
-    --blue: #3b9eff;
-    --cyan: #36d5ff;
-    --green: #22c55e;
-    --text: #f6f8fb;
-    --muted: #aabdd0;
-    --shadow:
-        0 12px 35px
-        rgba(0, 0, 0, 0.28);
-}
+/* La paleta está en css/paleta.css, que se carga antes que esta hoja. */
 
 
 * {

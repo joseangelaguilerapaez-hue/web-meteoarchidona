@@ -1,0 +1,99 @@
+/*
+ * MeteoArchidona
+ * Paleta
+ *
+ * Único sitio donde se definen los colores, sombras y radios del
+ * sitio. Se carga la primera en todas las páginas, antes que
+ * css/cabecera.css y que la hoja propia de cada una.
+ *
+ * Hasta el 13-9-2026 cada hoja declaraba su propio :root: cuatro
+ * copias, y con dos idiomas —--bg y --text en tres de ellas,
+ * --fondo y --texto en En vivo—. Cambiar un color eran cuatro sitios.
+ *
+ * Todos los valores se han conservado exactos. Por eso hay colores
+ * muy parecidos con nombres distintos (--accent y --amber, --cyan y
+ * --cyan-bright): En vivo tiene su propio tono y fundirlos cambiaría
+ * su aspecto. Si algún día se decide igualarlos, es aquí.
+ *
+ * El visor de radar (visores/radar.css) no está incluido: es un
+ * documento aparte, dentro de un iframe, con sus propios valores.
+ */
+
+:root {
+
+    /* ---- Fondos y superficies ---- */
+
+    --bg: #080d14;
+    --bg-alt: #07111f;
+    --bg-deep: #030914;
+
+    --surface: #0d1520;
+    --card: #111e2e;
+    --card-soft: #0d1a27;
+    --panel: rgba(12, 28, 47, 0.94);
+
+
+    /* ---- Bordes ---- */
+
+    --border: #1a2d42;
+    --border-strong: #29435e;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-amber: rgba(242, 191, 88, 0.28);
+    --border-cyan: rgba(54, 217, 255, 0.26);
+
+
+    /* ---- Texto ---- */
+
+    --text: #f6f8fb;
+    --white: #f5f8fc;
+    --text-soft: #c9d6e5;
+    --muted: #aabdd0;
+    --text-faint: #8194aa;
+    --muted-dark: #7890a7;
+
+
+    /* ---- Acentos ---- */
+
+    --accent: #f0a500;
+    --gold: #d48800;
+    --amber: #f2bf58;
+    --amber-light: #ffd989;
+
+    --blue: #3b9eff;
+    --cyan: #36d5ff;
+    --cyan-bright: #36d9ff;
+    --teal: #00c9a7;
+
+    --green: #22c55e;
+    --mint: #67e8a5;
+
+    --red: #ef4444;
+    --orange: #f97316;
+
+
+    /* ---- Sombras ---- */
+
+    --shadow:
+        0 12px 35px
+        rgba(0, 0, 0, 0.28);
+
+    --shadow-deep:
+        0 24px 70px
+        rgba(0, 0, 0, 0.38);
+
+    /* La de los paneles de Administración, más marcada que --shadow. */
+    --shadow-panel:
+        0 18px 50px
+        rgba(0, 0, 0, 0.38);
+
+
+    /* ---- Radios ---- */
+
+    --radius-lg: 28px;
+    --radius: 20px;
+    --radius-sm: 14px;
+
+}
+
+
+/* Fin de fichero: css/paleta.css */

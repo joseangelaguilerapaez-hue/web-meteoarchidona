@@ -11,24 +11,7 @@
  */
 
 
-:root {
-    --bg: #080d14;
-    --surface: #0d1520;
-    --card: #111e2e;
-    --card-soft: #0d1a27;
-    --border: #1a2d42;
-    --accent: #f0a500;
-    --gold: #d48800;
-    --teal: #00c9a7;
-    --blue: #3b9eff;
-    --cyan: #36d5ff;
-    --green: #22c55e;
-    --red: #ef4444;
-    --orange: #f97316;
-    --text: #f6f8fb;
-    --muted: #aabdd0;
-    --shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
-}
+/* La paleta está en css/paleta.css, que se carga antes que esta hoja. */
 
 
 * {

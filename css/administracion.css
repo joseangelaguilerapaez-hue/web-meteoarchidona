@@ -9,24 +9,7 @@
  * Salieron de un <style> dentro de esa página, tal cual estaban.
  */
 
-:root{
-    --bg:#080d14;
-    --surface:#0d1520;
-    --card:#111e2e;
-    --card-soft:#0d1a27;
-    --border:#1a2d42;
-    --border-strong:#29435e;
-    --accent:#f0a500;
-    --teal:#00c9a7;
-    --blue:#3b9eff;
-    --cyan:#36d5ff;
-    --green:#22c55e;
-    --red:#ef4444;
-    --text:#f6f8fb;
-    --muted:#aabdd0;
-    --muted-dark:#7890a7;
-    --shadow:0 18px 50px rgba(0,0,0,.38)
-}
+/* La paleta está en css/paleta.css, que se carga antes que esta hoja. */
 
 *{
     box-sizing:border-box
@@ -187,7 +170,7 @@ a{
             rgba(17,30,46,.99),
             rgba(9,22,34,.99)
         );
-    box-shadow:var(--shadow)
+    box-shadow:var(--shadow-panel)
 }
 
 .candado{
@@ -436,7 +419,7 @@ h3{
             rgba(17,30,46,.98),
             rgba(9,22,34,.98)
         );
-    box-shadow:var(--shadow)
+    box-shadow:var(--shadow-panel)
 }
 
 button.resumen-card{
