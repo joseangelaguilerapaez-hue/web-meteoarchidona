@@ -2,143 +2,225 @@
 # MeteoArchidona — configuración del servidor
 # ============================================================
 #
-# El sitio está en Hostinger, que sirve con LiteSpeed y lee este
-# fichero con la misma sintaxis que Apache. Si algún día se mudara a
-# Nginx o a GitHub Pages, esto sería papel mojado y habría que
-# rehacerlo donde toque.
+# El sitio está alojado en Hostinger sobre LiteSpeed.
 #
-# Nada de esto se puede probar en local: el servidor de pruebas de
-# Python ignora el .htaccess. Se comprueba desplegado.
+# Durante la fase activa de desarrollo se desactiva expresamente la
+# caché propia de LiteSpeed para evitar que, después de un despliegue,
+# el servidor continúe entregando versiones anteriores de las páginas.
+#
+# Los recursos estáticos siguen utilizando la caché normal del
+# navegador mediante las reglas Expires definidas más abajo.
+#
+# Cuando el desarrollo de la web esté más estabilizado podremos volver
+# a estudiar una política de caché selectiva.
+# ============================================================
+
 
 RewriteEngine On
 
-# Al entrar en "/" sale Actualidad. No es una redirección: se sirve
-# esa página directamente, así que la dirección de la portada es
-# meteoarchidona.com y no meteoarchidona.com/actualidad.
+
+# ============================================================
+# LITESPEED
+# ============================================================
+#
+# Hostinger utiliza LiteSpeed.
+#
+# Desactivamos tanto la caché pública como la privada para todo este
+# sitio.
+#
+# Esto evita situaciones en las que:
+#
+# - se despliega una versión nueva;
+# - GitHub y Hostinger ya contienen el fichero actualizado;
+# - pero LiteSpeed continúa entregando una copia anterior.
+#
+# El problema se manifestó claramente en Actualidad:
+#
+#     /
+#
+# mostraba todavía dos estaciones mientras:
+#
+#     /pages/actualidad.html?v=117prueba
+#
+# mostraba correctamente las tres.
+#
+# No se activa CacheEnable en ningún punto de este fichero.
+
+<IfModule LiteSpeed>
+
+    CacheDisable public /
+    CacheDisable private /
+
+</IfModule>
+
+
+# ============================================================
+# PÁGINA DE INICIO
+# ============================================================
+#
+# Al entrar en:
+#
+#     https://meteoarchidona.com/
+#
+# se sirve directamente:
+#
+#     pages/actualidad.html
+#
+# No se realiza ninguna redirección visible.
+
 DirectoryIndex pages/actualidad.html
 
-# Nunca listar el contenido de una carpeta: sin esto, entrar en
-# /assets/ o /js/ enseñaría el árbol entero del sitio.
+
+# ============================================================
+# SEGURIDAD DE DIRECTORIOS
+# ============================================================
+#
+# No permitir que el servidor muestre listados de carpetas.
+
 Options -Indexes
 
 
-# ------------------------------------------------------------
-# Direcciones limpias
-# ------------------------------------------------------------
+# ============================================================
+# DIRECCIONES LIMPIAS
+# ============================================================
 #
-# Las páginas viven en pages/ y se sirven sin carpeta y sin
-# extensión: /en-vivo, /observaciones, /prediccion, /administracion.
-# La barra del navegador enseña eso y no la ruta del fichero.
+# Las páginas viven físicamente dentro de:
 #
-# Es una reescritura interna, no una redirección: el visitante pide
-# /en-vivo y el servidor le da pages/en-vivo.html sin más viajes.
+#     pages/
 #
-# Las redirecciones de las direcciones viejas van antes, y todas
-# miran THE_REQUEST, que es la línea que mandó el navegador. Si
-# miraran la ruta a secas entrarían en bucle: la reescritura interna
-# convierte /en-vivo en pages/en-vivo.html, eso vuelve a pasar por
-# estas reglas, y pages/en-vivo.html redirige otra vez a /en-vivo.
+# pero públicamente se utilizan direcciones limpias:
+#
+#     /observaciones
+#     /prediccion
+#     /en-vivo
+#     /administracion
+#
+# Actualidad constituye la portada y por tanto utiliza:
+#
+#     /
+#
+# Las redirecciones de URLs antiguas utilizan THE_REQUEST para evitar
+# bucles con las reescrituras internas.
 
-# --- Direcciones viejas, a la nueva con un 301 permanente ---
+
+# ------------------------------------------------------------
+# Actualidad
+# ------------------------------------------------------------
 #
-# Todo lo que ya circula por ahí —enlaces guardados, resultados de
-# buscador— tiene que acabar en la dirección buena. El 301 es lo que
-# hace que el buscador cambie su índice en vez de dejar la vieja
-# rota.
+# Todas estas direcciones antiguas terminan en la portada:
 #
-# Actualidad es la portada, así que su dirección buena es "/". Que
-# además exista /actualidad repartiría el crédito entre dos
-# direcciones para la misma página, así que también redirige.
+#     /index.html
+#     /actualidad
+#     /pages/actualidad.html
 
 RewriteCond %{THE_REQUEST} \s/+(?:index\.html|actualidad|pages/actualidad\.html)[\s?] [NC]
 RewriteRule ^ / [R=301,L]
 
+
+# ------------------------------------------------------------
+# En vivo
+# ------------------------------------------------------------
+
 RewriteCond %{THE_REQUEST} \s/+(?:pages/)?en-vivo\.html[\s?] [NC]
 RewriteRule ^ /en-vivo [R=301,L]
+
+
+# ------------------------------------------------------------
+# Observaciones
+# ------------------------------------------------------------
 
 RewriteCond %{THE_REQUEST} \s/+(?:pages/)?observaciones\.html[\s?] [NC]
 RewriteRule ^ /observaciones [R=301,L]
 
+
+# ------------------------------------------------------------
+# Administración
+# ------------------------------------------------------------
+
 RewriteCond %{THE_REQUEST} \s/+(?:pages/)?administracion\.html[\s?] [NC]
 RewriteRule ^ /administracion [R=301,L]
+
+
+# ------------------------------------------------------------
+# Predicción
+# ------------------------------------------------------------
 
 RewriteCond %{THE_REQUEST} \s/+pages/prediccion\.html[\s?] [NC]
 RewriteRule ^ /prediccion [R=301,L]
 
-# --- Y la reescritura interna de las direcciones limpias ---
+
+# ------------------------------------------------------------
+# Reescritura interna de direcciones limpias
+# ------------------------------------------------------------
 
 RewriteRule ^(observaciones|prediccion|en-vivo|administracion)/?$ pages/$1.html [L]
 
 
-# ------------------------------------------------------------
-# Ficheros que no son del sitio
-# ------------------------------------------------------------
+# ============================================================
+# FICHEROS INTERNOS
+# ============================================================
 #
-# Nada que empiece por punto se sirve, ni fichero ni carpeta: .git,
-# .github, el propio .htaccess. Va sobre la ruta y no con FilesMatch
-# porque FilesMatch casa nombres de fichero y no rutas, así que
-# bloquearía un fichero llamado ".git" pero dejaría pasar
-# "/.git/config", que da la dirección del repositorio y con ella todo
-# el código.
+# No permitir acceso web a ficheros o carpetas cuyo nombre comienza
+# por punto:
 #
-# .well-known se salva: por ahí pasa la renovación del certificado.
+#     .git
+#     .github
+#     .gitignore
+#     .htaccess
+#
+# Se conserva .well-known porque puede ser utilizado para la
+# validación o renovación del certificado HTTPS.
 
 RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 
 
-# ------------------------------------------------------------
-# Cabeceras de seguridad
-# ------------------------------------------------------------
-#
-# Strict-Transport-Security obliga al navegador a entrar por HTTPS
-# durante un año, incluso escribiendo http:// a mano. Con el
-# certificado de Hostinger puesto es lo correcto, pero conviene
-# saberlo: si el sitio se quedara sin HTTPS, quien ya haya entrado no
-# podría volver hasta que caduque el plazo.
+# ============================================================
+# CABECERAS DE SEGURIDAD
+# ============================================================
 
 <IfModule mod_headers.c>
+
     Header always set X-Content-Type-Options "nosniff"
+
     Header always set X-Frame-Options "SAMEORIGIN"
+
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
 </IfModule>
 
 
-# ------------------------------------------------------------
-# Caché de documentos HTML
-# ------------------------------------------------------------
+# ============================================================
+# HTML — SIN CACHÉ
+# ============================================================
 #
-# Los documentos HTML cambian con frecuencia durante el desarrollo de
-# MeteoArchidona y además contienen las referencias versionadas a CSS
-# y JavaScript.
+# Además de desactivar la caché interna de LiteSpeed, los documentos
+# HTML tampoco deben quedar almacenados en el navegador.
 #
-# No deben permanecer almacenados en el navegador durante una hora,
-# porque después de un despliegue podría seguir utilizándose una
-# versión antigua del documento aunque CSS y JavaScript ya sean los
-# nuevos.
+# Esto garantiza que, después de un despliegue, el navegador solicite
+# siempre la versión actual del documento.
 #
-# Esto afecta también a:
+# Afecta a:
 #
-# - pages/actualidad.html;
-# - pages/observaciones.html;
-# - pages/prediccion.html;
-# - pages/en-vivo.html;
-# - pages/administracion.html;
-# - componentes/cabecera.html;
-# - cualquier futuro documento HTML.
-#
-# El navegador deberá solicitar/revalidar siempre estos documentos.
-#
-# CSS, JavaScript, imágenes y fuentes mantienen más abajo sus tiempos
-# largos de caché.
+#     pages/actualidad.html
+#     pages/observaciones.html
+#     pages/prediccion.html
+#     pages/en-vivo.html
+#     pages/administracion.html
+#     componentes/cabecera.html
+#     cualquier futuro HTML
 
 <IfModule mod_headers.c>
 
     <FilesMatch "\.html$">
 
         Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+
         Header always set Pragma "no-cache"
+
         Header always set Expires "0"
 
     </FilesMatch>
@@ -146,49 +228,93 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 </IfModule>
 
 
-# ------------------------------------------------------------
-# Compresión
-# ------------------------------------------------------------
+# ============================================================
+# COMPRESIÓN
+# ============================================================
 #
-# Texto plano comprimido al vuelo. Es de donde sale casi toda la
-# ganancia de peso: css/administracion.css y js/administracion.js
-# suman más de 100 KB y son texto repetitivo.
+# Comprimir recursos de texto enviados al navegador.
 
 <IfModule mod_deflate.c>
+
     AddOutputFilterByType DEFLATE text/html
+
     AddOutputFilterByType DEFLATE text/plain
+
     AddOutputFilterByType DEFLATE text/css
+
     AddOutputFilterByType DEFLATE text/javascript
+
     AddOutputFilterByType DEFLATE application/javascript
+
     AddOutputFilterByType DEFLATE application/json
+
     AddOutputFilterByType DEFLATE image/svg+xml
+
 </IfModule>
 
 
-# ------------------------------------------------------------
-# Caché del navegador
-# ------------------------------------------------------------
+# ============================================================
+# CACHÉ DEL NAVEGADOR PARA RECURSOS ESTÁTICOS
+# ============================================================
 #
-# Los documentos HTML no se almacenan y deben solicitarse/revalidarse
-# siempre. La política se refuerza tanto mediante mod_headers como
-# mediante un tiempo de expiración de cero segundos.
+# Importante:
 #
-# Las hojas de estilo y los scripts duran una semana. Sus enlaces
-# utilizan "?v=" en los documentos HTML para cambiar de URL cuando se
-# publica una nueva versión.
+# Esta sección controla la caché del navegador.
 #
-# Las imágenes duran un mes: normalmente no cambian y, cuando cambian,
-# se publica una nueva versión o nombre de recurso.
+# No contradice:
+#
+#     CacheDisable public /
+#
+# porque esa directiva anterior controla la caché interna de LiteSpeed.
+#
+# Política:
+#
+# HTML:
+#     sin caché.
+#
+# CSS y JavaScript:
+#     una semana.
+#
+#     Los enlaces utilizan ?v= para cambiar su URL cuando publicamos
+#     una nueva versión.
+#
+# Imágenes:
+#     un mes.
+#
+# Fuentes:
+#     un año.
 
 <IfModule mod_expires.c>
 
     ExpiresActive On
 
+
+    # --------------------------------------------------------
+    # Documentos
+    # --------------------------------------------------------
+
     ExpiresByType text/html "access plus 0 seconds"
+
+
+    # --------------------------------------------------------
+    # CSS
+    # --------------------------------------------------------
 
     ExpiresByType text/css "access plus 1 week"
 
+
+    # --------------------------------------------------------
+    # JavaScript
+    # --------------------------------------------------------
+
     ExpiresByType application/javascript "access plus 1 week"
+
+    ExpiresByType text/javascript "access plus 1 week"
+
+
+    # --------------------------------------------------------
+    # Imágenes
+    # --------------------------------------------------------
 
     ExpiresByType image/jpeg "access plus 1 month"
 
@@ -198,9 +324,18 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 
     ExpiresByType image/svg+xml "access plus 1 month"
 
+
+    # --------------------------------------------------------
+    # Fuentes
+    # --------------------------------------------------------
+
     ExpiresByType font/woff2 "access plus 1 year"
 
 </IfModule>
 
+
+# ============================================================
+# FIN
+# ============================================================
 
 # Fin de fichero: .htaccess
