@@ -239,6 +239,109 @@ function configurarMenu() {
 }
 
 
+/* ==========================================================
+   PIE COMÚN
+   ========================================================== */
+
+
+const RUTA_PIE = "/componentes/pie.html";
+
+
+/*
+ * Monta componentes/pie.html en el <div id="pie"> de la página, si lo
+ * tiene: Observaciones no lo lleva a propósito, porque su mapa ocupa
+ * la pantalla entera.
+ *
+ * La lista de secciones se copia del menú de la cabecera ya montada,
+ * así que se mantiene en un solo sitio. Si la cabecera no llegó a
+ * cargar, esa columna se oculta en vez de salir vacía.
+ */
+async function montarPie() {
+
+    const hueco = document.getElementById("pie");
+
+    if (!hueco) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const respuesta = await fetch(RUTA_PIE);
+
+        if (!respuesta.ok) {
+
+            throw new Error(`El pie respondió ${respuesta.status}`);
+
+        }
+
+        hueco.innerHTML = await respuesta.text();
+
+    } catch (error) {
+
+        // Sin pie la página sigue siendo usable: no se inventa uno.
+        console.error("No se ha podido cargar el pie:", error);
+
+        return;
+
+    }
+
+
+    const anio = document.getElementById("pie-anio");
+
+    if (anio) {
+
+        anio.textContent = String(new Date().getFullYear());
+
+    }
+
+
+    const lista = document.getElementById("pie-secciones");
+
+    const enlaces = document.querySelectorAll(".navegacion a[data-seccion]");
+
+    if (!lista) {
+
+        return;
+
+    }
+
+    if (!enlaces.length) {
+
+        lista.closest(".pie-sitio-columna")?.setAttribute("hidden", "");
+
+        return;
+
+    }
+
+
+    enlaces.forEach((original) => {
+
+        const enlace = document.createElement("a");
+
+        enlace.href = original.getAttribute("href");
+
+        enlace.textContent = original.textContent.trim();
+
+        if (original.getAttribute("aria-current") === "page") {
+
+            enlace.setAttribute("aria-current", "page");
+
+        }
+
+        const elemento = document.createElement("li");
+
+        elemento.appendChild(enlace);
+
+        lista.appendChild(elemento);
+
+    });
+
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -280,12 +383,19 @@ async function montarCabecera() {
 
         console.error("No se ha podido cargar la cabecera:", error);
 
+        // El pie no depende de la cabecera: se monta igual, solo que
+        // sin la columna de secciones.
+        montarPie();
+
         return;
 
     }
 
 
     marcarSeccionActual();
+
+    // Después de marcar la sección: el pie copia el menú ya marcado.
+    montarPie();
 
     configurarMenu();
 

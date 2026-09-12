@@ -1,0 +1,170 @@
+/*
+ * MeteoArchidona
+ * Pie común
+ *
+ * Estilos de componentes/pie.html, que va en todas las páginas menos
+ * Observaciones. Los colores salen de css/paleta.css.
+ *
+ * Las clases llevan el prefijo pie-sitio para no chocar con otras que
+ * ya existen, como .pie-camara de En vivo.
+ */
+
+
+.pie-sitio {
+    margin-top: 48px;
+    border-top: 1px solid var(--border);
+    background: rgba(8, 13, 20, 0.94);
+    color: var(--muted);
+}
+
+
+.pie-sitio-cuerpo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 32px;
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 34px 0 26px;
+}
+
+
+/* ==========================================================
+   MARCA
+   ========================================================== */
+
+.pie-sitio-nombre {
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+
+.pie-sitio-nombre span {
+    color: var(--accent);
+}
+
+
+.pie-sitio-marca p {
+    max-width: 340px;
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+.pie-sitio-firma strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   COLUMNAS
+   ========================================================== */
+
+.pie-sitio-titulo {
+    margin: 0 0 12px;
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+
+.pie-sitio-lista {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+.pie-sitio-lista a {
+    color: var(--muted);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+
+.pie-sitio-lista a[aria-current="page"] {
+    color: var(--accent);
+}
+
+
+.pie-sitio-correo {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    word-break: break-all;
+}
+
+
+@media (hover: hover) {
+    .pie-sitio-lista a:hover {
+        color: var(--cyan);
+    }
+}
+
+
+/* ==========================================================
+   BARRA FINAL
+   ========================================================== */
+
+.pie-sitio-barra {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 20px;
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 14px 0 20px;
+    border-top: 1px solid rgba(26, 45, 66, 0.7);
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   MÓVIL
+   ========================================================== */
+
+/*
+ * Una columna, y los enlaces con altura de sobra para el dedo: en
+ * móvil el menú va escondido tras un botón, y este pie es la forma de
+ * cambiar de sección al llegar al final de una página.
+ */
+@media (max-width: 720px) {
+
+    .pie-sitio {
+        margin-top: 32px;
+    }
+
+    .pie-sitio-cuerpo {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        width: calc(100% - 32px);
+        padding-top: 26px;
+    }
+
+    .pie-sitio-lista {
+        gap: 0;
+    }
+
+    .pie-sitio-lista a {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        font-size: 15px;
+    }
+
+    .pie-sitio-barra {
+        width: calc(100% - 32px);
+        flex-direction: column;
+    }
+
+}
+
+
+/* Fin de fichero: css/pie.css */

@@ -1696,26 +1696,10 @@ button {
    ========================================================== */
 
 
-.pie {
-    display: grid;
-    grid-template-columns:
-        1fr 1fr 1fr;
-    gap: 20px;
-    align-items: center;
-    padding: 20px 5px 5px;
-    color: var(--muted);
-    font-size: 10px;
-}
 
 
-.pie-centro {
-    text-align: center;
-}
 
 
-.pie-derecha {
-    text-align: right;
-}
 
 
 /* ==========================================================
@@ -1851,16 +1835,8 @@ button {
     }
 
 
-    .pie {
-        grid-template-columns: 1fr;
-        text-align: left;
-    }
 
 
-    .pie-centro,
-    .pie-derecha {
-        text-align: left;
-    }
 
 }
 
@@ -2108,7 +2084,6 @@ button {
     .camara-estado,
     .camara-nombre,
     .observacion,
-    .pie,
     .grafico-cabecera .leyenda span,
     .grafico-enlace {
         font-size: 11px;

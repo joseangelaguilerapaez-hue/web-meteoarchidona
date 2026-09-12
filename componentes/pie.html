@@ -1,0 +1,97 @@
+<!--
+    MeteoArchidona · Pie común
+
+    Lo inserta js/cabecera.js en el <div id="pie"> de cada página y se
+    estiliza con css/pie.css. Va en todas las páginas menos
+    Observaciones, cuyo mapa ocupa la pantalla entera.
+
+    La lista de secciones no se escribe aquí: js/cabecera.js la copia
+    del menú de componentes/cabecera.html, para que solo haya una lista
+    que mantener. El año lo pone también el JS.
+
+    Fuera, a propósito: el aviso legal (aplazado) y los patrocinios (aún
+    no son públicos). No se enlaza nada que no exista.
+-->
+
+<footer class="pie-sitio">
+
+<div class="pie-sitio-cuerpo">
+
+
+<div class="pie-sitio-marca">
+
+    <div class="pie-sitio-nombre">
+        METEO<span>ARCHIDONA</span>
+    </div>
+
+    <p>
+        El tiempo de nuestra comarca, con estaciones meteorológicas
+        propias en Archidona y su entorno.
+    </p>
+
+    <p class="pie-sitio-firma">
+        Un proyecto de <strong>Y&amp;Z Project</strong>
+    </p>
+
+</div>
+
+
+<nav
+    class="pie-sitio-columna"
+    aria-label="Secciones del sitio"
+>
+
+    <p class="pie-sitio-titulo">
+        Secciones
+    </p>
+
+    <ul
+        class="pie-sitio-lista"
+        id="pie-secciones"
+    ></ul>
+
+</nav>
+
+
+<div class="pie-sitio-columna">
+
+    <p class="pie-sitio-titulo">
+        Contacto
+    </p>
+
+    <ul class="pie-sitio-lista">
+
+        <li>
+            <a
+                class="pie-sitio-correo"
+                href="mailto:infometeoarchidona@meteoarchidona.com"
+            >infometeoarchidona@meteoarchidona.com</a>
+        </li>
+
+        <li>
+            <a href="/informacion">Más información</a>
+        </li>
+
+    </ul>
+
+</div>
+
+
+</div>
+
+
+<div class="pie-sitio-barra">
+
+    <span>
+        &copy; <span id="pie-anio">2026</span> MeteoArchidona
+    </span>
+
+    <span>
+        Archidona · Málaga
+    </span>
+
+</div>
+
+</footer>
+
+<!-- Fin de fichero: componentes/pie.html -->
