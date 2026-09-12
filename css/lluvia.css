@@ -1,0 +1,219 @@
+/*
+ * MeteoArchidona
+ * Lluvia de prueba en toda la pantalla
+ *
+ * Estilos de las capas que crea js/lluvia.js en las páginas que no
+ * tienen motor de lluvia propio: En vivo, Observaciones, Predicción,
+ * Información y Administración.
+ *
+ * Actualidad NO carga esta hoja: su lluvia, que además responde a los
+ * datos reales y al viento de cada estación, vive en
+ * css/actualidad.css. Los valores de aquí son copia exacta de esa hoja
+ * para que la lluvia se vea igual en todas las páginas; si se cambian
+ * allí, conviene cambiarlos aquí.
+ *
+ * Los niveles van dentro de .capa-lluvia y no como .nivel-1 sueltos,
+ * para que ninguna otra clase .nivel-* de una página los active.
+ */
+
+
+.capa-lluvia,
+.capa-gotas-cristal {
+    display: none;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+
+.capa-lluvia {
+    --factor-duracion: 1;
+    --factor-longitud: 1;
+    --factor-opacidad: 1;
+    --ancho-gota: 1px;
+    --inicio-x: 0px;
+    --final-x: 0px;
+    --recorrido-y: 1200px;
+    --angulo-gota: 0deg;
+
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+}
+
+
+.capa-gotas-cristal {
+    position: fixed;
+    inset: 0;
+    z-index: 101;
+}
+
+
+.capa-lluvia.activa,
+.capa-gotas-cristal.activa {
+    display: block;
+}
+
+
+/* ==========================================================
+   NIVELES
+   ========================================================== */
+
+.capa-lluvia.nivel-1 {
+    --factor-duracion: 1.80;
+    --factor-longitud: 0.52;
+    --factor-opacidad: 0.38;
+    --ancho-gota: 0.7px;
+    background: rgba(8, 22, 34, 0.005);
+}
+
+.capa-lluvia.nivel-1 .gota-lluvia:nth-child(n+17) {
+    display: none;
+}
+
+
+.capa-lluvia.nivel-2 {
+    --factor-duracion: 1.18;
+    --factor-longitud: 0.88;
+    --factor-opacidad: 0.62;
+    --ancho-gota: 1px;
+    background: rgba(8, 22, 34, 0.020);
+}
+
+.capa-lluvia.nivel-2 .gota-lluvia:nth-child(n+49) {
+    display: none;
+}
+
+
+.capa-lluvia.nivel-3 {
+    --factor-duracion: 0.76;
+    --factor-longitud: 1.32;
+    --factor-opacidad: 0.84;
+    --ancho-gota: 1.4px;
+    background: rgba(6, 19, 31, 0.052);
+}
+
+.capa-lluvia.nivel-3 .gota-lluvia:nth-child(n+97) {
+    display: none;
+}
+
+
+.capa-lluvia.nivel-4 {
+    --factor-duracion: 0.44;
+    --factor-longitud: 1.90;
+    --factor-opacidad: 1;
+    --ancho-gota: 2px;
+    background: rgba(4, 16, 28, 0.105);
+}
+
+.capa-lluvia.nivel-4 .gota-lluvia {
+    display: block;
+}
+
+
+/* ==========================================================
+   GOTAS DE LLUVIA
+   ========================================================== */
+
+.gota-lluvia {
+    position: absolute;
+    top: -18%;
+    left: var(--x);
+    width: var(--ancho-gota);
+    height: calc(var(--longitud) * var(--factor-longitud));
+    opacity: calc(var(--opacidad) * var(--factor-opacidad));
+    border-radius: 999px;
+    background: linear-gradient(to bottom, rgba(194, 231, 255, 0), rgba(180, 226, 255, 0.98));
+    box-shadow: 0 0 4px rgba(116, 201, 255, 0.34);
+    animation-name: caer-lluvia;
+    animation-duration: calc(var(--duracion) * var(--factor-duracion));
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-delay: var(--retraso);
+    will-change: transform;
+}
+
+
+.capa-lluvia.nivel-4 .gota-lluvia:nth-child(3n) {
+    box-shadow: 0 0 7px rgba(166, 222, 255, 0.54);
+}
+
+
+@keyframes caer-lluvia {
+
+    from {
+        transform: translate3d(var(--inicio-x), -40px, 0) rotate(var(--angulo-gota));
+    }
+
+    to {
+        transform: translate3d(var(--final-x), var(--recorrido-y), 0) rotate(var(--angulo-gota));
+    }
+
+}
+
+
+/* ==========================================================
+   GOTAS SOBRE EL CRISTAL
+   ========================================================== */
+
+.gota-cristal {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--tamano);
+    height: calc(var(--tamano) * 1.24);
+    border-radius: 54% 46% 59% 41% / 44% 47% 53% 56%;
+    border: 1px solid rgba(220, 244, 255, 0.18);
+    background: radial-gradient(
+        circle at 32% 24%,
+        rgba(255, 255, 255, 0.38),
+        rgba(177, 225, 251, 0.12) 30%,
+        rgba(86, 161, 205, 0.06) 67%,
+        rgba(255, 255, 255, 0.02)
+    );
+    box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.18), 0 1px 4px rgba(0, 0, 0, 0.16);
+    opacity: 0;
+    transform: scale(0.65);
+    animation: vida-gota-cristal var(--vida) ease-in-out forwards;
+    will-change: transform, opacity;
+}
+
+
+.gota-cristal::after {
+    content: "";
+    position: absolute;
+    width: 28%;
+    height: 20%;
+    left: 20%;
+    top: 17%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.36);
+    filter: blur(0.3px);
+}
+
+
+@keyframes vida-gota-cristal {
+
+    0% {
+        opacity: 0;
+        transform: translate3d(0, -3px, 0) scale(0.55);
+    }
+
+    12% {
+        opacity: var(--opacidad-cristal);
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    70% {
+        opacity: calc(var(--opacidad-cristal) * 0.88);
+        transform: translate3d(var(--desvio-x), calc(var(--deslizar) * 0.25), 0) scale(0.98);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(var(--desvio-x), var(--deslizar), 0) scale(0.88);
+    }
+
+}
+
+
+/* Fin de fichero: css/lluvia.css */
