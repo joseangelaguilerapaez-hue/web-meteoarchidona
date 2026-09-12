@@ -1,0 +1,66 @@
+/*
+============================================================
+TIPOGRAFÍAS
+============================================================
+
+Las fuentes se sirven desde el propio sitio en vez de pedirlas a
+fonts.googleapis.com: pidiéndolas a Google, cada visita manda su IP
+a un tercero sin necesidad, y la página depende de que ese servicio
+responda.
+
+Sora y JetBrains Mono son fuentes variables: un único fichero tiene
+todos los grosores. Google lo servía con una dirección distinta por
+peso —18 direcciones para 4 ficheros idénticos—, y el navegador lo
+descargaba una vez por cada grosor que usara la página. Aquí va un
+@font-face por familia y subconjunto, con el rango de pesos que
+cubre, y cuatro ficheros.
+
+Solo latino y latino extendido: cirílico, griego y vietnamita no
+hacen falta en un sitio en español.
+
+Se carga el primero en todas las páginas, antes que css/paleta.css.
+============================================================
+*/
+
+/* JetBrains Mono 400-600 · latin-ext */
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url('/assets/fuentes/jetbrains-mono-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* JetBrains Mono 400-600 · latin */
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url('/assets/fuentes/jetbrains-mono-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Sora 300-800 · latin-ext */
+@font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 300 800;
+    font-display: swap;
+    src: url('/assets/fuentes/sora-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Sora 300-800 · latin */
+@font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 300 800;
+    font-display: swap;
+    src: url('/assets/fuentes/sora-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+/* Fin de fichero: css/fuentes.css */

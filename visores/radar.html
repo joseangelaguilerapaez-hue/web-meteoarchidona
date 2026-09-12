@@ -6,12 +6,10 @@
 
 <title>MeteoArchidona · Visor meteorológico regional</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link
-href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap"
 rel="stylesheet"
+href="../css/fuentes.css?v=20260913-fuentes1"
 >
 
 <link
@@ -433,8 +431,13 @@ id="dato-capas"
 </main>
 
 
+<!--
+    Leaflet 1.9.4, servido desde el propio sitio en vez de unpkg.com.
+    Es el fichero original: su SHA-256 coincide con el integrity oficial
+    (sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=).
+-->
 <script
-src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+src="../js/vendor/leaflet-1.9.4.js"
 ></script>
 
 <script
