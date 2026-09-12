@@ -21,6 +21,7 @@ DirectoryIndex pages/actualidad.html
 # /assets/ o /js/ enseñaría el árbol entero del sitio.
 Options -Indexes
 
+
 # ------------------------------------------------------------
 # Direcciones limpias
 # ------------------------------------------------------------
@@ -105,6 +106,47 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 
 
 # ------------------------------------------------------------
+# Caché de documentos HTML
+# ------------------------------------------------------------
+#
+# Los documentos HTML cambian con frecuencia durante el desarrollo de
+# MeteoArchidona y además contienen las referencias versionadas a CSS
+# y JavaScript.
+#
+# No deben permanecer almacenados en el navegador durante una hora,
+# porque después de un despliegue podría seguir utilizándose una
+# versión antigua del documento aunque CSS y JavaScript ya sean los
+# nuevos.
+#
+# Esto afecta también a:
+#
+# - pages/actualidad.html;
+# - pages/observaciones.html;
+# - pages/prediccion.html;
+# - pages/en-vivo.html;
+# - pages/administracion.html;
+# - componentes/cabecera.html;
+# - cualquier futuro documento HTML.
+#
+# El navegador deberá solicitar/revalidar siempre estos documentos.
+#
+# CSS, JavaScript, imágenes y fuentes mantienen más abajo sus tiempos
+# largos de caché.
+
+<IfModule mod_headers.c>
+
+    <FilesMatch "\.html$">
+
+        Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header always set Pragma "no-cache"
+        Header always set Expires "0"
+
+    </FilesMatch>
+
+</IfModule>
+
+
+# ------------------------------------------------------------
 # Compresión
 # ------------------------------------------------------------
 #
@@ -127,22 +169,38 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 # Caché del navegador
 # ------------------------------------------------------------
 #
-# El HTML caduca en una hora, así que un cambio se ve pronto. Las
-# hojas y los scripts duran una semana, y por eso sus enlaces llevan
-# "?v=" en el HTML: al publicar hay que subir ese número, o el
-# visitante seguirá con la versión vieja hasta que caduque.
+# Los documentos HTML no se almacenan y deben solicitarse/revalidarse
+# siempre. La política se refuerza tanto mediante mod_headers como
+# mediante un tiempo de expiración de cero segundos.
 #
-# Las imágenes duran un mes: no cambian, y si cambian se sube una con
-# otro nombre.
+# Las hojas de estilo y los scripts duran una semana. Sus enlaces
+# utilizan "?v=" en los documentos HTML para cambiar de URL cuando se
+# publica una nueva versión.
+#
+# Las imágenes duran un mes: normalmente no cambian y, cuando cambian,
+# se publica una nueva versión o nombre de recurso.
 
 <IfModule mod_expires.c>
+
     ExpiresActive On
-    ExpiresByType text/html "access plus 1 hour"
+
+    ExpiresByType text/html "access plus 0 seconds"
+
     ExpiresByType text/css "access plus 1 week"
+
     ExpiresByType application/javascript "access plus 1 week"
+
     ExpiresByType image/jpeg "access plus 1 month"
+
     ExpiresByType image/png "access plus 1 month"
+
     ExpiresByType image/webp "access plus 1 month"
+
     ExpiresByType image/svg+xml "access plus 1 month"
+
     ExpiresByType font/woff2 "access plus 1 year"
+
 </IfModule>
+
+
+# Fin de fichero: .htaccess
