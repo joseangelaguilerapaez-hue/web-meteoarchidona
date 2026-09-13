@@ -1,1213 +1,1865 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width,initial-scale=1.0"
->
-
-<meta
-    name="description"
-    content="Actualidad meteorológica de MeteoArchidona."
->
-
-<title>
-    Actualidad · MeteoArchidona
-</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Administración privada de MeteoArchidona.">
+<title>Administración · MeteoArchidona</title>
 
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<link rel="canonical" href="https://meteoarchidona.com/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="MeteoArchidona">
-<meta property="og:locale" content="es_ES">
-<meta property="og:title" content="Actualidad · MeteoArchidona">
-<meta property="og:description" content="Actualidad meteorológica de MeteoArchidona.">
-<meta property="og:url" content="https://meteoarchidona.com/">
-<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta name="robots" content="noindex, nofollow">
 
+<link rel="stylesheet" href="../css/fuentes.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/paleta.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/cabecera.css?v=20260913-pruebas2">
+<link rel="stylesheet" href="../css/pie.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/administracion.css?v=20260913-lluvia2">
 
-<link
-    rel="stylesheet"
-    href="../css/fuentes.css?v=20260913-pie1"
->
-
-<link
-    rel="stylesheet"
-    href="../css/paleta.css?v=20260913-pie1"
->
-
-<link
-    rel="stylesheet"
-    href="../css/cabecera.css?v=20260913-pruebas2"
->
-
-<link
-    rel="stylesheet"
-    href="../css/pie.css?v=20260913-pie1"
->
-
-
-<link
-    rel="stylesheet"
-    href="../css/actualidad.css?v=20260913-pie1"
->
-
-
-<script
-    src="../js/cabecera.js?v=20260913-pie1"
-    defer
-></script>
-
-
-<script
-    src="../js/api.js?v=20260913-pie1"
-    defer
-></script>
-
-
-<script
-    src="../js/actualidad.js?v=20260913-pie1"
-    defer
-></script>
-
-
-<script
-    src="../js/lluvia.js?v=20260913-lluvia3"
-    defer
-></script>
-
+<script src="../js/cabecera.js?v=20260913-lluvia2" defer></script>
+<script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
+<script src="../js/api.js?v=20260913-lluvia2" defer></script>
+<script src="../js/administracion.js?v=20260913-lluvia2" defer></script>
 </head>
 
+<body data-seccion="administracion">
 
-<body data-seccion="actualidad">
-
+<div class="pagina">
 
 <div id="cabecera"></div>
 
 
-<div
-    class="capa-lluvia"
-    id="capa-lluvia"
-    aria-hidden="true"
-></div>
-
-
-<div
-    class="capa-gotas-cristal"
-    id="capa-gotas-cristal"
-    aria-hidden="true"
-></div>
+<!--
+    El botón de cerrar sesión vive aquí y no en
+    componentes/cabecera.html porque js/administracion.js lo busca
+    por su id nada más arrancar, y la cabecera se monta después.
+    js/cabecera.js lo traslada a su hueco al terminar.
+-->
+<button
+    id="botonCerrarSesionCabecera"
+    type="button"
+    class="boton-cabecera oculto"
+    data-en-cabecera
+>
+    Cerrar sesión
+</button>
 
 
 <main
-    class="contenido"
-    id="actual"
+    id="contenidoAcceso"
+    class="contenido-acceso"
 >
 
+<section class="acceso">
 
-<h1 class="solo-lectores">
-    MeteoArchidona · El tiempo en Archidona y su comarca
+<div
+    class="candado"
+    aria-hidden="true"
+>
+    🔒
+</div>
+
+<h1>
+    Administración
 </h1>
 
+<p class="descripcion">
+    Introduce tu PIN de seis cifras.
+    La validación se realizará automáticamente
+    al introducir la sexta cifra.
+</p>
 
-<section
-    class="panel-superior"
-    id="estaciones"
+<div
+    id="indicadorPin"
+    class="indicador-pin"
+    aria-label="PIN introducido"
 >
-
-
-<aside class="tarjeta resumen">
-
-
-<h2 class="seccion-titulo">
-    Condiciones actuales
-</h2>
-
-
-<div class="estado">
-
-    <span class="punto"></span>
-
-    Datos MeteoArchidona
-
+    <span class="punto-pin"></span>
+    <span class="punto-pin"></span>
+    <span class="punto-pin"></span>
+    <span class="punto-pin"></span>
+    <span class="punto-pin"></span>
+    <span class="punto-pin"></span>
 </div>
-
-
-<div class="estado-grafico">
-
-    <div
-        class="tiempo-icono"
-        aria-hidden="true"
-    >
-
-        <div class="sol"></div>
-
-        <div class="nube"></div>
-
-    </div>
-
-</div>
-
-
-<div class="ubicacion">
-    ⌖ ARCHIDONA
-</div>
-
-
-<div class="ubicacion-sub">
-    Málaga · Andalucía
-</div>
-
-
-<div class="sol-horas">
-
-
-    <div class="sol-hora">
-
-        ☀ 07:45
-
-        <span>
-            Amanecer
-        </span>
-
-    </div>
-
-
-    <div class="sol-hora">
-
-        ☾ 20:44
-
-        <span>
-            Atardecer
-        </span>
-
-    </div>
-
-
-</div>
-
-
-</aside>
-
-
-<!--
-    Plantilla única de estación.
-
-    Ninguna estación real queda codificada en este HTML.
-
-    JavaScript obtiene el catálogo público mediante:
-
-        GET /estaciones
-
-    y clona esta plantilla una vez por cada estación visible.
-
-    El identificador PLANTILLA es únicamente un marcador interno que
-    js/actualidad.js sustituye por el código funcional real de cada
-    estación:
-
-        29300
-        EL_SILO
-        LOS_LLANOS
-        ...
-
-    Las estaciones futuras no requerirán modificar este documento.
--->
-
-
-<template id="plantilla-estacion">
-
-
-<article
-    class="tarjeta estacion-principal"
-    id="tarjeta-PLANTILLA"
->
 
 
 <div
-    class="capa-lluvia-ficha"
-    id="capa-lluvia-PLANTILLA"
-    aria-hidden="true"
-></div>
+    class="teclado"
+    aria-label="Teclado numérico"
+>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="1"
+>
+    1
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="2"
+>
+    2
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="3"
+>
+    3
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="4"
+>
+    4
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="5"
+>
+    5
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="6"
+>
+    6
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="7"
+>
+    7
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="8"
+>
+    8
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="9"
+>
+    9
+</button>
+
+<button
+    id="botonLimpiar"
+    type="button"
+    class="tecla tecla-accion"
+>
+    Limpiar
+</button>
+
+<button
+    type="button"
+    class="tecla"
+    data-numero="0"
+>
+    0
+</button>
+
+<button
+    id="botonBorrar"
+    type="button"
+    class="tecla tecla-borrar"
+    aria-label="Borrar última cifra"
+>
+    ⌫
+</button>
+
+</div>
 
 
 <div
-    class="capa-gotas-cristal-ficha"
-    id="capa-gotas-cristal-PLANTILLA"
-    aria-hidden="true"
+    id="estadoAcceso"
+    class="estado"
+    role="status"
+    aria-live="polite"
 ></div>
 
 
-<div class="estacion-contenido">
+<div class="nota-seguridad">
+    El PIN no se almacena en esta página.
+    La API valida el acceso y entrega una
+    autorización temporal de 15 minutos.
+</div>
+
+</section>
+</main>
 
 
-<div class="estacion-cabecera">
+<main
+    id="panelAdministracion"
+    class="panel-admin oculto"
+>
 
+<div class="cabecera-admin">
 
 <div>
 
-    <h2
-        class="estacion-nombre"
-        id="nombre-PLANTILLA"
+    <h1 class="titulo-admin">
+        Panel de administración
+    </h1>
+
+    <p class="subtitulo-admin">
+        Estaciones, reglas de simulación,
+        proveedores, diagnósticos y herramientas
+        técnicas de MeteoArchidona.
+    </p>
+
+</div>
+
+
+<div class="sesion-admin">
+
+    <div
+        id="tiempoSesion"
+        class="sesion-tiempo"
     >
-        ESTACIÓN
+        Sesión · --:--
+    </div>
+
+    <button
+        id="botonActualizar"
+        type="button"
+        class="boton boton-secundario"
+    >
+        Actualizar
+    </button>
+
+    <button
+        id="botonCerrarSesion"
+        type="button"
+        class="boton boton-peligro"
+    >
+        Cerrar sesión
+    </button>
+
+</div>
+</div>
+
+
+<nav
+    class="modulos"
+    aria-label="Módulos administrativos"
+>
+
+<button
+    type="button"
+    class="modulo-boton activo"
+    data-modulo="resumen"
+>
+    Resumen
+</button>
+
+<button
+    type="button"
+    class="modulo-boton"
+    data-modulo="estaciones"
+>
+    Estaciones
+</button>
+
+<button
+    type="button"
+    class="modulo-boton"
+    data-modulo="weatherlink"
+>
+    WeatherLink
+</button>
+
+<button
+    type="button"
+    class="modulo-boton"
+    data-modulo="eumetsat"
+>
+    EUMETSAT
+</button>
+
+<button
+    type="button"
+    class="modulo-boton"
+    data-modulo="sql"
+>
+    SQL
+</button>
+
+</nav>
+
+
+<div
+    id="estadoPanel"
+    class="estado-panel"
+    role="status"
+    aria-live="polite"
+></div>
+
+
+<section
+    id="modulo-resumen"
+    class="modulo activo"
+>
+
+<div class="resumen-grid">
+
+<div class="resumen-card">
+    <div class="resumen-etiqueta">
+        Estaciones
+    </div>
+
+    <div
+        id="resumenTotal"
+        class="resumen-valor"
+    >
+        0
+    </div>
+</div>
+
+
+<div class="resumen-card">
+
+    <div class="resumen-etiqueta">
+        Activas
+    </div>
+
+    <div
+        id="resumenActivas"
+        class="resumen-valor"
+    >
+        0
+    </div>
+
+</div>
+
+
+<div class="resumen-card">
+
+    <div class="resumen-etiqueta">
+        Datos simulados
+    </div>
+
+    <div
+        id="resumenSimuladas"
+        class="resumen-valor"
+    >
+        0
+    </div>
+
+</div>
+
+
+<div class="resumen-card">
+
+    <div class="resumen-etiqueta">
+        En preparación
+    </div>
+
+    <div
+        id="resumenPreparacion"
+        class="resumen-valor"
+    >
+        0
+    </div>
+
+</div>
+
+</div>
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+    <h2 class="panel-titulo">
+        Centro de administración
+    </h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    La misma sesión temporal obtenida con el PIN
+    se utiliza para estaciones, reglas de simulación,
+    WeatherLink y SQL.
+    EUMETSAT mantiene su diagnóstico visual independiente.
+</p>
+
+
+<div class="resumen-grid">
+
+<button
+    type="button"
+    class="resumen-card"
+    data-ir-modulo="estaciones"
+>
+    <div class="resumen-etiqueta">
+        Gestión
+    </div>
+
+    <div class="resumen-valor">
+        Estaciones
+    </div>
+</button>
+
+
+<button
+    type="button"
+    class="resumen-card"
+    data-ir-modulo="weatherlink"
+>
+    <div class="resumen-etiqueta">
+        Proveedor
+    </div>
+
+    <div class="resumen-valor">
+        WeatherLink
+    </div>
+</button>
+
+
+<button
+    type="button"
+    class="resumen-card"
+    data-ir-modulo="eumetsat"
+>
+    <div class="resumen-etiqueta">
+        Diagnóstico
+    </div>
+
+    <div class="resumen-valor">
+        EUMETSAT
+    </div>
+</button>
+
+
+<button
+    type="button"
+    class="resumen-card"
+    data-ir-modulo="sql"
+>
+    <div class="resumen-etiqueta">
+        PostgreSQL
+    </div>
+
+    <div class="resumen-valor">
+        SQL
+    </div>
+</button>
+
+</div>
+</div>
+</section>
+
+</section>
+
+
+<section
+    id="modulo-estaciones"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+    <h2 class="panel-titulo">
+        Estaciones
+    </h2>
+
+    <button
+        id="botonNuevaEstacion"
+        type="button"
+        class="boton boton-principal"
+    >
+        + Nueva
+    </button>
+
+</div>
+
+
+<div class="panel-cuerpo">
+
+<div class="filtros">
+
+<input
+    id="filtroTexto"
+    type="search"
+    placeholder="Buscar código, nombre o localidad..."
+    autocomplete="off"
+>
+
+<div class="filtros-dobles">
+
+<select id="filtroEstado">
+    <option value="">
+        Todos los estados
+    </option>
+</select>
+
+<select id="filtroProveedor">
+    <option value="">
+        Todos los proveedores
+    </option>
+</select>
+
+</div>
+</div>
+
+<div
+    id="listaEstaciones"
+    class="lista-estaciones"
+></div>
+
+</div>
+</section>
+
+
+<section
+    id="panelFormularioEstacion"
+    class="panel"
+>
+
+<div class="panel-cabecera">
+
+    <h2
+        id="tituloFormulario"
+        class="panel-titulo"
+    >
+        Nueva estación
     </h2>
 
     <div
-        class="estacion-localidad"
-        id="localidad-PLANTILLA"
+        id="codigoSeleccionado"
+        class="estacion-codigo"
     ></div>
 
 </div>
 
 
-<div
-    class="online"
-    id="estado-PLANTILLA"
+<div class="panel-cuerpo">
+
+<form id="formularioEstacion">
+
+<div class="formulario-grid">
+
+
+<div class="campo">
+
+<label for="campoCodigo">
+    Código
+</label>
+
+<input
+    id="campoCodigo"
+    type="text"
+    maxlength="50"
+    required
+    autocomplete="off"
+    placeholder="SALINAS"
 >
 
-    <span class="punto"></span>
-
-    Cargando...
+<div class="campo-ayuda">
+    Identidad funcional estable.
+    No podrá modificarse después.
+</div>
 
 </div>
 
 
+<div class="campo">
+
+<label for="campoNombre">
+    Nombre público
+</label>
+
+<input
+    id="campoNombre"
+    type="text"
+    maxlength="150"
+    required
+    autocomplete="off"
+>
+
 </div>
 
 
-<div class="lectura-principal">
+<div class="campo">
+
+<label for="campoEstado">
+    Estado
+</label>
+
+<select
+    id="campoEstado"
+    required
+></select>
+
+</div>
 
 
-<div class="temperatura-bloque">
+<div class="campo">
+
+<label for="campoProveedor">
+    Proveedor
+</label>
+
+<select
+    id="campoProveedor"
+    required
+></select>
+
+</div>
+
+
+<div class="campo campo-ancho">
+
+<label for="campoEstacionReferenciaGeneral">
+    Estación de referencia general
+</label>
+
+<select id="campoEstacionReferenciaGeneral">
+
+    <option value="">
+        Sin referencia general
+    </option>
+
+</select>
+
+<div class="campo-ayuda">
+    Referencia base de una estación simulada.
+    Las variables sin regla propia heredarán el mismo dato
+    de esta estación. Una regla sin orígenes explícitos
+    utilizará también esta referencia.
+</div>
+
+</div>
+
+
+<div class="campo campo-ancho">
+
+<label for="campoDescripcion">
+    Descripción
+</label>
+
+<textarea
+    id="campoDescripcion"
+    placeholder="Descripción funcional de la estación..."
+></textarea>
+
+</div>
+
+
+<div class="campo">
+
+<label for="campoCiudad">
+    Ciudad
+</label>
+
+<input
+    id="campoCiudad"
+    type="text"
+    maxlength="150"
+    autocomplete="off"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label for="campoRegion">
+    Región
+</label>
+
+<input
+    id="campoRegion"
+    type="text"
+    maxlength="100"
+    autocomplete="off"
+    placeholder="Andalucía"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label for="campoPais">
+    País
+</label>
+
+<input
+    id="campoPais"
+    type="text"
+    maxlength="100"
+    autocomplete="off"
+    placeholder="España"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label for="campoZonaHoraria">
+    Zona horaria
+</label>
+
+<input
+    id="campoZonaHoraria"
+    type="text"
+    maxlength="100"
+    autocomplete="off"
+    placeholder="Europe/Madrid"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label for="campoLatitud">
+    Latitud
+</label>
+
+<input
+    id="campoLatitud"
+    type="number"
+    step="any"
+    min="-90"
+    max="90"
+    inputmode="decimal"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label for="campoLongitud">
+    Longitud
+</label>
+
+<input
+    id="campoLongitud"
+    type="number"
+    step="any"
+    min="-180"
+    max="180"
+    inputmode="decimal"
+>
+
+</div>
+
+</div>
+
+
+<div class="acciones-formulario">
+
+<button
+    id="botonGuardar"
+    type="submit"
+    class="boton boton-principal"
+>
+    Crear estación
+</button>
+
+<button
+    id="botonCancelar"
+    type="button"
+    class="boton"
+>
+    Limpiar formulario
+</button>
+
+</div>
 
 
 <div
-    class="temperatura"
-    id="temperatura-PLANTILLA"
->
-    --<sup>°C</sup>
-</div>
+    id="estadoFormulario"
+    class="estado-formulario"
+    role="status"
+    aria-live="polite"
+></div>
+
+</form>
 
 
 <div
-    class="sensacion"
-    id="sensacion-PLANTILLA"
->
-    Sensación -- °C
-</div>
-
-
-<div
-    class="observacion"
-    id="observacion-PLANTILLA"
->
-    Exterior --:--
-</div>
-
-
-</div>
-
-
-<div class="viento-panel">
-
-
-<div
-    class="veleta"
-    id="veleta-PLANTILLA"
-    data-lluvia-control="PLANTILLA"
-    tabindex="0"
-    role="button"
-    aria-label="Veleta de estación"
-    title="Veleta de estación"
+    id="panelMetadatos"
+    class="metadatos oculto"
 >
 
-    <span class="veleta-cardinal veleta-n">
-        N
-    </span>
+<div class="metadato">
 
-    <span class="veleta-cardinal veleta-e">
-        E
-    </span>
+    <div class="metadato-etiqueta">
+        ID interno
+    </div>
 
-    <span class="veleta-cardinal veleta-s">
-        S
-    </span>
-
-    <span class="veleta-cardinal veleta-o">
-        O
-    </span>
-
-
-    <div class="veleta-rotor">
-
-        <div class="veleta-aguja"></div>
-
+    <div
+        id="metaId"
+        class="metadato-valor"
+    >
+        —
     </div>
 
 </div>
 
 
-<div class="viento-datos">
+<div class="metadato">
+
+    <div class="metadato-etiqueta">
+        Activa
+    </div>
+
+    <div
+        id="metaActiva"
+        class="metadato-valor"
+    >
+        —
+    </div>
+
+</div>
 
 
-<div class="direccion-principal">
+<div class="metadato">
+
+    <div class="metadato-etiqueta">
+        WeatherLink station_id
+    </div>
+
+    <div
+        id="metaWeatherLinkId"
+        class="metadato-valor"
+    >
+        —
+    </div>
+
+</div>
 
 
-<div
-    class="direccion-cardinal"
-    id="direccion-PLANTILLA"
+<div class="metadato">
+
+    <div class="metadato-etiqueta">
+        Nombre WeatherLink
+    </div>
+
+    <div
+        id="metaWeatherLinkNombre"
+        class="metadato-valor"
+    >
+        —
+    </div>
+
+</div>
+
+
+<div class="metadato">
+
+    <div class="metadato-etiqueta">
+        Creada
+    </div>
+
+    <div
+        id="metaCreada"
+        class="metadato-valor"
+    >
+        —
+    </div>
+
+</div>
+
+
+<div class="metadato">
+
+    <div class="metadato-etiqueta">
+        Actualizada
+    </div>
+
+    <div
+        id="metaActualizada"
+        class="metadato-valor"
+    >
+        —
+    </div>
+
+</div>
+
+</div>
+
+
+<section
+    id="panelReglasEstacion"
+    class="reglas-seccion oculto"
 >
-    --
-</div>
 
+<div class="reglas-cabecera">
 
-<div
-    class="direccion-grados"
-    id="grados-PLANTILLA"
->
-    --°
-</div>
+<div>
 
+    <h3 class="reglas-titulo">
+        Reglas de simulación
+    </h3>
 
-</div>
-
-
-<div
-    class="viento-actual"
-    id="viento-actual-PLANTILLA"
->
-    --
-    <small>
-        km/h
-    </small>
-</div>
-
-
-<div class="viento-secundarios">
-
-
-<div class="viento-secundario">
-
-    Media 2 min
-
-    <strong id="viento-2m-PLANTILLA">
-        -- km/h
-    </strong>
+    <p class="reglas-subtitulo">
+        Cada estación puede tener múltiples reglas
+        y cada regla múltiples estaciones de referencia.
+    </p>
 
 </div>
 
 
-<div class="viento-secundario">
+<div class="acciones">
 
-    Media 10 min
+    <div
+        id="contadorReglas"
+        class="estacion-codigo"
+    ></div>
 
-    <strong id="viento-10m-PLANTILLA">
-        -- km/h
-    </strong>
-
-</div>
-
-
-<div class="viento-secundario">
-
-    Racha 10 min
-
-    <strong id="racha-PLANTILLA">
-        -- km/h
-    </strong>
+    <button
+        id="botonNuevaRegla"
+        type="button"
+        class="boton boton-principal boton-mini"
+    >
+        + Nueva regla
+    </button>
 
 </div>
-
 
 </div>
 
 
 <div
-    class="simulacion-estacion"
-    id="simulacion-PLANTILLA"
+    id="estadoReglas"
+    class="estado-reglas"
+    role="status"
+    aria-live="polite"
 ></div>
 
 
-</div>
-
-</div>
-
-</div>
-
-
-<div
-    class="patrocinio-estacion"
-    id="patrocinio-PLANTILLA"
-    aria-label="Patrocinadores de los datos de lluvia"
+<section
+    id="editorRegla"
+    class="editor-regla oculto"
 >
 
-
-<div class="patrocinio-estacion-titulo">
-    🌧️ LLUVIA EN VIVO
-</div>
-
-
-<div class="patrocinio-estacion-ventana">
-
-
-<div class="patrocinio-estacion-pista">
+<h4
+    id="tituloEditorRegla"
+    class="editor-titulo"
+>
+    Nueva regla
+</h4>
 
 
-<span class="patrocinio-estacion-texto">
+<form id="formularioRegla">
 
-    Datos patrocinados por
-
-    <strong>
-        Restaurante San Isidro
-    </strong>
-
-    ·
-
-    <strong>
-        Bar Central
-    </strong>
-
-    ·
-
-    <strong>
-        Las Viñas
-    </strong>
-
-    ·
-
-    <strong>
-        Gestión 95
-    </strong>
-
-</span>
+<div class="formulario-grid">
 
 
-<span
-    class="patrocinio-estacion-texto"
-    aria-hidden="true"
+<div class="campo">
+
+<label for="reglaVariableDestino">
+    Variable destino
+</label>
+
+<input
+    id="reglaVariableDestino"
+    type="text"
+    maxlength="50"
+    required
+    placeholder="TEMPERATURA"
 >
 
-    Datos patrocinados por
-
-    <strong>
-        Restaurante San Isidro
-    </strong>
-
-    ·
-
-    <strong>
-        Bar Central
-    </strong>
-
-    ·
-
-    <strong>
-        Las Viñas
-    </strong>
-
-    ·
-
-    <strong>
-        Gestión 95
-    </strong>
-
-</span>
+</div>
 
 
+<div class="campo">
+
+<label for="reglaOperacion">
+    Operación
+</label>
+
+<select
+    id="reglaOperacion"
+    required
+>
+    <option value="MEDIA">
+        MEDIA
+    </option>
+
+    <option value="SUMAR">
+        SUMAR
+    </option>
+
+    <option value="RESTAR">
+        RESTAR
+    </option>
+
+    <option value="AJUSTAR_PORCENTAJE">
+        AJUSTAR_PORCENTAJE
+    </option>
+</select>
+
+<div class="campo-ayuda">
+    En AJUSTAR_PORCENTAJE, un valor de -10 reduce
+    el dato un 10 % y un valor de 5 lo incrementa un 5 %.
 </div>
 
 </div>
 
+
+<div class="campo">
+
+<label for="reglaValor">
+    Valor
+</label>
+
+<input
+    id="reglaValor"
+    type="number"
+    step="any"
+    inputmode="decimal"
+    placeholder="Opcional"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label for="reglaPrioridad">
+    Prioridad
+</label>
+
+<input
+    id="reglaPrioridad"
+    type="number"
+    step="1"
+    value="0"
+    required
+>
+
+</div>
+
+
+<div class="campo">
+
+<label for="reglaEstacionalidad">
+    Estacionalidad
+</label>
+
+<select id="reglaEstacionalidad">
+
+    <option value="">
+        Sin restricción
+    </option>
+
+    <option value="INVIERNO">
+        INVIERNO
+    </option>
+
+    <option value="PRIMAVERA">
+        PRIMAVERA
+    </option>
+
+    <option value="VERANO">
+        VERANO
+    </option>
+
+    <option value="OTONO">
+        OTOÑO
+    </option>
+
+</select>
+
+<div class="campo-ayuda">
+    Sin restricción significa que la regla
+    puede aplicarse durante todo el año.
+</div>
+
+</div>
+
+
+<div class="campo">
+
+<label for="reglaFranjaDia">
+    Franja del día
+</label>
+
+<select id="reglaFranjaDia">
+
+    <option value="">
+        Sin restricción
+    </option>
+
+    <option value="MADRUGADA">
+        MADRUGADA
+    </option>
+
+    <option value="MANANA">
+        MAÑANA
+    </option>
+
+    <option value="TARDE">
+        TARDE
+    </option>
+
+    <option value="NOCHE">
+        NOCHE
+    </option>
+
+</select>
+
+<div class="campo-ayuda">
+    Sin restricción significa que la regla
+    puede aplicarse a cualquier hora.
+</div>
+
+</div>
+
+
+<div class="campo campo-ancho">
+
+<label for="reglaDescripcion">
+    Descripción
+</label>
+
+<textarea
+    id="reglaDescripcion"
+    placeholder="Descripción funcional de la regla..."
+></textarea>
+
+</div>
+
+
+<div class="campo campo-ancho">
+
+<div class="check-linea">
+
+<input
+    id="reglaActiva"
+    type="checkbox"
+    checked
+>
+
+<label for="reglaActiva">
+    Regla activa
+</label>
+
+</div>
+</div>
+
+</div>
+
+
+<div class="acciones-formulario">
 
 <button
-    type="button"
-    class="patrocinio-estacion-control"
-    data-patrocinio="PLANTILLA"
-    aria-label="Pausar patrocinio"
-    aria-pressed="false"
+    id="botonGuardarRegla"
+    type="submit"
+    class="boton boton-principal"
 >
-    Ⅱ
+    Guardar regla
 </button>
 
-
-</div>
-
-
-<div class="lluvia-resumen">
-
-
-<div class="lluvia-resumen-item">
-
-
-<div
-    class="lluvia-resumen-icono"
-    id="lluvia-resumen-icono-dia-PLANTILLA"
+<button
+    id="botonCancelarRegla"
+    type="button"
+    class="boton"
 >
-    ☁️
-</div>
+    Cancelar
+</button>
 
-
-<div class="lluvia-resumen-label">
-    Lluvia hoy
 </div>
 
 
 <div
-    class="lluvia-resumen-valor"
-    id="lluvia-dia-PLANTILLA"
+    id="estadoEditorRegla"
+    class="estado-editor"
+    role="status"
+    aria-live="polite"
+></div>
+
+</form>
+</section>
+
+
+<section
+    id="editorOrigen"
+    class="editor-origen oculto"
 >
-    -- mm
+
+<h4
+    id="tituloEditorOrigen"
+    class="editor-titulo"
+>
+    Añadir estación de referencia
+</h4>
+
+
+<form id="formularioOrigen">
+
+<div class="formulario-grid">
+
+
+<div class="campo">
+
+<label for="origenEstacion">
+    Estación de referencia
+</label>
+
+<select
+    id="origenEstacion"
+    required
+></select>
+
 </div>
 
 
+<div class="campo">
+
+<label for="origenVariable">
+    Variable origen
+</label>
+
+<input
+    id="origenVariable"
+    type="text"
+    maxlength="50"
+    required
+    placeholder="TEMPERATURA"
+>
+
 </div>
 
 
-<div class="lluvia-resumen-item">
+<div class="campo">
+
+<label for="origenPeso">
+    Peso
+</label>
+
+<input
+    id="origenPeso"
+    type="number"
+    step="any"
+    value="1"
+    required
+    inputmode="decimal"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label for="origenOrden">
+    Orden
+</label>
+
+<input
+    id="origenOrden"
+    type="number"
+    step="1"
+    value="0"
+    required
+>
+
+</div>
+
+
+<div class="campo campo-ancho">
+
+<div class="check-linea">
+
+<input
+    id="origenActiva"
+    type="checkbox"
+    checked
+>
+
+<label for="origenActiva">
+    Referencia activa
+</label>
+
+</div>
+</div>
+
+</div>
+
+
+<div class="acciones-formulario">
+
+<button
+    id="botonGuardarOrigen"
+    type="submit"
+    class="boton boton-principal"
+>
+    Guardar referencia
+</button>
+
+<button
+    id="botonCancelarOrigen"
+    type="button"
+    class="boton"
+>
+    Cancelar
+</button>
+
+</div>
 
 
 <div
-    class="lluvia-resumen-icono"
-    id="lluvia-icono-actual-PLANTILLA"
+    id="estadoEditorOrigen"
+    class="estado-editor"
+    role="status"
+    aria-live="polite"
+></div>
+
+</form>
+</section>
+
+
+<div
+    id="listaReglasEstacion"
+    class="lista-reglas"
+></div>
+
+</section>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<section
+    id="modulo-weatherlink"
+    class="modulo"
 >
-    ☁️
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    WeatherLink
+</h2>
+
+<button
+    id="botonWeatherlinkEstaciones"
+    type="button"
+    class="boton boton-principal"
+>
+    Consultar estaciones
+</button>
+
 </div>
 
 
-<div class="lluvia-resumen-label">
-    Intensidad
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Diagnóstico directo contra WeatherLink API v2
+    utilizando la sesión administrativa temporal.
+</p>
+
+<div
+    id="estadoWeatherlink"
+    class="estado"
+></div>
+
+
+<div
+    id="panelWeatherlinkEstaciones"
+    class="oculto"
+>
+
+<div class="tabla-contenedor">
+
+<table>
+
+<thead>
+<tr>
+    <th>station_id</th>
+    <th>Nombre</th>
+    <th>Zona horaria</th>
+    <th>Privada</th>
+    <th>Acción</th>
+</tr>
+</thead>
+
+<tbody id="tablaWeatherlinkEstaciones"></tbody>
+
+</table>
+
+</div>
+
+
+<details>
+
+<summary>
+    Ver JSON de estaciones
+</summary>
+
+<pre id="jsonWeatherlinkEstaciones"></pre>
+
+</details>
+
+</div>
+
+</div>
+</section>
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Consulta de estación
+</h2>
+
+</div>
+
+
+<div class="panel-cuerpo">
+
+<div class="dos-columnas">
+
+
+<div class="campo">
+
+<label for="weatherlinkStationId">
+    station_id
+</label>
+
+<input
+    id="weatherlinkStationId"
+    type="number"
+    inputmode="numeric"
+    placeholder="221936"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+    Operaciones
+</label>
+
+<div class="acciones">
+
+<button
+    id="botonWeatherlinkCondiciones"
+    type="button"
+    class="boton boton-secundario"
+>
+    Condiciones
+</button>
+
+<button
+    id="botonWeatherlinkHistorico"
+    type="button"
+    class="boton"
+>
+    Histórico 24 h
+</button>
+
+</div>
+</div>
+
 </div>
 
 
 <div
-    class="lluvia-resumen-valor"
-    id="lluvia-tasa-PLANTILLA"
+    id="estadoWeatherlinkEstacion"
+    class="estado"
+></div>
+
+</div>
+</section>
+
+
+<section
+    id="panelWeatherlinkCondiciones"
+    class="panel oculto"
 >
-    -- mm/h
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Condiciones actuales
+</h2>
+
 </div>
 
+
+<div class="panel-cuerpo">
 
 <div
-    class="lluvia-resumen-extra"
-    id="lluvia-estado-PLANTILLA"
+    id="tarjetasWeatherlink"
+    class="tarjetas-meteo"
+></div>
+
+
+<details>
+
+<summary>
+    Ver JSON completo
+</summary>
+
+<pre id="jsonWeatherlinkCondiciones"></pre>
+
+</details>
+
+</div>
+</section>
+
+
+<section
+    id="panelWeatherlinkHistorico"
+    class="panel oculto"
 >
-    --
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Histórico · últimas 24 horas
+</h2>
+
+<button
+    id="botonDescargarHistorico"
+    type="button"
+    class="boton boton-secundario"
+>
+    Descargar JSON
+</button>
+
 </div>
 
 
-</div>
-
-
-<div class="lluvia-resumen-item">
-
+<div class="panel-cuerpo">
 
 <div
-    class="lluvia-resumen-icono"
-    id="lluvia-resumen-icono-mes-PLANTILLA"
->
-    ☁️
-</div>
+    id="resumenWeatherlinkHistorico"
+    class="nota"
+></div>
 
+<details>
 
-<div class="lluvia-resumen-label">
-    Este mes
-</div>
+<summary>
+    Ver JSON completo
+</summary>
 
+<pre id="jsonWeatherlinkHistorico"></pre>
 
-<div
-    class="lluvia-resumen-valor"
-    id="lluvia-mes-PLANTILLA"
->
-    -- mm
-</div>
-
+</details>
 
 </div>
-
-
-<div class="lluvia-resumen-item">
-
-
-<div
-    class="lluvia-resumen-icono"
-    id="lluvia-resumen-icono-anio-PLANTILLA"
->
-    ☁️
-</div>
-
-
-<div class="lluvia-resumen-label">
-    Año agrícola
-</div>
-
-
-<div
-    class="lluvia-resumen-valor"
-    id="lluvia-anio-PLANTILLA"
->
-    -- mm
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-<div class="metricas-estacion">
-
-
-<div class="metrica-estacion">
-
-<div class="metrica-label">
-    💧 Humedad
-</div>
-
-<div
-    class="metrica-valor"
-    id="humedad-PLANTILLA"
->
-    -- %
-</div>
-
-</div>
-
-
-<div class="metrica-estacion">
-
-<div class="metrica-label">
-    ◇ Punto de rocío
-</div>
-
-<div
-    class="metrica-valor"
-    id="rocio-PLANTILLA"
->
-    -- °C
-</div>
-
-</div>
-
-
-<div class="metrica-estacion">
-
-<div class="metrica-label">
-    ◉ Presión
-</div>
-
-<div
-    class="metrica-valor"
-    id="presion-PLANTILLA"
->
-    -- hPa
-</div>
-
-<div
-    class="metrica-secundaria"
-    id="presion-hora-PLANTILLA"
->
-    Barómetro --:--
-</div>
-
-</div>
-
-
-<div class="metrica-estacion">
-
-<div class="metrica-label">
-    ☀ Radiación solar
-</div>
-
-<div
-    class="metrica-valor"
-    id="radiacion-PLANTILLA"
->
-    -- W/m²
-</div>
-
-</div>
-
-
-<div class="metrica-estacion">
-
-<div class="metrica-label">
-    ◉ Índice UV
-</div>
-
-<div
-    class="metrica-valor"
-    id="uv-PLANTILLA"
->
-    --
-</div>
-
-<div
-    class="metrica-secundaria"
-    id="uv-estado-PLANTILLA"
->
-    --
-</div>
-
-</div>
-
-
-<div class="metrica-estacion">
-
-<div class="metrica-label">
-    ◷ Observación exterior
-</div>
-
-<div
-    class="metrica-valor"
-    id="fecha-PLANTILLA"
->
-    --
-</div>
-
-</div>
-
-
-</div>
-
-
-</article>
-
-
-</template>
-
+</section>
 
 </section>
 
 
 <section
-    class="paneles-graficos"
-    id="graficos"
+    id="modulo-eumetsat"
+    class="modulo"
 >
 
+<section class="panel">
 
-<article class="tarjeta grafico">
+<div class="panel-cabecera">
 
-
-<div class="grafico-cabecera">
-
-
-<div class="grafico-titulo">
-    Temperatura · últimas 24 horas
-</div>
-
-
-<div class="leyenda">
-
-    <span>
-        El Silo
-    </span>
-
-    <span>
-        Los Llanos
-    </span>
+<h2 class="panel-titulo">
+    EUMETSAT · LI AFA
+</h2>
 
 </div>
 
 
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Diagnóstico visual del último producto
+    Lightning Imager disponible en EUMETView.
+</p>
+
+
+<div class="dos-columnas">
+
+
+<div class="campo">
+
+<label for="eumetsatZona">
+    Zona
+</label>
+
+<select id="eumetsatZona">
+
+<option value="andalucia">
+    Andalucía
+</option>
+
+<option value="europa">
+    Europa occidental
+</option>
+
+<option value="europa_oriental">
+    Europa oriental · Mar Negro · Cáucaso
+</option>
+
+<option value="estrecho">
+    Estrecho · Marruecos · norte de Argelia
+</option>
+
+<option value="golfo_guinea">
+    Golfo de Guinea · África occidental
+</option>
+
+<option value="sahel_foco">
+    Foco actual · Sahel occidental
+</option>
+
+</select>
+
 </div>
 
 
-<svg
-    class="grafico-svg"
-    viewBox="0 0 600 190"
-    preserveAspectRatio="none"
-    aria-label="Gráfico de temperatura de muestra"
+<div class="campo">
+
+<label>
+    Operaciones
+</label>
+
+<div class="acciones">
+
+<button
+    id="botonEumetsatCargar"
+    type="button"
+    class="boton boton-principal"
+>
+    Cargar último LI AFA
+</button>
+
+<button
+    id="botonEumetsatLimpiar"
+    type="button"
+    class="boton"
+>
+    Limpiar
+</button>
+
+</div>
+</div>
+
+</div>
+
+
+<div
+    id="estadoEumetsat"
+    class="estado"
+></div>
+
+
+<div
+    id="metaEumetsat"
+    class="nota"
+>
+    Todavía no se ha realizado ninguna consulta.
+</div>
+
+</div>
+</section>
+
+
+<section class="panel">
+
+<div class="panel-cuerpo">
+
+<div class="visor-eumetsat">
+
+<img
+    id="imagenEumetsat"
+    alt="Fotograma EUMETSAT LI AFA"
+    hidden
 >
 
-
-<line
-    class="rejilla"
-    x1="0"
-    y1="40"
-    x2="600"
-    y2="40"
-/>
-
-
-<line
-    class="rejilla"
-    x1="0"
-    y1="90"
-    x2="600"
-    y2="90"
-/>
-
-
-<line
-    class="rejilla"
-    x1="0"
-    y1="140"
-    x2="600"
-    y2="140"
-/>
-
-
-<polyline
-    class="linea-silo"
-    points="0,85 70,55 140,40 210,48 280,78 350,125 420,142 490,105 550,72 600,68"
-/>
-
-
-<polyline
-    class="linea-llanos"
-    points="0,95 70,72 140,60 210,68 280,98 350,140 420,152 490,118 550,88 600,84"
-/>
-
-
-</svg>
-
-
-</article>
-
-
-<article class="tarjeta grafico">
-
-
-<div class="grafico-cabecera">
-
-
-<div class="grafico-titulo">
-    Lluvia · últimos 7 días
 </div>
-
-
 </div>
-
-
-<svg
-    class="grafico-svg"
-    viewBox="0 0 500 190"
-    preserveAspectRatio="none"
-    aria-label="Gráfico de lluvia de muestra"
->
-
-
-<line
-    class="rejilla"
-    x1="0"
-    y1="40"
-    x2="500"
-    y2="40"
-/>
-
-
-<line
-    class="rejilla"
-    x1="0"
-    y1="90"
-    x2="500"
-    y2="90"
-/>
-
-
-<line
-    class="rejilla"
-    x1="0"
-    y1="140"
-    x2="500"
-    y2="140"
-/>
-
-
-<rect
-    class="barra"
-    x="25"
-    y="135"
-    width="40"
-    height="35"
-/>
-
-
-<rect
-    class="barra"
-    x="95"
-    y="55"
-    width="40"
-    height="115"
-/>
-
-
-<rect
-    class="barra"
-    x="165"
-    y="145"
-    width="40"
-    height="25"
-/>
-
-
-<rect
-    class="barra"
-    x="235"
-    y="166"
-    width="40"
-    height="4"
-/>
-
-
-<rect
-    class="barra"
-    x="305"
-    y="168"
-    width="40"
-    height="2"
-/>
-
-
-</svg>
-
-
-</article>
-
-
-<article
-    class="tarjeta grafico"
-    id="camaras"
->
-
-
-<div class="grafico-cabecera">
-
-
-<div class="grafico-titulo">
-    Cámaras en directo
-</div>
-
-
-<a
-    href="/en-vivo"
-    target="_parent"
-    class="grafico-enlace"
->
-    Ver todas →
-</a>
-
-
-</div>
-
-
-<div class="camaras">
-
-
-<div class="camara">
-
-
-<div class="camara-estado">
-    🟢 En línea
-</div>
-
-
-<div class="camara-nombre">
-    El Silo · Vista Sur
-</div>
-
-
-</div>
-
-
-<div class="camara">
-
-
-<div class="camara-estado">
-    🟢 En línea
-</div>
-
-
-<div class="camara-nombre">
-    Los Llanos · Vista Norte
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</article>
-
+</section>
 
 </section>
 
 
-<section class="tarjeta accesos">
-
-
-<a
-    href="#historicos"
-    class="acceso"
+<section
+    id="modulo-sql"
+    class="modulo"
 >
 
-<div class="acceso-icono">
-    📊
-</div>
+<section class="panel">
 
+<div class="panel-cabecera">
 
-<div>
-
-<div class="acceso-titulo">
-    HISTÓRICOS
-</div>
-
-<div class="acceso-subtitulo">
-    Datos por fecha
-</div>
+<h2 class="panel-titulo">
+    SQL Admin
+</h2>
 
 </div>
 
-</a>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Consola PostgreSQL administrativa.
+    La sesión PIN actual autoriza la operación.
+    Las modificaciones normales del esquema deben
+    continuar realizándose mediante Alembic.
+</p>
 
 
-<a
-    href="#graficos"
-    class="acceso"
+<div class="campo">
+
+<label for="sqlSentencia">
+    Sentencia SQL
+</label>
+
+<textarea
+    id="sqlSentencia"
+    class="sql-editor"
+    spellcheck="false"
+    placeholder="SELECT * FROM estaciones ORDER BY id;"
+></textarea>
+
+</div>
+
+
+<div class="confirmacion">
+
+<label>
+
+<input
+    id="sqlConfirmarDestructiva"
+    type="checkbox"
 >
 
-<div class="acceso-icono">
-    📈
-</div>
+<span>
+    Confirmo expresamente la ejecución de operaciones
+    destructivas como DELETE, DROP, TRUNCATE o ALTER.
+</span>
 
-
-<div>
-
-<div class="acceso-titulo">
-    GRÁFICOS
-</div>
-
-<div class="acceso-subtitulo">
-    Evolución detallada
-</div>
+</label>
 
 </div>
 
-</a>
 
+<div class="acciones-formulario">
 
-<a
-    href="/en-vivo"
-    target="_parent"
-    class="acceso"
+<button
+    id="botonSqlEjecutar"
+    type="button"
+    class="boton boton-principal"
 >
+    Ejecutar SQL
+</button>
 
-<div class="acceso-icono">
-    📷
-</div>
-
-
-<div>
-
-<div class="acceso-titulo">
-    CÁMARAS
-</div>
-
-<div class="acceso-subtitulo">
-    Imágenes en directo
-</div>
-
-</div>
-
-</a>
-
-
-<a
-    href="#estaciones"
-    class="acceso"
+<button
+    id="botonSqlExportar"
+    type="button"
+    class="boton boton-secundario"
 >
+    Descargar CSV
+</button>
 
-<div class="acceso-icono">
-    📡
-</div>
-
-
-<div>
-
-<div class="acceso-titulo">
-    ESTACIONES
-</div>
-
-<div class="acceso-subtitulo">
-    Información técnica
-</div>
-
-</div>
-
-</a>
-
-
-<a
-    href="#alertas"
-    class="acceso"
+<button
+    id="botonSqlEjemplo"
+    type="button"
+    class="boton"
 >
+    Consulta de estaciones
+</button>
 
-<div class="acceso-icono">
-    ⚠️
-</div>
-
-
-<div>
-
-<div class="acceso-titulo">
-    ALERTAS
-</div>
-
-<div class="acceso-subtitulo">
-    Avisos meteorológicos
-</div>
-
-</div>
-
-</a>
-
-
-<a
-    href="#estado"
-    class="acceso"
+<button
+    id="botonSqlLimpiar"
+    type="button"
+    class="boton"
 >
-
-<div class="acceso-icono">
-    ✅
-</div>
-
-
-<div>
-
-<div class="acceso-titulo">
-    ESTADO SISTEMA
-</div>
-
-<div class="acceso-subtitulo">
-    Datos automáticos
-</div>
+    Limpiar
+</button>
 
 </div>
 
-</a>
 
+<div
+    id="estadoSql"
+    class="estado"
+></div>
 
+</div>
 </section>
 
 
+<section
+    id="panelResultadoSql"
+    class="panel oculto"
+>
 
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Resultado
+</h2>
+
+</div>
+
+
+<div class="panel-cuerpo">
+
+<div
+    id="resumenSql"
+    class="nota"
+></div>
+
+<div
+    id="tablaSql"
+    class="tabla-contenedor"
+></div>
+
+</div>
+</section>
+
+</section>
 
 </main>
+
+</div>
 
 
 
@@ -1215,7 +1867,6 @@
 
 
 </body>
-
 </html>
 
-<!-- Fin de fichero: pages/actualidad.html -->
+<!-- Fin de fichero: administracion.html -->
