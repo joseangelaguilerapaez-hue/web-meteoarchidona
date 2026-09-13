@@ -638,6 +638,31 @@
 
 <div class="campo campo-ancho">
 
+<label for="campoEstacionReferenciaGeneral">
+    Estación de referencia general
+</label>
+
+<select id="campoEstacionReferenciaGeneral">
+
+    <option value="">
+        Sin referencia general
+    </option>
+
+</select>
+
+<div class="campo-ayuda">
+    Referencia base para una estación simulada.
+    Si una variable no tiene una regla específica,
+    heredará el mismo dato de esta estación.
+    Una regla sin orígenes explícitos utilizará
+    también esta referencia general.
+</div>
+
+</div>
+
+
+<div class="campo campo-ancho">
+
 <label for="campoDescripcion">
     Descripción
 </label>
@@ -994,7 +1019,17 @@
     <option value="RESTAR">
         RESTAR
     </option>
+
+    <option value="AJUSTAR_PORCENTAJE">
+        AJUSTAR_PORCENTAJE
+    </option>
 </select>
+
+<div class="campo-ayuda">
+    En AJUSTAR_PORCENTAJE, un valor de -10
+    reduce el dato un 10 % y un valor de 5
+    lo incrementa un 5 %.
+</div>
 
 </div>
 
