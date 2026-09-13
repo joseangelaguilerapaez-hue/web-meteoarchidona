@@ -998,6 +998,95 @@ function cargarOpcionesCatalogos(){
 }
 
 
+function rellenarSelectReferenciaGeneral(
+    estacionActualId=null,
+    valorSeleccionado=undefined
+){
+
+    const select=
+        $("campoEstacionReferenciaGeneral");
+
+    if(!select){
+        return
+    }
+
+    const previo=
+        valorSeleccionado
+        !==
+        undefined
+        ?
+        valorSeleccionado
+        :
+        select.value;
+
+    select.replaceChildren(
+        opcion(
+            "",
+            "Sin referencia general"
+        )
+    );
+
+    estaciones.forEach(
+        estacion=>{
+
+            if(
+                estacionActualId!==null
+                &&
+                Number(
+                    estacion.id
+                )
+                ===
+                Number(
+                    estacionActualId
+                )
+            ){
+                return
+            }
+
+            select.appendChild(
+                opcion(
+                    String(
+                        estacion.id
+                    ),
+                    `${
+                        estacion.codigo
+                    } · ${
+                        estacion.nombre_publico
+                    }`
+                )
+            )
+        }
+    );
+
+    asegurarOpcionSelect(
+        select,
+        previo
+    )
+}
+
+
+function actualizarSelectReferenciaGeneral(){
+
+    const estacionActual=
+        codigoEdicion
+        ?
+        estaciones.find(
+            estacion=>
+                estacion.codigo
+                ===
+                codigoEdicion
+        )
+        :
+        null;
+
+    rellenarSelectReferenciaGeneral(
+        estacionActual?.id
+        ??
+        null
+    )
+}
+
+
 function actualizarResumen(){
 
     $("resumenTotal").textContent=
@@ -1440,6 +1529,11 @@ function formularioNuevaEstacion(){
             "SIMULADOR"
     }
 
+    rellenarSelectReferenciaGeneral(
+        null,
+        null
+    );
+
     renderizarEstaciones();
 
     $("panelFormularioEstacion")
@@ -1486,6 +1580,11 @@ function cargarFormulario(
 
     $("campoProveedor").value=
         estacion.codigo_proveedor;
+
+    rellenarSelectReferenciaGeneral(
+        estacion.id,
+        estacion.estacion_referencia_general_id
+    );
 
     $("campoCiudad").value=
         estacion.ciudad
@@ -1645,6 +1744,11 @@ function cuerpoEstacion(){
         codigo_proveedor:
             $("campoProveedor").value,
 
+        estacion_referencia_general_id:
+            numeroNullable(
+                $("campoEstacionReferenciaGeneral").value
+            ),
+
         ciudad:
             valorNullable(
                 $("campoCiudad").value
@@ -1789,7 +1893,9 @@ async function cargarEstaciones(){
 
     renderizarEstaciones();
 
-    rellenarSelectOrigen()
+    rellenarSelectOrigen();
+
+    actualizarSelectReferenciaGeneral()
 }
 
 
@@ -3062,6 +3168,8 @@ async function cargarDatosAdministracion(){
         renderizarEstaciones();
 
         rellenarSelectOrigen();
+
+        actualizarSelectReferenciaGeneral();
 
         if(
             codigoEdicion
