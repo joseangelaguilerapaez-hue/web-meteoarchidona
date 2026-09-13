@@ -779,6 +779,135 @@ button {
 
 
 /* ==========================================================
+   SOL Y LUNA
+   ========================================================== */
+
+/*
+ * Columna izquierda del panel: «Condiciones actuales» y, debajo,
+ * «Sol y luna». Las rellena js/sol-luna.js.
+ */
+/*
+ * La columna se estira hasta el final de las fichas de estaciones
+ * (align-self: stretch, frente al start del panel) y «Sol y luna» se
+ * queda con todo el alto que sobra, para no dejar hueco debajo.
+ */
+.columna-resumen {
+    display: grid;
+    grid-template-rows:
+        auto
+        minmax(0, 1fr);
+    align-self: stretch;
+    gap: 14px;
+    min-width: 0;
+}
+
+
+/*
+ * Dentro, el bloque de la luna se centra en el alto sobrante y las
+ * fechas de luna llena y nueva bajan al pie de la tarjeta.
+ */
+.sol-luna {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+
+.sol-luna-dia {
+    display: grid;
+    gap: 4px;
+    margin-top: 14px;
+}
+
+
+.sol-luna-etiqueta {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+
+.sol-luna-duracion {
+    color: var(--amber);
+    font-family:
+        "JetBrains Mono",
+        monospace;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+
+.sol-luna-nota {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+.luna {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top:
+        1px solid
+        var(--border);
+}
+
+
+.luna-dibujo {
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
+    filter:
+        drop-shadow(
+            0 0 10px
+            rgba(217, 226, 233, 0.18)
+        );
+}
+
+
+.luna-sombra {
+    fill: #1a2a3c;
+    stroke: #244567;
+    stroke-width: 2;
+}
+
+
+.luna-luz {
+    fill: #e4ebf1;
+}
+
+
+.luna-fase {
+    margin-bottom: 3px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.sol-luna .luna {
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+}
+
+
+.sol-luna .luna-dibujo {
+    width: 96px;
+    height: 96px;
+}
+
+
+.sol-luna .sol-horas {
+    margin-top: 16px;
+}
+
+
+/* ==========================================================
    ESTACIONES
    ========================================================== */
 
@@ -1907,7 +2036,8 @@ button {
     }
 
 
-    .resumen {
+    .resumen,
+    .columna-resumen {
         display: none;
     }
 

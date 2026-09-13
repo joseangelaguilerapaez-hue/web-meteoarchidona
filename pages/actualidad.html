@@ -47,7 +47,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/cabecera.css?v=20260913-logo1"
+    href="../css/cabecera.css?v=20260913-colores1"
 >
 
 <link
@@ -58,7 +58,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/actualidad.css?v=20260913-impar1"
+    href="../css/actualidad.css?v=20260913-solluna1"
 >
 
 
@@ -82,6 +82,12 @@
 
 <script
     src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+
+<script
+    src="../js/sol-luna.js?v=20260913-solluna1"
     defer
 ></script>
 
@@ -123,6 +129,13 @@
     class="panel-superior"
     id="estaciones"
 >
+
+
+<!--
+    Columna izquierda: dos tarjetas apiladas. Van dentro de un <div>
+    para ocupar una sola casilla de la rejilla del panel.
+-->
+<div class="columna-resumen">
 
 
 <aside class="tarjeta resumen">
@@ -173,7 +186,7 @@
 
     <div class="sol-hora">
 
-        ☀ 07:45
+        ☀ <time id="sol-amanecer">--:--</time>
 
         <span>
             Amanecer
@@ -184,7 +197,7 @@
 
     <div class="sol-hora">
 
-        ☾ 20:44
+        ☾ <time id="sol-atardecer">--:--</time>
 
         <span>
             Atardecer
@@ -197,6 +210,117 @@
 
 
 </aside>
+
+
+<!--
+    Sol y luna. Todo lo calcula js/sol-luna.js en el navegador, sin
+    pedir nada a ningún servicio; también las horas de amanecer y
+    atardecer de la tarjeta de arriba.
+-->
+<aside
+    class="tarjeta sol-luna"
+    aria-labelledby="sol-luna-titulo"
+>
+
+
+<h2
+    class="seccion-titulo"
+    id="sol-luna-titulo"
+>
+    Sol y luna
+</h2>
+
+
+<div class="sol-luna-dia">
+
+    <span class="sol-luna-etiqueta">
+        Duración del día
+    </span>
+
+    <strong
+        class="sol-luna-duracion"
+        id="sol-duracion"
+    >
+        --
+    </strong>
+
+    <span
+        class="sol-luna-nota"
+        id="sol-diferencia"
+    ></span>
+
+</div>
+
+
+<div class="luna">
+
+    <svg
+        class="luna-dibujo"
+        viewBox="-50 -50 100 100"
+        aria-hidden="true"
+    >
+        <circle
+            class="luna-sombra"
+            r="46"
+        ></circle>
+        <path
+            class="luna-luz"
+            id="luna-luz"
+            d=""
+        ></path>
+    </svg>
+
+    <div>
+
+        <div
+            class="luna-fase"
+            id="luna-fase"
+        >
+            --
+        </div>
+
+        <div
+            class="sol-luna-nota"
+            id="luna-iluminada"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<div class="sol-horas">
+
+
+    <div class="sol-hora">
+
+        ● <time id="luna-proxima-llena">--</time>
+
+        <span>
+            Luna llena
+        </span>
+
+    </div>
+
+
+    <div class="sol-hora">
+
+        ○ <time id="luna-proxima-nueva">--</time>
+
+        <span>
+            Luna nueva
+        </span>
+
+    </div>
+
+
+</div>
+
+
+</aside>
+
+
+</div>
 
 
 <!--

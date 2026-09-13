@@ -225,20 +225,25 @@ button {
     padding:
         7px 10px;
 
+    /*
+     * Botones oscuros como las tarjetas de la página, con los acentos de
+     * css/paleta.css: cian al pasar el ratón y dorado (el de «ARCHIDONA»
+     * y el sol del logotipo) en la sección activa.
+     */
     color:
-        #102014;
+        var(--text-soft);
 
     background:
-        #b7ff5a;
+        rgba(
+            17,
+            30,
+            46,
+            0.88
+        );
 
     border:
         1px solid
-        rgba(
-            201,
-            255,
-            132,
-            0.92
-        );
+        var(--border-strong);
 
     border-radius: 9px;
 
@@ -253,17 +258,10 @@ button {
     white-space:
         normal;
 
-    box-shadow:
-        0 0 14px
-        rgba(
-            183,
-            255,
-            90,
-            0.15
-        );
-
     transition:
         background 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
         box-shadow 0.18s ease,
         transform 0.18s ease;
 }
@@ -272,18 +270,31 @@ button {
 @media (hover: hover) {
 .navegacion a:hover {
     color:
-        #071109;
+        var(--text);
 
     background:
-        #caff83;
+        rgba(
+            22,
+            40,
+            60,
+            0.95
+        );
+
+    border-color:
+        rgba(
+            54,
+            213,
+            255,
+            0.55
+        );
 
     box-shadow:
-        0 0 18px
+        0 0 12px
         rgba(
-            183,
+            54,
+            213,
             255,
-            90,
-            0.28
+            0.15
         );
 
     transform:
@@ -292,61 +303,42 @@ button {
 }
 
 
+.navegacion a:focus-visible {
+    outline:
+        2px solid
+        var(--cyan);
+
+    outline-offset: 2px;
+}
+
+
 .navegacion a.activo {
     color:
-        #ffffff;
+        var(--amber-light);
 
     background:
-        radial-gradient(
-            circle at 50% 18%,
-            #ffabab 0,
-            #ff5757 22%,
-            #f01f1f 43%,
-            #c50000 72%,
-            #780000 100%
+        rgba(
+            240,
+            165,
+            0,
+            0.14
         );
 
     border-color:
-        #ff7373;
-
-    box-shadow:
-        0 0 8px
         rgba(
-            255,
-            80,
-            80,
-            0.95
-        ),
-        0 0 22px
-        rgba(
-            255,
-            0,
-            0,
-            0.62
-        ),
-        0 0 38px
-        rgba(
-            255,
-            0,
-            0,
-            0.28
-        ),
-        inset
-        0 1px 6px
-        rgba(
-            255,
-            255,
-            255,
-            0.40
+            242,
+            191,
+            88,
+            0.65
         );
 
-    text-shadow:
-        0 1px 3px
+    box-shadow:
+        0 0 14px
         rgba(
+            240,
+            165,
             0,
-            0,
-            0,
-            0.55
+            0.18
         );
 }
 
