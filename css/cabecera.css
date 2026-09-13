@@ -126,101 +126,19 @@ button {
 }
 
 
-.marca-icono {
-    position: relative;
-
-    width: 70px;
-    height: 54px;
-
+/*
+ * Logotipo de MeteoArchidona (assets/logo-meteoarchidona.png). La
+ * cabecera usa una copia de 128 px, assets/logo-cabecera.png, que cubre
+ * pantallas de doble densidad sin cargar las 800 KB del original.
+ */
+.marca-logo {
+    display: block;
     flex: 0 0 auto;
-}
-
-
-.sol {
-    position: absolute;
-
-    top: 3px;
-    left: 25px;
-
-    width: 28px;
-    height: 28px;
-
-    border-radius: 50%;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ffd44f,
-            var(--accent)
-        );
-
-    box-shadow:
-        0 0 24px
-        rgba(
-            240,
-            165,
-            0,
-            0.28
-        );
-}
-
-
-.nube {
-    position: absolute;
-
-    left: 10px;
-    bottom: 7px;
-
-    width: 52px;
-    height: 23px;
-
-    border:
-        2px solid
-        #e5edf5;
-
-    border-radius: 22px;
-
-    background:
-        var(--bg);
-}
-
-
-.nube::before,
-.nube::after {
-    content: "";
-
-    position: absolute;
-
-    background:
-        var(--bg);
-
-    border:
-        2px solid
-        #e5edf5;
-
-    border-bottom:
-        0;
-
-    border-radius:
-        50% 50% 0 0;
-}
-
-
-.nube::before {
-    width: 21px;
-    height: 17px;
-
-    left: 7px;
-    top: -13px;
-}
-
-
-.nube::after {
-    width: 25px;
-    height: 21px;
-
-    left: 23px;
-    top: -17px;
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 
@@ -1032,6 +950,11 @@ button {
     .marca {
         grid-column: 1;
         grid-row: 1;
+    }
+
+    .marca-logo {
+        width: 48px;
+        height: 48px;
     }
 
     .boton-menu {
