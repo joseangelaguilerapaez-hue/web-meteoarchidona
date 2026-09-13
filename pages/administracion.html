@@ -987,13 +987,83 @@
     Variable destino
 </label>
 
-<input
+<select
     id="reglaVariableDestino"
-    type="text"
-    maxlength="50"
     required
-    placeholder="TEMPERATURA"
 >
+    <option value="">
+        Selecciona una variable...
+    </option>
+
+    <option value="TEMPERATURA">
+        TEMPERATURA
+    </option>
+
+    <option value="HUMEDAD">
+        HUMEDAD
+    </option>
+
+    <option value="PUNTO_ROCIO">
+        PUNTO_ROCIO
+    </option>
+
+    <option value="INDICE_CALOR">
+        INDICE_CALOR
+    </option>
+
+    <option value="TEMPERATURA_INTERIOR">
+        TEMPERATURA_INTERIOR
+    </option>
+
+    <option value="HUMEDAD_INTERIOR">
+        HUMEDAD_INTERIOR
+    </option>
+
+    <option value="PRESION">
+        PRESION
+    </option>
+
+    <option value="VIENTO_ACTUAL">
+        VIENTO_ACTUAL
+    </option>
+
+    <option value="VIENTO_MEDIO_2_MIN">
+        VIENTO_MEDIO_2_MIN
+    </option>
+
+    <option value="VIENTO_MEDIO_10_MIN">
+        VIENTO_MEDIO_10_MIN
+    </option>
+
+    <option value="RACHA_10_MIN">
+        RACHA_10_MIN
+    </option>
+
+    <option value="DIRECCION_VIENTO">
+        DIRECCION_VIENTO
+    </option>
+
+    <option value="LLUVIA_DIA">
+        LLUVIA_DIA
+    </option>
+
+    <option value="TASA_LLUVIA">
+        TASA_LLUVIA
+    </option>
+
+    <option value="RADIACION_SOLAR">
+        RADIACION_SOLAR
+    </option>
+
+    <option value="INDICE_UV">
+        INDICE_UV
+    </option>
+</select>
+
+<div class="campo-ayuda">
+    Magnitud meteorológica que será calculada
+    para la estación simulada.
+</div>
 
 </div>
 
@@ -1118,20 +1188,20 @@
         Sin restricción
     </option>
 
-    <option value="MADRUGADA">
-        MADRUGADA
+    <option value="NOCHE">
+        NOCHE
     </option>
 
     <option value="MANANA">
         MAÑANA
     </option>
 
-    <option value="TARDE">
-        TARDE
+    <option value="MEDIODIA">
+        MEDIODÍA
     </option>
 
-    <option value="NOCHE">
-        NOCHE
+    <option value="TARDE">
+        TARDE
     </option>
 
 </select>
@@ -1248,13 +1318,83 @@
     Variable origen
 </label>
 
-<input
+<select
     id="origenVariable"
-    type="text"
-    maxlength="50"
     required
-    placeholder="TEMPERATURA"
 >
+    <option value="">
+        Selecciona una variable...
+    </option>
+
+    <option value="TEMPERATURA">
+        TEMPERATURA
+    </option>
+
+    <option value="HUMEDAD">
+        HUMEDAD
+    </option>
+
+    <option value="PUNTO_ROCIO">
+        PUNTO_ROCIO
+    </option>
+
+    <option value="INDICE_CALOR">
+        INDICE_CALOR
+    </option>
+
+    <option value="TEMPERATURA_INTERIOR">
+        TEMPERATURA_INTERIOR
+    </option>
+
+    <option value="HUMEDAD_INTERIOR">
+        HUMEDAD_INTERIOR
+    </option>
+
+    <option value="PRESION">
+        PRESION
+    </option>
+
+    <option value="VIENTO_ACTUAL">
+        VIENTO_ACTUAL
+    </option>
+
+    <option value="VIENTO_MEDIO_2_MIN">
+        VIENTO_MEDIO_2_MIN
+    </option>
+
+    <option value="VIENTO_MEDIO_10_MIN">
+        VIENTO_MEDIO_10_MIN
+    </option>
+
+    <option value="RACHA_10_MIN">
+        RACHA_10_MIN
+    </option>
+
+    <option value="DIRECCION_VIENTO">
+        DIRECCION_VIENTO
+    </option>
+
+    <option value="LLUVIA_DIA">
+        LLUVIA_DIA
+    </option>
+
+    <option value="TASA_LLUVIA">
+        TASA_LLUVIA
+    </option>
+
+    <option value="RADIACION_SOLAR">
+        RADIACION_SOLAR
+    </option>
+
+    <option value="INDICE_UV">
+        INDICE_UV
+    </option>
+</select>
+
+<div class="campo-ayuda">
+    Variable de la estación de referencia
+    utilizada como origen de esta regla.
+</div>
 
 </div>
 
@@ -1871,4 +2011,4 @@
 </body>
 </html>
 
-<!-- Fin de fichero: administracion.html -->
+<!-- Fin de fichero: pages/administracion.html -->
