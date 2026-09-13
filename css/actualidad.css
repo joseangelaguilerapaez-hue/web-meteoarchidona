@@ -534,6 +534,103 @@ button {
 }
 
 
+/*
+ * Cuando existe un número impar de estaciones en escritorio, la última
+ * ficha no deja una media fila vacía: ocupa las dos columnas.
+ *
+ * Además, esa ficha utiliza el ancho adicional para redistribuir sus
+ * bloques principales en horizontal y reducir su altura.
+ *
+ * En móvil esta regla no se aplica y todas las fichas conservan su
+ * presentación vertical habitual.
+ */
+@media (min-width: 851px) {
+
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+    }
+
+
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
+    .estacion-contenido {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+        grid-template-areas:
+            "cabecera cabecera"
+            "lectura lluvia";
+        column-gap: 20px;
+        align-items: stretch;
+    }
+
+
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
+    .estacion-cabecera {
+        grid-area: cabecera;
+    }
+
+
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
+    .lectura-principal {
+        grid-area: lectura;
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(225px, 0.8fr);
+        align-self: stretch;
+    }
+
+
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
+    .lluvia-resumen {
+        grid-area: lluvia;
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+        align-self: center;
+        margin:
+            14px
+            0
+            12px;
+    }
+
+
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
+    .metricas-estacion {
+        grid-template-columns:
+            repeat(
+                6,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
+    .metrica-estacion {
+        border-right:
+            1px solid
+            rgba(255, 255, 255, 0.08);
+    }
+
+
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
+    .metrica-estacion:last-child {
+        border-right: none;
+    }
+
+}
+
+
 .tarjeta {
     background:
         linear-gradient(
@@ -1118,8 +1215,15 @@ button {
    ========================================================== */
 
 
+/*
+ * La estructura de patrocinio se conserva preparada para uso futuro,
+ * pero permanece oculta mientras no existan patrocinadores reales.
+ *
+ * No eliminar: bastará retirar este display:none cuando el contenido
+ * comercial sea real y esté aprobado para publicación.
+ */
 .patrocinio-estacion {
-    display: grid;
+    display: none;
     grid-template-columns:
         auto
         minmax(0, 1fr)
@@ -1702,6 +1806,7 @@ button {
 
 
 
+
 /* ==========================================================
    RESPONSIVE
    ========================================================== */
@@ -1726,6 +1831,20 @@ button {
 
     .lectura-principal {
         grid-template-columns: 1fr;
+    }
+
+
+    /*
+     * La ficha impar a ancho completo dispone de espacio suficiente
+     * incluso dentro de este tramo responsive, por lo que conserva
+     * temperatura y viento en paralelo.
+     */
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
+    .lectura-principal {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(225px, 0.8fr);
     }
 
 
@@ -1833,10 +1952,6 @@ button {
                 1fr
             );
     }
-
-
-
-
 
 }
 
