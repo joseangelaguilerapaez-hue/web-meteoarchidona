@@ -157,7 +157,7 @@ async function arrancarActualidad() {
 
         await importarModulo(
             "lluvia.js",
-            "./lluvia.js"
+            "./lluvia.js?v=20260914-diagnostico1"
         );
 
         const efectosLluvia =
