@@ -22,14 +22,14 @@
 
 import {
     estadoActualidad
-} from "./estado.js";
+} from "./estado.js?v=20260914-modular2";
 
 
 import {
     asignarTexto,
     limitar,
     obtenerElemento
-} from "./dom.js";
+} from "./dom.js?v=20260914-modular2";
 
 
 export function normalizarGrados(
