@@ -22,23 +22,23 @@
 
 import {
     estadoActualidad
-} from "./estado.js";
+} from "./estado.js?v=20260914-modular2";
 
 
 import {
     obtenerElemento
-} from "./dom.js";
+} from "./dom.js?v=20260914-modular2";
 
 
 import {
     obtenerNivelEfectivo
-} from "./lluvia.js?v=20260914-diagnostico1";
+} from "./lluvia.js?v=20260914-modular2";
 
 
 import {
     calcularMovimientoViento,
     obtenerVientoGlobal
-} from "./viento.js";
+} from "./viento.js?v=20260914-modular2";
 
 
 export function obtenerCodigosConFicha() {
