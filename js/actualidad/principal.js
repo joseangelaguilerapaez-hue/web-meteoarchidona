@@ -169,7 +169,7 @@ async function arrancarActualidad() {
         const simulacion =
             await importarModulo(
                 "simulacion.js",
-                "./simulacion.js"
+                "./simulacion.js?v=20260914-diagnostico3"
             );
 
         const patrocinios =
