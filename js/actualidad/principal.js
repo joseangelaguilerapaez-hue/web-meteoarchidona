@@ -9,6 +9,10 @@
  * Este fichero carga los módulos uno a uno mediante import() para
  * identificar con precisión cualquier error de carga o evaluación.
  *
+ * Todas las dependencias de la arquitectura modular utilizan una
+ * única versión común para evitar mezclar generaciones distintas
+ * del grafo de módulos ES.
+ *
  * Cuando el diagnóstico quede resuelto, volveremos al orquestador
  * definitivo con imports estáticos.
  */
@@ -135,64 +139,66 @@ async function arrancarActualidad() {
         /*
          * Cargamos primero los módulos base y después sus dependientes.
          *
-         * De esta forma, si alguno falla, podremos identificar con
-         * bastante precisión cuál es el primer punto roto del árbol.
+         * Todo el grafo utiliza la misma versión modular2.
+         *
+         * De esta forma evitamos que una dependencia interna pueda
+         * recuperar desde caché una generación anterior del módulo.
          */
 
         const estado =
             await importarModulo(
                 "estado.js",
-                "./estado.js"
+                "./estado.js?v=20260914-modular2"
             );
 
         await importarModulo(
             "dom.js",
-            "./dom.js"
+            "./dom.js?v=20260914-modular2"
         );
 
         await importarModulo(
             "viento.js",
-            "./viento.js"
+            "./viento.js?v=20260914-modular2"
         );
 
         await importarModulo(
             "lluvia.js",
-            "./lluvia.js?v=20260914-diagnostico1"
+            "./lluvia.js?v=20260914-modular2"
         );
 
         const efectosLluvia =
             await importarModulo(
                 "efectos-lluvia.js",
-                "./efectos-lluvia.js?v=20260914-diagnostico2"
+                "./efectos-lluvia.js?v=20260914-modular2"
             );
 
         const simulacion =
             await importarModulo(
                 "simulacion.js",
-                "./simulacion.js?v=20260914-diagnostico3"
+                "./simulacion.js?v=20260914-modular2"
             );
 
         const patrocinios =
             await importarModulo(
                 "patrocinios.js",
-                "./patrocinios.js"
+                "./patrocinios.js?v=20260914-modular2"
             );
 
         const estaciones =
             await importarModulo(
                 "estaciones.js",
-                "./estaciones.js?v=20260914-estaciones1"
+                "./estaciones.js?v=20260914-modular2"
             );
 
         await importarModulo(
             "meteorologia.js",
-            "./meteorologia.js?v=20260914-meteorologia1"
+            "./meteorologia.js?v=20260914-modular2"
         );
 
         const api =
             await importarModulo(
                 "api.js",
-                "./api.js?v=20260914-api1"
+                "./api.js?v=20260914-modular2"
             );
 
 
