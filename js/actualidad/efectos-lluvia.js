@@ -32,7 +32,7 @@ import {
 
 import {
     obtenerNivelEfectivo
-} from "./lluvia.js";
+} from "./lluvia.js?v=20260914-diagnostico1";
 
 
 import {
@@ -666,51 +666,4 @@ export function generarGotasCristalActivas() {
 
     document.querySelectorAll(
         ".capa-gotas-cristal.activa, .capa-gotas-cristal-ficha.activa"
-    ).forEach(
-        capa => {
-            const nivel =
-                Number(
-                    capa.dataset.nivel
-                )
-                ||
-                0;
-
-            if (
-                nivel <= 0
-                ||
-                Math.random()
-                >
-                obtenerProbabilidadGotaCristal(
-                    nivel
-                )
-            ) {
-                return;
-            }
-
-            const cantidad =
-                nivel >= 4
-                &&
-                Math.random()
-                >
-                0.48
-                ?
-                2
-                :
-                1;
-
-            for (
-                let i = 0;
-                i < cantidad;
-                i += 1
-            ) {
-                crearGotaCristal(
-                    capa,
-                    nivel
-                );
-            }
-        }
-    );
-}
-
-
-// Fin de fichero: js/actualidad/efectos-lluvia.js
+    ).for
