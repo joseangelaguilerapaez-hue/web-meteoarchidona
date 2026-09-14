@@ -734,13 +734,19 @@
     Zona horaria
 </label>
 
-<input
+<select
     id="campoZonaHoraria"
-    type="text"
-    maxlength="100"
-    autocomplete="off"
-    placeholder="Europe/Madrid"
+    required
 >
+    <option value="Europe/Madrid">
+        Europe/Madrid
+    </option>
+</select>
+
+<div class="campo-ayuda">
+    Zona horaria utilizada por MeteoArchidona
+    para las estaciones de la red.
+</div>
 
 </div>
 
