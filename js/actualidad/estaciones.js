@@ -25,30 +25,30 @@ import {
     establecerCodigosEstacion,
     establecerEstacionesPublicas,
     establecerPlantillaFichaEstacion
-} from "./estado.js";
+} from "./estado.js?v=20260914-modular2";
 
 
 import {
     normalizarCodigoEstacion,
     obtenerCodigosDesdeDom,
     obtenerElemento
-} from "./dom.js";
+} from "./dom.js?v=20260914-modular2";
 
 
 import {
     inicializarLluviaVisualEstacion,
     actualizarSistemaLluvia
-} from "./efectos-lluvia.js?v=20260914-diagnostico2";
+} from "./efectos-lluvia.js?v=20260914-modular2";
 
 
 import {
     configurarControlesLluvia
-} from "./simulacion.js?v=20260914-diagnostico3";
+} from "./simulacion.js?v=20260914-modular2";
 
 
 import {
     configurarPatrocinios
-} from "./patrocinios.js";
+} from "./patrocinios.js?v=20260914-modular2";
 
 
 export function obtenerMetadatosEstacion(
