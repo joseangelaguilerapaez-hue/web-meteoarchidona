@@ -36,7 +36,7 @@ import {
 
 import {
     actualizarSistemaLluvia
-} from "./efectos-lluvia.js";
+} from "./efectos-lluvia.js?v=20260914-diagnostico2";
 
 
 export function asegurarEstadoSimulacion(
