@@ -27,13 +27,13 @@
 import {
     NOMBRES_NIVEL_LLUVIA,
     estadoActualidad
-} from "./estado.js";
+} from "./estado.js?v=20260914-modular2";
 
 
 import {
     asignarTexto,
     formatearNumero
-} from "./dom.js";
+} from "./dom.js?v=20260914-modular2";
 
 
 function asegurarEstadoLluviaEstacion(
