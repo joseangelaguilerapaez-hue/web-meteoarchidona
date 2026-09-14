@@ -67,16 +67,24 @@ import {
 } from "./patrocinios.js";
 
 
+/* ==========================================================
+   REDIMENSIONADO
+   ========================================================== */
+
+
 function configurarRedimensionado() {
+
     window.addEventListener(
         "resize",
         () => {
+
             if (
                 estadoActualidad
                     .temporizadorResize
                 !==
                 null
             ) {
+
                 clearTimeout(
                     estadoActualidad
                         .temporizadorResize
@@ -84,13 +92,15 @@ function configurarRedimensionado() {
             }
 
             establecerTemporizadorResize(
-                setTimeout(
+                window.setTimeout(
                     () => {
+
                         actualizarSistemaLluvia();
 
                         establecerTemporizadorResize(
                             null
                         );
+
                     },
                     180
                 )
@@ -100,22 +110,28 @@ function configurarRedimensionado() {
 }
 
 
+/* ==========================================================
+   CABECERA DINÁMICA
+   ========================================================== */
+
+
 function configurarCabeceraDinamica() {
+
     /*
-     * El logotipo de Y&Z funciona como mando GLOBAL de la lluvia
-     * visual de prueba.
+     * El logotipo Y&Z se monta dinámicamente mediante js/cabecera.js.
      *
-     * El logotipo no pertenece originalmente al documento de
-     * Actualidad: js/cabecera.js inserta componentes/cabecera.html
-     * dinámicamente.
+     * Cuando la cabecera termina de montarse emite:
      *
-     * Cuando la cabecera termina de montarse emite
-     * "cabecera:montada". En ese momento se repasan los controles
-     * para conectar el logotipo recién incorporado.
+     *     cabecera:montada
+     *
+     * En ese momento se repasan los controles de lluvia para conectar
+     * también el logotipo como control GLOBAL de simulación visual.
      */
+
     document.addEventListener(
         "cabecera:montada",
         () => {
+
             configurarControlesLluvia();
 
             actualizarIndicadorSimulacion(
@@ -129,7 +145,13 @@ function configurarCabeceraDinamica() {
 }
 
 
+/* ==========================================================
+   ACTUALIZACIONES PERIÓDICAS
+   ========================================================== */
+
+
 function programarActualizaciones() {
+
     window.setInterval(
         cargarCondiciones,
         INTERVALO_CONDICIONES_MS
@@ -147,37 +169,64 @@ function programarActualizaciones() {
 }
 
 
+/* ==========================================================
+   INICIALIZACIÓN GENERAL
+   ========================================================== */
+
+
 export async function inicializarActualidad() {
+
+    /*
+     * El script se carga como type="module".
+     *
+     * Igual que en Administración, no necesitamos esperar
+     * manualmente a DOMContentLoaded: los módulos se ejecutan
+     * después de que el documento haya sido analizado.
+     */
+
     const plantillaDisponible =
         capturarPlantillaFichaEstacion();
 
     if (
         !plantillaDisponible
     ) {
-        console.error(
-            "No se ha encontrado una ficha base para construir las estaciones dinámicas."
+
+        throw new Error(
+            "No se ha encontrado la plantilla base de estaciones de Actualidad."
         );
     }
+
 
     const catalogoCargado =
         await cargarCatalogoEstaciones();
 
+
     if (
         catalogoCargado
-        &&
-        plantillaDisponible
     ) {
-        sincronizarFichasEstaciones();
+
+        const fichasSincronizadas =
+            sincronizarFichasEstaciones();
+
+        if (
+            !fichasSincronizadas
+        ) {
+
+            throw new Error(
+                "No ha sido posible sincronizar las fichas de estaciones."
+            );
+        }
     }
 
+
     /*
-     * Si el catálogo público no estuviera disponible durante el
-     * arranque, api.js conserva como respaldo temporal las estaciones
-     * presentes originalmente en el HTML.
+     * Si /estaciones falla, api.js conserva el respaldo disponible
+     * en el DOM cuando existe.
      *
-     * Por ello la inicialización visual continúa aunque la consulta
-     * inicial a /estaciones haya fallado.
+     * La inicialización visual puede continuar para no dejar
+     * bloqueado el resto de Actualidad.
      */
+
     inicializarLluviaVisual();
 
     configurarControlesLluvia();
@@ -186,7 +235,9 @@ export async function inicializarActualidad() {
 
     actualizarSistemaLluvia();
 
+
     await cargarCondiciones();
+
 
     configurarRedimensionado();
 
@@ -194,25 +245,32 @@ export async function inicializarActualidad() {
 }
 
 
-configurarCabeceraDinamica();
+/* ==========================================================
+   ARRANQUE
+   ========================================================== */
 
 
-if (
-    document.readyState
-    ===
-    "loading"
-) {
-    document.addEventListener(
-        "DOMContentLoaded",
-        inicializarActualidad,
-        {
-            once: true
-        }
-    );
+async function arrancarActualidad() {
 
-} else {
-    inicializarActualidad();
+    try {
+
+        configurarCabeceraDinamica();
+
+        await inicializarActualidad();
+
+    } catch (
+        error
+    ) {
+
+        console.error(
+            "No ha sido posible iniciar Actualidad.",
+            error
+        );
+    }
 }
+
+
+void arrancarActualidad();
 
 
 // Fin de fichero: js/actualidad/principal.js
