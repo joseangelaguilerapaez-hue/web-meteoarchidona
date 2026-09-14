@@ -38,12 +38,12 @@ import {
 import {
     inicializarLluviaVisualEstacion,
     actualizarSistemaLluvia
-} from "./efectos-lluvia.js";
+} from "./efectos-lluvia.js?v=20260914-diagnostico2";
 
 
 import {
     configurarControlesLluvia
-} from "./simulacion.js";
+} from "./simulacion.js?v=20260914-diagnostico3";
 
 
 import {
