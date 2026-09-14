@@ -32,18 +32,18 @@ import {
 import {
     crearEstadoInicialEstacion,
     obtenerMetadatosEstacion
-} from "./estaciones.js";
+} from "./estaciones.js?v=20260914-estaciones1";
 
 
 import {
     mostrarErrorLluvia,
     mostrarLluvia
-} from "./lluvia.js";
+} from "./lluvia.js?v=20260914-diagnostico1";
 
 
 import {
     actualizarSistemaLluvia
-} from "./efectos-lluvia.js";
+} from "./efectos-lluvia.js?v=20260914-diagnostico2";
 
 
 import {
@@ -431,4 +431,4 @@ export function mostrarErrorEstacion(
 }
 
 
-// Fin de fichero: js/actualidad/meteorologia.js
+// Fin de fichero:
