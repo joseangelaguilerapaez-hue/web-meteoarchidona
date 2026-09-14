@@ -181,7 +181,7 @@ async function arrancarActualidad() {
         const estaciones =
             await importarModulo(
                 "estaciones.js",
-                "./estaciones.js"
+                "./estaciones.js?v=20260914-estaciones1"
             );
 
         await importarModulo(
