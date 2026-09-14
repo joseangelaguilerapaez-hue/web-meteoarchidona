@@ -8,8 +8,23 @@
 # caché propia de LiteSpeed para evitar que, después de un despliegue,
 # el servidor continúe entregando versiones anteriores de las páginas.
 #
-# Los recursos estáticos siguen utilizando la caché normal del
-# navegador mediante las reglas Expires definidas más abajo.
+# Durante esta misma fase de desarrollo se desactiva también la caché
+# del navegador para documentos HTML y ficheros JavaScript.
+#
+# Esto es especialmente importante ahora que la web utiliza módulos ES:
+#
+#     principal.js
+#         ↓
+#     api.js
+#     estado.js
+#     estaciones.js
+#     lluvia.js
+#     ...
+#
+# Aunque el documento principal cambie de versión mediante ?v=, los
+# módulos importados internamente pueden conservar su URL sin parámetro
+# de versión. Por ello, mientras continúa la refactorización modular,
+# no deben quedar almacenados durante días en la caché del navegador.
 #
 # Cuando el desarrollo de la web esté más estabilizado podremos volver
 # a estudiar una política de caché selectiva.
@@ -202,28 +217,44 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 
 
 # ============================================================
-# HTML — SIN CACHÉ
+# HTML Y JAVASCRIPT — SIN CACHÉ DURANTE DESARROLLO
 # ============================================================
 #
 # Además de desactivar la caché interna de LiteSpeed, los documentos
-# HTML tampoco deben quedar almacenados en el navegador.
+# HTML y los ficheros JavaScript tampoco deben quedar almacenados en
+# el navegador durante la fase activa de desarrollo.
 #
 # Esto garantiza que, después de un despliegue, el navegador solicite
-# siempre la versión actual del documento.
+# siempre la versión actual.
 #
-# Afecta a:
+# En JavaScript es especialmente importante por los módulos ES:
 #
-#     pages/actualidad.html
-#     pages/observaciones.html
-#     pages/prediccion.html
-#     pages/en-vivo.html
-#     pages/administracion.html
-#     componentes/cabecera.html
-#     cualquier futuro HTML
+#     principal.js
+#     api.js
+#     estado.js
+#     estaciones.js
+#     lluvia.js
+#     efectos-lluvia.js
+#     ...
+#
+# Los imports internos pueden no llevar parámetro ?v= propio, por lo
+# que permitir una caché larga puede mezclar versiones distintas de
+# los módulos después de varios commits consecutivos.
 
 <IfModule mod_headers.c>
 
     <FilesMatch "\.html$">
+
+        Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+
+        Header always set Pragma "no-cache"
+
+        Header always set Expires "0"
+
+    </FilesMatch>
+
+
+    <FilesMatch "\.js$">
 
         Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
 
@@ -275,22 +306,26 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 #
 # porque esa directiva anterior controla la caché interna de LiteSpeed.
 #
-# Política:
+# Política DURANTE DESARROLLO:
 #
 # HTML:
 #     sin caché.
 #
-# CSS y JavaScript:
-#     una semana.
+# JavaScript:
+#     sin caché.
 #
-#     Los enlaces utilizan ?v= para cambiar su URL cuando publicamos
-#     una nueva versión.
+# CSS:
+#     una semana.
 #
 # Imágenes:
 #     un mes.
 #
 # Fuentes:
 #     un año.
+#
+# Cuando la arquitectura modular esté estabilizada podremos volver a
+# habilitar una política de caché de JavaScript basada en versionado
+# explícito de recursos.
 
 <IfModule mod_expires.c>
 
@@ -314,10 +349,17 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
     # --------------------------------------------------------
     # JavaScript
     # --------------------------------------------------------
-
-    ExpiresByType application/javascript "access plus 1 week"
-
-    ExpiresByType text/javascript "access plus 1 week"
+    #
+    # Sin caché durante desarrollo.
+    #
+    # Las cabeceras específicas definidas arriba fuerzan:
+    #
+    #     Cache-Control: no-store
+    #     Pragma: no-cache
+    #     Expires: 0
+    #
+    # Por ello no se establece aquí ningún ExpiresByType de una semana
+    # para JavaScript.
 
 
     # --------------------------------------------------------
