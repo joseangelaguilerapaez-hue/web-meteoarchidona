@@ -192,7 +192,7 @@ async function arrancarActualidad() {
         const api =
             await importarModulo(
                 "api.js",
-                "./api.js"
+                "./api.js?v=20260914-api1"
             );
 
 
