@@ -26,31 +26,31 @@ import {
     asignarTexto,
     formatearNumero,
     obtenerElemento
-} from "./dom.js";
+} from "./dom.js?v=20260914-modular2";
 
 
 import {
     crearEstadoInicialEstacion,
     obtenerMetadatosEstacion
-} from "./estaciones.js?v=20260914-estaciones1";
+} from "./estaciones.js?v=20260914-modular2";
 
 
 import {
     mostrarErrorLluvia,
     mostrarLluvia
-} from "./lluvia.js?v=20260914-diagnostico1";
+} from "./lluvia.js?v=20260914-modular2";
 
 
 import {
     actualizarSistemaLluvia
-} from "./efectos-lluvia.js?v=20260914-diagnostico2";
+} from "./efectos-lluvia.js?v=20260914-modular2";
 
 
 import {
     actualizarVeleta,
     establecerVientoEstacion,
     limpiarVientoEstacion
-} from "./viento.js";
+} from "./viento.js?v=20260914-modular2";
 
 
 export function clasificarUv(
@@ -431,4 +431,4 @@ export function mostrarErrorEstacion(
 }
 
 
-// Fin de fichero:
+// Fin de fichero: js/actualidad/meteorologia.js
