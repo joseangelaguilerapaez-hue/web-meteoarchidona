@@ -23,7 +23,7 @@
 
 import {
     estadoActualidad
-} from "./estado.js";
+} from "./estado.js?v=20260914-modular2";
 
 
 import {
@@ -33,18 +33,18 @@ import {
     estacionTieneFicha,
     obtenerCodigosConFicha,
     sincronizarFichasEstaciones
-} from "./estaciones.js";
+} from "./estaciones.js?v=20260914-modular2";
 
 
 import {
     inicializarLluviaVisualEstacion
-} from "./efectos-lluvia.js";
+} from "./efectos-lluvia.js?v=20260914-modular2";
 
 
 import {
     mostrarDatosEstacion,
     mostrarErrorEstacion
-} from "./meteorologia.js";
+} from "./meteorologia.js?v=20260914-modular2";
 
 
 function obtenerApiBase() {
