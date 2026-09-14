@@ -22,7 +22,10 @@
 <script src="../js/cabecera.js?v=20260913-lluvia2" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20260913-lluvia2" defer></script>
-<script src="../js/administracion.js?v=20260913-lluvia2" defer></script>
+<script
+    type="module"
+    src="../js/administracion/principal.js?v=20260914-modular1"
+></script>
 </head>
 
 <body data-seccion="administracion">
@@ -34,8 +37,8 @@
 
 <!--
     El botón de cerrar sesión vive aquí y no en
-    componentes/cabecera.html porque js/administracion.js lo busca
-    por su id nada más arrancar, y la cabecera se monta después.
+    componentes/cabecera.html porque el módulo administrativo lo
+    necesita desde el arranque, y la cabecera se monta después.
     js/cabecera.js lo traslada a su hueco al terminar.
 -->
 <button
