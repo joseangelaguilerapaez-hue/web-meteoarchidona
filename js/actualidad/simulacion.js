@@ -25,18 +25,18 @@
 import {
     NOMBRES_NIVEL_LLUVIA,
     estadoActualidad
-} from "./estado.js";
+} from "./estado.js?v=20260914-modular2";
 
 
 import {
     normalizarCodigoEstacion,
     obtenerElemento
-} from "./dom.js";
+} from "./dom.js?v=20260914-modular2";
 
 
 import {
     actualizarSistemaLluvia
-} from "./efectos-lluvia.js?v=20260914-diagnostico2";
+} from "./efectos-lluvia.js?v=20260914-modular2";
 
 
 export function asegurarEstadoSimulacion(
