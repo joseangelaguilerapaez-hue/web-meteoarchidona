@@ -186,7 +186,7 @@ async function arrancarActualidad() {
 
         await importarModulo(
             "meteorologia.js",
-            "./meteorologia.js"
+            "./meteorologia.js?v=20260914-meteorologia1"
         );
 
         const api =
