@@ -4,30 +4,31 @@
 #
 # El sitio está alojado en Hostinger sobre LiteSpeed.
 #
-# Durante la fase activa de desarrollo se desactiva expresamente la
-# caché propia de LiteSpeed para evitar que, después de un despliegue,
-# el servidor continúe entregando versiones anteriores de las páginas.
+# Durante la fase activa de desarrollo se mantiene desactivada
+# expresamente la caché propia de LiteSpeed para evitar que, después
+# de un despliegue, el servidor continúe entregando versiones
+# anteriores de las páginas o recursos.
 #
-# Durante esta misma fase de desarrollo se desactiva también la caché
-# del navegador para documentos HTML y ficheros JavaScript.
+# Los documentos HTML tampoco se almacenan en caché en el navegador.
 #
-# Esto es especialmente importante ahora que la web utiliza módulos ES:
+# Los recursos JavaScript sí pueden utilizar caché de navegador porque
+# se publican con versionado explícito mediante parámetros ?v=.
 #
-#     principal.js
+# En la arquitectura modular de Actualidad todas las dependencias de
+# una misma generación utilizan el mismo identificador de versión:
+#
+#     principal.js?v=...
 #         ↓
-#     api.js
-#     estado.js
-#     estaciones.js
-#     lluvia.js
+#     api.js?v=...
+#     estado.js?v=...
+#     estaciones.js?v=...
+#     lluvia.js?v=...
+#     efectos-lluvia.js?v=...
 #     ...
 #
-# Aunque el documento principal cambie de versión mediante ?v=, los
-# módulos importados internamente pueden conservar su URL sin parámetro
-# de versión. Por ello, mientras continúa la refactorización modular,
-# no deben quedar almacenados durante días en la caché del navegador.
-#
-# Cuando el desarrollo de la web esté más estabilizado podremos volver
-# a estudiar una política de caché selectiva.
+# Cuando se publique una nueva generación del grafo modular deberá
+# actualizarse su identificador de versión para invalidar de forma
+# controlada la caché anterior.
 # ============================================================
 
 
@@ -217,29 +218,24 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 
 
 # ============================================================
-# HTML Y JAVASCRIPT — SIN CACHÉ DURANTE DESARROLLO
+# POLÍTICA DE CACHÉ DE HTML Y JAVASCRIPT
 # ============================================================
 #
-# Además de desactivar la caché interna de LiteSpeed, los documentos
-# HTML y los ficheros JavaScript tampoco deben quedar almacenados en
-# el navegador durante la fase activa de desarrollo.
+# Los documentos HTML no se almacenan en caché.
 #
-# Esto garantiza que, después de un despliegue, el navegador solicite
-# siempre la versión actual.
+# Esto permite que, después de un despliegue, el navegador obtenga
+# inmediatamente el HTML actual y con él los identificadores ?v=
+# correspondientes a la nueva generación de recursos.
 #
-# En JavaScript es especialmente importante por los módulos ES:
+# JavaScript utiliza caché de navegador durante una semana.
 #
-#     principal.js
-#     api.js
-#     estado.js
-#     estaciones.js
-#     lluvia.js
-#     efectos-lluvia.js
-#     ...
+# La invalidación de JavaScript se realiza mediante versionado
+# explícito de las URLs:
 #
-# Los imports internos pueden no llevar parámetro ?v= propio, por lo
-# que permitir una caché larga puede mezclar versiones distintas de
-# los módulos después de varios commits consecutivos.
+#     fichero.js?v=identificador
+#
+# En los módulos ES todas las dependencias de una misma generación
+# deben utilizar el mismo identificador de versión.
 
 <IfModule mod_headers.c>
 
@@ -256,11 +252,9 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 
     <FilesMatch "\.js$">
 
-        Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header always set Cache-Control "public, max-age=604800"
 
-        Header always set Pragma "no-cache"
-
-        Header always set Expires "0"
+        Header always unset Pragma
 
     </FilesMatch>
 
@@ -306,13 +300,13 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 #
 # porque esa directiva anterior controla la caché interna de LiteSpeed.
 #
-# Política DURANTE DESARROLLO:
+# Política actual:
 #
 # HTML:
 #     sin caché.
 #
 # JavaScript:
-#     sin caché.
+#     una semana.
 #
 # CSS:
 #     una semana.
@@ -323,9 +317,9 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
 # Fuentes:
 #     un año.
 #
-# Cuando la arquitectura modular esté estabilizada podremos volver a
-# habilitar una política de caché de JavaScript basada en versionado
-# explícito de recursos.
+# Los recursos JavaScript deben publicarse con un identificador ?v=
+# nuevo cada vez que se modifique una generación que deba sustituir
+# inmediatamente a la anterior.
 
 <IfModule mod_expires.c>
 
@@ -349,17 +343,10 @@ RewriteRule (?:^|/)\.(?!well-known/) - [R=404,L]
     # --------------------------------------------------------
     # JavaScript
     # --------------------------------------------------------
-    #
-    # Sin caché durante desarrollo.
-    #
-    # Las cabeceras específicas definidas arriba fuerzan:
-    #
-    #     Cache-Control: no-store
-    #     Pragma: no-cache
-    #     Expires: 0
-    #
-    # Por ello no se establece aquí ningún ExpiresByType de una semana
-    # para JavaScript.
+
+    ExpiresByType text/javascript "access plus 1 week"
+
+    ExpiresByType application/javascript "access plus 1 week"
 
 
     # --------------------------------------------------------
