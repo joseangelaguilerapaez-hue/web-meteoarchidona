@@ -4,244 +4,122 @@
  * MeteoArchidona
  * Actualidad
  *
- * Orquestador principal de la página Actualidad.
+ * Orquestador temporal de diagnóstico de la arquitectura modular.
  *
- * Responsabilidades:
+ * Este fichero carga los módulos uno a uno mediante import() para
+ * identificar con precisión cualquier error de carga o evaluación.
  *
- * - arrancar la arquitectura modular de Actualidad;
- * - capturar la plantilla estructural de estación;
- * - cargar el catálogo público;
- * - sincronizar las fichas dinámicas;
- * - inicializar los efectos visuales de lluvia;
- * - configurar los controles manuales de lluvia;
- * - configurar los controles de patrocinio;
- * - cargar las condiciones meteorológicas;
- * - programar los refrescos periódicos;
- * - actualizar el sistema visual tras cambios de tamaño;
- * - conectar el logotipo Y&Z como control GLOBAL de lluvia de prueba
- *   cuando la cabecera dinámica haya sido montada.
- *
- * Este módulo no contiene lógica meteorológica, lógica HTTP detallada
- * ni construcción interna de fichas. Su función es coordinar los
- * módulos especializados de Actualidad.
+ * Cuando el diagnóstico quede resuelto, volveremos al orquestador
+ * definitivo con imports estáticos.
  */
 
 
-import {
-    INTERVALO_CATALOGO_MS,
-    INTERVALO_CONDICIONES_MS,
-    INTERVALO_GOTAS_CRISTAL_MS,
-    estadoActualidad,
-    establecerTemporizadorResize
-} from "./estado.js";
-
-
-import {
-    cargarCatalogoEstaciones,
-    cargarCondiciones,
-    refrescarCatalogo
-} from "./api.js";
-
-
-import {
-    capturarPlantillaFichaEstacion,
-    sincronizarFichasEstaciones
-} from "./estaciones.js";
-
-
-import {
-    actualizarSistemaLluvia,
-    generarGotasCristalActivas,
-    inicializarLluviaVisual
-} from "./efectos-lluvia.js";
-
-
-import {
-    actualizarIndicadorSimulacion,
-    configurarControlesLluvia
-} from "./simulacion.js";
-
-
-import {
-    configurarPatrocinios
-} from "./patrocinios.js";
-
-
-/* ==========================================================
-   REDIMENSIONADO
-   ========================================================== */
-
-
-function configurarRedimensionado() {
-
-    window.addEventListener(
-        "resize",
-        () => {
-
-            if (
-                estadoActualidad
-                    .temporizadorResize
-                !==
-                null
-            ) {
-
-                clearTimeout(
-                    estadoActualidad
-                        .temporizadorResize
-                );
-            }
-
-            establecerTemporizadorResize(
-                window.setTimeout(
-                    () => {
-
-                        actualizarSistemaLluvia();
-
-                        establecerTemporizadorResize(
-                            null
-                        );
-
-                    },
-                    180
-                )
-            );
-        }
-    );
-}
-
-
-/* ==========================================================
-   CABECERA DINÁMICA
-   ========================================================== */
-
-
-function configurarCabeceraDinamica() {
-
-    /*
-     * El logotipo Y&Z se monta dinámicamente mediante js/cabecera.js.
-     *
-     * Cuando la cabecera termina de montarse emite:
-     *
-     *     cabecera:montada
-     *
-     * En ese momento se repasan los controles de lluvia para conectar
-     * también el logotipo como control GLOBAL de simulación visual.
-     */
-
-    document.addEventListener(
-        "cabecera:montada",
-        () => {
-
-            configurarControlesLluvia();
-
-            actualizarIndicadorSimulacion(
-                "GLOBAL"
-            );
-        },
-        {
-            once: true
-        }
-    );
-}
-
-
-/* ==========================================================
-   ACTUALIZACIONES PERIÓDICAS
-   ========================================================== */
-
-
-function programarActualizaciones() {
-
-    window.setInterval(
-        cargarCondiciones,
-        INTERVALO_CONDICIONES_MS
+function mostrarErrorDiagnostico(
+    modulo,
+    error
+) {
+    console.error(
+        `Error cargando módulo ${modulo}:`,
+        error
     );
 
-    window.setInterval(
-        refrescarCatalogo,
-        INTERVALO_CATALOGO_MS
-    );
-
-    window.setInterval(
-        generarGotasCristalActivas,
-        INTERVALO_GOTAS_CRISTAL_MS
-    );
-}
-
-
-/* ==========================================================
-   INICIALIZACIÓN GENERAL
-   ========================================================== */
-
-
-export async function inicializarActualidad() {
-
-    /*
-     * El script se carga como type="module".
-     *
-     * Igual que en Administración, no necesitamos esperar
-     * manualmente a DOMContentLoaded: los módulos se ejecutan
-     * después de que el documento haya sido analizado.
-     */
-
-    const plantillaDisponible =
-        capturarPlantillaFichaEstacion();
+    let panel =
+        document.getElementById(
+            "diagnostico-actualidad-modulos"
+        );
 
     if (
-        !plantillaDisponible
+        !panel
     ) {
+        panel =
+            document.createElement(
+                "div"
+            );
 
-        throw new Error(
-            "No se ha encontrado la plantilla base de estaciones de Actualidad."
+        panel.id =
+            "diagnostico-actualidad-modulos";
+
+        panel.style.position =
+            "fixed";
+
+        panel.style.left =
+            "12px";
+
+        panel.style.right =
+            "12px";
+
+        panel.style.top =
+            "12px";
+
+        panel.style.zIndex =
+            "999999";
+
+        panel.style.padding =
+            "14px";
+
+        panel.style.background =
+            "#300";
+
+        panel.style.color =
+            "#fff";
+
+        panel.style.border =
+            "2px solid #f66";
+
+        panel.style.borderRadius =
+            "8px";
+
+        panel.style.fontFamily =
+            "monospace";
+
+        panel.style.fontSize =
+            "13px";
+
+        panel.style.whiteSpace =
+            "pre-wrap";
+
+        panel.style.wordBreak =
+            "break-word";
+
+        document.body.appendChild(
+            panel
         );
     }
 
+    panel.textContent =
+        `Fallo modular en Actualidad\n\n`
+        +
+        `Módulo: ${modulo}\n\n`
+        +
+        `Error: ${
+            error?.message
+            ||
+            String(
+                error
+            )
+        }`;
+}
 
-    const catalogoCargado =
-        await cargarCatalogoEstaciones();
 
+async function importarModulo(
+    nombre,
+    ruta
+) {
+    try {
+        return await import(
+            ruta
+        );
 
-    if (
-        catalogoCargado
+    } catch (
+        error
     ) {
+        mostrarErrorDiagnostico(
+            nombre,
+            error
+        );
 
-        const fichasSincronizadas =
-            sincronizarFichasEstaciones();
-
-        if (
-            !fichasSincronizadas
-        ) {
-
-            throw new Error(
-                "No ha sido posible sincronizar las fichas de estaciones."
-            );
-        }
+        throw error;
     }
-
-
-    /*
-     * Si /estaciones falla, api.js conserva el respaldo disponible
-     * en el DOM cuando existe.
-     *
-     * La inicialización visual puede continuar para no dejar
-     * bloqueado el resto de Actualidad.
-     */
-
-    inicializarLluviaVisual();
-
-    configurarControlesLluvia();
-
-    configurarPatrocinios();
-
-    actualizarSistemaLluvia();
-
-
-    await cargarCondiciones();
-
-
-    configurarRedimensionado();
-
-    programarActualizaciones();
 }
 
 
@@ -254,13 +132,235 @@ async function arrancarActualidad() {
 
     try {
 
-        configurarCabeceraDinamica();
+        /*
+         * Cargamos primero los módulos base y después sus dependientes.
+         *
+         * De esta forma, si alguno falla, podremos identificar con
+         * bastante precisión cuál es el primer punto roto del árbol.
+         */
 
-        await inicializarActualidad();
+        const estado =
+            await importarModulo(
+                "estado.js",
+                "./estado.js"
+            );
+
+        await importarModulo(
+            "dom.js",
+            "./dom.js"
+        );
+
+        await importarModulo(
+            "viento.js",
+            "./viento.js"
+        );
+
+        await importarModulo(
+            "lluvia.js",
+            "./lluvia.js"
+        );
+
+        const efectosLluvia =
+            await importarModulo(
+                "efectos-lluvia.js",
+                "./efectos-lluvia.js"
+            );
+
+        const simulacion =
+            await importarModulo(
+                "simulacion.js",
+                "./simulacion.js"
+            );
+
+        const patrocinios =
+            await importarModulo(
+                "patrocinios.js",
+                "./patrocinios.js"
+            );
+
+        const estaciones =
+            await importarModulo(
+                "estaciones.js",
+                "./estaciones.js"
+            );
+
+        await importarModulo(
+            "meteorologia.js",
+            "./meteorologia.js"
+        );
+
+        const api =
+            await importarModulo(
+                "api.js",
+                "./api.js"
+            );
+
+
+        /* ==================================================
+           CABECERA DINÁMICA
+           ================================================== */
+
+        document.addEventListener(
+            "cabecera:montada",
+            () => {
+
+                simulacion
+                    .configurarControlesLluvia();
+
+                simulacion
+                    .actualizarIndicadorSimulacion(
+                        "GLOBAL"
+                    );
+            },
+            {
+                once: true
+            }
+        );
+
+
+        /* ==================================================
+           PLANTILLA
+           ================================================== */
+
+        const plantillaDisponible =
+            estaciones
+                .capturarPlantillaFichaEstacion();
+
+        if (
+            !plantillaDisponible
+        ) {
+            throw new Error(
+                "No se ha encontrado la plantilla base de estaciones."
+            );
+        }
+
+
+        /* ==================================================
+           CATÁLOGO
+           ================================================== */
+
+        const catalogoCargado =
+            await api
+                .cargarCatalogoEstaciones();
+
+        if (
+            catalogoCargado
+        ) {
+            const sincronizado =
+                estaciones
+                    .sincronizarFichasEstaciones();
+
+            if (
+                !sincronizado
+            ) {
+                throw new Error(
+                    "El catálogo se cargó pero no fue posible crear las fichas."
+                );
+            }
+        }
+
+
+        /* ==================================================
+           EFECTOS Y CONTROLES
+           ================================================== */
+
+        efectosLluvia
+            .inicializarLluviaVisual();
+
+        simulacion
+            .configurarControlesLluvia();
+
+        patrocinios
+            .configurarPatrocinios();
+
+        efectosLluvia
+            .actualizarSistemaLluvia();
+
+
+        /* ==================================================
+           CONDICIONES
+           ================================================== */
+
+        await api
+            .cargarCondiciones();
+
+
+        /* ==================================================
+           RESIZE
+           ================================================== */
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (
+                    estado
+                        .estadoActualidad
+                        .temporizadorResize
+                    !==
+                    null
+                ) {
+                    clearTimeout(
+                        estado
+                            .estadoActualidad
+                            .temporizadorResize
+                    );
+                }
+
+                estado
+                    .establecerTemporizadorResize(
+                        window.setTimeout(
+                            () => {
+
+                                efectosLluvia
+                                    .actualizarSistemaLluvia();
+
+                                estado
+                                    .establecerTemporizadorResize(
+                                        null
+                                    );
+                            },
+                            180
+                        )
+                    );
+            }
+        );
+
+
+        /* ==================================================
+           INTERVALOS
+           ================================================== */
+
+        window.setInterval(
+            api.cargarCondiciones,
+            estado.INTERVALO_CONDICIONES_MS
+        );
+
+        window.setInterval(
+            api.refrescarCatalogo,
+            estado.INTERVALO_CATALOGO_MS
+        );
+
+        window.setInterval(
+            efectosLluvia.generarGotasCristalActivas,
+            estado.INTERVALO_GOTAS_CRISTAL_MS
+        );
+
 
     } catch (
         error
     ) {
+
+        if (
+            !document.getElementById(
+                "diagnostico-actualidad-modulos"
+            )
+        ) {
+            mostrarErrorDiagnostico(
+                "arranque general",
+                error
+            );
+        }
 
         console.error(
             "No ha sido posible iniciar Actualidad.",
