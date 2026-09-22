@@ -2103,6 +2103,14 @@ button {
     }
 
 
+    /*
+     * También la ficha impar: su regla del tramo de 1250 px es más
+     * específica y, sin repetirla aquí, en el móvil dejaba temperatura y
+     * viento en paralelo y la veleta tapaba los grados.
+     */
+    .lectura-principal,
+    .rejilla-estaciones
+    .estacion-principal:last-child:nth-child(odd)
     .lectura-principal {
         grid-template-columns: 1fr;
         gap: 12px;
