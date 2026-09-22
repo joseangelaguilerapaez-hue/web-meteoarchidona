@@ -652,6 +652,8 @@ button {
 
 
 .resumen {
+    display: flex;
+    flex-direction: column;
     padding: 20px;
 }
 
@@ -686,9 +688,20 @@ button {
 
 .estado-grafico {
     display: grid;
+    flex: 1 1 auto;
     place-items: center;
-    min-height: 160px;
+    min-height: 220px;
     margin: 13px 0;
+}
+
+
+/*
+ * El icono se dibuja con medidas fijas en px (sol, nube y sus
+ * pseudoelementos), así que se agranda con scale en lugar de tocar cada
+ * medida. min-height de .estado-grafico deja sitio a los 192 px finales.
+ */
+.estado-grafico .tiempo-icono {
+    transform: scale(1.6);
 }
 
 
@@ -788,14 +801,15 @@ button {
  */
 /*
  * La columna se estira hasta el final de las fichas de estaciones
- * (align-self: stretch, frente al start del panel) y «Sol y luna» se
- * queda con todo el alto que sobra, para no dejar hueco debajo.
+ * (align-self: stretch, frente al start del panel) y las dos tarjetas
+ * se reparten el alto a partes iguales; en cada una, el dibujo central
+ * (el tiempo, la luna) se centra en el espacio que sobra.
  */
 .columna-resumen {
     display: grid;
     grid-template-rows:
-        auto
-        minmax(0, 1fr);
+        1fr
+        1fr;
     align-self: stretch;
     gap: 14px;
     min-width: 0;
@@ -897,8 +911,8 @@ button {
 
 
 .sol-luna .luna-dibujo {
-    width: 96px;
-    height: 96px;
+    width: 150px;
+    height: 150px;
 }
 
 
