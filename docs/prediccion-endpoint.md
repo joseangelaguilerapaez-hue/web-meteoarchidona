@@ -46,11 +46,11 @@ Ejemplo recortado (una hora y un día; la respuesta real trae 48 horas y
   "municipio": {
     "codigo": "archidona",
     "nombre": "Archidona",
-    "codigo_ine": "29XXX"
+    "codigo_ine": "29017"
   },
   "fuente": {
     "nombre": "AEMET",
-    "url": "https://www.aemet.es/es/eltiempo/prediccion/municipios/...",
+    "url": "https://www.aemet.es/es/eltiempo/prediccion/municipios/archidona-id29017",
     "emitida": "2026-09-22T10:00:00+02:00",
     "obtenida": "2026-09-22T10:07:31+02:00"
   },
@@ -99,8 +99,11 @@ Ejemplo recortado (una hora y un día; la respuesta real trae 48 horas y
 }
 ```
 
-`codigo_ine` y `url` van a propósito sin rellenar: hay que sacarlos de
-AEMET, no escribirlos de memoria.
+Código de Archidona para AEMET: **29017**. Es el código INE de cinco
+cifras; el INE completo, `290173`, lleva al final un dígito de control
+que AEMET no usa (con él responde 404). Comprobado el 22-9-2026 con la
+predicción pública `https://www.aemet.es/xml/municipios/localidad_29017.xml`,
+que devuelve «Archidona, Málaga».
 
 
 ## Campos
@@ -158,9 +161,11 @@ La web elige el icono con este campo y enseña `descripcion` como texto.
 Si llega una `condicion` que la web no conoce, pinta el icono de nubes
 y el texto de `descripcion`, así que añadir valores no rompe nada.
 
-Valores y su equivalencia con los códigos `estadoCielo` de AEMET
-(**hay que comprobarla con una respuesta real** antes de darla por
-buena):
+Valores y su equivalencia con los códigos `estadoCielo` de AEMET.
+Comprobados con la respuesta real de Archidona del 22-9-2026: 11
+(Despejado), 12 y 12n (Poco nuboso), 14 (Nuboso), 15 (Muy nuboso) y 17
+(Nubes altas). El resto **falta confirmarlo** cuando aparezcan en una
+respuesta:
 
 | `condicion` | Códigos AEMET |
 | --- | --- |
