@@ -6,274 +6,596 @@
  *
  *     pages/prediccion.html
  *
- * Es la sección todavía por hacer: de momento solo el cartel de "Lo
- * que viene". Venía de css/index.css, donde Predicción era un panel
- * dentro del index.
- *
- * La paleta y los estilos base están en css/cabecera.css, que esta
+ * El contenido lo pinta js/prediccion.js. La paleta está en
+ * css/paleta.css y los estilos base en css/cabecera.css, que esta
  * página también carga.
  */
 
 
 /* ==========================================================
-   PANEL PROVISIONAL DE PREDICCIÓN
+   ESTRUCTURA
    ========================================================== */
 
 
-.panel-futuro {
-    width:
-        min(
-            1500px,
-            calc(
-                100%
-                -
-                48px
-            )
-        );
-
-    margin:
-        38px auto;
-
-    min-height:
-        calc(
-            100vh
-            -
-            170px
-        );
-
-    min-height:
-        calc(
-            100dvh
-            -
-            170px
-        );
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    padding:
-        40px;
+.prediccion {
+    display: grid;
+    gap: 16px;
+    width: min(1100px, calc(100% - 40px));
+    margin: 28px auto 48px;
 }
 
 
-.panel-futuro-contenido {
-    position:
-        relative;
-
-    overflow:
-        hidden;
-
-    width:
-        min(
-            800px,
-            100%
-        );
-
-    padding:
-        58px 46px;
-
-    text-align:
-        center;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius:
-        24px;
-
+.pred-tarjeta {
+    min-width: 0;
+    padding: 20px 22px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
     background:
-        radial-gradient(
-            circle at top,
-            rgba(
-                54,
-                213,
-                255,
-                0.08
-            ),
-            transparent 45%
-        ),
         linear-gradient(
             145deg,
-            rgba(
-                17,
-                30,
-                46,
-                0.98
-            ),
-            rgba(
-                7,
-                17,
-                28,
-                0.98
-            )
+            rgba(17, 30, 46, 0.98),
+            rgba(9, 22, 34, 0.98)
         );
-
-    box-shadow:
-        var(--shadow);
+    box-shadow: var(--shadow);
 }
 
 
-.panel-futuro-contenido::before {
+.pred-titulo {
+    margin: 0 0 14px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+.pred-vacio {
+    margin: 0;
+    color: var(--muted);
+}
+
+
+/* ==========================================================
+   ENCABEZADO Y PROCEDENCIA
+   ========================================================== */
+
+
+.pred-encabezado {
+    display: grid;
+    gap: 6px;
+}
+
+
+.pred-etiqueta {
+    color: var(--cyan);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+}
+
+
+.pred-encabezado h1 {
+    margin: 0;
+    font-size: clamp(26px, 3.4vw, 38px);
+    font-weight: 700;
+}
+
+
+.pred-fuente {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+
+.pred-fuente a {
+    color: var(--cyan);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+
+.pred-fuente-antigua {
+    color: var(--amber);
+}
+
+
+/*
+ * Aviso de datos de muestra. Tiene que verse a la primera: sin él,
+ * alguien podría tomar las cifras de ejemplo por una previsión.
+ */
+.pred-muestra {
+    margin: 6px 0 0;
+    padding: 10px 14px;
+    border: 1px solid var(--border-amber);
+    border-radius: 9px;
+    background: rgba(240, 165, 0, 0.1);
+    color: var(--amber-light);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   AVISOS
+   ========================================================== */
+
+
+.pred-avisos {
+    display: grid;
+    gap: 10px;
+}
+
+
+.pred-aviso {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    border-left: 5px solid;
+    border-radius: 9px;
+    background: rgba(13, 21, 32, 0.95);
+}
+
+
+.pred-aviso-amarillo {
+    border-color: #facc15;
+}
+
+
+.pred-aviso-naranja {
+    border-color: var(--orange);
+}
+
+
+.pred-aviso-rojo {
+    border-color: var(--red);
+}
+
+
+.pred-aviso-titulo {
+    font-size: 15px;
+}
+
+
+.pred-aviso-periodo,
+.pred-aviso-fuente {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.pred-aviso-texto {
+    margin: 2px 0;
+    color: var(--text-soft);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   AHORA / HOY
+   ========================================================== */
+
+
+.pred-hoy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: 24px;
+}
+
+
+.pred-hoy-principal {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+}
+
+
+.pred-hoy-icono .ic {
+    width: 120px;
+    height: 120px;
+}
+
+
+.pred-hoy-titulo {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+
+.pred-hoy-temperatura {
+    color: var(--green);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 58px;
+    font-weight: 700;
+    line-height: 1.05;
+}
+
+
+.pred-hoy-descripcion {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+.pred-hoy-cifras {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--border);
+}
+
+
+.pred-cifra {
+    padding: 12px 14px;
+    background: var(--card-soft);
+}
+
+
+.pred-cifra dt {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+.pred-cifra dd {
+    margin: 4px 0 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+.pred-max {
+    color: var(--orange);
+}
+
+
+.pred-min {
+    color: var(--cyan);
+}
+
+
+.pred-lluvia {
+    color: var(--blue);
+}
+
+
+/* ==========================================================
+   PRÓXIMAS HORAS
+   ========================================================== */
+
+
+/* Tira que se desliza de lado; en el móvil, con el dedo. */
+.pred-horas {
+    display: flex;
+    gap: 6px;
+    padding: 18px 2px 6px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-color: var(--border-strong) transparent;
+}
+
+
+.pred-horas:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+
+.pred-hora {
+    position: relative;
+    display: grid;
+    flex: 0 0 64px;
+    justify-items: center;
+    gap: 6px;
+    padding: 10px 4px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: rgba(13, 26, 39, 0.9);
+    scroll-snap-align: start;
+}
+
+
+.pred-hora:first-child {
+    border-color: var(--border-cyan);
+}
+
+
+/* Primera hora de cada día nuevo: línea y nombre del día encima. */
+.pred-hora-nuevo-dia {
+    margin-left: 10px;
+}
+
+
+.pred-hora-nuevo-dia::before {
     content: "";
-
-    position:
-        absolute;
-
-    inset: 0;
-
-    pointer-events:
-        none;
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(
-                54,
-                213,
-                255,
-                0.025
-            )
-            1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            rgba(
-                54,
-                213,
-                255,
-                0.025
-            )
-            1px,
-            transparent 1px
-        );
-
-    background-size:
-        36px 36px;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: -9px;
+    width: 1px;
+    background: var(--border-strong);
 }
 
 
-.panel-futuro-icono {
-    position:
-        relative;
-
-    z-index:
-        1;
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    width:
-        88px;
-
-    height:
-        88px;
-
-    margin:
-        0 auto 24px;
-
-    border:
-        1px solid
-        rgba(
-            240,
-            165,
-            0,
-            0.28
-        );
-
-    border-radius:
-        24px;
-
-    background:
-        rgba(
-            240,
-            165,
-            0,
-            0.07
-        );
-
-    font-size:
-        40px;
+.pred-hora-nuevo-dia::after {
+    content: attr(data-dia);
+    position: absolute;
+    top: -18px;
+    left: 0;
+    color: var(--amber);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 
-.panel-futuro-etiqueta {
-    position:
-        relative;
-
-    z-index:
-        1;
-
-    margin-bottom:
-        12px;
-
-    color:
-        var(--cyan);
-
-    font-family:
-        "JetBrains Mono",
-        monospace;
-
-    font-size:
-        11px;
-
-    font-weight:
-        600;
-
-    letter-spacing:
-        0.12em;
+.pred-hora-etiqueta {
+    color: var(--muted);
+    font-size: 11px;
 }
 
 
-.panel-futuro h1 {
-    position:
-        relative;
-
-    z-index:
-        1;
-
-    margin:
-        0 0 16px;
-
-    font-size:
-        clamp(
-            30px,
-            4vw,
-            54px
-        );
-
-    letter-spacing:
-        -0.045em;
+.pred-hora-icono .ic {
+    width: 36px;
+    height: 36px;
 }
 
 
-.panel-futuro p {
-    position:
-        relative;
+.pred-hora-temperatura {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 15px;
+    font-weight: 700;
+}
 
-    z-index:
-        1;
 
-    max-width:
-        620px;
+.pred-hora-lluvia {
+    color: var(--blue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+}
 
-    margin:
-        0 auto;
 
-    color:
-        var(--muted);
+.pred-hora-viento {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--text-soft);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+}
 
-    line-height:
-        1.75;
 
-    font-size:
-        14px;
+.pred-flecha {
+    display: inline-block;
+    color: var(--amber);
+    font-family: "Sora", sans-serif;
+    line-height: 1;
+}
+
+
+/* ==========================================================
+   PRÓXIMOS 7 DÍAS
+   ========================================================== */
+
+
+.pred-dias {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+.pred-dia {
+    display: grid;
+    grid-template-columns:
+        80px
+        40px
+        minmax(0, 1.3fr)
+        48px
+        36px
+        minmax(80px, 1.4fr)
+        36px
+        100px;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--border-subtle);
+}
+
+
+.pred-dia:first-child {
+    border-top: none;
+}
+
+
+.pred-dia-nombre {
+    font-weight: 700;
+}
+
+
+.pred-dia-icono .ic {
+    width: 36px;
+    height: 36px;
+}
+
+
+.pred-dia-descripcion {
+    overflow: hidden;
+    color: var(--text-soft);
+    font-size: 13px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.pred-dia-lluvia,
+.pred-dia-min,
+.pred-dia-max,
+.pred-dia-viento {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+}
+
+
+.pred-dia-lluvia {
+    color: var(--blue);
+}
+
+
+.pred-dia-min {
+    color: var(--cyan);
+    text-align: right;
+}
+
+
+.pred-dia-max {
+    color: var(--orange);
+    font-weight: 700;
+}
+
+
+.pred-dia-viento {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-soft);
+}
+
+
+/* Barra de mínima a máxima, en la escala de toda la semana. */
+.pred-dia-barra {
+    position: relative;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+
+.pred-dia-tramo {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--cyan), var(--amber), var(--orange));
+}
+
+
+/* ==========================================================
+   OTRAS PREDICCIONES
+   ========================================================== */
+
+
+.pred-enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+.pred-enlaces a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    color: var(--text-soft);
+    font-size: 13px;
+    transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+
+@media (hover: hover) {
+    .pred-enlaces a:hover {
+        border-color: rgba(54, 213, 255, 0.55);
+        color: var(--text);
+    }
+}
+
+
+/* ==========================================================
+   ICONOS
+   ========================================================== */
+
+
+.ic {
+    display: block;
+    overflow: visible;
+}
+
+
+.ic-sol {
+    fill: var(--amber);
+}
+
+
+.ic-rayos line {
+    stroke: var(--amber);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+}
+
+
+.ic-luna {
+    fill: #dbe4ee;
+}
+
+
+.ic-nube {
+    fill: #d9e2e9;
+}
+
+
+.ic-nube-clara {
+    fill: #eef3f7;
+}
+
+
+.ic-nube-oscura {
+    fill: #9fb0c1;
+}
+
+
+.ic-nube-fondo {
+    fill: #6f8295;
+}
+
+
+.ic-gota {
+    stroke: var(--blue);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+}
+
+
+.ic-rayo {
+    fill: #facc15;
+}
+
+
+.ic-copo {
+    fill: #f5f8fc;
+}
+
+
+.ic-niebla {
+    stroke: #aabdd0;
+    stroke-width: 2.4;
+    stroke-linecap: round;
 }
 
 
@@ -282,58 +604,64 @@
    ========================================================== */
 
 
-@media (
-    max-width: 850px
-) {
+@media (max-width: 850px) {
 
-    .panel-futuro {
-        width:
-            min(
-                calc(
-                    100%
-                    -
-                    24px
-                ),
-                1500px
-            );
-
-        margin:
-            20px auto;
-
-        min-height:
-            620px;
-
-        padding:
-            10px;
+    .pred-hoy {
+        grid-template-columns: 1fr;
     }
 
 
-    .panel-futuro-contenido {
-        padding:
-            42px 24px;
+    .pred-dia {
+        grid-template-columns:
+            64px
+            34px
+            40px
+            30px
+            minmax(60px, 1fr)
+            30px;
+        gap: 8px;
+    }
+
+
+    .pred-dia-descripcion,
+    .pred-dia-viento {
+        display: none;
     }
 
 }
 
-@media (
-    max-width: 620px
-) {
 
-    .panel-futuro {
-        min-height:
-            540px;
+@media (max-width: 620px) {
+
+    .prediccion {
+        width: calc(100% - 24px);
+        margin-top: 18px;
     }
 
 
-    .panel-futuro-icono {
-        width:
-            72px;
+    .pred-tarjeta {
+        padding: 16px 14px;
+    }
 
-        height:
-            72px;
 
-        font-size:
-            32px;
+    .pred-hoy-icono .ic {
+        width: 88px;
+        height: 88px;
+    }
+
+
+    .pred-hoy-temperatura {
+        font-size: 46px;
+    }
+
+
+    .pred-hoy-cifras {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    .pred-dia {
+        font-size: 14px;
     }
 
 }
