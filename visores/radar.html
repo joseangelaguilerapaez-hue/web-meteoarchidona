@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 
-<title>MeteoArchidona · Visor meteorológico regional</title>
+<title>MeteoArchidona · Seguimiento meteorológico</title>
 
 
 <link
@@ -30,7 +30,7 @@ href="./radar.css?v=20260913-mapa1"
 <div class="visor-titulo">
 
 <div class="visor-titulo-principal">
-Visor meteorológico regional
+Seguimiento meteorológico
 </div>
 
 <div class="visor-titulo-secundario">
@@ -81,7 +81,7 @@ id="instante-fecha"
 
 <section
 class="selector-fondos"
-aria-label="Fondo cartográfico"
+aria-label="Fondo del visor"
 >
 
 <div class="selector-fondos-titulo">
@@ -140,6 +140,42 @@ NEGRO
 </button>
 
 
+<button
+type="button"
+class="selector-fondo selector-fondo-true-colour"
+id="fondo-true-colour"
+data-fondo="true_colour"
+aria-pressed="false"
+title="Mostrar imagen satelital True Colour"
+>
+TRUE COLOUR
+</button>
+
+
+<button
+type="button"
+class="selector-fondo selector-fondo-infrarrojo"
+id="fondo-infrarrojo"
+data-fondo="infrarrojo"
+aria-pressed="false"
+title="Mostrar imagen satelital infrarroja"
+>
+INFRARROJO
+</button>
+
+
+<button
+type="button"
+class="selector-fondo selector-fondo-masas-aire"
+id="fondo-masas-aire"
+data-fondo="masas_aire"
+aria-pressed="false"
+title="Mostrar composición satelital de masas de aire"
+>
+MASAS DE AIRE
+</button>
+
+
 </div>
 
 </section>
@@ -156,27 +192,6 @@ Capas
 
 
 <div class="selector-capas-controles">
-
-
-<button
-type="button"
-class="selector-capa selector-capa-satelite"
-id="capa-satelite"
-data-capa="satelite"
-aria-pressed="false"
-title="Capa de satélite meteorológico pendiente de integración"
-disabled
->
-
-<span>
-SATÉLITE
-</span>
-
-<span class="selector-capa-estado">
-Próximamente
-</span>
-
-</button>
 
 
 <button
@@ -205,8 +220,7 @@ class="selector-capa selector-capa-rayos"
 id="capa-rayos"
 data-capa="rayos"
 aria-pressed="false"
-title="Capa de rayos pendiente de integración"
-disabled
+title="Mostrar u ocultar actividad eléctrica"
 >
 
 <span>
@@ -214,7 +228,7 @@ RAYOS
 </span>
 
 <span class="selector-capa-estado">
-Próximamente
+Oculta
 </span>
 
 </button>
@@ -229,7 +243,7 @@ Próximamente
 
 <div
 id="mapa-radar"
-aria-label="Mapa meteorológico regional MeteoArchidona"
+aria-label="Mapa de Seguimiento meteorológico de MeteoArchidona"
 >
 </div>
 
@@ -282,7 +296,7 @@ title="Fotograma siguiente"
 type="button"
 class="boton"
 id="recargar"
-title="Recargar timelines"
+title="Recargar Seguimiento"
 >
 ↻
 </button>
@@ -300,7 +314,7 @@ min="0"
 max="0"
 value="0"
 step="1"
-aria-label="Timeline meteorológica regional"
+aria-label="Timeline maestra de Seguimiento"
 >
 
 
@@ -365,7 +379,7 @@ aria-label="Opacidad radar"
 <div class="dato">
 
 <div class="dato-label">
-Fotogramas regionales
+Pasos temporales
 </div>
 
 <div
@@ -413,7 +427,7 @@ id="dato-localidades"
 <div class="dato">
 
 <div class="dato-label">
-Capas en instante
+Capas visibles
 </div>
 
 <div
@@ -445,7 +459,7 @@ src="../js/api.js?v=20260913-movil1"
 ></script>
 
 <script
-src="./radar.js?v=20260913-movil1"
+src="./radar.js?v=20260925-seguimiento1"
 ></script>
 
 
