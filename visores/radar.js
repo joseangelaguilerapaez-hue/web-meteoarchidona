@@ -1492,11 +1492,14 @@ function esperarCargaOverlay(
 
 async function crearOverlayRecurso(
  clave,
- *,
- pane,
- opacity=1,
- secuencia
+ opciones
 ){
+ const{
+  pane,
+  opacity=1,
+  secuencia
+ }=opciones;
+
  const recurso=
   obtenerRecurso(
    clave
