@@ -824,16 +824,26 @@ function reanudarReproduccionSiProcede(
 
 /*
  * Un error transitorio de red o un despertar de Render no debe
- * declarar inmediatamente todo un ámbito como no disponible.
+ * declarar inmediatamente un pipeline como no disponible.
  *
  * Se realizan como máximo dos intentos:
  *
- * 1. petición normal, reutilizando caché reciente cuando exista;
- * 2. segundo intento forzado tras una pausa breve.
+ * 1. petición normal, o forzada si el llamador lo ha pedido;
+ * 2. segundo intento siempre forzado tras una pausa breve.
+ *
+ * Este mecanismo se utiliza tanto en los cambios de ámbito como
+ * en la carga inicial, las recargas manuales y las actualizaciones
+ * automáticas del visor.
  */
 async function obtenerPipelineAmbitoConReintento(
- ambito
+ ambito,
+ opciones={}
 ){
+ const forzarPrimerIntento=
+  Boolean(
+   opciones.forzar
+  );
+
  let ultimoError=null;
 
  for(
@@ -846,6 +856,7 @@ async function obtenerPipelineAmbitoConReintento(
     ambito,
     {
      forzar:
+      forzarPrimerIntento||
       intento>0
     }
    );
@@ -3988,8 +3999,16 @@ async function cargarPipelineActivo(
  }
 
  try{
+  /*
+   * La carga inicial, las recargas manuales y las actualizaciones
+   * automáticas utilizan el mismo mecanismo de reintento que los
+   * cambios regional / nacional.
+   *
+   * Así un fallo puntual de fetch no deja el visor inmediatamente
+   * en estado "No disponible".
+   */
   const datos=
-   await obtenerPipelineAmbito(
+   await obtenerPipelineAmbitoConReintento(
     ambitoActivo,
     {
      forzar
