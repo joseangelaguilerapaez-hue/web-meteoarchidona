@@ -24,6 +24,14 @@
 html {
     min-width: 320px;
     min-height: 100%;
+
+    /*
+     * Color de fondo en el <html> y no solo en el <body>: al girar el
+     * móvil, iOS pinta las franjas de los lados (las del notch) con el
+     * color de fondo de la página, y el degradado del body no cuenta
+     * como color. Sin esto salían blancas.
+     */
+    background-color: var(--bg);
 }
 
 

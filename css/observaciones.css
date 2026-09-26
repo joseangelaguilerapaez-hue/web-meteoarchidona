@@ -94,4 +94,18 @@ border:0
 }
 
 
+/*
+ * Móvil en horizontal (y cualquier ventana baja). Con el alto fijo de
+ * 100dvh, entre la cabecera y las filas de selectores del visor el mapa
+ * se quedaba en 0 px: el visor entero cabía en 251 px y la página no
+ * dejaba desplazarse. Aquí se le da al visor un alto mínimo y se
+ * devuelve el desplazamiento a la página.
+ */
+@media(max-height:560px){
+body{height:auto;min-height:100dvh;overflow:auto}
+.visor-contenedor{flex:0 0 auto;min-height:560px}
+.observaciones{height:560px}
+}
+
+
 /* Fin de fichero: css/observaciones.css */

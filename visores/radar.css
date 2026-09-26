@@ -914,3 +914,24 @@ flex:1 1 auto
 
 
 /* Fin del bloque de pantallas anchas */
+
+
+/* =========================================================
+   VENTANAS BAJAS (MÓVIL EN HORIZONTAL)
+   Con 390 px de alto, las filas de selectores y los controles se
+   comían el mapa entero. El visor deja de atarse al alto de la
+   ventana y el mapa conserva un mínimo; la página de Observaciones
+   permite desplazarse (ver css/observaciones.css).
+   ========================================================= */
+
+@media(max-height:560px){
+
+.visor{height:auto;min-height:560px}
+
+.mapa-zona{min-height:260px}
+
+}
+
+
+/* Fin del bloque de ventanas bajas */
+
