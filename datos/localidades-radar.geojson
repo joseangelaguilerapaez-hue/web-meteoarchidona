@@ -19,6 +19,8 @@
     {"type":"Feature","properties":{"nombre":"A Coruña","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"nacional","nacional":true},"geometry":{"type":"Point","coordinates":[-8.4115,43.3623]}},
     {"type":"Feature","properties":{"nombre":"Cáceres","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"nacional","nacional":true},"geometry":{"type":"Point","coordinates":[-6.3708,39.4753]}},
     {"type":"Feature","properties":{"nombre":"Ciudad Real","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"nacional","nacional":true},"geometry":{"type":"Point","coordinates":[-3.9273,38.9863]}},
+    {"type":"Feature","properties":{"nombre":"Ceuta","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"nacional","nacional":true},"geometry":{"type":"Point","coordinates":[-5.3213,35.8894]}},
+    {"type":"Feature","properties":{"nombre":"Melilla","tipo":"capital","prioridad":1,"zoom_min":5,"corredor":"nacional","nacional":true},"geometry":{"type":"Point","coordinates":[-2.9381,35.2923]}},
 
     {"type":"Feature","properties":{"nombre":"Archidona","tipo":"cabecera","prioridad":1,"zoom_min":6,"corredor":"local"},"geometry":{"type":"Point","coordinates":[-4.387,37.095]}},
 
