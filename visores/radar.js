@@ -12,6 +12,16 @@ const FONDOS={
  masas_aire:{id:"fondo-masas-aire",tipo:"meteorologico"}
 };
 
+const NOMBRES_FONDOS={
+ satelite:"Satélite HD",
+ politico:"Político",
+ fisico:"Físico",
+ negro:"Negro",
+ true_colour:"True Colour",
+ infrarrojo:"Infrarrojo",
+ masas_aire:"Masas de aire"
+};
+
 const PRODUCTOS_SATELITE=[
  "true_colour",
  "infrarrojo",
@@ -30,6 +40,13 @@ const LIMITES_REGIONALES={
  norte:40.5
 };
 
+const LIMITES_NACIONALES={
+ oeste:-10.5,
+ sur:34.5,
+ este:5.0,
+ norte:44.5
+};
+
 const URL_LOCALIDADES=new URL(
  "../datos/localidades-radar.geojson",
  window.location.href
@@ -40,13 +57,30 @@ const URL_LIMITES=new URL(
  window.location.href
 ).href;
 
-const CENTRO_REGIONAL=[37.15,-4.25];
+const CENTRO_REGIONAL=[
+ 37.15,
+ -4.25
+];
+
 const ZOOM_REGIONAL=8;
+const ZOOM_MINIMO_BASE=5;
 
 const ATRIBUCION_LIMITES=
- 'Límites: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+ 'Límites administrativos: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors · Costa y fronteras: referencia simplificada MeteoArchidona';
+
+const FORMATO_HORA_MADRID=
+ new Intl.DateTimeFormat(
+  "es-ES",
+  {
+   timeZone:"Europe/Madrid",
+   hour:"2-digit",
+   minute:"2-digit",
+   hour12:false
+  }
+ );
 
 let mapa=null;
+
 let capaLocalidades=null;
 let localidades=[];
 
@@ -98,20 +132,32 @@ let capasRadarActuales={};
 let capaRayosActual=null;
 let claveRayosActual=null;
 
+let leyendaSeguimiento=null;
+let temporizadorLeyenda=null;
+
 
 /* =========================================================
    UTILIDADES
    ========================================================= */
 
 function elemento(id){
- return document.getElementById(id);
+ return document.getElementById(
+  id
+ );
 }
 
-function texto(id,valor){
- const nodo=elemento(id);
+function texto(
+ id,
+ valor
+){
+ const nodo=
+  elemento(
+   id
+  );
 
  if(nodo){
-  nodo.textContent=valor;
+  nodo.textContent=
+   valor;
  }
 }
 
@@ -125,7 +171,9 @@ function esperar(ms){
  );
 }
 
-function fechaValida(valor){
+function fechaValida(
+ valor
+){
  const fechaObjeto=
   new Date(
    valor
@@ -138,7 +186,9 @@ function fechaValida(valor){
   :fechaObjeto;
 }
 
-function marcaTemporal(valor){
+function marcaTemporal(
+ valor
+){
  const marca=
   Date.parse(
    valor
@@ -151,7 +201,9 @@ function marcaTemporal(valor){
   :null;
 }
 
-function hora(valor){
+function hora(
+ valor
+){
  const fechaObjeto=
   fechaValida(
    valor
@@ -168,7 +220,9 @@ function hora(valor){
   :"--:--";
 }
 
-function fecha(valor){
+function fecha(
+ valor
+){
  const fechaObjeto=
   fechaValida(
    valor
@@ -186,7 +240,15 @@ function fecha(valor){
   :"--";
 }
 
-function urlAbsoluta(url){
+function horaMadridActual(){
+ return FORMATO_HORA_MADRID.format(
+  new Date()
+ );
+}
+
+function urlAbsoluta(
+ url
+){
  if(!url){
   return null;
  }
@@ -376,7 +438,9 @@ function esFondoOscuro(){
 }
 
 function debeMostrarLimites(){
- if(!limitesActivos){
+ if(
+  !limitesActivos
+ ){
   return false;
  }
 
@@ -390,6 +454,16 @@ function debeMostrarLimites(){
   return false;
  }
 
+ /*
+  * Tampoco sobre Satélite HD ni Físico.
+  *
+  * La capa propia se reserva para:
+  *
+  * - fondo negro;
+  * - True Colour;
+  * - infrarrojo;
+  * - masas de aire.
+  */
  return(
   fondoActivo==="negro"||
   esFondoMeteorologico(
@@ -404,6 +478,212 @@ function nombreAmbito(
  return ambito==="nacional"
   ?"nacional"
   :"regional";
+}
+
+function nombreFondo(
+ nombre
+){
+ return NOMBRES_FONDOS[
+  nombre
+ ]||nombre;
+}
+
+
+/* =========================================================
+   LEYENDA DE SEGUIMIENTO
+
+   La hora mostrada aquí NO depende de la zona horaria del
+   dispositivo.
+
+   Siempre se calcula expresamente en:
+
+       Europe/Madrid
+
+   Por tanto gestiona automáticamente CET / CEST y los cambios
+   legales de horario de verano.
+
+   La hora amarilla de la cabecera continúa representando el
+   instante meteorológico seleccionado en la timeline.
+   ========================================================= */
+
+function crearLeyendaSeguimiento(){
+ if(
+  !mapa||
+  leyendaSeguimiento
+ ){
+  return;
+ }
+
+ const contenedor=
+  mapa.getContainer();
+
+ const leyenda=
+  document.createElement(
+   "div"
+  );
+
+ leyenda.className=
+  "leyenda-seguimiento";
+
+ leyenda.setAttribute(
+  "aria-label",
+  "Leyenda de Seguimiento"
+ );
+
+ contenedor.appendChild(
+  leyenda
+ );
+
+ leyendaSeguimiento=
+  leyenda;
+
+ actualizarLeyendaSeguimiento();
+}
+
+function actualizarLeyendaSeguimiento(){
+ if(
+  !leyendaSeguimiento
+ ){
+  return;
+ }
+
+ const estadoRadar=
+  radarActivo
+   ?"activa"
+   :"oculta";
+
+ const estadoRayos=
+  rayosActivo
+   ?"activos"
+   :"ocultos";
+
+ leyendaSeguimiento.replaceChildren();
+
+ const horaNodo=
+  document.createElement(
+   "div"
+  );
+
+ horaNodo.className=
+  "leyenda-seguimiento-hora";
+
+ horaNodo.textContent=
+  `Madrid · ${horaMadridActual()}`;
+
+ const fondoNodo=
+  document.createElement(
+   "div"
+  );
+
+ fondoNodo.className=
+  "leyenda-seguimiento-linea";
+
+ const fondoEtiqueta=
+  document.createElement(
+   "strong"
+  );
+
+ fondoEtiqueta.textContent=
+  "Base: ";
+
+ fondoNodo.appendChild(
+  fondoEtiqueta
+ );
+
+ fondoNodo.appendChild(
+  document.createTextNode(
+   nombreFondo(
+    fondoActivo
+   )
+  )
+ );
+
+ const capasNodo=
+  document.createElement(
+   "div"
+  );
+
+ capasNodo.className=
+  "leyenda-seguimiento-linea";
+
+ const lluviaEtiqueta=
+  document.createElement(
+   "strong"
+  );
+
+ lluviaEtiqueta.textContent=
+  "Lluvia: ";
+
+ capasNodo.appendChild(
+  lluviaEtiqueta
+ );
+
+ capasNodo.appendChild(
+  document.createTextNode(
+   `${estadoRadar} · `
+  )
+ );
+
+ const rayosEtiqueta=
+  document.createElement(
+   "strong"
+  );
+
+ rayosEtiqueta.textContent=
+  "Rayos: ";
+
+ capasNodo.appendChild(
+  rayosEtiqueta
+ );
+
+ capasNodo.appendChild(
+  document.createTextNode(
+   estadoRayos
+  )
+ );
+
+ leyendaSeguimiento.appendChild(
+  horaNodo
+ );
+
+ leyendaSeguimiento.appendChild(
+  fondoNodo
+ );
+
+ leyendaSeguimiento.appendChild(
+  capasNodo
+ );
+}
+
+function iniciarRelojLeyenda(){
+ if(
+  temporizadorLeyenda
+ ){
+  clearInterval(
+   temporizadorLeyenda
+  );
+ }
+
+ actualizarLeyendaSeguimiento();
+
+ temporizadorLeyenda=
+  setInterval(
+   actualizarLeyendaSeguimiento,
+   30000
+  );
+}
+
+function detenerRelojLeyenda(){
+ if(
+  temporizadorLeyenda
+ ){
+  clearInterval(
+   temporizadorLeyenda
+  );
+
+  temporizadorLeyenda=
+   null;
+ }
 }
 
 
@@ -601,6 +881,10 @@ async function cambiarAmbitoSeguimiento(
    }
   );
 
+  renderizarLocalidades();
+
+  actualizarLeyendaSeguimiento();
+
   await mostrarFotograma(
    indice
   );
@@ -618,6 +902,10 @@ async function cambiarAmbitoSeguimiento(
 
   document.body.dataset.ambito=
    ambitoActivo;
+
+  renderizarLocalidades();
+
+  actualizarLeyendaSeguimiento();
 
   establecerEstado(
    `Ámbito ${nombreAmbito(nuevoAmbito)} no disponible`,
@@ -638,6 +926,144 @@ async function cambiarAmbitoSeguimiento(
     null;
   }
  }
+}
+
+
+/* =========================================================
+   ENCUADRE DE LOS RASTER METEOROLÓGICOS
+
+   El usuario debe poder alejar el mapa lo suficiente para que el
+   visor pase de ámbito regional a nacional.
+
+   Sin embargo, una vez utilizado un fondo satelital meteorológico no
+   tiene sentido permitir que la vista se aleje más que la cobertura
+   nacional disponible:
+
+       oeste = -10.5
+       este  =  5.0
+       sur   = 34.5
+       norte = 44.5
+
+   Leaflet calcula el zoom mínimo necesario para que TODO el viewport
+   quede dentro de ese rectángulo.
+
+   Así se evitan:
+
+   - grandes márgenes negros alrededor del raster;
+   - desplazamientos fuera de la cobertura nacional;
+   - dejar el raster flotando dentro del visor.
+
+   Importante:
+
+   el límite se calcula contra la cobertura NACIONAL y no contra la
+   regional, de modo que sigue siendo posible provocar normalmente el
+   cambio automático:
+
+       regional -> nacional
+   ========================================================= */
+
+function limitesNacionalesLeaflet(){
+ if(
+  typeof L==="undefined"
+ ){
+  return null;
+ }
+
+ return L.latLngBounds(
+  [
+   [
+    LIMITES_NACIONALES.sur,
+    LIMITES_NACIONALES.oeste
+   ],
+   [
+    LIMITES_NACIONALES.norte,
+    LIMITES_NACIONALES.este
+   ]
+  ]
+ );
+}
+
+function actualizarRestriccionesMeteorologicas(){
+ if(!mapa){
+  return;
+ }
+
+ /*
+  * Los fondos cartográficos pueden navegar libremente.
+  *
+  * NEGRO tampoco tiene un raster propio que pueda quedar fuera
+  * del encuadre.
+  */
+ if(
+  !esFondoMeteorologico(
+   fondoActivo
+  )
+ ){
+  mapa.setMinZoom(
+   ZOOM_MINIMO_BASE
+  );
+
+  mapa.setMaxBounds(
+   null
+  );
+
+  return;
+ }
+
+ const limites=
+  limitesNacionalesLeaflet();
+
+ if(!limites){
+  return;
+ }
+
+ let zoomMinimo=
+  mapa.getBoundsZoom(
+   limites,
+   true
+  );
+
+ if(
+  !Number.isFinite(
+   zoomMinimo
+  )
+ ){
+  zoomMinimo=
+   ZOOM_MINIMO_BASE;
+ }
+
+ zoomMinimo=
+  Math.max(
+   ZOOM_MINIMO_BASE,
+   zoomMinimo
+  );
+
+ mapa.setMinZoom(
+  zoomMinimo
+ );
+
+ mapa.setMaxBounds(
+  limites
+ );
+
+ if(
+  mapa.getZoom()<
+  zoomMinimo
+ ){
+  mapa.setZoom(
+   zoomMinimo,
+   {
+    animate:false
+   }
+  );
+ }
+
+ mapa.panInsideBounds(
+  limites,
+  {
+   animate:false
+  }
+ );
 }
 
 
@@ -710,7 +1136,34 @@ function crearPanelesMapa(){
 
 
 /* =========================================================
-   LÍMITES ADMINISTRATIVOS
+   LÍMITES ADMINISTRATIVOS, COSTA Y FRONTERAS
+
+   Solo aparecen sobre:
+
+   - NEGRO;
+   - TRUE COLOUR;
+   - INFRARROJO;
+   - MASAS DE AIRE.
+
+   Nunca sobre POLÍTICO.
+   Tampoco sobre SATÉLITE HD ni FÍSICO.
+
+   Jerarquía visual:
+
+   1. costa:
+      azul eléctrico fino;
+
+   2. contorno de Andalucía:
+      buganvilla más visible;
+
+   3. provincias andaluzas:
+      buganvilla más tenue;
+
+   4. fronteras internacionales:
+      buganvilla fino y discontinuo;
+
+   5. provincias del entorno:
+      gris muy discreto.
    ========================================================= */
 
 function estiloLimiteAdministrativo(
@@ -719,23 +1172,40 @@ function estiloLimiteAdministrativo(
  const propiedades=
   feature?.properties||{};
 
- /*
-  * El estilo continúa siendo provisional.
-  *
-  * Más adelante definiremos definitivamente:
-  *
-  * - color buganvilla;
-  * - grosor;
-  * - líneas continuas/discontinuas;
-  * - jerarquía internacional/autonómica/provincial.
-  */
+ if(
+  propiedades.tipo==="costa"
+ ){
+  return{
+   color:"#00b7ff",
+   weight:1.55,
+   opacity:.92,
+   fill:false,
+   interactive:false
+  };
+ }
+
+ if(
+  propiedades.tipo===
+  "frontera_internacional"
+ ){
+  return{
+   color:"#c04b78",
+   weight:1.05,
+   opacity:.86,
+   dashArray:"6 5",
+   lineCap:"round",
+   fill:false,
+   interactive:false
+  };
+ }
+
  if(
   propiedades.tipo==="comunidad"
  ){
   return{
-   color:"#36d5ff",
-   weight:2.4,
-   opacity:.95,
+   color:"#c43f75",
+   weight:2.0,
+   opacity:.96,
    fill:false,
    interactive:false
   };
@@ -745,9 +1215,9 @@ function estiloLimiteAdministrativo(
   propiedades.grupo==="andalucia"
  ){
   return{
-   color:"#d8e2ea",
-   weight:1.25,
-   opacity:.82,
+   color:"#d2628d",
+   weight:1.15,
+   opacity:.78,
    fill:false,
    interactive:false
   };
@@ -755,8 +1225,8 @@ function estiloLimiteAdministrativo(
 
  return{
   color:"#8996a3",
-  weight:1,
-  opacity:.70,
+  weight:.85,
+  opacity:.48,
   fill:false,
   interactive:false
  };
@@ -1115,9 +1585,13 @@ function cambiarFondo(
 
  actualizarSelectorFondos();
 
+ actualizarRestriccionesMeteorologicas();
+
  actualizarLimitesAdministrativos();
 
  renderizarLocalidades();
+
+ actualizarLeyendaSeguimiento();
 
  reajustarMapa();
 
@@ -1138,6 +1612,32 @@ function cambiarFondo(
 
 /* =========================================================
    LOCALIDADES
+
+   REGIONAL
+   --------
+
+   Mantiene el catálogo detallado actual y utiliza zoom_min.
+
+   NACIONAL
+   --------
+
+   Solo aparecen los elementos que el GeoJSON marca explícitamente:
+
+       "nacional": true
+
+   Actualmente son:
+
+   - las ocho capitales andaluzas;
+   - Madrid;
+   - Valencia;
+   - Barcelona;
+   - Zaragoza;
+   - Bilbao;
+   - A Coruña;
+   - Cáceres;
+   - Ciudad Real.
+
+   No existe una lista de nombres hardcodeada en JavaScript.
    ========================================================= */
 
 function prioridadLocalidad(
@@ -1170,6 +1670,21 @@ function zoomMinimoLocalidad(
   :5;
 }
 
+function localidadDisponibleEnAmbito(
+ feature
+){
+ if(
+  ambitoActivo!=="nacional"
+ ){
+  return true;
+ }
+
+ return(
+  feature?.properties?.nacional===
+  true
+ );
+}
+
 function claseEtiquetaLocalidad(
  tipo
 ){
@@ -1191,19 +1706,45 @@ function claseEtiquetaLocalidad(
  }`;
 }
 
+function claseEtiquetaLocalidadCompleta(
+ propiedades
+){
+ const claseBase=
+  claseEtiquetaLocalidad(
+   propiedades.tipo
+  );
+
+ if(
+  ambitoActivo==="nacional"
+ ){
+  return`${claseBase} etiqueta-nacional`;
+ }
+
+ return claseBase;
+}
+
 function estiloPuntoLocalidad(
  propiedades
 ){
  const fondoOscuro=
   esFondoOscuro();
 
+ const nacional=
+  ambitoActivo==="nacional";
+
  if(
   propiedades.tipo==="capital"
  ){
   return{
-   radius:4.5,
+   radius:
+    nacional
+     ?3.2
+     :4.5,
    color:"#fff",
-   weight:1.5,
+   weight:
+    nacional
+     ?1.1
+     :1.5,
    fill:true,
    fillColor:
     fondoOscuro
@@ -1219,9 +1760,15 @@ function estiloPuntoLocalidad(
   propiedades.tipo==="cabecera"
  ){
   return{
-   radius:4,
+   radius:
+    nacional
+     ?3
+     :4,
    color:"#fff",
-   weight:1.4,
+   weight:
+    nacional
+     ?1
+     :1.4,
    fill:true,
    fillColor:
     fondoOscuro
@@ -1261,7 +1808,10 @@ function estiloPuntoLocalidad(
  }
 
  return{
-  radius:3,
+  radius:
+   nacional
+    ?2.8
+    :3,
   color:"#fff",
   weight:1,
   fill:true,
@@ -1359,6 +1909,15 @@ function direccionEtiquetaLocalidad(
 function offsetEtiquetaLocalidad(
  propiedades
 ){
+ if(
+  ambitoActivo==="nacional"
+ ){
+  return[
+   0,
+   -5
+  ];
+ }
+
  return propiedades.tipo==="estacion"
   ?[
     7,
@@ -1383,9 +1942,14 @@ function renderizarLocalidades(){
  const zoom=
   mapa.getZoom();
 
+ let visibles=0;
+
  localidades
   .filter(
    feature=>
+    localidadDisponibleEnAmbito(
+     feature
+    )&&
     zoom>=
     zoomMinimoLocalidad(
      feature
@@ -1476,8 +2040,8 @@ function renderizarLocalidades(){
         propiedades
        ),
       className:
-       claseEtiquetaLocalidad(
-        propiedades.tipo
+       claseEtiquetaLocalidadCompleta(
+        propiedades
        )
      }
     );
@@ -1490,8 +2054,15 @@ function renderizarLocalidades(){
      punto,
      propiedades
     );
+
+    visibles++;
    }
   );
+
+ texto(
+  "dato-localidades",
+  visibles
+ );
 }
 
 async function cargarLocalidades(){
@@ -1533,11 +2104,6 @@ async function cargarLocalidades(){
      feature.geometry&&
      feature.geometry.type==="Point"
    );
-
-  texto(
-   "dato-localidades",
-   localidades.length
-  );
 
   renderizarLocalidades();
 
@@ -1586,7 +2152,8 @@ function crearMapa(){
      CENTRO_REGIONAL,
     zoom:
      ZOOM_REGIONAL,
-    minZoom:5,
+    minZoom:
+     ZOOM_MINIMO_BASE,
     maxZoom:19,
     zoomControl:true
    }
@@ -1612,9 +2179,17 @@ function crearMapa(){
   mapa
  );
 
+ crearLeyendaSeguimiento();
+
+ iniciarRelojLeyenda();
+
  mapa.on(
   "zoomend",
-  renderizarLocalidades
+  ()=>{
+   renderizarLocalidades();
+
+   actualizarRestriccionesMeteorologicas();
+  }
  );
 
  mapa.on(
@@ -1636,13 +2211,16 @@ function reajustarMapa(){
  }
 
  requestAnimationFrame(
-  ()=>
+  ()=>{
    mapa.invalidateSize(
     {
      animate:false,
      pan:false
     }
-   )
+   );
+
+   actualizarRestriccionesMeteorologicas();
+  }
  );
 }
 
@@ -1910,6 +2488,8 @@ async function mostrarFondoMeteorologico(
     );
   }
 
+  actualizarRestriccionesMeteorologicas();
+
   return true;
  }
 
@@ -1943,6 +2523,8 @@ async function mostrarFondoMeteorologico(
  quitarCapa(
   anterior
  );
+
+ actualizarRestriccionesMeteorologicas();
 
  return true;
 }
@@ -1985,6 +2567,8 @@ function actualizarSelectorRadar(){
     ?"Activa"
     :"Oculta";
  }
+
+ actualizarLeyendaSeguimiento();
 }
 
 function ocultarCapasRadar(){
@@ -2213,6 +2797,8 @@ function actualizarSelectorRayos(){
     ?"Activa"
     :"Oculta";
  }
+
+ actualizarLeyendaSeguimiento();
 }
 
 function ocultarRayos(){
@@ -2408,6 +2994,8 @@ function actualizarEstadoVisual(
   "dato-capas",
   visibles
  );
+
+ actualizarLeyendaSeguimiento();
 
  if(
   esperadas===0
@@ -2857,6 +3445,8 @@ async function mostrarFotograma(
 
  actualizarControles();
 
+ actualizarLeyendaSeguimiento();
+
  reajustarMapa();
 
  const secuencia=
@@ -2885,6 +3475,8 @@ async function mostrarFotograma(
   ){
    return;
   }
+
+  actualizarRestriccionesMeteorologicas();
 
   actualizarLimitesAdministrativos();
 
@@ -2924,6 +3516,8 @@ async function mostrarFotograma(
  ){
   return;
  }
+
+ actualizarRestriccionesMeteorologicas();
 
  actualizarLimitesAdministrativos();
 
@@ -3130,6 +3724,8 @@ function aplicarPipeline(
  }
 
  actualizarDatosGenerales();
+
+ actualizarLeyendaSeguimiento();
 }
 
 function detenerActualizacionProgramada(){
@@ -3413,6 +4009,8 @@ function alternarRadar(){
 
  actualizarSelectorRadar();
 
+ actualizarLeyendaSeguimiento();
+
  if(
   !radarActivo
  ){
@@ -3437,6 +4035,8 @@ function alternarRayos(){
   !rayosActivo;
 
  actualizarSelectorRayos();
+
+ actualizarLeyendaSeguimiento();
 
  if(
   !rayosActivo
@@ -3667,6 +4267,8 @@ document.addEventListener(
    return;
   }
 
+  actualizarLeyendaSeguimiento();
+
   const generado=
    marcaTemporal(
     pipeline?.generado_en
@@ -3718,6 +4320,10 @@ function iniciar(){
 
  actualizarSelectorRayos();
 
+ actualizarRestriccionesMeteorologicas();
+
+ actualizarLeyendaSeguimiento();
+
  instalarEventos();
 
  requestAnimationFrame(
@@ -3745,6 +4351,8 @@ window.addEventListener(
   detener();
 
   detenerActualizacionProgramada();
+
+  detenerRelojLeyenda();
 
   if(
    temporizadorEvaluacionAmbito
