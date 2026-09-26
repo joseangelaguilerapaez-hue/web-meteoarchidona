@@ -136,9 +136,6 @@ let claveRayosActual=null;
 let leyendaSeguimiento=null;
 let temporizadorLeyenda=null;
 
-let zoomMinimoMeteorologicoActual=null;
-let ajustandoEncuadreMeteorologico=false;
-
 
 /* =========================================================
    UTILIDADES
@@ -496,20 +493,19 @@ function nombreFondo(
 /* =========================================================
    LEYENDA DE SEGUIMIENTO
 
-   La leyenda se mantiene deliberadamente mínima.
+   La leyenda es deliberadamente compacta y horizontal.
 
-   Se muestra en horizontal:
+   Muestra:
 
-       hora · fondo · Lluvia · Rayos
+   - hora actual de Madrid;
+   - fondo activo;
+   - "Lluvia" únicamente cuando radar está activo;
+   - "Rayos" únicamente cuando rayos está activo.
 
-   "Lluvia" únicamente aparece si el radar está activado.
+   No muestra estados "activo" u "oculto".
 
-   "Rayos" únicamente aparece si la capa de rayos está activada.
-
-   La hora NO depende de la zona horaria del dispositivo:
-   siempre se calcula expresamente en Europe/Madrid.
-
-   El aspecto visual de franja horizontal se define en radar.css.
+   La hora se calcula expresamente en Europe/Madrid, por lo que
+   gestiona automáticamente CET / CEST.
    ========================================================= */
 
 function crearLeyendaSeguimiento(){
@@ -553,7 +549,7 @@ function actualizarLeyendaSeguimiento(){
   return;
  }
 
- const elementos=[
+ const partes=[
   {
    texto:
     horaMadridActual(),
@@ -566,18 +562,18 @@ function actualizarLeyendaSeguimiento(){
      fondoActivo
     ),
    clase:
-    "leyenda-seguimiento-fondo"
+    "leyenda-seguimiento-linea"
   }
  ];
 
  if(
   radarActivo
  ){
-  elementos.push(
+  partes.push(
    {
     texto:"Lluvia",
     clase:
-     "leyenda-seguimiento-capa leyenda-seguimiento-lluvia"
+     "leyenda-seguimiento-linea"
    }
   );
  }
@@ -585,20 +581,20 @@ function actualizarLeyendaSeguimiento(){
  if(
   rayosActivo
  ){
-  elementos.push(
+  partes.push(
    {
     texto:"Rayos",
     clase:
-     "leyenda-seguimiento-capa leyenda-seguimiento-rayos"
+     "leyenda-seguimiento-linea"
    }
   );
  }
 
  leyendaSeguimiento.replaceChildren();
 
- elementos.forEach(
+ partes.forEach(
   (
-   item,
+   parte,
    posicion
   )=>{
 
@@ -627,26 +623,15 @@ function actualizarLeyendaSeguimiento(){
     );
 
    nodo.className=
-    item.clase;
+    parte.clase;
 
    nodo.textContent=
-    item.texto;
+    parte.texto;
 
    leyendaSeguimiento.appendChild(
     nodo
    );
   }
- );
-
- leyendaSeguimiento.setAttribute(
-  "aria-label",
-  elementos
-   .map(
-    item=>item.texto
-   )
-   .join(
-    ", "
-   )
  );
 }
 
@@ -705,6 +690,15 @@ function detenerRelojLeyenda(){
    El cambio conserva el instante temporal más próximo.
 
    Los dos pipelines pueden mantenerse en caché simultáneamente.
+
+   IMPORTANTE:
+
+   Que falle una imagen o una capa después de haber recibido
+   correctamente el pipeline nacional NO significa que el ámbito
+   nacional no esté disponible.
+
+   La disponibilidad del ámbito y la representación visual se
+   gestionan por separado.
    ========================================================= */
 
 function determinarAmbitoVista(){
@@ -827,6 +821,61 @@ function reanudarReproduccionSiProcede(
  reproducir();
 }
 
+
+/*
+ * Un error transitorio de red o un despertar de Render no debe
+ * declarar inmediatamente todo un ámbito como no disponible.
+ *
+ * Se realizan como máximo dos intentos:
+ *
+ * 1. petición normal, reutilizando caché reciente cuando exista;
+ * 2. segundo intento forzado tras una pausa breve.
+ */
+async function obtenerPipelineAmbitoConReintento(
+ ambito
+){
+ let ultimoError=null;
+
+ for(
+  let intento=0;
+  intento<2;
+  intento++
+ ){
+  try{
+   return await obtenerPipelineAmbito(
+    ambito,
+    {
+     forzar:
+      intento>0
+    }
+   );
+
+  }catch(error){
+   ultimoError=
+    error;
+
+   if(
+    intento===0
+   ){
+    console.warn(
+     `Primer intento fallido cargando el ámbito ${ambito}. Se reintentará.`,
+     error
+    );
+
+    await esperar(
+     700
+    );
+   }
+  }
+ }
+
+ throw ultimoError||
+  new Error(
+   `No se ha podido cargar el ámbito ${ambito}.`
+  );
+}
+
+
 async function cambiarAmbitoSeguimiento(
  nuevoAmbito
 ){
@@ -866,11 +915,8 @@ async function cambiarAmbitoSeguimiento(
  /*
   * Un cambio de ámbito puede coincidir con una animación.
   *
-  * Detenemos temporalmente la reproducción e invalidamos cualquier
-  * carga de imagen que todavía esté pendiente del ámbito anterior.
-  *
-  * Cuando termine el cambio se reanudará automáticamente si el
-  * usuario tenía Play activado.
+  * La reproducción se pausa mientras resolvemos el cambio para que
+  * no compitan entre sí cargas pertenecientes a ámbitos distintos.
   */
  detener();
 
@@ -884,84 +930,26 @@ async function cambiarAmbitoSeguimiento(
   `Cargando ámbito ${nombreAmbito(nuevoAmbito)}`
  );
 
+ /*
+  * PRIMERA FASE:
+  *
+  * comprobar exclusivamente si el pipeline del nuevo ámbito existe
+  * y puede descargarse.
+  *
+  * Solo un fallo aquí justifica el mensaje
+  * "Ámbito ... no disponible".
+  */
+ let datos=null;
+
  try{
-  const datos=
-   await obtenerPipelineAmbito(
-    nuevoAmbito,
-    {
-     forzar:false
-    }
+  datos=
+   await obtenerPipelineAmbitoConReintento(
+    nuevoAmbito
    );
-
-  /*
-   * El usuario puede volver a acercar o mover el mapa mientras
-   * el pipeline del otro ámbito todavía está descargándose.
-   *
-   * En ese caso no aplicamos una respuesta que ya haya quedado
-   * obsoleta respecto a la extensión actual del mapa.
-   */
-  if(
-   determinarAmbitoVista()!==
-   nuevoAmbito
-  ){
-   actualizarEstadoVisual(
-    timelineSeguimiento[
-     indice
-    ]
-   );
-
-   reanudarReproduccionSiProcede(
-    estabaReproduciendo
-   );
-
-   return;
-  }
-
-  /*
-   * Antes de sustituir recursos y timeline retiramos físicamente
-   * todos los overlays del ámbito anterior.
-   *
-   * Esto impide que, durante un cambio regional <-> nacional,
-   * pueda quedar dibujado un raster antiguo encima del nuevo
-   * pipeline.
-   */
-  limpiarCapasPorCambioAmbito();
-
-  ambitoActivo=
-   nuevoAmbito;
-
-  document.body.dataset.ambito=
-   ambitoActivo;
-
-  aplicarPipeline(
-   datos,
-   {
-    instanteReferencia,
-    irAlUltimo:false
-   }
-  );
-
-  actualizarRestriccionesMeteorologicas();
-
-  centrarCoberturaNacionalEnZoomMinimo();
-
-  renderizarLocalidades();
-
-  actualizarLeyendaSeguimiento();
-
-  await mostrarFotograma(
-   indice
-  );
-
-  programarActualizacion();
-
-  reanudarReproduccionSiProcede(
-   estabaReproduciendo
-  );
 
  }catch(error){
   console.error(
-   `No se ha podido cambiar al ámbito ${nuevoAmbito}:`,
+   `No se ha podido obtener el pipeline del ámbito ${nuevoAmbito}:`,
    error
   );
 
@@ -985,8 +973,102 @@ async function cambiarAmbitoSeguimiento(
    true
   );
 
+  if(
+   ambitoPendiente===
+   nuevoAmbito
+  ){
+   ambitoPendiente=
+    null;
+  }
+
   reanudarReproduccionSiProcede(
    estabaReproduciendo
+  );
+
+  return;
+ }
+
+ /*
+  * El pipeline ha llegado correctamente.
+  *
+  * Si durante la descarga el usuario ha vuelto a mover o acercar el
+  * mapa, no aplicamos un ámbito que ya no corresponde al viewport.
+  */
+ if(
+  determinarAmbitoVista()!==
+  nuevoAmbito
+ ){
+  if(
+   ambitoPendiente===
+   nuevoAmbito
+  ){
+   ambitoPendiente=
+    null;
+  }
+
+  actualizarEstadoVisual(
+   timelineSeguimiento[
+    indice
+   ]
+  );
+
+  reanudarReproduccionSiProcede(
+   estabaReproduciendo
+  );
+
+  return;
+ }
+
+ /*
+  * SEGUNDA FASE:
+  *
+  * el ámbito ya está confirmado como disponible.
+  *
+  * A partir de aquí cualquier fallo pertenece a la representación
+  * visual y NO debe hacer que volvamos al ámbito anterior ni mostrar
+  * el mensaje falso de "ámbito no disponible".
+  */
+ limpiarCapasPorCambioAmbito();
+
+ ambitoActivo=
+  nuevoAmbito;
+
+ document.body.dataset.ambito=
+  ambitoActivo;
+
+ try{
+  aplicarPipeline(
+   datos,
+   {
+    instanteReferencia,
+    irAlUltimo:false
+   }
+  );
+
+  renderizarLocalidades();
+
+  actualizarLeyendaSeguimiento();
+
+  await mostrarFotograma(
+   indice
+  );
+
+  programarActualizacion();
+
+ }catch(error){
+  console.error(
+   `El pipeline del ámbito ${nuevoAmbito} está disponible, pero ha fallado su representación visual:`,
+   error
+  );
+
+  establecerEstado(
+   "Error visual",
+   "error"
+  );
+
+  mostrarMensaje(
+   `El ámbito ${nombreAmbito(nuevoAmbito)} está disponible, pero no se ha podido representar correctamente alguna capa. Puedes reintentar con ↻.`,
+   true
   );
 
  }finally{
@@ -997,6 +1079,10 @@ async function cambiarAmbitoSeguimiento(
    ambitoPendiente=
     null;
   }
+
+  reanudarReproduccionSiProcede(
+   estabaReproduciendo
+  );
  }
 }
 
@@ -1004,41 +1090,39 @@ async function cambiarAmbitoSeguimiento(
 /* =========================================================
    ENCUADRE DE LOS RASTER METEOROLÓGICOS
 
-   El raster nacional tiene esta cobertura:
+   Para fondos meteorológicos se permite alejar el mapa hasta el
+   nivel exacto necesario para que TODA la cobertura nacional pueda
+   caber en el viewport.
 
-       oeste = -10.5
-       este  =  5.0
-       sur   = 34.5
-       norte = 44.5
+   Esto es distinto de obligar al viewport a quedar dentro del
+   raster.
 
-   El visor debe permitir alejar lo suficiente para ver completa
-   dicha cobertura.
+   La diferencia es importante:
 
-   Hay un detalle importante en Leaflet:
+   - getBoundsZoom(..., false) calcula el zoom al que el raster
+     completo cabe en la pantalla;
 
-   getBoundsZoom() respeta el minZoom que tenga activo el mapa en
-   ese momento.
+   - getBoundsZoom(..., true) calcula el zoom al que toda la
+     pantalla cabe dentro del raster.
 
-   Si el fondo anterior había dejado minZoom=5, Leaflet podía
-   calcular el encuadre nacional partiendo ya de ese límite y nunca
-   permitir bajar al nivel realmente necesario.
+   La segunda opción era demasiado restrictiva en móvil y impedía
+   ver la Península completa.
 
-   Por eso el proceso correcto es:
+   Tampoco se utiliza maxBounds estricto.
 
-   1. liberar temporalmente el mínimo hasta el valor absoluto 4;
-   2. calcular el zoom que permite encajar el BBOX completo;
-   3. fijar ese zoom calculado como mínimo meteorológico real.
+   Un maxBounds exactamente igual al raster puede producir saltos,
+   recortes y desplazamientos indeseados cuando el viewport tiene
+   una proporción diferente de la imagen.
 
-   Además, cuando el usuario alcanza precisamente ese zoom mínimo
-   en ámbito nacional, centramos la cobertura.
+   Solo impedimos que el centro del mapa abandone completamente la
+   cobertura nacional.
 
-   De esta forma el máximo alejamiento tiene un significado claro:
-   mostrar completa la cobertura nacional, en lugar de dejar la
-   Península desplazada hacia un lateral.
+   De este modo conseguimos:
 
-   No usamos maxBounds estricto porque las proporciones del raster
-   y de la pantalla móvil son distintas y eso provocaba saltos y
-   recortes al cambiar entre regional y nacional.
+   - poder encuadrar toda la Península;
+   - no permitir un alejamiento ilimitado;
+   - evitar grandes márgenes negros;
+   - mantener estable el cambio regional / nacional.
    ========================================================= */
 
 function limitesNacionalesLeaflet(){
@@ -1067,14 +1151,18 @@ function actualizarRestriccionesMeteorologicas(){
   return;
  }
 
+ /*
+  * Los fondos cartográficos pueden navegar libremente con el
+  * mínimo general del visor.
+  *
+  * NEGRO tampoco tiene un raster propio que pueda quedar fuera
+  * del encuadre.
+  */
  if(
   !esFondoMeteorologico(
    fondoActivo
   )
  ){
-  zoomMinimoMeteorologicoActual=
-   null;
-
   mapa.setMinZoom(
    ZOOM_MINIMO_BASE
   );
@@ -1094,30 +1182,15 @@ function actualizarRestriccionesMeteorologicas(){
  }
 
  /*
-  * Muy importante:
+  * false = encajar el BBOX completo dentro del viewport.
   *
-  * antes de calcular getBoundsZoom() liberamos el minZoom anterior.
-  *
-  * De lo contrario Leaflet puede devolver como mínimo el 5 heredado
-  * de los fondos cartográficos aunque el viewport necesite, por
-  * ejemplo, 4.x para mostrar completa la cobertura nacional.
+  * Este es el cálculo que permite visualizar completa la cobertura
+  * nacional.
   */
- mapa.setMinZoom(
-  ZOOM_MINIMO_METEOROLOGICO_ABSOLUTO
- );
-
- mapa.setMaxBounds(
-  null
- );
-
  let zoomMinimo=
   mapa.getBoundsZoom(
    limites,
-   false,
-   L.point(
-    12,
-    12
-   )
+   false
   );
 
  if(
@@ -1135,19 +1208,20 @@ function actualizarRestriccionesMeteorologicas(){
    zoomMinimo
   );
 
- zoomMinimoMeteorologicoActual=
-  zoomMinimo;
+ mapa.setMaxBounds(
+  null
+ );
 
  mapa.setMinZoom(
-  zoomMinimoMeteorologicoActual
+  zoomMinimo
  );
 
  if(
   mapa.getZoom()<
-  zoomMinimoMeteorologicoActual
+  zoomMinimo
  ){
   mapa.setZoom(
-   zoomMinimoMeteorologicoActual,
+   zoomMinimo,
    {
     animate:false
    }
@@ -1155,10 +1229,10 @@ function actualizarRestriccionesMeteorologicas(){
  }
 
  /*
-  * Solo corregimos una situación extrema en la que el centro
-  * haya quedado totalmente fuera de la cobertura.
+  * No bloqueamos el viewport dentro del BBOX.
   *
-  * No bloqueamos el movimiento normal del usuario.
+  * Solo corregimos una situación extrema en la que el centro del
+  * mapa haya quedado fuera de la cobertura meteorológica.
   */
  if(
   !limites.contains(
@@ -1172,87 +1246,6 @@ function actualizarRestriccionesMeteorologicas(){
    }
   );
  }
-}
-
-function centrarCoberturaNacionalEnZoomMinimo(){
- if(
-  !mapa||
-  ajustandoEncuadreMeteorologico||
-  ambitoActivo!=="nacional"||
-  !esFondoMeteorologico(
-   fondoActivo
-  )||
-  !Number.isFinite(
-   zoomMinimoMeteorologicoActual
-  )
- ){
-  return;
- }
-
- const zoomActual=
-  mapa.getZoom();
-
- /*
-  * Solo actuamos cuando el usuario está realmente en el máximo
-  * alejamiento permitido.
-  *
-  * A mayores aumentos conserva total libertad para desplazarse.
-  */
- if(
-  Math.abs(
-   zoomActual-
-   zoomMinimoMeteorologicoActual
-  )>
-  .05
- ){
-  return;
- }
-
- const limites=
-  limitesNacionalesLeaflet();
-
- if(!limites){
-  return;
- }
-
- const centroDeseado=
-  limites.getCenter();
-
- const centroActual=
-  mapa.getCenter();
-
- if(
-  Math.abs(
-   centroActual.lat-
-   centroDeseado.lat
-  )<
-  .01&&
-  Math.abs(
-   centroActual.lng-
-   centroDeseado.lng
-  )<
-  .01
- ){
-  return;
- }
-
- ajustandoEncuadreMeteorologico=
-  true;
-
- mapa.setView(
-  centroDeseado,
-  zoomMinimoMeteorologicoActual,
-  {
-   animate:false
-  }
- );
-
- requestAnimationFrame(
-  ()=>{
-   ajustandoEncuadreMeteorologico=
-    false;
-  }
- );
 }
 
 
@@ -1775,8 +1768,6 @@ function cambiarFondo(
  actualizarSelectorFondos();
 
  actualizarRestriccionesMeteorologicas();
-
- centrarCoberturaNacionalEnZoomMinimo();
 
  actualizarLimitesAdministrativos();
 
@@ -2368,11 +2359,9 @@ function crearMapa(){
  mapa.on(
   "zoomend",
   ()=>{
-   actualizarRestriccionesMeteorologicas();
-
-   centrarCoberturaNacionalEnZoomMinimo();
-
    renderizarLocalidades();
+
+   actualizarRestriccionesMeteorologicas();
   }
  );
 
@@ -2404,8 +2393,6 @@ function reajustarMapa(){
    );
 
    actualizarRestriccionesMeteorologicas();
-
-   centrarCoberturaNacionalEnZoomMinimo();
   }
  );
 }
@@ -2676,8 +2663,6 @@ async function mostrarFondoMeteorologico(
 
   actualizarRestriccionesMeteorologicas();
 
-  centrarCoberturaNacionalEnZoomMinimo();
-
   return true;
  }
 
@@ -2713,8 +2698,6 @@ async function mostrarFondoMeteorologico(
  );
 
  actualizarRestriccionesMeteorologicas();
-
- centrarCoberturaNacionalEnZoomMinimo();
 
  return true;
 }
@@ -3668,8 +3651,6 @@ async function mostrarFotograma(
 
   actualizarRestriccionesMeteorologicas();
 
-  centrarCoberturaNacionalEnZoomMinimo();
-
   actualizarLimitesAdministrativos();
 
   renderizarLocalidades();
@@ -3710,8 +3691,6 @@ async function mostrarFotograma(
  }
 
  actualizarRestriccionesMeteorologicas();
-
- centrarCoberturaNacionalEnZoomMinimo();
 
  actualizarLimitesAdministrativos();
 
@@ -4515,8 +4494,6 @@ function iniciar(){
  actualizarSelectorRayos();
 
  actualizarRestriccionesMeteorologicas();
-
- centrarCoberturaNacionalEnZoomMinimo();
 
  actualizarLeyendaSeguimiento();
 
