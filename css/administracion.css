@@ -410,7 +410,7 @@ h3{
 
 .resumen-grid{
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
     gap:12px;
     margin-bottom:16px
 }
@@ -451,6 +451,21 @@ button.resumen-card{
     font-family:"JetBrains Mono",monospace;
     font-size:29px;
     font-weight:600
+}
+
+/*
+ * Las cuatro tarjetas del Centro de administración son botones con
+ * palabras, no con cifras: a 29 px y en monoespaciada, "WeatherLink" y
+ * "Estaciones" se salían del botón en cuanto la rejilla bajaba a dos
+ * columnas. Con letra normal, más pequeña y partiendo palabra si hace
+ * falta, caben en cualquier pantalla. Las tarjetas de cifras siguen
+ * igual.
+ */
+button.resumen-card .resumen-valor{
+    font-family:"Sora",sans-serif;
+    font-size:clamp(15px,1.7vw,21px);
+    line-height:1.2;
+    overflow-wrap:anywhere
 }
 
 .panel{
