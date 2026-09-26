@@ -346,7 +346,7 @@ right:0;
 display:flex;
 flex-direction:row;
 align-items:center;
-gap:8px;
+gap:6px;
 width:auto;
 height:32px;
 max-width:none;
@@ -372,10 +372,7 @@ flex:0 0 auto;
 min-width:0
 }
 
-.leyenda-seguimiento>*+*::before{
-content:"·";
-display:inline-block;
-margin-right:8px;
+.leyenda-seguimiento-separador{
 color:#70879a;
 font-weight:700
 }
@@ -779,13 +776,9 @@ right:0;
 width:auto;
 height:30px;
 max-width:none;
-gap:6px;
+gap:5px;
 padding:0 7px 0 54px;
 font-size:8px
-}
-
-.leyenda-seguimiento>*+*::before{
-margin-right:6px
 }
 
 .leyenda-seguimiento-hora{
