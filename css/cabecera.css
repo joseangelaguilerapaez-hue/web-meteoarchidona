@@ -1043,4 +1043,91 @@ button {
 }
 
 
+/* ==========================================================
+   PANTALLAS BAJAS (MÓVIL TUMBADO)
+   ========================================================== */
+
+/*
+ * Con el móvil en horizontal solo hay unos 390 px de alto y la cabecera
+ * se llevaba 150, casi el 40 % de la pantalla: la marca en una fila y
+ * la fecha, la hora y el logotipo de Y&Z en otra.
+ *
+ * Aquí caben las dos en la misma fila y todo encoge un punto, así que
+ * la cabecera baja a unos 60 px. El menú desplegable sigue igual, solo
+ * que con los enlaces algo más bajos para que quepan sin desplazar.
+ */
+@media (max-height: 560px) and (min-width: 600px) {
+
+    .cabecera {
+        grid-template-columns: 1fr auto auto;
+        gap: 12px;
+        row-gap: 4px;
+        min-height: 0;
+        padding: 6px 16px;
+    }
+
+    .marca-logo {
+        width: 38px;
+        height: 38px;
+    }
+
+    .marca-titulo {
+        font-size: 17px;
+    }
+
+    .marca-subtitulo {
+        display: none;
+    }
+
+    .zona-derecha {
+        grid-column: 2;
+        grid-row: 1;
+        gap: 10px;
+        padding: 0;
+    }
+
+    .fecha {
+        font-size: 10px;
+    }
+
+    .reloj {
+        margin-top: 1px;
+        font-size: 18px;
+    }
+
+    .firma-proyecto {
+        width: 44px;
+        height: 44px;
+    }
+
+    .firma-proyecto img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .boton-menu {
+        grid-column: 3;
+        grid-row: 1;
+        width: 42px;
+        height: 42px;
+    }
+
+    /*
+     * Abierto, el menú de seis enlaces en una columna se comía 280 px
+     * de los 390 de alto. A dos columnas son tres filas.
+     */
+    .navegacion {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .navegacion a {
+        min-height: 40px;
+        font-size: 13px;
+    }
+
+}
+
+
 /* Fin de fichero: css/cabecera.css */
