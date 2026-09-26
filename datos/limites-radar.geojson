@@ -5,7 +5,7 @@
     "uso":"Referencias geográficas simplificadas para el visor de Seguimiento de MeteoArchidona",
     "fuente":"Límites administrativos existentes: OpenStreetMap, geometrías simplificadas de country-levels-export. Costa y fronteras internacionales: trazados simplificados de referencia visual.",
     "licencia":"© OpenStreetMap contributors (ODbL) para las geometrías administrativas procedentes de OpenStreetMap",
-    "detalle":"Incluye Andalucía y sus ocho provincias, Murcia, Albacete, Ciudad Real y Badajoz. Añade costa peninsular y balear simplificada y las fronteras terrestres España–Portugal y España–Francia para servir como referencias visuales sobre fondos meteorológicos. Huelva se deriva de los límites compartidos simplificados de Andalucía y Sevilla."
+    "detalle":"Incluye Andalucía y sus ocho provincias, Murcia, Albacete, Ciudad Real y Badajoz. Añade costa peninsular, balear y norteafricana simplificada y las fronteras terrestres España–Portugal y España–Francia para servir como referencias visuales sobre fondos meteorológicos. La costa norteafricana permite definir visualmente el Estrecho de Gibraltar, el mar de Alborán y el entorno de Ceuta y Melilla. Huelva se deriva de los límites compartidos simplificados de Andalucía y Sevilla."
   },
   "features":[
     {
@@ -781,6 +781,77 @@
           [-2.75,43.46],
           [-2.13,43.28],
           [-1.79,43.38]
+        ]
+      }
+    },
+    {
+      "type":"Feature",
+      "properties":{
+        "nombre":"Costa norteafricana",
+        "tipo":"costa",
+        "codigo":"COSTA-NORTE-AFRICA",
+        "grupo":"referencia_meteorologica",
+        "precision":"simplificada"
+      },
+      "geometry":{
+        "type":"LineString",
+        "coordinates":[
+          [-6.45,35.10],
+          [-6.25,35.20],
+          [-6.10,35.33],
+          [-6.03,35.47],
+          [-5.94,35.63],
+          [-5.83,35.78],
+          [-5.66,35.84],
+          [-5.49,35.86],
+          [-5.32,35.89],
+          [-5.24,35.82],
+          [-5.28,35.67],
+          [-5.31,35.57],
+          [-5.20,35.48],
+          [-5.05,35.40],
+          [-4.82,35.36],
+          [-4.60,35.30],
+          [-4.35,35.22],
+          [-4.05,35.20],
+          [-3.94,35.25],
+          [-3.72,35.22],
+          [-3.45,35.20],
+          [-3.18,35.20],
+          [-2.94,35.29],
+          [-2.82,35.24],
+          [-2.68,35.18],
+          [-2.48,35.12],
+          [-2.28,35.10],
+          [-2.10,35.08],
+          [-1.90,35.10],
+          [-1.72,35.18],
+          [-1.50,35.28],
+          [-1.30,35.38],
+          [-1.10,35.48],
+          [-0.88,35.60],
+          [-0.64,35.70],
+          [-0.40,35.78],
+          [-0.15,35.88],
+          [0.09,35.93],
+          [0.36,36.02],
+          [0.64,36.13],
+          [0.92,36.23],
+          [1.20,36.34],
+          [1.48,36.43],
+          [1.78,36.50],
+          [2.08,36.55],
+          [2.38,36.60],
+          [2.66,36.66],
+          [2.92,36.72],
+          [3.06,36.75],
+          [3.30,36.78],
+          [3.55,36.80],
+          [3.82,36.82],
+          [4.10,36.84],
+          [4.38,36.85],
+          [4.66,36.87],
+          [4.90,36.88]
         ]
       }
     },
