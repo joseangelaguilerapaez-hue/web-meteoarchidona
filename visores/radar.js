@@ -17,7 +17,7 @@ const NOMBRES_FONDOS={
  politico:"Político",
  fisico:"Físico",
  negro:"Negro",
- true_colour:"True Colour",
+ true_colour:"Canal visible",
  infrarrojo:"Infrarrojo",
  masas_aire:"Masas de aire"
 };
@@ -64,6 +64,7 @@ const CENTRO_REGIONAL=[
 
 const ZOOM_REGIONAL=8;
 const ZOOM_MINIMO_BASE=5;
+const ZOOM_MINIMO_METEOROLOGICO_ABSOLUTO=4;
 
 const ATRIBUCION_LIMITES=
  'Límites administrativos: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors · Costa y fronteras: referencia simplificada MeteoArchidona';
@@ -460,7 +461,7 @@ function debeMostrarLimites(){
   * La capa propia se reserva para:
   *
   * - fondo negro;
-  * - True Colour;
+  * - Canal visible;
   * - infrarrojo;
   * - masas de aire.
   */
@@ -798,6 +799,40 @@ async function evaluarAmbitoVista(){
  );
 }
 
+function limpiarCapasPorCambioAmbito(){
+ retirarFondoMeteorologico();
+
+ capaFondoMeteorologico=
+  null;
+
+ claveFondoMeteorologico=
+  null;
+
+ limpiarCapasRadar();
+
+ ocultarRayos();
+
+ capaRayosActual=
+  null;
+
+ claveRayosActual=
+  null;
+}
+
+function reanudarReproduccionSiProcede(
+ debeReanudar
+){
+ if(
+  !debeReanudar||
+  reproduciendo||
+  timelineSeguimiento.length<2
+ ){
+  return;
+ }
+
+ reproducir();
+}
+
 async function cambiarAmbitoSeguimiento(
  nuevoAmbito
 ){
@@ -830,6 +865,23 @@ async function cambiarAmbitoSeguimiento(
 
  const ambitoAnterior=
   ambitoActivo;
+
+ const estabaReproduciendo=
+  reproduciendo;
+
+ /*
+  * Un cambio de ámbito puede coincidir con una animación.
+  *
+  * Detenemos temporalmente la reproducción e invalidamos cualquier
+  * carga de imagen que todavía esté pendiente del ámbito anterior.
+  *
+  * Cuando termine el cambio se reanudará automáticamente si el
+  * usuario tenía Play activado.
+  */
+ detener();
+
+ ++secuenciaVisualizacion;
+ ++secuenciaPrecarga;
 
  ambitoPendiente=
   nuevoAmbito;
@@ -864,8 +916,22 @@ async function cambiarAmbitoSeguimiento(
     ]
    );
 
+   reanudarReproduccionSiProcede(
+    estabaReproduciendo
+   );
+
    return;
   }
+
+  /*
+   * Antes de sustituir recursos y timeline retiramos físicamente
+   * todos los overlays del ámbito anterior.
+   *
+   * Esto impide que, durante un cambio regional <-> nacional,
+   * pueda quedar dibujado un raster antiguo encima del nuevo
+   * pipeline.
+   */
+  limpiarCapasPorCambioAmbito();
 
   ambitoActivo=
    nuevoAmbito;
@@ -890,6 +956,10 @@ async function cambiarAmbitoSeguimiento(
   );
 
   programarActualizacion();
+
+  reanudarReproduccionSiProcede(
+   estabaReproduciendo
+  );
 
  }catch(error){
   console.error(
@@ -917,6 +987,10 @@ async function cambiarAmbitoSeguimiento(
    true
   );
 
+  reanudarReproduccionSiProcede(
+   estabaReproduciendo
+  );
+
  }finally{
   if(
    ambitoPendiente===
@@ -932,34 +1006,39 @@ async function cambiarAmbitoSeguimiento(
 /* =========================================================
    ENCUADRE DE LOS RASTER METEOROLÓGICOS
 
-   El usuario debe poder alejar el mapa lo suficiente para que el
-   visor pase de ámbito regional a nacional.
+   Para fondos meteorológicos se permite alejar el mapa hasta el
+   nivel exacto necesario para que TODA la cobertura nacional pueda
+   caber en el viewport.
 
-   Sin embargo, una vez utilizado un fondo satelital meteorológico no
-   tiene sentido permitir que la vista se aleje más que la cobertura
-   nacional disponible:
+   Esto es distinto de obligar al viewport a quedar dentro del
+   raster.
 
-       oeste = -10.5
-       este  =  5.0
-       sur   = 34.5
-       norte = 44.5
+   La diferencia es importante:
 
-   Leaflet calcula el zoom mínimo necesario para que TODO el viewport
-   quede dentro de ese rectángulo.
+   - getBoundsZoom(..., false) calcula el zoom al que el raster
+     completo cabe en la pantalla;
 
-   Así se evitan:
+   - getBoundsZoom(..., true) calcula el zoom al que toda la
+     pantalla cabe dentro del raster.
 
-   - grandes márgenes negros alrededor del raster;
-   - desplazamientos fuera de la cobertura nacional;
-   - dejar el raster flotando dentro del visor.
+   La segunda opción era demasiado restrictiva en móvil y impedía
+   ver la Península completa.
 
-   Importante:
+   Tampoco se utiliza maxBounds estricto.
 
-   el límite se calcula contra la cobertura NACIONAL y no contra la
-   regional, de modo que sigue siendo posible provocar normalmente el
-   cambio automático:
+   Un maxBounds exactamente igual al raster puede producir saltos,
+   recortes y desplazamientos indeseados cuando el viewport tiene
+   una proporción diferente de la imagen.
 
-       regional -> nacional
+   Solo impedimos que el centro del mapa abandone completamente la
+   cobertura nacional.
+
+   De este modo conseguimos:
+
+   - poder encuadrar toda la Península;
+   - no permitir un alejamiento ilimitado;
+   - evitar grandes márgenes negros;
+   - mantener estable el cambio regional / nacional.
    ========================================================= */
 
 function limitesNacionalesLeaflet(){
@@ -989,7 +1068,8 @@ function actualizarRestriccionesMeteorologicas(){
  }
 
  /*
-  * Los fondos cartográficos pueden navegar libremente.
+  * Los fondos cartográficos pueden navegar libremente con el
+  * mínimo general del visor.
   *
   * NEGRO tampoco tiene un raster propio que pueda quedar fuera
   * del encuadre.
@@ -1017,10 +1097,16 @@ function actualizarRestriccionesMeteorologicas(){
   return;
  }
 
+ /*
+  * false = encajar el BBOX completo dentro del viewport.
+  *
+  * Este es el cálculo que permite visualizar completa la cobertura
+  * nacional.
+  */
  let zoomMinimo=
   mapa.getBoundsZoom(
    limites,
-   true
+   false
   );
 
  if(
@@ -1034,16 +1120,16 @@ function actualizarRestriccionesMeteorologicas(){
 
  zoomMinimo=
   Math.max(
-   ZOOM_MINIMO_BASE,
+   ZOOM_MINIMO_METEOROLOGICO_ABSOLUTO,
    zoomMinimo
   );
 
- mapa.setMinZoom(
-  zoomMinimo
+ mapa.setMaxBounds(
+  null
  );
 
- mapa.setMaxBounds(
-  limites
+ mapa.setMinZoom(
+  zoomMinimo
  );
 
  if(
@@ -1058,12 +1144,24 @@ function actualizarRestriccionesMeteorologicas(){
   );
  }
 
- mapa.panInsideBounds(
-  limites,
-  {
-   animate:false
-  }
- );
+ /*
+  * No bloqueamos el viewport dentro del BBOX.
+  *
+  * Solo corregimos una situación extrema en la que el centro del
+  * mapa haya quedado fuera de la cobertura meteorológica.
+  */
+ if(
+  !limites.contains(
+   mapa.getCenter()
+  )
+ ){
+  mapa.panInsideBounds(
+   limites,
+   {
+    animate:false
+   }
+  );
+ }
 }
 
 
@@ -1141,7 +1239,7 @@ function crearPanelesMapa(){
    Solo aparecen sobre:
 
    - NEGRO;
-   - TRUE COLOUR;
+   - CANAL VISIBLE;
    - INFRARROJO;
    - MASAS DE AIRE.
 
@@ -1625,17 +1723,8 @@ function cambiarFondo(
 
        "nacional": true
 
-   Actualmente son:
-
-   - las ocho capitales andaluzas;
-   - Madrid;
-   - Valencia;
-   - Barcelona;
-   - Zaragoza;
-   - Bilbao;
-   - A Coruña;
-   - Cáceres;
-   - Ciudad Real.
+   Actualmente son las localidades de referencia seleccionadas para
+   el ámbito nacional.
 
    No existe una lista de nombres hardcodeada en JavaScript.
    ========================================================= */
@@ -2153,7 +2242,7 @@ function crearMapa(){
     zoom:
      ZOOM_REGIONAL,
     minZoom:
-     ZOOM_MINIMO_BASE,
+     ZOOM_MINIMO_METEOROLOGICO_ABSOLUTO,
     maxZoom:19,
     zoomControl:true
    }
