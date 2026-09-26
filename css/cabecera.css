@@ -650,7 +650,7 @@ button {
 }
 
 @media (
-    max-width: 850px
+    max-width: 1050px
 ) {
 
     .cabecera {
@@ -931,7 +931,7 @@ button {
  * logotipo. El menú, cerrado, no ocupa nada; abierto, baja como una
  * lista de enlaces de 48 px de alto, cómodos para el dedo.
  */
-@media (max-width: 850px) {
+@media (max-width: 1050px) {
 
     .cabecera {
         grid-template-columns: 1fr auto;

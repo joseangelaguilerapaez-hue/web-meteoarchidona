@@ -134,13 +134,13 @@ function recogerControlesDePagina() {
 
 
 /*
- * En pantallas de hasta 850 px el menú se esconde tras un botón para
+ * En pantallas de hasta 1050 px el menú se esconde tras un botón para
  * que la cabecera no se coma media pantalla. Aquí solo se cambia la
  * clase .menu-abierto y el aria-expanded; lo que se ve lo decide
  * css/cabecera.css, así que en escritorio el botón ni aparece.
  */
 
-const ANCHO_MENU_MOVIL = 850;
+const ANCHO_MENU_MOVIL = 1050;
 
 
 function configurarMenu() {

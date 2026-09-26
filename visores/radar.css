@@ -873,12 +873,12 @@ display:none
 
 /* =========================================================
    PANTALLAS ANCHAS
-   En el ordenador sobra sitio de lado y falta de alto: las filas de
+   Desde 900 px (tableta apaisada) sobra sitio de lado y falta de alto: las filas de
    FONDO y CAPAS se ponen una al lado de la otra en vez de apiladas, y
    sus botones caben en una sola línea. El mapa gana unos 90 px.
    ========================================================= */
 
-@media(min-width:1100px){
+@media(min-width:900px){
 
 .visor{
 grid-template-columns:minmax(0,1fr) auto;

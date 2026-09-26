@@ -2027,7 +2027,7 @@ button {
 }
 
 
-@media (max-width: 1020px) {
+@media (max-width: 1100px) {
 
     .panel-superior {
         grid-template-columns:
@@ -2050,6 +2050,11 @@ button {
     }
 
 
+    /*
+     * La columna lateral se esconde ya desde 1100 px: entre 1020 y 1100
+     * (tableta apaisada) le quedaban unos 130 px de ancho y salía
+     * estrecha y estirada, con el dibujo del tiempo suelto en medio.
+     */
     .resumen,
     .columna-resumen {
         display: none;
