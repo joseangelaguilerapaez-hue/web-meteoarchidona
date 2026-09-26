@@ -136,6 +136,9 @@ let claveRayosActual=null;
 let leyendaSeguimiento=null;
 let temporizadorLeyenda=null;
 
+let zoomMinimoMeteorologicoActual=null;
+let ajustandoEncuadreMeteorologico=false;
+
 
 /* =========================================================
    UTILIDADES
@@ -493,18 +496,20 @@ function nombreFondo(
 /* =========================================================
    LEYENDA DE SEGUIMIENTO
 
-   La hora mostrada aquí NO depende de la zona horaria del
-   dispositivo.
+   La leyenda se mantiene deliberadamente mínima.
 
-   Siempre se calcula expresamente en:
+   Se muestra en horizontal:
 
-       Europe/Madrid
+       hora · fondo · Lluvia · Rayos
 
-   Por tanto gestiona automáticamente CET / CEST y los cambios
-   legales de horario de verano.
+   "Lluvia" únicamente aparece si el radar está activado.
 
-   La hora amarilla de la cabecera continúa representando el
-   instante meteorológico seleccionado en la timeline.
+   "Rayos" únicamente aparece si la capa de rayos está activada.
+
+   La hora NO depende de la zona horaria del dispositivo:
+   siempre se calcula expresamente en Europe/Madrid.
+
+   El aspecto visual de franja horizontal se define en radar.css.
    ========================================================= */
 
 function crearLeyendaSeguimiento(){
@@ -548,111 +553,100 @@ function actualizarLeyendaSeguimiento(){
   return;
  }
 
- const estadoRadar=
-  radarActivo
-   ?"activa"
-   :"oculta";
+ const elementos=[
+  {
+   texto:
+    horaMadridActual(),
+   clase:
+    "leyenda-seguimiento-hora"
+  },
+  {
+   texto:
+    nombreFondo(
+     fondoActivo
+    ),
+   clase:
+    "leyenda-seguimiento-fondo"
+  }
+ ];
 
- const estadoRayos=
+ if(
+  radarActivo
+ ){
+  elementos.push(
+   {
+    texto:"Lluvia",
+    clase:
+     "leyenda-seguimiento-capa leyenda-seguimiento-lluvia"
+   }
+  );
+ }
+
+ if(
   rayosActivo
-   ?"activos"
-   :"ocultos";
+ ){
+  elementos.push(
+   {
+    texto:"Rayos",
+    clase:
+     "leyenda-seguimiento-capa leyenda-seguimiento-rayos"
+   }
+  );
+ }
 
  leyendaSeguimiento.replaceChildren();
 
- const horaNodo=
-  document.createElement(
-   "div"
-  );
+ elementos.forEach(
+  (
+   item,
+   posicion
+  )=>{
 
- horaNodo.className=
-  "leyenda-seguimiento-hora";
+   if(
+    posicion>0
+   ){
+    const separador=
+     document.createElement(
+      "span"
+     );
 
- horaNodo.textContent=
-  `Madrid · ${horaMadridActual()}`;
+    separador.className=
+     "leyenda-seguimiento-separador";
 
- const fondoNodo=
-  document.createElement(
-   "div"
-  );
+    separador.textContent=
+     "·";
 
- fondoNodo.className=
-  "leyenda-seguimiento-linea";
+    leyendaSeguimiento.appendChild(
+     separador
+    );
+   }
 
- const fondoEtiqueta=
-  document.createElement(
-   "strong"
-  );
+   const nodo=
+    document.createElement(
+     "span"
+    );
 
- fondoEtiqueta.textContent=
-  "Base: ";
+   nodo.className=
+    item.clase;
 
- fondoNodo.appendChild(
-  fondoEtiqueta
+   nodo.textContent=
+    item.texto;
+
+   leyendaSeguimiento.appendChild(
+    nodo
+   );
+  }
  );
 
- fondoNodo.appendChild(
-  document.createTextNode(
-   nombreFondo(
-    fondoActivo
+ leyendaSeguimiento.setAttribute(
+  "aria-label",
+  elementos
+   .map(
+    item=>item.texto
    )
-  )
- );
-
- const capasNodo=
-  document.createElement(
-   "div"
-  );
-
- capasNodo.className=
-  "leyenda-seguimiento-linea";
-
- const lluviaEtiqueta=
-  document.createElement(
-   "strong"
-  );
-
- lluviaEtiqueta.textContent=
-  "Lluvia: ";
-
- capasNodo.appendChild(
-  lluviaEtiqueta
- );
-
- capasNodo.appendChild(
-  document.createTextNode(
-   `${estadoRadar} · `
-  )
- );
-
- const rayosEtiqueta=
-  document.createElement(
-   "strong"
-  );
-
- rayosEtiqueta.textContent=
-  "Rayos: ";
-
- capasNodo.appendChild(
-  rayosEtiqueta
- );
-
- capasNodo.appendChild(
-  document.createTextNode(
-   estadoRayos
-  )
- );
-
- leyendaSeguimiento.appendChild(
-  horaNodo
- );
-
- leyendaSeguimiento.appendChild(
-  fondoNodo
- );
-
- leyendaSeguimiento.appendChild(
-  capasNodo
+   .join(
+    ", "
+   )
  );
 }
 
@@ -947,6 +941,10 @@ async function cambiarAmbitoSeguimiento(
    }
   );
 
+  actualizarRestriccionesMeteorologicas();
+
+  centrarCoberturaNacionalEnZoomMinimo();
+
   renderizarLocalidades();
 
   actualizarLeyendaSeguimiento();
@@ -1006,39 +1004,41 @@ async function cambiarAmbitoSeguimiento(
 /* =========================================================
    ENCUADRE DE LOS RASTER METEOROLÓGICOS
 
-   Para fondos meteorológicos se permite alejar el mapa hasta el
-   nivel exacto necesario para que TODA la cobertura nacional pueda
-   caber en el viewport.
+   El raster nacional tiene esta cobertura:
 
-   Esto es distinto de obligar al viewport a quedar dentro del
-   raster.
+       oeste = -10.5
+       este  =  5.0
+       sur   = 34.5
+       norte = 44.5
 
-   La diferencia es importante:
+   El visor debe permitir alejar lo suficiente para ver completa
+   dicha cobertura.
 
-   - getBoundsZoom(..., false) calcula el zoom al que el raster
-     completo cabe en la pantalla;
+   Hay un detalle importante en Leaflet:
 
-   - getBoundsZoom(..., true) calcula el zoom al que toda la
-     pantalla cabe dentro del raster.
+   getBoundsZoom() respeta el minZoom que tenga activo el mapa en
+   ese momento.
 
-   La segunda opción era demasiado restrictiva en móvil y impedía
-   ver la Península completa.
+   Si el fondo anterior había dejado minZoom=5, Leaflet podía
+   calcular el encuadre nacional partiendo ya de ese límite y nunca
+   permitir bajar al nivel realmente necesario.
 
-   Tampoco se utiliza maxBounds estricto.
+   Por eso el proceso correcto es:
 
-   Un maxBounds exactamente igual al raster puede producir saltos,
-   recortes y desplazamientos indeseados cuando el viewport tiene
-   una proporción diferente de la imagen.
+   1. liberar temporalmente el mínimo hasta el valor absoluto 4;
+   2. calcular el zoom que permite encajar el BBOX completo;
+   3. fijar ese zoom calculado como mínimo meteorológico real.
 
-   Solo impedimos que el centro del mapa abandone completamente la
-   cobertura nacional.
+   Además, cuando el usuario alcanza precisamente ese zoom mínimo
+   en ámbito nacional, centramos la cobertura.
 
-   De este modo conseguimos:
+   De esta forma el máximo alejamiento tiene un significado claro:
+   mostrar completa la cobertura nacional, en lugar de dejar la
+   Península desplazada hacia un lateral.
 
-   - poder encuadrar toda la Península;
-   - no permitir un alejamiento ilimitado;
-   - evitar grandes márgenes negros;
-   - mantener estable el cambio regional / nacional.
+   No usamos maxBounds estricto porque las proporciones del raster
+   y de la pantalla móvil son distintas y eso provocaba saltos y
+   recortes al cambiar entre regional y nacional.
    ========================================================= */
 
 function limitesNacionalesLeaflet(){
@@ -1067,18 +1067,14 @@ function actualizarRestriccionesMeteorologicas(){
   return;
  }
 
- /*
-  * Los fondos cartográficos pueden navegar libremente con el
-  * mínimo general del visor.
-  *
-  * NEGRO tampoco tiene un raster propio que pueda quedar fuera
-  * del encuadre.
-  */
  if(
   !esFondoMeteorologico(
    fondoActivo
   )
  ){
+  zoomMinimoMeteorologicoActual=
+   null;
+
   mapa.setMinZoom(
    ZOOM_MINIMO_BASE
   );
@@ -1098,15 +1094,30 @@ function actualizarRestriccionesMeteorologicas(){
  }
 
  /*
-  * false = encajar el BBOX completo dentro del viewport.
+  * Muy importante:
   *
-  * Este es el cálculo que permite visualizar completa la cobertura
-  * nacional.
+  * antes de calcular getBoundsZoom() liberamos el minZoom anterior.
+  *
+  * De lo contrario Leaflet puede devolver como mínimo el 5 heredado
+  * de los fondos cartográficos aunque el viewport necesite, por
+  * ejemplo, 4.x para mostrar completa la cobertura nacional.
   */
+ mapa.setMinZoom(
+  ZOOM_MINIMO_METEOROLOGICO_ABSOLUTO
+ );
+
+ mapa.setMaxBounds(
+  null
+ );
+
  let zoomMinimo=
   mapa.getBoundsZoom(
    limites,
-   false
+   false,
+   L.point(
+    12,
+    12
+   )
   );
 
  if(
@@ -1124,20 +1135,19 @@ function actualizarRestriccionesMeteorologicas(){
    zoomMinimo
   );
 
- mapa.setMaxBounds(
-  null
- );
+ zoomMinimoMeteorologicoActual=
+  zoomMinimo;
 
  mapa.setMinZoom(
-  zoomMinimo
+  zoomMinimoMeteorologicoActual
  );
 
  if(
   mapa.getZoom()<
-  zoomMinimo
+  zoomMinimoMeteorologicoActual
  ){
   mapa.setZoom(
-   zoomMinimo,
+   zoomMinimoMeteorologicoActual,
    {
     animate:false
    }
@@ -1145,10 +1155,10 @@ function actualizarRestriccionesMeteorologicas(){
  }
 
  /*
-  * No bloqueamos el viewport dentro del BBOX.
+  * Solo corregimos una situación extrema en la que el centro
+  * haya quedado totalmente fuera de la cobertura.
   *
-  * Solo corregimos una situación extrema en la que el centro del
-  * mapa haya quedado fuera de la cobertura meteorológica.
+  * No bloqueamos el movimiento normal del usuario.
   */
  if(
   !limites.contains(
@@ -1162,6 +1172,87 @@ function actualizarRestriccionesMeteorologicas(){
    }
   );
  }
+}
+
+function centrarCoberturaNacionalEnZoomMinimo(){
+ if(
+  !mapa||
+  ajustandoEncuadreMeteorologico||
+  ambitoActivo!=="nacional"||
+  !esFondoMeteorologico(
+   fondoActivo
+  )||
+  !Number.isFinite(
+   zoomMinimoMeteorologicoActual
+  )
+ ){
+  return;
+ }
+
+ const zoomActual=
+  mapa.getZoom();
+
+ /*
+  * Solo actuamos cuando el usuario está realmente en el máximo
+  * alejamiento permitido.
+  *
+  * A mayores aumentos conserva total libertad para desplazarse.
+  */
+ if(
+  Math.abs(
+   zoomActual-
+   zoomMinimoMeteorologicoActual
+  )>
+  .05
+ ){
+  return;
+ }
+
+ const limites=
+  limitesNacionalesLeaflet();
+
+ if(!limites){
+  return;
+ }
+
+ const centroDeseado=
+  limites.getCenter();
+
+ const centroActual=
+  mapa.getCenter();
+
+ if(
+  Math.abs(
+   centroActual.lat-
+   centroDeseado.lat
+  )<
+  .01&&
+  Math.abs(
+   centroActual.lng-
+   centroDeseado.lng
+  )<
+  .01
+ ){
+  return;
+ }
+
+ ajustandoEncuadreMeteorologico=
+  true;
+
+ mapa.setView(
+  centroDeseado,
+  zoomMinimoMeteorologicoActual,
+  {
+   animate:false
+  }
+ );
+
+ requestAnimationFrame(
+  ()=>{
+   ajustandoEncuadreMeteorologico=
+    false;
+  }
+ );
 }
 
 
@@ -1684,6 +1775,8 @@ function cambiarFondo(
  actualizarSelectorFondos();
 
  actualizarRestriccionesMeteorologicas();
+
+ centrarCoberturaNacionalEnZoomMinimo();
 
  actualizarLimitesAdministrativos();
 
@@ -2275,9 +2368,11 @@ function crearMapa(){
  mapa.on(
   "zoomend",
   ()=>{
-   renderizarLocalidades();
-
    actualizarRestriccionesMeteorologicas();
+
+   centrarCoberturaNacionalEnZoomMinimo();
+
+   renderizarLocalidades();
   }
  );
 
@@ -2309,6 +2404,8 @@ function reajustarMapa(){
    );
 
    actualizarRestriccionesMeteorologicas();
+
+   centrarCoberturaNacionalEnZoomMinimo();
   }
  );
 }
@@ -2579,6 +2676,8 @@ async function mostrarFondoMeteorologico(
 
   actualizarRestriccionesMeteorologicas();
 
+  centrarCoberturaNacionalEnZoomMinimo();
+
   return true;
  }
 
@@ -2614,6 +2713,8 @@ async function mostrarFondoMeteorologico(
  );
 
  actualizarRestriccionesMeteorologicas();
+
+ centrarCoberturaNacionalEnZoomMinimo();
 
  return true;
 }
@@ -3567,6 +3668,8 @@ async function mostrarFotograma(
 
   actualizarRestriccionesMeteorologicas();
 
+  centrarCoberturaNacionalEnZoomMinimo();
+
   actualizarLimitesAdministrativos();
 
   renderizarLocalidades();
@@ -3607,6 +3710,8 @@ async function mostrarFotograma(
  }
 
  actualizarRestriccionesMeteorologicas();
+
+ centrarCoberturaNacionalEnZoomMinimo();
 
  actualizarLimitesAdministrativos();
 
@@ -4410,6 +4515,8 @@ function iniciar(){
  actualizarSelectorRayos();
 
  actualizarRestriccionesMeteorologicas();
+
+ centrarCoberturaNacionalEnZoomMinimo();
 
  actualizarLeyendaSeguimiento();
 
