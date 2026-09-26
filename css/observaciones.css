@@ -72,12 +72,25 @@ text-align:center
 
 
 /*
- * En móvil el título "Satélite, lluvia y rayos" se quita: repetía lo
- * que ya dice la sección y le robaba altura al mapa del visor, que es
- * lo que se viene a ver. Mismo corte que visores/radar.css.
+ * El título de la página no se ve en ninguna pantalla: el visor ya
+ * lleva el suyo dentro ("Seguimiento meteorológico · Radar · Satélite ·
+ * Rayos"), así que salía dos veces seguidas y le robaba unos 75 px de
+ * alto al mapa, que es lo que se viene a ver.
+ *
+ * El <h1> se queda en el HTML, fuera de la vista pero legible para
+ * buscadores y lectores de pantalla: el del visor vive dentro de un
+ * iframe y no cuenta como título de esta página.
  */
-@media(max-width:700px){
-.cabecera-observaciones{display:none}
+.cabecera-observaciones{
+position:absolute;
+width:1px;
+height:1px;
+margin:-1px;
+padding:0;
+overflow:hidden;
+clip:rect(0 0 0 0);
+white-space:nowrap;
+border:0
 }
 
 
