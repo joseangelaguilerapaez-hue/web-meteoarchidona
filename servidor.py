@@ -78,7 +78,7 @@ for _seccion in SECCIONES:
 # Es solo para desarrollo: en producción las cabeceras las tiene que
 # mandar la API.
 PREFIJO_API = "/api/"
-API_REMOTA = "https://api-meteoarchidona.onrender.com"
+API_REMOTA = "https://vps-api.meteoarchidona.com"
 
 # Render apaga los servicios gratuitos cuando no se usan. La primera
 # petición después de un rato parado despierta el servicio y falla o

@@ -485,7 +485,7 @@
        ------------------------------------------------------------ */
 
     async function cargar() {
-        const base = window.API_BASE || "https://api-meteoarchidona.onrender.com";
+        const base = window.API_BASE || "/api";
 
         try {
             const respuesta = await fetch(`${base}/prediccion/${MUNICIPIO}`, { cache: "no-store" });
