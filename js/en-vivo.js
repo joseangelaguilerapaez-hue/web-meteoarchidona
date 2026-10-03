@@ -910,16 +910,9 @@ function prepararHlsNativo(
     });
 
 
-    video.addEventListener(
-        "loadstart",
-        ()=>{
-
-            establecerEstadoHls(
-                indice,
-                "CONECTANDO"
-            );
-
-        }
+    establecerEstadoHls(
+        indice,
+        "CONECTANDO"
     );
 
 
@@ -930,6 +923,7 @@ function prepararHlsNativo(
             ocultarErrorHls(
                 indice
             );
+
 
             establecerEstadoHls(
                 indice,
@@ -961,35 +955,10 @@ function prepararHlsNativo(
                 indice
             );
 
+
             establecerEstadoHls(
                 indice,
                 "VÍDEO EN DIRECTO"
-            );
-
-        }
-    );
-
-
-    video.addEventListener(
-        "waiting",
-        ()=>{
-
-            establecerEstadoHls(
-                indice,
-                "RECONECTANDO"
-            );
-
-        }
-    );
-
-
-    video.addEventListener(
-        "stalled",
-        ()=>{
-
-            establecerEstadoHls(
-                indice,
-                "RECONECTANDO"
             );
 
         }
@@ -1004,6 +973,7 @@ function prepararHlsNativo(
                 indice,
                 "SIN EMISIÓN"
             );
+
 
             mostrarErrorHls(
                 indice,
@@ -1074,6 +1044,7 @@ function prepararHlsJs(
             ocultarErrorHls(
                 indice
             );
+
 
             establecerEstadoHls(
                 indice,
@@ -1208,35 +1179,10 @@ function prepararHlsJs(
                 indice
             );
 
+
             establecerEstadoHls(
                 indice,
                 "VÍDEO EN DIRECTO"
-            );
-
-        }
-    );
-
-
-    video.addEventListener(
-        "waiting",
-        ()=>{
-
-            establecerEstadoHls(
-                indice,
-                "RECONECTANDO"
-            );
-
-        }
-    );
-
-
-    video.addEventListener(
-        "stalled",
-        ()=>{
-
-            establecerEstadoHls(
-                indice,
-                "RECONECTANDO"
             );
 
         }
@@ -1355,7 +1301,7 @@ function prepararImagenes(){
             }
 
 
-            const imagenesTarjeta=
+            const tarjetas=
                 Array.from(
                     rejillaCamaras.querySelectorAll(
                         ".tarjeta-camara"
@@ -1364,7 +1310,7 @@ function prepararImagenes(){
 
 
             const indice=
-                imagenesTarjeta.indexOf(
+                tarjetas.indexOf(
                     tarjeta
                 );
 
