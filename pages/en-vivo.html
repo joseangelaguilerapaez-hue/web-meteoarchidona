@@ -3,49 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>En vivo · MeteoArchidona</title>
 
 
-<meta name="description" content="Cámaras en directo de Archidona y de Sierra Nevada: el estado del cielo, la visibilidad y la nieve en tiempo real.">
+<meta
+    name="description"
+    content="Cámaras meteorológicas en directo de Los Llanos y Sierra Nevada para observar el cielo, la visibilidad, la nieve y el entorno en tiempo real."
+>
+
 <link rel="icon" href="/assets/icono-192.png" type="image/png" sizes="192x192">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
 <link rel="canonical" href="https://meteoarchidona.com/en-vivo">
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MeteoArchidona">
 <meta property="og:locale" content="es_ES">
 <meta property="og:title" content="En vivo · MeteoArchidona">
-<meta property="og:description" content="Cámaras en directo de Archidona y de Sierra Nevada: el estado del cielo, la visibilidad y la nieve en tiempo real.">
+
+<meta
+    property="og:description"
+    content="Cámaras meteorológicas en directo de Los Llanos y Sierra Nevada para observar el cielo, la visibilidad, la nieve y el entorno en tiempo real."
+>
+
 <meta property="og:url" content="https://meteoarchidona.com/en-vivo">
 <meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+
 
 <link rel="stylesheet" href="../css/fuentes.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/paleta.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
 <link rel="stylesheet" href="../css/pie.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/en-vivo.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/en-vivo.css?v=20261004-meteocam1">
+
 
 <script src="../js/cabecera.js?v=20260926-menu1" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
-<script src="../js/en-vivo.js?v=20260913-lluvia2" defer></script>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/hls.js@latest"
+    defer
+></script>
+
+<script
+    src="../js/en-vivo.js?v=20261004-meteocam1"
+    defer
+></script>
+
 </head>
+
 
 <body data-seccion="en-vivo">
 
 <div id="cabecera"></div>
 
+
 <main class="pagina">
+
 
 <header class="cabecera-en-vivo">
 
     <div class="cabecera-texto">
 
         <div class="eyebrow">
-            <span class="punto-directo" aria-hidden="true"></span>
+
+            <span
+                class="punto-directo"
+                aria-hidden="true"
+            ></span>
+
             OBSERVACIÓN VISUAL
+
         </div>
 
         <h1>
@@ -60,7 +93,11 @@
 
     </div>
 
-    <div class="cabecera-dibujo" aria-hidden="true">
+
+    <div
+        class="cabecera-dibujo"
+        aria-hidden="true"
+    >
 
         <div class="escena">
 
@@ -92,17 +129,18 @@
             </h2>
 
             <p>
-                Elige el grupo de cámaras que quieres consultar.
-                Las cámaras propias de MeteoArchidona aparecen
-                seleccionadas por defecto.
+                Elige la zona cuyas cámaras quieres consultar.
+                Las cámaras de Los Llanos pertenecen a la red
+                propia de MeteoArchidona.
             </p>
 
         </div>
 
+
         <div class="selector-control">
 
             <label for="selector-zona">
-                ZONA / GRUPO DE CÁMARAS
+                ZONA
             </label>
 
             <select
@@ -139,10 +177,12 @@
 
     </div>
 
+
     <div
         class="rejilla-camaras"
         id="rejilla-camaras"
     ></div>
+
 
     <div
         class="nota-proveedor"
@@ -151,8 +191,8 @@
 
 </section>
 
-</main>
 
+</main>
 
 
 <div id="pie"></div>
@@ -160,3 +200,5 @@
 
 </body>
 </html>
+
+<!-- Fin archivo: en-vivo.html -->
