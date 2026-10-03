@@ -6,18 +6,18 @@
  *
  * Lógica exclusiva de:
  *
- *     en-vivo.html
+ *     pages/en-vivo.html
  *
  * Responsabilidades:
  *
  * - guardar el catálogo de zonas y cámaras;
  * - montar el selector de zona;
- * - dibujar la zona elegida y sus cámaras.
- *
- * Salió de un <script> al final de esa página. Ahora se carga con
- * defer desde la cabecera, que se ejecuta igual: después de que el
- * documento esté leído y antes de DOMContentLoaded.
+ * - dibujar la zona elegida y sus cámaras;
+ * - reproducir las cámaras MeteoCam mediante HLS;
+ * - gestionar imágenes remotas;
+ * - liberar reproductores HLS al cambiar de zona.
  */
+
 
 /* =========================================================
    CATÁLOGO DE ZONAS Y CÁMARAS
@@ -25,50 +25,51 @@
 
 const zonas={
 
-    propias:{
+    "los-llanos":{
 
-        nombre:"Cámaras propias / 360º",
+        nombre:
+            "Los Llanos",
 
         descripcion:
-            "Red propia de MeteoArchidona. De momento mostramos " +
-            "las ubicaciones previstas con imágenes provisionales; " +
-            "el streaming 360º se incorporará cuando las cámaras " +
-            "queden instaladas y conectadas.",
+            "Cámaras propias de MeteoArchidona instaladas en Los Llanos, " +
+            "Villanueva del Trabuco. Las dos vistas permiten observar " +
+            "el cielo y el entorno en directo desde perspectivas " +
+            "complementarias.",
 
         nota:
             "<strong>Red MeteoArchidona.</strong> " +
-            "Estas cámaras serán gestionadas directamente por el proyecto.",
+            "Estas emisiones proceden directamente de las cámaras " +
+            "de MeteoArchidona y se distribuyen mediante la " +
+            "infraestructura propia del proyecto.",
 
         camaras:[
 
             {
-                nombre:"El Silo",
+                nombre:
+                    "MeteoCam Los Llanos — Panorámica",
 
                 ubicacion:
-                    "Archidona · cámara propia",
+                    "Los Llanos · Villanueva del Trabuco",
 
                 tipo:
-                    "PROPIA · 360º",
+                    "METEOCAM · PANORÁMICA",
 
                 estado:
-                    "PRÓXIMAMENTE",
+                    "CONECTANDO",
 
                 estadoClase:
-                    "proximamente",
+                    "",
 
                 descripcion:
-                    "Ubicación principal de MeteoArchidona en Archidona. " +
-                    "La futura cámara panorámica ofrecerá una vista amplia " +
-                    "del cielo y del entorno para seguimiento visual del tiempo.",
+                    "Vista panorámica de Los Llanos para observar de forma " +
+                    "continua el estado general del cielo, la nubosidad, " +
+                    "la visibilidad y la evolución del tiempo en el entorno.",
 
                 medio:
-                    "imagen-local",
+                    "hls",
 
                 src:
-                    "../assets/camaras/el-silo-provisional.jpg",
-
-                alt:
-                    "Vista provisional de la futura cámara de El Silo",
+                    "/live/los-llanos/panoramica/index.m3u8",
 
                 fuenteNombre:
                     "MeteoArchidona",
@@ -77,34 +78,34 @@ const zonas={
                     null
             },
 
+
             {
-                nombre:"Los Llanos",
+                nombre:
+                    "MeteoCam Los Llanos — Específica",
 
                 ubicacion:
-                    "Villanueva del Trabuco · cámara propia",
+                    "Los Llanos · Villanueva del Trabuco",
 
                 tipo:
-                    "PROPIA · 360º",
+                    "METEOCAM · ESPECÍFICA",
 
                 estado:
-                    "PRÓXIMAMENTE",
+                    "CONECTANDO",
 
                 estadoClase:
-                    "proximamente",
+                    "",
 
                 descripcion:
-                    "Segunda ubicación prevista de la red propia. " +
-                    "Complementará la observación visual desde Archidona " +
-                    "con una panorámica del entorno de Los Llanos.",
+                    "Vista específica de Los Llanos orientada a un sector " +
+                    "concreto del entorno. Complementa la panorámica para " +
+                    "seguir con mayor detalle la visibilidad, las nubes " +
+                    "y los cambios meteorológicos.",
 
                 medio:
-                    "imagen-local",
+                    "hls",
 
                 src:
-                    "../assets/camaras/los-llanos-provisional.jpg",
-
-                alt:
-                    "Vista provisional de la futura cámara de Los Llanos",
+                    "/live/los-llanos/ptz/index.m3u8",
 
                 fuenteNombre:
                     "MeteoArchidona",
@@ -398,24 +399,39 @@ const zonas={
    ========================================================= */
 
 const selectorZona=
-    document.getElementById("selector-zona");
+    document.getElementById(
+        "selector-zona"
+    );
 
 const tituloZona=
-    document.getElementById("titulo-zona");
+    document.getElementById(
+        "titulo-zona"
+    );
 
 const descripcionZona=
-    document.getElementById("descripcion-zona");
+    document.getElementById(
+        "descripcion-zona"
+    );
 
 const contadorZona=
-    document.getElementById("contador-zona");
+    document.getElementById(
+        "contador-zona"
+    );
 
 const rejillaCamaras=
-    document.getElementById("rejilla-camaras");
+    document.getElementById(
+        "rejilla-camaras"
+    );
 
 const notaProveedor=
-    document.getElementById("nota-proveedor");
+    document.getElementById(
+        "nota-proveedor"
+    );
+
 
 let temporizadorImagenes=null;
+
+let reproductoresHls=[];
 
 
 /* =========================================================
@@ -425,11 +441,26 @@ let temporizadorImagenes=null;
 function escaparHtml(valor){
 
     return String(valor)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 
 }
 
@@ -441,10 +472,12 @@ function urlConMarcaTiempo(url){
             ? "&"
             : "?";
 
-    return url+
+    return (
+        url+
         separador+
         "t="+
-        Date.now();
+        Date.now()
+    );
 
 }
 
@@ -460,6 +493,7 @@ function construirFuente(camara){
             camara.fuenteNombre
         );
 
+
     if(!camara.fuenteUrl){
 
         return `
@@ -470,6 +504,7 @@ function construirFuente(camara){
         `;
 
     }
+
 
     return `
         <span class="fuente">
@@ -491,15 +526,89 @@ function construirFuente(camara){
 
 
 /* =========================================================
+   MEDIO HLS
+   ========================================================= */
+
+function construirMedioHls(
+    camara,
+    indice
+){
+
+    return `
+        <div class="visor-camara visor-camara-hls">
+
+            <div
+                class="estado-visor"
+                id="estado-hls-${indice}"
+            >
+                ${escaparHtml(camara.estado)}
+            </div>
+
+            <div
+                class="media-error"
+                id="error-hls-${indice}"
+            >
+
+                <div>
+
+                    <strong>
+                        Emisión no disponible
+                    </strong>
+
+                    <span
+                        id="mensaje-error-hls-${indice}"
+                    >
+                        No se puede reproducir
+                        esta cámara en este momento.
+                    </span>
+
+                </div>
+
+            </div>
+
+            <video
+                id="video-hls-${indice}"
+                data-hls="1"
+                data-indice="${indice}"
+                data-stream-src="${escaparHtml(camara.src)}"
+                aria-label="${escaparHtml(camara.nombre)}"
+                controls
+                autoplay
+                muted
+                playsinline
+                preload="metadata"
+            ></video>
+
+        </div>
+    `;
+
+}
+
+
+/* =========================================================
    MEDIO
    ========================================================= */
 
-function construirMedio(camara,indice){
+function construirMedio(
+    camara,
+    indice
+){
+
+    if(camara.medio==="hls"){
+
+        return construirMedioHls(
+            camara,
+            indice
+        );
+
+    }
+
 
     const claseEstado=
         camara.estadoClase
             ? " "+camara.estadoClase
             : "";
+
 
     const estado=`
         <div class="estado-visor${claseEstado}">
@@ -535,7 +644,9 @@ function construirMedio(camara,indice){
 
     const src=
         esRemota
-            ? urlConMarcaTiempo(camara.src)
+            ? urlConMarcaTiempo(
+                camara.src
+            )
             : camara.src;
 
 
@@ -548,6 +659,7 @@ function construirMedio(camara,indice){
                 class="media-error"
                 id="error-imagen-${indice}"
             >
+
                 <div>
 
                     <strong>
@@ -558,15 +670,20 @@ function construirMedio(camara,indice){
                     una captura en este momento.
 
                 </div>
+
             </div>
 
             <img
                 src="${escaparHtml(src)}"
                 alt="${escaparHtml(camara.alt || camara.nombre)}"
                 loading="lazy"
-                ${esRemota
-                    ? `data-remota="1" data-base-src="${escaparHtml(camara.src)}"`
-                    : ""
+                ${
+                    esRemota
+                        ? (
+                            `data-remota="1" `+
+                            `data-base-src="${escaparHtml(camara.src)}"`
+                        )
+                        : ""
                 }
             >
 
@@ -580,12 +697,18 @@ function construirMedio(camara,indice){
    TARJETA
    ========================================================= */
 
-function construirTarjeta(camara,indice){
+function construirTarjeta(
+    camara,
+    indice
+){
 
     return `
         <article class="tarjeta-camara">
 
-            ${construirMedio(camara,indice)}
+            ${construirMedio(
+                camara,
+                indice
+            )}
 
             <div class="cuerpo-camara">
 
@@ -626,6 +749,587 @@ function construirTarjeta(camara,indice){
 
 
 /* =========================================================
+   ESTADO HLS
+   ========================================================= */
+
+function obtenerEstadoHls(indice){
+
+    return document.getElementById(
+        "estado-hls-"+indice
+    );
+
+}
+
+
+function establecerEstadoHls(
+    indice,
+    texto
+){
+
+    const elemento=
+        obtenerEstadoHls(
+            indice
+        );
+
+    if(!elemento){
+        return;
+    }
+
+    elemento.textContent=
+        texto;
+
+}
+
+
+function mostrarErrorHls(
+    indice,
+    mensaje
+){
+
+    const error=
+        document.getElementById(
+            "error-hls-"+indice
+        );
+
+    const mensajeError=
+        document.getElementById(
+            "mensaje-error-hls-"+indice
+        );
+
+
+    if(mensajeError){
+
+        mensajeError.textContent=
+            mensaje;
+
+    }
+
+
+    if(error){
+
+        error.classList.add(
+            "visible"
+        );
+
+    }
+
+}
+
+
+function ocultarErrorHls(indice){
+
+    const error=
+        document.getElementById(
+            "error-hls-"+indice
+        );
+
+
+    if(error){
+
+        error.classList.remove(
+            "visible"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DESTRUCCIÓN DE REPRODUCTORES HLS
+   ========================================================= */
+
+function destruirReproductoresHls(){
+
+    reproductoresHls.forEach(
+        reproductor=>{
+
+            if(reproductor.hls){
+
+                try{
+
+                    reproductor.hls.destroy();
+
+                }catch(error){
+
+                    console.debug(
+                        "No se pudo destruir un reproductor HLS.",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            if(reproductor.video){
+
+                try{
+
+                    reproductor.video.pause();
+
+                    reproductor.video.removeAttribute(
+                        "src"
+                    );
+
+                    reproductor.video.load();
+
+                }catch(error){
+
+                    console.debug(
+                        "No se pudo liberar un elemento de vídeo.",
+                        error
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+    reproductoresHls=[];
+
+}
+
+
+/* =========================================================
+   REPRODUCCIÓN HLS NATIVA
+   ========================================================= */
+
+function prepararHlsNativo(
+    video,
+    indice,
+    streamUrl
+){
+
+    reproductoresHls.push({
+        hls:null,
+        video:video
+    });
+
+
+    video.addEventListener(
+        "loadstart",
+        ()=>{
+
+            establecerEstadoHls(
+                indice,
+                "CONECTANDO"
+            );
+
+        }
+    );
+
+
+    video.addEventListener(
+        "loadedmetadata",
+        ()=>{
+
+            ocultarErrorHls(
+                indice
+            );
+
+            establecerEstadoHls(
+                indice,
+                "VÍDEO EN DIRECTO"
+            );
+
+
+            video.play()
+                .catch(
+                    ()=>{
+
+                        establecerEstadoHls(
+                            indice,
+                            "PULSA PLAY"
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+
+    video.addEventListener(
+        "playing",
+        ()=>{
+
+            ocultarErrorHls(
+                indice
+            );
+
+            establecerEstadoHls(
+                indice,
+                "VÍDEO EN DIRECTO"
+            );
+
+        }
+    );
+
+
+    video.addEventListener(
+        "waiting",
+        ()=>{
+
+            establecerEstadoHls(
+                indice,
+                "RECONECTANDO"
+            );
+
+        }
+    );
+
+
+    video.addEventListener(
+        "stalled",
+        ()=>{
+
+            establecerEstadoHls(
+                indice,
+                "RECONECTANDO"
+            );
+
+        }
+    );
+
+
+    video.addEventListener(
+        "error",
+        ()=>{
+
+            establecerEstadoHls(
+                indice,
+                "SIN EMISIÓN"
+            );
+
+            mostrarErrorHls(
+                indice,
+                "La emisión no está disponible en este momento."
+            );
+
+        }
+    );
+
+
+    video.src=
+        streamUrl;
+
+}
+
+
+/* =========================================================
+   REPRODUCCIÓN CON HLS.JS
+   ========================================================= */
+
+function prepararHlsJs(
+    video,
+    indice,
+    streamUrl
+){
+
+    const hls=
+        new window.Hls({
+
+            liveSyncDurationCount:
+                2,
+
+            liveMaxLatencyDurationCount:
+                5,
+
+            enableWorker:
+                true
+
+        });
+
+
+    reproductoresHls.push({
+        hls:hls,
+        video:video
+    });
+
+
+    establecerEstadoHls(
+        indice,
+        "CONECTANDO"
+    );
+
+
+    hls.loadSource(
+        streamUrl
+    );
+
+
+    hls.attachMedia(
+        video
+    );
+
+
+    hls.on(
+        window.Hls.Events.MANIFEST_PARSED,
+        ()=>{
+
+            ocultarErrorHls(
+                indice
+            );
+
+            establecerEstadoHls(
+                indice,
+                "VÍDEO EN DIRECTO"
+            );
+
+
+            video.play()
+                .catch(
+                    ()=>{
+
+                        establecerEstadoHls(
+                            indice,
+                            "PULSA PLAY"
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+
+    hls.on(
+        window.Hls.Events.ERROR,
+        (
+            event,
+            data
+        )=>{
+
+            if(!data.fatal){
+
+                return;
+
+            }
+
+
+            if(
+                data.type===
+                window.Hls.ErrorTypes.NETWORK_ERROR
+            ){
+
+                establecerEstadoHls(
+                    indice,
+                    "RECONECTANDO"
+                );
+
+
+                try{
+
+                    hls.startLoad();
+
+                }catch(error){
+
+                    console.debug(
+                        "No se pudo reiniciar la carga HLS.",
+                        error
+                    );
+
+                }
+
+
+                return;
+
+            }
+
+
+            if(
+                data.type===
+                window.Hls.ErrorTypes.MEDIA_ERROR
+            ){
+
+                establecerEstadoHls(
+                    indice,
+                    "RECUPERANDO VÍDEO"
+                );
+
+
+                try{
+
+                    hls.recoverMediaError();
+
+                }catch(error){
+
+                    console.debug(
+                        "No se pudo recuperar el vídeo HLS.",
+                        error
+                    );
+
+                }
+
+
+                return;
+
+            }
+
+
+            establecerEstadoHls(
+                indice,
+                "SIN EMISIÓN"
+            );
+
+
+            mostrarErrorHls(
+                indice,
+                "La emisión no puede reproducirse en este momento."
+            );
+
+
+            try{
+
+                hls.destroy();
+
+            }catch(error){
+
+                console.debug(
+                    "No se pudo destruir el reproductor HLS tras un error.",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+    video.addEventListener(
+        "playing",
+        ()=>{
+
+            ocultarErrorHls(
+                indice
+            );
+
+            establecerEstadoHls(
+                indice,
+                "VÍDEO EN DIRECTO"
+            );
+
+        }
+    );
+
+
+    video.addEventListener(
+        "waiting",
+        ()=>{
+
+            establecerEstadoHls(
+                indice,
+                "RECONECTANDO"
+            );
+
+        }
+    );
+
+
+    video.addEventListener(
+        "stalled",
+        ()=>{
+
+            establecerEstadoHls(
+                indice,
+                "RECONECTANDO"
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   PREPARACIÓN DE REPRODUCTORES HLS
+   ========================================================= */
+
+function prepararReproductoresHls(){
+
+    const videos=
+        rejillaCamaras.querySelectorAll(
+            "video[data-hls='1']"
+        );
+
+
+    videos.forEach(
+        video=>{
+
+            const indice=
+                Number(
+                    video.dataset.indice
+                );
+
+            const streamUrl=
+                video.dataset.streamSrc;
+
+
+            if(
+                !streamUrl ||
+                Number.isNaN(indice)
+            ){
+
+                return;
+
+            }
+
+
+            if(
+                video.canPlayType(
+                    "application/vnd.apple.mpegurl"
+                )
+            ){
+
+                prepararHlsNativo(
+                    video,
+                    indice,
+                    streamUrl
+                );
+
+                return;
+
+            }
+
+
+            if(
+                window.Hls &&
+                window.Hls.isSupported()
+            ){
+
+                prepararHlsJs(
+                    video,
+                    indice,
+                    streamUrl
+                );
+
+                return;
+
+            }
+
+
+            establecerEstadoHls(
+                indice,
+                "NO COMPATIBLE"
+            );
+
+
+            mostrarErrorHls(
+                indice,
+                "Este navegador no permite reproducir emisiones HLS."
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    GESTIÓN DE ERRORES DE IMÁGENES
    ========================================================= */
 
@@ -638,7 +1342,37 @@ function prepararImagenes(){
 
 
     imagenes.forEach(
-        (imagen,indice)=>{
+        imagen=>{
+
+            const tarjeta=
+                imagen.closest(
+                    ".tarjeta-camara"
+                );
+
+
+            if(!tarjeta){
+                return;
+            }
+
+
+            const imagenesTarjeta=
+                Array.from(
+                    rejillaCamaras.querySelectorAll(
+                        ".tarjeta-camara"
+                    )
+                );
+
+
+            const indice=
+                imagenesTarjeta.indexOf(
+                    tarjeta
+                );
+
+
+            if(indice<0){
+                return;
+            }
+
 
             const error=
                 document.getElementById(
@@ -651,9 +1385,11 @@ function prepararImagenes(){
                 ()=>{
 
                     if(error){
+
                         error.classList.remove(
                             "visible"
                         );
+
                     }
 
                 }
@@ -665,9 +1401,11 @@ function prepararImagenes(){
                 ()=>{
 
                     if(error){
+
                         error.classList.add(
                             "visible"
                         );
+
                     }
 
                 }
@@ -686,7 +1424,7 @@ function prepararImagenes(){
 function refrescarImagenesRemotas(){
 
     const imagenes=
-        document.querySelectorAll(
+        rejillaCamaras.querySelectorAll(
             "img[data-remota='1']"
         );
 
@@ -696,6 +1434,12 @@ function refrescarImagenesRemotas(){
 
             const baseSrc=
                 imagen.dataset.baseSrc;
+
+
+            if(!baseSrc){
+                return;
+            }
+
 
             imagen.src=
                 urlConMarcaTiempo(
@@ -708,13 +1452,37 @@ function refrescarImagenesRemotas(){
 }
 
 
+function detenerRefrescoImagenes(){
+
+    if(!temporizadorImagenes){
+        return;
+    }
+
+
+    clearInterval(
+        temporizadorImagenes
+    );
+
+
+    temporizadorImagenes=null;
+
+}
+
+
 function iniciarRefrescoImagenes(){
 
-    if(temporizadorImagenes){
+    detenerRefrescoImagenes();
 
-        clearInterval(
-            temporizadorImagenes
+
+    const imagenes=
+        rejillaCamaras.querySelectorAll(
+            "img[data-remota='1']"
         );
+
+
+    if(imagenes.length===0){
+
+        return;
 
     }
 
@@ -741,10 +1509,12 @@ function actualizarUrl(claveZona){
                 window.location.href
             );
 
+
         url.searchParams.set(
             "zona",
             claveZona
         );
+
 
         window.history.replaceState(
             {},
@@ -776,11 +1546,16 @@ function renderizarZona(
     const claveValida=
         zonas[claveZona]
             ? claveZona
-            : "propias";
+            : "los-llanos";
 
 
     const zona=
         zonas[claveValida];
+
+
+    destruirReproductoresHls();
+
+    detenerRefrescoImagenes();
 
 
     selectorZona.value=
@@ -807,7 +1582,10 @@ function renderizarZona(
     rejillaCamaras.innerHTML=
         zona.camaras
             .map(
-                (camara,indice)=>
+                (
+                    camara,
+                    indice
+                )=>
                     construirTarjeta(
                         camara,
                         indice
@@ -823,6 +1601,8 @@ function renderizarZona(
     prepararImagenes();
 
     iniciarRefrescoImagenes();
+
+    prepararReproductoresHls();
 
 
     if(actualizarDireccion){
@@ -843,9 +1623,16 @@ function renderizarZona(
 function cargarSelector(){
 
     selectorZona.innerHTML=
-        Object.entries(zonas)
+        Object.entries(
+            zonas
+        )
             .map(
-                ([clave,zona])=>`
+                (
+                    [
+                        clave,
+                        zona
+                    ]
+                )=>`
                     <option value="${escaparHtml(clave)}">
                         ${escaparHtml(zona.nombre)}
                     </option>
@@ -895,7 +1682,7 @@ function obtenerZonaInicial(){
     }
 
 
-    return "propias";
+    return "los-llanos";
 
 }
 
@@ -916,11 +1703,24 @@ selectorZona.addEventListener(
 );
 
 
+window.addEventListener(
+    "pagehide",
+    ()=>{
+
+        destruirReproductoresHls();
+
+        detenerRefrescoImagenes();
+
+    }
+);
+
+
 /* =========================================================
    INICIO
    ========================================================= */
 
 cargarSelector();
+
 
 renderizarZona(
     obtenerZonaInicial(),
@@ -928,5 +1728,5 @@ renderizarZona(
 );
 
 
-
-// Fin de fichero: js/en-vivo.js
+// Fin de fichero
+// Fin archivo: js/en-vivo.js
