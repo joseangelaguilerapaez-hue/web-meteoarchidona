@@ -4,13 +4,25 @@
  *
  * Estilos exclusivos de:
  *
- *     en-vivo.html
+ *     pages/en-vivo.html
  *
- * Salieron de un <style> dentro de esa página. Su cabecera es propia
- * (.cabecera-en-vivo) y no la comparte con el resto del sitio.
+ * Su cabecera es propia (.cabecera-en-vivo) y no la comparte
+ * con el resto del sitio.
+ *
+ * La página admite:
+ *
+ * - streaming HLS propio de MeteoArchidona;
+ * - streaming externo mediante iframe;
+ * - webcams mediante imágenes remotas;
+ * - imágenes locales.
  */
 
 /* La paleta está en css/paleta.css, que se carga antes que esta hoja. */
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
 
 *{
     box-sizing:border-box;
@@ -27,9 +39,21 @@ body{
     font-family:"Sora",system-ui,sans-serif;
     color:var(--white);
     background:
-        radial-gradient(circle at 15% 0%,rgba(54,217,255,.10),transparent 32%),
-        radial-gradient(circle at 90% 8%,rgba(242,191,88,.09),transparent 28%),
-        linear-gradient(180deg,var(--bg-alt) 0%,var(--bg-deep) 100%);
+        radial-gradient(
+            circle at 15% 0%,
+            rgba(54,217,255,.10),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 90% 8%,
+            rgba(242,191,88,.09),
+            transparent 28%
+        ),
+        linear-gradient(
+            180deg,
+            var(--bg-alt) 0%,
+            var(--bg-deep) 100%
+        );
 }
 
 button,
@@ -39,10 +63,14 @@ a{
 }
 
 .pagina{
-    width:min(1500px,calc(100% - 48px));
+    width:min(
+        1500px,
+        calc(100% - 48px)
+    );
     margin:0 auto;
     padding:42px 0 72px;
 }
+
 
 /* =========================================================
    CABECERA
@@ -52,18 +80,21 @@ a{
     position:relative;
     overflow:hidden;
     display:grid;
-    grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+    grid-template-columns:
+        minmax(0,1.35fr)
+        minmax(300px,.65fr);
     gap:38px;
     align-items:center;
     min-height:300px;
     padding:44px;
     border:1px solid var(--border-subtle);
     border-radius:var(--radius-lg);
-    background:linear-gradient(
-        135deg,
-        rgba(14,31,53,.96),
-        rgba(7,19,35,.96)
-    );
+    background:
+        linear-gradient(
+            135deg,
+            rgba(14,31,53,.96),
+            rgba(7,19,35,.96)
+        );
     box-shadow:var(--shadow-deep);
 }
 
@@ -83,7 +114,12 @@ a{
             transparent 1px
         );
     background-size:44px 44px;
-    mask-image:linear-gradient(to right,black,transparent 72%);
+    mask-image:
+        linear-gradient(
+            to right,
+            black,
+            transparent 72%
+        );
 }
 
 .cabecera-texto{
@@ -111,13 +147,19 @@ a{
     box-shadow:
         0 0 0 7px rgba(54,217,255,.09),
         0 0 20px rgba(54,217,255,.65);
-    animation:pulso 2s ease-in-out infinite;
+    animation:
+        pulso 2s ease-in-out infinite;
 }
 
 .cabecera-en-vivo h1{
     max-width:760px;
     margin:0 0 18px;
-    font-size:clamp(2.7rem,5vw,5.2rem);
+    font-size:
+        clamp(
+            2.7rem,
+            5vw,
+            5.2rem
+        );
     line-height:.95;
     letter-spacing:-.055em;
 }
@@ -129,7 +171,12 @@ a{
 .cabecera-en-vivo p{
     max-width:760px;
     margin:0;
-    font-size:clamp(1rem,1.4vw,1.15rem);
+    font-size:
+        clamp(
+            1rem,
+            1.4vw,
+            1.15rem
+        );
     line-height:1.75;
     color:var(--text-soft);
 }
@@ -155,8 +202,14 @@ a{
     height:190px;
     left:50%;
     top:50%;
-    transform:translate(-50%,-50%);
-    border:1px solid rgba(54,217,255,.22);
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+    border:
+        1px solid
+        rgba(54,217,255,.22);
     border-radius:50%;
 }
 
@@ -166,9 +219,15 @@ a{
     position:absolute;
     left:50%;
     top:50%;
-    transform:translate(-50%,-50%);
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
     border-radius:50%;
-    border:1px solid rgba(54,217,255,.18);
+    border:
+        1px solid
+        rgba(54,217,255,.18);
 }
 
 .radar::before{
@@ -188,25 +247,41 @@ a{
     width:95px;
     height:95px;
     transform-origin:0 0;
-    background:linear-gradient(
-        35deg,
-        rgba(54,217,255,.34),
-        transparent 70%
-    );
-    clip-path:polygon(0 0,100% 0,0 100%);
-    animation:barrido 4.6s linear infinite;
+    background:
+        linear-gradient(
+            35deg,
+            rgba(54,217,255,.34),
+            transparent 70%
+        );
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            0 100%
+        );
+    animation:
+        barrido 4.6s linear infinite;
 }
 
 .camara-dibujo{
     position:absolute;
     left:50%;
     top:50%;
-    transform:translate(-50%,-50%);
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
     width:114px;
     height:76px;
     border:2px solid var(--amber);
     border-radius:19px;
-    background:linear-gradient(145deg,#192f48,#091726);
+    background:
+        linear-gradient(
+            145deg,
+            #192f48,
+            #091726
+        );
     box-shadow:
         0 18px 45px rgba(0,0,0,.36),
         0 0 35px rgba(242,191,88,.10);
@@ -219,17 +294,21 @@ a{
     top:50%;
     width:44px;
     height:44px;
-    transform:translateY(-50%);
-    border:5px solid #07111f;
+    transform:
+        translateY(-50%);
+    border:
+        5px solid
+        #07111f;
     border-radius:50%;
-    background:radial-gradient(
-        circle at 38% 35%,
-        var(--cyan-bright) 0 7%,
-        #223d5d 8% 28%,
-        #050d17 29% 62%,
-        var(--amber) 63% 68%,
-        #081421 69%
-    );
+    background:
+        radial-gradient(
+            circle at 38% 35%,
+            var(--cyan-bright) 0 7%,
+            #223d5d 8% 28%,
+            #050d17 29% 62%,
+            var(--amber) 63% 68%,
+            #081421 69%
+        );
 }
 
 .camara-dibujo::after{
@@ -241,7 +320,9 @@ a{
     height:10px;
     border-radius:50%;
     background:var(--mint);
-    box-shadow:0 0 15px rgba(103,232,165,.75);
+    box-shadow:
+        0 0 15px
+        rgba(103,232,165,.75);
 }
 
 .soporte-camara{
@@ -250,11 +331,13 @@ a{
     height:54px;
     left:50%;
     bottom:17px;
-    transform:translateX(-50%);
-    background:linear-gradient(
-        var(--amber),
-        rgba(242,191,88,.35)
-    );
+    transform:
+        translateX(-50%);
+    background:
+        linear-gradient(
+            var(--amber),
+            rgba(242,191,88,.35)
+        );
     border-radius:6px;
 }
 
@@ -265,10 +348,12 @@ a{
     height:8px;
     left:50%;
     bottom:-2px;
-    transform:translateX(-50%);
+    transform:
+        translateX(-50%);
     border-radius:10px;
     background:var(--amber);
 }
+
 
 /* =========================================================
    SELECTOR
@@ -277,7 +362,9 @@ a{
 .selector-panel{
     margin-top:30px;
     padding:24px;
-    border:1px solid var(--border-subtle);
+    border:
+        1px solid
+        var(--border-subtle);
     border-radius:var(--radius-lg);
     background:var(--panel);
     box-shadow:var(--shadow-deep);
@@ -285,14 +372,21 @@ a{
 
 .selector-contenido{
     display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(280px,440px);
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(280px,440px);
     gap:24px;
     align-items:end;
 }
 
 .selector-texto h2{
     margin:0 0 8px;
-    font-size:clamp(1.25rem,2vw,1.7rem);
+    font-size:
+        clamp(
+            1.25rem,
+            2vw,
+            1.7rem
+        );
     letter-spacing:-.035em;
 }
 
@@ -315,18 +409,40 @@ a{
 .selector-control select{
     width:100%;
     appearance:none;
-    padding:15px 48px 15px 16px;
-    border:1px solid var(--border-cyan);
+    padding:
+        15px
+        48px
+        15px
+        16px;
+    border:
+        1px solid
+        var(--border-cyan);
     border-radius:var(--radius-sm);
     color:var(--white);
     outline:none;
     cursor:pointer;
 
     background:
-        linear-gradient(45deg,transparent 50%,var(--cyan-bright) 50%)
-            calc(100% - 21px) calc(50% - 2px) / 6px 6px no-repeat,
-        linear-gradient(135deg,var(--cyan-bright) 50%,transparent 50%)
-            calc(100% - 15px) calc(50% - 2px) / 6px 6px no-repeat,
+        linear-gradient(
+            45deg,
+            transparent 50%,
+            var(--cyan-bright) 50%
+        )
+        calc(100% - 21px)
+        calc(50% - 2px)
+        / 6px 6px
+        no-repeat,
+
+        linear-gradient(
+            135deg,
+            var(--cyan-bright) 50%,
+            transparent 50%
+        )
+        calc(100% - 15px)
+        calc(50% - 2px)
+        / 6px 6px
+        no-repeat,
+
         linear-gradient(
             180deg,
             rgba(19,43,67,.98),
@@ -335,10 +451,10 @@ a{
 }
 
 /*
- * La lista desplegada la dibuja el sistema, no esta hoja: hereda el
- * color del <select> —blanco— pero no su fondo, así que en Windows
- * salían letras blancas sobre blanco y no se leía ninguna opción.
- * Cada <option> lleva por eso su propio par de colores.
+ * La lista desplegada la dibuja el sistema, no esta hoja.
+ *
+ * Cada <option> lleva sus propios colores para evitar texto
+ * blanco sobre fondo blanco en determinados navegadores.
  */
 .selector-control select option{
     background:#0f2438;
@@ -352,8 +468,11 @@ a{
 
 .selector-control select:focus{
     border-color:var(--cyan-bright);
-    box-shadow:0 0 0 4px rgba(54,217,255,.10);
+    box-shadow:
+        0 0 0 4px
+        rgba(54,217,255,.10);
 }
+
 
 /* =========================================================
    ZONA
@@ -368,12 +487,20 @@ a{
     justify-content:space-between;
     gap:20px;
     align-items:flex-end;
-    margin:0 4px 18px;
+    margin:
+        0
+        4px
+        18px;
 }
 
 .cabecera-zona h2{
     margin:0;
-    font-size:clamp(1.6rem,2.3vw,2.15rem);
+    font-size:
+        clamp(
+            1.6rem,
+            2.3vw,
+            2.15rem
+        );
     letter-spacing:-.04em;
 }
 
@@ -387,12 +514,15 @@ a{
 .contador-zona{
     flex:0 0 auto;
     padding:8px 12px;
-    border:1px solid var(--border-amber);
+    border:
+        1px solid
+        var(--border-amber);
     border-radius:999px;
     font-family:"JetBrains Mono",monospace;
     font-size:.72rem;
     color:var(--amber);
 }
+
 
 /* =========================================================
    TARJETAS
@@ -400,34 +530,93 @@ a{
 
 .rejilla-camaras{
     display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0,1fr)
+        );
     gap:22px;
 }
 
 .tarjeta-camara{
     overflow:hidden;
-    border:1px solid var(--border-subtle);
+    border:
+        1px solid
+        var(--border-subtle);
     border-radius:var(--radius-lg);
     background:var(--panel);
     box-shadow:var(--shadow-deep);
 }
+
+
+/* =========================================================
+   VISOR
+   ========================================================= */
 
 .visor-camara{
     position:relative;
     overflow:hidden;
     width:100%;
     aspect-ratio:16/9;
-    background:#050b12;
+    background:#000;
 }
 
 .visor-camara iframe,
-.visor-camara img{
+.visor-camara img,
+.visor-camara video{
     display:block;
     width:100%;
     height:100%;
     border:0;
+}
+
+
+/* =========================================================
+   IFRAMES E IMÁGENES
+   ========================================================= */
+
+.visor-camara iframe,
+.visor-camara img{
     object-fit:cover;
 }
+
+
+/* =========================================================
+   VÍDEO HLS METEOCAM
+   ========================================================= */
+
+.visor-camara-hls{
+    background:#000;
+}
+
+/*
+ * No utilizar "cover" en las MeteoCam.
+ *
+ * La panorámica de Los Llanos es mucho más ancha que 16:9.
+ * "cover" recortaría los extremos de la imagen.
+ *
+ * "contain" garantiza que siempre pueda verse el encuadre completo.
+ */
+.visor-camara-hls video{
+    position:relative;
+    z-index:1;
+    object-fit:contain;
+    background:#000;
+}
+
+/*
+ * Los controles nativos quedan disponibles porque el visitante
+ * puede querer pausar, ampliar a pantalla completa o reanudar
+ * una emisión que el navegador no haya podido iniciar solo.
+ */
+.visor-camara-hls video:focus{
+    outline:none;
+}
+
+
+/* =========================================================
+   ESTADO DEL VISOR
+   ========================================================= */
 
 .estado-visor{
     position:absolute;
@@ -437,37 +626,58 @@ a{
     display:inline-flex;
     gap:8px;
     align-items:center;
+    max-width:
+        calc(100% - 32px);
     padding:8px 11px;
-    border:1px solid rgba(255,255,255,.14);
+    border:
+        1px solid
+        rgba(255,255,255,.14);
     border-radius:999px;
     font-family:"JetBrains Mono",monospace;
     font-size:.69rem;
     font-weight:600;
     letter-spacing:.06em;
     color:var(--white);
-    background:rgba(3,9,20,.80);
-    backdrop-filter:blur(10px);
+    background:
+        rgba(3,9,20,.80);
+    backdrop-filter:
+        blur(10px);
     pointer-events:none;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .estado-visor::before{
     content:"";
+    flex:0 0 auto;
     width:7px;
     height:7px;
     border-radius:50%;
     background:var(--cyan-bright);
-    box-shadow:0 0 12px rgba(54,217,255,.75);
+    box-shadow:
+        0 0 12px
+        rgba(54,217,255,.75);
 }
 
 .estado-visor.imagen::before{
     background:var(--amber);
-    box-shadow:0 0 12px rgba(242,191,88,.70);
+    box-shadow:
+        0 0 12px
+        rgba(242,191,88,.70);
 }
 
 .estado-visor.proximamente::before{
     background:var(--mint);
-    box-shadow:0 0 12px rgba(103,232,165,.70);
+    box-shadow:
+        0 0 12px
+        rgba(103,232,165,.70);
 }
+
+
+/* =========================================================
+   ERROR DE MEDIO
+   ========================================================= */
 
 .media-error{
     position:absolute;
@@ -478,11 +688,20 @@ a{
     padding:28px;
     text-align:center;
     color:var(--text-soft);
-    background:linear-gradient(145deg,#0d2033,#050b12);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(13,32,51,.97),
+            rgba(5,11,18,.98)
+        );
 }
 
 .media-error.visible{
     display:grid;
+}
+
+.media-error > div{
+    max-width:440px;
 }
 
 .media-error strong{
@@ -491,8 +710,21 @@ a{
     color:var(--white);
 }
 
+.media-error span{
+    display:block;
+    line-height:1.6;
+}
+
+
+/* =========================================================
+   CUERPO DE LA TARJETA
+   ========================================================= */
+
 .cuerpo-camara{
-    padding:22px 22px 24px;
+    padding:
+        22px
+        22px
+        24px;
 }
 
 .fila-titulo{
@@ -502,27 +734,44 @@ a{
     align-items:flex-start;
 }
 
+.titulo-camara{
+    min-width:0;
+}
+
 .titulo-camara h3{
     margin:0;
-    font-size:clamp(1.15rem,1.7vw,1.45rem);
+    font-size:
+        clamp(
+            1.15rem,
+            1.7vw,
+            1.45rem
+        );
     letter-spacing:-.035em;
 }
 
 .ubicacion-camara{
     margin-top:6px;
-    font-family:"JetBrains Mono",monospace;
+    font-family:
+        "JetBrains Mono",
+        monospace;
     font-size:.77rem;
     color:var(--cyan-bright);
 }
 
 .tipo-camara{
     flex:0 0 auto;
+    max-width:48%;
     padding:7px 10px;
-    border:1px solid var(--border-amber);
+    border:
+        1px solid
+        var(--border-amber);
     border-radius:999px;
-    font-family:"JetBrains Mono",monospace;
+    font-family:
+        "JetBrains Mono",
+        monospace;
     font-size:.68rem;
     color:var(--amber);
+    text-align:center;
 }
 
 .descripcion-camara{
@@ -531,6 +780,11 @@ a{
     line-height:1.65;
 }
 
+
+/* =========================================================
+   PIE DE LA TARJETA
+   ========================================================= */
+
 .pie-camara{
     display:flex;
     justify-content:space-between;
@@ -538,7 +792,9 @@ a{
     align-items:center;
     margin-top:20px;
     padding-top:16px;
-    border-top:1px solid var(--border-subtle);
+    border-top:
+        1px solid
+        var(--border-subtle);
 }
 
 .fuente{
@@ -555,20 +811,30 @@ a{
     text-decoration:none;
 }
 
-@media (hover: hover) {
-.fuente a:hover,
-.fuente a:focus-visible{
-    text-decoration:underline;
+@media (hover:hover){
+
+    .fuente a:hover,
+    .fuente a:focus-visible{
+        text-decoration:underline;
+    }
+
 }
-}
+
+
+/* =========================================================
+   NOTA DEL PROVEEDOR
+   ========================================================= */
 
 .nota-proveedor{
     margin-top:24px;
     padding:16px 18px;
-    border:1px solid var(--border-subtle);
+    border:
+        1px solid
+        var(--border-subtle);
     border-radius:var(--radius);
     color:var(--text-faint);
-    background:rgba(10,24,40,.72);
+    background:
+        rgba(10,24,40,.72);
     font-size:.84rem;
     line-height:1.65;
 }
@@ -577,25 +843,45 @@ a{
     color:var(--text-soft);
 }
 
+
 /* =========================================================
    ANIMACIONES
    ========================================================= */
 
 @keyframes pulso{
-    0%,100%{opacity:1}
-    50%{opacity:.55}
+
+    0%,
+    100%{
+        opacity:1;
+    }
+
+    50%{
+        opacity:.55;
+    }
+
 }
 
 @keyframes barrido{
-    from{transform:rotate(0deg)}
-    to{transform:rotate(360deg)}
+
+    from{
+        transform:
+            rotate(0deg);
+    }
+
+    to{
+        transform:
+            rotate(360deg);
+    }
+
 }
 
+
 /* =========================================================
-   RESPONSIVE
+   RESPONSIVE · TABLET
    ========================================================= */
 
 @media(max-width:980px){
+
     .cabecera-en-vivo{
         grid-template-columns:1fr;
         padding:34px;
@@ -612,22 +898,40 @@ a{
     .rejilla-camaras{
         grid-template-columns:1fr;
     }
+
 }
 
+
+/* =========================================================
+   RESPONSIVE · MÓVIL
+   ========================================================= */
+
 @media(max-width:640px){
+
     .pagina{
-        width:calc(100% - 24px);
-        padding:18px 0 44px;
+        width:
+            calc(100% - 24px);
+        padding:
+            18px
+            0
+            44px;
     }
 
     .cabecera-en-vivo{
         min-height:0;
-        padding:26px 22px;
+        padding:
+            26px
+            22px;
         border-radius:22px;
     }
 
     .cabecera-en-vivo h1{
-        font-size:clamp(2.35rem,13vw,3.5rem);
+        font-size:
+            clamp(
+                2.35rem,
+                13vw,
+                3.5rem
+            );
     }
 
     .selector-panel{
@@ -660,7 +964,10 @@ a{
     .estado-visor{
         left:12px;
         top:12px;
+        max-width:
+            calc(100% - 24px);
         padding:7px 9px;
+        font-size:.63rem;
     }
 
     .cuerpo-camara{
@@ -673,13 +980,16 @@ a{
 
     .tipo-camara{
         display:inline-flex;
+        max-width:100%;
         margin-top:12px;
     }
 
     .pie-camara{
         display:block;
     }
+
 }
 
 
-/* Fin de fichero: css/en-vivo.css */
+/* Fin de fichero */
+/* Fin archivo: css/en-vivo.css */
