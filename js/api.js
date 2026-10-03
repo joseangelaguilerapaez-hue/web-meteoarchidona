@@ -32,7 +32,7 @@
 
 
 
-const API_REMOTA = "https://vps-api.meteoarchidona.com";
+const API_REMOTA = "/api";
 
 const API_LOCAL = "/api";
 
