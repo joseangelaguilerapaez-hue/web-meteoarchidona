@@ -596,7 +596,7 @@ a{
 
 
 /* =========================================================
-   MARCA METEOARCHIDONA
+   SUPERPOSICIONES METEOCAM
    ========================================================= */
 
 .marca-meteocam{
@@ -688,6 +688,28 @@ a{
     box-shadow:
         0 0 12px
         rgba(103,232,165,.70);
+}
+
+
+.visor-camara-hls .estado-visor-hls{
+    padding:0;
+    border:0;
+    border-radius:0;
+    color:var(--cyan-bright);
+    background:transparent;
+    backdrop-filter:none;
+    text-shadow:
+        0 1px 3px rgba(0,0,0,.95),
+        0 0 8px rgba(0,0,0,.78);
+}
+
+.visor-camara-hls .estado-visor-hls::before{
+    width:8px;
+    height:8px;
+    background:var(--cyan-bright);
+    box-shadow:
+        0 0 4px rgba(54,217,255,.95),
+        0 0 12px rgba(54,217,255,.80);
 }
 
 
@@ -984,6 +1006,15 @@ a{
             calc(100% - 24px);
         padding:7px 9px;
         font-size:.63rem;
+    }
+
+    .visor-camara-hls .estado-visor-hls{
+        padding:0;
+        border:0;
+        border-radius:0;
+        color:var(--cyan-bright);
+        background:transparent;
+        backdrop-filter:none;
     }
 
     .marca-meteocam{
