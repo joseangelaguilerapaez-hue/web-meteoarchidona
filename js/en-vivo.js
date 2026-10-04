@@ -15,6 +15,7 @@
  * - dibujar la zona elegida y sus cámaras;
  * - reproducir las cámaras MeteoCam mediante HLS;
  * - superponer la marca MeteoArchidona en las cámaras propias;
+ * - anclar la marca y el estado al rectángulo real del vídeo;
  * - gestionar imágenes remotas;
  * - liberar reproductores HLS al cambiar de zona.
  */
@@ -561,7 +562,7 @@ function construirMedioHls(
         <div class="visor-camara visor-camara-hls">
 
             <div
-                class="estado-visor"
+                class="estado-visor estado-visor-hls"
                 id="estado-hls-${indice}"
             >
                 ${escaparHtml(camara.estado)}
@@ -920,6 +921,206 @@ function destruirReproductoresHls(){
 
 
 /* =========================================================
+   POSICIÓN DE SUPERPOSICIONES HLS
+   ========================================================= */
+
+function obtenerRectanguloVideo(video){
+
+    const anchoContenedor=
+        video.clientWidth;
+
+    const altoContenedor=
+        video.clientHeight;
+
+
+    if(
+        !anchoContenedor ||
+        !altoContenedor ||
+        !video.videoWidth ||
+        !video.videoHeight
+    ){
+
+        return null;
+
+    }
+
+
+    const proporcionContenedor=
+        anchoContenedor/
+        altoContenedor;
+
+    const proporcionVideo=
+        video.videoWidth/
+        video.videoHeight;
+
+
+    let anchoVideo;
+    let altoVideo;
+    let izquierda;
+    let arriba;
+
+
+    if(proporcionVideo>proporcionContenedor){
+
+        anchoVideo=
+            anchoContenedor;
+
+        altoVideo=
+            anchoContenedor/
+            proporcionVideo;
+
+        izquierda=
+            0;
+
+        arriba=
+            (
+                altoContenedor-
+                altoVideo
+            )/
+            2;
+
+    }else{
+
+        altoVideo=
+            altoContenedor;
+
+        anchoVideo=
+            altoContenedor*
+            proporcionVideo;
+
+        arriba=
+            0;
+
+        izquierda=
+            (
+                anchoContenedor-
+                anchoVideo
+            )/
+            2;
+
+    }
+
+
+    return {
+        izquierda:izquierda,
+        arriba:arriba,
+        derecha:
+            anchoContenedor-
+            izquierda-
+            anchoVideo,
+        abajo:
+            altoContenedor-
+            arriba-
+            altoVideo
+    };
+
+}
+
+
+function posicionarSuperposicionesHls(video){
+
+    const rectangulo=
+        obtenerRectanguloVideo(
+            video
+        );
+
+
+    if(!rectangulo){
+
+        return;
+
+    }
+
+
+    const visor=
+        video.closest(
+            ".visor-camara-hls"
+        );
+
+
+    if(!visor){
+
+        return;
+
+    }
+
+
+    const estado=
+        visor.querySelector(
+            ".estado-visor-hls"
+        );
+
+    const marca=
+        visor.querySelector(
+            ".marca-meteocam"
+        );
+
+
+    const margen=
+        window.matchMedia(
+            "(max-width:640px)"
+        ).matches
+            ? 10
+            : 14;
+
+
+    if(estado){
+
+        estado.style.left=
+            (
+                rectangulo.izquierda+
+                margen
+            )+
+            "px";
+
+        estado.style.top=
+            (
+                rectangulo.arriba+
+                margen
+            )+
+            "px";
+
+    }
+
+
+    if(marca){
+
+        marca.style.left=
+            (
+                rectangulo.izquierda+
+                margen
+            )+
+            "px";
+
+        marca.style.bottom=
+            (
+                rectangulo.abajo+
+                margen
+            )+
+            "px";
+
+    }
+
+}
+
+
+function posicionarTodasLasSuperposicionesHls(){
+
+    rejillaCamaras
+        .querySelectorAll(
+            "video[data-hls='1']"
+        )
+        .forEach(
+            video=>
+                posicionarSuperposicionesHls(
+                    video
+                )
+        );
+
+}
+
+
+/* =========================================================
    REPRODUCCIÓN HLS NATIVA
    ========================================================= */
 
@@ -1248,6 +1449,33 @@ function prepararReproductoresHls(){
                 return;
 
             }
+
+
+            video.addEventListener(
+                "loadedmetadata",
+                ()=>
+                    posicionarSuperposicionesHls(
+                        video
+                    )
+            );
+
+
+            video.addEventListener(
+                "playing",
+                ()=>
+                    posicionarSuperposicionesHls(
+                        video
+                    )
+            );
+
+
+            video.addEventListener(
+                "resize",
+                ()=>
+                    posicionarSuperposicionesHls(
+                        video
+                    )
+            );
 
 
             if(
@@ -1671,6 +1899,18 @@ selectorZona.addEventListener(
         );
 
     }
+);
+
+
+window.addEventListener(
+    "resize",
+    posicionarTodasLasSuperposicionesHls
+);
+
+
+window.addEventListener(
+    "orientationchange",
+    posicionarTodasLasSuperposicionesHls
 );
 
 
