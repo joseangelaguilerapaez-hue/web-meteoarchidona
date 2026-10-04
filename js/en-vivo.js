@@ -14,6 +14,7 @@
  * - montar el selector de zona;
  * - dibujar la zona elegida y sus cámaras;
  * - reproducir las cámaras MeteoCam mediante HLS;
+ * - superponer la marca MeteoArchidona en las cámaras propias;
  * - gestionar imágenes remotas;
  * - liberar reproductores HLS al cambiar de zona.
  */
@@ -526,6 +527,28 @@ function construirFuente(camara){
 
 
 /* =========================================================
+   MARCA METEOARCHIDONA
+   ========================================================= */
+
+function construirMarcaMeteoCam(){
+
+    return `
+        <div
+            class="marca-meteocam"
+            aria-hidden="true"
+        >
+            <img
+                src="/assets/logo-cabecera.png"
+                alt=""
+                draggable="false"
+            >
+        </div>
+    `;
+
+}
+
+
+/* =========================================================
    MEDIO HLS
    ========================================================= */
 
@@ -543,6 +566,8 @@ function construirMedioHls(
             >
                 ${escaparHtml(camara.estado)}
             </div>
+
+            ${construirMarcaMeteoCam()}
 
             <div
                 class="media-error"
