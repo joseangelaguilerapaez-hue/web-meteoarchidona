@@ -450,12 +450,6 @@ a{
         );
 }
 
-/*
- * La lista desplegada la dibuja el sistema, no esta hoja.
- *
- * Cada <option> lleva sus propios colores para evitar texto
- * blanco sobre fondo blanco en determinados navegadores.
- */
 .selector-control select option{
     background:#0f2438;
     color:var(--white);
@@ -589,14 +583,6 @@ a{
     background:#000;
 }
 
-/*
- * No utilizar "cover" en las MeteoCam.
- *
- * La panorámica de Los Llanos es mucho más ancha que 16:9.
- * "cover" recortaría los extremos de la imagen.
- *
- * "contain" garantiza que siempre pueda verse el encuadre completo.
- */
 .visor-camara-hls video{
     position:relative;
     z-index:1;
@@ -604,13 +590,43 @@ a{
     background:#000;
 }
 
-/*
- * Los controles nativos quedan disponibles porque el visitante
- * puede querer pausar, ampliar a pantalla completa o reanudar
- * una emisión que el navegador no haya podido iniciar solo.
- */
 .visor-camara-hls video:focus{
     outline:none;
+}
+
+
+/* =========================================================
+   MARCA METEOARCHIDONA
+   ========================================================= */
+
+.marca-meteocam{
+    position:absolute;
+    z-index:4;
+    left:14px;
+    bottom:14px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    pointer-events:none;
+    user-select:none;
+    opacity:.90;
+}
+
+.marca-meteocam img{
+    display:block;
+    width:auto;
+    height:34px;
+    max-width:140px;
+    object-fit:contain;
+    filter:
+        drop-shadow(
+            0 2px 4px
+            rgba(0,0,0,.78)
+        )
+        drop-shadow(
+            0 0 8px
+            rgba(0,0,0,.42)
+        );
 }
 
 
@@ -968,6 +984,17 @@ a{
             calc(100% - 24px);
         padding:7px 9px;
         font-size:.63rem;
+    }
+
+    .marca-meteocam{
+        left:10px;
+        bottom:10px;
+        opacity:.88;
+    }
+
+    .marca-meteocam img{
+        height:28px;
+        max-width:112px;
     }
 
     .cuerpo-camara{
