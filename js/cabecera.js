@@ -29,7 +29,8 @@
 
 
 
-const RUTA_CABECERA = "/componentes/cabecera.html";
+const RUTA_CABECERA =
+    "/componentes/cabecera.html?v=20261005-vps1";
 
 
 /* ==========================================================
