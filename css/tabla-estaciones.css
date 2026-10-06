@@ -157,7 +157,7 @@ body {
 
     transition:
         background-color 160ms ease,
-        box-shadow 160ms ease;
+        color 160ms ease;
 }
 
 
@@ -167,9 +167,7 @@ body {
 
 
 .tabla-estaciones tbody tr:hover td {
-    box-shadow:
-        inset 0 0 0 999px
-        rgba(255, 255, 255, 0.025);
+    filter: brightness(1.05);
 }
 
 
@@ -201,162 +199,91 @@ body {
 
 
 /*
- * Azul
- *
- * Temperatura muy baja.
- * Humedad muy alta.
- * Presión baja.
- * Lluvia moderada.
+ * Fondo completo de celda.
+ * Se usan tonos semitransparentes para mantener legibilidad.
  */
+
+
 .meteo-azul {
     background:
         rgba(
             59,
             158,
             255,
-            0.20
+            0.26
         ) !important;
-
-    box-shadow:
-        inset 3px 0
-        #3b9eff;
 }
 
 
-/*
- * Cian
- *
- * Temperatura fría.
- * Humedad alta.
- * Presión moderadamente baja.
- * Lluvia débil.
- */
 .meteo-cian {
     background:
         rgba(
             54,
             213,
             255,
-            0.16
+            0.23
         ) !important;
-
-    box-shadow:
-        inset 3px 0
-        #36d5ff;
 }
 
 
-/*
- * Verde
- *
- * Valores meteorológicos cómodos o normales.
- */
 .meteo-verde {
     background:
         rgba(
             34,
             197,
             94,
-            0.15
+            0.22
         ) !important;
-
-    box-shadow:
-        inset 3px 0
-        #22c55e;
 }
 
 
-/*
- * Ámbar
- *
- * Valores cálidos, secos, altos o moderados.
- */
 .meteo-ambar {
     background:
         rgba(
             242,
             191,
             88,
-            0.17
+            0.24
         ) !important;
-
-    box-shadow:
-        inset 3px 0
-        #f2bf58;
 }
 
 
-/*
- * Naranja
- *
- * Valores meteorológicos fuertes.
- */
 .meteo-naranja {
     background:
         rgba(
             249,
             115,
             22,
-            0.20
+            0.27
         ) !important;
-
-    box-shadow:
-        inset 3px 0
-        #f97316;
 }
 
 
-/*
- * Rojo
- *
- * Valores meteorológicos muy fuertes o extremos.
- */
 .meteo-rojo {
     background:
         rgba(
             239,
             68,
             68,
-            0.23
+            0.30
         ) !important;
-
-    box-shadow:
-        inset 3px 0
-        #ef4444;
 }
 
 
-/*
- * Gris
- *
- * Calma o dato no disponible.
- */
 .meteo-gris {
     background:
         rgba(
             129,
             148,
             170,
-            0.14
+            0.20
         ) !important;
-
-    box-shadow:
-        inset 3px 0
-        #8194aa;
 }
 
 
-/*
- * Neutro
- *
- * Sin lluvia.
- */
 .meteo-neutro {
     background:
         var(--surface, #0d1520) !important;
-
-    box-shadow:
-        none;
 }
 
 
@@ -488,7 +415,7 @@ body {
 
 
 .leyenda-cromatica-contenido {
-    padding: 10px;
+    padding: 8px;
 }
 
 
@@ -509,7 +436,7 @@ body {
             )
         );
 
-    gap: 8px;
+    gap: 6px;
 }
 
 
@@ -518,7 +445,7 @@ body {
 
     flex-direction: column;
 
-    gap: 8px;
+    gap: 6px;
 
     min-width: 0;
 }
@@ -552,9 +479,9 @@ body {
 .leyenda-grupo-filas {
     display: grid;
 
-    gap: 3px;
+    gap: 2px;
 
-    margin-top: 3px;
+    margin-top: 2px;
 }
 
 
@@ -562,17 +489,17 @@ body {
     display: grid;
 
     grid-template-columns:
-        30px
+        28px
         minmax(
-            76px,
-            0.75fr
+            72px,
+            0.72fr
         )
         minmax(
-            88px,
+            86px,
             1fr
         );
 
-    gap: 3px;
+    gap: 2px;
 
     min-width: 0;
 
@@ -602,7 +529,7 @@ body {
 
 .leyenda-rango,
 .leyenda-significado {
-    padding: 4px 7px;
+    padding: 4px 6px;
 
     background:
         var(--card-soft, #0d1a27);
@@ -680,7 +607,7 @@ body {
 
 .leyenda-nota {
     margin:
-        9px
+        8px
         2px
         0;
 
@@ -697,7 +624,7 @@ body {
    ========================================================== */
 
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
 
     .leyenda-rejilla {
         grid-template-columns:
@@ -708,35 +635,6 @@ body {
                     1fr
                 )
             );
-
-        gap: 7px;
-    }
-
-
-    .leyenda-cromatica-contenido {
-        padding: 8px;
-    }
-
-
-    .leyenda-fila {
-        grid-template-columns:
-            26px
-            minmax(
-                68px,
-                0.8fr
-            )
-            minmax(
-                76px,
-                1fr
-            );
-    }
-
-
-    .leyenda-rango,
-    .leyenda-significado {
-        padding: 4px 5px;
-
-        font-size: 9px;
     }
 
 }
@@ -776,39 +674,59 @@ body {
         font-size: 12px;
     }
 
-}
 
+    .leyenda-cromatica-contenido {
+        padding: 6px;
+    }
 
-/*
- * Salvavidas para pantallas extremadamente estrechas.
- *
- * El diseño normal de móvil mantiene dos columnas.
- */
-@media (max-width: 390px) {
 
     .leyenda-rejilla {
         grid-template-columns:
-            1fr;
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+
+        gap: 4px;
+    }
+
+
+    .leyenda-columna {
+        gap: 4px;
+    }
+
+
+    .leyenda-grupo-filas {
+        gap: 2px;
     }
 
 
     .leyenda-fila {
         grid-template-columns:
-            28px
+            24px
             minmax(
-                86px,
-                0.75fr
+                58px,
+                0.68fr
             )
             minmax(
-                100px,
+                66px,
                 1fr
             );
+
+        gap: 2px;
+
+        min-height: 26px;
     }
 
 
     .leyenda-rango,
     .leyenda-significado {
-        font-size: 9.5px;
+        padding: 3px 4px;
+
+        font-size: 8.5px;
     }
 
 }
