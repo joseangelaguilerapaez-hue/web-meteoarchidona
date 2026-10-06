@@ -9,6 +9,7 @@
  *
  * - tabla dinámica de estaciones;
  * - presentación compacta;
+ * - distribución porcentual de columnas;
  * - coloración meteorológica de celdas;
  * - leyenda cromática desplegable;
  * - rejilla responsive de la leyenda.
@@ -101,25 +102,23 @@ body {
 .tabla-estaciones {
     width: 100%;
 
-    /*
-     * La versión inicial necesitaba 790 px.
-     *
-     * Los nombres compactos permiten reducir notablemente
-     * el ancho sin perjudicar la lectura.
-     */
-    min-width: 640px;
-
     border-collapse: collapse;
 
-    table-layout: auto;
+    /*
+     * Las columnas se reparten exactamente el ancho disponible.
+     *
+     * No existe ya un min-width general que obligue a la tabla
+     * a ser más ancha que el visor en pantallas pequeñas.
+     */
+    table-layout: fixed;
 }
 
 
 .tabla-estaciones th,
 .tabla-estaciones td {
     padding:
-        7px
-        8px;
+        6px
+        4px;
 
     border-bottom:
         1px solid
@@ -138,12 +137,12 @@ body {
     color:
         var(--text-soft, #c9d6e5);
 
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 700;
 
     line-height: 1.1;
 
-    letter-spacing: 0.025em;
+    letter-spacing: 0.015em;
 
     text-align: center;
     text-transform: uppercase;
@@ -163,7 +162,7 @@ body {
     color:
         var(--text, #f6f8fb);
 
-    font-size: 11.5px;
+    font-size: 11px;
     line-height: 1.15;
 
     font-variant-numeric:
@@ -182,13 +181,71 @@ body {
 
 
 /* ==========================================================
+   DISTRIBUCIÓN PORCENTUAL DE COLUMNAS
+   ========================================================== */
+
+
+/*
+ * Total: 100 %
+ *
+ * Estación      14 %
+ * Temperatura   13 %
+ * Humedad       11 %
+ * Presión       14 %
+ * Viento        20 %
+ * Lluvia día    14 %
+ * Lluvia mes    14 %
+ */
+
+
+.tabla-estaciones th:nth-child(1),
+.tabla-estaciones td:nth-child(1) {
+    width: 14%;
+}
+
+
+.tabla-estaciones th:nth-child(2),
+.tabla-estaciones td:nth-child(2) {
+    width: 13%;
+}
+
+
+.tabla-estaciones th:nth-child(3),
+.tabla-estaciones td:nth-child(3) {
+    width: 11%;
+}
+
+
+.tabla-estaciones th:nth-child(4),
+.tabla-estaciones td:nth-child(4) {
+    width: 14%;
+}
+
+
+.tabla-estaciones th:nth-child(5),
+.tabla-estaciones td:nth-child(5) {
+    width: 20%;
+}
+
+
+.tabla-estaciones th:nth-child(6),
+.tabla-estaciones td:nth-child(6) {
+    width: 14%;
+}
+
+
+.tabla-estaciones th:nth-child(7),
+.tabla-estaciones td:nth-child(7) {
+    width: 14%;
+}
+
+
+/* ==========================================================
    COLUMNAS
    ========================================================== */
 
 
 .tabla-estaciones-nombre {
-    min-width: 92px;
-
     background:
         var(--tabla-neutro) !important;
 
@@ -196,16 +253,20 @@ body {
         var(--text, #f6f8fb) !important;
 
     font-weight: 700;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
 }
 
 
 .tabla-estaciones-valor {
-    min-width: 72px;
+    min-width: 0;
 }
 
 
 .tabla-estaciones-viento {
-    min-width: 108px;
+    min-width: 0;
 }
 
 
@@ -647,41 +708,34 @@ body {
     }
 
 
-    .tabla-estaciones {
-        min-width: 620px;
-    }
-
-
+    /*
+     * La tabla continúa ocupando exactamente el 100 %.
+     *
+     * En móvil reducimos solo tipografía y padding.
+     * No volvemos a introducir ningún ancho mínimo.
+     */
     .tabla-estaciones th,
     .tabla-estaciones td {
         padding:
-            6px
-            7px;
+            5px
+            2px;
     }
 
 
     .tabla-estaciones th {
-        font-size: 9px;
+        font-size: 8px;
+
+        letter-spacing: 0;
     }
 
 
     .tabla-estaciones td {
-        font-size: 10.5px;
+        font-size: 9.5px;
     }
 
 
     .tabla-estaciones-nombre {
-        min-width: 82px;
-    }
-
-
-    .tabla-estaciones-valor {
-        min-width: 68px;
-    }
-
-
-    .tabla-estaciones-viento {
-        min-width: 102px;
+        font-size: 9.5px;
     }
 
 
