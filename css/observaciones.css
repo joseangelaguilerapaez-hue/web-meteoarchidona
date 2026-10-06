@@ -6,19 +6,11 @@
  *
  *     pages/observaciones.html
  *
- * Estructura principal:
+ * Orden principal:
  *
- * - Vistazo general
- *     - título
- *     - tabla de estaciones
- *
- * - Visor de Seguimiento
+ * 1. Visor de Seguimiento.
+ * 2. Vistazo general.
  */
-
-
-/* ==========================================================
-   BASE
-   ========================================================== */
 
 
 * {
@@ -163,17 +155,52 @@ body {
 
 
 /* ==========================================================
+   VISOR
+   ========================================================== */
+
+
+/*
+ * Primera posición de la rejilla.
+ *
+ * No necesita título propio porque la pestaña ya identifica
+ * claramente esta sección como Seguimiento.
+ */
+.visor-contenedor {
+    width: 100%;
+
+    height: 100vh;
+    height: 100dvh;
+
+    min-height: 620px;
+
+    background: #071019;
+}
+
+
+.observaciones {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+
+    background: #071019;
+}
+
+
+/* ==========================================================
    VISTAZO GENERAL
    ========================================================== */
 
 
 /*
- * Primera posición de la rejilla principal.
+ * Segunda posición de la rejilla.
  *
- * Internamente utiliza dos filas:
+ * El bloque contiene:
  *
- * 1. título;
- * 2. tabla de estaciones.
+ * 1. título "Vistazo general";
+ * 2. tabla compacta de estaciones.
  */
 .vistazo-general {
     display: grid;
@@ -194,9 +221,9 @@ body {
         );
 
     margin:
+        0
         14px
-        14px
-        0;
+        14px;
 
     overflow: hidden;
 
@@ -229,13 +256,13 @@ body {
 
     align-items: center;
 
-    min-height: 48px;
+    min-height: 42px;
 
     margin: 0;
 
     padding:
-        11px
-        16px;
+        9px
+        13px;
 
     border-bottom:
         1px solid
@@ -247,13 +274,13 @@ body {
 
     font-size:
         clamp(
-            16px,
-            3vw,
-            21px
+            14px,
+            2.7vw,
+            18px
         );
 
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.1;
     letter-spacing: 0.025em;
 
     text-transform: uppercase;
@@ -265,46 +292,24 @@ body {
    ========================================================== */
 
 
+/*
+ * La tabla interior se ha compactado considerablemente.
+ *
+ * Este alto deja visible:
+ *
+ * - cabecera;
+ * - cinco estaciones;
+ * - estado de actualización;
+ * - leyenda plegada.
+ *
+ * Si la leyenda se despliega, el contenido adicional queda
+ * dentro de este componente sin afectar al visor superior.
+ */
 .tabla-estaciones-iframe {
     display: block;
 
     width: 100%;
-    height: 470px;
-
-    border: 0;
-
-    background: #071019;
-}
-
-
-/* ==========================================================
-   VISOR
-   ========================================================== */
-
-
-/*
- * Segunda posición de la rejilla.
- *
- * El visor conserva aproximadamente una pantalla completa
- * para que el mapa no pierda superficie útil.
- */
-.visor-contenedor {
-    width: 100%;
-
-    height: 100vh;
-    height: 100dvh;
-
-    min-height: 620px;
-
-    background: #071019;
-}
-
-
-.observaciones {
-    display: block;
-
-    width: 100%;
-    height: 100%;
+    height: 330px;
 
     border: 0;
 
@@ -346,11 +351,11 @@ body {
 
 
 /*
- * El h1 de la página permanece en el documento para buscadores
- * y lectores de pantalla.
+ * El h1 permanece en el documento para buscadores y lectores
+ * de pantalla.
  *
- * No se muestra visualmente porque Seguimiento dispone de sus
- * propios títulos funcionales dentro del contenido.
+ * Visualmente no se muestra porque la propia pestaña y el visor
+ * ya identifican Seguimiento.
  */
 .cabecera-observaciones {
     position: absolute;
@@ -389,6 +394,11 @@ body {
     }
 
 
+    .visor-contenedor {
+        min-height: 620px;
+    }
+
+
     .vistazo-general {
         width:
             calc(
@@ -396,36 +406,27 @@ body {
             );
 
         margin:
+            0
             10px
-            10px
-            0;
+            10px;
 
         border-radius: 10px;
     }
 
 
     .vistazo-general-titulo {
-        min-height: 44px;
+        min-height: 38px;
 
         padding:
-            10px
-            12px;
+            8px
+            10px;
 
-        font-size: 16px;
+        font-size: 14px;
     }
 
 
-    /*
-     * En móvil la tabla necesita algo más de altura por la
-     * disposición responsive de su contenido y su leyenda.
-     */
     .tabla-estaciones-iframe {
-        height: 540px;
-    }
-
-
-    .visor-contenedor {
-        min-height: 620px;
+        height: 300px;
     }
 
 }
@@ -438,14 +439,14 @@ body {
 
 @media (max-height: 560px) {
 
-    .tabla-estaciones-iframe {
-        height: 500px;
-    }
-
-
     .visor-contenedor {
         height: 560px;
         min-height: 560px;
+    }
+
+
+    .tabla-estaciones-iframe {
+        height: 290px;
     }
 
 }
