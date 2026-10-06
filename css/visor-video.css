@@ -4,7 +4,7 @@
  *
  * Estilos exclusivos de:
  *
- *     componentes/visor-video.html
+ *     visores/video.html
  *
  * El componente:
  *
@@ -130,7 +130,7 @@ body {
 
     align-items: center;
 
-    gap: 8px;
+    gap: 10px;
 
     max-width:
         calc(
@@ -142,18 +142,22 @@ body {
             255,
             255,
             255,
-            0.90
+            0.96
         );
 
     font-family:
         "JetBrains Mono",
         monospace;
 
+    /*
+     * El tamaño se aproxima visualmente al reloj
+     * sobreimpreso por la propia cámara.
+     */
     font-size:
         clamp(
-            9px,
-            1.2vw,
-            13px
+            14px,
+            1.55vw,
+            20px
         );
 
     font-weight: 600;
@@ -170,21 +174,21 @@ body {
             0,
             0,
             0,
-            0.95
+            0.98
         ),
         0 0 5px
         rgba(
             0,
             0,
             0,
-            0.90
+            0.92
         ),
         0 0 12px
         rgba(
             0,
             0,
             0,
-            0.72
+            0.78
         );
 
     pointer-events: none;
@@ -205,14 +209,14 @@ body {
 .visor-video-meteo-dato + .visor-video-meteo-dato::before {
     content: "·";
 
-    margin-right: 8px;
+    margin-right: 10px;
 
     color:
         rgba(
             255,
             255,
             255,
-            0.55
+            0.70
         );
 }
 
@@ -404,8 +408,23 @@ body {
 
     z-index: 7;
 
-    right: 12px;
+    /*
+     * Los controles se sitúan en el centro inferior del visor.
+     *
+     * El JavaScript heredado todavía calcula dinámicamente
+     * una coordenada right. La anulamos aquí porque el vídeo
+     * siempre está centrado mediante object-fit: contain.
+     */
+    left: 50%;
+
+    right: auto !important;
+
     bottom: 12px;
+
+    transform:
+        translateX(
+            -50%
+        );
 
     display: flex;
 
@@ -692,9 +711,9 @@ body {
 .visor-video-meteo {
     font-size:
         clamp(
-            12px,
-            1.2vw,
-            17px
+            16px,
+            1.6vw,
+            22px
         );
 }
 
@@ -739,19 +758,19 @@ body {
         top: 8px;
         left: 8px;
 
-        gap: 5px;
+        gap: 6px;
 
         font-size:
             clamp(
-                8px,
-                2.35vw,
-                10px
+                11px,
+                3.2vw,
+                15px
             );
     }
 
 
     .visor-video-meteo-dato + .visor-video-meteo-dato::before {
-        margin-right: 5px;
+        margin-right: 6px;
     }
 
 
@@ -796,12 +815,20 @@ body {
 
 
     .visor-video-controles {
-        right: 8px;
+        left: 50%;
+
+        right: auto !important;
+
         bottom: 8px;
 
         gap: 4px;
 
         padding: 4px;
+
+        transform:
+            translateX(
+                -50%
+            );
     }
 
 
@@ -825,7 +852,7 @@ body {
     .visor-video-meteo {
         gap: 4px;
 
-        font-size: 7.5px;
+        font-size: 10.5px;
     }
 
 
