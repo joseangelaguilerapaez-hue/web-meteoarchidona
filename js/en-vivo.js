@@ -13,11 +13,10 @@
  * - guardar el catálogo de zonas y cámaras;
  * - montar el selector de zona;
  * - dibujar la zona elegida y sus cámaras;
- * - reproducir las cámaras MeteoCam mediante HLS;
- * - superponer la marca MeteoArchidona en las cámaras propias;
- * - anclar la marca y el estado al rectángulo real del vídeo;
+ * - integrar las cámaras propias mediante el visor reutilizable;
+ * - mantener los reproductores externos mediante iframe;
  * - gestionar imágenes remotas;
- * - liberar reproductores HLS al cambiar de zona.
+ * - refrescar periódicamente webcams JPEG.
  */
 
 
@@ -56,22 +55,22 @@ const zonas={
                 tipo:
                     "METEOCAM · PANORÁMICA",
 
-                estado:
-                    "CONECTANDO",
-
-                estadoClase:
-                    "",
-
                 descripcion:
                     "Vista panorámica de Los Llanos para observar de forma " +
                     "continua el estado general del cielo, la nubosidad, " +
                     "la visibilidad y la evolución del tiempo en el entorno.",
 
                 medio:
-                    "hls",
+                    "visor-video",
 
-                src:
-                    "/live/los-llanos/panoramica/index.m3u8",
+                visorCamara:
+                    "los-llanos",
+
+                visorVista:
+                    "panoramica",
+
+                interactivo:
+                    true,
 
                 fuenteNombre:
                     "MeteoArchidona",
@@ -91,12 +90,6 @@ const zonas={
                 tipo:
                     "METEOCAM · ESPECÍFICA",
 
-                estado:
-                    "CONECTANDO",
-
-                estadoClase:
-                    "",
-
                 descripcion:
                     "Vista específica de Los Llanos orientada a un sector " +
                     "concreto del entorno. Complementa la panorámica para " +
@@ -104,10 +97,16 @@ const zonas={
                     "y los cambios meteorológicos.",
 
                 medio:
-                    "hls",
+                    "visor-video",
 
-                src:
-                    "/live/los-llanos/ptz/index.m3u8",
+                visorCamara:
+                    "los-llanos",
+
+                visorVista:
+                    "ptz",
+
+                interactivo:
+                    true,
 
                 fuenteNombre:
                     "MeteoArchidona",
@@ -433,8 +432,6 @@ const notaProveedor=
 
 let temporizadorImagenes=null;
 
-let reproductoresHls=[];
-
 
 /* =========================================================
    UTILIDADES
@@ -528,82 +525,51 @@ function construirFuente(camara){
 
 
 /* =========================================================
-   MARCA METEOARCHIDONA
+   VISOR DE VÍDEO METEOARCHIDONA
    ========================================================= */
 
-function construirMarcaMeteoCam(){
+function construirUrlVisorVideo(camara){
 
-    return `
-        <div
-            class="marca-meteocam"
-            aria-hidden="true"
-        >
-            <img
-                src="/assets/logo-cabecera.png"
-                alt=""
-                draggable="false"
-            >
-        </div>
-    `;
+    const parametros=
+        new URLSearchParams({
+            camara:
+                camara.visorCamara,
+            vista:
+                camara.visorVista,
+            interactivo:
+                camara.interactivo===false
+                    ? "0"
+                    : "1"
+        });
+
+
+    return (
+        "../visores/video.html?"+
+        parametros.toString()
+    );
 
 }
 
 
-/* =========================================================
-   MEDIO HLS
-   ========================================================= */
+function construirMedioVisorVideo(camara){
 
-function construirMedioHls(
-    camara,
-    indice
-){
+    const src=
+        construirUrlVisorVideo(
+            camara
+        );
+
 
     return `
-        <div class="visor-camara visor-camara-hls">
+        <div class="visor-camara visor-camara-propia">
 
-            <div
-                class="estado-visor estado-visor-hls"
-                id="estado-hls-${indice}"
-            >
-                ${escaparHtml(camara.estado)}
-            </div>
-
-            ${construirMarcaMeteoCam()}
-
-            <div
-                class="media-error"
-                id="error-hls-${indice}"
-            >
-
-                <div>
-
-                    <strong>
-                        Emisión no disponible
-                    </strong>
-
-                    <span
-                        id="mensaje-error-hls-${indice}"
-                    >
-                        No se puede reproducir
-                        esta cámara en este momento.
-                    </span>
-
-                </div>
-
-            </div>
-
-            <video
-                id="video-hls-${indice}"
-                data-hls="1"
-                data-indice="${indice}"
-                data-stream-src="${escaparHtml(camara.src)}"
-                aria-label="${escaparHtml(camara.nombre)}"
-                controls
-                autoplay
-                muted
-                playsinline
-                preload="metadata"
-            ></video>
+            <iframe
+                class="iframe-visor-video"
+                src="${escaparHtml(src)}"
+                title="${escaparHtml(camara.nombre)}"
+                loading="eager"
+                allow="autoplay; fullscreen"
+                allowfullscreen
+            ></iframe>
 
         </div>
     `;
@@ -620,11 +586,10 @@ function construirMedio(
     indice
 ){
 
-    if(camara.medio==="hls"){
+    if(camara.medio==="visor-video"){
 
-        return construirMedioHls(
-            camara,
-            indice
+        return construirMedioVisorVideo(
+            camara
         );
 
     }
@@ -770,760 +735,6 @@ function construirTarjeta(
 
         </article>
     `;
-
-}
-
-
-/* =========================================================
-   ESTADO HLS
-   ========================================================= */
-
-function obtenerEstadoHls(indice){
-
-    return document.getElementById(
-        "estado-hls-"+indice
-    );
-
-}
-
-
-function establecerEstadoHls(
-    indice,
-    texto
-){
-
-    const elemento=
-        obtenerEstadoHls(
-            indice
-        );
-
-    if(!elemento){
-        return;
-    }
-
-    elemento.textContent=
-        texto;
-
-}
-
-
-function mostrarErrorHls(
-    indice,
-    mensaje
-){
-
-    const error=
-        document.getElementById(
-            "error-hls-"+indice
-        );
-
-    const mensajeError=
-        document.getElementById(
-            "mensaje-error-hls-"+indice
-        );
-
-
-    if(mensajeError){
-
-        mensajeError.textContent=
-            mensaje;
-
-    }
-
-
-    if(error){
-
-        error.classList.add(
-            "visible"
-        );
-
-    }
-
-}
-
-
-function ocultarErrorHls(indice){
-
-    const error=
-        document.getElementById(
-            "error-hls-"+indice
-        );
-
-
-    if(error){
-
-        error.classList.remove(
-            "visible"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   DESTRUCCIÓN DE REPRODUCTORES HLS
-   ========================================================= */
-
-function destruirReproductoresHls(){
-
-    reproductoresHls.forEach(
-        reproductor=>{
-
-            if(reproductor.hls){
-
-                try{
-
-                    reproductor.hls.destroy();
-
-                }catch(error){
-
-                    console.debug(
-                        "No se pudo destruir un reproductor HLS.",
-                        error
-                    );
-
-                }
-
-            }
-
-
-            if(reproductor.video){
-
-                try{
-
-                    reproductor.video.pause();
-
-                    reproductor.video.removeAttribute(
-                        "src"
-                    );
-
-                    reproductor.video.load();
-
-                }catch(error){
-
-                    console.debug(
-                        "No se pudo liberar un elemento de vídeo.",
-                        error
-                    );
-
-                }
-
-            }
-
-        }
-    );
-
-
-    reproductoresHls=[];
-
-}
-
-
-/* =========================================================
-   POSICIÓN DE SUPERPOSICIONES HLS
-   ========================================================= */
-
-function obtenerRectanguloVideo(video){
-
-    const anchoContenedor=
-        video.clientWidth;
-
-    const altoContenedor=
-        video.clientHeight;
-
-
-    if(
-        !anchoContenedor ||
-        !altoContenedor ||
-        !video.videoWidth ||
-        !video.videoHeight
-    ){
-
-        return null;
-
-    }
-
-
-    const proporcionContenedor=
-        anchoContenedor/
-        altoContenedor;
-
-    const proporcionVideo=
-        video.videoWidth/
-        video.videoHeight;
-
-
-    let anchoVideo;
-    let altoVideo;
-    let izquierda;
-    let arriba;
-
-
-    if(proporcionVideo>proporcionContenedor){
-
-        anchoVideo=
-            anchoContenedor;
-
-        altoVideo=
-            anchoContenedor/
-            proporcionVideo;
-
-        izquierda=
-            0;
-
-        arriba=
-            (
-                altoContenedor-
-                altoVideo
-            )/
-            2;
-
-    }else{
-
-        altoVideo=
-            altoContenedor;
-
-        anchoVideo=
-            altoContenedor*
-            proporcionVideo;
-
-        arriba=
-            0;
-
-        izquierda=
-            (
-                anchoContenedor-
-                anchoVideo
-            )/
-            2;
-
-    }
-
-
-    return {
-        izquierda:izquierda,
-        arriba:arriba,
-        derecha:
-            anchoContenedor-
-            izquierda-
-            anchoVideo,
-        abajo:
-            altoContenedor-
-            arriba-
-            altoVideo
-    };
-
-}
-
-
-function posicionarSuperposicionesHls(video){
-
-    const rectangulo=
-        obtenerRectanguloVideo(
-            video
-        );
-
-
-    if(!rectangulo){
-
-        return;
-
-    }
-
-
-    const visor=
-        video.closest(
-            ".visor-camara-hls"
-        );
-
-
-    if(!visor){
-
-        return;
-
-    }
-
-
-    const estado=
-        visor.querySelector(
-            ".estado-visor-hls"
-        );
-
-    const marca=
-        visor.querySelector(
-            ".marca-meteocam"
-        );
-
-
-    const margen=
-        window.matchMedia(
-            "(max-width:640px)"
-        ).matches
-            ? 10
-            : 14;
-
-
-    if(estado){
-
-        estado.style.left=
-            (
-                rectangulo.izquierda+
-                margen
-            )+
-            "px";
-
-        estado.style.top=
-            (
-                rectangulo.arriba+
-                margen
-            )+
-            "px";
-
-    }
-
-
-    if(marca){
-
-        marca.style.left=
-            (
-                rectangulo.izquierda+
-                margen
-            )+
-            "px";
-
-        marca.style.bottom=
-            (
-                rectangulo.abajo+
-                margen
-            )+
-            "px";
-
-    }
-
-}
-
-
-function posicionarTodasLasSuperposicionesHls(){
-
-    rejillaCamaras
-        .querySelectorAll(
-            "video[data-hls='1']"
-        )
-        .forEach(
-            video=>
-                posicionarSuperposicionesHls(
-                    video
-                )
-        );
-
-}
-
-
-/* =========================================================
-   REPRODUCCIÓN HLS NATIVA
-   ========================================================= */
-
-function prepararHlsNativo(
-    video,
-    indice,
-    streamUrl
-){
-
-    reproductoresHls.push({
-        hls:null,
-        video:video
-    });
-
-
-    establecerEstadoHls(
-        indice,
-        "CONECTANDO"
-    );
-
-
-    video.addEventListener(
-        "loadedmetadata",
-        ()=>{
-
-            ocultarErrorHls(
-                indice
-            );
-
-
-            establecerEstadoHls(
-                indice,
-                "VÍDEO EN DIRECTO"
-            );
-
-
-            video.play()
-                .catch(
-                    ()=>{
-
-                        establecerEstadoHls(
-                            indice,
-                            "PULSA PLAY"
-                        );
-
-                    }
-                );
-
-        }
-    );
-
-
-    video.addEventListener(
-        "playing",
-        ()=>{
-
-            ocultarErrorHls(
-                indice
-            );
-
-
-            establecerEstadoHls(
-                indice,
-                "VÍDEO EN DIRECTO"
-            );
-
-        }
-    );
-
-
-    video.addEventListener(
-        "error",
-        ()=>{
-
-            establecerEstadoHls(
-                indice,
-                "SIN EMISIÓN"
-            );
-
-
-            mostrarErrorHls(
-                indice,
-                "La emisión no está disponible en este momento."
-            );
-
-        }
-    );
-
-
-    video.src=
-        streamUrl;
-
-}
-
-
-/* =========================================================
-   REPRODUCCIÓN CON HLS.JS
-   ========================================================= */
-
-function prepararHlsJs(
-    video,
-    indice,
-    streamUrl
-){
-
-    const hls=
-        new window.Hls({
-
-            liveSyncDurationCount:
-                2,
-
-            liveMaxLatencyDurationCount:
-                5,
-
-            enableWorker:
-                true
-
-        });
-
-
-    reproductoresHls.push({
-        hls:hls,
-        video:video
-    });
-
-
-    establecerEstadoHls(
-        indice,
-        "CONECTANDO"
-    );
-
-
-    hls.loadSource(
-        streamUrl
-    );
-
-
-    hls.attachMedia(
-        video
-    );
-
-
-    hls.on(
-        window.Hls.Events.MANIFEST_PARSED,
-        ()=>{
-
-            ocultarErrorHls(
-                indice
-            );
-
-
-            establecerEstadoHls(
-                indice,
-                "VÍDEO EN DIRECTO"
-            );
-
-
-            video.play()
-                .catch(
-                    ()=>{
-
-                        establecerEstadoHls(
-                            indice,
-                            "PULSA PLAY"
-                        );
-
-                    }
-                );
-
-        }
-    );
-
-
-    hls.on(
-        window.Hls.Events.ERROR,
-        (
-            event,
-            data
-        )=>{
-
-            if(!data.fatal){
-
-                return;
-
-            }
-
-
-            if(
-                data.type===
-                window.Hls.ErrorTypes.NETWORK_ERROR
-            ){
-
-                establecerEstadoHls(
-                    indice,
-                    "RECONECTANDO"
-                );
-
-
-                try{
-
-                    hls.startLoad();
-
-                }catch(error){
-
-                    console.debug(
-                        "No se pudo reiniciar la carga HLS.",
-                        error
-                    );
-
-                }
-
-
-                return;
-
-            }
-
-
-            if(
-                data.type===
-                window.Hls.ErrorTypes.MEDIA_ERROR
-            ){
-
-                establecerEstadoHls(
-                    indice,
-                    "RECUPERANDO VÍDEO"
-                );
-
-
-                try{
-
-                    hls.recoverMediaError();
-
-                }catch(error){
-
-                    console.debug(
-                        "No se pudo recuperar el vídeo HLS.",
-                        error
-                    );
-
-                }
-
-
-                return;
-
-            }
-
-
-            establecerEstadoHls(
-                indice,
-                "SIN EMISIÓN"
-            );
-
-
-            mostrarErrorHls(
-                indice,
-                "La emisión no puede reproducirse en este momento."
-            );
-
-
-            try{
-
-                hls.destroy();
-
-            }catch(error){
-
-                console.debug(
-                    "No se pudo destruir el reproductor HLS tras un error.",
-                    error
-                );
-
-            }
-
-        }
-    );
-
-
-    video.addEventListener(
-        "playing",
-        ()=>{
-
-            ocultarErrorHls(
-                indice
-            );
-
-
-            establecerEstadoHls(
-                indice,
-                "VÍDEO EN DIRECTO"
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   PREPARACIÓN DE REPRODUCTORES HLS
-   ========================================================= */
-
-function prepararReproductoresHls(){
-
-    const videos=
-        rejillaCamaras.querySelectorAll(
-            "video[data-hls='1']"
-        );
-
-
-    videos.forEach(
-        video=>{
-
-            const indice=
-                Number(
-                    video.dataset.indice
-                );
-
-            const streamUrl=
-                video.dataset.streamSrc;
-
-
-            if(
-                !streamUrl ||
-                Number.isNaN(indice)
-            ){
-
-                return;
-
-            }
-
-
-            video.addEventListener(
-                "loadedmetadata",
-                ()=>
-                    posicionarSuperposicionesHls(
-                        video
-                    )
-            );
-
-
-            video.addEventListener(
-                "playing",
-                ()=>
-                    posicionarSuperposicionesHls(
-                        video
-                    )
-            );
-
-
-            video.addEventListener(
-                "resize",
-                ()=>
-                    posicionarSuperposicionesHls(
-                        video
-                    )
-            );
-
-
-            if(
-                video.canPlayType(
-                    "application/vnd.apple.mpegurl"
-                )
-            ){
-
-                prepararHlsNativo(
-                    video,
-                    indice,
-                    streamUrl
-                );
-
-                return;
-
-            }
-
-
-            if(
-                window.Hls &&
-                window.Hls.isSupported()
-            ){
-
-                prepararHlsJs(
-                    video,
-                    indice,
-                    streamUrl
-                );
-
-                return;
-
-            }
-
-
-            establecerEstadoHls(
-                indice,
-                "NO COMPATIBLE"
-            );
-
-
-            mostrarErrorHls(
-                indice,
-                "Este navegador no permite reproducir emisiones HLS."
-            );
-
-        }
-    );
 
 }
 
@@ -1752,8 +963,6 @@ function renderizarZona(
         zonas[claveValida];
 
 
-    destruirReproductoresHls();
-
     detenerRefrescoImagenes();
 
 
@@ -1800,8 +1009,6 @@ function renderizarZona(
     prepararImagenes();
 
     iniciarRefrescoImagenes();
-
-    prepararReproductoresHls();
 
 
     if(actualizarDireccion){
@@ -1903,26 +1110,8 @@ selectorZona.addEventListener(
 
 
 window.addEventListener(
-    "resize",
-    posicionarTodasLasSuperposicionesHls
-);
-
-
-window.addEventListener(
-    "orientationchange",
-    posicionarTodasLasSuperposicionesHls
-);
-
-
-window.addEventListener(
     "pagehide",
-    ()=>{
-
-        destruirReproductoresHls();
-
-        detenerRefrescoImagenes();
-
-    }
+    detenerRefrescoImagenes
 );
 
 
