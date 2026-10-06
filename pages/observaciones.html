@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
 
 <meta
@@ -10,224 +8,446 @@ name="viewport"
 content="width=device-width,initial-scale=1.0,viewport-fit=cover"
 >
 
-<meta
-name="description"
-content="Seguimiento meteorológico multicapa de MeteoArchidona: estaciones, radar, satélite y rayos."
->
-
 <title>
-MeteoArchidona · Seguimiento meteorológico
+MeteoArchidona · Tabla de estaciones
 </title>
 
 
 <link
-rel="icon"
-href="/assets/icono-192.png"
-type="image/png"
-sizes="192x192"
->
-
-<link
-rel="icon"
-href="/favicon.ico"
-sizes="48x48"
->
-
-<link
-rel="apple-touch-icon"
-href="/assets/apple-touch-icon.png"
->
-
-<link rel="canonical" href="https://meteoarchidona.com/observaciones">
-
-
-<meta
-property="og:type"
-content="website"
->
-
-<meta
-property="og:site_name"
-content="MeteoArchidona"
->
-
-<meta
-property="og:locale"
-content="es_ES"
->
-
-<meta
-property="og:title"
-content="MeteoArchidona · Seguimiento meteorológico"
->
-
-<meta
-property="og:description"
-content="Seguimiento meteorológico multicapa de MeteoArchidona: estaciones, radar, satélite y rayos."
->
-
-<meta
-property="og:url"
-content="https://meteoarchidona.com/observaciones"
->
-
-<meta
-property="og:image"
-content="https://meteoarchidona.com/assets/compartir.jpg"
->
-
-<meta
-property="og:image:width"
-content="1200"
->
-
-<meta
-property="og:image:height"
-content="630"
->
-
-
-<link
 rel="stylesheet"
-href="../css/fuentes.css?v=20260913-pruebas1"
+href="../css/fuentes.css?v=20260913-fuentes1"
 >
+
 
 <link
 rel="stylesheet"
 href="../css/paleta.css?v=20260913-pruebas1"
 >
 
-<link
-rel="stylesheet"
-href="../css/cabecera.css?v=20260926-giro2"
->
 
 <link
 rel="stylesheet"
-href="../css/lluvia.css?v=20260913-pruebas1"
+href="../css/tabla-estaciones.css?v=20261006-tabla-estaciones5"
 >
-
-<link
-rel="stylesheet"
-href="../css/observaciones.css?v=20261006-vistazo1"
->
-
-
-<script
-src="../js/cabecera.js?v=20261005-vps1"
-defer
-></script>
-
-<script
-src="../js/lluvia.js?v=20260913-lluvia3"
-defer
-></script>
 
 </head>
 
 
-<body data-seccion="observaciones">
+<body>
 
 
-<div id="cabecera"></div>
+<main class="tabla-estaciones-panel">
 
 
-<header class="cabecera-observaciones">
-
-<h1>
-Seguimiento meteorológico
-</h1>
-
-<p>
-Estaciones · radar · satélite · rayos
-</p>
-
-</header>
-
-
-<main class="seguimiento-rejilla">
-
-
-<!-- ======================================================
-     VISTAZO GENERAL
-     ====================================================== -->
-
-
-<section
-class="vistazo-general"
-aria-labelledby="vistazo-general-titulo"
+<div
+class="tabla-estaciones-contenedor"
+role="region"
+aria-label="Condiciones actuales de las estaciones meteorológicas"
+tabindex="0"
 >
 
 
-<h2
-class="vistazo-general-titulo"
-id="vistazo-general-titulo"
->
-Vistazo general
-</h2>
+<table class="tabla-estaciones">
 
 
-<iframe
-class="tabla-estaciones-iframe"
-src="../componentes/tabla-estaciones.html?v=20261006-tabla-estaciones4"
-title="Vistazo general de las estaciones meteorológicas de MeteoArchidona"
-loading="eager"
->
-</iframe>
+<thead>
+
+<tr>
+
+<th scope="col">
+Estación
+</th>
+
+<th scope="col">
+Temperatura
+</th>
+
+<th scope="col">
+Humedad
+</th>
+
+<th scope="col">
+Presión
+</th>
+
+<th scope="col">
+Viento
+</th>
+
+<th scope="col">
+Lluvia hoy
+</th>
+
+<th scope="col">
+Lluvia mes
+</th>
+
+</tr>
+
+</thead>
 
 
-</section>
+<tbody id="tabla-estaciones-cuerpo">
+
+<tr class="tabla-estaciones-cargando">
+
+<td colspan="7">
+Cargando estaciones…
+</td>
+
+</tr>
+
+</tbody>
 
 
-<!-- ======================================================
-     VISOR DE SEGUIMIENTO
-     ====================================================== -->
+</table>
 
-
-<section
-class="visor-contenedor"
-aria-label="Visor meteorológico"
->
-
-
-<iframe
-class="observaciones"
-src="../visores/radar.html?v=20261005-vps1"
-title="Visor de Seguimiento meteorológico de MeteoArchidona"
-loading="eager"
->
-</iframe>
-
-
-<noscript>
-
-<div class="sin-js">
-
-<p>
-
-Para utilizar Seguimiento meteorológico necesitas JavaScript.
-
-<br>
-
-<a href="../visores/radar.html">
-Abrir Seguimiento meteorológico
-</a>
-
-</p>
 
 </div>
 
-</noscript>
 
+<p
+class="tabla-estaciones-estado"
+id="tabla-estaciones-estado"
+aria-live="polite"
+>
+Cargando datos…
+</p>
+
+
+<details class="leyenda-cromatica">
+
+<summary>
+Leyenda cromática
+</summary>
+
+
+<div class="leyenda-cromatica-contenido">
+
+
+<div class="leyenda-rejilla">
+
+
+<!-- ======================================================
+     COLUMNA 1
+     ====================================================== -->
+
+
+<div class="leyenda-columna">
+
+
+<section class="leyenda-grupo">
+
+<h3 class="leyenda-grupo-titulo">
+Temperatura
+</h3>
+
+<div class="leyenda-grupo-filas">
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color azul"></span>
+<span class="leyenda-rango">&lt; 0 °C</span>
+<span class="leyenda-significado">Frío intenso</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color cian"></span>
+<span class="leyenda-rango">0–10 °C</span>
+<span class="leyenda-significado">Frío</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color verde"></span>
+<span class="leyenda-rango">10–20 °C</span>
+<span class="leyenda-significado">Suave</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color ambar"></span>
+<span class="leyenda-rango">20–30 °C</span>
+<span class="leyenda-significado">Templado / cálido</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color naranja"></span>
+<span class="leyenda-rango">30–35 °C</span>
+<span class="leyenda-significado">Calor</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color rojo"></span>
+<span class="leyenda-rango">&gt; 35 °C</span>
+<span class="leyenda-significado">Calor fuerte</span>
+</div>
+
+
+</div>
 
 </section>
+
+
+<section class="leyenda-grupo">
+
+<h3 class="leyenda-grupo-titulo">
+Humedad
+</h3>
+
+<div class="leyenda-grupo-filas">
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color ambar"></span>
+<span class="leyenda-rango">&lt; 30 %</span>
+<span class="leyenda-significado">Muy seca</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color verde"></span>
+<span class="leyenda-rango">30–60 %</span>
+<span class="leyenda-significado">Normal</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color cian"></span>
+<span class="leyenda-rango">60–80 %</span>
+<span class="leyenda-significado">Húmeda</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color azul"></span>
+<span class="leyenda-rango">&gt; 80 %</span>
+<span class="leyenda-significado">Muy húmeda</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+</div>
+
+
+<!-- ======================================================
+     COLUMNA 2
+     ====================================================== -->
+
+
+<div class="leyenda-columna">
+
+
+<section class="leyenda-grupo">
+
+<h3 class="leyenda-grupo-titulo">
+Presión
+</h3>
+
+<div class="leyenda-grupo-filas">
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color azul"></span>
+<span class="leyenda-rango">&lt; 1000 hPa</span>
+<span class="leyenda-significado">Baja</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color cian"></span>
+<span class="leyenda-rango">1000–1015 hPa</span>
+<span class="leyenda-significado">Moderadamente baja</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color verde"></span>
+<span class="leyenda-rango">1015–1025 hPa</span>
+<span class="leyenda-significado">Normal / alta</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color ambar"></span>
+<span class="leyenda-rango">&gt; 1025 hPa</span>
+<span class="leyenda-significado">Alta</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+<section class="leyenda-grupo">
+
+<h3 class="leyenda-grupo-titulo">
+Viento
+</h3>
+
+<div class="leyenda-grupo-filas">
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color gris"></span>
+<span class="leyenda-rango">&lt; 5 km/h</span>
+<span class="leyenda-significado">Calma</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color verde"></span>
+<span class="leyenda-rango">5–20 km/h</span>
+<span class="leyenda-significado">Flojo</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color ambar"></span>
+<span class="leyenda-rango">20–40 km/h</span>
+<span class="leyenda-significado">Moderado</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color naranja"></span>
+<span class="leyenda-rango">40–60 km/h</span>
+<span class="leyenda-significado">Fuerte</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color rojo"></span>
+<span class="leyenda-rango">&gt; 60 km/h</span>
+<span class="leyenda-significado">Muy fuerte</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+</div>
+
+
+<!-- ======================================================
+     COLUMNA 3
+     ====================================================== -->
+
+
+<div class="leyenda-columna">
+
+
+<section class="leyenda-grupo">
+
+<h3 class="leyenda-grupo-titulo">
+Lluvia
+</h3>
+
+<div class="leyenda-grupo-filas">
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color neutro"></span>
+<span class="leyenda-rango">0 mm/h</span>
+<span class="leyenda-significado">Sin lluvia</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color cian"></span>
+<span class="leyenda-rango">&gt; 0 y &lt; 0,5</span>
+<span class="leyenda-significado">Débil</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color azul"></span>
+<span class="leyenda-rango">0,5–2 mm/h</span>
+<span class="leyenda-significado">Moderada</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color naranja"></span>
+<span class="leyenda-rango">2–10 mm/h</span>
+<span class="leyenda-significado">Fuerte</span>
+</div>
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color rojo"></span>
+<span class="leyenda-rango">≥ 10 mm/h</span>
+<span class="leyenda-significado">Muy fuerte</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+<section class="leyenda-grupo">
+
+<h3 class="leyenda-grupo-titulo">
+Sin dato
+</h3>
+
+<div class="leyenda-grupo-filas">
+
+
+<div class="leyenda-fila">
+<span class="leyenda-color gris"></span>
+<span class="leyenda-rango">—</span>
+<span class="leyenda-significado">No disponible</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+</div>
+
+
+</div>
+
+
+<p class="leyenda-nota">
+Las celdas de lluvia hoy y lluvia mes se colorean según la intensidad
+actual de precipitación, expresada en mm/h.
+</p>
+
+
+</div>
+
+</details>
 
 
 </main>
 
 
-</body>
+<script
+src="../js/api.js?v=20261003-vps1"
+></script>
 
+
+<script
+src="../js/tabla-estaciones.js?v=20261006-tabla-estaciones3"
+></script>
+
+
+</body>
 </html>
 
-<!-- Fin de fichero: pages/observaciones.html -->
+<!-- Fin de fichero: componentes/tabla-estaciones.html -->
