@@ -1,61 +1,236 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<meta name="description" content="Seguimiento meteorológico multicapa de MeteoArchidona: radar, satélite y rayos.">
-<title>MeteoArchidona · Seguimiento meteorológico</title>
 
-<link rel="icon" href="/assets/icono-192.png" type="image/png" sizes="192x192">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<link rel="canonical" href="https://meteoarchidona.com/observaciones">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="MeteoArchidona">
-<meta property="og:locale" content="es_ES">
-<meta property="og:title" content="MeteoArchidona · Seguimiento meteorológico">
-<meta property="og:description" content="Seguimiento meteorológico multicapa de MeteoArchidona: radar, satélite y rayos.">
-<meta property="og:url" content="https://meteoarchidona.com/observaciones">
-<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<link rel="stylesheet" href="../css/fuentes.css?v=20260913-pruebas1">
-<link rel="stylesheet" href="../css/paleta.css?v=20260913-pruebas1">
-<link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
-<link rel="stylesheet" href="../css/lluvia.css?v=20260913-pruebas1">
-<link rel="stylesheet" href="../css/observaciones.css?v=20260926-giro1">
-<script src="../js/cabecera.js?v=20261005-vps1" defer></script>
-<script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0,viewport-fit=cover"
+>
+
+<meta
+name="description"
+content="Seguimiento meteorológico multicapa de MeteoArchidona: estaciones, radar, satélite y rayos."
+>
+
+<title>
+MeteoArchidona · Seguimiento meteorológico
+</title>
+
+
+<link
+rel="icon"
+href="/assets/icono-192.png"
+type="image/png"
+sizes="192x192"
+>
+
+<link
+rel="icon"
+href="/favicon.ico"
+sizes="48x48"
+>
+
+<link
+rel="apple-touch-icon"
+href="/assets/apple-touch-icon.png"
+>
+
+<link
+rel="canonical"
+href="https://meteoarchidona.com/observaciones"
+>
+
+
+<meta
+property="og:type"
+content="website"
+>
+
+<meta
+property="og:site_name"
+content="MeteoArchidona"
+>
+
+<meta
+property="og:locale"
+content="es_ES"
+>
+
+<meta
+property="og:title"
+content="MeteoArchidona · Seguimiento meteorológico"
+>
+
+<meta
+property="og:description"
+content="Seguimiento meteorológico multicapa de MeteoArchidona: estaciones, radar, satélite y rayos."
+>
+
+<meta
+property="og:url"
+content="https://meteoarchidona.com/observaciones"
+>
+
+<meta
+property="og:image"
+content="https://meteoarchidona.com/assets/compartir.jpg"
+>
+
+<meta
+property="og:image:width"
+content="1200"
+>
+
+<meta
+property="og:image:height"
+content="630"
+>
+
+
+<link
+rel="stylesheet"
+href="../css/fuentes.css?v=20260913-pruebas1"
+>
+
+<link
+rel="stylesheet"
+href="../css/paleta.css?v=20260913-pruebas1"
+>
+
+<link
+rel="stylesheet"
+href="../css/cabecera.css?v=20260926-giro2"
+>
+
+<link
+rel="stylesheet"
+href="../css/lluvia.css?v=20260913-pruebas1"
+>
+
+<link
+rel="stylesheet"
+href="../css/observaciones.css?v=20261006-vistazo1"
+>
+
+
+<script
+src="../js/cabecera.js?v=20261005-vps1"
+defer
+></script>
+
+<script
+src="../js/lluvia.js?v=20260913-lluvia3"
+defer
+></script>
+
 </head>
+
 
 <body data-seccion="observaciones">
 
+
 <div id="cabecera"></div>
 
+
 <header class="cabecera-observaciones">
-<h1>Seguimiento meteorológico</h1>
-<p>Radar · satélite · rayos en una línea temporal común</p>
+
+<h1>
+Seguimiento meteorológico
+</h1>
+
+<p>
+Estaciones · radar · satélite · rayos
+</p>
+
 </header>
 
-<div class="visor-contenedor">
+
+<main class="seguimiento-rejilla">
+
+
+<!-- ======================================================
+     VISTAZO GENERAL
+     ====================================================== -->
+
+
+<section
+class="vistazo-general"
+aria-labelledby="vistazo-general-titulo"
+>
+
+
+<h2
+class="vistazo-general-titulo"
+id="vistazo-general-titulo"
+>
+Vistazo general
+</h2>
+
+
+<iframe
+class="tabla-estaciones-iframe"
+src="../componentes/tabla-estaciones.html?v=20261006-tabla-estaciones4"
+title="Vistazo general de las estaciones meteorológicas de MeteoArchidona"
+loading="eager"
+>
+</iframe>
+
+
+</section>
+
+
+<!-- ======================================================
+     VISOR DE SEGUIMIENTO
+     ====================================================== -->
+
+
+<section
+class="visor-contenedor"
+aria-label="Visor meteorológico"
+>
+
+
 <iframe
 class="observaciones"
 src="../visores/radar.html?v=20261005-vps1"
 title="Visor de Seguimiento meteorológico de MeteoArchidona"
-loading="eager">
+loading="eager"
+>
 </iframe>
 
+
 <noscript>
+
 <div class="sin-js">
+
 <p>
-Para utilizar Seguimiento meteorológico necesitas JavaScript.<br>
-<a href="../visores/radar.html">Abrir Seguimiento meteorológico</a>
+
+Para utilizar Seguimiento meteorológico necesitas JavaScript.
+
+<br>
+
+<a href="../visores/radar.html">
+Abrir Seguimiento meteorológico
+</a>
+
 </p>
-</div>
-</noscript>
+
 </div>
 
+</noscript>
+
+
+</section>
+
+
+</main>
+
+
 </body>
+
 </html>
 
 <!-- Fin de fichero: pages/observaciones.html -->
