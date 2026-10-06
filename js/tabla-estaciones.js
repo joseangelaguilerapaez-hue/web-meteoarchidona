@@ -4,7 +4,8 @@
  * MeteoArchidona
  * Tabla de estaciones
  *
- * Construcción y actualización dinámica de la tabla de estaciones.
+ * Construcción dinámica de la tabla de estaciones y aplicación de la
+ * escala cromática meteorológica.
  *
  * Las estaciones se descubren mediante:
  *
@@ -14,16 +15,25 @@
  *
  *     GET /condiciones-actuales/{codigo}
  *
- * No existe ninguna lista fija de estaciones en este fichero.
+ * Las dos celdas de lluvia se colorean con tasa_lluvia_mm_h.
+ * Los valores mostrados siguen siendo los acumulados diario y mensual.
  */
 
 
-const INTERVALO_CONDICIONES_MS =
-    60_000;
+const INTERVALO_CONDICIONES_MS = 60_000;
+const INTERVALO_CATALOGO_MS = 300_000;
 
 
-const INTERVALO_CATALOGO_MS =
-    300_000;
+const CLASES_METEO = [
+    "meteo-azul",
+    "meteo-cian",
+    "meteo-verde",
+    "meteo-ambar",
+    "meteo-naranja",
+    "meteo-rojo",
+    "meteo-gris",
+    "meteo-neutro"
+];
 
 
 let estacionesPublicas = [];
@@ -35,21 +45,13 @@ let estacionesPublicas = [];
 
 
 function obtenerApiBase() {
-    const apiBase =
-        String(
-            window.API_BASE
-            ||
-            ""
-        )
-            .trim()
-            .replace(
-                /\/+$/,
-                ""
-            );
+    const apiBase = String(
+        window.API_BASE || ""
+    )
+        .trim()
+        .replace(/\/+$/, "");
 
-    if (
-        !apiBase
-    ) {
+    if (!apiBase) {
         throw new Error(
             "window.API_BASE no está definido."
         );
@@ -59,28 +61,16 @@ function obtenerApiBase() {
 }
 
 
-function normalizarCodigoEstacion(
-    codigo
-) {
-    if (
-        codigo === null
-        ||
-        codigo === undefined
-    ) {
-        return "";
-    }
-
+function normalizarCodigoEstacion(codigo) {
     return String(
-        codigo
+        codigo ?? ""
     )
         .trim()
         .toUpperCase();
 }
 
 
-function numeroValido(
-    valor
-) {
+function numeroValido(valor) {
     return (
         valor !== null
         &&
@@ -88,11 +78,7 @@ function numeroValido(
         &&
         valor !== ""
         &&
-        Number.isFinite(
-            Number(
-                valor
-            )
-        )
+        Number.isFinite(Number(valor))
     );
 }
 
@@ -101,11 +87,7 @@ function formatearNumero(
     valor,
     decimales = 1
 ) {
-    if (
-        !numeroValido(
-            valor
-        )
-    ) {
+    if (!numeroValido(valor)) {
         return null;
     }
 
@@ -122,30 +104,19 @@ function formatearMedida(
     unidad,
     decimales = 1
 ) {
-    const numero =
-        formatearNumero(
-            valor,
-            decimales
-        );
+    const numero = formatearNumero(
+        valor,
+        decimales
+    );
 
-    if (
-        numero === null
-    ) {
-        return "—";
-    }
-
-    return `${numero} ${unidad}`;
+    return numero === null
+        ? "—"
+        : `${numero} ${unidad}`;
 }
 
 
-function obtenerDireccionCardinal(
-    grados
-) {
-    if (
-        !numeroValido(
-            grados
-        )
-    ) {
+function obtenerDireccionCardinal(grados) {
+    if (!numeroValido(grados)) {
         return "";
     }
 
@@ -168,58 +139,34 @@ function obtenerDireccionCardinal(
         "NNO"
     ];
 
-    const valor =
-        (
-            Number(
-                grados
-            )
-            %
-            360
-            +
-            360
-        )
-        %
-        360;
-
-    const indice =
-        Math.round(
-            valor / 22.5
-        )
-        %
-        16;
+    const valor = (
+        Number(grados) % 360 + 360
+    ) % 360;
 
     return direcciones[
-        indice
+        Math.round(
+            valor / 22.5
+        ) % 16
     ];
 }
 
 
-function formatearViento(
-    datos
-) {
-    const velocidad =
-        formatearNumero(
-            datos?.viento_actual_kmh
-        );
+function formatearViento(datos) {
+    const velocidad = formatearNumero(
+        datos?.viento_actual_kmh
+    );
 
-    if (
-        velocidad === null
-    ) {
+    if (velocidad === null) {
         return "—";
     }
 
-    const direccion =
-        obtenerDireccionCardinal(
-            datos?.direccion_viento_grados
-        );
+    const direccion = obtenerDireccionCardinal(
+        datos?.direccion_viento_grados
+    );
 
-    if (
-        !direccion
-    ) {
-        return `${velocidad} km/h`;
-    }
-
-    return `${velocidad} km/h · ${direccion}`;
+    return direccion
+        ? `${velocidad} km/h · ${direccion}`
+        : `${velocidad} km/h`;
 }
 
 
@@ -230,15 +177,10 @@ function obtenerCuerpoTabla() {
 }
 
 
-function obtenerFila(
-    codigo
-) {
-    const cuerpo =
-        obtenerCuerpoTabla();
+function obtenerFila(codigo) {
+    const cuerpo = obtenerCuerpoTabla();
 
-    if (
-        !cuerpo
-    ) {
+    if (!cuerpo) {
         return null;
     }
 
@@ -248,13 +190,36 @@ function obtenerFila(
         )
     ).find(
         fila =>
-            fila.dataset
-                .codigoEstacion
+            fila.dataset.codigoEstacion
             ===
             codigo
-    )
-    ||
-    null;
+    ) || null;
+}
+
+
+function obtenerCelda(
+    fila,
+    campo
+) {
+    return fila?.querySelector(
+        `[data-campo="${campo}"]`
+    ) || null;
+}
+
+
+function asignarTextoFila(
+    fila,
+    campo,
+    texto
+) {
+    const celda = obtenerCelda(
+        fila,
+        campo
+    );
+
+    if (celda) {
+        celda.textContent = texto;
+    }
 }
 
 
@@ -262,19 +227,15 @@ function establecerEstado(
     texto,
     esError = false
 ) {
-    const elemento =
-        document.getElementById(
-            "tabla-estaciones-estado"
-        );
+    const elemento = document.getElementById(
+        "tabla-estaciones-estado"
+    );
 
-    if (
-        !elemento
-    ) {
+    if (!elemento) {
         return;
     }
 
-    elemento.textContent =
-        texto;
+    elemento.textContent = texto;
 
     elemento.classList.toggle(
         "error",
@@ -298,6 +259,239 @@ function obtenerHoraActual() {
 
 
 /* ==========================================================
+   CLASIFICACIÓN CROMÁTICA
+   ========================================================== */
+
+
+function claseTemperatura(valor) {
+    if (!numeroValido(valor)) {
+        return "meteo-gris";
+    }
+
+    const n = Number(valor);
+
+    if (n < 0) {
+        return "meteo-azul";
+    }
+
+    if (n < 10) {
+        return "meteo-cian";
+    }
+
+    if (n < 20) {
+        return "meteo-verde";
+    }
+
+    if (n < 30) {
+        return "meteo-ambar";
+    }
+
+    if (n <= 35) {
+        return "meteo-naranja";
+    }
+
+    return "meteo-rojo";
+}
+
+
+function claseHumedad(valor) {
+    if (!numeroValido(valor)) {
+        return "meteo-gris";
+    }
+
+    const n = Number(valor);
+
+    if (n < 30) {
+        return "meteo-ambar";
+    }
+
+    if (n < 60) {
+        return "meteo-verde";
+    }
+
+    if (n <= 80) {
+        return "meteo-cian";
+    }
+
+    return "meteo-azul";
+}
+
+
+function clasePresion(valor) {
+    if (!numeroValido(valor)) {
+        return "meteo-gris";
+    }
+
+    const n = Number(valor);
+
+    if (n < 1000) {
+        return "meteo-azul";
+    }
+
+    if (n < 1015) {
+        return "meteo-cian";
+    }
+
+    if (n <= 1025) {
+        return "meteo-verde";
+    }
+
+    return "meteo-ambar";
+}
+
+
+function claseViento(valor) {
+    if (!numeroValido(valor)) {
+        return "meteo-gris";
+    }
+
+    const n = Number(valor);
+
+    if (n < 5) {
+        return "meteo-gris";
+    }
+
+    if (n < 20) {
+        return "meteo-verde";
+    }
+
+    if (n < 40) {
+        return "meteo-ambar";
+    }
+
+    if (n <= 60) {
+        return "meteo-naranja";
+    }
+
+    return "meteo-rojo";
+}
+
+
+function claseLluvia(tasa) {
+    if (!numeroValido(tasa)) {
+        return "meteo-gris";
+    }
+
+    const n = Number(tasa);
+
+    if (n <= 0) {
+        return "meteo-neutro";
+    }
+
+    if (n < 0.5) {
+        return "meteo-cian";
+    }
+
+    if (n < 2) {
+        return "meteo-azul";
+    }
+
+    if (n < 10) {
+        return "meteo-naranja";
+    }
+
+    return "meteo-rojo";
+}
+
+
+function aplicarClaseMeteorologica(
+    fila,
+    campo,
+    clase
+) {
+    const celda = obtenerCelda(
+        fila,
+        campo
+    );
+
+    if (!celda) {
+        return;
+    }
+
+    celda.classList.remove(
+        ...CLASES_METEO
+    );
+
+    celda.classList.add(
+        clase
+    );
+}
+
+
+function colorearDatosEstacion(
+    fila,
+    datos
+) {
+    aplicarClaseMeteorologica(
+        fila,
+        "temperatura",
+        claseTemperatura(
+            datos?.temperatura_c
+        )
+    );
+
+    aplicarClaseMeteorologica(
+        fila,
+        "humedad",
+        claseHumedad(
+            datos?.humedad_pct
+        )
+    );
+
+    aplicarClaseMeteorologica(
+        fila,
+        "presion",
+        clasePresion(
+            datos?.presion_hpa
+        )
+    );
+
+    aplicarClaseMeteorologica(
+        fila,
+        "viento",
+        claseViento(
+            datos?.viento_actual_kmh
+        )
+    );
+
+    const lluvia = claseLluvia(
+        datos?.tasa_lluvia_mm_h
+    );
+
+    aplicarClaseMeteorologica(
+        fila,
+        "lluvia-dia",
+        lluvia
+    );
+
+    aplicarClaseMeteorologica(
+        fila,
+        "lluvia-mes",
+        lluvia
+    );
+}
+
+
+function colorearErrorEstacion(fila) {
+    [
+        "temperatura",
+        "humedad",
+        "presion",
+        "viento",
+        "lluvia-dia",
+        "lluvia-mes"
+    ].forEach(
+        campo =>
+            aplicarClaseMeteorologica(
+                fila,
+                campo,
+                "meteo-gris"
+            )
+    );
+}
+
+
+/* ==========================================================
    FILAS DINÁMICAS
    ========================================================== */
 
@@ -306,42 +500,33 @@ function crearCelda(
     clase,
     campo
 ) {
-    const celda =
-        document.createElement(
-            "td"
-        );
+    const celda = document.createElement(
+        "td"
+    );
 
-    celda.className =
-        clase;
+    celda.className = clase;
 
-    celda.dataset.campo =
-        campo;
+    celda.dataset.campo = campo;
 
-    celda.textContent =
-        "—";
+    celda.textContent = "—";
 
     return celda;
 }
 
 
-function crearFilaEstacion(
-    estacion
-) {
-    const fila =
-        document.createElement(
-            "tr"
-        );
+function crearFilaEstacion(estacion) {
+    const fila = document.createElement(
+        "tr"
+    );
 
-    fila.dataset
-        .codigoEstacion =
+    fila.dataset.codigoEstacion =
         estacion.codigo;
 
 
-    const nombre =
-        crearCelda(
-            "tabla-estaciones-nombre",
-            "nombre"
-        );
+    const nombre = crearCelda(
+        "tabla-estaciones-nombre",
+        "nombre"
+    );
 
     nombre.textContent =
         estacion.nombre_publico
@@ -405,48 +590,21 @@ function crearFilaEstacion(
 }
 
 
-function asignarTextoFila(
-    fila,
-    campo,
-    texto
-) {
-    const celda =
-        fila.querySelector(
-            `[data-campo="${campo}"]`
-        );
+function crearFilaVacia(texto) {
+    const fila = document.createElement(
+        "tr"
+    );
 
-    if (
-        celda
-    ) {
-        celda.textContent =
-            texto;
-    }
-}
-
-
-function crearFilaVacia(
-    texto
-) {
-    const fila =
-        document.createElement(
-            "tr"
-        );
+    const celda = document.createElement(
+        "td"
+    );
 
     fila.className =
         "tabla-estaciones-vacia";
 
+    celda.colSpan = 7;
 
-    const celda =
-        document.createElement(
-            "td"
-        );
-
-    celda.colSpan =
-        7;
-
-    celda.textContent =
-        texto;
-
+    celda.textContent = texto;
 
     fila.appendChild(
         celda
@@ -457,12 +615,9 @@ function crearFilaVacia(
 
 
 function sincronizarFilas() {
-    const cuerpo =
-        obtenerCuerpoTabla();
+    const cuerpo = obtenerCuerpoTabla();
 
-    if (
-        !cuerpo
-    ) {
+    if (!cuerpo) {
         return;
     }
 
@@ -475,26 +630,21 @@ function sincronizarFilas() {
     );
 
 
-    const codigosValidos =
-        new Set(
-            estacionesPublicas.map(
-                estacion =>
-                    estacion.codigo
-            )
-        );
+    const codigosValidos = new Set(
+        estacionesPublicas.map(
+            estacion =>
+                estacion.codigo
+        )
+    );
 
 
     cuerpo.querySelectorAll(
         "tr[data-codigo-estacion]"
     ).forEach(
         fila => {
-            const codigo =
-                fila.dataset
-                    .codigoEstacion;
-
             if (
                 !codigosValidos.has(
-                    codigo
+                    fila.dataset.codigoEstacion
                 )
             ) {
                 fila.remove();
@@ -505,20 +655,15 @@ function sincronizarFilas() {
 
     estacionesPublicas.forEach(
         estacion => {
-            let fila =
-                obtenerFila(
-                    estacion.codigo
+            let fila = obtenerFila(
+                estacion.codigo
+            );
+
+            if (!fila) {
+                fila = crearFilaEstacion(
+                    estacion
                 );
-
-            if (
-                !fila
-            ) {
-                fila =
-                    crearFilaEstacion(
-                        estacion
-                    );
             }
-
 
             asignarTextoFila(
                 fila,
@@ -527,7 +672,6 @@ function sincronizarFilas() {
                 ||
                 estacion.codigo
             );
-
 
             /*
              * Reinsertar conserva el orden exacto devuelto
@@ -564,16 +708,14 @@ function establecerCatalogoEstaciones(
 ) {
     const normalizadas = [];
 
-    const codigosVistos =
-        new Set();
+    const codigosVistos = new Set();
 
 
     estaciones.forEach(
         estacion => {
-            const codigo =
-                normalizarCodigoEstacion(
-                    estacion?.codigo
-                );
+            const codigo = normalizarCodigoEstacion(
+                estacion?.codigo
+            );
 
             if (
                 !codigo
@@ -585,11 +727,9 @@ function establecerCatalogoEstaciones(
                 return;
             }
 
-
             codigosVistos.add(
                 codigo
             );
-
 
             normalizadas.push(
                 {
@@ -611,26 +751,21 @@ function establecerCatalogoEstaciones(
 
 
 async function cargarCatalogoEstaciones() {
-    const respuesta =
-        await fetch(
-            `${obtenerApiBase()}/estaciones`,
-            {
-                cache: "no-store"
-            }
-        );
+    const respuesta = await fetch(
+        `${obtenerApiBase()}/estaciones`,
+        {
+            cache: "no-store"
+        }
+    );
 
-
-    if (
-        !respuesta.ok
-    ) {
+    if (!respuesta.ok) {
         throw new Error(
             `HTTP ${respuesta.status}`
         );
     }
 
 
-    const datos =
-        await respuesta.json();
+    const datos = await respuesta.json();
 
 
     if (
@@ -664,14 +799,11 @@ function mostrarDatosEstacion(
     estacion,
     datos
 ) {
-    const fila =
-        obtenerFila(
-            estacion.codigo
-        );
+    const fila = obtenerFila(
+        estacion.codigo
+    );
 
-    if (
-        !fila
-    ) {
+    if (!fila) {
         return;
     }
 
@@ -749,20 +881,21 @@ function mostrarDatosEstacion(
             "mm"
         )
     );
+
+
+    colorearDatosEstacion(
+        fila,
+        datos
+    );
 }
 
 
-function mostrarErrorEstacion(
-    estacion
-) {
-    const fila =
-        obtenerFila(
-            estacion.codigo
-        );
+function mostrarErrorEstacion(estacion) {
+    const fila = obtenerFila(
+        estacion.codigo
+    );
 
-    if (
-        !fila
-    ) {
+    if (!fila) {
         return;
     }
 
@@ -780,13 +913,17 @@ function mostrarErrorEstacion(
         "lluvia-dia",
         "lluvia-mes"
     ].forEach(
-        campo => {
+        campo =>
             asignarTextoFila(
                 fila,
                 campo,
                 "—"
-            );
-        }
+            )
+    );
+
+
+    colorearErrorEstacion(
+        fila
     );
 }
 
@@ -796,34 +933,27 @@ function mostrarErrorEstacion(
    ========================================================== */
 
 
-async function cargarEstacion(
-    estacion
-) {
+async function cargarEstacion(estacion) {
     try {
-        const respuesta =
-            await fetch(
-                `${obtenerApiBase()}/condiciones-actuales/${
-                    encodeURIComponent(
-                        estacion.codigo
-                    )
-                }`,
-                {
-                    cache: "no-store"
-                }
-            );
+        const respuesta = await fetch(
+            `${obtenerApiBase()}/condiciones-actuales/${
+                encodeURIComponent(
+                    estacion.codigo
+                )
+            }`,
+            {
+                cache: "no-store"
+            }
+        );
 
-
-        if (
-            !respuesta.ok
-        ) {
+        if (!respuesta.ok) {
             throw new Error(
                 `HTTP ${respuesta.status}`
             );
         }
 
 
-        const datos =
-            await respuesta.json();
+        const datos = await respuesta.json();
 
 
         mostrarDatosEstacion(
@@ -834,9 +964,7 @@ async function cargarEstacion(
 
         return true;
 
-    } catch (
-        error
-    ) {
+    } catch (error) {
         console.error(
             `Error cargando ${estacion.codigo}:`,
             error
@@ -863,21 +991,19 @@ async function cargarCondiciones() {
     }
 
 
-    const resultados =
-        await Promise.all(
-            estacionesPublicas.map(
-                estacion =>
-                    cargarEstacion(
-                        estacion
-                    )
-            )
-        );
+    const resultados = await Promise.all(
+        estacionesPublicas.map(
+            estacion =>
+                cargarEstacion(
+                    estacion
+                )
+        )
+    );
 
 
-    const correctas =
-        resultados.filter(
-            Boolean
-        ).length;
+    const correctas = resultados.filter(
+        Boolean
+    ).length;
 
 
     establecerEstado(
@@ -898,11 +1024,11 @@ async function refrescarCatalogo() {
     try {
         await cargarCatalogoEstaciones();
 
+        await cargarCondiciones();
+
         return true;
 
-    } catch (
-        error
-    ) {
+    } catch (error) {
         console.error(
             "Error cargando catálogo público de estaciones:",
             error
@@ -926,15 +1052,7 @@ async function refrescarCatalogo() {
 
 
 async function inicializarTablaEstaciones() {
-    const catalogoCargado =
-        await refrescarCatalogo();
-
-
-    if (
-        catalogoCargado
-    ) {
-        await cargarCondiciones();
-    }
+    await refrescarCatalogo();
 
 
     window.setInterval(
