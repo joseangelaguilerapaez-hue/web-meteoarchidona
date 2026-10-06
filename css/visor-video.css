@@ -231,8 +231,24 @@ body {
 
     z-index: 5;
 
+    /*
+     * El estado se centra en la parte superior del vídeo.
+     *
+     * El JavaScript continúa calculando la coordenada vertical
+     * según el rectángulo real de la imagen. La coordenada
+     * horizontal right que asigna dinámicamente se anula aquí
+     * para evitar solapamientos con la fecha/hora de la cámara.
+     */
+    left: 50%;
+
+    right: auto !important;
+
     top: 12px;
-    right: 12px;
+
+    transform:
+        translateX(
+            -50%
+        );
 
     display: inline-flex;
 
@@ -411,8 +427,8 @@ body {
     /*
      * Los controles se sitúan en el centro inferior del visor.
      *
-     * El JavaScript heredado todavía calcula dinámicamente
-     * una coordenada right. La anulamos aquí porque el vídeo
+     * El JavaScript todavía calcula dinámicamente una
+     * coordenada right. La anulamos aquí porque el vídeo
      * siempre está centrado mediante object-fit: contain.
      */
     left: 50%;
@@ -775,8 +791,11 @@ body {
 
 
     .visor-video-estado {
+        left: 50%;
+
+        right: auto !important;
+
         top: 8px;
-        right: 8px;
 
         gap: 4px;
 
@@ -785,6 +804,11 @@ body {
                 7px,
                 2vw,
                 9px
+            );
+
+        transform:
+            translateX(
+                -50%
             );
     }
 
