@@ -27,7 +27,8 @@
  * - mantener siempre la marca MeteoArchidona;
  * - ofrecer controles propios cuando el visor es interactivo;
  * - maximizar el contenedor completo del visor;
- * - mantener las superposiciones dentro del rectángulo real del vídeo.
+ * - mantener las superposiciones dentro del rectángulo real del vídeo;
+ * - evitar solapamientos entre datos meteorológicos y estado.
  */
 
 
@@ -370,6 +371,11 @@ function establecerEstado(texto) {
     estado.textContent =
         texto;
 
+
+    window.requestAnimationFrame(
+        posicionarSuperposiciones
+    );
+
 }
 
 
@@ -464,6 +470,16 @@ function mostrarMeteo(datos) {
 
     }
 
+
+    /*
+     * El ancho de la franja meteorológica cambia cuando llegan
+     * los valores reales. Recalculamos la posición del estado
+     * para evitar que "EN DIRECTO" pueda quedar encima.
+     */
+    window.requestAnimationFrame(
+        posicionarSuperposiciones
+    );
+
 }
 
 
@@ -490,6 +506,11 @@ function mostrarMeteoSinDatos() {
     if (lluvia) {
         lluvia.textContent = "— mm";
     }
+
+
+    window.requestAnimationFrame(
+        posicionarSuperposiciones
+    );
 
 }
 
@@ -726,6 +747,53 @@ function obtenerRectanguloVideo(video) {
 
 
 /* ==========================================================
+   SOLAPAMIENTOS
+   ========================================================== */
+
+
+function seSolapanHorizontalmente(
+    elementoA,
+    elementoB,
+    separacion = 0
+) {
+
+    if (
+        !elementoA
+        ||
+        !elementoB
+    ) {
+
+        return false;
+
+    }
+
+
+    const a =
+        elementoA.getBoundingClientRect();
+
+
+    const b =
+        elementoB.getBoundingClientRect();
+
+
+    return (
+        a.right
+        +
+        separacion
+        >
+        b.left
+        &&
+        b.right
+        +
+        separacion
+        >
+        a.left
+    );
+
+}
+
+
+/* ==========================================================
    SUPERPOSICIONES
    ========================================================== */
 
@@ -770,6 +838,18 @@ function posicionarSuperposiciones() {
             : 12;
 
 
+    const separacion =
+        movil
+            ? 6
+            : 10;
+
+
+    const arribaBase =
+        rectangulo.arriba
+        +
+        margen;
+
+
     if (meteo) {
 
         meteo.style.left =
@@ -783,11 +863,7 @@ function posicionarSuperposiciones() {
 
 
         meteo.style.top =
-            (
-                rectangulo.arriba
-                +
-                margen
-            )
+            arribaBase
             +
             "px";
 
@@ -796,24 +872,52 @@ function posicionarSuperposiciones() {
 
     if (estado) {
 
-        estado.style.right =
-            (
-                rectangulo.derecha
-                +
-                margen
-            )
-            +
-            "px";
-
-
+        /*
+         * La posición horizontal está centrada mediante CSS.
+         *
+         * Siempre comenzamos intentando colocar el estado en
+         * la primera línea superior.
+         */
         estado.style.top =
-            (
-                rectangulo.arriba
-                +
-                margen
-            )
+            arribaBase
             +
             "px";
+
+
+        /*
+         * En visores estrechos la franja de temperatura,
+         * humedad y lluvia puede alcanzar el centro.
+         *
+         * Si realmente invade el espacio de "EN DIRECTO",
+         * bajamos únicamente el estado una segunda línea.
+         *
+         * En cuanto vuelve a existir espacio suficiente
+         * —por ejemplo al entrar en pantalla completa—
+         * esta misma función lo devuelve automáticamente
+         * a la primera línea.
+         */
+        if (
+            meteo
+            &&
+            seSolapanHorizontalmente(
+                meteo,
+                estado,
+                separacion
+            )
+        ) {
+
+            estado.style.top =
+                (
+                    arribaBase
+                    +
+                    meteo.offsetHeight
+                    +
+                    separacion
+                )
+                +
+                "px";
+
+        }
 
     }
 
@@ -844,16 +948,11 @@ function posicionarSuperposiciones() {
 
     if (controles) {
 
-        controles.style.right =
-            (
-                rectangulo.derecha
-                +
-                margen
-            )
-            +
-            "px";
-
-
+        /*
+         * La posición horizontal de los controles también
+         * está centrada por CSS. Aquí solo se mantiene
+         * correctamente su distancia al borde real del vídeo.
+         */
         controles.style.bottom =
             (
                 rectangulo.abajo
