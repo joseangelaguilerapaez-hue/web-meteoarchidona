@@ -1,0 +1,638 @@
+<!--
+    MeteoArchidona · Ficha de estación
+
+    Componente reutilizable de una estación meteorológica.
+
+    La ficha no representa una estación concreta. Los identificadores
+    terminados en PLANTILLA se sustituyen dinámicamente por el código
+    real de la estación al crear cada instancia.
+
+    Este componente se utiliza inicialmente desde Actualidad y queda
+    preparado para reutilizarse en otras vistas y, en el futuro, en
+    dashboards configurables por los usuarios.
+
+    Identidad visual:
+    - logo específico de Estaciones MeteoArchidona;
+    - estado, nombre y localidad agrupados;
+    - datos meteorológicos de la estación;
+    - espacio preparado para futuras ampliaciones como cámara.
+-->
+
+
+<template id="plantilla-estacion">
+
+
+<article
+    class="tarjeta estacion-principal"
+    id="tarjeta-PLANTILLA"
+>
+
+
+<div
+    class="capa-lluvia-ficha"
+    id="capa-lluvia-PLANTILLA"
+    aria-hidden="true"
+></div>
+
+
+<div
+    class="capa-gotas-cristal-ficha"
+    id="capa-gotas-cristal-PLANTILLA"
+    aria-hidden="true"
+></div>
+
+
+<div class="estacion-contenido">
+
+
+<!-- ======================================================
+     IDENTIDAD DE LA ESTACIÓN
+     ====================================================== -->
+
+
+<div class="estacion-cabecera">
+
+
+<div class="estacion-identidad">
+
+
+<div
+    class="estacion-logo"
+    aria-hidden="true"
+>
+
+    <img
+        src="/assets/logo-estaciones-cabecera.png"
+        width="128"
+        height="128"
+        alt=""
+        draggable="false"
+    >
+
+</div>
+
+
+<div class="estacion-identidad-texto">
+
+
+<div
+    class="online"
+    id="estado-PLANTILLA"
+>
+
+    <span class="punto"></span>
+
+    Cargando...
+
+</div>
+
+
+<h2
+    class="estacion-nombre"
+    id="nombre-PLANTILLA"
+>
+    ESTACIÓN
+</h2>
+
+
+<div
+    class="estacion-localidad"
+    id="localidad-PLANTILLA"
+></div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- ======================================================
+     LECTURA PRINCIPAL
+     ====================================================== -->
+
+
+<div class="lectura-principal">
+
+
+<div class="temperatura-bloque">
+
+
+<div
+    class="temperatura"
+    id="temperatura-PLANTILLA"
+>
+    --<sup>°C</sup>
+</div>
+
+
+<div
+    class="sensacion"
+    id="sensacion-PLANTILLA"
+>
+    Sensación -- °C
+</div>
+
+
+<div
+    class="observacion"
+    id="observacion-PLANTILLA"
+>
+    Exterior --:--
+</div>
+
+
+</div>
+
+
+<div class="viento-panel">
+
+
+<div
+    class="veleta"
+    id="veleta-PLANTILLA"
+    data-lluvia-control="PLANTILLA"
+    tabindex="0"
+    role="button"
+    aria-label="Veleta de estación"
+    title="Veleta de estación"
+>
+
+    <span class="veleta-cardinal veleta-n">
+        N
+    </span>
+
+    <span class="veleta-cardinal veleta-e">
+        E
+    </span>
+
+    <span class="veleta-cardinal veleta-s">
+        S
+    </span>
+
+    <span class="veleta-cardinal veleta-o">
+        O
+    </span>
+
+
+    <div class="veleta-rotor">
+
+        <div class="veleta-aguja"></div>
+
+    </div>
+
+</div>
+
+
+<div class="viento-datos">
+
+
+<div class="direccion-principal">
+
+
+<div
+    class="direccion-cardinal"
+    id="direccion-PLANTILLA"
+>
+    --
+</div>
+
+
+<div
+    class="direccion-grados"
+    id="grados-PLANTILLA"
+>
+    --°
+</div>
+
+
+</div>
+
+
+<div
+    class="viento-actual"
+    id="viento-actual-PLANTILLA"
+>
+    --
+    <small>
+        km/h
+    </small>
+</div>
+
+
+<div class="viento-secundarios">
+
+
+<div class="viento-secundario">
+
+    Media 2 min
+
+    <strong id="viento-2m-PLANTILLA">
+        -- km/h
+    </strong>
+
+</div>
+
+
+<div class="viento-secundario">
+
+    Media 10 min
+
+    <strong id="viento-10m-PLANTILLA">
+        -- km/h
+    </strong>
+
+</div>
+
+
+<div class="viento-secundario">
+
+    Racha 10 min
+
+    <strong id="racha-PLANTILLA">
+        -- km/h
+    </strong>
+
+</div>
+
+
+</div>
+
+
+<div
+    class="simulacion-estacion"
+    id="simulacion-PLANTILLA"
+></div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     PATROCINIO
+     ====================================================== -->
+
+
+<div
+    class="patrocinio-estacion"
+    id="patrocinio-PLANTILLA"
+    aria-label="Patrocinadores de los datos de lluvia"
+>
+
+
+<div class="patrocinio-estacion-titulo">
+    🌧️ LLUVIA EN VIVO
+</div>
+
+
+<div class="patrocinio-estacion-ventana">
+
+
+<div class="patrocinio-estacion-pista">
+
+
+<span class="patrocinio-estacion-texto">
+
+    Datos patrocinados por
+
+    <strong>
+        Restaurante San Isidro
+    </strong>
+
+    ·
+
+    <strong>
+        Bar Central
+    </strong>
+
+    ·
+
+    <strong>
+        Las Viñas
+    </strong>
+
+    ·
+
+    <strong>
+        Gestión 95
+    </strong>
+
+</span>
+
+
+<span
+    class="patrocinio-estacion-texto"
+    aria-hidden="true"
+>
+
+    Datos patrocinados por
+
+    <strong>
+        Restaurante San Isidro
+    </strong>
+
+    ·
+
+    <strong>
+        Bar Central
+    </strong>
+
+    ·
+
+    <strong>
+        Las Viñas
+    </strong>
+
+    ·
+
+    <strong>
+        Gestión 95
+    </strong>
+
+</span>
+
+
+</div>
+
+</div>
+
+
+<button
+    type="button"
+    class="patrocinio-estacion-control"
+    data-patrocinio="PLANTILLA"
+    aria-label="Pausar patrocinio"
+    aria-pressed="false"
+>
+    Ⅱ
+</button>
+
+
+</div>
+
+
+<!-- ======================================================
+     LLUVIA
+     ====================================================== -->
+
+
+<div class="lluvia-resumen">
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-dia-PLANTILLA"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Lluvia hoy
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-dia-PLANTILLA"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-icono-actual-PLANTILLA"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Intensidad
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-tasa-PLANTILLA"
+>
+    -- mm/h
+</div>
+
+
+<div
+    class="lluvia-resumen-extra"
+    id="lluvia-estado-PLANTILLA"
+>
+    --
+</div>
+
+
+</div>
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-mes-PLANTILLA"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Este mes
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-mes-PLANTILLA"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+<div class="lluvia-resumen-item">
+
+
+<div
+    class="lluvia-resumen-icono"
+    id="lluvia-resumen-icono-anio-PLANTILLA"
+>
+    ☁️
+</div>
+
+
+<div class="lluvia-resumen-label">
+    Año agrícola
+</div>
+
+
+<div
+    class="lluvia-resumen-valor"
+    id="lluvia-anio-PLANTILLA"
+>
+    -- mm
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- ======================================================
+     MÉTRICAS
+     ====================================================== -->
+
+
+<div class="metricas-estacion">
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    💧 Humedad
+</div>
+
+<div
+    class="metrica-valor"
+    id="humedad-PLANTILLA"
+>
+    -- %
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◇ Punto de rocío
+</div>
+
+<div
+    class="metrica-valor"
+    id="rocio-PLANTILLA"
+>
+    -- °C
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◉ Presión
+</div>
+
+<div
+    class="metrica-valor"
+    id="presion-PLANTILLA"
+>
+    -- hPa
+</div>
+
+<div
+    class="metrica-secundaria"
+    id="presion-hora-PLANTILLA"
+>
+    Barómetro --:--
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ☀ Radiación solar
+</div>
+
+<div
+    class="metrica-valor"
+    id="radiacion-PLANTILLA"
+>
+    -- W/m²
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◉ Índice UV
+</div>
+
+<div
+    class="metrica-valor"
+    id="uv-PLANTILLA"
+>
+    --
+</div>
+
+<div
+    class="metrica-secundaria"
+    id="uv-estado-PLANTILLA"
+>
+    --
+</div>
+
+</div>
+
+
+<div class="metrica-estacion">
+
+<div class="metrica-label">
+    ◷ Observación exterior
+</div>
+
+<div
+    class="metrica-valor"
+    id="fecha-PLANTILLA"
+>
+    --
+</div>
+
+</div>
+
+
+</div>
+
+
+</article>
+
+
+</template>
+
+
+<!-- Fin de fichero: componentes/ficha-estacion.html -->
