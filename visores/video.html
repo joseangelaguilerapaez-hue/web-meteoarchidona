@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0,viewport-fit=cover"
+>
+
+<title>
+MeteoArchidona · Visor de vídeo
+</title>
+
+
+<link
+rel="stylesheet"
+href="../css/fuentes.css?v=20260913-fuentes1"
+>
+
+
+<link
+rel="stylesheet"
+href="../css/paleta.css?v=20260913-pruebas1"
+>
+
+
+<link
+rel="stylesheet"
+href="../css/visor-video.css?v=20261006-video1"
+>
+
+
+<script
+src="../js/api.js?v=20261003-vps1"
+defer
+></script>
+
+
+<script
+src="../js/vendor/hls-1.7.3.min.js?v=20261004-hls173-1"
+defer
+></script>
+
+
+<script
+src="../js/visor-video.js?v=20261006-video1"
+defer
+></script>
+
+</head>
+
+
+<body>
+
+
+<main
+id="visor-video"
+class="visor-video"
+aria-label="Visor de vídeo MeteoArchidona"
+>
+
+
+<!-- ======================================================
+     VÍDEO
+     ====================================================== -->
+
+
+<video
+id="visor-video-elemento"
+autoplay
+muted
+playsinline
+preload="auto"
+aria-label="Emisión en directo"
+>
+</video>
+
+
+<!-- ======================================================
+     DATOS METEOROLÓGICOS
+     ====================================================== -->
+
+
+<div
+id="visor-video-meteo"
+class="visor-video-meteo visor-video-superposicion"
+aria-label="Condiciones meteorológicas actuales"
+>
+
+
+<span class="visor-video-meteo-dato">
+
+<span id="visor-video-temperatura">
+— °C
+</span>
+
+</span>
+
+
+<span class="visor-video-meteo-dato">
+
+<span id="visor-video-humedad">
+— %
+</span>
+
+</span>
+
+
+<span class="visor-video-meteo-dato">
+
+<span id="visor-video-lluvia">
+— mm
+</span>
+
+</span>
+
+
+</div>
+
+
+<!-- ======================================================
+     ESTADO DE EMISIÓN
+     ====================================================== -->
+
+
+<div
+id="visor-video-estado"
+class="visor-video-estado visor-video-superposicion"
+aria-live="polite"
+>
+CONECTANDO
+</div>
+
+
+<!-- ======================================================
+     MARCA METEOARCHIDONA
+     ====================================================== -->
+
+
+<div
+id="visor-video-marca"
+class="visor-video-marca visor-video-superposicion"
+aria-hidden="true"
+>
+
+<img
+src="/assets/logo-cabecera.png"
+alt=""
+>
+
+</div>
+
+
+<!-- ======================================================
+     MENSAJE DE ERROR
+     ====================================================== -->
+
+
+<div
+id="visor-video-error"
+class="visor-video-error"
+role="status"
+aria-live="polite"
+>
+
+<div class="visor-video-error-contenido">
+
+<strong>
+Emisión no disponible
+</strong>
+
+<span id="visor-video-error-texto">
+No se ha podido cargar el vídeo.
+</span>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     CONTROLES PROPIOS
+     ====================================================== -->
+
+
+<div
+id="visor-video-controles"
+class="visor-video-controles"
+hidden
+>
+
+
+<button
+id="visor-video-play"
+class="visor-video-control"
+type="button"
+aria-label="Pausar vídeo"
+title="Reproducir / pausar"
+>
+❚❚
+</button>
+
+
+<button
+id="visor-video-fullscreen"
+class="visor-video-control"
+type="button"
+aria-label="Pantalla completa"
+title="Pantalla completa"
+>
+⛶
+</button>
+
+
+</div>
+
+
+</main>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: visores/video.html -->
