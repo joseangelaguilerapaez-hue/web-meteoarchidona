@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0,viewport-fit=cover"
+>
+
+<title>
+MeteoArchidona · Tabla de estaciones
+</title>
+
+
+<link
+rel="stylesheet"
+href="../css/fuentes.css?v=20260913-fuentes1"
+>
+
+
+<link
+rel="stylesheet"
+href="../css/paleta.css?v=20260913-pruebas1"
+>
+
+
+<link
+rel="stylesheet"
+href="../css/tabla-estaciones.css?v=20261006-tabla-estaciones1"
+>
+
+</head>
+
+
+<body>
+
+
+<main class="tabla-estaciones-panel">
+
+
+<header class="tabla-estaciones-cabecera">
+
+<h2>
+Estaciones meteorológicas
+</h2>
+
+</header>
+
+
+<div
+class="tabla-estaciones-contenedor"
+role="region"
+aria-label="Condiciones actuales de las estaciones meteorológicas"
+tabindex="0"
+>
+
+
+<table class="tabla-estaciones">
+
+
+<thead>
+
+<tr>
+
+<th scope="col">
+Estación
+</th>
+
+<th scope="col">
+Temperatura
+</th>
+
+<th scope="col">
+Humedad
+</th>
+
+<th scope="col">
+Presión
+</th>
+
+<th scope="col">
+Viento
+</th>
+
+<th scope="col">
+Lluvia hoy
+</th>
+
+<th scope="col">
+Lluvia mes
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="tabla-estaciones-cuerpo">
+
+<tr class="tabla-estaciones-cargando">
+
+<td colspan="7">
+Cargando estaciones…
+</td>
+
+</tr>
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+<p
+class="tabla-estaciones-estado"
+id="tabla-estaciones-estado"
+aria-live="polite"
+>
+Cargando datos…
+</p>
+
+
+</main>
+
+
+<script
+src="../js/api.js?v=20261003-vps1"
+></script>
+
+
+<script
+src="../js/tabla-estaciones.js?v=20261006-tabla-estaciones1"
+></script>
+
+
+</body>
+</html>
+
+<!-- Fin de fichero: componentes/tabla-estaciones.html -->
