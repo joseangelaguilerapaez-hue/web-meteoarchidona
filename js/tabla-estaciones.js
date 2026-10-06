@@ -17,6 +17,10 @@
  *
  * Las dos celdas de lluvia se colorean con tasa_lluvia_mm_h.
  * Los valores mostrados siguen siendo los acumulados diario y mensual.
+ *
+ * Los nombres compactos son únicamente una decisión de presentación
+ * de esta tabla. No condicionan el catálogo dinámico de estaciones:
+ * cualquier estación futura sin alias seguirá apareciendo normalmente.
  */
 
 
@@ -167,6 +171,127 @@ function formatearViento(datos) {
     return direccion
         ? `${velocidad} km/h · ${direccion}`
         : `${velocidad} km/h`;
+}
+
+
+/* ==========================================================
+   NOMBRES COMPACTOS
+   ========================================================== */
+
+
+/*
+ * Normaliza únicamente para poder reconocer de forma robusta
+ * los nombres a los que se aplica un alias visual.
+ */
+function normalizarNombreEstacion(nombre) {
+    return String(
+        nombre ?? ""
+    )
+        .trim()
+        .normalize("NFD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .replace(
+            /\s+/g,
+            " "
+        )
+        .toUpperCase();
+}
+
+
+/*
+ * Alias exclusivamente visuales para la tabla compacta.
+ *
+ * No constituyen una lista de estaciones.
+ * Las estaciones se siguen obteniendo siempre desde /estaciones.
+ */
+function compactarNombreEstacion(nombre) {
+    const original = String(
+        nombre ?? ""
+    ).trim();
+
+    if (!original) {
+        return "";
+    }
+
+    const clave = normalizarNombreEstacion(
+        original
+    );
+
+
+    if (
+        clave.startsWith(
+            "EL SILO"
+        )
+    ) {
+        return "Silo";
+    }
+
+
+    if (
+        clave.startsWith(
+            "LOS LLANOS"
+        )
+    ) {
+        return "Llanos";
+    }
+
+
+    if (
+        clave.startsWith(
+            "SALINAS"
+        )
+    ) {
+        return "Salinas";
+    }
+
+
+    if (
+        clave.includes(
+            "PUERTA DE LA HOYA"
+        )
+    ) {
+        return "La Hoya";
+    }
+
+
+    if (
+        clave.startsWith(
+            "LA VEGA"
+        )
+    ) {
+        return "La Vega";
+    }
+
+
+    return original;
+}
+
+
+function obtenerNombreVisible(
+    estacion,
+    datos = null
+) {
+    const nombre =
+        datos?.nombre_estacion
+        ||
+        estacion?.nombre_publico
+        ||
+        estacion?.codigo
+        ||
+        "";
+
+    return (
+        compactarNombreEstacion(
+            nombre
+        )
+        ||
+        estacion?.codigo
+        ||
+        "—"
+    );
 }
 
 
@@ -529,9 +654,9 @@ function crearFilaEstacion(estacion) {
     );
 
     nombre.textContent =
-        estacion.nombre_publico
-        ||
-        estacion.codigo;
+        obtenerNombreVisible(
+            estacion
+        );
 
     fila.appendChild(
         nombre
@@ -668,9 +793,9 @@ function sincronizarFilas() {
             asignarTextoFila(
                 fila,
                 "nombre",
-                estacion.nombre_publico
-                ||
-                estacion.codigo
+                obtenerNombreVisible(
+                    estacion
+                )
             );
 
             /*
@@ -816,11 +941,10 @@ function mostrarDatosEstacion(
     asignarTextoFila(
         fila,
         "nombre",
-        datos?.nombre_estacion
-        ||
-        estacion.nombre_publico
-        ||
-        estacion.codigo
+        obtenerNombreVisible(
+            estacion,
+            datos
+        )
     );
 
 
