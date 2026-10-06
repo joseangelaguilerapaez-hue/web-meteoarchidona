@@ -1,110 +1,453 @@
 /*
  * MeteoArchidona
- * Página Observaciones
+ * Página Observaciones / Seguimiento
  *
  * Estilos exclusivos de:
  *
- *     observaciones.html
+ *     pages/observaciones.html
  *
- * La página es un marco: cabecera propia (.cabecera-observaciones) y
- * un iframe a visores/radar.html, que trae sus propios estilos.
+ * Estructura principal:
+ *
+ * - Vistazo general
+ *     - título
+ *     - tabla de estaciones
+ *
+ * - Visor de Seguimiento
  */
 
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;background:#071019}
-body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;font-family:Arial,sans-serif;color:#fff}
 
-.cabecera-observaciones{
-flex:0 0 auto;
-width:100%;
-padding:15px 20px 14px;
-background:linear-gradient(90deg,#091725 0,#0c2032 50%,#091725 100%);
-border-top:1px solid rgba(54,213,255,.12);
-border-bottom:1px solid rgba(54,213,255,.28);
-box-shadow:0 5px 18px rgba(0,0,0,.22)
+/* ==========================================================
+   BASE
+   ========================================================== */
+
+
+* {
+    box-sizing: border-box;
 }
 
-.cabecera-observaciones h1{
-margin:0;
-font-size:clamp(21px,4.8vw,34px);
-font-weight:800;
-line-height:1.08;
-letter-spacing:.025em;
-text-transform:uppercase
+
+html,
+body {
+    margin: 0;
+
+    width: 100%;
+    min-height: 100%;
+
+    background: #071019;
 }
 
-.cabecera-observaciones h1 span{color:#36d5ff}
 
-.cabecera-observaciones p{
-margin:6px 0 0;
-color:#aabdd0;
-font-size:clamp(11px,2.8vw,14px);
-line-height:1.35
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    font-family: Arial, sans-serif;
+
+    color: #ffffff;
 }
 
-.visor-contenedor{flex:1 1 auto;min-height:0;width:100%;background:#071019}
 
-.observaciones{display:block;width:100%;height:100%;border:0;background:#071019}
+/* ==========================================================
+   CABECERA DE PÁGINA
+   ========================================================== */
 
-.sin-js{
-display:grid;
-place-items:center;
-width:100%;
-height:100%;
-padding:24px;
-color:#fff;
-background:#071019;
-text-align:center
+
+.cabecera-observaciones {
+    flex: 0 0 auto;
+
+    width: 100%;
+
+    padding: 15px 20px 14px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #091725 0,
+            #0c2032 50%,
+            #091725 100%
+        );
+
+    border-top:
+        1px solid
+        rgba(
+            54,
+            213,
+            255,
+            0.12
+        );
+
+    border-bottom:
+        1px solid
+        rgba(
+            54,
+            213,
+            255,
+            0.28
+        );
+
+    box-shadow:
+        0 5px 18px
+        rgba(
+            0,
+            0,
+            0,
+            0.22
+        );
 }
 
-.sin-js a{color:#36d5ff}
 
-@media(max-width:600px){
-.cabecera-observaciones{padding:13px 18px 12px}
-.cabecera-observaciones h1{font-size:22px}
+.cabecera-observaciones h1 {
+    margin: 0;
+
+    font-size:
+        clamp(
+            21px,
+            4.8vw,
+            34px
+        );
+
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: 0.025em;
+
+    text-transform: uppercase;
 }
 
-@media(max-width:380px){
-.cabecera-observaciones{padding:11px 14px 10px}
-.cabecera-observaciones h1{font-size:19px}
-.cabecera-observaciones p{font-size:10px}
+
+.cabecera-observaciones h1 span {
+    color: #36d5ff;
 }
+
+
+.cabecera-observaciones p {
+    margin: 6px 0 0;
+
+    color: #aabdd0;
+
+    font-size:
+        clamp(
+            11px,
+            2.8vw,
+            14px
+        );
+
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
+   REJILLA PRINCIPAL DE SEGUIMIENTO
+   ========================================================== */
+
+
+.seguimiento-rejilla {
+    display: grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1fr
+        );
+
+    grid-auto-flow: row;
+
+    gap: 14px;
+
+    width: 100%;
+
+    background: #071019;
+}
+
+
+/* ==========================================================
+   VISTAZO GENERAL
+   ========================================================== */
 
 
 /*
- * El título de la página no se ve en ninguna pantalla: el visor ya
- * lleva el suyo dentro ("Seguimiento meteorológico · Radar · Satélite ·
- * Rayos"), así que salía dos veces seguidas y le robaba unos 75 px de
- * alto al mapa, que es lo que se viene a ver.
+ * Primera posición de la rejilla principal.
  *
- * El <h1> se queda en el HTML, fuera de la vista pero legible para
- * buscadores y lectores de pantalla: el del visor vive dentro de un
- * iframe y no cuenta como título de esta página.
+ * Internamente utiliza dos filas:
+ *
+ * 1. título;
+ * 2. tabla de estaciones.
  */
-.cabecera-observaciones{
-position:absolute;
-width:1px;
-height:1px;
-margin:-1px;
-padding:0;
-overflow:hidden;
-clip:rect(0 0 0 0);
-white-space:nowrap;
-border:0
+.vistazo-general {
+    display: grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1fr
+        );
+
+    grid-template-rows:
+        auto
+        auto;
+
+    width:
+        calc(
+            100% - 28px
+        );
+
+    margin:
+        14px
+        14px
+        0;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        #29435e;
+
+    border-radius: 12px;
+
+    background: #071019;
+
+    box-shadow:
+        0 8px 24px
+        rgba(
+            0,
+            0,
+            0,
+            0.22
+        );
 }
 
 
+/* ==========================================================
+   TÍTULO VISTAZO GENERAL
+   ========================================================== */
+
+
+.vistazo-general-titulo {
+    display: flex;
+
+    align-items: center;
+
+    min-height: 48px;
+
+    margin: 0;
+
+    padding:
+        11px
+        16px;
+
+    border-bottom:
+        1px solid
+        #29435e;
+
+    background: #252b33;
+
+    color: #f6f8fb;
+
+    font-size:
+        clamp(
+            16px,
+            3vw,
+            21px
+        );
+
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: 0.025em;
+
+    text-transform: uppercase;
+}
+
+
+/* ==========================================================
+   TABLA DE ESTACIONES EMBEBIDA
+   ========================================================== */
+
+
+.tabla-estaciones-iframe {
+    display: block;
+
+    width: 100%;
+    height: 470px;
+
+    border: 0;
+
+    background: #071019;
+}
+
+
+/* ==========================================================
+   VISOR
+   ========================================================== */
+
+
 /*
- * Móvil en horizontal (y cualquier ventana baja). Con el alto fijo de
- * 100dvh, entre la cabecera y las filas de selectores del visor el mapa
- * se quedaba en 0 px: el visor entero cabía en 251 px y la página no
- * dejaba desplazarse. Aquí se le da al visor un alto mínimo y se
- * devuelve el desplazamiento a la página.
+ * Segunda posición de la rejilla.
+ *
+ * El visor conserva aproximadamente una pantalla completa
+ * para que el mapa no pierda superficie útil.
  */
-@media(max-height:560px){
-body{height:auto;min-height:100dvh;overflow:auto}
-.visor-contenedor{flex:0 0 auto;min-height:560px}
-.observaciones{height:560px}
+.visor-contenedor {
+    width: 100%;
+
+    height: 100vh;
+    height: 100dvh;
+
+    min-height: 620px;
+
+    background: #071019;
+}
+
+
+.observaciones {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+
+    background: #071019;
+}
+
+
+/* ==========================================================
+   SIN JAVASCRIPT
+   ========================================================== */
+
+
+.sin-js {
+    display: grid;
+
+    place-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 24px;
+
+    color: #ffffff;
+
+    background: #071019;
+
+    text-align: center;
+}
+
+
+.sin-js a {
+    color: #36d5ff;
+}
+
+
+/* ==========================================================
+   TÍTULO DE PÁGINA OCULTO VISUALMENTE
+   ========================================================== */
+
+
+/*
+ * El h1 de la página permanece en el documento para buscadores
+ * y lectores de pantalla.
+ *
+ * No se muestra visualmente porque Seguimiento dispone de sus
+ * propios títulos funcionales dentro del contenido.
+ */
+.cabecera-observaciones {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    margin: -1px;
+    padding: 0;
+
+    overflow: hidden;
+
+    clip:
+        rect(
+            0
+            0
+            0
+            0
+        );
+
+    white-space: nowrap;
+
+    border: 0;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+
+@media (max-width: 700px) {
+
+    .seguimiento-rejilla {
+        gap: 10px;
+    }
+
+
+    .vistazo-general {
+        width:
+            calc(
+                100% - 20px
+            );
+
+        margin:
+            10px
+            10px
+            0;
+
+        border-radius: 10px;
+    }
+
+
+    .vistazo-general-titulo {
+        min-height: 44px;
+
+        padding:
+            10px
+            12px;
+
+        font-size: 16px;
+    }
+
+
+    /*
+     * En móvil la tabla necesita algo más de altura por la
+     * disposición responsive de su contenido y su leyenda.
+     */
+    .tabla-estaciones-iframe {
+        height: 540px;
+    }
+
+
+    .visor-contenedor {
+        min-height: 620px;
+    }
+
+}
+
+
+/* ==========================================================
+   MÓVIL HORIZONTAL / VENTANAS BAJAS
+   ========================================================== */
+
+
+@media (max-height: 560px) {
+
+    .tabla-estaciones-iframe {
+        height: 500px;
+    }
+
+
+    .visor-contenedor {
+        height: 560px;
+        min-height: 560px;
+    }
+
 }
 
 
