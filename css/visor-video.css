@@ -11,6 +11,7 @@
  * - ocupa siempre el 100 % del contenedor que lo aloja;
  * - no impone un tamaño exterior concreto;
  * - mantiene el vídeo dentro de su rectángulo disponible;
+ * - puede mostrar una portada corporativa sin cargar el stream;
  * - superpone datos meteorológicos;
  * - mantiene siempre la marca MeteoArchidona;
  * - admite modo interactivo y no interactivo;
@@ -88,6 +89,210 @@ body {
     object-fit: contain;
 
     background: #000;
+}
+
+
+/* ==========================================================
+   PORTADA CORPORATIVA
+   ========================================================== */
+
+
+/*
+ * La portada aparece cuando el visor se utiliza con:
+ *
+ *     autoplay=0
+ *
+ * No existe ningún stream cargado todavía.
+ *
+ * Utilizamos pseudo-elementos del propio visor para no
+ * introducir elementos adicionales en el HTML.
+ */
+
+
+/*
+ * Fondo + logotipo.
+ */
+.visor-video::before {
+    content: "";
+
+    position: absolute;
+
+    z-index: 6;
+
+    inset: 0;
+
+    visibility: hidden;
+
+    opacity: 0;
+
+    background-color: #050b12;
+
+    background-image:
+        url("/assets/logo-cabecera.png"),
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(
+                17,
+                67,
+                101,
+                0.58
+            )
+            0%,
+            rgba(
+                8,
+                29,
+                46,
+                0.78
+            )
+            38%,
+            rgba(
+                3,
+                10,
+                17,
+                0.98
+            )
+            76%
+        );
+
+    background-repeat:
+        no-repeat,
+        no-repeat;
+
+    background-position:
+        center 43%,
+        center;
+
+    background-size:
+        auto min(62%, 230px),
+        cover;
+
+    pointer-events: none;
+
+    transition:
+        opacity
+        180ms
+        ease,
+        visibility
+        180ms
+        ease;
+}
+
+
+/*
+ * Mensaje de activación.
+ */
+.visor-video::after {
+    content: "PULSA PARA VER EN DIRECTO";
+
+    position: absolute;
+
+    z-index: 6;
+
+    left: 50%;
+    bottom: 11%;
+
+    visibility: hidden;
+
+    opacity: 0;
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    width:
+        calc(
+            100% - 32px
+        );
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.90
+        );
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size:
+        clamp(
+            9px,
+            1.5vw,
+            14px
+        );
+
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    letter-spacing: 0.075em;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    text-shadow:
+        0 1px 2px
+        rgba(
+            0,
+            0,
+            0,
+            0.98
+        ),
+        0 0 8px
+        rgba(
+            0,
+            0,
+            0,
+            0.88
+        );
+
+    pointer-events: none;
+
+    user-select: none;
+
+    transition:
+        opacity
+        180ms
+        ease,
+        visibility
+        180ms
+        ease;
+}
+
+
+.visor-video.portada-activa::before,
+.visor-video.portada-activa::after {
+    visibility: visible;
+
+    opacity: 1;
+}
+
+
+/*
+ * El visor completo actúa como superficie de reproducción
+ * cuando se ha solicitado click=1.
+ */
+.visor-video.click-alterna {
+    cursor: pointer;
+
+    touch-action: manipulation;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+/*
+ * Los controles propios, si estuvieran habilitados, conservan
+ * prioridad visual sobre la portada.
+ */
+.visor-video.portada-activa
+.visor-video-controles {
+    z-index: 7;
 }
 
 
@@ -235,9 +440,7 @@ body {
      * El estado se centra en la parte superior del vídeo.
      *
      * El JavaScript continúa calculando la coordenada vertical
-     * según el rectángulo real de la imagen. La coordenada
-     * horizontal right que asigna dinámicamente se anula aquí
-     * para evitar solapamientos con la fecha/hora de la cámara.
+     * según el rectángulo real de la imagen.
      */
     left: 50%;
 
@@ -426,10 +629,6 @@ body {
 
     /*
      * Los controles se sitúan en el centro inferior del visor.
-     *
-     * El JavaScript todavía calcula dinámicamente una
-     * coordenada right. La anulamos aquí porque el vídeo
-     * siempre está centrado mediante object-fit: contain.
      */
     left: 50%;
 
@@ -600,7 +799,7 @@ body {
 .visor-video-error {
     position: absolute;
 
-    z-index: 4;
+    z-index: 8;
 
     inset: 0;
 
@@ -763,12 +962,54 @@ body {
 }
 
 
+/*
+ * Si la portada se utilizase en pantalla completa,
+ * ampliamos también el logotipo.
+ */
+.visor-video.portada-activa:fullscreen::before,
+.visor-video.portada-activa:-webkit-full-screen::before {
+    background-size:
+        auto min(58%, 360px),
+        cover;
+}
+
+
 /* ==========================================================
    RESPONSIVE
    ========================================================== */
 
 
 @media (max-width: 640px) {
+
+    .visor-video::before {
+        background-position:
+            center 42%,
+            center;
+
+        background-size:
+            auto min(58%, 180px),
+            cover;
+    }
+
+
+    .visor-video::after {
+        bottom: 9%;
+
+        width:
+            calc(
+                100% - 20px
+            );
+
+        font-size:
+            clamp(
+                8px,
+                2.6vw,
+                11px
+            );
+
+        letter-spacing: 0.055em;
+    }
+
 
     .visor-video-meteo {
         top: 8px;
@@ -872,6 +1113,22 @@ body {
 
 
 @media (max-width: 360px) {
+
+    .visor-video::before {
+        background-size:
+            auto min(54%, 145px),
+            cover;
+    }
+
+
+    .visor-video::after {
+        bottom: 8%;
+
+        font-size: 8px;
+
+        letter-spacing: 0.04em;
+    }
+
 
     .visor-video-meteo {
         gap: 4px;
