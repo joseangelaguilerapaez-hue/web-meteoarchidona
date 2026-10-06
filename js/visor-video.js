@@ -11,21 +11,43 @@
  *     camara=los-llanos
  *     vista=panoramica | ptz
  *     interactivo=0 | 1
+ *     autoplay=0 | 1
+ *     controles=0 | 1
+ *     click=0 | 1
+ *
+ * Valores por defecto:
+ *
+ *     interactivo=0
+ *     autoplay=1
+ *     controles=interactivo
+ *     click=0
  *
  * Ejemplos:
  *
- *     visor-video.html?camara=los-llanos&vista=panoramica&interactivo=0
+ * Visor interactivo con reproducción automática:
  *
- *     visor-video.html?camara=los-llanos&vista=ptz&interactivo=1
+ *     video.html?camara=los-llanos&vista=panoramica&interactivo=1
+ *
+ * Visor compacto para ficha de estación:
+ *
+ *     video.html?camara=los-llanos&vista=panoramica
+ *         &interactivo=1
+ *         &autoplay=0
+ *         &controles=0
+ *         &click=1
  *
  * Responsabilidades:
  *
  * - resolver cámara y vista;
  * - reproducir HLS;
+ * - poder retrasar completamente la carga del stream;
+ * - iniciar la emisión mediante pulsación;
+ * - pausar y reanudar mediante pulsación;
+ * - detener la descarga HLS.js mientras está pausado;
  * - gestionar recuperación y errores;
  * - mostrar datos meteorológicos de la estación asociada;
  * - mantener siempre la marca MeteoArchidona;
- * - ofrecer controles propios cuando el visor es interactivo;
+ * - ofrecer controles propios cuando se soliciten;
  * - maximizar el contenedor completo del visor;
  * - mantener las superposiciones dentro del rectángulo real del vídeo;
  * - evitar solapamientos entre datos meteorológicos y estado.
@@ -81,6 +103,10 @@ let reproductorHls = null;
 let temporizadorMeteo = null;
 
 let configuracionActual = null;
+
+let reproduccionPreparada = false;
+
+let cargaHlsDetenida = false;
 
 
 /* ==========================================================
@@ -258,6 +284,42 @@ function obtenerConfiguracion() {
     }
 
 
+    const interactivo =
+        parametroBooleano(
+            parametros.get(
+                "interactivo"
+            ),
+            false
+        );
+
+
+    const autoplay =
+        parametroBooleano(
+            parametros.get(
+                "autoplay"
+            ),
+            true
+        );
+
+
+    const controles =
+        parametroBooleano(
+            parametros.get(
+                "controles"
+            ),
+            interactivo
+        );
+
+
+    const clickAlterna =
+        parametroBooleano(
+            parametros.get(
+                "click"
+            ),
+            false
+        );
+
+
     return {
 
         claveCamara:
@@ -276,12 +338,16 @@ function obtenerConfiguracion() {
             vista.src,
 
         interactivo:
-            parametroBooleano(
-                parametros.get(
-                    "interactivo"
-                ),
-                false
-            )
+            interactivo,
+
+        autoplay:
+            autoplay,
+
+        controles:
+            controles,
+
+        clickAlterna:
+            clickAlterna
 
     };
 
@@ -427,6 +493,67 @@ function ocultarError() {
 
 
 /* ==========================================================
+   PORTADA
+   ========================================================== */
+
+
+function mostrarPortada() {
+
+    const {
+        raiz,
+        video
+    } =
+        obtenerDom();
+
+
+    if (raiz) {
+
+        raiz.classList.add(
+            "portada-activa"
+        );
+
+    }
+
+
+    if (video) {
+
+        video.autoplay =
+            false;
+
+        video.preload =
+            "none";
+
+    }
+
+
+    establecerEstado(
+        "PULSA PARA VER EN DIRECTO"
+    );
+
+}
+
+
+function ocultarPortada() {
+
+    const {
+        raiz
+    } =
+        obtenerDom();
+
+
+    if (!raiz) {
+        return;
+    }
+
+
+    raiz.classList.remove(
+        "portada-activa"
+    );
+
+}
+
+
+/* ==========================================================
    METEOROLOGÍA
    ========================================================== */
 
@@ -471,11 +598,6 @@ function mostrarMeteo(datos) {
     }
 
 
-    /*
-     * El ancho de la franja meteorológica cambia cuando llegan
-     * los valores reales. Recalculamos la posición del estado
-     * para evitar que "EN DIRECTO" pueda quedar encima.
-     */
     window.requestAnimationFrame(
         posicionarSuperposiciones
     );
@@ -815,6 +937,20 @@ function posicionarSuperposiciones() {
     }
 
 
+    /*
+     * Mientras estamos en la portada todavía no existe
+     * rectángulo real de vídeo porque no se ha cargado HLS.
+     * La portada se posiciona íntegramente mediante CSS.
+     */
+    if (
+        !reproduccionPreparada
+    ) {
+
+        return;
+
+    }
+
+
     const rectangulo =
         obtenerRectanguloVideo(
             video
@@ -872,30 +1008,12 @@ function posicionarSuperposiciones() {
 
     if (estado) {
 
-        /*
-         * La posición horizontal está centrada mediante CSS.
-         *
-         * Siempre comenzamos intentando colocar el estado en
-         * la primera línea superior.
-         */
         estado.style.top =
             arribaBase
             +
             "px";
 
 
-        /*
-         * En visores estrechos la franja de temperatura,
-         * humedad y lluvia puede alcanzar el centro.
-         *
-         * Si realmente invade el espacio de "EN DIRECTO",
-         * bajamos únicamente el estado una segunda línea.
-         *
-         * En cuanto vuelve a existir espacio suficiente
-         * —por ejemplo al entrar en pantalla completa—
-         * esta misma función lo devuelve automáticamente
-         * a la primera línea.
-         */
         if (
             meteo
             &&
@@ -948,11 +1066,6 @@ function posicionarSuperposiciones() {
 
     if (controles) {
 
-        /*
-         * La posición horizontal de los controles también
-         * está centrada por CSS. Aquí solo se mantiene
-         * correctamente su distancia al borde real del vídeo.
-         */
         controles.style.bottom =
             (
                 rectangulo.abajo
@@ -968,7 +1081,7 @@ function posicionarSuperposiciones() {
 
 
 /* ==========================================================
-   CONTROLES
+   BOTÓN PLAY
    ========================================================== */
 
 
@@ -992,7 +1105,11 @@ function actualizarBotonPlay() {
     }
 
 
-    if (video.paused) {
+    if (
+        !reproduccionPreparada
+        ||
+        video.paused
+    ) {
 
         botonPlay.textContent =
             "▶";
@@ -1018,7 +1135,86 @@ function actualizarBotonPlay() {
 }
 
 
-async function alternarReproduccion() {
+/* ==========================================================
+   PAUSA Y REANUDACIÓN
+   ========================================================== */
+
+
+function detenerCargaHls() {
+
+    if (
+        !reproductorHls
+        ||
+        typeof reproductorHls.stopLoad
+        !==
+        "function"
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        reproductorHls.stopLoad();
+
+        cargaHlsDetenida =
+            true;
+
+
+    } catch (error) {
+
+        console.debug(
+            "No se pudo detener temporalmente la carga HLS.",
+            error
+        );
+
+    }
+
+}
+
+
+function reanudarCargaHls() {
+
+    if (
+        !reproductorHls
+        ||
+        !cargaHlsDetenida
+        ||
+        typeof reproductorHls.startLoad
+        !==
+        "function"
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        reproductorHls.startLoad(
+            -1
+        );
+
+        cargaHlsDetenida =
+            false;
+
+
+    } catch (error) {
+
+        console.debug(
+            "No se pudo reanudar la carga HLS.",
+            error
+        );
+
+    }
+
+}
+
+
+function pausarReproduccion() {
 
     const {
         video
@@ -1029,8 +1225,118 @@ async function alternarReproduccion() {
     if (
         !video
         ||
-        !configuracionActual?.interactivo
+        !reproduccionPreparada
     ) {
+
+        return;
+
+    }
+
+
+    video.pause();
+
+
+    /*
+     * En navegadores que utilizan hls.js detenemos también
+     * la solicitud de nuevos segmentos.
+     *
+     * El último fotograma permanece visible en el elemento
+     * de vídeo.
+     */
+    detenerCargaHls();
+
+
+    establecerEstado(
+        "PAUSADO"
+    );
+
+
+    actualizarBotonPlay();
+
+}
+
+
+async function reanudarReproduccion() {
+
+    const {
+        video
+    } =
+        obtenerDom();
+
+
+    if (!video) {
+        return;
+    }
+
+
+    if (!reproduccionPreparada) {
+
+        ocultarPortada();
+
+        prepararReproduccion();
+
+        return;
+
+    }
+
+
+    reanudarCargaHls();
+
+
+    try {
+
+        await video.play();
+
+
+    } catch (error) {
+
+        console.debug(
+            "No se pudo reanudar la reproducción.",
+            error
+        );
+
+
+        establecerEstado(
+            "PULSA PARA REPRODUCIR"
+        );
+
+    }
+
+
+    actualizarBotonPlay();
+
+}
+
+
+async function alternarReproduccion() {
+
+    const {
+        video
+    } =
+        obtenerDom();
+
+
+    if (!video) {
+        return;
+    }
+
+
+    const puedeAlternar =
+        Boolean(
+            configuracionActual?.interactivo
+            ||
+            configuracionActual?.clickAlterna
+        );
+
+
+    if (!puedeAlternar) {
+        return;
+    }
+
+
+    if (!reproduccionPreparada) {
+
+        await reanudarReproduccion();
 
         return;
 
@@ -1039,30 +1345,21 @@ async function alternarReproduccion() {
 
     if (video.paused) {
 
-        try {
-
-            await video.play();
-
-        } catch (error) {
-
-            console.debug(
-                "No se pudo iniciar la reproducción.",
-                error
-            );
-
-        }
+        await reanudarReproduccion();
 
 
     } else {
 
-        video.pause();
+        pausarReproduccion();
 
     }
 
-
-    actualizarBotonPlay();
-
 }
+
+
+/* ==========================================================
+   PANTALLA COMPLETA
+   ========================================================== */
 
 
 function documentoEnFullscreen() {
@@ -1156,8 +1453,40 @@ async function alternarFullscreen() {
 
 
 /* ==========================================================
-   MODO INTERACTIVO
+   INTERACCIÓN
    ========================================================== */
+
+
+function pulsacionSobreVisor(evento) {
+
+    if (
+        !configuracionActual?.clickAlterna
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * Los botones propios tienen su comportamiento independiente.
+     * Evitamos que una pulsación sobre ellos llegue también
+     * al alternador general del visor.
+     */
+    if (
+        evento.target.closest(
+            ".visor-video-control"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    alternarReproduccion();
+
+}
 
 
 function configurarInteractividad() {
@@ -1189,15 +1518,37 @@ function configurarInteractividad() {
         );
 
 
+    const clickAlterna =
+        Boolean(
+            configuracionActual?.clickAlterna
+        );
+
+
+    const mostrarControles =
+        Boolean(
+            configuracionActual?.controles
+        );
+
+
     raiz.classList.toggle(
         "interactivo",
         interactivo
+        ||
+        clickAlterna
     );
 
 
     raiz.classList.toggle(
         "no-interactivo",
         !interactivo
+        &&
+        !clickAlterna
+    );
+
+
+    raiz.classList.toggle(
+        "click-alterna",
+        clickAlterna
     );
 
 
@@ -1210,7 +1561,15 @@ function configurarInteractividad() {
 
 
     video.autoplay =
-        true;
+        Boolean(
+            configuracionActual?.autoplay
+        );
+
+
+    video.preload =
+        configuracionActual?.autoplay
+            ? "auto"
+            : "none";
 
 
     video.muted =
@@ -1227,7 +1586,11 @@ function configurarInteractividad() {
     );
 
 
-    if (!interactivo) {
+    if (
+        !interactivo
+        &&
+        !clickAlterna
+    ) {
 
         video.tabIndex =
             -1;
@@ -1238,13 +1601,13 @@ function configurarInteractividad() {
     if (controles) {
 
         controles.hidden =
-            !interactivo;
+            !mostrarControles;
 
     }
 
 
     if (
-        interactivo
+        mostrarControles
         &&
         botonPlay
     ) {
@@ -1258,6 +1621,8 @@ function configurarInteractividad() {
 
 
     if (
+        mostrarControles
+        &&
         interactivo
         &&
         botonFullscreen
@@ -1266,6 +1631,16 @@ function configurarInteractividad() {
         botonFullscreen.addEventListener(
             "click",
             alternarFullscreen
+        );
+
+    }
+
+
+    if (clickAlterna) {
+
+        raiz.addEventListener(
+            "click",
+            pulsacionSobreVisor
         );
 
     }
@@ -1294,6 +1669,9 @@ function prepararHlsNativo(
 
     reproductorHls =
         null;
+
+    cargaHlsDetenida =
+        false;
 
 
     video.addEventListener(
@@ -1354,8 +1732,12 @@ function prepararHlsNativo(
             () => {
 
                 establecerEstado(
-                    configuracionActual?.interactivo
-                        ? "PULSA PLAY"
+                    (
+                        configuracionActual?.interactivo
+                        ||
+                        configuracionActual?.clickAlterna
+                    )
+                        ? "PULSA PARA REPRODUCIR"
                         : "CONECTANDO"
                 );
 
@@ -1394,6 +1776,10 @@ function prepararHlsJs(
         hls;
 
 
+    cargaHlsDetenida =
+        false;
+
+
     establecerEstado(
         "CONECTANDO"
     );
@@ -1421,8 +1807,12 @@ function prepararHlsJs(
                     () => {
 
                         establecerEstado(
-                            configuracionActual?.interactivo
-                                ? "PULSA PLAY"
+                            (
+                                configuracionActual?.interactivo
+                                ||
+                                configuracionActual?.clickAlterna
+                            )
+                                ? "PULSA PARA REPRODUCIR"
                                 : "CONECTANDO"
                         );
 
@@ -1459,6 +1849,10 @@ function prepararHlsJs(
                 try {
 
                     hls.startLoad();
+
+                    cargaHlsDetenida =
+                        false;
+
 
                 } catch (error) {
 
@@ -1563,6 +1957,11 @@ function prepararHlsJs(
 
 function prepararReproduccion() {
 
+    if (reproduccionPreparada) {
+        return;
+    }
+
+
     const {
         video
     } =
@@ -1576,6 +1975,19 @@ function prepararReproduccion() {
         );
 
     }
+
+
+    reproduccionPreparada =
+        true;
+
+
+    ocultarPortada();
+
+    ocultarError();
+
+
+    video.preload =
+        "auto";
 
 
     const src =
@@ -1658,6 +2070,14 @@ function destruirReproductor() {
             null;
 
     }
+
+
+    cargaHlsDetenida =
+        false;
+
+
+    reproduccionPreparada =
+        false;
 
 
     const {
@@ -1785,10 +2205,23 @@ function inicializarVisorVideo() {
         registrarEventosGlobales();
 
 
-        prepararReproduccion();
-
-
         iniciarActualizacionMeteo();
+
+
+        if (
+            configuracionActual.autoplay
+        ) {
+
+            prepararReproduccion();
+
+
+        } else {
+
+            mostrarPortada();
+
+            actualizarBotonPlay();
+
+        }
 
 
     } catch (error) {
