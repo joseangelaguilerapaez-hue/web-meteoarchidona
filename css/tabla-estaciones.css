@@ -4,6 +4,13 @@
  *
  * Componente autónomo para mostrar en formato tabular las condiciones
  * principales de todas las estaciones públicas de MeteoArchidona.
+ *
+ * Incluye:
+ *
+ * - tabla dinámica de estaciones;
+ * - coloración meteorológica de celdas;
+ * - leyenda cromática desplegable;
+ * - rejilla responsive de la leyenda.
  */
 
 
@@ -147,6 +154,10 @@ body {
         tabular-nums;
 
     text-align: center;
+
+    transition:
+        background-color 160ms ease,
+        box-shadow 160ms ease;
 }
 
 
@@ -155,14 +166,10 @@ body {
 }
 
 
-.tabla-estaciones tbody tr:hover {
-    background:
-        rgba(
-            54,
-            213,
-            255,
-            0.045
-        );
+.tabla-estaciones tbody tr:hover td {
+    box-shadow:
+        inset 0 0 0 999px
+        rgba(255, 255, 255, 0.025);
 }
 
 
@@ -185,6 +192,171 @@ body {
 
 .tabla-estaciones-viento {
     min-width: 145px;
+}
+
+
+/* ==========================================================
+   COLORES METEOROLÓGICOS
+   ========================================================== */
+
+
+/*
+ * Azul
+ *
+ * Temperatura muy baja.
+ * Humedad muy alta.
+ * Presión baja.
+ * Lluvia moderada.
+ */
+.meteo-azul {
+    background:
+        rgba(
+            59,
+            158,
+            255,
+            0.20
+        ) !important;
+
+    box-shadow:
+        inset 3px 0
+        #3b9eff;
+}
+
+
+/*
+ * Cian
+ *
+ * Temperatura fría.
+ * Humedad alta.
+ * Presión moderadamente baja.
+ * Lluvia débil.
+ */
+.meteo-cian {
+    background:
+        rgba(
+            54,
+            213,
+            255,
+            0.16
+        ) !important;
+
+    box-shadow:
+        inset 3px 0
+        #36d5ff;
+}
+
+
+/*
+ * Verde
+ *
+ * Valores meteorológicos cómodos o normales.
+ */
+.meteo-verde {
+    background:
+        rgba(
+            34,
+            197,
+            94,
+            0.15
+        ) !important;
+
+    box-shadow:
+        inset 3px 0
+        #22c55e;
+}
+
+
+/*
+ * Ámbar
+ *
+ * Valores cálidos, secos, altos o moderados.
+ */
+.meteo-ambar {
+    background:
+        rgba(
+            242,
+            191,
+            88,
+            0.17
+        ) !important;
+
+    box-shadow:
+        inset 3px 0
+        #f2bf58;
+}
+
+
+/*
+ * Naranja
+ *
+ * Valores meteorológicos fuertes.
+ */
+.meteo-naranja {
+    background:
+        rgba(
+            249,
+            115,
+            22,
+            0.20
+        ) !important;
+
+    box-shadow:
+        inset 3px 0
+        #f97316;
+}
+
+
+/*
+ * Rojo
+ *
+ * Valores meteorológicos muy fuertes o extremos.
+ */
+.meteo-rojo {
+    background:
+        rgba(
+            239,
+            68,
+            68,
+            0.23
+        ) !important;
+
+    box-shadow:
+        inset 3px 0
+        #ef4444;
+}
+
+
+/*
+ * Gris
+ *
+ * Calma o dato no disponible.
+ */
+.meteo-gris {
+    background:
+        rgba(
+            129,
+            148,
+            170,
+            0.14
+        ) !important;
+
+    box-shadow:
+        inset 3px 0
+        #8194aa;
+}
+
+
+/*
+ * Neutro
+ *
+ * Sin lluvia.
+ */
+.meteo-neutro {
+    background:
+        var(--surface, #0d1520) !important;
+
+    box-shadow:
+        none;
 }
 
 
@@ -233,8 +405,341 @@ body {
 
 
 /* ==========================================================
+   LEYENDA CROMÁTICA
+   ========================================================== */
+
+
+.leyenda-cromatica {
+    width: 100%;
+
+    margin-top: 12px;
+
+    border:
+        1px solid
+        var(--border-strong, #29435e);
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    background:
+        var(--surface, #0d1520);
+}
+
+
+.leyenda-cromatica > summary {
+    display: flex;
+
+    align-items: center;
+    gap: 9px;
+
+    width: 100%;
+
+    padding: 10px 13px;
+
+    cursor: pointer;
+
+    background: #0c2032;
+
+    color:
+        var(--text, #f6f8fb);
+
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    list-style: none;
+
+    user-select: none;
+}
+
+
+.leyenda-cromatica > summary::-webkit-details-marker {
+    display: none;
+}
+
+
+.leyenda-cromatica > summary::before {
+    content: "▸";
+
+    display: inline-block;
+
+    color:
+        var(--cyan, #36d5ff);
+
+    font-size: 14px;
+
+    transition:
+        transform 140ms ease;
+}
+
+
+.leyenda-cromatica[open] > summary::before {
+    transform:
+        rotate(
+            90deg
+        );
+}
+
+
+.leyenda-cromatica > summary:hover {
+    background: #10283d;
+}
+
+
+.leyenda-cromatica-contenido {
+    padding: 10px;
+}
+
+
+/* ==========================================================
+   REJILLA DE LEYENDA
+   ========================================================== */
+
+
+.leyenda-rejilla {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 8px;
+}
+
+
+.leyenda-columna {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+
+.leyenda-grupo {
+    min-width: 0;
+}
+
+
+.leyenda-grupo-titulo {
+    margin: 0;
+
+    padding: 7px 9px;
+
+    border:
+        1px solid
+        var(--border-strong, #29435e);
+
+    background: #0c2032;
+
+    color:
+        var(--text, #f6f8fb);
+
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+
+.leyenda-grupo-filas {
+    display: grid;
+
+    gap: 3px;
+
+    margin-top: 3px;
+}
+
+
+.leyenda-fila {
+    display: grid;
+
+    grid-template-columns:
+        30px
+        minmax(
+            76px,
+            0.75fr
+        )
+        minmax(
+            88px,
+            1fr
+        );
+
+    gap: 3px;
+
+    min-width: 0;
+
+    min-height: 29px;
+}
+
+
+.leyenda-color,
+.leyenda-rango,
+.leyenda-significado {
+    display: flex;
+
+    align-items: center;
+
+    min-width: 0;
+
+    border:
+        1px solid
+        var(--border, #1a2d42);
+}
+
+
+.leyenda-color {
+    justify-content: center;
+}
+
+
+.leyenda-rango,
+.leyenda-significado {
+    padding: 4px 7px;
+
+    background:
+        var(--card-soft, #0d1a27);
+
+    color:
+        var(--text, #f6f8fb);
+
+    font-size: 10px;
+    line-height: 1.15;
+}
+
+
+.leyenda-rango {
+    white-space: nowrap;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+
+.leyenda-significado {
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   MUESTRAS DE COLOR DE LA LEYENDA
+   ========================================================== */
+
+
+.leyenda-color.azul {
+    background: #3b9eff;
+}
+
+
+.leyenda-color.cian {
+    background: #36d5ff;
+}
+
+
+.leyenda-color.verde {
+    background: #22c55e;
+}
+
+
+.leyenda-color.ambar {
+    background: #f2bf58;
+}
+
+
+.leyenda-color.naranja {
+    background: #f97316;
+}
+
+
+.leyenda-color.rojo {
+    background: #ef4444;
+}
+
+
+.leyenda-color.gris {
+    background: #8194aa;
+}
+
+
+.leyenda-color.neutro {
+    background: #0d1520;
+}
+
+
+/* ==========================================================
+   NOTA DE LEYENDA
+   ========================================================== */
+
+
+.leyenda-nota {
+    margin:
+        9px
+        2px
+        0;
+
+    color:
+        var(--muted, #aabdd0);
+
+    font-size: 10px;
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
    RESPONSIVE
    ========================================================== */
+
+
+@media (max-width: 800px) {
+
+    .leyenda-rejilla {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+
+        gap: 7px;
+    }
+
+
+    .leyenda-cromatica-contenido {
+        padding: 8px;
+    }
+
+
+    .leyenda-fila {
+        grid-template-columns:
+            26px
+            minmax(
+                68px,
+                0.8fr
+            )
+            minmax(
+                76px,
+                1fr
+            );
+    }
+
+
+    .leyenda-rango,
+    .leyenda-significado {
+        padding: 4px 5px;
+
+        font-size: 9px;
+    }
+
+}
 
 
 @media (max-width: 700px) {
@@ -257,6 +762,53 @@ body {
 
     .tabla-estaciones td {
         font-size: 13px;
+    }
+
+
+    .leyenda-cromatica {
+        margin-top: 10px;
+    }
+
+
+    .leyenda-cromatica > summary {
+        padding: 9px 10px;
+
+        font-size: 12px;
+    }
+
+}
+
+
+/*
+ * Salvavidas para pantallas extremadamente estrechas.
+ *
+ * El diseño normal de móvil mantiene dos columnas.
+ */
+@media (max-width: 390px) {
+
+    .leyenda-rejilla {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .leyenda-fila {
+        grid-template-columns:
+            28px
+            minmax(
+                86px,
+                0.75fr
+            )
+            minmax(
+                100px,
+                1fr
+            );
+    }
+
+
+    .leyenda-rango,
+    .leyenda-significado {
+        font-size: 9.5px;
     }
 
 }
