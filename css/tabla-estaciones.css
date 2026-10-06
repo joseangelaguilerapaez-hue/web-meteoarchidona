@@ -1,0 +1,265 @@
+/*
+ * MeteoArchidona
+ * Tabla de estaciones
+ *
+ * Componente autónomo para mostrar en formato tabular las condiciones
+ * principales de todas las estaciones públicas de MeteoArchidona.
+ */
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #071019;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    color: var(--text, #f6f8fb);
+}
+
+
+/* ==========================================================
+   PANEL
+   ========================================================== */
+
+
+.tabla-estaciones-panel {
+    width: 100%;
+    padding: 14px;
+    background: #071019;
+}
+
+
+.tabla-estaciones-cabecera {
+    margin: 0 0 10px;
+}
+
+
+.tabla-estaciones-cabecera h2 {
+    margin: 0;
+
+    color: var(--text, #f6f8fb);
+
+    font-size: clamp(
+        17px,
+        3vw,
+        22px
+    );
+
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+
+    text-transform: uppercase;
+}
+
+
+/* ==========================================================
+   CONTENEDOR
+   ========================================================== */
+
+
+.tabla-estaciones-contenedor {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border:
+        1px solid
+        var(--border-strong, #29435e);
+
+    border-radius: 12px;
+
+    background:
+        var(--surface, #0d1520);
+
+    box-shadow:
+        0 8px 24px
+        rgba(0, 0, 0, 0.22);
+}
+
+
+/* ==========================================================
+   TABLA
+   ========================================================== */
+
+
+.tabla-estaciones {
+    width: 100%;
+    min-width: 790px;
+
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+
+.tabla-estaciones th,
+.tabla-estaciones td {
+    padding: 11px 13px;
+
+    border-bottom:
+        1px solid
+        var(--border, #1a2d42);
+
+    vertical-align: middle;
+
+    white-space: nowrap;
+}
+
+
+.tabla-estaciones th {
+    background: #0c2032;
+
+    color:
+        var(--text-soft, #c9d6e5);
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.035em;
+
+    text-align: center;
+    text-transform: uppercase;
+}
+
+
+.tabla-estaciones th:first-child,
+.tabla-estaciones td:first-child {
+    text-align: left;
+}
+
+
+.tabla-estaciones td {
+    color:
+        var(--text, #f6f8fb);
+
+    font-size: 14px;
+
+    font-variant-numeric:
+        tabular-nums;
+
+    text-align: center;
+}
+
+
+.tabla-estaciones tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+.tabla-estaciones tbody tr:hover {
+    background:
+        rgba(
+            54,
+            213,
+            255,
+            0.045
+        );
+}
+
+
+/* ==========================================================
+   COLUMNAS
+   ========================================================== */
+
+
+.tabla-estaciones-nombre {
+    min-width: 180px;
+
+    font-weight: 700;
+}
+
+
+.tabla-estaciones-valor {
+    min-width: 105px;
+}
+
+
+.tabla-estaciones-viento {
+    min-width: 145px;
+}
+
+
+/* ==========================================================
+   ESTADOS
+   ========================================================== */
+
+
+.tabla-estaciones-sin-datos {
+    color:
+        var(--muted, #aabdd0);
+}
+
+
+.tabla-estaciones-cargando td,
+.tabla-estaciones-vacia td {
+    padding: 18px 14px;
+
+    color:
+        var(--muted, #aabdd0);
+
+    text-align: center;
+}
+
+
+.tabla-estaciones-estado {
+    margin:
+        8px
+        2px
+        0;
+
+    color:
+        var(--text-faint, #8194aa);
+
+    font-size: 11px;
+    line-height: 1.35;
+
+    text-align: right;
+}
+
+
+.tabla-estaciones-estado.error {
+    color:
+        var(--amber-light, #ffd989);
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+
+@media (max-width: 700px) {
+
+    .tabla-estaciones-panel {
+        padding: 10px;
+    }
+
+
+    .tabla-estaciones-cabecera {
+        margin-bottom: 8px;
+    }
+
+
+    .tabla-estaciones th,
+    .tabla-estaciones td {
+        padding: 10px 11px;
+    }
+
+
+    .tabla-estaciones td {
+        font-size: 13px;
+    }
+
+}
+
+
+/* Fin de fichero: css/tabla-estaciones.css */
