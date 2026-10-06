@@ -3,8 +3,8 @@
  * Cabecera común
  *
  * Monta la cabecera de componentes/cabecera.html en el
- * <div id="cabecera"> de cada página, marca el enlace de la sección
- * en la que estamos y pone el reloj en marcha.
+ * <div id="cabecera"> de cada página, adapta la identidad visual a
+ * la sección activa, marca su enlace y pone el reloj en marcha.
  *
  * La sección se lee de <body data-seccion="...">, que tiene que
  * coincidir con el data-seccion del enlace correspondiente.
@@ -97,6 +97,33 @@ function marcarSeccionActual() {
         enlace.setAttribute("aria-current", "page");
 
     }
+
+}
+
+
+function configurarLogotipoSeccion() {
+
+    const logo =
+        document.querySelector(
+            ".marca-logo"
+        );
+
+
+    if (!logo) {
+
+        return;
+
+    }
+
+
+    const seccion =
+        document.body.dataset.seccion;
+
+
+    logo.src =
+        seccion === "en-vivo"
+            ? "/assets/logo-camaras-cabecera.png"
+            : "/assets/logo-cabecera.png";
 
 }
 
@@ -394,6 +421,8 @@ async function montarCabecera() {
 
 
     marcarSeccionActual();
+
+    configurarLogotipoSeccion();
 
     // Después de marcar la sección: el pie copia el menú ya marcado.
     montarPie();
