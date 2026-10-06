@@ -33,7 +33,7 @@
  *     video.html?camara=los-llanos&vista=panoramica
  *         &interactivo=1
  *         &autoplay=0
- *         &controles=0
+ *         &controles=1
  *         &click=1
  *
  * Responsabilidades:
@@ -48,6 +48,8 @@
  * - mostrar datos meteorológicos de la estación asociada;
  * - mantener siempre la marca MeteoArchidona;
  * - ofrecer controles propios cuando se soliciten;
+ * - ocultar el botón play cuando click=1, porque el visor ya alterna la reproducción;
+ * - conservar fullscreen como único control visible en ese modo;
  * - maximizar el contenedor completo del visor;
  * - mantener las superposiciones dentro del rectángulo real del vídeo;
  * - evitar solapamientos entre datos meteorológicos y estado.
@@ -1598,16 +1600,60 @@ function configurarInteractividad() {
     }
 
 
+    const mostrarBotonPlay =
+        mostrarControles
+        &&
+        !clickAlterna;
+
+
+    const mostrarBotonFullscreen =
+        mostrarControles
+        &&
+        interactivo;
+
+
     if (controles) {
 
         controles.hidden =
-            !mostrarControles;
+            !(
+                mostrarBotonPlay
+                ||
+                mostrarBotonFullscreen
+            );
+
+    }
+
+
+    if (botonPlay) {
+
+        botonPlay.hidden =
+            !mostrarBotonPlay;
+
+
+        botonPlay.style.display =
+            mostrarBotonPlay
+                ? ""
+                : "none";
+
+    }
+
+
+    if (botonFullscreen) {
+
+        botonFullscreen.hidden =
+            !mostrarBotonFullscreen;
+
+
+        botonFullscreen.style.display =
+            mostrarBotonFullscreen
+                ? ""
+                : "none";
 
     }
 
 
     if (
-        mostrarControles
+        mostrarBotonPlay
         &&
         botonPlay
     ) {
@@ -1621,9 +1667,7 @@ function configurarInteractividad() {
 
 
     if (
-        mostrarControles
-        &&
-        interactivo
+        mostrarBotonFullscreen
         &&
         botonFullscreen
     ) {
