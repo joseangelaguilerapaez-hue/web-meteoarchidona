@@ -1,0 +1,849 @@
+/*
+ * MeteoArchidona
+ * Visor de vídeo reutilizable
+ *
+ * Estilos exclusivos de:
+ *
+ *     componentes/visor-video.html
+ *
+ * El componente:
+ *
+ * - ocupa siempre el 100 % del contenedor que lo aloja;
+ * - no impone un tamaño exterior concreto;
+ * - mantiene el vídeo dentro de su rectángulo disponible;
+ * - superpone datos meteorológicos;
+ * - mantiene siempre la marca MeteoArchidona;
+ * - admite modo interactivo y no interactivo;
+ * - admite pantalla completa sobre el visor completo.
+ */
+
+
+/* ==========================================================
+   BASE
+   ========================================================== */
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    margin: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #000;
+}
+
+
+body {
+    font-family:
+        "Sora",
+        Arial,
+        sans-serif;
+}
+
+
+/* ==========================================================
+   VISOR
+   ========================================================== */
+
+
+.visor-video {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+
+    background: #000;
+
+    isolation: isolate;
+}
+
+
+.visor-video video {
+    position: absolute;
+
+    z-index: 1;
+
+    inset: 0;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+
+    object-fit: contain;
+
+    background: #000;
+}
+
+
+/* ==========================================================
+   MODO NO INTERACTIVO
+   ========================================================== */
+
+
+.visor-video.no-interactivo video {
+    pointer-events: none;
+
+    user-select: none;
+}
+
+
+/*
+ * En modo no interactivo tampoco permitimos que ninguna
+ * superposición capture pulsaciones.
+ */
+.visor-video.no-interactivo
+.visor-video-superposicion {
+    pointer-events: none;
+}
+
+
+/* ==========================================================
+   DATOS METEOROLÓGICOS
+   ========================================================== */
+
+
+.visor-video-meteo {
+    position: absolute;
+
+    z-index: 5;
+
+    top: 12px;
+    left: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    max-width:
+        calc(
+            100% - 24px
+        );
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.90
+        );
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size:
+        clamp(
+            9px,
+            1.2vw,
+            13px
+        );
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    letter-spacing: 0.015em;
+
+    white-space: nowrap;
+
+    text-shadow:
+        0 1px 2px
+        rgba(
+            0,
+            0,
+            0,
+            0.95
+        ),
+        0 0 5px
+        rgba(
+            0,
+            0,
+            0,
+            0.90
+        ),
+        0 0 12px
+        rgba(
+            0,
+            0,
+            0,
+            0.72
+        );
+
+    pointer-events: none;
+
+    user-select: none;
+}
+
+
+.visor-video-meteo-dato {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-width: 0;
+}
+
+
+.visor-video-meteo-dato + .visor-video-meteo-dato::before {
+    content: "·";
+
+    margin-right: 8px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.55
+        );
+}
+
+
+/* ==========================================================
+   ESTADO DE EMISIÓN
+   ========================================================== */
+
+
+.visor-video-estado {
+    position: absolute;
+
+    z-index: 5;
+
+    top: 12px;
+    right: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    max-width:
+        calc(
+            100% - 24px
+        );
+
+    overflow: hidden;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.88
+        );
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size:
+        clamp(
+            8px,
+            1vw,
+            11px
+        );
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    letter-spacing: 0.055em;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    text-shadow:
+        0 1px 2px
+        rgba(
+            0,
+            0,
+            0,
+            0.98
+        ),
+        0 0 7px
+        rgba(
+            0,
+            0,
+            0,
+            0.90
+        );
+
+    pointer-events: none;
+
+    user-select: none;
+}
+
+
+.visor-video-estado::before {
+    content: "";
+
+    flex:
+        0
+        0
+        auto;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #36d5ff;
+
+    box-shadow:
+        0 0 4px
+        rgba(
+            54,
+            213,
+            255,
+            0.95
+        ),
+        0 0 10px
+        rgba(
+            54,
+            213,
+            255,
+            0.82
+        );
+}
+
+
+/* ==========================================================
+   MARCA METEOARCHIDONA
+   ========================================================== */
+
+
+.visor-video-marca {
+    position: absolute;
+
+    z-index: 5;
+
+    left: 12px;
+    bottom: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    pointer-events: none;
+
+    user-select: none;
+}
+
+
+.visor-video-marca img {
+    display: block;
+
+    width: auto;
+
+    height:
+        clamp(
+            24px,
+            5vw,
+            38px
+        );
+
+    max-width:
+        min(
+            34vw,
+            160px
+        );
+
+    object-fit: contain;
+
+    opacity: 0.92;
+
+    filter:
+        drop-shadow(
+            0 2px 3px
+            rgba(
+                0,
+                0,
+                0,
+                0.90
+            )
+        )
+        drop-shadow(
+            0 0 8px
+            rgba(
+                0,
+                0,
+                0,
+                0.60
+            )
+        );
+}
+
+
+/* ==========================================================
+   CONTROLES PROPIOS
+   ========================================================== */
+
+
+.visor-video-controles {
+    position: absolute;
+
+    z-index: 7;
+
+    right: 12px;
+    bottom: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 5px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.14
+        );
+
+    border-radius: 9px;
+
+    background:
+        rgba(
+            3,
+            9,
+            18,
+            0.64
+        );
+
+    backdrop-filter:
+        blur(
+            7px
+        );
+
+    -webkit-backdrop-filter:
+        blur(
+            7px
+        );
+
+    box-shadow:
+        0 3px 12px
+        rgba(
+            0,
+            0,
+            0,
+            0.28
+        );
+}
+
+
+.visor-video-controles[hidden] {
+    display: none;
+}
+
+
+.visor-video-control {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 30px;
+
+    padding: 0;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.13
+        );
+
+    border-radius: 6px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.94
+        );
+
+    background:
+        rgba(
+            18,
+            34,
+            50,
+            0.78
+        );
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color
+        120ms
+        ease,
+        border-color
+        120ms
+        ease,
+        transform
+        120ms
+        ease;
+}
+
+
+.visor-video-control:hover {
+    border-color:
+        rgba(
+            54,
+            213,
+            255,
+            0.60
+        );
+
+    background:
+        rgba(
+            30,
+            58,
+            82,
+            0.92
+        );
+}
+
+
+.visor-video-control:active {
+    transform:
+        translateY(
+            1px
+        );
+}
+
+
+.visor-video-control:focus-visible {
+    outline:
+        2px solid
+        #36d5ff;
+
+    outline-offset:
+        2px;
+}
+
+
+/* ==========================================================
+   ERROR
+   ========================================================== */
+
+
+.visor-video-error {
+    position: absolute;
+
+    z-index: 4;
+
+    inset: 0;
+
+    display: none;
+
+    place-items: center;
+
+    padding: 24px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.86
+        );
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(
+                13,
+                32,
+                51,
+                0.97
+            ),
+            rgba(
+                5,
+                11,
+                18,
+                0.98
+            )
+        );
+}
+
+
+.visor-video-error.visible {
+    display: grid;
+}
+
+
+.visor-video-error-contenido {
+    max-width: 420px;
+}
+
+
+.visor-video-error strong {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #fff;
+
+    font-size:
+        clamp(
+            13px,
+            1.8vw,
+            18px
+        );
+}
+
+
+.visor-video-error span {
+    display: block;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.72
+        );
+
+    font-size:
+        clamp(
+            11px,
+            1.35vw,
+            14px
+        );
+
+    line-height: 1.55;
+}
+
+
+/* ==========================================================
+   PANTALLA COMPLETA
+   ========================================================== */
+
+
+.visor-video:fullscreen {
+    width: 100vw;
+    height: 100vh;
+
+    background: #000;
+}
+
+
+.visor-video:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+
+    background: #000;
+}
+
+
+.visor-video:fullscreen video,
+.visor-video:-webkit-full-screen video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+/*
+ * En pantalla completa aumentamos ligeramente las
+ * superposiciones sin alterar su posición relativa.
+ */
+.visor-video:fullscreen
+.visor-video-meteo,
+.visor-video:-webkit-full-screen
+.visor-video-meteo {
+    font-size:
+        clamp(
+            12px,
+            1.2vw,
+            17px
+        );
+}
+
+
+.visor-video:fullscreen
+.visor-video-estado,
+.visor-video:-webkit-full-screen
+.visor-video-estado {
+    font-size:
+        clamp(
+            10px,
+            0.9vw,
+            13px
+        );
+}
+
+
+.visor-video:fullscreen
+.visor-video-marca img,
+.visor-video:-webkit-full-screen
+.visor-video-marca img {
+    height:
+        clamp(
+            34px,
+            4vw,
+            54px
+        );
+
+    max-width:
+        190px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+
+@media (max-width: 640px) {
+
+    .visor-video-meteo {
+        top: 8px;
+        left: 8px;
+
+        gap: 5px;
+
+        font-size:
+            clamp(
+                8px,
+                2.35vw,
+                10px
+            );
+    }
+
+
+    .visor-video-meteo-dato + .visor-video-meteo-dato::before {
+        margin-right: 5px;
+    }
+
+
+    .visor-video-estado {
+        top: 8px;
+        right: 8px;
+
+        gap: 4px;
+
+        font-size:
+            clamp(
+                7px,
+                2vw,
+                9px
+            );
+    }
+
+
+    .visor-video-estado::before {
+        width: 6px;
+        height: 6px;
+    }
+
+
+    .visor-video-marca {
+        left: 8px;
+        bottom: 8px;
+    }
+
+
+    .visor-video-marca img {
+        height:
+            clamp(
+                20px,
+                6.5vw,
+                30px
+            );
+
+        max-width:
+            34vw;
+    }
+
+
+    .visor-video-controles {
+        right: 8px;
+        bottom: 8px;
+
+        gap: 4px;
+
+        padding: 4px;
+    }
+
+
+    .visor-video-control {
+        width: 31px;
+        height: 27px;
+
+        font-size: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   VISORES MUY PEQUEÑOS
+   ========================================================== */
+
+
+@media (max-width: 360px) {
+
+    .visor-video-meteo {
+        gap: 4px;
+
+        font-size: 7.5px;
+    }
+
+
+    .visor-video-meteo-dato + .visor-video-meteo-dato::before {
+        margin-right: 4px;
+    }
+
+
+    .visor-video-estado {
+        font-size: 7px;
+    }
+
+
+    .visor-video-marca img {
+        max-width: 30vw;
+    }
+
+}
+
+
+/* Fin de fichero: css/visor-video.css */
