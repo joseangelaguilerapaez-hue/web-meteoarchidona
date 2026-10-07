@@ -62,10 +62,50 @@
 
 
 .estacion-contenido {
+    display: block;
+
     padding:
         18px
         20px
         0;
+}
+
+
+/*
+ * Compatibilidad durante la extracción desde actualidad.css.
+ *
+ * La hoja antigua contiene una regla de alta especificidad para
+ * la última estación impar que convierte .estacion-contenido en
+ * una rejilla interna.
+ *
+ * El componente nuevo gestiona por sí mismo su disposición
+ * horizontal, por lo que neutralizamos únicamente esa regla.
+ *
+ * Cuando retiremos definitivamente los estilos antiguos de
+ * actualidad.css este bloque podrá desaparecer.
+ */
+@media (min-width: 851px) {
+
+    .rejilla-estaciones
+    .estacion-principal
+    .ficha-estacion {
+        min-width: 0;
+    }
+
+
+    .rejilla-estaciones
+    .estacion-principal.ficha-estacion.ficha-estacion--horizontal:last-child:nth-child(odd)
+    .estacion-contenido {
+        display: block;
+
+        grid-template-columns: none;
+        grid-template-areas: none;
+
+        column-gap: normal;
+
+        align-items: initial;
+    }
+
 }
 
 
@@ -118,6 +158,8 @@
 
 
 .estacion-cabecera {
+    display: block;
+
     min-width: 0;
 }
 
@@ -1691,12 +1733,6 @@
    ========================================================== */
 
 
-/*
- * Aunque una ficha esté marcada como horizontal, si su contenedor
- * acaba siendo estrecho —por ejemplo en móvil— se presenta
- * verticalmente. El modo lógico sigue siendo horizontal, pero
- * la composición responde al espacio real disponible.
- */
 @container (max-width: 620px) {
 
     .estacion-contenido {
