@@ -31,7 +31,7 @@
 
 
 const RUTA_COMPONENTE =
-    "/componentes/ficha-estacion.html?v=20261007-ficha1";
+    "/componentes/ficha-estacion.html?v=20261007-ficha2";
 
 
 const MODOS_VALIDOS =
@@ -615,10 +615,6 @@ export function montarVisorFicha(
     }
 
 
-    /*
-     * Evitamos recrear el iframe si la ficha ya tiene
-     * correctamente montado su visor.
-     */
     const iframeExistente =
         contenedor.querySelector(
             "iframe"
@@ -952,16 +948,6 @@ export async function crearFichaEstacion(
    ========================================================== */
 
 
-/*
- * Ayudante reutilizable para una rejilla de dos columnas.
- *
- * Todas las fichas son verticales salvo la última cuando el número
- * total es impar. Esa última ocupa conceptualmente ambas columnas
- * y utiliza el diseño horizontal.
- *
- * La decisión sobre cuánto espacio ocupa realmente continúa siendo
- * responsabilidad del contenedor mediante CSS.
- */
 export function actualizarModosRejilla(
     rejilla
 ) {
