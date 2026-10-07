@@ -7,15 +7,20 @@
     terminados en PLANTILLA se sustituyen dinámicamente por el código
     real de la estación al crear cada instancia.
 
-    Este componente se utiliza inicialmente desde Actualidad y queda
-    preparado para reutilizarse en otras vistas y, en el futuro, en
-    dashboards configurables por los usuarios.
+    Modos soportados:
 
-    Identidad visual:
-    - logo específico de Estaciones MeteoArchidona;
-    - estado, nombre y localidad agrupados;
-    - datos meteorológicos de la estación;
-    - espacio preparado para futuras ampliaciones como cámara.
+        ficha-estacion--vertical
+        ficha-estacion--horizontal
+
+    La página o dashboard que utiliza el componente decide el modo.
+
+    El visor de cámara forma siempre parte de la ficha. Si la estación
+    dispone de cámara mostrará su emisión; si todavía no dispone de ella,
+    el propio visor mostrará el estado de vídeo no disponible.
+
+    Este componente se utiliza inicialmente desde Actualidad y queda
+    preparado para reutilizarse posteriormente en dashboards
+    configurables por los usuarios.
 -->
 
 
@@ -23,8 +28,9 @@
 
 
 <article
-    class="tarjeta estacion-principal"
+    class="tarjeta estacion-principal ficha-estacion ficha-estacion--vertical"
     id="tarjeta-PLANTILLA"
+    data-modo-ficha="vertical"
 >
 
 
@@ -46,8 +52,19 @@
 
 
 <!-- ======================================================
-     IDENTIDAD DE LA ESTACIÓN
+     ZONA SUPERIOR
      ====================================================== -->
+
+
+<div class="estacion-superior">
+
+
+<!-- ======================================================
+     IDENTIDAD + TEMPERATURA
+     ====================================================== -->
+
+
+<div class="estacion-principal-datos">
 
 
 <div class="estacion-cabecera">
@@ -110,14 +127,6 @@
 </div>
 
 
-<!-- ======================================================
-     LECTURA PRINCIPAL
-     ====================================================== -->
-
-
-<div class="lectura-principal">
-
-
 <div class="temperatura-bloque">
 
 
@@ -146,6 +155,46 @@
 
 
 </div>
+
+
+</div>
+
+
+<!-- ======================================================
+     VISOR DE CÁMARA
+     ====================================================== -->
+
+
+<div
+    class="estacion-visor"
+    id="visor-estacion-PLANTILLA"
+    data-visor-estacion="PLANTILLA"
+>
+
+
+<div
+    class="estacion-visor-contenedor"
+    id="visor-contenedor-PLANTILLA"
+></div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- ======================================================
+     BLOQUES SECUNDARIOS
+     ====================================================== -->
+
+
+<div class="estacion-secundarios">
+
+
+<!-- ======================================================
+     VIENTO
+     ====================================================== -->
 
 
 <div class="viento-panel">
@@ -269,110 +318,6 @@
 
 
 </div>
-
-</div>
-
-</div>
-
-
-<!-- ======================================================
-     PATROCINIO
-     ====================================================== -->
-
-
-<div
-    class="patrocinio-estacion"
-    id="patrocinio-PLANTILLA"
-    aria-label="Patrocinadores de los datos de lluvia"
->
-
-
-<div class="patrocinio-estacion-titulo">
-    🌧️ LLUVIA EN VIVO
-</div>
-
-
-<div class="patrocinio-estacion-ventana">
-
-
-<div class="patrocinio-estacion-pista">
-
-
-<span class="patrocinio-estacion-texto">
-
-    Datos patrocinados por
-
-    <strong>
-        Restaurante San Isidro
-    </strong>
-
-    ·
-
-    <strong>
-        Bar Central
-    </strong>
-
-    ·
-
-    <strong>
-        Las Viñas
-    </strong>
-
-    ·
-
-    <strong>
-        Gestión 95
-    </strong>
-
-</span>
-
-
-<span
-    class="patrocinio-estacion-texto"
-    aria-hidden="true"
->
-
-    Datos patrocinados por
-
-    <strong>
-        Restaurante San Isidro
-    </strong>
-
-    ·
-
-    <strong>
-        Bar Central
-    </strong>
-
-    ·
-
-    <strong>
-        Las Viñas
-    </strong>
-
-    ·
-
-    <strong>
-        Gestión 95
-    </strong>
-
-</span>
-
-
-</div>
-
-</div>
-
-
-<button
-    type="button"
-    class="patrocinio-estacion-control"
-    data-patrocinio="PLANTILLA"
-    aria-label="Pausar patrocinio"
-    aria-pressed="false"
->
-    Ⅱ
-</button>
 
 
 </div>
@@ -500,6 +445,113 @@
 
 
 </div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- ======================================================
+     PATROCINIO
+     ====================================================== -->
+
+
+<div
+    class="patrocinio-estacion"
+    id="patrocinio-PLANTILLA"
+    aria-label="Patrocinadores de los datos de lluvia"
+>
+
+
+<div class="patrocinio-estacion-titulo">
+    🌧️ LLUVIA EN VIVO
+</div>
+
+
+<div class="patrocinio-estacion-ventana">
+
+
+<div class="patrocinio-estacion-pista">
+
+
+<span class="patrocinio-estacion-texto">
+
+    Datos patrocinados por
+
+    <strong>
+        Restaurante San Isidro
+    </strong>
+
+    ·
+
+    <strong>
+        Bar Central
+    </strong>
+
+    ·
+
+    <strong>
+        Las Viñas
+    </strong>
+
+    ·
+
+    <strong>
+        Gestión 95
+    </strong>
+
+</span>
+
+
+<span
+    class="patrocinio-estacion-texto"
+    aria-hidden="true"
+>
+
+    Datos patrocinados por
+
+    <strong>
+        Restaurante San Isidro
+    </strong>
+
+    ·
+
+    <strong>
+        Bar Central
+    </strong>
+
+    ·
+
+    <strong>
+        Las Viñas
+    </strong>
+
+    ·
+
+    <strong>
+        Gestión 95
+    </strong>
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+<button
+    type="button"
+    class="patrocinio-estacion-control"
+    data-patrocinio="PLANTILLA"
+    aria-label="Pausar patrocinio"
+    aria-pressed="false"
+>
+    Ⅱ
+</button>
 
 
 </div>
