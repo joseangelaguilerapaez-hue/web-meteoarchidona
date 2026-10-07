@@ -42,13 +42,14 @@ const MODOS_VALIDOS =
 
 
 /*
- * Cámaras actualmente disponibles.
+ * Cámara provisional de Los Llanos.
  *
- * Este mapa es deliberadamente pequeño.
- * No se inventan cámaras para estaciones que todavía no las tienen.
+ * Esta asociación permanece cableada únicamente hasta que la API
+ * exponga la relación real:
  *
- * En el futuro esta información podrá proceder del catálogo/API
- * de estaciones sin cambiar el contrato del componente.
+ *     estación 1:N cámaras
+ *
+ * Los Llanos utiliza como vista principal de la ficha la cámara PTZ.
  */
 const CAMARAS_ESTACION = {
 
@@ -57,7 +58,7 @@ const CAMARAS_ESTACION = {
             "los-llanos",
 
         vista:
-            "panoramica"
+            "ptz"
     }
 
 };
@@ -948,6 +949,13 @@ export async function crearFichaEstacion(
    ========================================================== */
 
 
+/*
+ * La ficha horizontal solo tiene sentido cuando Actualidad está
+ * mostrando realmente la rejilla en dos columnas.
+ *
+ * Por debajo de 851 px Actualidad pasa a una sola columna, por lo
+ * que TODAS las fichas deben ser verticales, incluida la última.
+ */
 export function actualizarModosRejilla(
     rejilla
 ) {
@@ -965,6 +973,10 @@ export function actualizarModosRejilla(
         );
 
 
+    /*
+     * Estado base:
+     * todas las fichas son siempre verticales.
+     */
     fichas.forEach(
         ficha => {
 
@@ -977,6 +989,30 @@ export function actualizarModosRejilla(
     );
 
 
+    /*
+     * Actualidad solo utiliza dos columnas a partir de 851 px.
+     *
+     * En móvil y tableta estrecha nunca se fuerza una ficha
+     * horizontal aunque el número de estaciones sea impar.
+     */
+    const rejillaDosColumnas =
+        window.matchMedia(
+            "(min-width: 851px)"
+        ).matches;
+
+
+    if (!rejillaDosColumnas) {
+
+        return;
+
+    }
+
+
+    /*
+     * En escritorio, si el número de estaciones es impar,
+     * únicamente la última ocupa las dos columnas y utiliza
+     * el diseño horizontal.
+     */
     if (
         fichas.length
         %
