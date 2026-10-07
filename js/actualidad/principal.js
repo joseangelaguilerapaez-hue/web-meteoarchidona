@@ -92,7 +92,7 @@ import {
     cargarPlantillaFichaEstacion,
     capturarPlantillaFichaEstacion,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261007-ficha1";
+} from "./estaciones.js?v=20261007-ficha2";
 
 
 /* ==========================================================
