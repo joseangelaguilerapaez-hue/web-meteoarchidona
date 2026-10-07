@@ -12,6 +12,7 @@
  *     vista=panoramica | ptz
  *     estacion=LOS_LLANOS
  *     disponible=0 | 1
+ *     compacto=0 | 1
  *     interactivo=0 | 1
  *     autoplay=0 | 1
  *     controles=0 | 1
@@ -20,6 +21,7 @@
  * Valores por defecto:
  *
  *     disponible=1
+ *     compacto=0
  *     interactivo=0
  *     autoplay=1
  *     controles=interactivo
@@ -35,6 +37,7 @@
  *
  *     video.html?camara=los-llanos&vista=panoramica
  *         &estacion=LOS_LLANOS
+ *         &compacto=1
  *         &disponible=1
  *         &interactivo=1
  *         &autoplay=0
@@ -282,6 +285,15 @@ function obtenerConfiguracion() {
         );
 
 
+    const compacto =
+        parametroBooleano(
+            parametros.get(
+                "compacto"
+            ),
+            false
+        );
+
+
     const estacionSolicitada =
         normalizarCodigoEstacion(
             parametros.get(
@@ -304,6 +316,9 @@ function obtenerConfiguracion() {
 
             disponible:
                 false,
+
+            compacto:
+                compacto,
 
             claveCamara:
                 null,
@@ -431,6 +446,9 @@ function obtenerConfiguracion() {
 
         disponible:
             true,
+
+        compacto:
+            compacto,
 
         claveCamara:
             claveCamara,
@@ -1171,16 +1189,37 @@ function posicionarSuperposiciones() {
         ).matches;
 
 
+    /*
+     * En el visor incrustado de una ficha reducimos también
+     * los márgenes internos. Al entrar en pantalla completa
+     * recuperamos automáticamente la disposición normal.
+     */
+    const compacto =
+        Boolean(
+            configuracionActual?.compacto
+        )
+        &&
+        !documentoEnFullscreen();
+
+
     const margen =
-        movil
-            ? 8
-            : 12;
+        compacto
+            ? 5
+            : (
+                movil
+                    ? 8
+                    : 12
+            );
 
 
     const separacion =
-        movil
-            ? 6
-            : 10;
+        compacto
+            ? 4
+            : (
+                movil
+                    ? 6
+                    : 10
+            );
 
 
     const arribaBase =
@@ -2490,6 +2529,20 @@ function inicializarVisorVideo() {
         raiz.setAttribute(
             "aria-label",
             configuracionActual.nombre
+        );
+
+
+        /*
+         * El modo compacto se utiliza al incrustar el visor dentro
+         * de una ficha de estación. La hoja de estilos reduce ahí
+         * superposiciones y controles, pero en fullscreen vuelve
+         * a utilizar la escala normal.
+         */
+        raiz.classList.toggle(
+            "compacto",
+            Boolean(
+                configuracionActual.compacto
+            )
         );
 
 
