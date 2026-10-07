@@ -446,6 +446,21 @@ function crearParametrosVisorBase() {
         new URLSearchParams();
 
 
+    /*
+     * El visor incrustado dentro de una ficha necesita su propia
+     * escala visual.
+     *
+     * El modo compacto reduce únicamente las superposiciones y
+     * controles del visor mientras permanece incrustado.
+     *
+     * Al entrar en pantalla completa recuperará la escala normal.
+     */
+    parametros.set(
+        "compacto",
+        "1"
+    );
+
+
     parametros.set(
         "interactivo",
         "1"
