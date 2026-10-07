@@ -33,7 +33,7 @@ import {
     estacionTieneFicha,
     obtenerCodigosConFicha,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20260914-modular2";
+} from "./estaciones.js?v=20261007-ficha3";
 
 
 import {
@@ -44,10 +44,11 @@ import {
 import {
     mostrarDatosEstacion,
     mostrarErrorEstacion
-} from "./meteorologia.js?v=20260914-modular2";
+} from "./meteorologia.js?v=20261007-ficha3";
 
 
 function obtenerApiBase() {
+
     const apiBase =
         String(
             window.API_BASE
@@ -60,38 +61,51 @@ function obtenerApiBase() {
                 ""
             );
 
+
     if (
         !apiBase
     ) {
+
         throw new Error(
             "window.API_BASE no está definido. Debe cargarse js/api.js antes de Actualidad."
         );
+
     }
 
+
     return apiBase;
+
 }
 
 
 export async function cargarCatalogoEstaciones() {
+
     try {
+
         const respuesta =
             await fetch(
                 `${obtenerApiBase()}/estaciones`,
                 {
-                    cache: "no-store"
+                    cache:
+                        "no-store"
                 }
             );
+
 
         if (
             !respuesta.ok
         ) {
+
             throw new Error(
                 `HTTP ${respuesta.status}`
             );
+
         }
+
 
         const datos =
             await respuesta.json();
+
 
         if (
             !datos
@@ -100,24 +114,31 @@ export async function cargarCatalogoEstaciones() {
                 datos.estaciones
             )
         ) {
+
             throw new Error(
                 "Respuesta de catálogo de estaciones no válida."
             );
+
         }
+
 
         establecerCatalogoEstaciones(
             datos.estaciones
         );
 
+
         return true;
+
 
     } catch (
         error
     ) {
+
         console.error(
             "Error cargando catálogo público de estaciones:",
             error
         );
+
 
         /*
          * Si todavía no existe un catálogo válido, se utilizan como
@@ -135,34 +156,46 @@ export async function cargarCatalogoEstaciones() {
             ===
             0
         ) {
+
             establecerCatalogoDesdeDom();
+
         }
 
+
         return false;
+
     }
+
 }
 
 
 export async function cargarEstacion(
     codigo
 ) {
+
     if (
         !estacionTieneFicha(
             codigo
         )
     ) {
+
         return false;
+
     }
+
 
     crearEstadoInicialEstacion(
         codigo
     );
 
+
     inicializarLluviaVisualEstacion(
         codigo
     );
 
+
     try {
+
         const respuesta =
             await fetch(
                 `${
@@ -173,56 +206,74 @@ export async function cargarEstacion(
                     )
                 }`,
                 {
-                    cache: "no-store"
+                    cache:
+                        "no-store"
                 }
             );
+
 
         if (
             !respuesta.ok
         ) {
+
             throw new Error(
                 `HTTP ${respuesta.status}`
             );
+
         }
+
 
         const datos =
             await respuesta.json();
+
 
         mostrarDatosEstacion(
             codigo,
             datos
         );
 
+
         return true;
+
 
     } catch (
         error
     ) {
+
         console.error(
             `Error cargando ${codigo}:`,
             error
         );
 
+
         mostrarErrorEstacion(
             codigo
         );
 
+
         return false;
+
     }
+
 }
 
 
 export async function cargarCondiciones() {
+
     const codigos =
         obtenerCodigosConFicha();
+
 
     if (
         codigos.length
         ===
         0
     ) {
+
         return [];
+
     }
+
 
     return Promise.all(
         codigos.map(
@@ -232,18 +283,24 @@ export async function cargarCondiciones() {
                 )
         )
     );
+
 }
 
 
 export async function refrescarCatalogo() {
+
     const cargado =
         await cargarCatalogoEstaciones();
+
 
     if (
         cargado
     ) {
+
         sincronizarFichasEstaciones();
+
     }
+
 
     /*
      * Aunque el refresco del catálogo falle, se vuelven a consultar
@@ -254,7 +311,9 @@ export async function refrescarCatalogo() {
      */
     await cargarCondiciones();
 
+
     return cargado;
+
 }
 
 
