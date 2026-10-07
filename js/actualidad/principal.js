@@ -9,30 +9,12 @@
  * Responsabilidades:
  *
  * - coordinar el arranque de los módulos de Actualidad;
- * - utilizar temporalmente la plantilla incrustada si todavía existe;
- * - cargar automáticamente el componente externo cuando se retire;
+ * - cargar el componente reutilizable de ficha de estación;
  * - cargar y sincronizar el catálogo público;
  * - inicializar efectos visuales y controles;
  * - cargar las condiciones meteorológicas;
- * - reaccionar al redimensionado de la ventana;
+ * - recalcular la disposición de las fichas al cambiar el ancho;
  * - programar las actualizaciones periódicas.
- *
- * Migración de ficha de estación:
- *
- * Mientras pages/actualidad.html contenga:
- *
- *     <template id="plantilla-estacion">
- *
- * se utilizará esa plantilla antigua.
- *
- * Cuando la retiremos, el arranque cargará automáticamente:
- *
- *     componentes/ficha-estacion.html
- *
- * mediante js/ficha-estacion.js.
- *
- * Esto permite hacer la migración archivo a archivo sin dejar
- * Actualidad en un estado intermedio roto.
  */
 
 
@@ -92,7 +74,7 @@ import {
     cargarPlantillaFichaEstacion,
     capturarPlantillaFichaEstacion,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261007-ficha2";
+} from "./estaciones.js?v=20261007-ficha3";
 
 
 /* ==========================================================
@@ -104,7 +86,7 @@ import {
     cargarCatalogoEstaciones,
     cargarCondiciones,
     refrescarCatalogo
-} from "./api.js?v=20260914-modular2";
+} from "./api.js?v=20261007-ficha3";
 
 
 /* ==========================================================
@@ -113,14 +95,12 @@ import {
 
 
 /*
- * Durante la migración existen dos posibles fuentes:
+ * La vía normal es el componente externo:
  *
- * 1. Plantilla antigua incrustada en actualidad.html.
- * 2. Nuevo componente externo ficha-estacion.html.
+ *     componentes/ficha-estacion.html
  *
- * La presencia de la plantilla antigua actúa como interruptor
- * temporal. Cuando desaparezca del HTML no será necesario cambiar
- * nuevamente este archivo.
+ * Se conserva la detección de una plantilla incrustada como
+ * compatibilidad defensiva durante la transición.
  */
 async function prepararPlantillaEstaciones() {
 
@@ -144,6 +124,72 @@ async function prepararPlantillaEstaciones() {
 
 
     return await cargarPlantillaFichaEstacion();
+
+}
+
+
+/* ==========================================================
+   REDIMENSIONAMIENTO
+   ========================================================== */
+
+
+function configurarRedimensionamiento() {
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (
+                estadoActualidad
+                    .temporizadorResize
+                !==
+                null
+            ) {
+
+                clearTimeout(
+                    estadoActualidad
+                        .temporizadorResize
+                );
+
+            }
+
+
+            establecerTemporizadorResize(
+                window.setTimeout(
+                    () => {
+
+                        /*
+                         * sincronizarFichasEstaciones() recalcula también
+                         * el modo vertical/horizontal de cada ficha.
+                         *
+                         * Esto es necesario para que:
+                         *
+                         * - escritorio con número impar:
+                         *     última ficha horizontal;
+                         *
+                         * - móvil / una sola columna:
+                         *     todas las fichas verticales.
+                         *
+                         * Los visores ya existentes no se recrean si su
+                         * URL no ha cambiado.
+                         */
+                        sincronizarFichasEstaciones();
+
+
+                        actualizarSistemaLluvia();
+
+
+                        establecerTemporizadorResize(
+                            null
+                        );
+
+                    },
+                    180
+                )
+            );
+
+        }
+    );
 
 }
 
@@ -252,46 +298,10 @@ async function arrancarActualidad() {
 
 
         /* ==================================================
-           RESIZE
+           RESPONSIVE
            ================================================== */
 
-        window.addEventListener(
-            "resize",
-            () => {
-
-                if (
-                    estadoActualidad
-                        .temporizadorResize
-                    !==
-                    null
-                ) {
-
-                    clearTimeout(
-                        estadoActualidad
-                            .temporizadorResize
-                    );
-
-                }
-
-
-                establecerTemporizadorResize(
-                    window.setTimeout(
-                        () => {
-
-                            actualizarSistemaLluvia();
-
-
-                            establecerTemporizadorResize(
-                                null
-                            );
-
-                        },
-                        180
-                    )
-                );
-
-            }
-        );
+        configurarRedimensionamiento();
 
 
         /* ==================================================
