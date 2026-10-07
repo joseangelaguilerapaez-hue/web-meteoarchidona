@@ -10,6 +10,8 @@
  *
  * - normalizar el catálogo público de estaciones;
  * - conservar metadatos y códigos publicados;
+ * - aplicar alias exclusivamente visuales cuando un nombre no cabe
+ *   razonablemente en la ficha;
  * - crear y retirar fichas dinámicamente;
  * - admitir temporalmente la antigua plantilla incluida en Actualidad;
  * - cargar la nueva plantilla reutilizable ficha-estacion;
@@ -59,7 +61,102 @@ import {
     establecerModoFicha,
     montarVisorFicha,
     obtenerPlantillaFichaEstacion as obtenerPlantillaComponente
-} from "../ficha-estacion.js?v=20261007-ficha2";
+} from "../ficha-estacion.js?v=20261007-ficha3";
+
+
+/* ==========================================================
+   NOMBRES VISUALES
+   ========================================================== */
+
+
+/*
+ * La BD y la API conservan siempre el nombre completo.
+ *
+ * Estos alias son exclusivamente de presentación y únicamente
+ * se aplican cuando una ficha necesita un nombre más compacto.
+ */
+function normalizarNombreVisual(
+    nombre
+) {
+
+    return String(
+        nombre
+        ??
+        ""
+    )
+        .trim()
+        .normalize(
+            "NFD"
+        )
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .replace(
+            /\s+/g,
+            " "
+        )
+        .toUpperCase();
+
+}
+
+
+export function obtenerNombreVisibleEstacion(
+    nombre,
+    codigo = ""
+) {
+
+    const original =
+        String(
+            nombre
+            ??
+            ""
+        )
+            .trim();
+
+
+    const codigoNormalizado =
+        normalizarCodigoEstacion(
+            codigo
+        );
+
+
+    const clave =
+        normalizarNombreVisual(
+            original
+        );
+
+
+    /*
+     * La estación se almacena con un nombre descriptivo largo:
+     *
+     *     Salinas Los Pachecos (Archidona)
+     *
+     * Para las superficies compactas de Actualidad utilizamos
+     * simplemente "Salinas".
+     */
+    if (
+        codigoNormalizado
+        ===
+        "SALINAS"
+        ||
+        clave.startsWith(
+            "SALINAS"
+        )
+    ) {
+
+        return "Salinas";
+
+    }
+
+
+    return (
+        original
+        ||
+        codigoNormalizado
+    );
+
+}
 
 
 /* ==========================================================
@@ -484,16 +581,6 @@ function limpiarPlantilla(
    ========================================================== */
 
 
-/*
- * Compatibilidad temporal.
- *
- * Mientras pages/actualidad.html siga conteniendo la antigua
- * <template id="plantilla-estacion">, este método continúa
- * funcionando exactamente como hasta ahora.
- *
- * Esto permite preparar la migración archivo a archivo sin
- * dejar Actualidad rota entre commits.
- */
 export function capturarPlantillaFichaEstacion() {
 
     const panel =
@@ -601,13 +688,6 @@ export function capturarPlantillaFichaEstacion() {
    ========================================================== */
 
 
-/*
- * Carga componentes/ficha-estacion.html mediante el módulo
- * reutilizable js/ficha-estacion.js.
- *
- * Esta será la vía definitiva cuando eliminemos la plantilla
- * incrustada de pages/actualidad.html.
- */
 export async function cargarPlantillaFichaEstacion() {
 
     try {
@@ -821,9 +901,10 @@ export function actualizarMetadatosFicha(
 ) {
 
     const nombre =
-        estacion.nombre_publico
-        ||
-        estacion.codigo;
+        obtenerNombreVisibleEstacion(
+            estacion.nombre_publico,
+            estacion.codigo
+        );
 
 
     const localidad =
@@ -977,11 +1058,6 @@ export function prepararFichaNueva(
     );
 
 
-    /*
-     * Solo la nueva generación del componente utiliza estas
-     * funciones. La plantilla antigua permanece intacta hasta
-     * que se retire de actualidad.html.
-     */
     if (
         ficha.classList
             .contains(
@@ -1266,11 +1342,6 @@ export function sincronizarFichasEstaciones() {
                     );
 
 
-                    /*
-                     * Si estamos usando ya la ficha reutilizable,
-                     * aseguramos que el visor siga correspondiendo
-                     * a la estación actual.
-                     */
                     if (
                         ficha.classList
                             .contains(
@@ -1288,10 +1359,6 @@ export function sincronizarFichasEstaciones() {
                 }
 
 
-                /*
-                 * Reinsertar conserva el orden devuelto
-                 * por el catálogo público.
-                 */
                 rejilla.appendChild(
                     ficha
                 );
@@ -1300,16 +1367,6 @@ export function sincronizarFichasEstaciones() {
         );
 
 
-    /*
-     * En el componente nuevo:
-     *
-     * - todas las fichas son verticales;
-     * - si el total es impar, la última pasa a horizontal.
-     *
-     * Si todavía se está usando la plantilla antigua,
-     * actualizarModosRejilla no encuentra .ficha-estacion
-     * y no modifica nada.
-     */
     actualizarModosRejilla(
         rejilla
     );
