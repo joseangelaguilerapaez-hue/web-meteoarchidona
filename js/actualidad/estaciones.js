@@ -59,7 +59,7 @@ import {
     establecerModoFicha,
     montarVisorFicha,
     obtenerPlantillaFichaEstacion as obtenerPlantillaComponente
-} from "../ficha-estacion.js?v=20261007-ficha1";
+} from "../ficha-estacion.js?v=20261007-ficha2";
 
 
 /* ==========================================================
