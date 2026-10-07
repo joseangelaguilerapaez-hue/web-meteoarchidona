@@ -12,6 +12,7 @@
  * - no impone un tamaño exterior concreto;
  * - mantiene el vídeo dentro de su rectángulo disponible;
  * - puede mostrar una portada corporativa sin cargar el stream;
+ * - admite un estado corporativo para estaciones sin cámara;
  * - superpone datos meteorológicos;
  * - mantiene siempre la marca MeteoArchidona;
  * - admite modo interactivo y no interactivo;
@@ -182,7 +183,8 @@ body {
  * Mensaje de activación.
  */
 .visor-video::after {
-    content: "PULSA PARA VER EN DIRECTO";
+    content:
+        "PULSA PARA VER EN DIRECTO";
 
     position: absolute;
 
@@ -272,6 +274,90 @@ body {
 }
 
 
+/* ==========================================================
+   PORTADA SIN CÁMARA
+   ========================================================== */
+
+
+/*
+ * La ausencia de cámara es un estado normal del visor.
+ *
+ * Se mantiene la identidad visual de MeteoArchidona Cámaras
+ * para dejar claro que la estación está preparada para este
+ * servicio aunque todavía no disponga de vídeo en directo.
+ *
+ * No existe interacción, stream HLS ni controles.
+ */
+.visor-video.no-disponible {
+    cursor: default;
+
+    touch-action: auto;
+}
+
+
+.visor-video.no-disponible::before {
+    background-position:
+        center 41%,
+        center;
+
+    background-size:
+        auto min(58%, 215px),
+        cover;
+}
+
+
+.visor-video.no-disponible::after {
+    content:
+        "VÍDEO EN DIRECTO\A NO DISPONIBLE EN ESTA ESTACIÓN";
+
+    bottom: 9%;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.82
+        );
+
+    line-height: 1.45;
+
+    letter-spacing: 0.065em;
+
+    white-space: pre-line;
+}
+
+
+/*
+ * El mensaje principal ya aparece en la propia portada.
+ * Evitamos repetirlo además en la franja superior de estado.
+ */
+.visor-video.no-disponible
+.visor-video-estado {
+    display: none;
+}
+
+
+.visor-video.no-disponible
+.visor-video-meteo,
+.visor-video.no-disponible
+.visor-video-marca,
+.visor-video.no-disponible
+.visor-video-controles {
+    display: none !important;
+}
+
+
+/*
+ * El elemento video permanece completamente inactivo
+ * debajo de la portada.
+ */
+.visor-video.no-disponible
+video {
+    pointer-events: none;
+}
+
+
 /*
  * El visor completo actúa como superficie de reproducción
  * cuando se ha solicitado click=1.
@@ -283,6 +369,18 @@ body {
 
     -webkit-tap-highlight-color:
         transparent;
+}
+
+
+/*
+ * Una estación sin cámara nunca debe heredar el cursor
+ * interactivo aunque en algún contexto se añadiese
+ * accidentalmente click-alterna.
+ */
+.visor-video.no-disponible.click-alterna {
+    cursor: default;
+
+    touch-action: auto;
 }
 
 
@@ -411,7 +509,9 @@ body {
 }
 
 
-.visor-video-meteo-dato + .visor-video-meteo-dato::before {
+.visor-video-meteo-dato
++
+.visor-video-meteo-dato::before {
     content: "·";
 
     margin-right: 10px;
@@ -436,15 +536,10 @@ body {
 
     z-index: 5;
 
-    /*
-     * El estado se centra en la parte superior del vídeo.
-     *
-     * El JavaScript continúa calculando la coordenada vertical
-     * según el rectángulo real de la imagen.
-     */
     left: 50%;
 
-    right: auto !important;
+    right:
+        auto !important;
 
     top: 12px;
 
@@ -530,17 +625,22 @@ body {
 
     border-radius: 50%;
 
-    background: #36d5ff;
+    background:
+        #36d5ff;
 
     box-shadow:
-        0 0 4px
+        0
+        0
+        4px
         rgba(
             54,
             213,
             255,
             0.95
         ),
-        0 0 10px
+        0
+        0
+        10px
         rgba(
             54,
             213,
@@ -597,7 +697,9 @@ body {
 
     filter:
         drop-shadow(
-            0 2px 3px
+            0
+            2px
+            3px
             rgba(
                 0,
                 0,
@@ -606,7 +708,9 @@ body {
             )
         )
         drop-shadow(
-            0 0 8px
+            0
+            0
+            8px
             rgba(
                 0,
                 0,
@@ -627,12 +731,10 @@ body {
 
     z-index: 7;
 
-    /*
-     * Los controles se sitúan en el centro inferior del visor.
-     */
     left: 50%;
 
-    right: auto !important;
+    right:
+        auto !important;
 
     bottom: 12px;
 
@@ -679,7 +781,9 @@ body {
         );
 
     box-shadow:
-        0 3px 12px
+        0
+        3px
+        12px
         rgba(
             0,
             0,
@@ -786,8 +890,7 @@ body {
         2px solid
         #36d5ff;
 
-    outline-offset:
-        2px;
+    outline-offset: 2px;
 }
 
 
@@ -907,8 +1010,10 @@ body {
 }
 
 
-.visor-video:fullscreen video,
-.visor-video:-webkit-full-screen video {
+.visor-video:fullscreen
+video,
+.visor-video:-webkit-full-screen
+video {
     width: 100%;
     height: 100%;
 
@@ -957,8 +1062,7 @@ body {
             54px
         );
 
-    max-width:
-        190px;
+    max-width: 190px;
 }
 
 
@@ -1007,7 +1111,29 @@ body {
                 11px
             );
 
-        letter-spacing: 0.055em;
+        letter-spacing:
+            0.055em;
+    }
+
+
+    .visor-video.no-disponible::before {
+        background-size:
+            auto min(54%, 170px),
+            cover;
+    }
+
+
+    .visor-video.no-disponible::after {
+        bottom: 7%;
+
+        font-size:
+            clamp(
+                8px,
+                2.4vw,
+                10px
+            );
+
+        line-height: 1.4;
     }
 
 
@@ -1026,7 +1152,9 @@ body {
     }
 
 
-    .visor-video-meteo-dato + .visor-video-meteo-dato::before {
+    .visor-video-meteo-dato
+    +
+    .visor-video-meteo-dato::before {
         margin-right: 6px;
     }
 
@@ -1034,7 +1162,8 @@ body {
     .visor-video-estado {
         left: 50%;
 
-        right: auto !important;
+        right:
+            auto !important;
 
         top: 8px;
 
@@ -1074,15 +1203,15 @@ body {
                 30px
             );
 
-        max-width:
-            34vw;
+        max-width: 34vw;
     }
 
 
     .visor-video-controles {
         left: 50%;
 
-        right: auto !important;
+        right:
+            auto !important;
 
         bottom: 8px;
 
@@ -1126,7 +1255,25 @@ body {
 
         font-size: 8px;
 
-        letter-spacing: 0.04em;
+        letter-spacing:
+            0.04em;
+    }
+
+
+    .visor-video.no-disponible::before {
+        background-size:
+            auto min(50%, 135px),
+            cover;
+    }
+
+
+    .visor-video.no-disponible::after {
+        bottom: 6%;
+
+        font-size: 7.5px;
+
+        letter-spacing:
+            0.035em;
     }
 
 
@@ -1137,7 +1284,9 @@ body {
     }
 
 
-    .visor-video-meteo-dato + .visor-video-meteo-dato::before {
+    .visor-video-meteo-dato
+    +
+    .visor-video-meteo-dato::before {
         margin-right: 4px;
     }
 
