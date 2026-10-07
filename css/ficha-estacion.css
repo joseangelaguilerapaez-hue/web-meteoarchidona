@@ -1,0 +1,2004 @@
+/*
+ * MeteoArchidona
+ * Componente · Ficha de estación
+ *
+ * Estilos de:
+ *
+ *     componentes/ficha-estacion.html
+ *
+ * Modos:
+ *
+ *     ficha-estacion--vertical
+ *     ficha-estacion--horizontal
+ *
+ * El visor forma siempre parte de la composición.
+ * Que exista o no cámara no modifica la geometría de la ficha.
+ */
+
+
+/* ==========================================================
+   FICHA
+   ========================================================== */
+
+
+.ficha-estacion {
+    position: relative;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(4, 29, 57, 0.35),
+            rgba(3, 13, 23, 0.94)
+        ),
+        radial-gradient(
+            circle at 70% 0%,
+            rgba(59, 158, 255, 0.28),
+            transparent 48%
+        ),
+        linear-gradient(
+            135deg,
+            #0d2c49,
+            #101c27 60%,
+            #07111c
+        );
+
+    box-shadow:
+        var(--shadow);
+
+    container-type:
+        inline-size;
+}
+
+
+.estacion-contenido {
+    padding:
+        18px
+        20px
+        0;
+}
+
+
+/* ==========================================================
+   ZONA SUPERIOR
+   ========================================================== */
+
+
+.estacion-superior {
+    display: grid;
+
+    align-items: stretch;
+
+    gap: 14px;
+
+    min-width: 0;
+}
+
+
+.ficha-estacion--vertical
+.estacion-superior {
+    grid-template-columns:
+        minmax(138px, 0.88fr)
+        minmax(150px, 1.12fr);
+}
+
+
+.ficha-estacion--horizontal
+.estacion-superior {
+    grid-template-columns:
+        minmax(210px, 0.72fr)
+        minmax(340px, 1.28fr);
+
+    gap: 20px;
+}
+
+
+/* ==========================================================
+   IDENTIDAD + TEMPERATURA
+   ========================================================== */
+
+
+.estacion-principal-datos {
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+
+.estacion-cabecera {
+    min-width: 0;
+}
+
+
+.estacion-identidad {
+    display: grid;
+
+    grid-template-columns:
+        58px
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+
+.ficha-estacion--horizontal
+.estacion-identidad {
+    grid-template-columns:
+        72px
+        minmax(0, 1fr);
+
+    gap: 11px;
+}
+
+
+.estacion-logo {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 58px;
+    height: 58px;
+
+    min-width: 0;
+}
+
+
+.ficha-estacion--horizontal
+.estacion-logo {
+    width: 72px;
+    height: 72px;
+}
+
+
+.estacion-logo img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 2px 5px
+            rgba(0, 0, 0, 0.52)
+        );
+}
+
+
+.estacion-identidad-texto {
+    min-width: 0;
+
+    text-align: right;
+}
+
+
+.online {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 7px;
+
+    color:
+        var(--green);
+
+    font-size: 11px;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+
+.punto {
+    flex:
+        0
+        0
+        auto;
+
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background:
+        var(--green);
+
+    box-shadow:
+        0 0 12px
+        rgba(34, 197, 94, 0.50);
+}
+
+
+.estacion-nombre {
+    margin:
+        5px
+        0
+        0;
+
+    overflow: hidden;
+
+    color:
+        var(--text);
+
+    font-size: 19px;
+    font-weight: 700;
+
+    line-height: 1.08;
+
+    text-overflow: ellipsis;
+}
+
+
+.ficha-estacion--horizontal
+.estacion-nombre {
+    font-size: 22px;
+}
+
+
+.estacion-localidad {
+    margin-top: 3px;
+
+    overflow: hidden;
+
+    color:
+        #c7d7e5;
+
+    font-size: 11px;
+
+    line-height: 1.2;
+
+    text-overflow: ellipsis;
+}
+
+
+.ficha-estacion--horizontal
+.estacion-localidad {
+    font-size: 12px;
+}
+
+
+.estacion-localidad:empty {
+    display: none;
+}
+
+
+/* ==========================================================
+   TEMPERATURA
+   ========================================================== */
+
+
+.temperatura-bloque {
+    min-width: 0;
+
+    margin-top: 12px;
+}
+
+
+.temperatura {
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size:
+        clamp(
+            42px,
+            4.3vw,
+            62px
+        );
+
+    font-weight: 600;
+
+    color:
+        #85c948;
+
+    letter-spacing:
+        -0.06em;
+
+    line-height: 1;
+}
+
+
+.ficha-estacion--horizontal
+.temperatura {
+    font-size:
+        clamp(
+            50px,
+            5vw,
+            72px
+        );
+}
+
+
+.temperatura sup {
+    font-size: 22px;
+
+    letter-spacing: 0;
+}
+
+
+.ficha-estacion--horizontal
+.temperatura sup {
+    font-size: 25px;
+}
+
+
+.sensacion {
+    margin-top: 5px;
+
+    font-size: 12px;
+}
+
+
+.observacion {
+    margin-top: 5px;
+
+    color:
+        var(--muted);
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   VISOR DE CÁMARA
+   ========================================================== */
+
+
+.estacion-visor {
+    position: relative;
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(54, 213, 255, 0.16);
+
+    border-radius: 10px;
+
+    background:
+        #050b12;
+
+    box-shadow:
+        inset
+        0
+        0
+        22px
+        rgba(54, 213, 255, 0.035);
+}
+
+
+.ficha-estacion--vertical
+.estacion-visor {
+    min-height: 112px;
+}
+
+
+.ficha-estacion--horizontal
+.estacion-visor {
+    min-height: 210px;
+}
+
+
+.estacion-visor-contenedor {
+    position: absolute;
+
+    inset: 0;
+}
+
+
+.estacion-visor-iframe {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+
+    background:
+        #050b12;
+}
+
+
+/* ==========================================================
+   BLOQUES SECUNDARIOS
+   ========================================================== */
+
+
+.estacion-secundarios {
+    display: grid;
+
+    gap: 12px;
+
+    margin-top: 14px;
+
+    min-width: 0;
+}
+
+
+.ficha-estacion--vertical
+.estacion-secundarios {
+    grid-template-columns:
+        1fr;
+}
+
+
+.ficha-estacion--horizontal
+.estacion-secundarios {
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 18px;
+
+    align-items: stretch;
+
+    margin-top: 18px;
+}
+
+
+/* ==========================================================
+   VIENTO
+   ========================================================== */
+
+
+.viento-panel {
+    display: grid;
+
+    grid-template-columns:
+        108px
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+
+    padding: 10px;
+
+    border:
+        1px solid
+        rgba(59, 158, 255, 0.20);
+
+    border-radius: 10px;
+
+    background:
+        rgba(3, 17, 29, 0.58);
+}
+
+
+.ficha-estacion--horizontal
+.viento-panel {
+    min-height: 138px;
+
+    padding:
+        12px
+        14px;
+}
+
+
+.veleta {
+    position: relative;
+
+    width: 106px;
+    height: 106px;
+
+    border:
+        2px solid
+        #315878;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(31, 73, 108, 0.45),
+            rgba(5, 17, 27, 0.90) 68%
+        ),
+        repeating-conic-gradient(
+            from 0deg,
+            rgba(142, 195, 232, 0.22) 0deg,
+            rgba(142, 195, 232, 0.22) 1deg,
+            transparent 1deg,
+            transparent 15deg
+        );
+
+    cursor: pointer;
+
+    touch-action: manipulation;
+
+    user-select: none;
+
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+
+    box-shadow:
+        inset
+        0
+        0
+        22px
+        rgba(59, 158, 255, 0.08);
+
+    --angulo: 0deg;
+}
+
+
+.veleta::after {
+    content: "";
+
+    position: absolute;
+
+    z-index: 5;
+
+    left: 50%;
+    top: 50%;
+
+    width: 8px;
+    height: 8px;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    border-radius: 50%;
+
+    background:
+        var(--accent);
+
+    box-shadow:
+        0 0 10px
+        rgba(240, 165, 0, 0.60);
+}
+
+
+@media (hover: hover) {
+
+    .veleta:hover {
+        border-color:
+            var(--blue);
+    }
+
+}
+
+
+.veleta:focus-visible {
+    outline:
+        2px solid
+        var(--cyan);
+
+    outline-offset: 3px;
+}
+
+
+.veleta-cardinal {
+    position: absolute;
+
+    z-index: 4;
+
+    color:
+        #dce9f5;
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 9px;
+    font-weight: 600;
+}
+
+
+.veleta-n {
+    top: 5px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.veleta-s {
+    bottom: 5px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.veleta-e {
+    right: 6px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+}
+
+
+.veleta-o {
+    left: 6px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+}
+
+
+.veleta-rotor {
+    position: absolute;
+
+    z-index: 3;
+
+    left: 50%;
+    top: 50%;
+
+    width: 0;
+    height: 0;
+
+    transform:
+        rotate(
+            var(--angulo)
+        );
+
+    transition:
+        transform
+        0.45s
+        ease;
+}
+
+
+.veleta-aguja {
+    position: absolute;
+
+    left: -1.5px;
+    bottom: 0;
+
+    width: 3px;
+    height: 36px;
+
+    border-radius: 3px;
+
+    background:
+        linear-gradient(
+            to top,
+            #f0a500,
+            #ffd257
+        );
+
+    box-shadow:
+        0
+        0
+        7px
+        rgba(240, 165, 0, 0.40);
+}
+
+
+.veleta-aguja::before {
+    content: "";
+
+    position: absolute;
+
+    top: -7px;
+    left: 50%;
+
+    width: 0;
+    height: 0;
+
+    transform:
+        translateX(-50%);
+
+    border-left:
+        5px solid
+        transparent;
+
+    border-right:
+        5px solid
+        transparent;
+
+    border-top:
+        10px solid
+        #ffd257;
+}
+
+
+.viento-datos {
+    min-width: 0;
+}
+
+
+.direccion-principal {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 6px;
+}
+
+
+.direccion-cardinal {
+    color:
+        var(--accent);
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 23px;
+    font-weight: 700;
+}
+
+
+.direccion-grados {
+    color:
+        var(--muted);
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 11px;
+}
+
+
+.viento-actual {
+    margin-top: 5px;
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+.viento-actual small {
+    color:
+        var(--muted);
+
+    font-size: 9px;
+    font-weight: 400;
+}
+
+
+.viento-secundarios {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap:
+        4px
+        8px;
+
+    margin-top: 6px;
+}
+
+
+.viento-secundario {
+    min-width: 0;
+
+    color:
+        var(--muted);
+
+    font-size: 8px;
+}
+
+
+.viento-secundario strong {
+    display: block;
+
+    margin-top: 1px;
+
+    color:
+        var(--text);
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 9px;
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+
+.simulacion-estacion {
+    display: none;
+
+    width: fit-content;
+
+    margin-top: 7px;
+
+    padding:
+        3px
+        6px;
+
+    border:
+        1px solid
+        rgba(54, 213, 255, 0.30);
+
+    border-radius: 999px;
+
+    background:
+        rgba(3, 29, 43, 0.82);
+
+    color:
+        var(--cyan);
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing:
+        0.04em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.simulacion-estacion.visible {
+    display: block;
+}
+
+
+/* ==========================================================
+   LLUVIA
+   ========================================================== */
+
+
+.lluvia-resumen {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
+    margin: 0;
+
+    padding:
+        9px
+        10px;
+
+    border:
+        1px solid
+        rgba(54, 213, 255, 0.14);
+
+    border-radius: 8px;
+
+    background:
+        rgba(11, 35, 52, 0.78);
+}
+
+
+.ficha-estacion--horizontal
+.lluvia-resumen {
+    align-content: center;
+
+    min-height: 138px;
+
+    padding:
+        11px
+        12px;
+}
+
+
+.lluvia-resumen-item {
+    min-width: 0;
+    min-height: 48px;
+
+    display: grid;
+
+    grid-template-columns:
+        30px
+        minmax(0, 1fr);
+
+    grid-template-areas:
+        "icono label"
+        "icono valor"
+        "icono extra";
+
+    align-items: center;
+
+    column-gap: 7px;
+
+    padding:
+        5px
+        6px;
+
+    border:
+        1px solid
+        rgba(54, 213, 255, 0.07);
+
+    border-radius: 6px;
+
+    background:
+        rgba(5, 24, 37, 0.24);
+}
+
+
+.lluvia-resumen-icono {
+    grid-area:
+        icono;
+
+    font-size: 21px;
+}
+
+
+.lluvia-resumen-label {
+    grid-area:
+        label;
+
+    color:
+        var(--muted);
+
+    font-size: 8px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.lluvia-resumen-valor {
+    grid-area:
+        valor;
+
+    margin-top: 2px;
+
+    color:
+        var(--cyan);
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.lluvia-resumen-extra {
+    grid-area:
+        extra;
+
+    margin-top: 1px;
+
+    color:
+        var(--muted);
+
+    font-size: 7px;
+}
+
+
+/* ==========================================================
+   PATROCINIO
+   ========================================================== */
+
+
+.patrocinio-estacion {
+    display: none;
+
+    grid-template-columns:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    min-height: 34px;
+
+    margin:
+        10px
+        0
+        0;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(0, 168, 255, 0.42);
+
+    border-radius: 7px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(7, 21, 38, 0.96),
+            rgba(13, 32, 53, 0.96)
+        );
+}
+
+
+.patrocinio-estacion-titulo {
+    align-self: stretch;
+
+    display: flex;
+
+    align-items: center;
+
+    padding:
+        0
+        10px;
+
+    white-space: nowrap;
+
+    border-right:
+        1px solid
+        rgba(0, 168, 255, 0.30);
+
+    color:
+        #fff;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing:
+        0.07em;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+
+.patrocinio-estacion-ventana {
+    min-width: 0;
+
+    overflow: hidden;
+
+    -webkit-mask-image:
+        linear-gradient(
+            to right,
+            transparent,
+            #000 5%,
+            #000 95%,
+            transparent
+        );
+
+    mask-image:
+        linear-gradient(
+            to right,
+            transparent,
+            #000 5%,
+            #000 95%,
+            transparent
+        );
+}
+
+
+.patrocinio-estacion-pista {
+    display: flex;
+
+    width: max-content;
+
+    animation:
+        patrocinio-estacion-desplazar
+        21s
+        linear
+        infinite;
+
+    will-change:
+        transform;
+}
+
+
+.patrocinio-estacion-texto {
+    display: block;
+
+    flex: none;
+
+    padding:
+        0
+        34px;
+
+    white-space: nowrap;
+
+    color:
+        #00a8ff;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    text-shadow:
+        0
+        0
+        8px
+        rgba(0, 168, 255, 0.28);
+}
+
+
+.patrocinio-estacion-texto strong {
+    color:
+        #42c7ff;
+
+    font-weight: 800;
+
+    text-shadow:
+        0
+        0
+        10px
+        rgba(66, 199, 255, 0.38);
+}
+
+
+.patrocinio-estacion-control {
+    align-self: stretch;
+
+    width: 34px;
+
+    border: 0;
+
+    border-left:
+        1px solid
+        rgba(0, 168, 255, 0.25);
+
+    background:
+        transparent;
+
+    color:
+        #42c7ff;
+
+    cursor: pointer;
+
+    font-size: 10px;
+}
+
+
+@media (hover: hover) {
+
+    .patrocinio-estacion-control:hover {
+        background:
+            rgba(0, 168, 255, 0.07);
+    }
+
+}
+
+
+.patrocinio-estacion-control:focus-visible {
+    outline:
+        2px solid
+        #00a8ff;
+
+    outline-offset:
+        -3px;
+}
+
+
+.patrocinio-estacion.pausado
+.patrocinio-estacion-pista {
+    animation-play-state:
+        paused;
+}
+
+
+@keyframes patrocinio-estacion-desplazar {
+
+    from {
+        transform:
+            translateX(0);
+    }
+
+    to {
+        transform:
+            translateX(-50%);
+    }
+
+}
+
+
+/* ==========================================================
+   MÉTRICAS
+   ========================================================== */
+
+
+.metricas-estacion {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    margin-top: 12px;
+
+    background:
+        rgba(3, 13, 23, 0.80);
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+}
+
+
+.ficha-estacion--horizontal
+.metricas-estacion {
+    grid-template-columns:
+        repeat(
+            6,
+            minmax(0, 1fr)
+        );
+
+    margin-top: 16px;
+}
+
+
+.metrica-estacion {
+    min-width: 0;
+
+    padding:
+        11px
+        13px;
+
+    border-right:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+
+.ficha-estacion--vertical
+.metrica-estacion:nth-child(3n) {
+    border-right: none;
+}
+
+
+.ficha-estacion--horizontal
+.metrica-estacion:last-child {
+    border-right: none;
+}
+
+
+.metrica-label {
+    color:
+        var(--muted);
+
+    font-size: 9px;
+}
+
+
+.metrica-valor {
+    margin-top: 4px;
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.metrica-secundaria {
+    margin-top: 3px;
+
+    color:
+        var(--muted);
+
+    font-size: 8px;
+}
+
+
+/* ==========================================================
+   LLUVIA VISUAL DE LA FICHA
+   ========================================================== */
+
+
+.capa-lluvia-ficha,
+.capa-gotas-cristal-ficha {
+    position: absolute;
+
+    inset: 0;
+
+    display: none;
+
+    overflow: hidden;
+
+    border-radius: inherit;
+
+    pointer-events: none;
+}
+
+
+.capa-lluvia-ficha {
+    z-index: 12;
+
+    --factor-duracion: 1;
+    --factor-longitud: 1;
+    --factor-opacidad: 1;
+    --ancho-gota: 1px;
+    --inicio-x: 0px;
+    --final-x: 0px;
+    --recorrido-y: 1200px;
+    --angulo-gota: 0deg;
+}
+
+
+.capa-gotas-cristal-ficha {
+    z-index: 13;
+}
+
+
+.capa-lluvia-ficha.activa,
+.capa-gotas-cristal-ficha.activa {
+    display: block;
+}
+
+
+.capa-lluvia-ficha.nivel-1 {
+    --factor-duracion: 1.80;
+    --factor-longitud: 0.52;
+    --factor-opacidad: 0.38;
+    --ancho-gota: 0.7px;
+
+    background:
+        rgba(8, 22, 34, 0.009);
+}
+
+
+.capa-lluvia-ficha.nivel-2 {
+    --factor-duracion: 1.18;
+    --factor-longitud: 0.88;
+    --factor-opacidad: 0.62;
+    --ancho-gota: 1px;
+
+    background:
+        rgba(8, 22, 34, 0.030);
+}
+
+
+.capa-lluvia-ficha.nivel-3 {
+    --factor-duracion: 0.76;
+    --factor-longitud: 1.32;
+    --factor-opacidad: 0.84;
+    --ancho-gota: 1.4px;
+
+    background:
+        rgba(6, 19, 31, 0.072);
+}
+
+
+.capa-lluvia-ficha.nivel-4 {
+    --factor-duracion: 0.44;
+    --factor-longitud: 1.90;
+    --factor-opacidad: 1;
+    --ancho-gota: 2px;
+
+    background:
+        rgba(4, 16, 28, 0.135);
+}
+
+
+.capa-lluvia-ficha
+.gota-lluvia {
+    position: absolute;
+
+    top: -18%;
+    left:
+        var(--x);
+
+    width:
+        var(--ancho-gota);
+
+    height:
+        calc(
+            var(--longitud)
+            *
+            var(--factor-longitud)
+        );
+
+    opacity:
+        calc(
+            var(--opacidad)
+            *
+            var(--factor-opacidad)
+        );
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(194, 231, 255, 0),
+            rgba(180, 226, 255, 0.98)
+        );
+
+    box-shadow:
+        0
+        0
+        4px
+        rgba(116, 201, 255, 0.34);
+
+    animation-name:
+        caer-lluvia-ficha;
+
+    animation-duration:
+        calc(
+            var(--duracion)
+            *
+            var(--factor-duracion)
+        );
+
+    animation-timing-function:
+        linear;
+
+    animation-iteration-count:
+        infinite;
+
+    animation-delay:
+        var(--retraso);
+
+    will-change:
+        transform;
+}
+
+
+.capa-lluvia-ficha.nivel-1
+.gota-lluvia:nth-child(n+17) {
+    display: none;
+}
+
+
+.capa-lluvia-ficha.nivel-2
+.gota-lluvia:nth-child(n+49) {
+    display: none;
+}
+
+
+.capa-lluvia-ficha.nivel-3
+.gota-lluvia:nth-child(n+97) {
+    display: none;
+}
+
+
+.capa-lluvia-ficha.nivel-4
+.gota-lluvia {
+    display: block;
+}
+
+
+.capa-lluvia-ficha.nivel-4
+.gota-lluvia:nth-child(3n) {
+    box-shadow:
+        0
+        0
+        7px
+        rgba(166, 222, 255, 0.54);
+}
+
+
+@keyframes caer-lluvia-ficha {
+
+    from {
+        transform:
+            translate3d(
+                var(--inicio-x),
+                -40px,
+                0
+            )
+            rotate(
+                var(--angulo-gota)
+            );
+    }
+
+    to {
+        transform:
+            translate3d(
+                var(--final-x),
+                var(--recorrido-y),
+                0
+            )
+            rotate(
+                var(--angulo-gota)
+            );
+    }
+
+}
+
+
+.capa-gotas-cristal-ficha
+.gota-cristal {
+    position: absolute;
+
+    left:
+        var(--x);
+
+    top:
+        var(--y);
+
+    width:
+        var(--tamano);
+
+    height:
+        calc(
+            var(--tamano)
+            *
+            1.24
+        );
+
+    border:
+        1px solid
+        rgba(220, 244, 255, 0.18);
+
+    border-radius:
+        54% 46% 59% 41%
+        /
+        44% 47% 53% 56%;
+
+    background:
+        radial-gradient(
+            circle at 32% 24%,
+            rgba(255, 255, 255, 0.38),
+            rgba(177, 225, 251, 0.12) 30%,
+            rgba(86, 161, 205, 0.06) 67%,
+            rgba(255, 255, 255, 0.02)
+        );
+
+    box-shadow:
+        inset
+        1px
+        1px
+        2px
+        rgba(255, 255, 255, 0.18),
+        0
+        1px
+        4px
+        rgba(0, 0, 0, 0.16);
+
+    opacity: 0;
+
+    transform:
+        scale(0.65);
+
+    animation:
+        vida-gota-cristal-ficha
+        var(--vida)
+        ease-in-out
+        forwards;
+
+    will-change:
+        transform,
+        opacity;
+}
+
+
+.capa-gotas-cristal-ficha
+.gota-cristal::after {
+    content: "";
+
+    position: absolute;
+
+    left: 20%;
+    top: 17%;
+
+    width: 28%;
+    height: 20%;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.36);
+
+    filter:
+        blur(0.3px);
+}
+
+
+@keyframes vida-gota-cristal-ficha {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translate3d(
+                0,
+                -3px,
+                0
+            )
+            scale(0.55);
+    }
+
+    12% {
+        opacity:
+            var(--opacidad-cristal);
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            )
+            scale(1);
+    }
+
+    70% {
+        opacity:
+            calc(
+                var(--opacidad-cristal)
+                *
+                0.88
+            );
+
+        transform:
+            translate3d(
+                var(--desvio-x),
+                calc(
+                    var(--deslizar)
+                    *
+                    0.25
+                ),
+                0
+            )
+            scale(0.98);
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate3d(
+                var(--desvio-x),
+                var(--deslizar),
+                0
+            )
+            scale(0.88);
+    }
+
+}
+
+
+/* ==========================================================
+   RESPONSIVE DEL PROPIO COMPONENTE
+   ========================================================== */
+
+
+/*
+ * Aunque una ficha esté marcada como horizontal, si su contenedor
+ * acaba siendo estrecho —por ejemplo en móvil— se presenta
+ * verticalmente. El modo lógico sigue siendo horizontal, pero
+ * la composición responde al espacio real disponible.
+ */
+@container (max-width: 620px) {
+
+    .estacion-contenido {
+        padding:
+            16px
+            16px
+            0;
+    }
+
+
+    .estacion-superior,
+    .ficha-estacion--horizontal
+    .estacion-superior {
+        grid-template-columns:
+            minmax(130px, 0.9fr)
+            minmax(145px, 1.1fr);
+
+        gap: 10px;
+    }
+
+
+    .estacion-identidad,
+    .ficha-estacion--horizontal
+    .estacion-identidad {
+        grid-template-columns:
+            52px
+            minmax(0, 1fr);
+
+        gap: 7px;
+    }
+
+
+    .estacion-logo,
+    .ficha-estacion--horizontal
+    .estacion-logo {
+        width: 52px;
+        height: 52px;
+    }
+
+
+    .estacion-nombre,
+    .ficha-estacion--horizontal
+    .estacion-nombre {
+        font-size: 18px;
+    }
+
+
+    .estacion-localidad,
+    .ficha-estacion--horizontal
+    .estacion-localidad {
+        font-size: 11px;
+    }
+
+
+    .online {
+        font-size: 10px;
+    }
+
+
+    .temperatura,
+    .ficha-estacion--horizontal
+    .temperatura {
+        font-size: 46px;
+    }
+
+
+    .temperatura sup,
+    .ficha-estacion--horizontal
+    .temperatura sup {
+        font-size: 20px;
+    }
+
+
+    .ficha-estacion--vertical
+    .estacion-visor,
+    .ficha-estacion--horizontal
+    .estacion-visor {
+        min-height: 108px;
+    }
+
+
+    .estacion-secundarios,
+    .ficha-estacion--horizontal
+    .estacion-secundarios {
+        grid-template-columns:
+            1fr;
+
+        gap: 10px;
+
+        margin-top: 12px;
+    }
+
+
+    .ficha-estacion--horizontal
+    .viento-panel,
+    .ficha-estacion--horizontal
+    .lluvia-resumen {
+        min-height: 0;
+    }
+
+
+    .viento-panel {
+        grid-template-columns:
+            106px
+            minmax(0, 1fr);
+    }
+
+
+    .veleta {
+        width: 104px;
+        height: 104px;
+    }
+
+
+    .lluvia-resumen {
+        padding: 8px;
+    }
+
+
+    .lluvia-resumen-item {
+        grid-template-columns:
+            26px
+            minmax(0, 1fr);
+
+        column-gap: 5px;
+
+        padding:
+            5px
+            3px;
+    }
+
+
+    .lluvia-resumen-icono {
+        font-size: 18px;
+    }
+
+
+    .lluvia-resumen-label,
+    .lluvia-resumen-extra,
+    .viento-secundario,
+    .viento-actual small,
+    .metrica-label,
+    .metrica-secundaria,
+    .veleta-cardinal,
+    .observacion {
+        font-size: 11px;
+    }
+
+
+    .lluvia-resumen-valor,
+    .viento-secundario strong {
+        font-size: 12px;
+    }
+
+
+    .metricas-estacion,
+    .ficha-estacion--horizontal
+    .metricas-estacion {
+        grid-template-columns:
+            1fr
+            1fr;
+
+        margin-top: 12px;
+    }
+
+
+    .ficha-estacion
+    .metrica-estacion {
+        border-right:
+            1px solid
+            rgba(255, 255, 255, 0.08);
+    }
+
+
+    .ficha-estacion
+    .metrica-estacion:nth-child(2n) {
+        border-right: none;
+    }
+
+}
+
+
+@container (max-width: 390px) {
+
+    .estacion-superior,
+    .ficha-estacion--horizontal
+    .estacion-superior {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .estacion-principal-datos {
+        width: 100%;
+    }
+
+
+    .estacion-identidad,
+    .ficha-estacion--horizontal
+    .estacion-identidad {
+        grid-template-columns:
+            58px
+            minmax(0, 1fr);
+    }
+
+
+    .estacion-logo,
+    .ficha-estacion--horizontal
+    .estacion-logo {
+        width: 58px;
+        height: 58px;
+    }
+
+
+    .temperatura,
+    .ficha-estacion--horizontal
+    .temperatura {
+        font-size: 47px;
+    }
+
+
+    .ficha-estacion--vertical
+    .estacion-visor,
+    .ficha-estacion--horizontal
+    .estacion-visor {
+        min-height: 150px;
+    }
+
+
+    .viento-panel {
+        grid-template-columns:
+            94px
+            minmax(0, 1fr);
+    }
+
+
+    .veleta {
+        width: 92px;
+        height: 92px;
+    }
+
+
+    .veleta-aguja {
+        height: 31px;
+    }
+
+
+    .direccion-cardinal {
+        font-size: 20px;
+    }
+
+
+    .viento-actual {
+        font-size: 14px;
+    }
+
+
+    .lluvia-resumen-item {
+        grid-template-columns:
+            22px
+            minmax(0, 1fr);
+
+        column-gap: 4px;
+    }
+
+
+    .lluvia-resumen-icono {
+        font-size: 16px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOVIMIENTO REDUCIDO
+   ========================================================== */
+
+
+@media (prefers-reduced-motion: reduce) {
+
+    .patrocinio-estacion-pista {
+        animation: none;
+    }
+
+
+    .patrocinio-estacion-texto:nth-child(2) {
+        display: none;
+    }
+
+
+    .capa-lluvia-ficha,
+    .capa-gotas-cristal-ficha {
+        display:
+            none !important;
+    }
+
+
+    .veleta-rotor {
+        transition: none;
+    }
+
+}
+
+
+/* Fin de fichero: css/ficha-estacion.css */
