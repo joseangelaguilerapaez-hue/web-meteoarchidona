@@ -10,6 +10,8 @@
  *
  *     camara=los-llanos
  *     vista=panoramica | ptz
+ *     estacion=LOS_LLANOS
+ *     disponible=0 | 1
  *     interactivo=0 | 1
  *     autoplay=0 | 1
  *     controles=0 | 1
@@ -17,6 +19,7 @@
  *
  * Valores por defecto:
  *
+ *     disponible=1
  *     interactivo=0
  *     autoplay=1
  *     controles=interactivo
@@ -31,14 +34,30 @@
  * Visor compacto para ficha de estación:
  *
  *     video.html?camara=los-llanos&vista=panoramica
+ *         &estacion=LOS_LLANOS
+ *         &disponible=1
  *         &interactivo=1
  *         &autoplay=0
  *         &controles=1
  *         &click=1
  *
+ * Visor de estación todavía sin cámara:
+ *
+ *     video.html?estacion=EL_SILO&disponible=0
+ *
+ * Cuando disponible=0:
+ *
+ * - no se resuelve ninguna cámara;
+ * - no se carga ningún manifiesto HLS;
+ * - no se realiza ningún intento de conexión;
+ * - no se habilitan controles ni interacción;
+ * - se mantiene la portada corporativa de Cámaras;
+ * - se muestra que esa estación todavía no dispone de vídeo.
+ *
  * Responsabilidades:
  *
  * - resolver cámara y vista;
+ * - admitir estaciones todavía sin vídeo;
  * - reproducir HLS;
  * - poder retrasar completamente la carga del stream;
  * - iniciar la emisión mediante pulsación;
@@ -205,11 +224,12 @@ function parametroBooleano(
     }
 
 
-    const normalizado = String(
-        valor
-    )
-        .trim()
-        .toLowerCase();
+    const normalizado =
+        String(
+            valor
+        )
+            .trim()
+            .toLowerCase();
 
 
     return [
@@ -226,12 +246,95 @@ function parametroBooleano(
 }
 
 
+function normalizarCodigoEstacion(
+    valor
+) {
+
+    const codigo =
+        String(
+            valor
+            ??
+            ""
+        )
+            .trim()
+            .toUpperCase();
+
+
+    return codigo || null;
+
+}
+
+
 function obtenerConfiguracion() {
 
     const parametros =
         new URLSearchParams(
             window.location.search
         );
+
+
+    const disponible =
+        parametroBooleano(
+            parametros.get(
+                "disponible"
+            ),
+            true
+        );
+
+
+    const estacionSolicitada =
+        normalizarCodigoEstacion(
+            parametros.get(
+                "estacion"
+            )
+        );
+
+
+    /*
+     * Una estación sin cámara constituye un estado válido
+     * del visor, no un error.
+     *
+     * Es fundamental resolver este caso ANTES de aplicar
+     * la cámara por defecto, porque una ficha sin cámara
+     * nunca debe terminar mostrando Los Llanos.
+     */
+    if (!disponible) {
+
+        return {
+
+            disponible:
+                false,
+
+            claveCamara:
+                null,
+
+            claveVista:
+                null,
+
+            estacion:
+                estacionSolicitada,
+
+            nombre:
+                "Vídeo en directo no disponible",
+
+            src:
+                null,
+
+            interactivo:
+                false,
+
+            autoplay:
+                false,
+
+            controles:
+                false,
+
+            clickAlterna:
+                false
+
+        };
+
+    }
 
 
     const claveCamara =
@@ -251,7 +354,9 @@ function obtenerConfiguracion() {
 
 
     const claveVista =
-        claveVistaSolicitada === "especifica"
+        claveVistaSolicitada
+        ===
+        "especifica"
             ? "ptz"
             : claveVistaSolicitada;
 
@@ -324,6 +429,9 @@ function obtenerConfiguracion() {
 
     return {
 
+        disponible:
+            true,
+
         claveCamara:
             claveCamara,
 
@@ -331,6 +439,8 @@ function obtenerConfiguracion() {
             claveVista,
 
         estacion:
+            estacionSolicitada
+            ||
             camara.estacion,
 
         nombre:
@@ -510,6 +620,11 @@ function mostrarPortada() {
 
     if (raiz) {
 
+        raiz.classList.remove(
+            "no-disponible"
+        );
+
+
         raiz.classList.add(
             "portada-activa"
         );
@@ -535,6 +650,80 @@ function mostrarPortada() {
 }
 
 
+function mostrarPortadaNoDisponible() {
+
+    const {
+        raiz,
+        video,
+        meteo,
+        marca,
+        controles
+    } =
+        obtenerDom();
+
+
+    if (raiz) {
+
+        raiz.classList.add(
+            "portada-activa",
+            "no-disponible"
+        );
+
+    }
+
+
+    if (video) {
+
+        video.autoplay =
+            false;
+
+        video.preload =
+            "none";
+
+        video.pause();
+
+        video.removeAttribute(
+            "src"
+        );
+
+    }
+
+
+    /*
+     * En una portada de cámara pendiente no necesitamos
+     * superponer nuevamente datos que ya muestra la ficha.
+     */
+    if (meteo) {
+
+        meteo.hidden =
+            true;
+
+    }
+
+
+    if (marca) {
+
+        marca.hidden =
+            true;
+
+    }
+
+
+    if (controles) {
+
+        controles.hidden =
+            true;
+
+    }
+
+
+    establecerEstado(
+        "VÍDEO EN DIRECTO NO DISPONIBLE"
+    );
+
+}
+
+
 function ocultarPortada() {
 
     const {
@@ -549,7 +738,8 @@ function ocultarPortada() {
 
 
     raiz.classList.remove(
-        "portada-activa"
+        "portada-activa",
+        "no-disponible"
     );
 
 }
@@ -645,6 +835,8 @@ async function actualizarMeteo() {
         !configuracionActual
         ||
         !configuracionActual.estacion
+        ||
+        !configuracionActual.disponible
     ) {
 
         mostrarMeteoSinDatos();
@@ -706,6 +898,15 @@ async function actualizarMeteo() {
 function iniciarActualizacionMeteo() {
 
     detenerActualizacionMeteo();
+
+
+    if (
+        !configuracionActual?.disponible
+    ) {
+
+        return;
+
+    }
 
 
     actualizarMeteo();
@@ -1228,6 +1429,8 @@ function pausarReproduccion() {
         !video
         ||
         !reproduccionPreparada
+        ||
+        !configuracionActual?.disponible
     ) {
 
         return;
@@ -1266,8 +1469,14 @@ async function reanudarReproduccion() {
         obtenerDom();
 
 
-    if (!video) {
+    if (
+        !video
+        ||
+        !configuracionActual?.disponible
+    ) {
+
         return;
+
     }
 
 
@@ -1318,8 +1527,14 @@ async function alternarReproduccion() {
         obtenerDom();
 
 
-    if (!video) {
+    if (
+        !video
+        ||
+        !configuracionActual?.disponible
+    ) {
+
         return;
+
     }
 
 
@@ -1381,6 +1596,8 @@ async function alternarFullscreen() {
 
     if (
         !configuracionActual?.interactivo
+        ||
+        !configuracionActual?.disponible
     ) {
 
         return;
@@ -1463,6 +1680,8 @@ function pulsacionSobreVisor(evento) {
 
     if (
         !configuracionActual?.clickAlterna
+        ||
+        !configuracionActual?.disponible
     ) {
 
         return;
@@ -1514,19 +1733,31 @@ function configurarInteractividad() {
     }
 
 
+    const disponible =
+        Boolean(
+            configuracionActual?.disponible
+        );
+
+
     const interactivo =
+        disponible
+        &&
         Boolean(
             configuracionActual?.interactivo
         );
 
 
     const clickAlterna =
+        disponible
+        &&
         Boolean(
             configuracionActual?.clickAlterna
         );
 
 
     const mostrarControles =
+        disponible
+        &&
         Boolean(
             configuracionActual?.controles
         );
@@ -1563,13 +1794,15 @@ function configurarInteractividad() {
 
 
     video.autoplay =
+        disponible
+        &&
         Boolean(
             configuracionActual?.autoplay
         );
 
 
     video.preload =
-        configuracionActual?.autoplay
+        video.autoplay
             ? "auto"
             : "none";
 
@@ -2001,8 +2234,14 @@ function prepararHlsJs(
 
 function prepararReproduccion() {
 
-    if (reproduccionPreparada) {
+    if (
+        reproduccionPreparada
+        ||
+        !configuracionActual?.disponible
+    ) {
+
         return;
+
     }
 
 
@@ -2016,6 +2255,17 @@ function prepararReproduccion() {
 
         throw new Error(
             "No existe el elemento de vídeo."
+        );
+
+    }
+
+
+    if (
+        !configuracionActual.src
+    ) {
+
+        throw new Error(
+            "La cámara no tiene una fuente de vídeo configurada."
         );
 
     }
@@ -2247,6 +2497,26 @@ function inicializarVisorVideo() {
 
 
         registrarEventosGlobales();
+
+
+        /*
+         * Este es un estado normal del componente.
+         * Terminamos aquí deliberadamente:
+         *
+         * - no meteorología duplicada;
+         * - no HLS;
+         * - no peticiones a la cámara;
+         * - no reproducción.
+         */
+        if (
+            !configuracionActual.disponible
+        ) {
+
+            mostrarPortadaNoDisponible();
+
+            return;
+
+        }
 
 
         iniciarActualizacionMeteo();
