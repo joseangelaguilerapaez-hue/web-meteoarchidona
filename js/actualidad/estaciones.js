@@ -11,9 +11,12 @@
  * - normalizar el catálogo público de estaciones;
  * - conservar metadatos y códigos publicados;
  * - crear y retirar fichas dinámicamente;
- * - mantener la plantilla estructural de estación;
+ * - admitir temporalmente la antigua plantilla incluida en Actualidad;
+ * - cargar la nueva plantilla reutilizable ficha-estacion;
  * - preparar el estado interno asociado a cada estación;
  * - actualizar nombre, localidad y metadatos de la ficha;
+ * - montar el visor de cámara de cada estación;
+ * - asignar modo vertical u horizontal según la rejilla;
  * - conservar como respaldo temporal las estaciones presentes en el DOM.
  *
  * Este módulo no consulta directamente la API.
@@ -51,13 +54,28 @@ import {
 } from "./patrocinios.js?v=20260914-modular2";
 
 
+import {
+    actualizarModosRejilla,
+    establecerModoFicha,
+    montarVisorFicha,
+    obtenerPlantillaFichaEstacion as obtenerPlantillaComponente
+} from "../ficha-estacion.js?v=20261007-ficha1";
+
+
+/* ==========================================================
+   METADATOS
+   ========================================================== */
+
+
 export function obtenerMetadatosEstacion(
     codigo
 ) {
+
     const codigoNormalizado =
         normalizarCodigoEstacion(
             codigo
         );
+
 
     return (
         estadoActualidad
@@ -71,21 +89,30 @@ export function obtenerMetadatosEstacion(
         ||
         null
     );
+
 }
+
+
+/* ==========================================================
+   FICHAS EXISTENTES
+   ========================================================== */
 
 
 export function estacionTieneFicha(
     codigo
 ) {
+
     return Boolean(
         obtenerElemento(
             `tarjeta-${codigo}`
         )
     );
+
 }
 
 
 export function obtenerCodigosConFicha() {
+
     return estadoActualidad
         .codigosEstacion
         .filter(
@@ -94,12 +121,19 @@ export function obtenerCodigosConFicha() {
                     codigo
                 )
         );
+
 }
+
+
+/* ==========================================================
+   ESTADO INTERNO
+   ========================================================== */
 
 
 export function crearEstadoInicialEstacion(
     codigo
 ) {
+
     if (
         !Object.prototype.hasOwnProperty.call(
             estadoActualidad
@@ -107,12 +141,15 @@ export function crearEstadoInicialEstacion(
             codigo
         )
     ) {
+
         estadoActualidad
             .lluviaReal[
                 codigo
             ] =
             0;
+
     }
+
 
     if (
         !Object.prototype.hasOwnProperty.call(
@@ -121,12 +158,15 @@ export function crearEstadoInicialEstacion(
             codigo
         )
     ) {
+
         estadoActualidad
             .lluviaSimulada[
                 codigo
             ] =
             0;
+
     }
+
 
     if (
         !Object.prototype.hasOwnProperty.call(
@@ -135,97 +175,133 @@ export function crearEstadoInicialEstacion(
             codigo
         )
     ) {
+
         estadoActualidad
             .vientoEstacion[
                 codigo
             ] = {
-                direccion: null,
-                velocidad: 0
+
+                direccion:
+                    null,
+
+                velocidad:
+                    0
+
             };
+
     }
+
 }
 
 
 export function eliminarEstadoEstacionesAusentes(
     codigosValidos
 ) {
+
     const permitidos =
         new Set(
             codigosValidos
         );
+
 
     Object.keys(
         estadoActualidad
             .lluviaReal
     ).forEach(
         codigo => {
+
             if (
                 !permitidos.has(
                     codigo
                 )
             ) {
+
                 delete estadoActualidad
                     .lluviaReal[
                         codigo
                     ];
+
             }
+
         }
     );
+
 
     Object.keys(
         estadoActualidad
             .lluviaSimulada
     ).forEach(
         codigo => {
+
             if (
-                codigo !== "GLOBAL"
+                codigo
+                !==
+                "GLOBAL"
                 &&
                 !permitidos.has(
                     codigo
                 )
             ) {
+
                 delete estadoActualidad
                     .lluviaSimulada[
                         codigo
                     ];
+
             }
+
         }
     );
+
 
     Object.keys(
         estadoActualidad
             .vientoEstacion
     ).forEach(
         codigo => {
+
             if (
                 !permitidos.has(
                     codigo
                 )
             ) {
+
                 delete estadoActualidad
                     .vientoEstacion[
                         codigo
                     ];
+
             }
+
         }
     );
+
 }
+
+
+/* ==========================================================
+   CATÁLOGO
+   ========================================================== */
 
 
 export function establecerCatalogoEstaciones(
     estaciones
 ) {
+
     const normalizadas = [];
 
     const codigosVistos =
         new Set();
 
+
     estaciones.forEach(
         estacion => {
+
             const codigo =
                 normalizarCodigoEstacion(
                     estacion?.codigo
                 );
+
 
             if (
                 !codigo
@@ -234,15 +310,20 @@ export function establecerCatalogoEstaciones(
                     codigo
                 )
             ) {
+
                 return;
+
             }
+
 
             codigosVistos.add(
                 codigo
             );
 
+
             normalizadas.push(
                 {
+
                     codigo,
 
                     nombre_publico:
@@ -269,14 +350,18 @@ export function establecerCatalogoEstaciones(
                         estacion?.pais
                         ??
                         null
+
                 }
             );
+
         }
     );
+
 
     establecerEstacionesPublicas(
         normalizadas
     );
+
 
     const codigos =
         normalizadas.map(
@@ -284,69 +369,155 @@ export function establecerCatalogoEstaciones(
                 estacion.codigo
         );
 
+
     establecerCodigosEstacion(
         codigos
     );
+
 
     eliminarEstadoEstacionesAusentes(
         codigos
     );
 
+
     codigos.forEach(
         codigo => {
+
             crearEstadoInicialEstacion(
                 codigo
             );
+
         }
     );
 
+
     actualizarSistemaLluvia();
+
 }
 
 
+/* ==========================================================
+   RESPALDO DESDE DOM
+   ========================================================== */
+
+
 export function establecerCatalogoDesdeDom() {
+
     const codigos =
         obtenerCodigosDesdeDom();
+
 
     establecerCatalogoEstaciones(
         codigos.map(
             codigo => ({
+
                 codigo,
+
                 nombre_publico:
                     codigo,
+
                 estado:
                     null,
+
                 ciudad:
                     null,
+
                 region:
                     null,
+
                 pais:
                     null
+
             })
         )
     );
+
 }
 
 
+/* ==========================================================
+   LIMPIEZA DE PLANTILLA
+   ========================================================== */
+
+
+function limpiarPlantilla(
+    plantilla
+) {
+
+    plantilla
+        .querySelectorAll(
+            ".gota-lluvia, .gota-cristal"
+        )
+        .forEach(
+            elemento =>
+                elemento.remove()
+        );
+
+
+    plantilla
+        .querySelectorAll(
+            "*"
+        )
+        .forEach(
+            elemento => {
+
+                delete elemento.dataset
+                    .gotasLluviaInicializadas;
+
+                delete elemento.dataset
+                    .controlLluviaConfigurado;
+
+                delete elemento.dataset
+                    .patrocinioConfigurado;
+
+            }
+        );
+
+
+    return plantilla;
+
+}
+
+
+/* ==========================================================
+   PLANTILLA ANTIGUA
+   ========================================================== */
+
+
+/*
+ * Compatibilidad temporal.
+ *
+ * Mientras pages/actualidad.html siga conteniendo la antigua
+ * <template id="plantilla-estacion">, este método continúa
+ * funcionando exactamente como hasta ahora.
+ *
+ * Esto permite preparar la migración archivo a archivo sin
+ * dejar Actualidad rota entre commits.
+ */
 export function capturarPlantillaFichaEstacion() {
+
     const panel =
         document.querySelector(
             ".panel-superior"
         );
 
-    if (
-        !panel
-    ) {
+
+    if (!panel) {
+
         return false;
+
     }
+
 
     const template =
         obtenerElemento(
             "plantilla-estacion"
         );
 
+
     let ficha =
         null;
+
 
     if (
         template
@@ -355,16 +526,18 @@ export function capturarPlantillaFichaEstacion() {
         ===
         "TEMPLATE"
     ) {
+
         ficha =
             template.content
                 .querySelector(
                     ".estacion-principal"
                 );
+
     }
 
-    if (
-        !ficha
-    ) {
+
+    if (!ficha) {
+
         ficha =
             Array.from(
                 panel.children
@@ -377,13 +550,16 @@ export function capturarPlantillaFichaEstacion() {
             )
             ||
             null;
+
     }
 
-    if (
-        !ficha
-    ) {
+
+    if (!ficha) {
+
         return false;
+
     }
+
 
     const codigo =
         normalizarCodigoEstacion(
@@ -393,50 +569,115 @@ export function capturarPlantillaFichaEstacion() {
             )
         );
 
-    if (
-        !codigo
-    ) {
+
+    if (!codigo) {
+
         return false;
+
     }
 
+
     const plantilla =
-        ficha.cloneNode(
-            true
+        limpiarPlantilla(
+            ficha.cloneNode(
+                true
+            )
         );
 
-    plantilla
-        .querySelectorAll(
-            ".gota-lluvia, .gota-cristal"
-        )
-        .forEach(
-            elemento =>
-                elemento.remove()
-        );
-
-    plantilla
-        .querySelectorAll(
-            "*"
-        )
-        .forEach(
-            elemento => {
-                delete elemento.dataset
-                    .gotasLluviaInicializadas;
-
-                delete elemento.dataset
-                    .controlLluviaConfigurado;
-
-                delete elemento.dataset
-                    .patrocinioConfigurado;
-            }
-        );
 
     establecerPlantillaFichaEstacion(
         plantilla,
         codigo
     );
 
+
     return true;
+
 }
+
+
+/* ==========================================================
+   NUEVO COMPONENTE EXTERNO
+   ========================================================== */
+
+
+/*
+ * Carga componentes/ficha-estacion.html mediante el módulo
+ * reutilizable js/ficha-estacion.js.
+ *
+ * Esta será la vía definitiva cuando eliminemos la plantilla
+ * incrustada de pages/actualidad.html.
+ */
+export async function cargarPlantillaFichaEstacion() {
+
+    try {
+
+        const template =
+            await obtenerPlantillaComponente();
+
+
+        if (
+            !template
+            ||
+            template.tagName
+            !==
+            "TEMPLATE"
+        ) {
+
+            return false;
+
+        }
+
+
+        const ficha =
+            template.content
+                .querySelector(
+                    ".ficha-estacion"
+                );
+
+
+        if (!ficha) {
+
+            return false;
+
+        }
+
+
+        const plantilla =
+            limpiarPlantilla(
+                ficha.cloneNode(
+                    true
+                )
+            );
+
+
+        establecerPlantillaFichaEstacion(
+            plantilla,
+            "PLANTILLA"
+        );
+
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo cargar el componente de ficha de estación.",
+            error
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* ==========================================================
+   SUSTITUCIÓN DEL CÓDIGO
+   ========================================================== */
 
 
 export function sustituirCodigoEnFicha(
@@ -444,6 +685,7 @@ export function sustituirCodigoEnFicha(
     codigoOrigen,
     codigoDestino
 ) {
+
     const elementos = [
         ficha,
         ...ficha.querySelectorAll(
@@ -451,8 +693,10 @@ export function sustituirCodigoEnFicha(
         )
     ];
 
+
     elementos.forEach(
         elemento => {
+
             if (
                 elemento.id
                 &&
@@ -460,6 +704,7 @@ export function sustituirCodigoEnFicha(
                     `-${codigoOrigen}`
                 )
             ) {
+
                 elemento.id =
                     `${
                         elemento.id.slice(
@@ -471,7 +716,9 @@ export function sustituirCodigoEnFicha(
                             )
                         )
                     }-${codigoDestino}`;
+
             }
+
 
             if (
                 elemento.dataset
@@ -479,10 +726,13 @@ export function sustituirCodigoEnFicha(
                 ===
                 codigoOrigen
             ) {
+
                 elemento.dataset
                     .lluviaControl =
                     codigoDestino;
+
             }
+
 
             if (
                 elemento.dataset
@@ -490,10 +740,27 @@ export function sustituirCodigoEnFicha(
                 ===
                 codigoOrigen
             ) {
+
                 elemento.dataset
                     .patrocinio =
                     codigoDestino;
+
             }
+
+
+            if (
+                elemento.dataset
+                    .visorEstacion
+                ===
+                codigoOrigen
+            ) {
+
+                elemento.dataset
+                    .visorEstacion =
+                    codigoDestino;
+
+            }
+
 
             delete elemento.dataset
                 .gotasLluviaInicializadas;
@@ -503,19 +770,30 @@ export function sustituirCodigoEnFicha(
 
             delete elemento.dataset
                 .patrocinioConfigurado;
+
         }
     );
+
 }
+
+
+/* ==========================================================
+   LOCALIDAD
+   ========================================================== */
 
 
 export function obtenerLocalidadEstacion(
     estacion
 ) {
+
     if (
         estacion?.ciudad
     ) {
+
         return estacion.ciudad;
+
     }
+
 
     const partes = [
         estacion?.region,
@@ -524,150 +802,218 @@ export function obtenerLocalidadEstacion(
         Boolean
     );
 
+
     return partes.join(
         " · "
     );
+
 }
+
+
+/* ==========================================================
+   METADATOS DE FICHA
+   ========================================================== */
 
 
 export function actualizarMetadatosFicha(
     ficha,
     estacion
 ) {
+
     const nombre =
         estacion.nombre_publico
         ||
         estacion.codigo;
+
 
     const localidad =
         obtenerLocalidadEstacion(
             estacion
         );
 
+
     const nombreElemento =
         ficha.querySelector(
             ".estacion-nombre"
         );
 
-    if (
-        nombreElemento
-    ) {
+
+    if (nombreElemento) {
+
         nombreElemento.textContent =
             nombre;
+
     }
+
 
     const localidadElemento =
         ficha.querySelector(
             ".estacion-localidad"
         );
 
-    if (
-        localidadElemento
-    ) {
+
+    if (localidadElemento) {
+
         localidadElemento.textContent =
             localidad;
+
     }
+
 
     const veleta =
         ficha.querySelector(
             "[data-lluvia-control]"
         );
 
-    if (
-        veleta
-    ) {
+
+    if (veleta) {
+
         veleta.setAttribute(
             "aria-label",
             `Veleta de ${nombre}`
         );
 
+
         veleta.setAttribute(
             "title",
             `Veleta de ${nombre}`
         );
+
     }
+
 
     const patrocinio =
         ficha.querySelector(
             ".patrocinio-estacion"
         );
 
-    if (
-        patrocinio
-    ) {
+
+    if (patrocinio) {
+
         patrocinio.setAttribute(
             "aria-label",
             `Patrocinadores de los datos de lluvia de ${nombre}`
         );
+
     }
+
 }
+
+
+/* ==========================================================
+   PREPARACIÓN DE NUEVA FICHA
+   ========================================================== */
 
 
 export function prepararFichaNueva(
     ficha,
     estacion
 ) {
+
     const codigo =
         estacion.codigo;
+
 
     ficha.dataset
         .estacionDinamica =
         "1";
 
+
     ficha.dataset
         .codigoEstacion =
         codigo;
+
 
     const localidad =
         ficha.querySelector(
             ".estacion-localidad"
         );
 
-    if (
-        localidad
-    ) {
+
+    if (localidad) {
+
         localidad.id =
             `localidad-${codigo}`;
+
     }
+
 
     const estado =
         ficha.querySelector(
             ".online"
         );
 
-    if (
-        estado
-    ) {
+
+    if (estado) {
+
         estado.innerHTML =
             '<span class="punto"></span>Cargando...';
+
     }
+
 
     const simulacion =
         ficha.querySelector(
             ".simulacion-estacion"
         );
 
-    if (
-        simulacion
-    ) {
+
+    if (simulacion) {
+
         simulacion.classList.remove(
             "visible"
         );
 
+
         simulacion.textContent =
             "";
+
     }
+
 
     actualizarMetadatosFicha(
         ficha,
         estacion
     );
+
+
+    /*
+     * Solo la nueva generación del componente utiliza estas
+     * funciones. La plantilla antigua permanece intacta hasta
+     * que se retire de actualidad.html.
+     */
+    if (
+        ficha.classList
+            .contains(
+                "ficha-estacion"
+            )
+    ) {
+
+        establecerModoFicha(
+            ficha,
+            "vertical"
+        );
+
+
+        montarVisorFicha(
+            ficha,
+            codigo
+        );
+
+    }
+
 }
+
+
+/* ==========================================================
+   CREACIÓN DE FICHA
+   ========================================================== */
 
 
 export function crearFichaEstacion(
     estacion
 ) {
+
     if (
         !estadoActualidad
             .plantillaFichaEstacion
@@ -675,8 +1021,11 @@ export function crearFichaEstacion(
         !estadoActualidad
             .codigoPlantillaFicha
     ) {
+
         return null;
+
     }
+
 
     const ficha =
         estadoActualidad
@@ -685,6 +1034,7 @@ export function crearFichaEstacion(
                 true
             );
 
+
     sustituirCodigoEnFicha(
         ficha,
         estadoActualidad
@@ -692,99 +1042,137 @@ export function crearFichaEstacion(
         estacion.codigo
     );
 
+
     prepararFichaNueva(
         ficha,
         estacion
     );
 
+
     return ficha;
+
 }
 
 
+/* ==========================================================
+   REJILLA
+   ========================================================== */
+
+
 export function obtenerOCrearRejillaEstaciones() {
+
     const panel =
         document.querySelector(
             ".panel-superior"
         );
 
-    if (
-        !panel
-    ) {
+
+    if (!panel) {
+
         return null;
+
     }
+
 
     let rejilla =
         obtenerElemento(
             "rejilla-estaciones"
         );
 
-    if (
-        rejilla
-    ) {
+
+    if (rejilla) {
+
         return rejilla;
+
     }
+
 
     if (
         !estadoActualidad
             .plantillaFichaEstacion
     ) {
+
         return null;
+
     }
+
 
     rejilla =
         document.createElement(
             "div"
         );
 
+
     rejilla.id =
         "rejilla-estaciones";
 
+
     rejilla.className =
         "rejilla-estaciones";
+
 
     Array.from(
         panel.children
     ).forEach(
         elemento => {
+
             if (
                 elemento.classList
                     .contains(
                         "estacion-principal"
                     )
             ) {
+
                 elemento.remove();
+
             }
+
         }
     );
+
 
     panel.classList.add(
         "panel-superior-dinamico"
     );
 
+
     panel.appendChild(
         rejilla
     );
 
+
     return rejilla;
+
 }
 
 
+/* ==========================================================
+   SINCRONIZACIÓN
+   ========================================================== */
+
+
 export function sincronizarFichasEstaciones() {
+
     if (
         !estadoActualidad
             .plantillaFichaEstacion
     ) {
+
         return false;
+
     }
+
 
     const rejilla =
         obtenerOCrearRejillaEstaciones();
 
-    if (
-        !rejilla
-    ) {
+
+    if (!rejilla) {
+
         return false;
+
     }
+
 
     const codigosValidos =
         new Set(
@@ -792,75 +1180,113 @@ export function sincronizarFichasEstaciones() {
                 .codigosEstacion
         );
 
+
     rejilla.querySelectorAll(
         ".estacion-principal[data-estacion-dinamica='1']"
     ).forEach(
         ficha => {
+
             const codigo =
                 normalizarCodigoEstacion(
                     ficha.dataset
                         .codigoEstacion
                 );
 
+
             if (
                 !codigosValidos.has(
                     codigo
                 )
             ) {
+
                 ficha.remove();
+
             }
+
         }
     );
+
 
     estadoActualidad
         .estacionesPublicas
         .forEach(
             estacion => {
+
                 let ficha =
                     obtenerElemento(
                         `tarjeta-${estacion.codigo}`
                     );
 
-                if (
-                    !ficha
-                ) {
+
+                if (!ficha) {
+
                     ficha =
                         crearFichaEstacion(
                             estacion
                         );
 
-                    if (
-                        !ficha
-                    ) {
+
+                    if (!ficha) {
+
                         return;
+
                     }
+
 
                     rejilla.appendChild(
                         ficha
                     );
 
+
                     crearEstadoInicialEstacion(
                         estacion.codigo
                     );
+
 
                     inicializarLluviaVisualEstacion(
                         estacion.codigo
                     );
 
+
                     configurarControlesLluvia(
                         ficha
                     );
+
 
                     configurarPatrocinios(
                         ficha
                     );
 
+
                 } else {
+
                     actualizarMetadatosFicha(
                         ficha,
                         estacion
                     );
+
+
+                    /*
+                     * Si estamos usando ya la ficha reutilizable,
+                     * aseguramos que el visor siga correspondiendo
+                     * a la estación actual.
+                     */
+                    if (
+                        ficha.classList
+                            .contains(
+                                "ficha-estacion"
+                            )
+                    ) {
+
+                        montarVisorFicha(
+                            ficha,
+                            estacion.codigo
+                        );
+
+                    }
+
                 }
+
 
                 /*
                  * Reinsertar conserva el orden devuelto
@@ -869,12 +1295,31 @@ export function sincronizarFichasEstaciones() {
                 rejilla.appendChild(
                     ficha
                 );
+
             }
         );
 
+
+    /*
+     * En el componente nuevo:
+     *
+     * - todas las fichas son verticales;
+     * - si el total es impar, la última pasa a horizontal.
+     *
+     * Si todavía se está usando la plantilla antigua,
+     * actualizarModosRejilla no encuentra .ficha-estacion
+     * y no modifica nada.
+     */
+    actualizarModosRejilla(
+        rejilla
+    );
+
+
     actualizarSistemaLluvia();
 
+
     return true;
+
 }
 
 
