@@ -16,6 +16,7 @@
  * - superpone datos meteorológicos;
  * - mantiene siempre la marca MeteoArchidona;
  * - admite modo interactivo y no interactivo;
+ * - admite modo compacto para fichas de estación;
  * - admite pantalla completa sobre el visor completo.
  */
 
@@ -990,6 +991,135 @@ video {
 
 
 /* ==========================================================
+   MODO COMPACTO · FICHA DE ESTACIÓN
+   ========================================================== */
+
+
+/*
+ * El modo compacto se activa mediante:
+ *
+ *     compacto=1
+ *
+ * y se utiliza cuando el visor está incrustado dentro de una
+ * ficha de estación.
+ *
+ * La reducción solo afecta al visor embebido. Al entrar en
+ * pantalla completa se recupera la escala normal.
+ */
+.visor-video.compacto:not(:fullscreen)
+.visor-video-meteo {
+    gap: 3px;
+
+    max-width:
+        calc(
+            100% - 10px
+        );
+
+    font-size: 7.5px;
+
+    line-height: 1;
+
+    letter-spacing: 0;
+}
+
+
+.visor-video.compacto:not(:fullscreen)
+.visor-video-meteo-dato
++
+.visor-video-meteo-dato::before {
+    margin-right: 3px;
+}
+
+
+.visor-video.compacto:not(:fullscreen)
+.visor-video-estado {
+    gap: 3px;
+
+    max-width:
+        calc(
+            100% - 10px
+        );
+
+    font-size: 6.5px;
+
+    letter-spacing: 0.035em;
+}
+
+
+.visor-video.compacto:not(:fullscreen)
+.visor-video-estado::before {
+    width: 4px;
+    height: 4px;
+
+    box-shadow:
+        0
+        0
+        3px
+        rgba(
+            54,
+            213,
+            255,
+            0.90
+        );
+}
+
+
+.visor-video.compacto:not(:fullscreen)
+.visor-video-marca img {
+    height: 16px;
+
+    max-width: 22vw;
+}
+
+
+.visor-video.compacto:not(:fullscreen)
+.visor-video-controles {
+    gap: 2px;
+
+    padding: 2px;
+
+    border-radius: 5px;
+
+    backdrop-filter:
+        blur(
+            4px
+        );
+
+    -webkit-backdrop-filter:
+        blur(
+            4px
+        );
+}
+
+
+.visor-video.compacto:not(:fullscreen)
+.visor-video-control {
+    width: 18px;
+    height: 18px;
+
+    border-radius: 4px;
+
+    font-size: 9px;
+}
+
+
+/*
+ * La portada de una cámara disponible también se compacta para
+ * que el botón de pantalla completa no domine visualmente la ficha.
+ */
+.visor-video.compacto.portada-activa:not(:fullscreen)
+.visor-video-controles {
+    padding: 2px;
+}
+
+
+/*
+ * El estado "sin cámara" ya tiene su propia portada y no muestra
+ * controles ni superposiciones; no necesita más ajustes.
+ */
+
+
+/* ==========================================================
    PANTALLA COMPLETA
    ========================================================== */
 
@@ -1063,6 +1193,146 @@ video {
         );
 
     max-width: 190px;
+}
+
+
+/*
+ * Si el visor procede de una ficha compacta, fullscreen recupera
+ * explícitamente la escala normal también en navegadores que usan
+ * la variante WebKit de pantalla completa.
+ */
+.visor-video.compacto:fullscreen
+.visor-video-meteo,
+.visor-video.compacto:-webkit-full-screen
+.visor-video-meteo {
+    gap: 10px;
+
+    max-width:
+        calc(
+            100% - 24px
+        );
+
+    font-size:
+        clamp(
+            16px,
+            1.6vw,
+            22px
+        );
+
+    letter-spacing: 0.015em;
+}
+
+
+.visor-video.compacto:fullscreen
+.visor-video-meteo-dato
++
+.visor-video-meteo-dato::before,
+.visor-video.compacto:-webkit-full-screen
+.visor-video-meteo-dato
++
+.visor-video-meteo-dato::before {
+    margin-right: 10px;
+}
+
+
+.visor-video.compacto:fullscreen
+.visor-video-estado,
+.visor-video.compacto:-webkit-full-screen
+.visor-video-estado {
+    gap: 6px;
+
+    max-width:
+        calc(
+            100% - 24px
+        );
+
+    font-size:
+        clamp(
+            10px,
+            0.9vw,
+            13px
+        );
+
+    letter-spacing: 0.055em;
+}
+
+
+.visor-video.compacto:fullscreen
+.visor-video-estado::before,
+.visor-video.compacto:-webkit-full-screen
+.visor-video-estado::before {
+    width: 7px;
+    height: 7px;
+
+    box-shadow:
+        0
+        0
+        4px
+        rgba(
+            54,
+            213,
+            255,
+            0.95
+        ),
+        0
+        0
+        10px
+        rgba(
+            54,
+            213,
+            255,
+            0.82
+        );
+}
+
+
+.visor-video.compacto:fullscreen
+.visor-video-marca img,
+.visor-video.compacto:-webkit-full-screen
+.visor-video-marca img {
+    height:
+        clamp(
+            34px,
+            4vw,
+            54px
+        );
+
+    max-width: 190px;
+}
+
+
+.visor-video.compacto:fullscreen
+.visor-video-controles,
+.visor-video.compacto:-webkit-full-screen
+.visor-video-controles {
+    gap: 6px;
+
+    padding: 5px;
+
+    border-radius: 9px;
+
+    backdrop-filter:
+        blur(
+            7px
+        );
+
+    -webkit-backdrop-filter:
+        blur(
+            7px
+        );
+}
+
+
+.visor-video.compacto:fullscreen
+.visor-video-control,
+.visor-video.compacto:-webkit-full-screen
+.visor-video-control {
+    width: 34px;
+    height: 30px;
+
+    border-radius: 6px;
+
+    font-size: 14px;
 }
 
 
