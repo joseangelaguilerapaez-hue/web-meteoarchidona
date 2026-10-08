@@ -61,7 +61,7 @@ import {
     establecerModoFicha,
     montarVisorFicha,
     obtenerPlantillaFichaEstacion as obtenerPlantillaComponente
-} from "../ficha-estacion.js?v=20261007-ficha3";
+} from "../ficha-estacion.js?v=20261007-ficha4";
 
 
 /* ==========================================================
@@ -74,6 +74,8 @@ import {
  *
  * Estos alias son exclusivamente de presentación y únicamente
  * se aplican cuando una ficha necesita un nombre más compacto.
+ *
+ * El criterio se mantiene alineado con la tabla de estaciones.
  */
 function normalizarNombreVisual(
     nombre
@@ -146,6 +148,26 @@ export function obtenerNombreVisibleEstacion(
     ) {
 
         return "Salinas";
+
+    }
+
+
+    /*
+     * Mismo criterio ya utilizado en la tabla de estaciones:
+     *
+     *     Puerta de la Hoya
+     *
+     * se presenta de forma compacta como:
+     *
+     *     La Hoya
+     */
+    if (
+        clave.includes(
+            "PUERTA DE LA HOYA"
+        )
+    ) {
+
+        return "La Hoya";
 
     }
 
