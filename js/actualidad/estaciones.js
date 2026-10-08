@@ -1331,6 +1331,18 @@ export function sincronizarFichasEstaciones() {
                     }
 
 
+                    /*
+                     * Solo las fichas nuevas se insertan en el DOM.
+                     *
+                     * No debemos volver a ejecutar appendChild()
+                     * sobre una ficha existente porque eso la
+                     * extraería y volvería a insertar.
+                     *
+                     * La ficha contiene el iframe del visor. Mover
+                     * ese nodo mientras el vídeo está en fullscreen
+                     * hace que Chrome/Android abandone inmediatamente
+                     * la pantalla completa.
+                     */
                     rejilla.appendChild(
                         ficha
                     );
@@ -1371,6 +1383,10 @@ export function sincronizarFichasEstaciones() {
                             )
                     ) {
 
+                        /*
+                         * montarVisorFicha() conserva el iframe
+                         * existente cuando la URL no ha cambiado.
+                         */
                         montarVisorFicha(
                             ficha,
                             estacion.codigo
@@ -1379,11 +1395,6 @@ export function sincronizarFichasEstaciones() {
                     }
 
                 }
-
-
-                rejilla.appendChild(
-                    ficha
-                );
 
             }
         );
