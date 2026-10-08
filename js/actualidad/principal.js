@@ -74,7 +74,7 @@ import {
     cargarPlantillaFichaEstacion,
     capturarPlantillaFichaEstacion,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261007-ficha4";
+} from "./estaciones.js?v=20261007-ficha5";
 
 
 /* ==========================================================
@@ -86,7 +86,7 @@ import {
     cargarCatalogoEstaciones,
     cargarCondiciones,
     refrescarCatalogo
-} from "./api.js?v=20261007-ficha4";
+} from "./api.js?v=20261007-ficha5";
 
 
 /* ==========================================================
@@ -170,8 +170,10 @@ function configurarRedimensionamiento() {
                          * - móvil / una sola columna:
                          *     todas las fichas verticales.
                          *
-                         * Los visores ya existentes no se recrean si su
-                         * URL no ha cambiado.
+                         * sincronizarFichasEstaciones() ya no mueve
+                         * fichas existentes dentro del DOM, de modo que
+                         * un resize provocado al entrar en fullscreen
+                         * no desmonta ni vuelve a insertar el iframe.
                          */
                         sincronizarFichasEstaciones();
 
