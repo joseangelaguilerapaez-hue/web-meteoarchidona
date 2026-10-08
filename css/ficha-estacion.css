@@ -74,12 +74,12 @@
 /*
  * Compatibilidad durante la extracción desde actualidad.css.
  *
- * La hoja antigua contiene una regla de alta especificidad para
- * la última estación impar que convierte .estacion-contenido en
- * una rejilla interna.
+ * La hoja antigua contiene reglas de alta especificidad para
+ * la última estación impar.
  *
  * El componente nuevo gestiona por sí mismo su disposición
- * horizontal, por lo que neutralizamos únicamente esa regla.
+ * horizontal, por lo que neutralizamos únicamente esas reglas
+ * antiguas que todavía podrían alterar su geometría.
  *
  * Cuando retiremos definitivamente los estilos antiguos de
  * actualidad.css este bloque podrá desaparecer.
@@ -104,6 +104,25 @@
         column-gap: normal;
 
         align-items: initial;
+    }
+
+
+    /*
+     * actualidad.css centraba verticalmente la lluvia de la
+     * antigua ficha impar horizontal.
+     *
+     * En el componente nuevo viento y lluvia pertenecen a la
+     * misma fila de .estacion-secundarios, así que ambos deben
+     * comenzar arriba y ocupar la altura disponible.
+     */
+    .rejilla-estaciones
+    .estacion-principal.ficha-estacion.ficha-estacion--horizontal:last-child:nth-child(odd)
+    .lluvia-resumen {
+        grid-area: auto;
+
+        align-self: stretch;
+
+        margin: 0;
     }
 
 }
