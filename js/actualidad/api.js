@@ -33,7 +33,7 @@ import {
     estacionTieneFicha,
     obtenerCodigosConFicha,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261007-ficha4";
+} from "./estaciones.js?v=20261007-ficha5";
 
 
 import {
@@ -44,7 +44,7 @@ import {
 import {
     mostrarDatosEstacion,
     mostrarErrorEstacion
-} from "./meteorologia.js?v=20261007-ficha4";
+} from "./meteorologia.js?v=20261007-ficha5";
 
 
 function obtenerApiBase() {
