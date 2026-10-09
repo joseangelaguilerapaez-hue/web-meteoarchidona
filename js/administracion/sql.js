@@ -10,6 +10,7 @@
  * - mostrar resultados tabulares;
  * - informar del tipo de operación y filas afectadas;
  * - exportar consultas de lectura a CSV;
+ * - copiar resultados tabulares al portapapeles;
  * - cargar una consulta de ejemplo;
  * - limpiar el editor y sus resultados.
  *
@@ -33,6 +34,42 @@ import {
 
 
 /* ==========================================================
+   ESTADO DE ACCIONES DEL RESULTADO
+   ========================================================== */
+
+function existeResultadoTabular(){
+
+    const tabla=
+        $("tablaSql")
+            ?.querySelector(
+                "table"
+            );
+
+    if(!tabla){
+        return false
+    }
+
+    return !!tabla.querySelector(
+        "tbody tr"
+    )
+}
+
+
+function actualizarBotonCopiarSql(){
+
+    const boton=
+        $("botonSqlCopiar");
+
+    if(!boton){
+        return
+    }
+
+    boton.disabled=
+        !existeResultadoTabular()
+}
+
+
+/* ==========================================================
    RENDER DE RESULTADOS
    ========================================================== */
 
@@ -48,6 +85,8 @@ function renderizarResultadoSql(
     }
 
     contenedor.replaceChildren();
+
+    actualizarBotonCopiarSql();
 
     const columnas=
         Array.isArray(
@@ -111,6 +150,8 @@ function renderizarResultadoSql(
         contenedor.appendChild(
             mensaje
         );
+
+        actualizarBotonCopiarSql();
 
         return
     }
@@ -208,7 +249,9 @@ function renderizarResultadoSql(
 
     contenedor.appendChild(
         tabla
-    )
+    );
+
+    actualizarBotonCopiarSql()
 }
 
 
@@ -245,6 +288,15 @@ export async function ejecutarSql(){
     if(boton){
 
         boton.disabled=
+            true
+    }
+
+    const botonCopiar=
+        $("botonSqlCopiar");
+
+    if(botonCopiar){
+
+        botonCopiar.disabled=
             true
     }
 
@@ -302,6 +354,8 @@ export async function ejecutarSql(){
         return datos
 
     }catch(error){
+
+        actualizarBotonCopiarSql();
 
         mostrarEstado(
             estadoElemento,
@@ -444,6 +498,237 @@ export async function exportarSql(){
 
 
 /* ==========================================================
+   COPIA AL PORTAPAPELES
+   ========================================================== */
+
+function normalizarCeldaPortapapeles(
+    valor
+){
+
+    return String(
+        valor
+        ??
+        ""
+    )
+        .replace(
+            /\t/g,
+            " "
+        )
+        .replace(
+            /\r?\n/g,
+            " "
+        )
+}
+
+
+function construirTextoResultadoSql(){
+
+    const tabla=
+        $("tablaSql")
+            ?.querySelector(
+                "table"
+            );
+
+    if(!tabla){
+        return ""
+    }
+
+    const filas=
+        Array.from(
+            tabla.rows
+        );
+
+    if(!filas.length){
+        return ""
+    }
+
+    return filas
+        .map(
+            fila=>
+                Array.from(
+                    fila.cells
+                )
+                    .map(
+                        celda=>
+                            normalizarCeldaPortapapeles(
+                                celda.textContent
+                            )
+                    )
+                    .join(
+                        "\t"
+                    )
+        )
+        .join(
+            "\n"
+        )
+}
+
+
+function copiarTextoConMetodoClasico(
+    texto
+){
+
+    const area=
+        document.createElement(
+            "textarea"
+        );
+
+    area.value=
+        texto;
+
+    area.setAttribute(
+        "readonly",
+        ""
+    );
+
+    area.style.position=
+        "fixed";
+
+    area.style.left=
+        "-9999px";
+
+    area.style.top=
+        "0";
+
+    area.style.opacity=
+        "0";
+
+    document.body.appendChild(
+        area
+    );
+
+    try{
+
+        area.focus();
+
+        area.select();
+
+        area.setSelectionRange(
+            0,
+            area.value.length
+        );
+
+        const copiado=
+            document.execCommand(
+                "copy"
+            );
+
+        if(!copiado){
+
+            throw new Error(
+                "El navegador no ha permitido copiar el resultado."
+            )
+        }
+
+    }finally{
+
+        area.remove()
+    }
+}
+
+
+async function copiarTextoPortapapeles(
+    texto
+){
+
+    if(
+        navigator.clipboard
+        &&
+        typeof navigator.clipboard.writeText
+        ===
+        "function"
+    ){
+
+        try{
+
+            await navigator.clipboard.writeText(
+                texto
+            );
+
+            return
+
+        }catch(error){
+
+            /*
+             * Algunos navegadores o contextos pueden bloquear la API
+             * moderna del portapapeles. Se intenta entonces el método
+             * clásico como compatibilidad.
+             */
+        }
+    }
+
+    copiarTextoConMetodoClasico(
+        texto
+    )
+}
+
+
+export async function copiarResultadoSql(){
+
+    const estadoElemento=
+        $("estadoSql");
+
+    const texto=
+        construirTextoResultadoSql();
+
+    if(!texto){
+
+        mostrarEstado(
+            estadoElemento,
+            "No hay un resultado tabular para copiar.",
+            "error"
+        );
+
+        actualizarBotonCopiarSql();
+
+        return
+    }
+
+    const boton=
+        $("botonSqlCopiar");
+
+    if(boton){
+
+        boton.disabled=
+            true
+    }
+
+    mostrarEstado(
+        estadoElemento,
+        "Copiando resultado...",
+        "info"
+    );
+
+    try{
+
+        await copiarTextoPortapapeles(
+            texto
+        );
+
+        mostrarEstado(
+            estadoElemento,
+            "Resultado copiado al portapapeles.",
+            "ok"
+        );
+
+    }catch(error){
+
+        mostrarEstado(
+            estadoElemento,
+            error.message,
+            "error"
+        );
+
+        throw error
+
+    }finally{
+
+        actualizarBotonCopiarSql()
+    }
+}
+
+
+/* ==========================================================
    CONSULTA DE EJEMPLO
    ========================================================== */
 
@@ -493,6 +778,8 @@ export function limpiarSql(){
             ""
     }
 
+    actualizarBotonCopiarSql();
+
     mostrarEstado(
         $("estadoSql"),
         ""
@@ -520,6 +807,13 @@ export function configurarEventosSql(){
                 void exportarSql()
         );
 
+    $("botonSqlCopiar")
+        ?.addEventListener(
+            "click",
+            ()=>
+                void copiarResultadoSql()
+        );
+
     $("botonSqlEjemplo")
         ?.addEventListener(
             "click",
@@ -530,7 +824,9 @@ export function configurarEventosSql(){
         ?.addEventListener(
             "click",
             limpiarSql
-        )
+        );
+
+    actualizarBotonCopiarSql()
 }
 
 
