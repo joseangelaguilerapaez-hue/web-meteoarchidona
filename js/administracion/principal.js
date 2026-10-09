@@ -73,7 +73,7 @@ import {
 import {
     configurarEventosSql,
     limpiarSql
-} from "./sql.js";
+} from "./sql.js?v=20261009-sqlcopiar2";
 
 
 /* ==========================================================
