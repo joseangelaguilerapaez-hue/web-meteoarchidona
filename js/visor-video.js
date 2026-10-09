@@ -73,6 +73,8 @@
  * - ocultar el botón play cuando click=1, porque el visor ya alterna la reproducción;
  * - conservar fullscreen como único control visible en ese modo;
  * - maximizar el contenedor completo del visor;
+ * - permitir zoom táctil y desplazamiento en pantalla completa;
+ * - mantener los controles y superposiciones fijos durante el zoom;
  * - mantener las superposiciones dentro del rectángulo real del vídeo;
  * - evitar solapamientos entre datos meteorológicos y estado.
  */
@@ -84,6 +86,10 @@
 
 
 const INTERVALO_METEO_MS = 60_000;
+
+const ZOOM_VIDEO_MIN = 1;
+
+const ZOOM_VIDEO_MAX = 4;
 
 
 const CAMARAS = {
@@ -131,6 +137,31 @@ let configuracionActual = null;
 let reproduccionPreparada = false;
 
 let cargaHlsDetenida = false;
+
+
+/*
+ * Estado del zoom táctil.
+ *
+ * Solo se utiliza cuando el contenedor del visor está en
+ * pantalla completa. La vista incrustada conserva el zoom
+ * normal del navegador.
+ */
+let zoomVideo = ZOOM_VIDEO_MIN;
+
+let desplazamientoZoomX = 0;
+
+let desplazamientoZoomY = 0;
+
+const punterosZoom =
+    new Map();
+
+let distanciaPinzaInicial = null;
+
+let zoomPinzaInicial = ZOOM_VIDEO_MIN;
+
+let ultimoPunteroArrastre = null;
+
+let suprimirClickVisorHasta = 0;
 
 
 /* ==========================================================
@@ -1711,14 +1742,336 @@ async function alternarFullscreen() {
 
 
 /* ==========================================================
-   INTERACCIÓN
+   ZOOM TÁCTIL EN PANTALLA COMPLETA
    ========================================================== */
 
 
-function pulsacionSobreVisor(evento) {
+function limitarValor(
+    valor,
+    minimo,
+    maximo
+) {
+
+    return Math.min(
+        maximo,
+        Math.max(
+            minimo,
+            valor
+        )
+    );
+
+}
+
+
+function marcarGestoZoom() {
+
+    /*
+     * Android genera en ocasiones un click justo después de
+     * finalizar un gesto táctil.
+     *
+     * Como el visor puede utilizar click para pausar o reanudar,
+     * bloqueamos brevemente ese click residual.
+     */
+    suprimirClickVisorHasta =
+        Date.now()
+        +
+        500;
+
+}
+
+
+function configurarEstiloZoomFullscreen() {
+
+    const {
+        raiz,
+        video
+    } =
+        obtenerDom();
+
 
     if (
-        !configuracionActual?.clickAlterna
+        !raiz
+        ||
+        !video
+    ) {
+
+        return;
+    }
+
+
+    if (
+        documentoEnFullscreen()
+        ===
+        raiz
+    ) {
+
+        /*
+         * touch-action se activa únicamente en fullscreen.
+         *
+         * Así el visor incrustado conserva el comportamiento
+         * normal del navegador y puede seguir ampliándose con
+         * el zoom general de la página.
+         */
+        raiz.style.touchAction =
+            "none";
+
+        video.style.transformOrigin =
+            "center center";
+
+        video.style.willChange =
+            "transform";
+
+
+    } else {
+
+        raiz.style.touchAction =
+            "";
+
+        video.style.transformOrigin =
+            "";
+
+        video.style.willChange =
+            "";
+
+    }
+
+}
+
+
+function limitarDesplazamientoZoom() {
+
+    const {
+        raiz
+    } =
+        obtenerDom();
+
+
+    if (!raiz) {
+        return;
+    }
+
+
+    if (
+        zoomVideo
+        <=
+        ZOOM_VIDEO_MIN
+    ) {
+
+        desplazamientoZoomX = 0;
+        desplazamientoZoomY = 0;
+
+        return;
+
+    }
+
+
+    /*
+     * El vídeo ocupa el contenedor completo y utiliza
+     * object-fit: contain.
+     *
+     * Limitamos el desplazamiento a la superficie ampliada
+     * del propio visor para impedir que la imagen pueda
+     * perderse completamente fuera de pantalla.
+     */
+    const maximoX =
+        (
+            raiz.clientWidth
+            *
+            (
+                zoomVideo
+                -
+                ZOOM_VIDEO_MIN
+            )
+        )
+        /
+        2;
+
+
+    const maximoY =
+        (
+            raiz.clientHeight
+            *
+            (
+                zoomVideo
+                -
+                ZOOM_VIDEO_MIN
+            )
+        )
+        /
+        2;
+
+
+    desplazamientoZoomX =
+        limitarValor(
+            desplazamientoZoomX,
+            -maximoX,
+            maximoX
+        );
+
+
+    desplazamientoZoomY =
+        limitarValor(
+            desplazamientoZoomY,
+            -maximoY,
+            maximoY
+        );
+
+}
+
+
+function aplicarZoomVideo() {
+
+    const {
+        video
+    } =
+        obtenerDom();
+
+
+    if (!video) {
+        return;
+    }
+
+
+    limitarDesplazamientoZoom();
+
+
+    if (
+        zoomVideo
+        <=
+        ZOOM_VIDEO_MIN
+    ) {
+
+        video.style.transform =
+            "";
+
+        return;
+
+    }
+
+
+    /*
+     * La transformación se aplica exclusivamente al elemento
+     * de vídeo.
+     *
+     * Los datos meteorológicos, estado, logotipo y controles
+     * permanecen fijos sobre la pantalla completa.
+     */
+    video.style.transform =
+        `translate3d(${
+            desplazamientoZoomX
+        }px, ${
+            desplazamientoZoomY
+        }px, 0) scale(${
+            zoomVideo
+        })`;
+
+}
+
+
+function reiniciarZoomVideo() {
+
+    zoomVideo =
+        ZOOM_VIDEO_MIN;
+
+    desplazamientoZoomX = 0;
+
+    desplazamientoZoomY = 0;
+
+    punterosZoom.clear();
+
+    distanciaPinzaInicial =
+        null;
+
+    zoomPinzaInicial =
+        ZOOM_VIDEO_MIN;
+
+    ultimoPunteroArrastre =
+        null;
+
+
+    aplicarZoomVideo();
+
+}
+
+
+function distanciaEntrePunteros() {
+
+    const puntos =
+        Array.from(
+            punterosZoom.values()
+        );
+
+
+    if (
+        puntos.length
+        <
+        2
+    ) {
+
+        return null;
+
+    }
+
+
+    return Math.hypot(
+        puntos[1].x
+        -
+        puntos[0].x,
+
+        puntos[1].y
+        -
+        puntos[0].y
+    );
+
+}
+
+
+function prepararPinzaZoom() {
+
+    if (
+        punterosZoom.size
+        <
+        2
+    ) {
+
+        distanciaPinzaInicial =
+            null;
+
+        return;
+
+    }
+
+
+    distanciaPinzaInicial =
+        distanciaEntrePunteros();
+
+
+    zoomPinzaInicial =
+        zoomVideo;
+
+
+    ultimoPunteroArrastre =
+        null;
+
+}
+
+
+function iniciarGestoZoom(evento) {
+
+    const {
+        raiz
+    } =
+        obtenerDom();
+
+
+    if (
+        !raiz
+        ||
+        documentoEnFullscreen()
+        !==
+        raiz
+        ||
+        !configuracionActual?.interactivo
         ||
         !configuracionActual?.disponible
     ) {
@@ -1729,6 +2082,496 @@ function pulsacionSobreVisor(evento) {
 
 
     /*
+     * El ratón conserva su comportamiento habitual.
+     * Este mecanismo está pensado para pantalla táctil,
+     * stylus y dispositivos equivalentes.
+     */
+    if (
+        evento.pointerType
+        ===
+        "mouse"
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * Los botones deben seguir siendo botones aunque
+     * estemos en pantalla completa.
+     */
+    if (
+        evento.target.closest(
+            ".visor-video-control"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    punterosZoom.set(
+        evento.pointerId,
+        {
+            x:
+                evento.clientX,
+
+            y:
+                evento.clientY
+        }
+    );
+
+
+    try {
+
+        raiz.setPointerCapture(
+            evento.pointerId
+        );
+
+
+    } catch (error) {
+
+        console.debug(
+            "No se pudo capturar el puntero del zoom.",
+            error
+        );
+
+    }
+
+
+    /*
+     * Dos punteros:
+     * comenzamos un gesto de pinza.
+     */
+    if (
+        punterosZoom.size
+        >=
+        2
+    ) {
+
+        prepararPinzaZoom();
+
+        marcarGestoZoom();
+
+        return;
+
+    }
+
+
+    /*
+     * Un único dedo solo desplaza cuando ya existe zoom.
+     */
+    if (
+        zoomVideo
+        >
+        ZOOM_VIDEO_MIN
+    ) {
+
+        ultimoPunteroArrastre = {
+
+            id:
+                evento.pointerId,
+
+            x:
+                evento.clientX,
+
+            y:
+                evento.clientY
+
+        };
+
+    }
+
+}
+
+
+function moverGestoZoom(evento) {
+
+    const {
+        raiz
+    } =
+        obtenerDom();
+
+
+    if (
+        !raiz
+        ||
+        documentoEnFullscreen()
+        !==
+        raiz
+        ||
+        !punterosZoom.has(
+            evento.pointerId
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * touch-action:none ya impide el gesto nativo, pero
+     * preventDefault añade protección en navegadores móviles
+     * con implementaciones parciales de Pointer Events.
+     */
+    evento.preventDefault();
+
+
+    punterosZoom.set(
+        evento.pointerId,
+        {
+            x:
+                evento.clientX,
+
+            y:
+                evento.clientY
+        }
+    );
+
+
+    /*
+     * PINZA
+     * ------------------------------------------------------
+     *
+     * Conservamos el zoom existente cuando comienza la pinza
+     * y aplicamos sobre él la relación entre la distancia
+     * actual y la distancia inicial de los dos dedos.
+     */
+    if (
+        punterosZoom.size
+        >=
+        2
+    ) {
+
+        if (
+            !distanciaPinzaInicial
+        ) {
+
+            prepararPinzaZoom();
+
+        }
+
+
+        const distanciaActual =
+            distanciaEntrePunteros();
+
+
+        if (
+            distanciaActual
+            &&
+            distanciaPinzaInicial
+        ) {
+
+            zoomVideo =
+                limitarValor(
+                    zoomPinzaInicial
+                    *
+                    (
+                        distanciaActual
+                        /
+                        distanciaPinzaInicial
+                    ),
+                    ZOOM_VIDEO_MIN,
+                    ZOOM_VIDEO_MAX
+                );
+
+
+            /*
+             * Evitamos residuos minúsculos cerca de 1×.
+             */
+            if (
+                zoomVideo
+                <=
+                ZOOM_VIDEO_MIN
+                +
+                0.01
+            ) {
+
+                zoomVideo =
+                    ZOOM_VIDEO_MIN;
+
+                desplazamientoZoomX = 0;
+
+                desplazamientoZoomY = 0;
+
+            }
+
+
+            marcarGestoZoom();
+
+            aplicarZoomVideo();
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*
+     * ARRASTRE
+     * ------------------------------------------------------
+     *
+     * Con el vídeo ampliado, un dedo permite recorrer la
+     * imagen sin alterar el nivel de zoom.
+     */
+    if (
+        zoomVideo
+        <=
+        ZOOM_VIDEO_MIN
+        ||
+        !ultimoPunteroArrastre
+        ||
+        ultimoPunteroArrastre.id
+        !==
+        evento.pointerId
+    ) {
+
+        return;
+
+    }
+
+
+    const deltaX =
+        evento.clientX
+        -
+        ultimoPunteroArrastre.x;
+
+
+    const deltaY =
+        evento.clientY
+        -
+        ultimoPunteroArrastre.y;
+
+
+    if (
+        Math.abs(
+            deltaX
+        )
+        +
+        Math.abs(
+            deltaY
+        )
+        >
+        1
+    ) {
+
+        desplazamientoZoomX +=
+            deltaX;
+
+        desplazamientoZoomY +=
+            deltaY;
+
+
+        marcarGestoZoom();
+
+        aplicarZoomVideo();
+
+    }
+
+
+    ultimoPunteroArrastre = {
+
+        id:
+            evento.pointerId,
+
+        x:
+            evento.clientX,
+
+        y:
+            evento.clientY
+
+    };
+
+}
+
+
+function finalizarGestoZoom(evento) {
+
+    const {
+        raiz
+    } =
+        obtenerDom();
+
+
+    if (
+        !punterosZoom.has(
+            evento.pointerId
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    punterosZoom.delete(
+        evento.pointerId
+    );
+
+
+    if (raiz) {
+
+        try {
+
+            if (
+                raiz.hasPointerCapture(
+                    evento.pointerId
+                )
+            ) {
+
+                raiz.releasePointerCapture(
+                    evento.pointerId
+                );
+
+            }
+
+
+        } catch (error) {
+
+            console.debug(
+                "No se pudo liberar el puntero del zoom.",
+                error
+            );
+
+        }
+
+    }
+
+
+    distanciaPinzaInicial =
+        null;
+
+
+    /*
+     * Si aún quedan dos dedos, se establece un nuevo punto
+     * de partida para continuar el gesto sin saltos.
+     */
+    if (
+        punterosZoom.size
+        >=
+        2
+    ) {
+
+        prepararPinzaZoom();
+
+        return;
+
+    }
+
+
+    /*
+     * Si después de una pinza queda un dedo apoyado y el
+     * vídeo continúa ampliado, ese dedo puede seguir
+     * desplazando la imagen.
+     */
+    if (
+        punterosZoom.size
+        ===
+        1
+        &&
+        zoomVideo
+        >
+        ZOOM_VIDEO_MIN
+    ) {
+
+        const [
+            [
+                id,
+                punto
+            ]
+        ] =
+            Array.from(
+                punterosZoom.entries()
+            );
+
+
+        ultimoPunteroArrastre = {
+
+            id:
+                id,
+
+            x:
+                punto.x,
+
+            y:
+                punto.y
+
+        };
+
+
+        return;
+
+    }
+
+
+    ultimoPunteroArrastre =
+        null;
+
+}
+
+
+function configurarZoomPantallaCompleta() {
+
+    const {
+        raiz
+    } =
+        obtenerDom();
+
+
+    if (!raiz) {
+        return;
+    }
+
+
+    raiz.addEventListener(
+        "pointerdown",
+        iniciarGestoZoom
+    );
+
+
+    raiz.addEventListener(
+        "pointermove",
+        moverGestoZoom,
+        {
+            passive:
+                false
+        }
+    );
+
+
+    raiz.addEventListener(
+        "pointerup",
+        finalizarGestoZoom
+    );
+
+
+    raiz.addEventListener(
+        "pointercancel",
+        finalizarGestoZoom
+    );
+
+
+    raiz.addEventListener(
+        "lostpointercapture",
+        finalizarGestoZoom
+    );
+
+}
+
+
+/* ==========================================================
+   INTERACCIÓN
+   ========================================================== */
+
+
+function pulsacionSobreVisor(evento) {
+
+    /*
      * Los botones propios tienen su comportamiento independiente.
      * Evitamos que una pulsación sobre ellos llegue también
      * al alternador general del visor.
@@ -1737,6 +2580,35 @@ function pulsacionSobreVisor(evento) {
         evento.target.closest(
             ".visor-video-control"
         )
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * Un pellizco o arrastre puede producir un click sintético
+     * al levantar los dedos. Ese click no debe pausar ni
+     * reanudar accidentalmente el vídeo.
+     */
+    if (
+        Date.now()
+        <
+        suprimirClickVisorHasta
+    ) {
+
+        evento.preventDefault();
+
+        return;
+
+    }
+
+
+    if (
+        !configuracionActual?.clickAlterna
+        ||
+        !configuracionActual?.disponible
     ) {
 
         return;
@@ -2383,6 +3255,11 @@ function destruirReproductor() {
     detenerActualizacionMeteo();
 
 
+    reiniciarZoomVideo();
+
+    configurarEstiloZoomFullscreen();
+
+
     if (reproductorHls) {
 
         try {
@@ -2450,43 +3327,60 @@ function destruirReproductor() {
    ========================================================== */
 
 
+function actualizarTrasCambioTamano() {
+
+    aplicarZoomVideo();
+
+    posicionarSuperposiciones();
+
+}
+
+
+function cambioEstadoFullscreen() {
+
+    /*
+     * Cada entrada o salida de fullscreen comienza en 1×.
+     *
+     * Al salir evitamos que una transformación utilizada en
+     * pantalla completa permanezca accidentalmente en la ficha
+     * incrustada.
+     */
+    reiniciarZoomVideo();
+
+    configurarEstiloZoomFullscreen();
+
+
+    window.setTimeout(
+        posicionarSuperposiciones,
+        50
+    );
+
+}
+
+
 function registrarEventosGlobales() {
 
     window.addEventListener(
         "resize",
-        posicionarSuperposiciones
+        actualizarTrasCambioTamano
     );
 
 
     window.addEventListener(
         "orientationchange",
-        posicionarSuperposiciones
+        actualizarTrasCambioTamano
     );
 
 
     document.addEventListener(
         "fullscreenchange",
-        () => {
-
-            window.setTimeout(
-                posicionarSuperposiciones,
-                50
-            );
-
-        }
+        cambioEstadoFullscreen
     );
 
 
     document.addEventListener(
         "webkitfullscreenchange",
-        () => {
-
-            window.setTimeout(
-                posicionarSuperposiciones,
-                50
-            );
-
-        }
+        cambioEstadoFullscreen
     );
 
 
@@ -2547,6 +3441,9 @@ function inicializarVisorVideo() {
 
 
         configurarInteractividad();
+
+
+        configurarZoomPantallaCompleta();
 
 
         registrarEventosGlobales();
