@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Configura la revalidación de caché de Administración en Nginx.
+Configura la revalidación de caché del HTML en Nginx.
 
 El fichero de configuración activa de Nginx no pertenece
 al repositorio Git de la web.
@@ -9,19 +9,41 @@ al repositorio Git de la web.
 Este script permite conservar en GitHub el procedimiento
 de actualización de dicha configuración.
 
-Modifica exclusivamente el bloque:
+Modifica exclusivamente los bloques de las páginas:
 
+    location = /
+    location = /observaciones
+    location = /prediccion
+    location = /en-vivo
+    location = /informacion
     location = /administracion
 
-para incorporar:
+para incorporar en cada uno:
 
     expires -1;
+
+Por qué el HTML y no los recursos:
+
+    El número de versión de las hojas y los scripts viaja
+    dentro del HTML:
+
+        <script src="../js/cabecera.js?v=20261005-vps1">
+
+    Si el navegador conserva el HTML antiguo, no llega a
+    ver el ?v= nuevo, y subirlo no sirve de nada. Por eso
+    el HTML tiene que revalidarse siempre.
+
+    Sin cabecera de caché, Nginx no manda ni Cache-Control
+    ni Expires, y el navegador se inventa el plazo: en la
+    práctica un 10 % del tiempo que lleve el fichero sin
+    modificarse. De ahí que el síntoma sea intermitente.
 
 Antes de aplicar cambios:
 
 - comprueba que existe la configuración;
-- identifica el bloque esperado;
-- comprueba que contiene la ruta HTML correcta;
+- identifica los bloques esperados, todos, antes de
+  escribir nada;
+- comprueba que cada uno contiene su ruta HTML correcta;
 - verifica la configuración actual de Nginx;
 - crea una copia de seguridad.
 
@@ -32,6 +54,10 @@ Después de modificar:
 
 Si falla la validación o la recarga, intenta restaurar
 la configuración anterior.
+
+Si cualquiera de los bloques no encaja con lo esperado,
+aborta sin tocar nada: aplicar el ajuste a medias en un
+servidor en producción es peor que no aplicarlo.
 
 No modifica:
 
@@ -60,6 +86,37 @@ DIRECTORIO_COPIAS = Path(
     "/home/jose"
 )
 
+# Cada dirección limpia con el HTML que sirve. Es la misma
+# correspondencia que la tabla del README y que la lista
+# SECCIONES de servidor.py; si se añade una sección hay que
+# darla de alta también aquí.
+PAGINAS = (
+    (
+        "/",
+        "/pages/actualidad.html",
+    ),
+    (
+        "/observaciones",
+        "/pages/observaciones.html",
+    ),
+    (
+        "/prediccion",
+        "/pages/prediccion.html",
+    ),
+    (
+        "/en-vivo",
+        "/pages/en-vivo.html",
+    ),
+    (
+        "/informacion",
+        "/pages/informacion.html",
+    ),
+    (
+        "/administracion",
+        "/pages/administracion.html",
+    ),
+)
+
 
 def ejecutar_comando(
     *argumentos: str,
@@ -72,20 +129,25 @@ def ejecutar_comando(
     )
 
 
-def preparar_contenido(
+def localizar_bloque(
     contenido: str,
-) -> str | None:
+    ruta: str,
+):
     """
-    Localiza exclusivamente la ruta de Administración.
+    Localiza el bloque location de una sola dirección.
 
-    Devuelve el nuevo contenido o None si el ajuste
-    ya está aplicado.
+    Devuelve la coincidencia. Si no hay exactamente una,
+    levanta una excepción sin modificar nada.
     """
 
+    # El \{ detrás de la ruta impide que "/" encaje con
+    # "/administracion": después de la barra tendría que
+    # venir la llave, y viene una letra.
     patron_bloque = re.compile(
         r"(?P<indent>^[ \t]*)"
-        r"location[ \t]+=[ \t]+/administracion"
-        r"[ \t]*\{[ \t]*\r?\n"
+        r"location[ \t]+=[ \t]+"
+        + re.escape(ruta)
+        + r"[ \t]*\{[ \t]*\r?\n"
         r"(?P<cuerpo>.*?)"
         r"(?P=indent)\}[ \t]*(?=\r?\n|$)",
         re.MULTILINE | re.DOTALL,
@@ -100,11 +162,30 @@ def preparar_contenido(
     if len(coincidencias) != 1:
         raise RuntimeError(
             "No se ha encontrado exactamente un bloque "
-            "location = /administracion. "
+            f"location = {ruta} "
+            f"(encontrados: {len(coincidencias)}). "
             "No se modificará Nginx."
         )
 
-    bloque = coincidencias[0]
+    return coincidencias[0]
+
+
+def aplicar_pagina(
+    contenido: str,
+    ruta: str,
+    html: str,
+) -> str | None:
+    """
+    Añade expires -1 al bloque de una dirección.
+
+    Devuelve el nuevo contenido, o None si el ajuste ya
+    estaba aplicado en esa dirección.
+    """
+
+    bloque = localizar_bloque(
+        contenido,
+        ruta,
+    )
 
     cuerpo = bloque.group(
         "cuerpo"
@@ -113,8 +194,8 @@ def preparar_contenido(
     patron_ruta = re.compile(
         r"(?m)^(?P<indent>[ \t]*)"
         r"try_files[ \t]+"
-        r"/pages/administracion\.html"
-        r"[ \t]+=404;[ \t]*$"
+        + re.escape(html)
+        + r"[ \t]+=404;[ \t]*$"
     )
 
     coincidencia_ruta = patron_ruta.search(
@@ -123,8 +204,8 @@ def preparar_contenido(
 
     if coincidencia_ruta is None:
         raise RuntimeError(
-            "El bloque de Administración no contiene "
-            "la ruta HTML esperada. "
+            f"El bloque de {ruta} no contiene la ruta HTML "
+            f"esperada (try_files {html} =404;). "
             "Se necesita una revisión manual."
         )
 
@@ -139,7 +220,8 @@ def preparar_contenido(
         cuerpo,
     ):
         raise RuntimeError(
-            "Ya existe una directiva expires diferente. "
+            f"El bloque de {ruta} ya tiene una directiva "
+            "expires diferente. "
             "No se sobrescribirá automáticamente."
         )
 
@@ -170,6 +252,76 @@ def preparar_contenido(
     )
 
 
+def preparar_contenido(
+    contenido: str,
+):
+    """
+    Recorre todas las páginas y acumula los cambios.
+
+    Devuelve el nuevo contenido —o None si no hace falta
+    cambiar nada— junto con el informe por dirección.
+
+    Como aquí no se escribe en disco, cualquier bloque que
+    no encaje aborta el procedimiento completo antes de
+    tocar la configuración.
+    """
+
+    actual = contenido
+
+    informe = []
+
+    cambios = 0
+
+    for ruta, html in PAGINAS:
+        resultado = aplicar_pagina(
+            actual,
+            ruta,
+            html,
+        )
+
+        if resultado is None:
+            informe.append(
+                (
+                    ruta,
+                    "ya tenía expires -1",
+                )
+            )
+
+            continue
+
+        actual = resultado
+
+        cambios += 1
+
+        informe.append(
+            (
+                ruta,
+                "expires -1 añadido",
+            )
+        )
+
+    if cambios == 0:
+        return None, informe
+
+    return actual, informe
+
+
+def imprimir_informe(
+    informe,
+) -> None:
+    """Muestra qué se ha decidido para cada dirección."""
+
+    ancho = max(
+        len(ruta)
+        for ruta, _ in informe
+    )
+
+    for ruta, detalle in informe:
+        print(
+            f"  {ruta.ljust(ancho)}  {detalle}"
+        )
+
+
 def main() -> None:
     """Aplica de forma controlada el ajuste de caché."""
 
@@ -195,15 +347,24 @@ def main() -> None:
         )
     )
 
-    contenido_nuevo = preparar_contenido(
+    contenido_nuevo, informe = preparar_contenido(
         contenido_original
+    )
+
+    print(
+        "Situación de cada dirección:"
+    )
+
+    imprimir_informe(
+        informe
     )
 
     if contenido_nuevo is None:
         print(
-            "Administración ya tiene expires -1. "
+            "Todas las páginas tienen ya expires -1. "
             "No hay cambios."
         )
+
         return
 
     print(
@@ -276,8 +437,17 @@ def main() -> None:
         raise
 
     print(
-        "Configuración de caché de Administración "
+        "Configuración de caché del HTML "
         "actualizada correctamente."
+    )
+
+    print(
+        "Conviene comprobarlo:"
+    )
+
+    print(
+        "  curl -sI https://meteoarchidona.com/ "
+        "| grep -i cache-control"
     )
 
 
@@ -285,4 +455,4 @@ if __name__ == "__main__":
     main()
 
 
-# Fin de fichero: scripts/configurar_cache_administracion.py
+# Fin de fichero: scripts/configurar_cache_paginas.py
