@@ -24,7 +24,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261009-sqlcopiar2"
+    src="../js/administracion/principal.js?v=20261010-camaras2"
 ></script>
 </head>
 
@@ -226,7 +226,7 @@
     </h1>
 
     <p class="subtitulo-admin">
-        Estaciones, reglas de simulación,
+        Estaciones, cámaras, reglas de simulación,
         proveedores, diagnósticos y herramientas
         técnicas de MeteoArchidona.
     </p>
@@ -282,6 +282,14 @@
     data-modulo="estaciones"
 >
     Estaciones
+</button>
+
+<button
+    type="button"
+    class="modulo-boton"
+    data-modulo="camaras"
+>
+    Cámaras
 </button>
 
 <button
@@ -404,7 +412,7 @@
 
 <p class="modulo-intro">
     La misma sesión temporal obtenida con el PIN
-    se utiliza para estaciones, reglas de simulación,
+    se utiliza para estaciones, cámaras, reglas de simulación,
     WeatherLink y SQL.
     EUMETSAT mantiene su diagnóstico visual independiente.
 </p>
@@ -423,6 +431,21 @@
 
     <div class="resumen-valor">
         Estaciones
+    </div>
+</button>
+
+
+<button
+    type="button"
+    class="resumen-card"
+    data-ir-modulo="camaras"
+>
+    <div class="resumen-etiqueta">
+        Gestión
+    </div>
+
+    <div class="resumen-valor">
+        Cámaras
     </div>
 </button>
 
@@ -1501,6 +1524,258 @@
 ></div>
 
 </section>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     ADMINISTRACIÓN DE CÁMARAS
+     ========================================================= -->
+
+<section
+    id="modulo-camaras"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Cámaras
+</h2>
+
+<button
+    id="botonRecargarCamaras"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Catálogo de cámaras lógicas registradas en MeteoArchidona.
+    Cada vista panorámica o PTZ dispone de su propio registro.
+</p>
+
+<p class="modulo-intro">
+    Las altas técnicas se realizarán desde MeteoCam.
+    Administración permite consultar las cámaras y configurar
+    su nombre público y habilitación.
+</p>
+
+
+<div class="filtros">
+
+<div class="campo">
+
+<label for="filtroCamaraTexto">
+    Buscar cámaras
+</label>
+
+<input
+    id="filtroCamaraTexto"
+    type="search"
+    placeholder="Nombre, dispositivo, vista o modelo..."
+    autocomplete="off"
+>
+
+</div>
+
+
+<div class="filtros-dobles">
+
+<div class="campo">
+
+<label for="filtroCamaraEstacion">
+    Estación
+</label>
+
+<select id="filtroCamaraEstacion">
+
+<option value="">
+    Todas las estaciones
+</option>
+
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label for="filtroCamaraHabilitada">
+    Habilitación
+</label>
+
+<select id="filtroCamaraHabilitada">
+
+<option value="">
+    Todas
+</option>
+
+<option value="si">
+    Habilitadas
+</option>
+
+<option value="no">
+    Deshabilitadas
+</option>
+
+</select>
+
+</div>
+
+</div>
+</div>
+
+
+<div
+    id="estadoCamaras"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+
+<div
+    id="listaCamaras"
+    class="lista-estaciones"
+></div>
+
+</div>
+</section>
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2
+    id="tituloFormularioCamara"
+    class="panel-titulo"
+>
+    Selecciona una cámara
+</h2>
+
+</div>
+
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    La configuración administrativa no modifica
+    los datos técnicos sincronizados por MeteoCam.
+</p>
+
+
+<form id="formularioCamara">
+
+<div class="formulario-grid">
+
+
+<div class="campo campo-ancho">
+
+<label for="campoCamaraNombrePublico">
+    Nombre público
+</label>
+
+<input
+    id="campoCamaraNombrePublico"
+    type="text"
+    maxlength="250"
+    autocomplete="off"
+    placeholder="Ejemplo: Los Llanos PTZ"
+    disabled
+>
+
+<div class="campo-ayuda">
+    Nombre mostrado por MeteoArchidona.
+    No altera el nombre técnico comunicado por la cámara.
+    Puede dejarse vacío.
+</div>
+
+</div>
+
+
+<div class="campo campo-ancho">
+
+<div class="check-linea">
+
+<input
+    id="campoCamaraHabilitada"
+    type="checkbox"
+    disabled
+>
+
+<label for="campoCamaraHabilitada">
+    Cámara habilitada
+</label>
+
+</div>
+
+<div class="campo-ayuda">
+    Una cámara nueva permanece deshabilitada
+    hasta que Administración autoriza su utilización.
+    Estar habilitada no significa estar conectada.
+</div>
+
+</div>
+
+</div>
+
+
+<div class="acciones-formulario">
+
+<button
+    id="botonGuardarCamara"
+    type="submit"
+    class="boton boton-principal"
+    disabled
+>
+    Guardar cambios
+</button>
+
+</div>
+
+
+<div
+    id="estadoFormularioCamara"
+    class="estado-formulario"
+    role="status"
+    aria-live="polite"
+></div>
+
+</form>
+
+
+<h3 class="reglas-titulo">
+    Información técnica
+</h3>
+
+<p class="modulo-intro">
+    Datos de solo lectura obtenidos del registro de cámara.
+    La identificación, las capacidades y el estado técnico
+    se sincronizarán desde MeteoCam.
+</p>
+
+
+<div
+    id="datosTecnicosCamara"
+    class="metadatos"
+></div>
 
 </div>
 </section>
