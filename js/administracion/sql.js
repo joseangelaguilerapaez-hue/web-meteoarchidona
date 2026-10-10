@@ -24,13 +24,13 @@ import {
     $,
     mostrarEstado,
     formatearValor
-} from "./estado.js?v=20261010-cache1";
+} from "./estado.js";
 
 import {
     RUTA_SQL,
     peticionAdministrativa,
     peticionJson
-} from "./api.js?v=20261010-cache1";
+} from "./api.js";
 
 
 /* ==========================================================

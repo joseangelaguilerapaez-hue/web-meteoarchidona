@@ -84,21 +84,9 @@ a medias:
 3. `componentes/cabecera.html`, para que salga en el menú.
 4. `sitemap.xml`, si es una página pública.
 
-**Al publicar hay que subir el `?v=`**, y en tres sitios, no en uno:
-
-1. Los enlaces del HTML, `<link href>` y `<script src>`.
-2. **Los `import` entre módulos.** El `?v=` de
-   `principal.js?v=...` no alcanza a lo que ese fichero importa: si
-   dentro pone `from "./estado.js"` sin versión, ese módulo se sirve de
-   caché por su cuenta y el arreglo no llega. Lo vigila
-   `tests/test_estructura.py`.
-3. El fichero que lo importa, cuando se cambia un módulo: al cambiar
-   `estado.js`, hay que subir el `?v=` con el que lo piden todos los
-   que lo importan.
-
-Y el `?v=` solo funciona **si el HTML que lo lleva está fresco**,
-porque es ahí dentro donde viaja. De eso se encarga el `expires -1;`
-de Nginx, que pone `scripts/configurar_cache_paginas.py`.
+**Al publicar hay que subir el `?v=` de los enlaces.** Las hojas y los
+scripts se cachean una semana (ver `.htaccess`); sin cambiar ese número,
+el visitante seguiría con la versión vieja.
 
 **La dirección de la API se decide en `js/api.js`** y en ningún otro
 sitio: `/api` en local, la API en Render en producción.
@@ -120,8 +108,7 @@ Solo necesitan Python; no instalan nada ni salen a internet.
   cabecera y el `sitemap.xml`; que cada página cargue fuentes, paleta y
   cabecera en ese orden, con su lluvia y su pie donde tocan; que no haya
   CSS ni JS dentro del HTML ni nada pedido a Google Fonts o a un CDN; y
-  que todo lo enlazado exista y lleve `?v=`, incluidos los `import`
-  entre módulos.
+  que todo lo enlazado exista y lleve `?v=`.
 - **`tests/test_servidor.py`** arranca `servidor.py` y comprueba que las
   direcciones limpias sirven su página, las viejas redirigen con 301,
   las carpetas no se listan y no se cachea nada.
@@ -131,18 +118,9 @@ Administración...) ni cómo se ve. Eso sigue probándose en el navegador.
 
 ## Al desplegar
 
-El sitio lo sirve **Nginx**, en un VPS. Su configuración está en
-`/etc/nginx/sites-enabled/meteoarchidona-web` y **no pertenece a este
-repositorio**: ahí viven las direcciones limpias, las cabeceras y el
-reenvío de `/api`. Lo que se puede versionar aquí son los
-procedimientos de `scripts/`.
-
-Nginx **no lee el `.htaccess`**. Ese fichero viene de cuando el sitio
-estaba en Hostinger con LiteSpeed, y hoy no se aplica: queda pendiente
-decidir si se traduce a un fichero de Nginx versionado o se borra.
-
-Nada de la capa de servidor se puede probar en local, así que conviene
-comprobar a mano:
+El sitio está en Hostinger, que sirve con LiteSpeed y lee el `.htaccess`
+con la misma sintaxis que Apache. Nada de ese fichero se puede probar en
+local, así que conviene comprobar a mano:
 
 ```
 /                 → Actualidad

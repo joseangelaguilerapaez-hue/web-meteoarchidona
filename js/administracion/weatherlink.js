@@ -23,12 +23,12 @@ import {
     estadoAdministracion,
     mostrarEstado,
     formatearValor
-} from "./estado.js?v=20261010-cache1";
+} from "./estado.js";
 
 import {
     RUTA_WEATHERLINK,
     peticionJson
-} from "./api.js?v=20261010-cache1";
+} from "./api.js";
 
 
 /* ==========================================================

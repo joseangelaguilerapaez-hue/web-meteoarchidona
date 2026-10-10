@@ -23,13 +23,13 @@ import {
     $,
     estadoAdministracion,
     mostrarEstado
-} from "./estado.js?v=20261010-cache1";
+} from "./estado.js";
 
 import {
     URL_API,
     RUTA_EUMETSAT,
     comprobar
-} from "./api.js?v=20261010-cache1";
+} from "./api.js";
 
 
 /* ==========================================================

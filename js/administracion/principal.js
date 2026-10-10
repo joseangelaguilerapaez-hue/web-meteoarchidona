@@ -31,18 +31,18 @@ import {
     estadoAdministracion,
     mostrarEstado,
     establecerCatalogos
-} from "./estado.js?v=20261010-cache1";
+} from "./estado.js";
 
 import {
     RUTA_CATALOGOS,
     peticionJson
-} from "./api.js?v=20261010-cache1";
+} from "./api.js";
 
 import {
     configurarCallbacksAcceso,
     configurarEventosAcceso,
     recuperarSesion
-} from "./acceso.js?v=20261010-cache1";
+} from "./acceso.js";
 
 import {
     configurarCallbacksEstaciones,
@@ -53,13 +53,13 @@ import {
     renderizarEstaciones,
     actualizarSelectReferenciaGeneral,
     seleccionarEstacion
-} from "./estaciones.js?v=20261010-cache1";
+} from "./estaciones.js";
 
 import {
     cargarCamaras,
     configurarEventosCamaras,
     limpiarCamaras
-} from "./camaras.js?v=20261010-cache1";
+} from "./camaras.js?v=20261010-camaras1";
 
 import {
     configurarEventosSimulacion,
@@ -67,22 +67,22 @@ import {
     estacionesActualizadas,
     estacionSeleccionada,
     ocultarEditoresReglas
-} from "./simulacion.js?v=20261010-cache1";
+} from "./simulacion.js";
 
 import {
     configurarEventosWeatherlink,
     limpiarWeatherlink
-} from "./weatherlink.js?v=20261010-cache1";
+} from "./weatherlink.js";
 
 import {
     configurarEventosEumetsat,
     limpiarEumetsat
-} from "./eumetsat.js?v=20261010-cache1";
+} from "./eumetsat.js";
 
 import {
     configurarEventosSql,
     limpiarSql
-} from "./sql.js?v=20261010-cache1";
+} from "./sql.js?v=20261009-sqlcopiar2";
 
 
 /* ==========================================================

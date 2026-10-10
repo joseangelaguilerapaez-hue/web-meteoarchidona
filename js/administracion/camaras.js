@@ -29,11 +29,11 @@ import {
     $,
     estadoAdministracion,
     mostrarEstado
-} from "./estado.js?v=20261010-cache1";
+} from "./estado.js";
 
 import {
     peticionJson
-} from "./api.js?v=20261010-cache1";
+} from "./api.js";
 
 
 const RUTA_CAMARAS =
