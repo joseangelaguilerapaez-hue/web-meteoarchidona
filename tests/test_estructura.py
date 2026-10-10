@@ -38,6 +38,14 @@ HTML_DEL_SITIO = PAGINAS + sorted((RAIZ / "componentes").glob("*.html")) + [RAIZ
 
 HOJAS_DEL_SITIO = sorted((RAIZ / "css").glob("*.css")) + [RAIZ / "visores" / "radar.css"]
 
+# Todo el JavaScript propio. Lo de vendor/ no es nuestro y lleva la
+# versión en el nombre del fichero.
+MODULOS_DEL_SITIO = sorted(
+    ruta
+    for ruta in (RAIZ / "js").rglob("*.js")
+    if "vendor" not in ruta.parts
+) + sorted((RAIZ / "visores").glob("*.js"))
+
 # Actualidad es la portada: se sirve en "/" y no figura en SECCIONES.
 PORTADA = "actualidad"
 
@@ -60,10 +68,16 @@ def leer(ruta):
 
 
 def sin_comentarios(ruta):
-    """El contenido del fichero sin sus comentarios de HTML o de CSS."""
+    """El contenido del fichero sin sus comentarios de HTML, CSS o JS."""
     texto = leer(ruta)
     if ruta.suffix == ".css":
         return re.sub(r"(?s)/\*.*?\*/", "", texto)
+    if ruta.suffix == ".js":
+        # Solo los bloques /* */ y las líneas que empiezan por //. No se
+        # tocan las // de dentro de una línea, para no partir una URL
+        # escrita en una cadena.
+        texto = re.sub(r"(?s)/\*.*?\*/", "", texto)
+        return re.sub(r"(?m)^[ \t]*//.*$", "", texto)
     return re.sub(r"(?s)<!--.*?-->", "", texto)
 
 
@@ -230,7 +244,7 @@ class TestEnlaces(unittest.TestCase):
                     self.assertTrue(destino.resolve().exists(), f"no existe {valor}")
 
     def test_css_y_js_locales_llevan_version(self):
-        """Sin ?v= la caché de una semana del .htaccess serviría la versión vieja."""
+        """Sin ?v= el navegador seguiría sirviendo la versión vieja."""
         for pagina in PAGINAS + [RAIZ / "visores" / "radar.html"]:
             for valor in enlaces_locales(sin_comentarios(pagina)):
                 ruta = urllib.parse.urlsplit(valor).path
@@ -239,6 +253,24 @@ class TestEnlaces(unittest.TestCase):
                     continue
                 with self.subTest(pagina=relativa(pagina), enlace=valor):
                     self.assertTrue("?v=" in valor, f"{valor} no lleva ?v=")
+
+    def test_los_import_entre_modulos_llevan_version(self):
+        """
+        El ?v= del HTML no alcanza a los import de dentro.
+
+        La página pide principal.js?v=..., pero si dentro pone
+        from "./estado.js" sin versión, ese módulo se cachea por su
+        cuenta y un arreglo en él no llega al visitante. Hay que
+        versionar también cada import.
+        """
+        for modulo in MODULOS_DEL_SITIO:
+            texto = sin_comentarios(modulo)
+            for valor in re.findall(r'(?:import|export)[^"\']*from\s*["\'](\.[^"\']+)["\']', texto):
+                ruta = urllib.parse.urlsplit(valor).path
+                with self.subTest(modulo=relativa(modulo), importado=valor):
+                    self.assertIn("?v=", valor, f"{valor} no lleva ?v=")
+                    self.assertTrue((modulo.parent / ruta).resolve().exists(),
+                                    f"no existe {valor}")
 
 
 class TestFicherosDelSitio(unittest.TestCase):
