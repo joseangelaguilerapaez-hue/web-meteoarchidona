@@ -9,19 +9,22 @@
  * - conectar los distintos módulos administrativos;
  * - cargar los catálogos generales;
  * - cargar estaciones;
+ * - cargar cámaras cuando exista su panel administrativo;
  * - coordinar estaciones y simulación;
  * - inicializar todos los manejadores de eventos;
  * - restaurar una sesión administrativa existente;
  * - limpiar los módulos al cerrar sesión;
  * - gestionar la navegación entre módulos administrativos.
  *
- * Este fichero será el punto de entrada definitivo de Administración
- * cuando sustituyamos el antiguo js/administracion.js.
+ * Este fichero constituye el punto de entrada utilizado por:
  *
- * De momento se incorpora sin modificar administracion.html para
- * poder validar el nuevo módulo antes del cambio final.
+ *     pages/administracion.html
+ *
+ * Los módulos se mantienen separados por responsabilidad.
+ *
+ * La incorporación de un módulo nuevo no debe alterar el
+ * comportamiento de los módulos administrativos existentes.
  */
-
 
 import {
     $,
@@ -51,6 +54,12 @@ import {
     actualizarSelectReferenciaGeneral,
     seleccionarEstacion
 } from "./estaciones.js";
+
+import {
+    cargarCamaras,
+    configurarEventosCamaras,
+    limpiarCamaras
+} from "./camaras.js?v=20261010-camaras1";
 
 import {
     configurarEventosSimulacion,
@@ -134,6 +143,54 @@ async function cargarCatalogos(){
 
 
 /* ==========================================================
+   CÁMARAS
+   ========================================================== */
+
+async function cargarModuloCamaras(){
+    /*
+     * Durante la incorporación progresiva del subsistema,
+     * el archivo JavaScript puede existir antes de que
+     * se haya añadido su sección a administracion.html.
+     *
+     * En ese caso no se realiza ninguna petición.
+     *
+     * Cuando el panel exista, las cámaras se cargarán
+     * utilizando la sesión administrativa común.
+     *
+     * Un problema específico del catálogo de cámaras
+     * no debe impedir utilizar el resto de Administración.
+     */
+
+    if(
+        !$("modulo-camaras")
+    ){
+        return
+    }
+
+    try{
+
+        await cargarCamaras()
+
+    }catch(error){
+
+        console.error(
+            "No se ha podido cargar Administración de Cámaras.",
+            error
+        )
+
+        /*
+         * cargarCamaras ya informa del error en
+         * el panel específico de cámaras.
+         *
+         * No se propaga para evitar bloquear
+         * la carga administrativa general.
+         */
+
+    }
+}
+
+
+/* ==========================================================
    CARGA GENERAL DE ADMINISTRACIÓN
    ========================================================== */
 
@@ -183,6 +240,16 @@ export async function cargarDatosAdministracion(){
                     .codigoEdicion
             )
         }
+
+        /*
+         * Las cámaras se cargan después de las estaciones
+         * para que el módulo pueda mostrar los nombres
+         * públicos de sus estaciones asociadas.
+         *
+         * La carga es independiente y no impide utilizar
+         * el resto del panel si falla.
+         */
+        await cargarModuloCamaras();
 
         mostrarEstado(
             $("estadoPanel"),
@@ -234,6 +301,8 @@ async function alCerrarSesion(){
     limpiarEumetsat();
 
     limpiarSql();
+
+    limpiarCamaras();
 
     activarModulo(
         "resumen"
@@ -335,6 +404,8 @@ function configurarEventos(){
     configurarEventosAcceso();
 
     configurarEventosEstaciones();
+
+    configurarEventosCamaras();
 
     configurarEventosSimulacion();
 
