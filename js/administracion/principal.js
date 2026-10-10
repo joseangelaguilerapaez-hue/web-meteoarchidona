@@ -31,18 +31,18 @@ import {
     estadoAdministracion,
     mostrarEstado,
     establecerCatalogos
-} from "./estado.js";
+} from "./estado.js?v=20261010-cache1";
 
 import {
     RUTA_CATALOGOS,
     peticionJson
-} from "./api.js";
+} from "./api.js?v=20261010-cache1";
 
 import {
     configurarCallbacksAcceso,
     configurarEventosAcceso,
     recuperarSesion
-} from "./acceso.js";
+} from "./acceso.js?v=20261010-cache1";
 
 import {
     configurarCallbacksEstaciones,
@@ -53,13 +53,13 @@ import {
     renderizarEstaciones,
     actualizarSelectReferenciaGeneral,
     seleccionarEstacion
-} from "./estaciones.js";
+} from "./estaciones.js?v=20261010-cache1";
 
 import {
     cargarCamaras,
     configurarEventosCamaras,
     limpiarCamaras
-} from "./camaras.js?v=20261010-camaras1";
+} from "./camaras.js?v=20261010-cache1";
 
 import {
     configurarEventosSimulacion,
@@ -67,22 +67,22 @@ import {
     estacionesActualizadas,
     estacionSeleccionada,
     ocultarEditoresReglas
-} from "./simulacion.js";
+} from "./simulacion.js?v=20261010-cache1";
 
 import {
     configurarEventosWeatherlink,
     limpiarWeatherlink
-} from "./weatherlink.js";
+} from "./weatherlink.js?v=20261010-cache1";
 
 import {
     configurarEventosEumetsat,
     limpiarEumetsat
-} from "./eumetsat.js";
+} from "./eumetsat.js?v=20261010-cache1";
 
 import {
     configurarEventosSql,
     limpiarSql
-} from "./sql.js?v=20261009-sqlcopiar2";
+} from "./sql.js?v=20261010-cache1";
 
 
 /* ==========================================================

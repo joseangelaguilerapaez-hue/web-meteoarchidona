@@ -24,7 +24,7 @@ import {
     estadoAdministracion,
     mostrarEstado,
     reiniciarEstadoAdministracion
-} from "./estado.js";
+} from "./estado.js?v=20261010-cache1";
 
 import {
     LONGITUD_PIN,
@@ -35,7 +35,7 @@ import {
     guardarSesion,
     eliminarSesion,
     obtenerExpiracion
-} from "./api.js";
+} from "./api.js?v=20261010-cache1";
 
 
 /* ==========================================================

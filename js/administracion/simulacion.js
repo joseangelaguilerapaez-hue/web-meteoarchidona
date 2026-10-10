@@ -28,12 +28,12 @@ import {
     asegurarOpcionSelect,
     valorNullable,
     numeroNullable
-} from "./estado.js";
+} from "./estado.js?v=20261010-cache1";
 
 import {
     RUTA_ESTACIONES,
     peticionJson
-} from "./api.js";
+} from "./api.js?v=20261010-cache1";
 
 
 /* ==========================================================
