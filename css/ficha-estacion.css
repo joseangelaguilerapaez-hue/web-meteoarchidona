@@ -13,6 +13,13 @@
  *
  * El visor forma siempre parte de la composición.
  * Que exista o no cámara no modifica la geometría de la ficha.
+ *
+ * Cuando una estación dispone de cámaras, la zona de vídeo puede
+ * incorporar:
+ *
+ *     selector de cámara;
+ *     información del preset activo;
+ *     visor de vídeo.
  */
 
 
@@ -58,6 +65,12 @@
 
     container-type:
         inline-size;
+}
+
+
+.ficha-estacion [hidden] {
+    display:
+        none !important;
 }
 
 
@@ -425,12 +438,247 @@
 
 
 /* ==========================================================
+   ZONA DE CÁMARA
+   ========================================================== */
+
+
+.estacion-camara {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    min-width: 0;
+    min-height: 0;
+}
+
+
+/* ==========================================================
+   CONTROLES DE CÁMARA
+   ========================================================== */
+
+
+.estacion-camara-controles {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(96px, auto);
+
+    align-items: end;
+
+    gap: 8px;
+
+    min-width: 0;
+
+    padding:
+        7px
+        8px;
+
+    border:
+        1px solid
+        rgba(54, 213, 255, 0.14);
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(5, 24, 39, 0.88),
+            rgba(4, 16, 28, 0.92)
+        );
+
+    box-shadow:
+        inset
+        0
+        0
+        16px
+        rgba(54, 213, 255, 0.025);
+}
+
+
+.ficha-estacion--horizontal
+.estacion-camara-controles {
+    gap: 10px;
+
+    padding:
+        8px
+        10px;
+}
+
+
+.estacion-camara-selector,
+.estacion-camara-preset {
+    min-width: 0;
+}
+
+
+.estacion-camara-selector {
+    display: grid;
+
+    gap: 4px;
+}
+
+
+.estacion-camara-etiqueta {
+    display: block;
+
+    color:
+        var(--muted);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    line-height: 1.1;
+
+    letter-spacing:
+        0.06em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.estacion-camara-select {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 32px;
+
+    margin: 0;
+
+    padding:
+        6px
+        29px
+        6px
+        9px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(54, 213, 255, 0.30);
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background:
+        #071522;
+
+    color:
+        var(--text);
+
+    font-family:
+        inherit;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    line-height: 1.2;
+
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+
+    color-scheme:
+        dark;
+}
+
+
+.estacion-camara-select:focus-visible {
+    border-color:
+        var(--cyan);
+
+    box-shadow:
+        0
+        0
+        0
+        2px
+        rgba(54, 213, 255, 0.16);
+}
+
+
+.estacion-camara-select:disabled {
+    cursor: default;
+
+    opacity: 0.66;
+}
+
+
+.estacion-camara-preset {
+    display: grid;
+
+    gap: 4px;
+
+    max-width: 190px;
+}
+
+
+.estacion-camara-preset-valor {
+    display: block;
+
+    min-width: 0;
+    min-height: 32px;
+
+    padding:
+        7px
+        9px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(240, 165, 0, 0.25);
+
+    border-radius: 7px;
+
+    background:
+        rgba(240, 165, 0, 0.055);
+
+    color:
+        #ffd257;
+
+    font-size: 10px;
+    font-weight: 650;
+
+    line-height: 1.55;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.ficha-estacion--horizontal
+.estacion-camara-select {
+    min-height: 34px;
+
+    font-size: 12px;
+}
+
+
+.ficha-estacion--horizontal
+.estacion-camara-preset-valor {
+    min-height: 34px;
+
+    font-size: 11px;
+}
+
+
+/* ==========================================================
    VISOR DE CÁMARA
    ========================================================== */
 
 
 .estacion-visor {
     position: relative;
+
+    flex:
+        1
+        1
+        auto;
 
     min-width: 0;
 
@@ -1825,6 +2073,49 @@
     }
 
 
+    .estacion-camara {
+        gap: 7px;
+    }
+
+
+    .estacion-camara-controles,
+    .ficha-estacion--horizontal
+    .estacion-camara-controles {
+        grid-template-columns:
+            1fr;
+
+        align-items: stretch;
+
+        gap: 6px;
+
+        padding:
+            7px
+            8px;
+    }
+
+
+    .estacion-camara-preset {
+        max-width: none;
+    }
+
+
+    .estacion-camara-select,
+    .ficha-estacion--horizontal
+    .estacion-camara-select,
+    .estacion-camara-preset-valor,
+    .ficha-estacion--horizontal
+    .estacion-camara-preset-valor {
+        min-height: 30px;
+
+        font-size: 10px;
+    }
+
+
+    .estacion-camara-etiqueta {
+        font-size: 8px;
+    }
+
+
     .ficha-estacion--vertical
     .estacion-visor,
     .ficha-estacion--horizontal
@@ -1970,6 +2261,27 @@
     .ficha-estacion--horizontal
     .temperatura {
         font-size: 47px;
+    }
+
+
+    .estacion-camara-controles,
+    .ficha-estacion--horizontal
+    .estacion-camara-controles {
+        padding:
+            8px
+            9px;
+    }
+
+
+    .estacion-camara-select,
+    .ficha-estacion--horizontal
+    .estacion-camara-select,
+    .estacion-camara-preset-valor,
+    .ficha-estacion--horizontal
+    .estacion-camara-preset-valor {
+        min-height: 34px;
+
+        font-size: 11px;
     }
 
 
