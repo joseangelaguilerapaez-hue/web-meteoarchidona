@@ -61,7 +61,7 @@ import {
     establecerModoFicha,
     montarVisorFicha,
     obtenerPlantillaFichaEstacion as obtenerPlantillaComponente
-} from "../ficha-estacion.js?v=20261007-ficha4";
+} from "../ficha-estacion.js?v=20261012-camara1";
 
 
 /* ==========================================================
@@ -589,6 +589,9 @@ function limpiarPlantilla(
                 delete elemento.dataset
                     .patrocinioConfigurado;
 
+                delete elemento.dataset
+                    .selectorCamaraConfigurado;
+
             }
         );
 
@@ -864,6 +867,48 @@ export function sustituirCodigoEnFicha(
             }
 
 
+            if (
+                elemento.dataset
+                    .controlesCamara
+                ===
+                codigoOrigen
+            ) {
+
+                elemento.dataset
+                    .controlesCamara =
+                    codigoDestino;
+
+            }
+
+
+            if (
+                elemento.dataset
+                    .selectorCamara
+                ===
+                codigoOrigen
+            ) {
+
+                elemento.dataset
+                    .selectorCamara =
+                    codigoDestino;
+
+            }
+
+
+            if (
+                elemento.dataset
+                    .presetCamara
+                ===
+                codigoOrigen
+            ) {
+
+                elemento.dataset
+                    .presetCamara =
+                    codigoDestino;
+
+            }
+
+
             delete elemento.dataset
                 .gotasLluviaInicializadas;
 
@@ -872,6 +917,9 @@ export function sustituirCodigoEnFicha(
 
             delete elemento.dataset
                 .patrocinioConfigurado;
+
+            delete elemento.dataset
+                .selectorCamaraConfigurado;
 
         }
     );
