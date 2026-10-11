@@ -14,9 +14,28 @@
 
     La página o dashboard que utiliza el componente decide el modo.
 
-    El visor de cámara forma siempre parte de la ficha. Si la estación
-    dispone de cámara mostrará su emisión; si todavía no dispone de ella,
-    el propio visor mostrará el estado de vídeo no disponible.
+    El visor de cámara forma siempre parte de la ficha.
+
+    La zona de cámara dispone de:
+
+        selector de cámara;
+        información del preset activo;
+        visor de vídeo.
+
+    El selector y la información de preset permanecen ocultos hasta
+    que JavaScript cargue el catálogo público de cámaras de la estación.
+
+    Si la estación dispone de varias cámaras, el selector permitirá
+    escoger la vista mostrada.
+
+    Las cámaras panorámicas no utilizan presets.
+
+    Las cámaras PTZ pueden mostrar su preset activo, pero en esta
+    primera fase el preset será únicamente informativo y no ejecutará
+    movimientos físicos.
+
+    Si la estación todavía no dispone de cámara, el propio visor
+    mostrará el estado de vídeo no disponible.
 
     Este componente se utiliza inicialmente desde Actualidad y queda
     preparado para reutilizarse posteriormente en dashboards
@@ -161,6 +180,86 @@
 
 
 <!-- ======================================================
+     CÁMARA
+     ====================================================== -->
+
+
+<div class="estacion-camara">
+
+
+<!-- ======================================================
+     CONTROLES DE CÁMARA
+     ====================================================== -->
+
+
+<div
+    class="estacion-camara-controles"
+    id="controles-camara-PLANTILLA"
+    data-controles-camara="PLANTILLA"
+    hidden
+>
+
+
+<div
+    class="estacion-camara-selector"
+    id="bloque-selector-camara-PLANTILLA"
+    hidden
+>
+
+
+<label
+    class="estacion-camara-etiqueta"
+    for="selector-camara-PLANTILLA"
+>
+    Cámara
+</label>
+
+
+<select
+    class="estacion-camara-select"
+    id="selector-camara-PLANTILLA"
+    data-selector-camara="PLANTILLA"
+    disabled
+>
+
+<option value="">
+    Cargando cámaras...
+</option>
+
+</select>
+
+
+</div>
+
+
+<div
+    class="estacion-camara-preset"
+    id="bloque-preset-camara-PLANTILLA"
+    data-preset-camara="PLANTILLA"
+    hidden
+>
+
+
+<span class="estacion-camara-etiqueta">
+    Preset
+</span>
+
+
+<strong
+    class="estacion-camara-preset-valor"
+    id="preset-camara-PLANTILLA"
+>
+    —
+</strong>
+
+
+</div>
+
+
+</div>
+
+
+<!-- ======================================================
      VISOR DE CÁMARA
      ====================================================== -->
 
@@ -176,6 +275,9 @@
     class="estacion-visor-contenedor"
     id="visor-contenedor-PLANTILLA"
 ></div>
+
+
+</div>
 
 
 </div>
