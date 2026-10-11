@@ -74,7 +74,7 @@ import {
     cargarPlantillaFichaEstacion,
     capturarPlantillaFichaEstacion,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261007-ficha5";
+} from "./estaciones.js?v=20261012-camara1";
 
 
 /* ==========================================================
@@ -86,7 +86,7 @@ import {
     cargarCatalogoEstaciones,
     cargarCondiciones,
     refrescarCatalogo
-} from "./api.js?v=20261007-ficha5";
+} from "./api.js?v=20261012-camara1";
 
 
 /* ==========================================================
