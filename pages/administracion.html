@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1573,7 +1574,7 @@
 <p class="modulo-intro">
     Las altas técnicas se realizarán desde MeteoCam.
     Administración permite consultar las cámaras y configurar
-    su nombre público y habilitación.
+    su nombre público, habilitación y preset activo cuando proceda.
 </p>
 
 
@@ -1710,6 +1711,40 @@
 </div>
 
 
+<!-- =========================================================
+     PRESET ACTIVO DE LA CÁMARA PTZ
+     ========================================================= -->
+
+<div
+    id="bloqueCamaraPresetActivo"
+    class="campo campo-ancho oculto"
+    hidden
+>
+
+<label for="campoCamaraPresetActivo">
+    Preset activo
+</label>
+
+<select
+    id="campoCamaraPresetActivo"
+    disabled
+>
+<option value="">
+    Selecciona un preset
+</option>
+</select>
+
+<div class="campo-ayuda">
+    Posición predefinida seleccionada para esta cámara.
+    Solo pueden seleccionarse presets disponibles.
+
+    Cambiar esta selección no mueve físicamente la cámara.
+    Los movimientos se gestionarán mediante comandos de MeteoCam.
+</div>
+
+</div>
+
+
 <div class="campo campo-ancho">
 
 <div class="check-linea">
@@ -1759,6 +1794,58 @@
 ></div>
 
 </form>
+
+
+<!-- =========================================================
+     ADMINISTRACIÓN DE PRESETS PTZ
+     ========================================================= -->
+
+<section
+    id="seccionPresetsCamara"
+    class="oculto"
+    hidden
+>
+
+<h3 class="reglas-titulo">
+    Presets de cámara
+</h3>
+
+<p class="modulo-intro">
+    Los presets son posiciones predefinidas sincronizadas
+    automáticamente por MeteoCam.
+
+    Administración permite consultar su disponibilidad,
+    establecer nombres públicos y seleccionar el preset
+    activo de la cámara.
+</p>
+
+<div class="acciones-formulario">
+
+<button
+    id="botonRecargarPresetsCamara"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar presets
+</button>
+
+</div>
+
+
+<div
+    id="estadoPresetsCamara"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+
+<div
+    id="listaPresetsCamara"
+    class="lista-estaciones"
+></div>
+
+</section>
 
 
 <h3 class="reglas-titulo">
