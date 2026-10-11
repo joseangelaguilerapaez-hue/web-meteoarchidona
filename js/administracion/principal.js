@@ -1,3 +1,4 @@
+
 /*
  * MeteoArchidona
  * Administración
@@ -59,7 +60,7 @@ import {
     cargarCamaras,
     configurarEventosCamaras,
     limpiarCamaras
-} from "./camaras.js?v=20261010-camaras1";
+} from "./camaras.js?v=20261011-presets1";
 
 import {
     configurarEventosSimulacion,
