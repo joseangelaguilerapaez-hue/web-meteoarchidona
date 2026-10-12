@@ -129,13 +129,74 @@ function nombreCamara(camara){
         || `Cámara ${camara.id}`;
 }
 
-function descripcionCamara(camara){
+/*
+ * Construye el nombre visible de la cámara.
+ *
+ * Si el nombre público ya coincide con el tipo
+ * de vista, no se repite.
+ *
+ * Si tiene un nombre personalizado, se conserva
+ * y se añade el tipo de vista para dar contexto.
+ *
+ * Nunca se utiliza PTZ como denominación pública.
+ */
+function etiquetaCamara(camara){
     const vista = camara.tipo_vista === "PTZ"
         ? "Vista específica"
         : camara.tipo_vista === "PANORAMICA"
             ? "Vista panorámica"
             : (camara.tipo_vista || "Cámara");
-    return `${nombreEstacion(camara.estacion_id)} · ${nombreCamara(camara)} · ${vista}`;
+
+    const nombre = nombreCamara(camara).trim();
+
+    if(
+        nombre.localeCompare(
+            vista,
+            "es",
+            {sensitivity: "base"}
+        ) === 0
+    ){
+        return vista;
+    }
+
+    return `${nombre} · ${vista}`;
+}
+
+/*
+ * Identifica de forma inequívoca cada cámara.
+ *
+ * Cuando varias cámaras de una misma estación
+ * tienen la misma etiqueta, se añade el ID.
+ *
+ * Así se permiten dos o más vistas panorámicas
+ * sin crear opciones indistinguibles.
+ */
+function descripcionCamara(camara){
+    const etiqueta = etiquetaCamara(camara);
+
+    const repetida = camaras.some(otra =>
+        otra.id !== camara.id
+        &&
+        otra.estacion_id === camara.estacion_id
+        &&
+        etiquetaCamara(otra).localeCompare(
+            etiqueta,
+            "es",
+            {sensitivity: "base"}
+        ) === 0
+    );
+
+    const identificador = repetida
+        ? ` · #${camara.id}`
+        : "";
+
+    return (
+        `${nombreEstacion(camara.estacion_id)} · `
+        +
+        etiqueta
+        +
+        identificador
+    );
 }
 
 function camaraPorId(id){
