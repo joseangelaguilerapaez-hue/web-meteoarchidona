@@ -7,7 +7,6 @@
 <meta name="description" content="Administración privada de MeteoArchidona.">
 <title>Administración · MeteoArchidona</title>
 
-
 <link rel="icon" href="/assets/icono-192.png" type="image/png" sizes="192x192">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -25,7 +24,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261011-presets1"
+    src="../js/administracion/principal.js?v=20261012-timelapses1"
 ></script>
 </head>
 
@@ -34,7 +33,6 @@
 <div class="pagina">
 
 <div id="cabecera"></div>
-
 
 <!--
     El botón de cerrar sesión vive aquí y no en
@@ -52,6 +50,10 @@
 </button>
 
 
+<!-- =========================================================
+     ACCESO ADMINISTRATIVO
+     ========================================================= -->
+
 <main
     id="contenidoAcceso"
     class="contenido-acceso"
@@ -59,10 +61,7 @@
 
 <section class="acceso">
 
-<div
-    class="candado"
-    aria-hidden="true"
->
+<div class="candado" aria-hidden="true">
     🔒
 </div>
 
@@ -89,11 +88,7 @@
     <span class="punto-pin"></span>
 </div>
 
-
-<div
-    class="teclado"
-    aria-label="Teclado numérico"
->
+<div class="teclado" aria-label="Teclado numérico">
 
 <button
     type="button"
@@ -194,14 +189,12 @@
 
 </div>
 
-
 <div
     id="estadoAcceso"
     class="estado"
     role="status"
     aria-live="polite"
 ></div>
-
 
 <div class="nota-seguridad">
     El PIN no se almacena en esta página.
@@ -212,6 +205,10 @@
 </section>
 </main>
 
+
+<!-- =========================================================
+     PANEL PRINCIPAL
+     ========================================================= -->
 
 <main
     id="panelAdministracion"
@@ -227,13 +224,12 @@
     </h1>
 
     <p class="subtitulo-admin">
-        Estaciones, cámaras, reglas de simulación,
+        Estaciones, cámaras, timelapses, reglas de simulación,
         proveedores, diagnósticos y herramientas
         técnicas de MeteoArchidona.
     </p>
 
 </div>
-
 
 <div class="sesion-admin">
 
@@ -263,6 +259,10 @@
 </div>
 </div>
 
+
+<!-- =========================================================
+     NAVEGACIÓN ADMINISTRATIVA
+     ========================================================= -->
 
 <nav
     class="modulos"
@@ -296,6 +296,14 @@
 <button
     type="button"
     class="modulo-boton"
+    data-modulo="timelapses"
+>
+    Timelapses
+</button>
+
+<button
+    type="button"
+    class="modulo-boton"
     data-modulo="weatherlink"
 >
     WeatherLink
@@ -319,7 +327,6 @@
 
 </nav>
 
-
 <div
     id="estadoPanel"
     class="estado-panel"
@@ -327,6 +334,10 @@
     aria-live="polite"
 ></div>
 
+
+<!-- =========================================================
+     RESUMEN
+     ========================================================= -->
 
 <section
     id="modulo-resumen"
@@ -348,7 +359,6 @@
     </div>
 </div>
 
-
 <div class="resumen-card">
 
     <div class="resumen-etiqueta">
@@ -364,7 +374,6 @@
 
 </div>
 
-
 <div class="resumen-card">
 
     <div class="resumen-etiqueta">
@@ -379,7 +388,6 @@
     </div>
 
 </div>
-
 
 <div class="resumen-card">
 
@@ -413,11 +421,10 @@
 
 <p class="modulo-intro">
     La misma sesión temporal obtenida con el PIN
-    se utiliza para estaciones, cámaras, reglas de simulación,
-    WeatherLink y SQL.
+    se utiliza para estaciones, cámaras, timelapses,
+    reglas de simulación, WeatherLink y SQL.
     EUMETSAT mantiene su diagnóstico visual independiente.
 </p>
-
 
 <div class="resumen-grid">
 
@@ -435,7 +442,6 @@
     </div>
 </button>
 
-
 <button
     type="button"
     class="resumen-card"
@@ -450,6 +456,19 @@
     </div>
 </button>
 
+<button
+    type="button"
+    class="resumen-card"
+    data-ir-modulo="timelapses"
+>
+    <div class="resumen-etiqueta">
+        Programaciones
+    </div>
+
+    <div class="resumen-valor">
+        Timelapses
+    </div>
+</button>
 
 <button
     type="button"
@@ -465,7 +484,6 @@
     </div>
 </button>
 
-
 <button
     type="button"
     class="resumen-card"
@@ -479,7 +497,6 @@
         EUMETSAT
     </div>
 </button>
-
 
 <button
     type="button"
@@ -502,13 +519,16 @@
 </section>
 
 
+<!-- =========================================================
+     ADMINISTRACIÓN DE ESTACIONES
+     ========================================================= -->
+
 <section
     id="modulo-estaciones"
     class="modulo"
 >
 
 <div class="admin-grid">
-
 
 <section class="panel">
 
@@ -527,7 +547,6 @@
     </button>
 
 </div>
-
 
 <div class="panel-cuerpo">
 
@@ -587,13 +606,11 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <form id="formularioEstacion">
 
 <div class="formulario-grid">
-
 
 <div class="campo">
 
@@ -617,7 +634,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="campoNombre">
@@ -634,7 +650,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="campoEstado">
@@ -648,7 +663,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="campoProveedor">
@@ -661,7 +675,6 @@
 ></select>
 
 </div>
-
 
 <div class="campo campo-ancho">
 
@@ -687,7 +700,6 @@
 
 </div>
 
-
 <div class="campo campo-ancho">
 
 <label for="campoDescripcion">
@@ -700,7 +712,6 @@
 ></textarea>
 
 </div>
-
 
 <div class="campo">
 
@@ -716,7 +727,6 @@
 >
 
 </div>
-
 
 <div class="campo">
 
@@ -734,7 +744,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="campoPais">
@@ -750,7 +759,6 @@
 >
 
 </div>
-
 
 <div class="campo">
 
@@ -774,7 +782,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="campoLatitud">
@@ -791,7 +798,6 @@
 >
 
 </div>
-
 
 <div class="campo">
 
@@ -811,7 +817,6 @@
 </div>
 
 </div>
-
 
 <div class="acciones-formulario">
 
@@ -833,7 +838,6 @@
 
 </div>
 
-
 <div
     id="estadoFormulario"
     class="estado-formulario"
@@ -843,6 +847,10 @@
 
 </form>
 
+
+<!-- =========================================================
+     METADATOS DE ESTACIÓN
+     ========================================================= -->
 
 <div
     id="panelMetadatos"
@@ -864,7 +872,6 @@
 
 </div>
 
-
 <div class="metadato">
 
     <div class="metadato-etiqueta">
@@ -879,7 +886,6 @@
     </div>
 
 </div>
-
 
 <div class="metadato">
 
@@ -896,7 +902,6 @@
 
 </div>
 
-
 <div class="metadato">
 
     <div class="metadato-etiqueta">
@@ -912,7 +917,6 @@
 
 </div>
 
-
 <div class="metadato">
 
     <div class="metadato-etiqueta">
@@ -927,7 +931,6 @@
     </div>
 
 </div>
-
 
 <div class="metadato">
 
@@ -946,6 +949,10 @@
 
 </div>
 
+
+<!-- =========================================================
+     REGLAS DE SIMULACIÓN
+     ========================================================= -->
 
 <section
     id="panelReglasEstacion"
@@ -967,7 +974,6 @@
 
 </div>
 
-
 <div class="acciones">
 
     <div
@@ -987,7 +993,6 @@
 
 </div>
 
-
 <div
     id="estadoReglas"
     class="estado-reglas"
@@ -995,6 +1000,10 @@
     aria-live="polite"
 ></div>
 
+
+<!-- =========================================================
+     EDITOR DE REGLA
+     ========================================================= -->
 
 <section
     id="editorRegla"
@@ -1008,11 +1017,9 @@
     Nueva regla
 </h4>
 
-
 <form id="formularioRegla">
 
 <div class="formulario-grid">
-
 
 <div class="campo">
 
@@ -1100,7 +1107,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="reglaOperacion">
@@ -1136,7 +1142,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="reglaValor">
@@ -1153,7 +1158,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="reglaPrioridad">
@@ -1169,7 +1173,6 @@
 >
 
 </div>
-
 
 <div class="campo">
 
@@ -1208,7 +1211,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="reglaFranjaDia">
@@ -1246,7 +1248,6 @@
 
 </div>
 
-
 <div class="campo campo-ancho">
 
 <label for="reglaDescripcion">
@@ -1259,7 +1260,6 @@
 ></textarea>
 
 </div>
-
 
 <div class="campo campo-ancho">
 
@@ -1279,7 +1279,6 @@
 </div>
 
 </div>
-
 
 <div class="acciones-formulario">
 
@@ -1301,7 +1300,6 @@
 
 </div>
 
-
 <div
     id="estadoEditorRegla"
     class="estado-editor"
@@ -1312,6 +1310,10 @@
 </form>
 </section>
 
+
+<!-- =========================================================
+     EDITOR DE ORÍGENES
+     ========================================================= -->
 
 <section
     id="editorOrigen"
@@ -1325,11 +1327,9 @@
     Añadir estación de referencia
 </h4>
 
-
 <form id="formularioOrigen">
 
 <div class="formulario-grid">
-
 
 <div class="campo">
 
@@ -1343,7 +1343,6 @@
 ></select>
 
 </div>
-
 
 <div class="campo">
 
@@ -1431,7 +1430,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="origenPeso">
@@ -1449,7 +1447,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label for="origenOrden">
@@ -1465,7 +1462,6 @@
 >
 
 </div>
-
 
 <div class="campo campo-ancho">
 
@@ -1485,7 +1481,6 @@
 </div>
 
 </div>
-
 
 <div class="acciones-formulario">
 
@@ -1507,7 +1502,6 @@
 
 </div>
 
-
 <div
     id="estadoEditorOrigen"
     class="estado-editor"
@@ -1517,7 +1511,6 @@
 
 </form>
 </section>
-
 
 <div
     id="listaReglasEstacion"
@@ -1544,7 +1537,6 @@
 
 <div class="admin-grid">
 
-
 <section class="panel">
 
 <div class="panel-cabecera">
@@ -1563,7 +1555,6 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <p class="modulo-intro">
@@ -1576,7 +1567,6 @@
     Administración permite consultar las cámaras y configurar
     su nombre público, habilitación y preset activo cuando proceda.
 </p>
-
 
 <div class="filtros">
 
@@ -1595,7 +1585,6 @@
 
 </div>
 
-
 <div class="filtros-dobles">
 
 <div class="campo">
@@ -1613,7 +1602,6 @@
 </select>
 
 </div>
-
 
 <div class="campo">
 
@@ -1642,14 +1630,12 @@
 </div>
 </div>
 
-
 <div
     id="estadoCamaras"
     class="estado"
     role="status"
     aria-live="polite"
 ></div>
-
 
 <div
     id="listaCamaras"
@@ -1673,7 +1659,6 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <p class="modulo-intro">
@@ -1681,11 +1666,9 @@
     los datos técnicos sincronizados por MeteoCam.
 </p>
 
-
 <form id="formularioCamara">
 
 <div class="formulario-grid">
-
 
 <div class="campo campo-ancho">
 
@@ -1744,7 +1727,6 @@
 
 </div>
 
-
 <div class="campo campo-ancho">
 
 <div class="check-linea">
@@ -1771,7 +1753,6 @@
 
 </div>
 
-
 <div class="acciones-formulario">
 
 <button
@@ -1784,7 +1765,6 @@
 </button>
 
 </div>
-
 
 <div
     id="estadoFormularioCamara"
@@ -1831,7 +1811,6 @@
 
 </div>
 
-
 <div
     id="estadoPresetsCamara"
     class="estado"
@@ -1839,14 +1818,12 @@
     aria-live="polite"
 ></div>
 
-
 <div
     id="listaPresetsCamara"
     class="lista-estaciones"
 ></div>
 
 </section>
-
 
 <h3 class="reglas-titulo">
     Información técnica
@@ -1857,7 +1834,6 @@
     La identificación, las capacidades y el estado técnico
     se sincronizarán desde MeteoCam.
 </p>
-
 
 <div
     id="datosTecnicosCamara"
@@ -1870,6 +1846,668 @@
 </div>
 </section>
 
+
+<!-- =========================================================
+     ADMINISTRACIÓN DE TIMELAPSES
+     ========================================================= -->
+
+<section
+    id="modulo-timelapses"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+
+<!-- =========================================================
+     LISTADO DE PROGRAMACIONES
+     ========================================================= -->
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Timelapses
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonRecargarTimelapses"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+<button
+    id="botonNuevaProgramacionTimelapse"
+    type="button"
+    class="boton boton-principal"
+>
+    + Nueva
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Gestión de programaciones para generar vídeos
+    timelapse a partir de las cámaras de MeteoArchidona.
+</p>
+
+<p class="modulo-intro">
+    En esta fase únicamente se guardan las configuraciones.
+    La captura de imágenes, la ejecución de horarios
+    y la generación de vídeos se incorporarán posteriormente.
+</p>
+
+<div class="filtros">
+
+<div class="campo">
+
+<label for="filtroTimelapseTexto">
+    Buscar programaciones
+</label>
+
+<input
+    id="filtroTimelapseTexto"
+    type="search"
+    placeholder="Código, nombre, cámara o descripción..."
+    autocomplete="off"
+>
+
+</div>
+
+<div class="filtros-dobles">
+
+<div class="campo">
+
+<label for="filtroTimelapseCamara">
+    Cámara
+</label>
+
+<select id="filtroTimelapseCamara">
+    <option value="">
+        Todas las cámaras
+    </option>
+</select>
+
+</div>
+
+<div class="campo">
+
+<label for="filtroTimelapseEstado">
+    Estado
+</label>
+
+<select id="filtroTimelapseEstado">
+
+<option value="">
+    Todas
+</option>
+
+<option value="activas">
+    Activas
+</option>
+
+<option value="inactivas">
+    Inactivas
+</option>
+
+</select>
+
+</div>
+
+</div>
+</div>
+
+<div
+    id="estadoTimelapses"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="listaProgramacionesTimelapse"
+    class="lista-estaciones"
+></div>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     FORMULARIO DE PROGRAMACIÓN
+     ========================================================= -->
+
+<section
+    id="panelFormularioTimelapse"
+    class="panel oculto"
+    hidden
+>
+
+<div class="panel-cabecera">
+
+<h2
+    id="tituloFormularioTimelapse"
+    class="panel-titulo"
+>
+    Nueva programación
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Configura cómo se obtendrán los fotogramas
+    y cómo se generará el timelapse.
+    Ninguna programación moverá la cámara
+    hasta que se implemente el ejecutor correspondiente.
+</p>
+
+<form id="formularioProgramacionTimelapse">
+
+<div class="formulario-grid">
+
+
+<!-- =========================================================
+     IDENTIFICACIÓN
+     ========================================================= -->
+
+<div class="campo">
+
+<label for="campoTimelapseCodigo">
+    Código
+</label>
+
+<input
+    id="campoTimelapseCodigo"
+    type="text"
+    maxlength="80"
+    required
+    autocomplete="off"
+    placeholder="LOS_LLANOS_AMANECER"
+>
+
+<div class="campo-ayuda">
+    Identificador administrativo único
+    de la programación.
+</div>
+
+</div>
+
+<div class="campo">
+
+<label for="campoTimelapseNombre">
+    Nombre
+</label>
+
+<input
+    id="campoTimelapseNombre"
+    type="text"
+    maxlength="200"
+    required
+    autocomplete="off"
+    placeholder="Amanecer de Los Llanos"
+>
+
+</div>
+
+<div class="campo campo-ancho">
+
+<label for="campoTimelapseDescripcion">
+    Descripción
+</label>
+
+<textarea
+    id="campoTimelapseDescripcion"
+    placeholder="Descripción opcional de la programación..."
+></textarea>
+
+</div>
+
+
+<!-- =========================================================
+     CÁMARA
+     ========================================================= -->
+
+<div class="campo campo-ancho">
+
+<label for="campoTimelapseCamara">
+    Cámara
+</label>
+
+<select
+    id="campoTimelapseCamara"
+    required
+>
+    <option value="">
+        Selecciona una cámara
+    </option>
+</select>
+
+<div class="campo-ayuda">
+    Selecciona la cámara lógica que proporcionará
+    las imágenes del timelapse.
+    Una vista panorámica y una vista específica
+    son cámaras independientes.
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     PRESET OPCIONAL
+     ========================================================= -->
+
+<div
+    id="bloqueTimelapsePreset"
+    class="campo campo-ancho oculto"
+    hidden
+>
+
+<label for="campoTimelapsePreset">
+    Posición predefinida de cámara
+</label>
+
+<select
+    id="campoTimelapsePreset"
+    disabled
+>
+    <option value="">
+        Sin cambio de posición
+    </option>
+</select>
+
+<div class="campo-ayuda">
+    Opcional para cámaras con presets disponibles.
+
+    Si no seleccionas un preset, la programación
+    utilizará la imagen que esté proporcionando
+    la cámara en ese momento.
+
+    Elegir un preset solamente guarda la configuración.
+    No ordena ningún movimiento físico de la cámara.
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     TIPO DE PROGRAMACIÓN
+     ========================================================= -->
+
+<div class="campo">
+
+<label for="campoTimelapseTipo">
+    Tipo de programación
+</label>
+
+<select
+    id="campoTimelapseTipo"
+    required
+>
+
+<option value="EVENTO_SOLAR">
+    Evento solar
+</option>
+
+<option value="HORA_FIJA">
+    Hora fija
+</option>
+
+<option value="MANUAL">
+    Manual
+</option>
+
+<option value="PERIODICA">
+    Periódica (pendiente de configurar)
+</option>
+
+</select>
+
+<div class="campo-ayuda">
+    La modalidad periódica todavía no admite
+    guardar nuevas reglas.
+    Definiremos su sintaxis antes de habilitarla.
+</div>
+
+</div>
+
+<div class="campo">
+
+<label for="campoTimelapseZonaHoraria">
+    Zona horaria
+</label>
+
+<input
+    id="campoTimelapseZonaHoraria"
+    type="text"
+    maxlength="80"
+    value="Europe/Madrid"
+    required
+    autocomplete="off"
+>
+
+<div class="campo-ayuda">
+    Zona horaria IANA.
+    Normalmente Europe/Madrid.
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     EVENTO SOLAR
+     ========================================================= -->
+
+<div
+    id="bloqueTimelapseEventoSolar"
+    class="campo"
+>
+
+<label for="campoTimelapseEventoSolar">
+    Evento solar
+</label>
+
+<select id="campoTimelapseEventoSolar">
+
+<option value="AMANECER">
+    Amanecer
+</option>
+
+<option value="ATARDECER">
+    Atardecer
+</option>
+
+</select>
+
+<div class="campo-ayuda">
+    El horario se calculará diariamente
+    a partir de la posición geográfica
+    de la estación.
+</div>
+
+</div>
+
+<div
+    id="bloqueTimelapseDesfaseInicio"
+    class="campo"
+>
+
+<label for="campoTimelapseDesfaseInicioSegundos">
+    Desfase de inicio (segundos)
+</label>
+
+<input
+    id="campoTimelapseDesfaseInicioSegundos"
+    type="number"
+    step="1"
+    value="0"
+    inputmode="numeric"
+>
+
+<div class="campo-ayuda">
+    Valor negativo: comienza antes del evento.
+    Valor positivo: comienza después.
+
+    Ejemplo: -900 comienza 15 minutos
+    antes del amanecer o atardecer.
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     HORA FIJA
+     ========================================================= -->
+
+<div
+    id="bloqueTimelapseHoraLocal"
+    class="campo oculto"
+    hidden
+>
+
+<label for="campoTimelapseHoraLocal">
+    Hora local
+</label>
+
+<input
+    id="campoTimelapseHoraLocal"
+    type="time"
+    step="60"
+>
+
+<div class="campo-ayuda">
+    Hora local de inicio de la programación,
+    interpretada en la zona horaria indicada.
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     RECURRENCIA
+     ========================================================= -->
+
+<div
+    id="bloqueTimelapseRecurrencia"
+    class="campo campo-ancho oculto"
+    hidden
+>
+
+<label for="campoTimelapseReglaRecurrencia">
+    Regla de recurrencia
+</label>
+
+<input
+    id="campoTimelapseReglaRecurrencia"
+    type="text"
+    maxlength="500"
+    autocomplete="off"
+    placeholder="Pendiente de definir"
+    disabled
+>
+
+<div class="campo-ayuda">
+    Pendiente de establecer el formato de recurrencia.
+    Hasta entonces no se permite guardar
+    programaciones periódicas.
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     PARÁMETROS DE CAPTURA
+     ========================================================= -->
+
+<div class="campo">
+
+<label for="campoTimelapseDuracionSegundos">
+    Duración de captura (segundos)
+</label>
+
+<input
+    id="campoTimelapseDuracionSegundos"
+    type="number"
+    min="1"
+    step="1"
+    value="1800"
+    required
+    inputmode="numeric"
+>
+
+<div class="campo-ayuda">
+    Duración total del periodo durante el cual
+    se obtendrán los fotogramas.
+
+    Ejemplo: 1800 segundos equivalen a 30 minutos.
+</div>
+
+</div>
+
+<div class="campo">
+
+<label for="campoTimelapseIntervaloCapturaSegundos">
+    Intervalo entre fotogramas (segundos)
+</label>
+
+<input
+    id="campoTimelapseIntervaloCapturaSegundos"
+    type="number"
+    min="1"
+    step="1"
+    value="10"
+    required
+    inputmode="numeric"
+>
+
+<div class="campo-ayuda">
+    Tiempo entre dos imágenes consecutivas.
+
+    Ejemplo: 10 segundos significa
+    una imagen cada 10 segundos.
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     PARÁMETROS DEL VÍDEO
+     ========================================================= -->
+
+<div class="campo">
+
+<label for="campoTimelapseFpsSalida">
+    FPS del vídeo
+</label>
+
+<input
+    id="campoTimelapseFpsSalida"
+    type="number"
+    min="1"
+    step="1"
+    value="25"
+    required
+    inputmode="numeric"
+>
+
+<div class="campo-ayuda">
+    Fotogramas por segundo del MP4 resultante.
+
+    A mayor FPS, mayor velocidad de reproducción
+    para el mismo número de fotogramas.
+</div>
+
+</div>
+
+<div class="campo">
+
+<label for="campoTimelapseRetencionDias">
+    Conservación del vídeo (días)
+</label>
+
+<input
+    id="campoTimelapseRetencionDias"
+    type="number"
+    min="1"
+    step="1"
+    inputmode="numeric"
+    placeholder="Sin valor específico"
+>
+
+<div class="campo-ayuda">
+    Opcional. Se utilizará para aplicar
+    la política de conservación cuando
+    esté implementado el sistema de vídeos.
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     HABILITACIÓN
+     ========================================================= -->
+
+<div class="campo campo-ancho">
+
+<div class="check-linea">
+
+<input
+    id="campoTimelapseActiva"
+    type="checkbox"
+    checked
+>
+
+<label for="campoTimelapseActiva">
+    Programación activa
+</label>
+
+</div>
+
+<div class="campo-ayuda">
+    Permite habilitar o deshabilitar esta receta
+    para su futura ejecución automática.
+
+    Mientras no exista el ejecutor de timelapses,
+    activar una programación no inicia capturas.
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     ACCIONES DEL FORMULARIO
+     ========================================================= -->
+
+<div class="acciones-formulario">
+
+<button
+    id="botonGuardarProgramacionTimelapse"
+    type="submit"
+    class="boton boton-principal"
+>
+    Crear programación
+</button>
+
+<button
+    id="botonCancelarProgramacionTimelapse"
+    type="button"
+    class="boton"
+>
+    Cancelar
+</button>
+
+</div>
+
+<div
+    id="estadoFormularioTimelapse"
+    class="estado-formulario"
+    role="status"
+    aria-live="polite"
+></div>
+
+</form>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     WEATHERLINK
+     ========================================================= -->
 
 <section
     id="modulo-weatherlink"
@@ -1894,7 +2532,6 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <p class="modulo-intro">
@@ -1906,7 +2543,6 @@
     id="estadoWeatherlink"
     class="estado"
 ></div>
-
 
 <div
     id="panelWeatherlinkEstaciones"
@@ -1932,7 +2568,6 @@
 </table>
 
 </div>
-
 
 <details>
 
@@ -1960,11 +2595,9 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <div class="dos-columnas">
-
 
 <div class="campo">
 
@@ -1980,7 +2613,6 @@
 >
 
 </div>
-
 
 <div class="campo">
 
@@ -2011,7 +2643,6 @@
 
 </div>
 
-
 <div
     id="estadoWeatherlinkEstacion"
     class="estado"
@@ -2034,14 +2665,12 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <div
     id="tarjetasWeatherlink"
     class="tarjetas-meteo"
 ></div>
-
 
 <details>
 
@@ -2078,7 +2707,6 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <div
@@ -2102,6 +2730,10 @@
 </section>
 
 
+<!-- =========================================================
+     EUMETSAT
+     ========================================================= -->
+
 <section
     id="modulo-eumetsat"
     class="modulo"
@@ -2117,7 +2749,6 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <p class="modulo-intro">
@@ -2125,9 +2756,7 @@
     Lightning Imager disponible en EUMETView.
 </p>
 
-
 <div class="dos-columnas">
-
 
 <div class="campo">
 
@@ -2165,7 +2794,6 @@
 
 </div>
 
-
 <div class="campo">
 
 <label>
@@ -2195,12 +2823,10 @@
 
 </div>
 
-
 <div
     id="estadoEumetsat"
     class="estado"
 ></div>
-
 
 <div
     id="metaEumetsat"
@@ -2211,7 +2837,6 @@
 
 </div>
 </section>
-
 
 <section class="panel">
 
@@ -2232,6 +2857,10 @@
 </section>
 
 
+<!-- =========================================================
+     SQL ADMIN
+     ========================================================= -->
+
 <section
     id="modulo-sql"
     class="modulo"
@@ -2247,7 +2876,6 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <p class="modulo-intro">
@@ -2256,7 +2884,6 @@
     Las modificaciones normales del esquema deben
     continuar realizándose mediante Alembic.
 </p>
-
 
 <div class="campo">
 
@@ -2272,7 +2899,6 @@
 ></textarea>
 
 </div>
-
 
 <div class="confirmacion">
 
@@ -2291,7 +2917,6 @@
 </label>
 
 </div>
-
 
 <div class="acciones-formulario">
 
@@ -2338,7 +2963,6 @@
 
 </div>
 
-
 <div
     id="estadoSql"
     class="estado"
@@ -2361,7 +2985,6 @@
 
 </div>
 
-
 <div class="panel-cuerpo">
 
 <div
@@ -2383,10 +3006,7 @@
 
 </div>
 
-
-
 <div id="pie"></div>
-
 
 </body>
 </html>
