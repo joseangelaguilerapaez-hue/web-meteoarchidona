@@ -10,21 +10,20 @@
  * - conectar los distintos módulos administrativos;
  * - cargar los catálogos generales;
  * - cargar estaciones;
- * - cargar cámaras cuando exista su panel administrativo;
+ * - cargar cámaras;
+ * - cargar programaciones de timelapse;
  * - coordinar estaciones y simulación;
- * - inicializar todos los manejadores de eventos;
+ * - inicializar efectos y manejadores de eventos;
  * - restaurar una sesión administrativa existente;
  * - limpiar los módulos al cerrar sesión;
- * - gestionar la navegación entre módulos administrativos.
+ * - gestionar la navegación administrativa.
  *
- * Este fichero constituye el punto de entrada utilizado por:
+ * Este fichero es el punto de entrada utilizado por:
  *
  *     pages/administracion.html
  *
- * Los módulos se mantienen separados por responsabilidad.
- *
- * La incorporación de un módulo nuevo no debe alterar el
- * comportamiento de los módulos administrativos existentes.
+ * La incorporación de nuevos módulos no debe alterar
+ * el comportamiento de los ya existentes.
  */
 
 import {
@@ -87,6 +86,31 @@ import {
 
 
 /* ==========================================================
+   ESTADO DEL MÓDULO DE TIMELAPSES
+   ========================================================== */
+
+/*
+ * El módulo de timelapses se incorpora progresivamente.
+ *
+ * Su carga es diferida para permitir:
+ *
+ * 1. registrar primero este orquestador;
+ * 2. crear posteriormente timelapses.js;
+ * 3. añadir finalmente su sección HTML.
+ *
+ * Mientras no exista el panel modulo-timelapses,
+ * no se intenta importar el archivo JavaScript.
+ *
+ * De esta forma se conserva la disponibilidad
+ * de los módulos administrativos existentes.
+ */
+
+let moduloTimelapses = null;
+
+let promesaModuloTimelapses = null;
+
+
+/* ==========================================================
    NAVEGACIÓN ENTRE MÓDULOS
    ========================================================== */
 
@@ -116,7 +140,8 @@ export function activarModulo(
                 ===
                 nombre
             )
-    )
+    );
+
 }
 
 
@@ -126,7 +151,7 @@ export function activarModulo(
 
 async function cargarCatalogos(){
 
-    const datos=
+    const datos =
         await peticionJson(
             RUTA_CATALOGOS
         );
@@ -139,7 +164,8 @@ async function cargarCatalogos(){
 
     cargarOpcionesSimulacion();
 
-    return estadoAdministracion.catalogos
+    return estadoAdministracion.catalogos;
+
 }
 
 
@@ -148,46 +174,165 @@ async function cargarCatalogos(){
    ========================================================== */
 
 async function cargarModuloCamaras(){
+
     /*
-     * Durante la incorporación progresiva del subsistema,
-     * el archivo JavaScript puede existir antes de que
-     * se haya añadido su sección a administracion.html.
+     * La carga del módulo de cámaras es independiente.
      *
-     * En ese caso no se realiza ninguna petición.
-     *
-     * Cuando el panel exista, las cámaras se cargarán
-     * utilizando la sesión administrativa común.
-     *
-     * Un problema específico del catálogo de cámaras
-     * no debe impedir utilizar el resto de Administración.
+     * Un fallo específico no debe bloquear
+     * el resto de Administración.
      */
 
     if(
         !$("modulo-camaras")
     ){
-        return
+        return;
     }
 
     try{
 
-        await cargarCamaras()
+        await cargarCamaras();
 
     }catch(error){
 
         console.error(
             "No se ha podido cargar Administración de Cámaras.",
             error
-        )
+        );
 
         /*
-         * cargarCamaras ya informa del error en
-         * el panel específico de cámaras.
-         *
-         * No se propaga para evitar bloquear
-         * la carga administrativa general.
+         * cargarCamaras informa del error dentro
+         * del panel administrativo correspondiente.
          */
 
     }
+
+}
+
+
+/* ==========================================================
+   IMPORTACIÓN DIFERIDA DE TIMELAPSES
+   ========================================================== */
+
+async function obtenerModuloTimelapses(){
+
+    /*
+     * Todavía no se importa ningún JavaScript
+     * si la página no contiene el módulo.
+     */
+
+    if(
+        !$("modulo-timelapses")
+    ){
+        return null;
+    }
+
+    /*
+     * Conservamos la misma promesa para evitar
+     * importaciones duplicadas cuando se solicitan
+     * varias recargas administrativas.
+     */
+
+    if(
+        promesaModuloTimelapses === null
+    ){
+
+        promesaModuloTimelapses = import(
+            "./timelapses.js?v=20261012-timelapses1"
+        );
+
+    }
+
+    try{
+
+        moduloTimelapses =
+            await promesaModuloTimelapses;
+
+        return moduloTimelapses;
+
+    }catch(error){
+
+        /*
+         * Permite reintentar la carga si falló
+         * por una incidencia temporal.
+         */
+
+        promesaModuloTimelapses = null;
+
+        moduloTimelapses = null;
+
+        throw error;
+
+    }
+
+}
+
+
+/* ==========================================================
+   CARGA ADMINISTRATIVA DE TIMELAPSES
+   ========================================================== */
+
+async function cargarModuloTimelapses(){
+
+    if(
+        !$("modulo-timelapses")
+    ){
+        return;
+    }
+
+    try{
+
+        const modulo =
+            await obtenerModuloTimelapses();
+
+        if(!modulo){
+            return;
+        }
+
+        /*
+         * El módulo proporciona sus propios eventos.
+         *
+         * La configuración deberá ser idempotente
+         * para evitar registrar eventos duplicados
+         * durante recargas administrativas.
+         */
+
+        modulo.configurarEventosTimelapses();
+
+        /*
+         * Consulta:
+         *
+         * GET /admin/timelapses/programaciones
+         *
+         * La carga de cámaras y presets específicos
+         * será responsabilidad de timelapses.js.
+         */
+
+        await modulo.cargarTimelapses();
+
+    }catch(error){
+
+        console.error(
+            "No se ha podido cargar Administración de Timelapses.",
+            error
+        );
+
+        mostrarEstado(
+            $("estadoTimelapses"),
+            error.message
+            ||
+            "No se ha podido cargar las programaciones de timelapse.",
+            "error"
+        );
+
+        /*
+         * La incidencia permanece aislada.
+         *
+         * Los demás módulos administrativos
+         * deben continuar funcionando.
+         */
+
+    }
+
 }
 
 
@@ -218,10 +363,10 @@ export async function cargarDatosAdministracion(){
         estacionesActualizadas();
 
         /*
-         * Si en una futura recarga administrativa ya hubiera una
-         * estación seleccionada, se conserva la selección y se
-         * recuperan sus datos completos y sus reglas.
+         * Restaurar la estación seleccionada cuando
+         * continúe existiendo en el catálogo.
          */
+
         if(
             estadoAdministracion.codigoEdicion
             &&
@@ -239,18 +384,29 @@ export async function cargarDatosAdministracion(){
             await seleccionarEstacion(
                 estadoAdministracion
                     .codigoEdicion
-            )
+            );
+
         }
 
         /*
-         * Las cámaras se cargan después de las estaciones
-         * para que el módulo pueda mostrar los nombres
-         * públicos de sus estaciones asociadas.
+         * Cámaras.
          *
-         * La carga es independiente y no impide utilizar
-         * el resto del panel si falla.
+         * Se cargan después de las estaciones
+         * para poder mostrar su nombre público.
          */
+
         await cargarModuloCamaras();
+
+        /*
+         * Timelapses.
+         *
+         * El módulo se carga después de cámaras.
+         *
+         * Su funcionamiento es independiente
+         * y cualquier error queda aislado.
+         */
+
+        await cargarModuloTimelapses();
 
         mostrarEstado(
             $("estadoPanel"),
@@ -258,7 +414,7 @@ export async function cargarDatosAdministracion(){
             "ok"
         );
 
-        return true
+        return true;
 
     }catch(error){
 
@@ -270,8 +426,10 @@ export async function cargarDatosAdministracion(){
             "error"
         );
 
-        throw error
+        throw error;
+
     }
+
 }
 
 
@@ -285,7 +443,8 @@ async function alAbrirSesion(){
 
     activarModulo(
         "resumen"
-    )
+    );
+
 }
 
 
@@ -305,9 +464,30 @@ async function alCerrarSesion(){
 
     limpiarCamaras();
 
+    /*
+     * Limpiamos también las programaciones
+     * cuando el módulo ya se haya cargado.
+     *
+     * No es necesario importar el módulo
+     * únicamente para cerrar sesión.
+     */
+
+    if(
+        moduloTimelapses
+        &&
+        typeof moduloTimelapses.limpiarTimelapses
+        ===
+        "function"
+    ){
+
+        moduloTimelapses.limpiarTimelapses();
+
+    }
+
     activarModulo(
         "resumen"
-    )
+    );
+
 }
 
 
@@ -321,13 +501,15 @@ async function alSeleccionarEstacion(
 
     await estacionSeleccionada(
         estacion
-    )
+    );
+
 }
 
 
 async function alActualizarEstaciones(){
 
-    estacionesActualizadas()
+    estacionesActualizadas();
+
 }
 
 
@@ -349,7 +531,8 @@ function configurarCallbacks(){
             alSeleccionarEstacion,
             alActualizarEstaciones
         }
-    )
+    );
+
 }
 
 
@@ -390,7 +573,8 @@ function configurarEventosGenerales(){
                         boton.dataset.irModulo
                     )
             )
-    )
+    );
+
 }
 
 
@@ -414,7 +598,13 @@ function configurarEventos(){
 
     configurarEventosEumetsat();
 
-    configurarEventosSql()
+    configurarEventosSql();
+
+    /*
+     * Los eventos de Timelapses se configurarán
+     * cuando se importe su módulo diferido.
+     */
+
 }
 
 
@@ -430,7 +620,7 @@ export async function iniciarAdministracion(){
 
     try{
 
-        await recuperarSesion()
+        await recuperarSesion();
 
     }catch(error){
 
@@ -445,8 +635,10 @@ export async function iniciarAdministracion(){
             ||
             "No ha sido posible iniciar Administración.",
             "error"
-        )
+        );
+
     }
+
 }
 
 
