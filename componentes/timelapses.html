@@ -1,0 +1,291 @@
+
+<!--
+    MeteoArchidona · Componente Timelapses
+
+    Componente público, independiente y reutilizable.
+
+    Uso inicial:
+        pages/actualidad.html
+
+    Uso futuro:
+        Libro Histórico y otras páginas.
+
+    Funcionalidades previstas:
+
+    - Mostrar timelapses de cámaras publicadas.
+    - Crear dinámicamente una ficha por cámara.
+    - Consultar los últimos siete días disponibles.
+    - Priorizar el MP4 completo sobre los parciales.
+    - Seleccionar inicialmente el día anterior,
+      cuando exista.
+    - Permitir seleccionar otros días.
+    - Reutilizar visores/video.html para reproducir.
+    - No descargar ni reproducir automáticamente
+      los MP4 al cargar el componente.
+
+    Los datos y las URLs procederán de la API.
+
+    Este archivo contiene únicamente plantillas HTML.
+    No realiza consultas ni contiene lógica JavaScript.
+-->
+
+
+<!-- ======================================================
+     COMPONENTE PRINCIPAL
+     ====================================================== -->
+
+
+<template id="plantilla-timelapses">
+
+
+<div class="timelapses-componente">
+
+
+<header class="timelapses-cabecera">
+
+
+<div class="timelapses-identidad">
+
+
+<h2 class="timelapses-titulo">
+    Timelapses
+</h2>
+
+
+<p class="timelapses-descripcion">
+    Descubre cómo ha evolucionado el tiempo
+    desde nuestras cámaras meteorológicas.
+</p>
+
+
+</div>
+
+
+</header>
+
+
+<!-- ======================================================
+     ESTADO DE CARGA O DISPONIBILIDAD
+     ====================================================== -->
+
+
+<p
+    class="timelapses-estado"
+    data-timelapses-estado
+    role="status"
+    aria-live="polite"
+    hidden
+></p>
+
+
+<!-- ======================================================
+     LISTA DINÁMICA DE CÁMARAS
+     ====================================================== -->
+
+
+<div
+    class="timelapses-lista"
+    data-timelapses-lista
+></div>
+
+
+</div>
+
+
+</template>
+
+
+<!-- ======================================================
+     PLANTILLA REUTILIZABLE POR CÁMARA
+
+     Se clonará una vez por cada cámara que disponga
+     de timelapses publicados.
+
+     PLANTILLA será sustituido por un identificador
+     único de la cámara.
+     ====================================================== -->
+
+
+<template id="plantilla-timelapse-camara">
+
+
+<article
+    class="timelapses-camara"
+    data-timelapses-camara
+>
+
+
+<!-- ======================================================
+     IDENTIFICACIÓN DE LA CÁMARA
+     ====================================================== -->
+
+
+<header class="timelapses-camara-cabecera">
+
+
+<h3
+    class="timelapses-camara-nombre"
+    data-timelapses-camara-nombre
+>
+    Cámara meteorológica
+</h3>
+
+
+<p
+    class="timelapses-camara-ubicacion"
+    data-timelapses-camara-ubicacion
+></p>
+
+
+</header>
+
+
+<!-- ======================================================
+     SELECTOR DE TIMELAPSES
+     ====================================================== -->
+
+
+<div class="timelapses-selector-contenedor">
+
+
+<label
+    class="timelapses-selector-etiqueta"
+    for="selector-timelapse-PLANTILLA"
+>
+    Seleccionar timelapse
+</label>
+
+
+<select
+    class="timelapses-selector"
+    id="selector-timelapse-PLANTILLA"
+    data-timelapses-selector
+    disabled
+>
+
+
+<option value="">
+    Cargando timelapses...
+</option>
+
+
+</select>
+
+
+</div>
+
+
+<!-- ======================================================
+     INFORMACIÓN DEL VÍDEO SELECCIONADO
+     ====================================================== -->
+
+
+<div class="timelapses-informacion">
+
+
+<time
+    class="timelapses-fecha"
+    data-timelapses-fecha
+></time>
+
+
+<span
+    class="timelapses-tipo"
+    data-timelapses-tipo
+></span>
+
+
+<span
+    class="timelapses-duracion"
+    data-timelapses-duracion
+></span>
+
+
+</div>
+
+
+<!-- ======================================================
+     ZONA DE REPRODUCCIÓN
+
+     La portada se muestra inicialmente.
+
+     No existe un iframe con src en la plantilla:
+     JavaScript lo creará únicamente cuando el visitante
+     solicite reproducir el timelapse.
+
+     Así evitamos cargar simultáneamente varios MP4.
+     ====================================================== -->
+
+
+<div class="timelapses-visor">
+
+
+<div
+    class="timelapses-portada"
+    data-timelapses-portada
+>
+
+
+<button
+    class="timelapses-reproducir"
+    type="button"
+    data-timelapses-reproducir
+    aria-label="Reproducir timelapse"
+    disabled
+>
+
+
+<img
+    class="timelapses-portada-logo"
+    src="/assets/icono-camaras-192.png"
+    alt=""
+    loading="lazy"
+    draggable="false"
+>
+
+
+<span class="timelapses-portada-texto">
+    Pulsa para reproducir
+</span>
+
+
+</button>
+
+
+</div>
+
+
+<div
+    class="timelapses-visor-contenedor"
+    data-timelapses-visor
+    hidden
+></div>
+
+
+</div>
+
+
+<!-- ======================================================
+     INFORMACIÓN ADICIONAL
+     ====================================================== -->
+
+
+<footer class="timelapses-camara-pie">
+
+
+<p
+    class="timelapses-camara-detalle"
+    data-timelapses-detalle
+></p>
+
+
+</footer>
+
+
+</article>
+
+
+</template>
+
+
+<!-- Fin de fichero: componentes/timelapses.html -->
