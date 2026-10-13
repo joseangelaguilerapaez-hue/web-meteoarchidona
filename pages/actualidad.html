@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -40,15 +41,18 @@
     href="../css/fuentes.css?v=20260913-pie1"
 >
 
+
 <link
     rel="stylesheet"
     href="../css/paleta.css?v=20260913-pie1"
 >
 
+
 <link
     rel="stylesheet"
     href="../css/cabecera.css?v=20260926-giro2"
 >
+
 
 <link
     rel="stylesheet"
@@ -338,6 +342,66 @@
 </section>
 
 
+<!-- ======================================================
+     TIMELAPSES PÚBLICOS
+     ======================================================
+
+     Este componente está separado de las fichas de estación.
+
+     El módulo público de timelapses será responsable de:
+
+     - consultar los vídeos publicados;
+     - seleccionar el día anterior;
+     - priorizar COMPLETO frente a PARCIAL;
+     - generar dinámicamente los visores;
+     - mostrar la sección cuando exista contenido.
+
+     Hasta completar esa integración permanece oculto.
+
+     Los MP4 no se cargarán automáticamente al entrar
+     en Actualidad.
+     ====================================================== -->
+
+
+<section
+    id="timelapses"
+    class="tarjeta timelapses-seccion"
+    aria-labelledby="timelapses-titulo"
+    hidden
+>
+
+
+<div class="timelapses-cabecera">
+
+    <h2
+        id="timelapses-titulo"
+        class="seccion-titulo"
+    >
+        Timelapse del día anterior
+    </h2>
+
+    <p class="timelapses-descripcion">
+        La evolución meteorológica vista desde nuestras cámaras.
+    </p>
+
+</div>
+
+
+<div
+    id="timelapses-lista"
+    class="timelapses-lista"
+    aria-live="polite"
+></div>
+
+
+</section>
+
+
+<!-- ======================================================
+     GRÁFICOS METEOROLÓGICOS
+     ====================================================== -->
+
+
 <section
     class="paneles-graficos"
     id="graficos"
@@ -524,74 +588,12 @@
 </article>
 
 
-<article
-    class="tarjeta grafico"
-    id="camaras"
->
-
-
-<div class="grafico-cabecera">
-
-
-<div class="grafico-titulo">
-    Cámaras en directo
-</div>
-
-
-<a
-    href="/en-vivo"
-    target="_parent"
-    class="grafico-enlace"
->
-    Ver todas →
-</a>
-
-
-</div>
-
-
-<div class="camaras">
-
-
-<div class="camara">
-
-
-<div class="camara-estado">
-    🟢 En línea
-</div>
-
-
-<div class="camara-nombre">
-    El Silo · Vista Sur
-</div>
-
-
-</div>
-
-
-<div class="camara">
-
-
-<div class="camara-estado">
-    🟢 En línea
-</div>
-
-
-<div class="camara-nombre">
-    Los Llanos · Vista Norte
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</article>
-
-
 </section>
+
+
+<!-- ======================================================
+     ACCESOS A OTRAS SECCIONES
+     ====================================================== -->
 
 
 <section class="tarjeta accesos">
@@ -602,6 +604,7 @@
     class="acceso"
 >
 
+
 <div class="acceso-icono">
     📊
 </div>
@@ -609,15 +612,19 @@
 
 <div>
 
+
 <div class="acceso-titulo">
     HISTÓRICOS
 </div>
+
 
 <div class="acceso-subtitulo">
     Datos por fecha
 </div>
 
+
 </div>
+
 
 </a>
 
@@ -627,6 +634,7 @@
     class="acceso"
 >
 
+
 <div class="acceso-icono">
     📈
 </div>
@@ -634,15 +642,19 @@
 
 <div>
 
+
 <div class="acceso-titulo">
     GRÁFICOS
 </div>
+
 
 <div class="acceso-subtitulo">
     Evolución detallada
 </div>
 
+
 </div>
+
 
 </a>
 
@@ -653,6 +665,7 @@
     class="acceso"
 >
 
+
 <div class="acceso-icono">
     📷
 </div>
@@ -660,15 +673,19 @@
 
 <div>
 
+
 <div class="acceso-titulo">
     CÁMARAS
 </div>
+
 
 <div class="acceso-subtitulo">
     Imágenes en directo
 </div>
 
+
 </div>
+
 
 </a>
 
@@ -678,6 +695,7 @@
     class="acceso"
 >
 
+
 <div class="acceso-icono">
     📡
 </div>
@@ -685,15 +703,19 @@
 
 <div>
 
+
 <div class="acceso-titulo">
     ESTACIONES
 </div>
+
 
 <div class="acceso-subtitulo">
     Información técnica
 </div>
 
+
 </div>
+
 
 </a>
 
@@ -703,6 +725,7 @@
     class="acceso"
 >
 
+
 <div class="acceso-icono">
     ⚠️
 </div>
@@ -710,15 +733,19 @@
 
 <div>
 
+
 <div class="acceso-titulo">
     ALERTAS
 </div>
+
 
 <div class="acceso-subtitulo">
     Avisos meteorológicos
 </div>
 
+
 </div>
+
 
 </a>
 
@@ -728,6 +755,7 @@
     class="acceso"
 >
 
+
 <div class="acceso-icono">
     ✅
 </div>
@@ -735,15 +763,19 @@
 
 <div>
 
+
 <div class="acceso-titulo">
     ESTADO SISTEMA
 </div>
+
 
 <div class="acceso-subtitulo">
     Datos automáticos
 </div>
 
+
 </div>
+
 
 </a>
 
