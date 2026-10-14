@@ -57,9 +57,12 @@ defer
         visor-video-multimedia.js
             -> reproductor HTML5
 
-    El visor conserva su estructura HTML,
-    estilos y controles corporativos.
+    Ambos modos comparten estructura y estilos.
+
+    Los controles de progreso corresponden
+    exclusivamente a la modalidad MP4.
 -->
+
 
 <script
 src="../js/visor-video-multimedia.js?v=20261013-mp4-1"
@@ -80,7 +83,7 @@ aria-label="Visor de vídeo MeteoArchidona"
 
 
 <!-- ======================================================
-     VÍDEO
+     ELEMENTO DE VÍDEO
      ====================================================== -->
 
 
@@ -138,7 +141,7 @@ aria-label="Condiciones meteorológicas actuales"
 
 
 <!-- ======================================================
-     ESTADO DE EMISIÓN
+     ESTADO DE EMISIÓN / REPRODUCCIÓN
      ====================================================== -->
 
 
@@ -182,23 +185,37 @@ role="status"
 aria-live="polite"
 >
 
+
 <div class="visor-video-error-contenido">
+
 
 <strong>
 Emisión no disponible
 </strong>
 
+
 <span id="visor-video-error-texto">
 No se ha podido cargar el vídeo.
 </span>
 
+
 </div>
+
 
 </div>
 
 
 <!-- ======================================================
      CONTROLES PROPIOS
+
+     Reutilizados por ambas modalidades.
+
+     HLS:
+         Conserva su comportamiento actual.
+
+     MP4:
+         Reproducción, pausa, desplazamiento
+         temporal y pantalla completa.
      ====================================================== -->
 
 
@@ -207,6 +224,11 @@ id="visor-video-controles"
 class="visor-video-controles"
 hidden
 >
+
+
+<!-- ======================================================
+     REPRODUCIR / PAUSAR
+     ====================================================== -->
 
 
 <button
@@ -218,6 +240,90 @@ title="Reproducir / pausar"
 >
 ❚❚
 </button>
+
+
+<!-- ======================================================
+     PROGRESO MP4
+
+     Oculto inicialmente.
+
+     El controlador multimedia lo activará
+     únicamente cuando corresponda.
+
+     El valor de la barra representa la
+     posición relativa dentro del archivo MP4.
+
+     No representa directamente la hora
+     meteorológica de los fotogramas.
+     ====================================================== -->
+
+
+<div
+id="visor-video-progreso"
+class="visor-video-progreso"
+hidden
+>
+
+
+<label
+class="visor-video-progreso-etiqueta"
+for="visor-video-busqueda"
+>
+Posición del timelapse
+</label>
+
+
+<input
+id="visor-video-busqueda"
+class="visor-video-progreso-barra"
+type="range"
+min="0"
+max="1000"
+step="1"
+value="0"
+disabled
+aria-label="Avanzar o retroceder por el timelapse"
+>
+
+
+<div
+class="visor-video-progreso-tiempos"
+aria-hidden="true"
+>
+
+
+<span
+id="visor-video-tiempo-actual"
+class="visor-video-tiempo-actual"
+>
+00:00
+</span>
+
+
+<span
+class="visor-video-progreso-separador"
+>
+/
+</span>
+
+
+<span
+id="visor-video-tiempo-total"
+class="visor-video-tiempo-total"
+>
+--:--
+</span>
+
+
+</div>
+
+
+</div>
+
+
+<!-- ======================================================
+     PANTALLA COMPLETA
+     ====================================================== -->
 
 
 <button
