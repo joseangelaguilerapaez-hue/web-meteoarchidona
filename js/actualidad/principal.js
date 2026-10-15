@@ -1,3 +1,4 @@
+
 "use strict";
 
 /*
@@ -14,7 +15,8 @@
  * - inicializar efectos visuales y controles;
  * - cargar las condiciones meteorológicas;
  * - recalcular la disposición de las fichas al cambiar el ancho;
- * - programar las actualizaciones periódicas.
+ * - programar las actualizaciones periódicas;
+ * - inicializar independientemente los timelapses públicos.
  */
 
 
@@ -102,6 +104,8 @@ import {
  * Se conserva la detección de una plantilla incrustada como
  * compatibilidad defensiva durante la transición.
  */
+
+
 async function prepararPlantillaEstaciones() {
 
     const plantillaIncrustada =
@@ -175,6 +179,7 @@ function configurarRedimensionamiento() {
                          * un resize provocado al entrar en fullscreen
                          * no desmonta ni vuelve a insertar el iframe.
                          */
+
                         sincronizarFichasEstaciones();
 
 
@@ -192,6 +197,75 @@ function configurarRedimensionamiento() {
 
         }
     );
+
+}
+
+
+/* ==========================================================
+   TIMELAPSES PÚBLICOS
+   ========================================================== */
+
+
+/*
+ * El componente de timelapses es independiente.
+ *
+ * Se carga dinámicamente para que cualquier fallo
+ * del catálogo público, de sus plantillas o del módulo
+ * no impida el funcionamiento de las estaciones.
+ *
+ * El propio componente mantiene oculta su sección
+ * cuando no existen timelapses publicados.
+ *
+ * No descarga archivos MP4 hasta que el visitante
+ * solicita reproducir uno.
+ */
+
+
+async function prepararTimelapses() {
+
+    const contenedor =
+        document.getElementById(
+            "timelapses"
+        );
+
+
+    if (
+        !contenedor
+    ) {
+
+        return false;
+
+    }
+
+
+    try {
+
+        const modulo =
+            await import(
+                "/js/timelapses.js?v=20261015-actualidad1"
+            );
+
+
+        return await modulo.montarTimelapses(
+            contenedor
+        );
+
+    } catch (
+        error
+    ) {
+
+        contenedor.hidden = true;
+
+
+        console.warn(
+            "No se ha podido inicializar el componente de timelapses.",
+            error
+        );
+
+
+        return false;
+
+    }
 
 }
 
@@ -326,6 +400,20 @@ async function arrancarActualidad() {
             generarGotasCristalActivas,
             INTERVALO_GOTAS_CRISTAL_MS
         );
+
+
+        /* ==================================================
+           TIMELAPSES
+           ================================================== */
+
+        /*
+         * Se inicia sin bloquear Actualidad.
+         *
+         * Un error del componente no interrumpe
+         * los temporizadores ni los demás módulos.
+         */
+
+        void prepararTimelapses();
 
 
     } catch (
