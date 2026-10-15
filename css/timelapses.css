@@ -1,0 +1,663 @@
+
+/*
+ * MeteoArchidona
+ * Componente público Timelapses
+ *
+ * Hoja de estilos independiente y reutilizable.
+ *
+ * Plantilla:
+ *     componentes/timelapses.html
+ *
+ * Usos previstos:
+ *     Actualidad
+ *     Libro Histórico
+ *     Otros paneles públicos
+ *
+ * Características:
+ *
+ * - Ancho completo del contenedor.
+ * - Selector de timelapses por cámara.
+ * - Visores creados dinámicamente.
+ * - Portada corporativa.
+ * - Reproductor multimedia incrustado.
+ * - Adaptación a móvil y ordenador.
+ *
+ * Los estilos no controlan la reproducción
+ * ni realizan consultas a la API.
+ */
+
+
+/* ==========================================================
+   BASE DEL COMPONENTE
+   ========================================================== */
+
+
+.timelapses-seccion {
+    margin-top: 14px;
+    padding: clamp(14px, 2vw, 24px);
+    min-width: 0;
+}
+
+
+.timelapses-componente {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+
+    color: var(--text, #f6f8fb);
+}
+
+
+/*
+ * Respetar siempre el atributo hidden.
+ *
+ * Algunas clases utilizan display flex o grid.
+ * Esta regla impide que esos estilos hagan
+ * visibles elementos todavía no preparados.
+ */
+
+
+.timelapses-seccion[hidden],
+.timelapses-componente [hidden] {
+    display: none !important;
+}
+
+
+/* ==========================================================
+   CABECERA
+   ========================================================== */
+
+
+.timelapses-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+
+.timelapses-identidad {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+
+.timelapses-titulo {
+    margin: 0;
+
+    color: var(--text, #f6f8fb);
+
+    font-size: clamp(16px, 1.7vw, 23px);
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+
+.timelapses-descripcion {
+    margin: 7px 0 0;
+
+    color: var(--muted, #aabdd0);
+
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   MENSAJES DE ESTADO
+   ========================================================== */
+
+
+.timelapses-estado {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+
+    border: 1px solid var(--border, #1a2d42);
+    border-radius: 9px;
+
+    background: var(--card-soft, #0d1a27);
+
+    color: var(--text-soft, #c9d6e5);
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   CONTENEDOR DE CÁMARAS
+   ========================================================== */
+
+
+.timelapses-lista {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 20px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+
+/*
+ * Cada cámara utiliza una ficha independiente.
+ *
+ * Inicialmente habrá una sola cámara panorámica.
+ * Las futuras cámaras se añadirán dinámicamente.
+ */
+
+
+.timelapses-camara {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: clamp(10px, 1.5vw, 18px);
+
+    border: 1px solid var(--border, #1a2d42);
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(13, 26, 39, 0.98),
+            rgba(8, 17, 29, 0.98)
+        );
+}
+
+
+/* ==========================================================
+   IDENTIFICACIÓN DE CÁMARA
+   ========================================================== */
+
+
+.timelapses-camara-cabecera {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-bottom: 14px;
+}
+
+
+.timelapses-camara-nombre {
+    margin: 0;
+
+    color: var(--text, #f6f8fb);
+
+    font-size: clamp(14px, 1.3vw, 18px);
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+
+.timelapses-camara-ubicacion {
+    margin: 0;
+
+    color: var(--muted, #aabdd0);
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   SELECTOR DE TIMELAPSES
+   ========================================================== */
+
+
+.timelapses-selector-contenedor {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin-bottom: 14px;
+}
+
+
+.timelapses-selector-etiqueta {
+    color: var(--text-soft, #c9d6e5);
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+.timelapses-selector {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+
+    padding: 10px 12px;
+
+    border: 1px solid var(--border-strong, #29435e);
+    border-radius: 8px;
+
+    background: var(--card-soft, #0d1a27);
+
+    color: var(--text, #f6f8fb);
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+
+.timelapses-selector:focus-visible {
+    outline: 2px solid var(--cyan, #36d5ff);
+    outline-offset: 2px;
+}
+
+
+.timelapses-selector:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+.timelapses-selector option {
+    background: var(--card-soft, #0d1a27);
+    color: var(--text, #f6f8fb);
+}
+
+
+/* ==========================================================
+   INFORMACIÓN DEL TIMELAPSE
+   ========================================================== */
+
+
+.timelapses-informacion {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 7px 14px;
+
+    min-height: 26px;
+    margin-bottom: 12px;
+
+    color: var(--text-soft, #c9d6e5);
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+.timelapses-fecha {
+    color: var(--text, #f6f8fb);
+    font-weight: 700;
+}
+
+
+.timelapses-tipo {
+    color: var(--cyan, #36d5ff);
+    font-weight: 600;
+}
+
+
+.timelapses-duracion {
+    color: var(--muted, #aabdd0);
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* ==========================================================
+   VISOR MULTIMEDIA
+   ========================================================== */
+
+
+.timelapses-visor {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+
+    /*
+     * Relación de aspecto configurable
+     * desde el futuro módulo JavaScript.
+     *
+     * Inicialmente 16:9.
+     *
+     * Las vistas panorámicas podrán recibir
+     * una proporción diferente sin modificar
+     * esta hoja de estilos.
+     */
+
+    aspect-ratio: var(
+        --timelapses-relacion-visor,
+        16 / 9
+    );
+
+    overflow: hidden;
+
+    border: 1px solid var(--border-strong, #29435e);
+    border-radius: 9px;
+
+    background: #000;
+}
+
+
+/* ==========================================================
+   PORTADA CORPORATIVA
+   ========================================================== */
+
+
+.timelapses-portada {
+    position: absolute;
+
+    inset: 0;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            #18314a 0%,
+            #0a1725 55%,
+            #030914 100%
+        );
+}
+
+
+.timelapses-reproducir {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 16px;
+
+    border: 0;
+
+    background: transparent;
+    color: var(--text, #f6f8fb);
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+.timelapses-reproducir:disabled {
+    cursor: not-allowed;
+}
+
+
+.timelapses-reproducir:focus-visible {
+    outline: 3px solid var(--cyan, #36d5ff);
+    outline-offset: -5px;
+}
+
+
+/* ==========================================================
+   LOGOTIPO
+   ========================================================== */
+
+
+.timelapses-portada-logo {
+    display: block;
+
+    width: clamp(48px, 9vw, 100px);
+    height: auto;
+
+    max-width: 30%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+    user-select: none;
+}
+
+
+/* ==========================================================
+   INDICADOR DE REPRODUCCIÓN
+   ========================================================== */
+
+
+.timelapses-reproducir::before {
+    content: "▶";
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: clamp(38px, 5vw, 58px);
+    height: clamp(38px, 5vw, 58px);
+
+    border: 1px solid rgba(54, 213, 255, 0.5);
+    border-radius: 50%;
+
+    background: rgba(12, 28, 47, 0.95);
+
+    color: var(--cyan, #36d5ff);
+
+    font-size: clamp(16px, 2vw, 23px);
+
+    box-shadow:
+        0 0 20px rgba(54, 213, 255, 0.13);
+}
+
+
+.timelapses-reproducir:hover:not(:disabled)::before {
+    background: rgba(22, 53, 77, 0.98);
+
+    border-color: var(--cyan, #36d5ff);
+}
+
+
+.timelapses-portada-texto {
+    color: var(--text-soft, #c9d6e5);
+
+    font-size: clamp(11px, 1vw, 14px);
+    font-weight: 600;
+
+    text-align: center;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   CONTENEDOR DEL REPRODUCTOR
+   ========================================================== */
+
+
+.timelapses-visor-contenedor {
+    position: absolute;
+
+    inset: 0;
+    z-index: 1;
+
+    width: 100%;
+    height: 100%;
+
+    background: #000;
+}
+
+
+.timelapses-visor-contenedor iframe {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+
+    background: #000;
+}
+
+
+/* ==========================================================
+   INFORMACIÓN ADICIONAL
+   ========================================================== */
+
+
+.timelapses-camara-pie {
+    margin-top: 12px;
+}
+
+
+.timelapses-camara-detalle {
+    margin: 0;
+
+    color: var(--muted, #aabdd0);
+
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   PANTALLAS MEDIANAS
+   ========================================================== */
+
+
+@media (max-width: 900px) {
+
+    .timelapses-seccion {
+        padding: 14px;
+    }
+
+    .timelapses-lista {
+        gap: 16px;
+    }
+
+    .timelapses-camara {
+        padding: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   MÓVIL
+   ========================================================== */
+
+
+@media (max-width: 620px) {
+
+    .timelapses-seccion {
+        margin-top: 12px;
+        padding: 10px;
+    }
+
+    .timelapses-cabecera {
+        margin-bottom: 14px;
+    }
+
+    .timelapses-titulo {
+        font-size: 17px;
+    }
+
+    .timelapses-descripcion {
+        font-size: 11px;
+    }
+
+    .timelapses-camara {
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    .timelapses-camara-cabecera {
+        margin-bottom: 10px;
+    }
+
+    .timelapses-camara-nombre {
+        font-size: 13px;
+    }
+
+    .timelapses-camara-ubicacion {
+        font-size: 10px;
+    }
+
+    .timelapses-selector {
+        min-height: 40px;
+        font-size: 12px;
+    }
+
+    .timelapses-informacion {
+        gap: 5px 10px;
+        margin-bottom: 10px;
+        font-size: 10px;
+    }
+
+    .timelapses-visor {
+        border-radius: 6px;
+    }
+
+    .timelapses-reproducir {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .timelapses-camara-pie {
+        margin-top: 10px;
+    }
+
+    .timelapses-camara-detalle {
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   MÓVILES MUY ESTRECHOS
+   ========================================================== */
+
+
+@media (max-width: 360px) {
+
+    .timelapses-seccion {
+        padding: 8px;
+    }
+
+    .timelapses-camara {
+        padding: 6px;
+    }
+
+    .timelapses-portada-logo {
+        width: 42px;
+    }
+
+    .timelapses-reproducir::before {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    .timelapses-portada-texto {
+        font-size: 10px;
+    }
+
+}
+
+
+/* Fin de fichero: css/timelapses.css */
