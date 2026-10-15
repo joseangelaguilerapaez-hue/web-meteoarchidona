@@ -55,6 +55,11 @@
     defer
 ></script>
 
+<script
+    src="../js/en-vivo-youtube.js?v=20261015-directos1"
+    defer
+></script>
+
 </head>
 
 
@@ -65,6 +70,10 @@
 
 <main class="pagina">
 
+
+<!-- ======================================================
+     CABECERA DE LA PÁGINA
+     ====================================================== -->
 
 <header class="cabecera-en-vivo">
 
@@ -115,6 +124,15 @@
 </header>
 
 
+<!-- ======================================================
+     SELECTOR DE ZONAS EXISTENTE
+
+     Gestionado por:
+         js/en-vivo.js
+
+     No se modifica su funcionamiento.
+     ====================================================== -->
+
 <section
     class="selector-panel"
     aria-labelledby="titulo-selector"
@@ -155,6 +173,17 @@
 </section>
 
 
+<!-- ======================================================
+     CÁMARAS EXISTENTES
+
+     - MeteoCam Los Llanos
+     - Sierra Nevada
+     - Fuentes externas
+
+     Gestionadas por:
+         js/en-vivo.js
+     ====================================================== -->
+
 <section
     class="seccion-camaras"
     aria-live="polite"
@@ -193,50 +222,108 @@
 
 
 <!-- ======================================================
-     VISOR YOUTUBE · PRUEBA MURCIA
+     DIRECTOS YOUTUBE
 
-     Componente reutilizable:
+     Selector independiente del catálogo de zonas.
+
+     Controlador:
+         js/en-vivo-youtube.js
+
+     Visor reutilizable:
          visores/youtube.html
-         visores/youtube.css
-         visores/youtube.js
 
-     Se pasa la URL del vídeo mediante el parámetro url.
+     El selector cambia la URL del visor
+     y los datos públicos de la cámara.
 
-     No modifica el visor HLS/MP4 existente.
+     Por ahora:
+         MURCIA
+         NERJA
+
+     En el futuro el catálogo podrá proceder
+     de la API y de la tabla video_youtube.
+
+     No modifica las cámaras existentes.
      ====================================================== -->
 
 
+<!-- SELECTOR DE CÁMARAS YOUTUBE -->
+
 <section
-    class="seccion-camaras"
-    aria-labelledby="titulo-youtube-murcia"
+    class="selector-panel"
+    aria-labelledby="titulo-directos-youtube"
 >
 
-    <div class="cabecera-zona">
+    <div class="selector-contenido">
 
-        <div>
+        <div class="selector-texto">
 
-            <h2 id="titulo-youtube-murcia">
-                Murcia · Emisión meteorológica en directo
+            <h2 id="titulo-directos-youtube">
+                Directos YouTube
             </h2>
 
             <p>
-                Emisión externa de YouTube integrada
-                en MeteoArchidona para observar
-                las condiciones meteorológicas de Murcia.
+                Emisiones meteorológicas y cámaras externas
+                disponibles a través de YouTube.
+
+                Selecciona una cámara para observar
+                su imagen en directo sin salir
+                de MeteoArchidona.
             </p>
+
+        </div>
+
+
+        <div class="selector-control">
+
+            <label for="selector-directo-youtube">
+                CÁMARA
+            </label>
+
+            <select
+                id="selector-directo-youtube"
+                aria-label="Seleccionar cámara de YouTube"
+            >
+
+                <option
+                    value="murcia"
+                    selected
+                >
+                    Murcia
+                </option>
+
+                <option
+                    value="nerja"
+                >
+                    Nerja
+                </option>
+
+            </select>
 
         </div>
 
     </div>
 
+</section>
+
+
+<!-- VISOR Y FICHA DE LA CÁMARA SELECCIONADA -->
+
+<section
+    class="seccion-camaras"
+    aria-label="Emisión de YouTube seleccionada"
+>
 
     <article class="tarjeta-camara">
+
+
+        <!-- REPRODUCTOR -->
 
         <div class="visor-camara">
 
             <iframe
+                id="visor-directo-youtube"
                 src="../visores/youtube.html?v=20261015-youtube1&amp;url=https%3A%2F%2Fwww.youtube.com%2Flive%2FCGNR241h08Q"
-                title="Murcia · Emisión meteorológica de YouTube"
+                title="Cámara meteorológica de Murcia · YouTube"
                 loading="lazy"
                 referrerpolicy="strict-origin-when-cross-origin"
                 allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
@@ -246,17 +333,22 @@
         </div>
 
 
+        <!-- INFORMACIÓN DE LA CÁMARA -->
+
         <div class="cuerpo-camara">
 
             <div class="fila-titulo">
 
                 <div class="titulo-camara">
 
-                    <h3>
+                    <h3 id="titulo-camara-youtube">
                         Cámara meteorológica de Murcia
                     </h3>
 
-                    <div class="ubicacion-camara">
+                    <div
+                        class="ubicacion-camara"
+                        id="ubicacion-camara-youtube"
+                    >
                         Murcia · España
                     </div>
 
@@ -270,15 +362,19 @@
             </div>
 
 
-            <p class="descripcion-camara">
-                Reproducción de una emisión externa
-                mediante el visor YouTube de MeteoArchidona.
+            <!-- DESCRIPCIÓN -->
 
+            <p
+                class="descripcion-camara"
+                id="descripcion-camara-youtube"
+            >
+                Emisión meteorológica en directo desde Murcia.
                 La imagen conserva los datos meteorológicos,
-                gráficos, rótulos y demás elementos
-                originales incluidos por su autor.
+                gráficos y rótulos originales de su autor.
             </p>
 
+
+            <!-- FUENTE ORIGINAL -->
 
             <div class="pie-camara">
 
@@ -291,7 +387,8 @@
                     Emisión original publicada en YouTube.
 
                     <a
-                        href="https://www.youtube.com/watch?v=CGNR241h08Q"
+                        id="enlace-camara-youtube"
+                        href="https://www.youtube.com/live/CGNR241h08Q"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -309,7 +406,7 @@
 </section>
 
 
-<!-- Fin de prueba del visor YouTube -->
+<!-- Fin del apartado Directos YouTube -->
 
 
 </main>
