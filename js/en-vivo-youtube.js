@@ -6,7 +6,7 @@
  * Archivo:
  *     js/en-vivo-youtube.js
  *
- * Responsabilidades:
+ * Responsabilidades :
  *
  * - Mantener el catálogo de cámaras YouTube.
  * - Cambiar la emisión seleccionada.
