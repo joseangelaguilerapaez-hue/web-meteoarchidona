@@ -47,152 +47,6 @@
 >
 
 
-<!-- Prueba aislada del visor YouTube: no afecta a los visores HLS/MP4. -->
-<style>
-    .ma-youtube-prueba,
-    .ma-youtube-prueba * {
-        box-sizing: border-box;
-    }
-
-    .ma-youtube-prueba {
-        width: 100%;
-        min-width: 0;
-        margin: 32px 0 0;
-    }
-
-    .ma-youtube-prueba__titulo {
-        margin: 0 0 8px;
-        font-size: clamp(1.3rem, 3vw, 1.8rem);
-        line-height: 1.25;
-    }
-
-    .ma-youtube-prueba__intro {
-        margin: 0 0 16px;
-        line-height: 1.5;
-    }
-
-    .ma-youtube-prueba__tarjeta {
-        width: 100%;
-        overflow: hidden;
-        border: 1px solid #dbe5ea;
-        border-radius: 14px;
-        background: #fff;
-    }
-
-    .ma-youtube-prueba__pantalla {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        background: #0b151e;
-    }
-
-    .ma-youtube-prueba__pantalla iframe {
-        display: block;
-        width: 100%;
-        height: 100%;
-        border: 0;
-    }
-
-    .ma-youtube-prueba__portada {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        padding: 16px;
-        text-align: center;
-        background: radial-gradient(circle at 50% 30%, #314a60, #172a39 60%, #0b151e);
-        color: #fff;
-    }
-
-    .ma-youtube-prueba__portada strong {
-        font-size: clamp(1rem, 2.5vw, 1.3rem);
-    }
-
-    .ma-youtube-prueba__portada p {
-        max-width: 480px;
-        margin: 0;
-        font-size: 0.9rem;
-        line-height: 1.4;
-        color: #e0eaf0;
-    }
-
-    .ma-youtube-prueba__boton {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        border: 0;
-        border-radius: 999px;
-        padding: 12px 20px;
-        background: #fff;
-        color: #183446;
-        font: inherit;
-        font-weight: 700;
-        cursor: pointer;
-    }
-
-    .ma-youtube-prueba__boton:hover,
-    .ma-youtube-prueba__boton:focus-visible {
-        background: #dceaf2;
-        outline: 2px solid #4a9fc6;
-        outline-offset: 2px;
-    }
-
-    .ma-youtube-prueba__triangulo {
-        display: inline-block;
-        width: 0;
-        height: 0;
-        border-top: 7px solid transparent;
-        border-bottom: 7px solid transparent;
-        border-left: 12px solid #c93434;
-    }
-
-    .ma-youtube-prueba__info {
-        padding: 16px 18px 18px;
-        line-height: 1.5;
-        color: #193044;
-    }
-
-    .ma-youtube-prueba__info p {
-        margin: 0 0 10px;
-    }
-
-    .ma-youtube-prueba__fuente {
-        padding-top: 10px;
-        border-top: 1px solid #dbe5ea;
-        font-size: 0.9rem;
-    }
-
-    .ma-youtube-prueba__fuente a {
-        color: #136a91;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-    }
-
-    @media (max-width: 480px) {
-        .ma-youtube-prueba__portada {
-            gap: 8px;
-            padding: 8px;
-        }
-
-        .ma-youtube-prueba__portada p {
-            font-size: 0.75rem;
-        }
-
-        .ma-youtube-prueba__boton {
-            padding: 9px 14px;
-            font-size: 0.85rem;
-        }
-
-        .ma-youtube-prueba__info {
-            padding: 14px;
-        }
-    }
-</style>
-
-
 <script src="../js/cabecera.js?v=20261006-camaras1" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 
@@ -338,79 +192,124 @@
 </section>
 
 
-<!-- Inicio: prueba del visor YouTube. Sección independiente. -->
+<!-- ======================================================
+     VISOR YOUTUBE · PRUEBA MURCIA
+
+     Componente reutilizable:
+         visores/youtube.html
+         visores/youtube.css
+         visores/youtube.js
+
+     Se pasa la URL del vídeo mediante el parámetro url.
+
+     No modifica el visor HLS/MP4 existente.
+     ====================================================== -->
+
+
 <section
-    class="ma-youtube-prueba"
-    aria-labelledby="ma-youtube-prueba-titulo"
+    class="seccion-camaras"
+    aria-labelledby="titulo-youtube-murcia"
 >
 
-    <h2
-        class="ma-youtube-prueba__titulo"
-        id="ma-youtube-prueba-titulo"
-    >
-        Murcia · Emisión meteorológica en directo
-    </h2>
+    <div class="cabecera-zona">
 
-    <p class="ma-youtube-prueba__intro">
-        Prueba de reproducción de un directo de YouTube
-        dentro de MeteoArchidona.
-    </p>
+        <div>
 
-    <div class="ma-youtube-prueba__tarjeta">
+            <h2 id="titulo-youtube-murcia">
+                Murcia · Emisión meteorológica en directo
+            </h2>
 
-        <div
-            class="ma-youtube-prueba__pantalla"
-            id="ma-youtube-prueba-pantalla"
-        >
-
-            <div
-                class="ma-youtube-prueba__portada"
-                id="ma-youtube-prueba-portada"
-            >
-                <strong>Emisión meteorológica de Murcia</strong>
-
-                <p>
-                    La imagen se mostrará tal como la ofrece su autor,
-                    con todos sus datos meteorológicos y rótulos originales.
-                </p>
-
-                <button
-                    class="ma-youtube-prueba__boton"
-                    id="ma-youtube-prueba-reproducir"
-                    type="button"
-                >
-                    <span
-                        class="ma-youtube-prueba__triangulo"
-                        aria-hidden="true"
-                    ></span>
-                    Reproducir emisión
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="ma-youtube-prueba__info">
             <p>
-                Emisión externa de YouTube. MeteoArchidona no altera
-                la imagen ni los elementos incluidos por su autor.
+                Emisión externa de YouTube integrada
+                en MeteoArchidona para observar
+                las condiciones meteorológicas de Murcia.
             </p>
 
-            <div class="ma-youtube-prueba__fuente">
-                <strong>Fuente:</strong>
-                canal responsable de esta emisión en YouTube.
-                <a
-                    href="https://www.youtube.com/watch?v=CGNR241h08Q"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >Ver vídeo y autor en YouTube</a>.
-            </div>
         </div>
 
     </div>
 
+
+    <article class="tarjeta-camara">
+
+        <div class="visor-camara">
+
+            <iframe
+                src="../visores/youtube.html?v=20261015-youtube1&amp;url=https%3A%2F%2Fwww.youtube.com%2Flive%2FCGNR241h08Q"
+                title="Murcia · Emisión meteorológica de YouTube"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                allowfullscreen
+            ></iframe>
+
+        </div>
+
+
+        <div class="cuerpo-camara">
+
+            <div class="fila-titulo">
+
+                <div class="titulo-camara">
+
+                    <h3>
+                        Cámara meteorológica de Murcia
+                    </h3>
+
+                    <div class="ubicacion-camara">
+                        Murcia · España
+                    </div>
+
+                </div>
+
+
+                <span class="tipo-camara">
+                    YOUTUBE
+                </span>
+
+            </div>
+
+
+            <p class="descripcion-camara">
+                Reproducción de una emisión externa
+                mediante el visor YouTube de MeteoArchidona.
+
+                La imagen conserva los datos meteorológicos,
+                gráficos, rótulos y demás elementos
+                originales incluidos por su autor.
+            </p>
+
+
+            <div class="pie-camara">
+
+                <div class="fuente">
+
+                    <strong>
+                        Fuente:
+                    </strong>
+
+                    Emisión original publicada en YouTube.
+
+                    <a
+                        href="https://www.youtube.com/watch?v=CGNR241h08Q"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Ver vídeo y autor
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </article>
+
 </section>
-<!-- Fin: prueba del visor YouTube. -->
+
+
+<!-- Fin de prueba del visor YouTube -->
 
 
 </main>
@@ -418,34 +317,6 @@
 
 <div id="pie"></div>
 
-
-<script>
-/* Prueba aislada del visor YouTube: carga únicamente al pulsar el botón. */
-(() => {
-    'use strict';
-
-    const boton = document.getElementById('ma-youtube-prueba-reproducir');
-    const pantalla = document.getElementById('ma-youtube-prueba-pantalla');
-    const portada = document.getElementById('ma-youtube-prueba-portada');
-
-    if (!boton || !pantalla || !portada) {
-        return;
-    }
-
-    boton.addEventListener('click', () => {
-        const iframe = document.createElement('iframe');
-
-        iframe.title = 'YouTube: emisión meteorológica de Murcia';
-        iframe.src = 'https://www.youtube-nocookie.com/embed/CGNR241h08Q?autoplay=1&playsinline=1';
-        iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share';
-        iframe.allowFullscreen = true;
-        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-
-        portada.remove();
-        pantalla.appendChild(iframe);
-    }, { once: true });
-})();
-</script>
 
 </body>
 </html>
