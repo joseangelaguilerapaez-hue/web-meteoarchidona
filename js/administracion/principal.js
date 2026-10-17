@@ -34,7 +34,10 @@
  *     timelapses-productos.js
  *         -> productos MP4 y publicaciones
  *
- * Ambos módulos son independientes.
+ *     timelapses-pestanas.js
+ *         -> navegación Configuración / Productos
+ *
+ * Los controladores son independientes.
  */
 
 import {
@@ -94,6 +97,10 @@ import {
     configurarEventosSql,
     limpiarSql
 } from "./sql.js?v=20261009-sqlcopiar2";
+
+import {
+    configurarPestanasTimelapses
+} from "./timelapses-pestanas.js?v=20261017-pestanas1";
 
 
 /* ==========================================================
@@ -364,9 +371,9 @@ async function cargarModuloTimelapses(){
 async function obtenerModuloProductosTimelapse(){
 
     /*
-     * Los productos utilizan la misma pestaña
-     * administrativa que las programaciones,
-     * pero tienen un controlador independiente.
+     * Los productos utilizan el módulo administrativo
+     * de Timelapses, con su propia pestaña y
+     * un controlador independiente.
      */
 
     if(
@@ -447,9 +454,17 @@ async function cargarModuloProductosTimelapse(){
             $("panelProductosTimelapse")
         );
 
+        /*
+         * El componente se monta exclusivamente
+         * dentro de la pestaña Productos.
+         *
+         * No se inserta directamente dentro
+         * del módulo general de Timelapses.
+         */
+
         const montado =
             await modulo.montarProductosTimelapse(
-                "modulo-timelapses"
+                "contenedorProductosTimelapses"
             );
 
         if(!montado){
@@ -560,10 +575,22 @@ export async function cargarDatosAdministracion(){
         await cargarModuloCamaras();
 
         /*
+         * Preparar las dos pestañas de Timelapses
+         * antes de cargar sus controladores.
+         *
+         * La operación es idempotente:
+         * no duplica pestañas durante recargas.
+         */
+
+        configurarPestanasTimelapses();
+
+        /*
          * Programaciones de timelapse.
          *
          * Conservamos íntegramente su controlador
          * y sus operaciones administrativas.
+         *
+         * Se muestran en Configuración.
          */
 
         await cargarModuloTimelapses();
@@ -572,7 +599,7 @@ export async function cargarDatosAdministracion(){
          * Productos timelapse.
          *
          * Componente independiente dentro de
-         * la misma pestaña Timelapses.
+         * la pestaña Productos.
          *
          * El módulo monta su propia sección HTML,
          * consulta los MP4 y configura sus botones
