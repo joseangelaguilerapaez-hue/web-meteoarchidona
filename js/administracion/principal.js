@@ -12,6 +12,7 @@
  * - cargar estaciones;
  * - cargar cámaras;
  * - cargar programaciones de timelapse;
+ * - cargar productos timelapse y publicaciones;
  * - coordinar estaciones y simulación;
  * - inicializar efectos y manejadores de eventos;
  * - restaurar una sesión administrativa existente;
@@ -24,6 +25,16 @@
  *
  * La incorporación de nuevos módulos no debe alterar
  * el comportamiento de los ya existentes.
+ *
+ * Timelapses:
+ *
+ *     timelapses.js
+ *         -> programaciones
+ *
+ *     timelapses-productos.js
+ *         -> productos MP4 y publicaciones
+ *
+ * Ambos módulos son independientes.
  */
 
 import {
@@ -86,28 +97,45 @@ import {
 
 
 /* ==========================================================
-   ESTADO DEL MÓDULO DE TIMELAPSES
+   ESTADO DEL MÓDULO DE PROGRAMACIONES TIMELAPSE
    ========================================================== */
 
 /*
- * El módulo de timelapses se incorpora progresivamente.
- *
- * Su carga es diferida para permitir:
- *
- * 1. registrar primero este orquestador;
- * 2. crear posteriormente timelapses.js;
- * 3. añadir finalmente su sección HTML.
+ * Las programaciones se cargan diferidamente.
  *
  * Mientras no exista el panel modulo-timelapses,
- * no se intenta importar el archivo JavaScript.
+ * no se intenta importar timelapses.js.
  *
- * De esta forma se conserva la disponibilidad
- * de los módulos administrativos existentes.
+ * Conservamos la promesa para evitar importaciones
+ * duplicadas durante recargas administrativas.
  */
 
 let moduloTimelapses = null;
 
 let promesaModuloTimelapses = null;
+
+
+/* ==========================================================
+   ESTADO DEL MÓDULO DE PRODUCTOS TIMELAPSE
+   ========================================================== */
+
+/*
+ * Los productos MP4 y sus publicaciones utilizan
+ * un componente administrativo independiente.
+ *
+ * No reutilizan el controlador de programaciones.
+ *
+ * El componente HTML se obtiene dinámicamente:
+ *
+ *     /componentes/admin-timelapses-productos.html
+ *
+ * Su JavaScript se importa únicamente cuando
+ * existe el módulo administrativo de timelapses.
+ */
+
+let moduloProductosTimelapse = null;
+
+let promesaModuloProductosTimelapse = null;
 
 
 /* ==========================================================
@@ -210,14 +238,14 @@ async function cargarModuloCamaras(){
 
 
 /* ==========================================================
-   IMPORTACIÓN DIFERIDA DE TIMELAPSES
+   IMPORTACIÓN DIFERIDA DE PROGRAMACIONES
    ========================================================== */
 
 async function obtenerModuloTimelapses(){
 
     /*
-     * Todavía no se importa ningún JavaScript
-     * si la página no contiene el módulo.
+     * No importamos el módulo si la página
+     * no contiene su sección administrativa.
      */
 
     if(
@@ -225,12 +253,6 @@ async function obtenerModuloTimelapses(){
     ){
         return null;
     }
-
-    /*
-     * Conservamos la misma promesa para evitar
-     * importaciones duplicadas cuando se solicitan
-     * varias recargas administrativas.
-     */
 
     if(
         promesaModuloTimelapses === null
@@ -268,7 +290,7 @@ async function obtenerModuloTimelapses(){
 
 
 /* ==========================================================
-   CARGA ADMINISTRATIVA DE TIMELAPSES
+   CARGA ADMINISTRATIVA DE PROGRAMACIONES
    ========================================================== */
 
 async function cargarModuloTimelapses(){
@@ -291,9 +313,8 @@ async function cargarModuloTimelapses(){
         /*
          * El módulo proporciona sus propios eventos.
          *
-         * La configuración deberá ser idempotente
-         * para evitar registrar eventos duplicados
-         * durante recargas administrativas.
+         * La configuración es idempotente para evitar
+         * registrar eventos duplicados durante recargas.
          */
 
         modulo.configurarEventosTimelapses();
@@ -304,7 +325,7 @@ async function cargarModuloTimelapses(){
          * GET /admin/timelapses/programaciones
          *
          * La carga de cámaras y presets específicos
-         * será responsabilidad de timelapses.js.
+         * corresponde a timelapses.js.
          */
 
         await modulo.cargarTimelapses();
@@ -320,7 +341,7 @@ async function cargarModuloTimelapses(){
             $("estadoTimelapses"),
             error.message
             ||
-            "No se ha podido cargar las programaciones de timelapse.",
+            "No se han podido cargar las programaciones de timelapse.",
             "error"
         );
 
@@ -330,6 +351,147 @@ async function cargarModuloTimelapses(){
          * Los demás módulos administrativos
          * deben continuar funcionando.
          */
+
+    }
+
+}
+
+
+/* ==========================================================
+   IMPORTACIÓN DIFERIDA DE PRODUCTOS TIMELAPSE
+   ========================================================== */
+
+async function obtenerModuloProductosTimelapse(){
+
+    /*
+     * Los productos utilizan la misma pestaña
+     * administrativa que las programaciones,
+     * pero tienen un controlador independiente.
+     */
+
+    if(
+        !$("modulo-timelapses")
+    ){
+        return null;
+    }
+
+    /*
+     * Se reutiliza la importación cuando ya
+     * exista una carga anterior del módulo.
+     */
+
+    if(
+        promesaModuloProductosTimelapse === null
+    ){
+
+        promesaModuloProductosTimelapse = import(
+            "./timelapses-productos.js?v=20261017-productos1"
+        );
+
+    }
+
+    try{
+
+        moduloProductosTimelapse =
+            await promesaModuloProductosTimelapse;
+
+        return moduloProductosTimelapse;
+
+    }catch(error){
+
+        promesaModuloProductosTimelapse = null;
+
+        moduloProductosTimelapse = null;
+
+        throw error;
+
+    }
+
+}
+
+
+/* ==========================================================
+   CARGA ADMINISTRATIVA DE PRODUCTOS TIMELAPSE
+   ========================================================== */
+
+async function cargarModuloProductosTimelapse(){
+
+    if(
+        !$("modulo-timelapses")
+    ){
+        return;
+    }
+
+    try{
+
+        const modulo =
+            await obtenerModuloProductosTimelapse();
+
+        if(!modulo){
+            return;
+        }
+
+        /*
+         * Detectamos si el componente estaba
+         * montado antes de iniciar la operación.
+         *
+         * El propio montaje realiza la primera
+         * consulta de productos y cámaras.
+         *
+         * En las recargas posteriores solamente
+         * actualizamos los productos, sin volver
+         * a crear el HTML ni los eventos.
+         */
+
+        const estabaMontado = Boolean(
+            $("panelProductosTimelapse")
+        );
+
+        const montado =
+            await modulo.montarProductosTimelapse(
+                "modulo-timelapses"
+            );
+
+        if(!montado){
+            return;
+        }
+
+        if(estabaMontado){
+
+            /*
+             * Consulta:
+             *
+             * GET /admin/timelapses/productos
+             *
+             * Los filtros y la paginación
+             * pertenecen al módulo de productos.
+             */
+
+            await modulo.cargarProductosTimelapse();
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "No se pudo cargar Administración "
+            + "de productos timelapse.",
+            error
+        );
+
+        /*
+         * Un error en los productos MP4 no debe
+         * bloquear la administración de cámaras,
+         * estaciones ni programaciones.
+         */
+
+        mostrarEstado(
+            $("estadoTimelapses"),
+            error.message
+            ||
+            "No se pudo cargar la gestión de productos timelapse.",
+            "error"
+        );
 
     }
 
@@ -398,15 +560,28 @@ export async function cargarDatosAdministracion(){
         await cargarModuloCamaras();
 
         /*
-         * Timelapses.
+         * Programaciones de timelapse.
          *
-         * El módulo se carga después de cámaras.
-         *
-         * Su funcionamiento es independiente
-         * y cualquier error queda aislado.
+         * Conservamos íntegramente su controlador
+         * y sus operaciones administrativas.
          */
 
         await cargarModuloTimelapses();
+
+        /*
+         * Productos timelapse.
+         *
+         * Componente independiente dentro de
+         * la misma pestaña Timelapses.
+         *
+         * El módulo monta su propia sección HTML,
+         * consulta los MP4 y configura sus botones
+         * de publicación y retirada.
+         *
+         * Los errores permanecen aislados.
+         */
+
+        await cargarModuloProductosTimelapse();
 
         mostrarEstado(
             $("estadoPanel"),
@@ -465,11 +640,11 @@ async function alCerrarSesion(){
     limpiarCamaras();
 
     /*
-     * Limpiamos también las programaciones
-     * cuando el módulo ya se haya cargado.
+     * Limpiamos las programaciones cuando
+     * su módulo ya se haya cargado.
      *
-     * No es necesario importar el módulo
-     * únicamente para cerrar sesión.
+     * No importamos el módulo únicamente
+     * para cerrar sesión.
      */
 
     if(
@@ -481,6 +656,33 @@ async function alCerrarSesion(){
     ){
 
         moduloTimelapses.limpiarTimelapses();
+
+    }
+
+    /*
+     * Limpiamos también el componente de
+     * productos y publicaciones.
+     *
+     * Esta operación:
+     *
+     * - invalida las consultas pendientes;
+     * - elimina el listado del DOM;
+     * - descarta el estado de los productos;
+     * - conserva el módulo de programaciones;
+     * - no borra ni modifica MP4 reales.
+     */
+
+    if(
+        moduloProductosTimelapse
+        &&
+        typeof moduloProductosTimelapse
+            .limpiarProductosTimelapse
+        ===
+        "function"
+    ){
+
+        moduloProductosTimelapse
+            .limpiarProductosTimelapse();
 
     }
 
@@ -601,8 +803,13 @@ function configurarEventos(){
     configurarEventosSql();
 
     /*
-     * Los eventos de Timelapses se configurarán
-     * cuando se importe su módulo diferido.
+     * Los eventos de programaciones se configuran
+     * cuando se importa timelapses.js.
+     *
+     * Los eventos de productos se configuran
+     * durante el montaje de su componente HTML.
+     *
+     * Ambos controladores son independientes.
      */
 
 }
