@@ -1,0 +1,226 @@
+
+<!--
+    MeteoArchidona
+    Administración de productos timelapse.
+
+    Archivo:
+        componentes/admin-timelapses-productos.html
+
+    Componente independiente de las programaciones.
+
+    Funcionalidades previstas:
+
+    - Consultar MP4 generados.
+    - Filtrar por cámara.
+    - Filtrar por estado de publicación.
+    - Mostrar disponibilidad del original.
+    - Consultar datos técnicos.
+    - Publicar manualmente.
+    - Retirar publicaciones.
+    - Navegar por páginas de resultados.
+
+    Los productos serán cargados desde PostgreSQL
+    mediante la API administrativa.
+
+    Los botones de cada producto serán creados
+    dinámicamente por JavaScript.
+
+    Este archivo contiene solo HTML.
+
+    No contiene lógica ni credenciales.
+-->
+
+
+<template id="plantilla-admin-timelapses-productos">
+
+
+<section
+    id="panelProductosTimelapse"
+    class="panel admin-timelapses-productos"
+    aria-labelledby="tituloProductosTimelapse"
+>
+
+
+<!-- ======================================================
+     CABECERA
+     ====================================================== -->
+
+
+<div class="panel-cabecera">
+
+<h2
+    id="tituloProductosTimelapse"
+    class="panel-titulo"
+>
+    Vídeos generados
+</h2>
+
+<button
+    id="botonRecargarProductosTimelapse"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+
+
+<!-- ======================================================
+     CONTENIDO
+     ====================================================== -->
+
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Consulta los timelapses generados por las cámaras
+    de MeteoArchidona y administra su publicación.
+</p>
+
+<p class="modulo-intro">
+    Los archivos originales se conservan en el
+    almacenamiento privado. Publicar crea una copia
+    accesible desde la web. Retirar elimina ese
+    acceso público sin borrar el original.
+</p>
+
+
+<!-- ======================================================
+     FILTROS
+     ====================================================== -->
+
+
+<div class="filtros">
+
+<div class="filtros-dobles">
+
+
+<div class="campo">
+
+<label for="filtroProductosTimelapsePublicacion">
+    Publicación
+</label>
+
+<select id="filtroProductosTimelapsePublicacion">
+
+<option value="todos">
+    Todos
+</option>
+
+<option value="no_publicados">
+    No publicados
+</option>
+
+<option value="publicados">
+    Publicados
+</option>
+
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label for="filtroProductosTimelapseCamara">
+    Cámara
+</label>
+
+<select id="filtroProductosTimelapseCamara">
+
+<option value="">
+    Todas las cámaras
+</option>
+
+</select>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     ESTADO DE CONSULTA
+     ====================================================== -->
+
+
+<div
+    id="estadoProductosTimelapse"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+
+<!-- ======================================================
+     LISTADO DINÁMICO
+     ====================================================== -->
+
+
+<div
+    id="listaProductosTimelapse"
+    class="lista-estaciones"
+    aria-label="Productos timelapse registrados"
+></div>
+
+
+<!-- ======================================================
+     PAGINACIÓN
+     ====================================================== -->
+
+
+<div class="acciones-formulario">
+
+<button
+    id="botonAnteriorProductosTimelapse"
+    type="button"
+    class="boton boton-secundario"
+    disabled
+>
+    Anterior
+</button>
+
+<button
+    id="botonSiguienteProductosTimelapse"
+    type="button"
+    class="boton boton-secundario"
+    disabled
+>
+    Siguiente
+</button>
+
+<span
+    id="paginaProductosTimelapse"
+    class="campo-ayuda"
+    aria-live="polite"
+>
+    Página 1
+</span>
+
+</div>
+
+
+<!-- ======================================================
+     INFORMACIÓN DEL RESULTADO
+     ====================================================== -->
+
+
+<p
+    id="totalProductosTimelapse"
+    class="modulo-intro"
+></p>
+
+
+</div>
+
+</section>
+
+
+</template>
+
+
+<!-- Fin de fichero: componentes/admin-timelapses-productos.html -->
