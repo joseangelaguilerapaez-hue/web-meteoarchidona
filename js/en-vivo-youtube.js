@@ -6,7 +6,7 @@
  * Archivo:
  *     js/en-vivo-youtube.js
  *
- * Responsabilidades :
+ * Responsabilidades:
  *
  * - Mantener el catálogo de cámaras YouTube.
  * - Cambiar la emisión seleccionada.
@@ -65,6 +65,28 @@
 
             url:
                 'https://www.youtube.com/live/liW4_fLCE5A'
+
+        },
+
+
+        malaga_puerto: {
+
+            nombre:
+                'Cámara en directo del puerto de Málaga',
+
+            ubicacion:
+                'Puerto de Málaga · Málaga',
+
+            descripcion:
+                'Emisión meteorológica en directo desde el ' +
+                'puerto de Málaga, con vistas a los cruceros, ' +
+                'el Muelle de Levante y el faro. ' +
+                'El vídeo se reproduce desde YouTube, ' +
+                'conservando la imagen y los elementos ' +
+                'originales de su autor.',
+
+            url:
+                'https://www.youtube.com/live/sxgx5ZqAAxo'
 
         }
 
