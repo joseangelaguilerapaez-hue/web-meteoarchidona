@@ -1,126 +1,78 @@
 
 /*
  * MeteoArchidona
- * Selector de emisiones YouTube para En vivo.
+ * Selector dinámico de emisiones YouTube para En vivo.
  *
  * Archivo:
  *     js/en-vivo-youtube.js
  *
  * Responsabilidades:
  *
- * - Mantener el catálogo de cámaras YouTube.
+ * - Consultar las cámaras publicadas en PostgreSQL
+ *   mediante el endpoint público de la API.
+ * - Construir dinámicamente el selector.
  * - Cambiar la emisión seleccionada.
  * - Actualizar nombre, ubicación y descripción.
- * - Actualizar el enlace a la emisión original.
+ * - Actualizar el enlace al vídeo original.
+ * - Gestionar errores y catálogos vacíos.
  *
- * Utiliza el componente:
+ * Endpoint:
+ *
+ *     GET /camaras/youtube
+ *
+ * Utiliza el visor:
  *
  *     visores/youtube.html
  *
+ * No contiene un catálogo fijo de cámaras.
  * No modifica el visor HLS/MP4.
  */
 
 (() => {
-    'use strict';
+    "use strict";
+
+    // =====================================================
+    // CONFIGURACIÓN
+    // =====================================================
+
+    const RUTA_API = "/camaras/youtube";
+
+    const RUTA_VISOR = "/visores/youtube.html";
+
+    const VERSION_VISOR = "20261015-youtube1";
+
+    const PATRON_YOUTUBE = /^[A-Za-z0-9_-]{11}$/;
+
+    const camaras = new Map();
 
 
-    /* =====================================================
-       CATÁLOGO DE DIRECTOS YOUTUBE
-       ===================================================== */
-
-    const CAMARAS = {
-
-        murcia: {
-
-            nombre:
-                'Cámara meteorológica de Murcia',
-
-            ubicacion:
-                'Murcia · España',
-
-            descripcion:
-                'Emisión meteorológica en directo desde Murcia. ' +
-                'La imagen conserva los datos meteorológicos, ' +
-                'gráficos y rótulos originales de su autor.',
-
-            url:
-                'https://www.youtube.com/live/CGNR241h08Q'
-
-        },
-
-
-        nerja: {
-
-            nombre:
-                'Cámara en directo de Nerja',
-
-            ubicacion:
-                'Nerja · Málaga',
-
-            descripcion:
-                'Emisión en directo desde Nerja, Málaga. ' +
-                'El vídeo se reproduce desde YouTube, ' +
-                'conservando íntegramente la imagen ' +
-                'y los elementos originales de su autor.',
-
-            url:
-                'https://www.youtube.com/live/liW4_fLCE5A'
-
-        },
-
-
-        malaga_puerto: {
-
-            nombre:
-                'Cámara en directo del puerto de Málaga',
-
-            ubicacion:
-                'Puerto de Málaga · Málaga',
-
-            descripcion:
-                'Emisión meteorológica en directo desde el ' +
-                'puerto de Málaga, con vistas a los cruceros, ' +
-                'el Muelle de Levante y el faro. ' +
-                'El vídeo se reproduce desde YouTube, ' +
-                'conservando la imagen y los elementos ' +
-                'originales de su autor.',
-
-            url:
-                'https://www.youtube.com/live/sxgx5ZqAAxo'
-
-        }
-
-    };
-
-
-    /* =====================================================
-       ELEMENTOS DEL HTML
-       ===================================================== */
+    // =====================================================
+    // ELEMENTOS HTML
+    // =====================================================
 
     const selector = document.getElementById(
-        'selector-directo-youtube'
+        "selector-directo-youtube"
     );
 
     const visor = document.getElementById(
-        'visor-directo-youtube'
+        "visor-directo-youtube"
     );
 
     const titulo = document.getElementById(
-        'titulo-camara-youtube'
+        "titulo-camara-youtube"
     );
 
     const ubicacion = document.getElementById(
-        'ubicacion-camara-youtube'
+        "ubicacion-camara-youtube"
     );
 
     const descripcion = document.getElementById(
-        'descripcion-camara-youtube'
+        "descripcion-camara-youtube"
     );
 
     const enlace = document.getElementById(
-        'enlace-camara-youtube'
+        "enlace-camara-youtube"
     );
-
 
     if (
         !selector ||
@@ -134,86 +86,275 @@
     }
 
 
-    /* =====================================================
-       CAMBIAR CÁMARA
-       ===================================================== */
+    // =====================================================
+    // ESTADO DEL SELECTOR
+    // =====================================================
+
+    function mostrarEstado(mensaje, esError = false) {
+
+        selector.replaceChildren();
+
+        const opcion = document.createElement("option");
+
+        opcion.value = "";
+        opcion.textContent = mensaje;
+
+        selector.appendChild(opcion);
+
+        selector.disabled = true;
+
+        visor.removeAttribute("src");
+        visor.title = "Visor YouTube sin emisión";
+
+        titulo.textContent = esError
+            ? "Emisiones no disponibles"
+            : mensaje;
+
+        ubicacion.textContent = "";
+        descripcion.textContent = esError
+            ? "No se ha podido cargar el catálogo de cámaras."
+            : "";
+
+        enlace.removeAttribute("href");
+        enlace.hidden = true;
+    }
+
+
+    // =====================================================
+    // NORMALIZACIÓN
+    // =====================================================
+
+    function normalizarTexto(valor) {
+
+        if (typeof valor !== "string") {
+            return "";
+        }
+
+        return valor.trim();
+    }
+
+
+    // =====================================================
+    // VALIDACIÓN DE CÁMARAS
+    // =====================================================
+
+    function normalizarCamara(registro) {
+
+        if (!registro || typeof registro !== "object") {
+            return null;
+        }
+
+        const codigo = normalizarTexto(
+            registro.codigo
+        );
+
+        const youtubeId = normalizarTexto(
+            registro.youtube_id
+        );
+
+        if (
+            !codigo ||
+            !PATRON_YOUTUBE.test(youtubeId)
+        ) {
+            return null;
+        }
+
+        const nombre = normalizarTexto(
+            registro.nombre
+        ) || `Cámara ${codigo}`;
+
+        return {
+            codigo,
+            nombre,
+            ubicacion: normalizarTexto(
+                registro.ubicacion
+            ),
+            descripcion: normalizarTexto(
+                registro.descripcion
+            ),
+            youtubeId,
+            url: (
+                "https://www.youtube.com/live/" +
+                youtubeId
+            )
+        };
+    }
+
+
+    // =====================================================
+    // CAMBIAR CÁMARA
+    // =====================================================
 
     function mostrarCamara() {
 
         const codigo = selector.value;
 
-        if (
-            !Object.prototype.hasOwnProperty.call(
-                CAMARAS,
-                codigo
-            )
-        ) {
+        const camara = camaras.get(codigo);
+
+        if (!camara) {
             return;
         }
 
-        const camara = CAMARAS[codigo];
-
-
-        /* Construcción de la URL del visor */
-
         const urlVisor = new URL(
-            '/visores/youtube.html',
+            RUTA_VISOR,
             window.location.origin
         );
 
         urlVisor.searchParams.set(
-            'v',
-            '20261015-youtube1'
+            "v",
+            VERSION_VISOR
         );
 
         urlVisor.searchParams.set(
-            'url',
+            "url",
             camara.url
         );
-
-
-        /* Cambiar la emisión solo si es necesario */
 
         if (visor.src !== urlVisor.href) {
             visor.src = urlVisor.href;
         }
 
+        visor.title = camara.nombre + " · YouTube";
 
-        /* Actualizar los datos de la cámara */
+        titulo.textContent = camara.nombre;
 
-        visor.title =
-            camara.nombre + ' · YouTube';
+        ubicacion.textContent = camara.ubicacion;
 
-        titulo.textContent =
-            camara.nombre;
+        descripcion.textContent = camara.descripcion;
 
-        ubicacion.textContent =
-            camara.ubicacion;
-
-        descripcion.textContent =
-            camara.descripcion;
-
-        enlace.href =
-            camara.url;
-
+        enlace.href = camara.url;
+        enlace.hidden = false;
     }
 
 
-    /* =====================================================
-       EVENTOS DEL SELECTOR
-       ===================================================== */
+    // =====================================================
+    // CONSTRUIR SELECTOR DINÁMICO
+    // =====================================================
+
+    function construirSelector(registros) {
+
+        camaras.clear();
+
+        selector.replaceChildren();
+
+        for (const registro of registros) {
+
+            const camara = normalizarCamara(
+                registro
+            );
+
+            if (
+                !camara ||
+                camaras.has(camara.codigo)
+            ) {
+                continue;
+            }
+
+            camaras.set(
+                camara.codigo,
+                camara
+            );
+
+            const opcion = document.createElement(
+                "option"
+            );
+
+            opcion.value = camara.codigo;
+            opcion.textContent = camara.nombre;
+
+            selector.appendChild(opcion);
+        }
+
+        if (camaras.size === 0) {
+
+            mostrarEstado(
+                "No hay emisiones disponibles"
+            );
+
+            return;
+        }
+
+        selector.disabled = false;
+
+        selector.selectedIndex = 0;
+
+        mostrarCamara();
+    }
+
+
+    // =====================================================
+    // CONSULTAR API
+    // =====================================================
+
+    async function cargarCamaras() {
+
+        mostrarEstado(
+            "Cargando cámaras..."
+        );
+
+        try {
+
+            const respuesta = await fetch(
+                RUTA_API,
+                {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    },
+                    cache: "no-store",
+                    credentials: "same-origin"
+                }
+            );
+
+            if (!respuesta.ok) {
+
+                throw new Error(
+                    "Error HTTP " + respuesta.status
+                );
+            }
+
+            const datos = await respuesta.json();
+
+            if (!Array.isArray(datos)) {
+
+                throw new Error(
+                    "Respuesta de catálogo inválida"
+                );
+            }
+
+            construirSelector(datos);
+
+        } catch (error) {
+
+            console.error(
+                "MeteoArchidona: error cargando " +
+                "el catálogo YouTube.",
+                error
+            );
+
+            mostrarEstado(
+                "No se pudieron cargar las cámaras",
+                true
+            );
+        }
+    }
+
+
+    // =====================================================
+    // EVENTOS
+    // =====================================================
 
     selector.addEventListener(
-        'change',
+        "change",
         mostrarCamara
     );
 
 
-    /* =====================================================
-       INICIALIZACIÓN
-       ===================================================== */
+    // =====================================================
+    // INICIALIZACIÓN
+    // =====================================================
 
-    mostrarCamara();
+    void cargarCamaras();
 
 })();
 
