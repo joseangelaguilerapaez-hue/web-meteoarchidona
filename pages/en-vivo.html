@@ -56,7 +56,7 @@
 ></script>
 
 <script
-    src="../js/en-vivo-youtube.js?v=20261020-directos2"
+    src="../js/en-vivo-youtube.js?v=20261021-youtube-api1"
     defer
 ></script>
 
@@ -232,16 +232,28 @@
      Visor reutilizable:
          visores/youtube.html
 
-     El selector cambia la URL del visor
-     y los datos públicos de la cámara.
+     Catálogo dinámico:
 
-     Cámaras:
-         MURCIA
-         NERJA
-         PUERTO DE MÁLAGA
+         PostgreSQL
+             ->
+         GET /camaras/youtube
+             ->
+         js/en-vivo-youtube.js
+             ->
+         Selector y visor
 
-     En el futuro el catálogo podrá proceder
-     de la API y de la tabla video_youtube.
+     Las cámaras publicadas se obtienen de la API.
+
+     No existen opciones de cámaras cableadas en HTML.
+
+     El JavaScript gestiona:
+
+     - carga inicial;
+     - catálogo vacío;
+     - errores de consulta;
+     - selección de cámara;
+     - actualización del visor;
+     - información pública de la emisión.
 
      No modifica las cámaras existentes.
      ====================================================== -->
@@ -283,25 +295,14 @@
             <select
                 id="selector-directo-youtube"
                 aria-label="Seleccionar cámara de YouTube"
+                disabled
             >
 
                 <option
-                    value="murcia"
+                    value=""
                     selected
                 >
-                    Murcia
-                </option>
-
-                <option
-                    value="nerja"
-                >
-                    Nerja
-                </option>
-
-                <option
-                    value="malaga_puerto"
-                >
-                    Puerto de Málaga
+                    Cargando cámaras...
                 </option>
 
             </select>
@@ -329,8 +330,7 @@
 
             <iframe
                 id="visor-directo-youtube"
-                src="../visores/youtube.html?v=20261015-youtube1&amp;url=https%3A%2F%2Fwww.youtube.com%2Flive%2FCGNR241h08Q"
-                title="Cámara meteorológica de Murcia · YouTube"
+                title="Visor YouTube sin emisión"
                 loading="lazy"
                 referrerpolicy="strict-origin-when-cross-origin"
                 allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
@@ -349,15 +349,13 @@
                 <div class="titulo-camara">
 
                     <h3 id="titulo-camara-youtube">
-                        Cámara meteorológica de Murcia
+                        Cargando cámaras...
                     </h3>
 
                     <div
                         class="ubicacion-camara"
                         id="ubicacion-camara-youtube"
-                    >
-                        Murcia · España
-                    </div>
+                    ></div>
 
                 </div>
 
@@ -374,11 +372,7 @@
             <p
                 class="descripcion-camara"
                 id="descripcion-camara-youtube"
-            >
-                Emisión meteorológica en directo desde Murcia.
-                La imagen conserva los datos meteorológicos,
-                gráficos y rótulos originales de su autor.
-            </p>
+            ></p>
 
 
             <!-- FUENTE ORIGINAL -->
@@ -395,9 +389,9 @@
 
                     <a
                         id="enlace-camara-youtube"
-                        href="https://www.youtube.com/live/CGNR241h08Q"
                         target="_blank"
                         rel="noopener noreferrer"
+                        hidden
                     >
                         Ver vídeo y autor
                     </a>
