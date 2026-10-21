@@ -16,7 +16,11 @@
  * - Actualizar el enlace al vídeo original.
  * - Gestionar errores y catálogos vacíos.
  *
- * Endpoint:
+ * Endpoint público a través de Nginx:
+ *
+ *     GET /api/camaras/youtube
+ *
+ * Endpoint interno de FastAPI:
  *
  *     GET /camaras/youtube
  *
@@ -35,7 +39,7 @@
     // CONFIGURACIÓN
     // =====================================================
 
-    const RUTA_API = "/camaras/youtube";
+    const RUTA_API = "/api/camaras/youtube";
 
     const RUTA_VISOR = "/visores/youtube.html";
 
