@@ -1,9 +1,11 @@
 # CLAUDE.md — web-meteoarchidona
 
 Web pública de meteoarchidona.com: lecturas de las estaciones propias, visor de radar y
-satélite, cámaras en vivo e información. Es un **sitio estático**: sin compilación, sin
-dependencias que instalar y sin paso de publicación. Los ficheros del repositorio son
-exactamente los que se sirven.
+satélite, cámaras en vivo e información. Es un **sitio estático**: sin compilación y sin
+dependencias que instalar. Los ficheros del repositorio son exactamente los que se sirven.
+
+**Fusionar en `main` no publica nada**: José actualiza el VPS de Hostinger con `git pull` desde
+Termius. Lee `docs/despliegue.md` antes de decir que algo "ya está en producción".
 
 Los datos los sirve `api-meteoarchidona` (repositorio aparte). Esta web solo los consume.
 No pertenece a Horizonte 4K: no mezcles código, configuración ni secretos con ese proyecto.
