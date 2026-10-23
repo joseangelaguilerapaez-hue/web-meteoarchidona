@@ -26,7 +26,6 @@ No se marca nada como hecho que no esté en `main`.
 ## En construcción / abierto
 
 - **Predicción**: la página muestra datos de muestra desde el 22 sep porque `GET /prediccion/{municipio}` aún no existe. Está en el PR #10 de `api-meteoarchidona`; en cuanto se fusione y despliegue, la web pasa sola a datos reales. Contrato en `docs/prediccion-endpoint.md`.
-- PR #7 · este `CLAUDE.md` y `docs/estado.md`.
 
 ## Pendiente
 
@@ -39,4 +38,4 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Registro
 
-- 2026-10-23 · Creados `CLAUDE.md` y este documento; estado reconstruido desde Git.
+- 2026-10-23 · Creados `CLAUDE.md` y este documento (PR #7); estado reconstruido desde Git.
