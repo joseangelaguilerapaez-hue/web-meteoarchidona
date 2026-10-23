@@ -39,6 +39,16 @@ no autoriza a `localhost`, por lo que `servidor.py` hace de intermediario en `/a
 - El navegador cachea: si cambias un `.js` o `.css` que ya está en producción, mira cómo versiona el resto del proyecto los recursos antes de decidir.
 - Si un cambio exige un endpoint o un campo nuevo, el cambio de backend va en `api-meteoarchidona`, no aquí. Dilo en el PR.
 
+## Estado del proyecto
+
+**Al empezar una sesión, lee `docs/estado.md`**: qué está hecho, qué está en construcción y qué
+queda pendiente. Es la fuente de verdad de "por dónde vamos".
+
+**Al terminar cada tarea, actualiza `docs/estado.md` en el mismo PR**: mueve lo que corresponda
+entre Hecho, En construcción y Pendiente, y añade una línea fechada al Registro. No marques como
+hecho nada que no esté en `main`. Si dudas del estado real de algo, déjalo "por confirmar" y
+pregúntaselo a José en vez de suponerlo.
+
 ## Cosas que no se hacen sin orden expresa
 
 - Cambiar `.htaccess`, `robots.txt` o `sitemap.xml`: afectan directamente al servidor en producción.
