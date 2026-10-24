@@ -41,3 +41,4 @@ No se marca nada como hecho que no esté en `main`.
 
 - 2026-10-23 · Creados `CLAUDE.md` y este documento (PR #7); estado reconstruido desde Git.
 - 2026-10-24 · Borrador de privacidad y cookies para la auditoría de uso.
+- 2026-10-24 · La API ya aplica los plazos de conservación de la política de privacidad.
