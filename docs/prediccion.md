@@ -46,6 +46,62 @@ No se consideran todavía definitivos:
 Estas decisiones se tomarán durante la implementación y después de analizar los datos reales proporcionados por las fuentes externas.
 
 
+## 2 bis. Reorientación del 25 de octubre de 2026
+
+Decidido por José (Yoseba) el 25-10-2026, después de revisar lo construido. **Manda sobre lo que se contradiga en el resto del documento.**
+
+### Principio
+
+MeteoArchidona no hace predicciones: no somos meteorólogos. **Toda la predicción sale de AEMET.** Lo propio de MeteoArchidona es:
+
+1. **Lo que está pasando**: los datos reales de nuestras estaciones.
+2. **Cómo se cuenta**: un texto propio, redactado por inteligencia artificial a partir de la predicción de AEMET y de nuestros datos reales, con el tono de un presentador del tiempo de televisión.
+
+La IA **no predice**: solo redacta lo que ya dice AEMET. No puede añadir fenómenos, cifras ni horas que no estén en los datos que se le pasan.
+
+### La página, como un parte del tiempo
+
+Orden de arriba abajo:
+
+1. **Ahora en Archidona**: observación real de la estación El Silo (temperatura, humedad, viento, lluvia…). No es predicción.
+2. **El tiempo de hoy, contado por MeteoArchidona**: el texto de la IA.
+3. **Lo que queda de hoy**: esta tarde y esta noche, según AEMET.
+4. **Próximas horas**: franja hora a hora (AEMET).
+5. **Mañana**: con más detalle (AEMET).
+6. **Próximos días**: resumido (AEMET).
+7. **Avisos oficiales de AEMET**, cuando los haya.
+
+La procedencia de AEMET se muestra siempre. El texto de la IA lleva una nota del tipo «Texto redactado automáticamente a partir de la predicción de AEMET y de los datos de nuestras estaciones».
+
+### Cómo se genera el texto
+
+- En el servidor, **unas pocas veces al día**, cuando AEMET publica una predicción nueva; nunca por cada visita. Se guarda en PostgreSQL con la edición de AEMET y los datos usados, y la web lo lee de nuestra API.
+- Con la API de un proveedor de IA (Claude u otro). Su clave vive en el servidor, como la de AEMET.
+- Instrucciones estrictas: usar solo los datos recibidos, no inventar, citar AEMET como fuente.
+- Alcance inicial: hoy y mañana. Más adelante, ya se verá.
+
+### Correo
+
+El mismo texto se enviará por correo a los usuarios suscritos, a diario o cuando cada uno lo configure. Depende del sistema de usuarios (`docs/Usuarios.md`).
+
+### Qué cambia respecto a lo construido (primera versión, 12-10-2026)
+
+- «Ahora en Archidona» usa hoy la predicción horaria de AEMET: pasa a usar El Silo.
+- Si la API falla, la página enseña datos de muestra inventados: se quitan; se muestra un aviso de que la predicción no está disponible.
+- La predicción se pide a AEMET en directo con 30 minutos en memoria: pasa a guardarse en PostgreSQL y a actualizarse sola varias veces al día (necesario para el texto de la IA y para tener histórico).
+- Los avisos de AEMET aún no se leen.
+
+### Orden de trabajo
+
+1. Reordenar la página: «Ahora» con El Silo y sin datos inventados.
+2. Guardar la predicción de AEMET en PostgreSQL y actualizarla automáticamente.
+3. Texto del presentador con IA (requiere clave de la API del proveedor elegido).
+4. Avisos oficiales de AEMET.
+5. Correo diario a suscriptores, cuando existan los usuarios.
+
+Quedan fuera por ahora, sin descartarlas: la narrativa por catálogo cerrado de frases y refranes (secciones 33 a 38; el texto de la IA cumple esa función), las alertas propias y la comparación con otras fuentes.
+
+
 ## 3. Principios generales
 
 El subsistema seguirá los siguientes principios:

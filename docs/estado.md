@@ -27,7 +27,7 @@ No se marca nada como hecho que no esté en `main`.
 ## En construcción / abierto
 
 - Auditoría, segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores; forzar la versión de `componentes/ficha-estacion.html` para que la visualización de fichas llegue a todos.
-- **Predicción**: la página muestra datos de muestra desde el 22 sep porque `GET /prediccion/{municipio}` aún no existe. Está en el PR #10 de `api-meteoarchidona`; en cuanto se fusione y despliegue, la web pasa sola a datos reales. Contrato en `docs/prediccion-endpoint.md`.
+- **Predicción**: muestra datos reales de AEMET desde el 23 oct (API PR #10 y #14). Reorientación decidida el 25 oct (`docs/prediccion.md`, sección 2 bis): toda la predicción de AEMET, «Ahora» con datos reales de El Silo, texto propio redactado por IA y, más adelante, correo diario. Siguiente paso: reordenar la página y quitar los datos de muestra inventados.
 
 ## Pendiente
 
@@ -48,3 +48,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-24 · Auditoría de uso en la web: aviso de consentimiento, ventana de privacidad y envío de eventos de página y visualizaciones.
 - 2026-10-24 · Páginas vistas anónimas de todos los visitantes; textos del aviso y de la privacidad ajustados (decisión de José).
 - 2026-10-24 · Publicada en producción la auditoría de uso (aviso, privacidad y envío de eventos); verificada con una visita real.
+- 2026-10-25 · Reorientación de Predicción decidida por José y escrita en `docs/prediccion.md` (2 bis); estado de Predicción corregido.

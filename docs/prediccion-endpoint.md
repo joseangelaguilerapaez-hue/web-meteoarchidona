@@ -205,7 +205,7 @@ Los códigos con `n` (`11n`, `12n`...) son la misma condición de noche:
 Con la ruta ya desplegada:
 
 ```bash
-curl -s https://api-meteoarchidona.onrender.com/prediccion/archidona | python -m json.tool
+curl -s http://127.0.0.1:8000/prediccion/archidona | python3 -m json.tool   # desde el VPS
 ```
 
 y abrir https://meteoarchidona.com/prediccion: el aviso «Datos de
