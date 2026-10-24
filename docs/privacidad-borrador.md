@@ -99,8 +99,7 @@ cuando quieras desde el enlace "Privacidad" del pie, sin que eso afecte a lo tra
 ### ¿Quién más accede?
 
 Nadie, salvo nuestro proveedor de alojamiento, que guarda los datos por cuenta nuestra:
-Hostinger International Limited **(por confirmar en una factura que es la entidad con la que
-está contratado)**. El servidor está en Reino Unido (Manchester). Reino Unido está fuera de la
+Hostinger International Limited. El servidor está en Reino Unido (Manchester). Reino Unido está fuera de la
 Unión Europea, pero la Comisión Europea reconoce que protege los datos personales a un nivel
 equivalente (decisión de adecuación, renovada hasta diciembre de 2031), por lo que la
 transferencia no necesita garantías adicionales.
@@ -157,7 +156,7 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 1. ~~Datos del responsable~~: José Ángel Aguilera Páez (24-10-2026). NIF y domicilio solo cuando haya actividad económica, en el aviso legal.
 2. ~~Correo para ejercer derechos~~: infometeoarchidona@meteoarchidona.com (24-10-2026).
 3. ~~Plazos de conservación~~: IP 6 meses, resto 25 meses, consentimiento 12 meses (aprobados por José el 24-10-2026).
-4. ~~Proveedor de alojamiento~~: servidor en Manchester (Reino Unido), red de Hostinger International Limited (comprobado desde el VPS el 24-10-2026). Reino Unido tiene decisión de adecuación de la UE hasta diciembre de 2031. **(Por confirmar en una factura la entidad contratante.)**
+4. ~~Proveedor de alojamiento~~: servidor en Manchester (Reino Unido), red de Hostinger International Limited (comprobado desde el VPS el 24-10-2026). Reino Unido tiene decisión de adecuación de la UE hasta diciembre de 2031. Entidad confirmada en el recibo de pago del VPS (KVM 4, 28-09-2026), emitido por Hostinger International Ltd.
 5. ~~Registros de Nginx~~: rotación diaria, se conservan 14 (comprobado en `/etc/logrotate.d/nginx` el 24-10-2026).
 6. ~~Retirada del consentimiento~~: se deja de registrar y lo anterior se conserva hasta su plazo, salvo petición expresa de borrado, que se atiende (decidido por José el 24-10-2026; el RGPD obliga a borrar si se pide tras retirar el consentimiento).
 7. ~~Aviso, ventana "Privacidad" y enlace del pie~~: rama `feature/auditoria-consentimiento` (24-10-2026). La política va en `componentes/privacidad.html`, que abre `js/auditoria.js` en una ventana (no es una página propia, para no tocar menú, `.htaccess` ni sitemap). Probado en Chromium que nada se envía antes de "Aceptar" ni tras "Rechazar". Se usa el almacenamiento local del navegador, no cookies.
