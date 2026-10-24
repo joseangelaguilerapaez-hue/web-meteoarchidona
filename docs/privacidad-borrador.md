@@ -46,7 +46,7 @@ Reglas de presentación (AEPD):
 ### ¿Quién es el responsable?
 
 - Responsable: José Ángel Aguilera Páez.
-- Contacto para privacidad: infometeoarchidona@meteoarchidona.com **(por confirmar si se usa este u otro buzón)**
+- Contacto para privacidad: infometeoarchidona@meteoarchidona.com
 
 No hay delegado de protección de datos: no es obligatorio para un sitio de este tipo.
 
@@ -111,7 +111,7 @@ política de privacidad. Las predicciones proceden de AEMET y no implican ningú
 ### ¿Qué derechos tienes?
 
 Acceder a tus datos, rectificarlos, suprimirlos, oponerte o limitar su tratamiento, pedir su
-portabilidad y retirar tu consentimiento. Escribe a **(correo de privacidad, por confirmar)**.
+portabilidad y retirar tu consentimiento. Escribe a infometeoarchidona@meteoarchidona.com.
 Como no te pedimos nombre ni correo, para localizar tus datos necesitaremos el identificador
 de tu navegador, que puedes ver en la pantalla "Privacidad" de la web **(por construir)**.
 
@@ -152,7 +152,7 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 ## Pendiente antes de publicar
 
 1. ~~Datos del responsable~~: José Ángel Aguilera Páez (24-10-2026). NIF y domicilio solo cuando haya actividad económica, en el aviso legal.
-2. Correo para ejercer derechos.
+2. ~~Correo para ejercer derechos~~: infometeoarchidona@meteoarchidona.com (24-10-2026).
 3. Plazos de conservación (propuestos: IP 6 meses, resto 25 meses, consentimiento 12 meses).
 4. Proveedor de alojamiento: entidad y país del centro de datos.
 5. Registros de Nginx: cuánto tiempo se guardan.
