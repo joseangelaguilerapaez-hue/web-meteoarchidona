@@ -63,7 +63,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/prediccion.css?v=20260922-prediccion1"
+    href="../css/prediccion.css?v=20261025-presentador1"
 >
 
 
@@ -84,7 +84,7 @@
 ></script>
 
 <script
-    src="../js/prediccion.js?v=20261003-vps1"
+    src="../js/prediccion.js?v=20261025-presentador1"
     defer
 ></script>
 
@@ -101,10 +101,16 @@
 
 
 <!--
-    Predicción de Archidona. Todo lo rellena js/prediccion.js con lo
-    que devuelve GET /prediccion/archidona de nuestra API (contrato en
-    docs/prediccion-endpoint.md). Mientras esa ruta no exista, enseña
-    datos de muestra con el aviso #pred-muestra a la vista.
+    Predicción de Archidona. Todo lo rellena js/prediccion.js:
+
+    - «Ahora en Archidona»: observación real de la estación El Silo
+      (GET /condiciones-actuales/EL_SILO).
+    - El resto: predicción de AEMET (GET /prediccion/archidona,
+      contrato en docs/prediccion-endpoint.md).
+
+    MeteoArchidona no predice: la predicción es toda de AEMET
+    (docs/prediccion.md, 2 bis). Si AEMET no está disponible se avisa
+    con #pred-error; nunca se enseñan datos inventados.
 -->
 <main class="prediccion">
 
@@ -127,12 +133,12 @@
     </p>
 
     <p
-        class="pred-muestra"
-        id="pred-muestra"
+        class="pred-error"
+        id="pred-error"
         hidden
     >
-        Datos de muestra: la predicción real de AEMET aún no está
-        conectada. Estos valores no son una previsión.
+        La predicción de AEMET no está disponible en este momento.
+        Lo volvemos a intentar en unos minutos.
     </p>
 
 </header>
@@ -142,6 +148,26 @@
     class="pred-avisos"
     id="pred-avisos"
     aria-label="Avisos meteorológicos"
+    hidden
+></section>
+
+
+<section
+    class="pred-tarjeta pred-hoy pred-ahora"
+    id="pred-ahora"
+    aria-label="Ahora en Archidona"
+></section>
+
+
+<!--
+    Texto del presentador: lo redacta la IA en la API solo a partir de
+    la predicción de AEMET y de la observación de la estación. Oculto
+    mientras no haya texto del día.
+-->
+<section
+    class="pred-tarjeta pred-presentador"
+    id="pred-presentador"
+    aria-label="El tiempo hoy, contado por MeteoArchidona"
     hidden
 ></section>
 

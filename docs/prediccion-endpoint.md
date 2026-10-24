@@ -3,10 +3,10 @@
 Qué tiene que devolver la API para que la página de Predicción
 (`pages/prediccion.html`, `js/prediccion.js`) muestre datos reales.
 
-Mientras la ruta no exista, o si responde con error, la página enseña
-datos de muestra con el aviso «Datos de muestra» bien visible. El día
-que la ruta responda con este formato, la página pasa sola a los datos
-reales, sin tocar nada en la web.
+Si la ruta responde con error, la página avisa de que la predicción de
+AEMET no está disponible y conserva la última que hubiera pintado.
+Nunca enseña datos inventados (desde el 25-10-2026; antes enseñaba datos
+de muestra).
 
 Sigue lo acordado en [prediccion.md](prediccion.md): la fuente es AEMET
 OpenData, la clave de AEMET se queda en el servidor, y la web solo habla
@@ -32,8 +32,8 @@ Respuestas:
 | Código | Cuándo | Qué hace la web |
 | --- | --- | --- |
 | 200 | Hay predicción guardada, aunque sea antigua | La pinta; si `desactualizada` es `true`, lo avisa |
-| 404 | Municipio desconocido o sin ninguna predicción todavía | Datos de muestra |
-| 5xx | Fallo de la API | Datos de muestra |
+| 404 | Municipio desconocido o sin ninguna predicción todavía | Aviso «no disponible» |
+| 5xx | Fallo de la API | Aviso «no disponible»; conserva la última predicción pintada |
 
 
 ## Respuesta
@@ -193,7 +193,8 @@ Los códigos con `n` (`11n`, `12n`...) son la misma condición de noche:
 
 | Bloque de la página | Campos que usa |
 | --- | --- |
-| Hoy en Archidona | `diaria[0]` y la primera hora de `horaria` |
+| Ahora en Archidona | No sale de aquí: observación de El Silo, `GET /condiciones-actuales/EL_SILO` |
+| Hoy · predicción de AEMET | `diaria[0]`; el icono, de la primera hora de `horaria` |
 | Próximas horas | `horaria` entera |
 | Próximos 7 días | `diaria` entera |
 | Avisos | `avisos`; la franja no aparece si la lista está vacía |
@@ -208,6 +209,5 @@ Con la ruta ya desplegada:
 curl -s http://127.0.0.1:8000/prediccion/archidona | python3 -m json.tool   # desde el VPS
 ```
 
-y abrir https://meteoarchidona.com/prediccion: el aviso «Datos de
-muestra» tiene que haber desaparecido y la procedencia tiene que decir
-«AEMET · emitida …».
+y abrir https://meteoarchidona.com/prediccion: la procedencia tiene que
+decir «AEMET · emitida …».

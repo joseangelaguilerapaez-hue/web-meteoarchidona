@@ -93,9 +93,9 @@ El mismo texto se enviará por correo a los usuarios suscritos. Cada usuario eli
 
 ### Orden de trabajo
 
-1. Reordenar la página: «Ahora» con El Silo y sin datos inventados.
+1. Reordenar la página: «Ahora» con El Silo y sin datos inventados. **Hecho el 25-10-2026** (rama `feature/prediccion-ahora-el-silo`).
 2. Guardar la predicción de AEMET en PostgreSQL y actualizarla automáticamente.
-3. Texto del presentador con IA (requiere clave de la API del proveedor elegido).
+3. Texto del presentador con IA. **Preparado el 25-10-2026** (API PR #28, web en la rama `feature/prediccion-ahora-el-silo`). Decisiones de José: la IA es Claude (Anthropic) y el texto se redacta solo con cada edición nueva de AEMET (la API lo comprueba cada hora en el minuto 12). La predicción no se guarda aún entera en PostgreSQL: se guarda cada texto con los datos exactos que recibió la IA. El bloque «El tiempo hoy, contado por MeteoArchidona» va justo después de «Ahora» y queda oculto mientras no haya texto del día (por ejemplo, sin clave de Anthropic o entre medianoche y la primera edición de AEMET).
 4. Avisos oficiales de AEMET.
 5. Correo diario a suscriptores, cuando existan los usuarios.
 
