@@ -161,5 +161,5 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 5. Registros de Nginx: cuánto tiempo se guardan.
 6. ~~Retirada del consentimiento~~: se deja de registrar y lo anterior se conserva hasta su plazo, salvo petición expresa de borrado, que se atiende (decidido por José el 24-10-2026; el RGPD obliga a borrar si se pide tras retirar el consentimiento).
 7. Construir el aviso, la página "Privacidad" y el enlace del pie, y comprobar que nada se registra antes de "Aceptar".
-8. Implementar en la API la purga automática de los plazos que se aprueben.
+8. ~~Purga automática~~: desplegada en la API el 24-10-2026 (cada día a las 04:47; IP a los 6 meses, resto a los 25).
 9. Recomendable: una revisión por un profesional antes de publicar.
