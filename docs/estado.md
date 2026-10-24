@@ -29,6 +29,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Pendiente
 
+- Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
 - Estadísticas, usuarios, publicidad y redimensionamiento con nuevos puntos de medición: existen como documentos de especificación en `docs/`, pero no consta implementación en el historial reciente **(por confirmar cuáles se van a construir y en qué orden)**.
 - Observaciones: ver `docs/observaciones.md` para lo previsto **(por confirmar el estado real)**.
 
@@ -39,3 +40,4 @@ No se marca nada como hecho que no esté en `main`.
 ## Registro
 
 - 2026-10-23 · Creados `CLAUDE.md` y este documento (PR #7); estado reconstruido desde Git.
+- 2026-10-24 · Borrador de privacidad y cookies para la auditoría de uso.
