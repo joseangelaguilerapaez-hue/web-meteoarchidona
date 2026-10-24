@@ -99,8 +99,11 @@ cuando quieras desde el enlace "Privacidad" del pie, sin que eso afecte a lo tra
 ### ¿Quién más accede?
 
 Nadie, salvo nuestro proveedor de alojamiento, que guarda los datos por cuenta nuestra:
-**(por confirmar: Hostinger, entidad contratante y país del centro de datos del VPS; si está
-fuera del Espacio Económico Europeo, indicar la garantía de la transferencia)**.
+Hostinger International Limited **(por confirmar en una factura que es la entidad con la que
+está contratado)**. El servidor está en Reino Unido (Manchester). Reino Unido está fuera de la
+Unión Europea, pero la Comisión Europea reconoce que protege los datos personales a un nivel
+equivalente (decisión de adecuación, renovada hasta diciembre de 2031), por lo que la
+transferencia no necesita garantías adicionales.
 
 No cedemos datos a terceros salvo obligación legal.
 
@@ -154,7 +157,7 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 1. ~~Datos del responsable~~: José Ángel Aguilera Páez (24-10-2026). NIF y domicilio solo cuando haya actividad económica, en el aviso legal.
 2. ~~Correo para ejercer derechos~~: infometeoarchidona@meteoarchidona.com (24-10-2026).
 3. ~~Plazos de conservación~~: IP 6 meses, resto 25 meses, consentimiento 12 meses (aprobados por José el 24-10-2026).
-4. Proveedor de alojamiento: entidad y país del centro de datos.
+4. ~~Proveedor de alojamiento~~: servidor en Manchester (Reino Unido), red de Hostinger International Limited (comprobado desde el VPS el 24-10-2026). Reino Unido tiene decisión de adecuación de la UE hasta diciembre de 2031. **(Por confirmar en una factura la entidad contratante.)**
 5. Registros de Nginx: cuánto tiempo se guardan.
 6. Qué se borra al retirar el consentimiento.
 7. Construir el aviso, la página "Privacidad" y el enlace del pie, y comprobar que nada se registra antes de "Aceptar".
