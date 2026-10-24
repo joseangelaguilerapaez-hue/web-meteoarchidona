@@ -100,10 +100,10 @@
 
 
 /*
- * Aviso de datos de muestra. Tiene que verse a la primera: sin él,
- * alguien podría tomar las cifras de ejemplo por una previsión.
+ * Aviso de que la predicción de AEMET no está disponible. Tiene que
+ * verse a la primera.
  */
-.pred-muestra {
+.pred-error {
     margin: 6px 0 0;
     padding: 10px 14px;
     border: 1px solid var(--border-amber);
@@ -664,6 +664,21 @@
         font-size: 14px;
     }
 
+}
+
+
+/* ==========================================================
+   AHORA EN ARCHIDONA (OBSERVACIÓN DE EL SILO)
+   ========================================================== */
+
+.pred-ahora-estacion {
+    margin-top: 4px;
+    color: var(--text-faint);
+    font-size: 13px;
+}
+
+.pred-ahora .pred-hoy-temperatura {
+    color: var(--text);
 }
 
 

@@ -93,7 +93,7 @@ El mismo texto se enviará por correo a los usuarios suscritos. Cada usuario eli
 
 ### Orden de trabajo
 
-1. Reordenar la página: «Ahora» con El Silo y sin datos inventados.
+1. Reordenar la página: «Ahora» con El Silo y sin datos inventados. **Hecho el 25-10-2026** (rama `feature/prediccion-ahora-el-silo`).
 2. Guardar la predicción de AEMET en PostgreSQL y actualizarla automáticamente.
 3. Texto del presentador con IA (requiere clave de la API del proveedor elegido).
 4. Avisos oficiales de AEMET.

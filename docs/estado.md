@@ -27,7 +27,7 @@ No se marca nada como hecho que no esté en `main`.
 ## En construcción / abierto
 
 - Auditoría, segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores; forzar la versión de `componentes/ficha-estacion.html` para que la visualización de fichas llegue a todos.
-- **Predicción**: muestra datos reales de AEMET desde el 23 oct (API PR #10 y #14). Reorientación decidida el 25 oct (`docs/prediccion.md`, sección 2 bis): toda la predicción de AEMET, «Ahora» con datos reales de El Silo, texto propio redactado por IA y, más adelante, correo diario. Siguiente paso: reordenar la página y quitar los datos de muestra inventados.
+- **Predicción**: muestra datos reales de AEMET desde el 23 oct (API PR #10 y #14). Reorientación decidida el 25 oct (`docs/prediccion.md`, sección 2 bis): toda la predicción de AEMET, «Ahora» con datos reales de El Silo, texto propio redactado por IA y, más adelante, correo diario. Paso 1 en construcción (rama `feature/prediccion-ahora-el-silo`): «Ahora en Archidona» con la observación real de El Silo y sin datos de muestra inventados.
 
 ## Pendiente
 
@@ -49,3 +49,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-24 · Páginas vistas anónimas de todos los visitantes; textos del aviso y de la privacidad ajustados (decisión de José).
 - 2026-10-24 · Publicada en producción la auditoría de uso (aviso, privacidad y envío de eventos); verificada con una visita real.
 - 2026-10-25 · Reorientación de Predicción decidida por José y escrita en `docs/prediccion.md` (2 bis); estado de Predicción corregido.
+- 2026-10-25 · Predicción: «Ahora» con datos reales de El Silo, bloque «Hoy» marcado como predicción de AEMET y fuera los datos de muestra.
