@@ -26,7 +26,7 @@ artículo 22.2 de la Ley 34/2002 (LSSI) y la Guía sobre el uso de las cookies d
 > por la web. Son estadísticas propias: no usamos Google Analytics ni compartimos estos
 > datos con nadie, ni los usamos para publicidad.
 >
-> Si no aceptas, la web funciona exactamente igual y no registramos nada.
+> Si no aceptas, la web funciona exactamente igual: solo sumamos uno al contador de visitas de cada página, sin guardar ningún dato tuyo ni nada en tu navegador.
 >
 > [ Aceptar ]   [ Rechazar ]   Más información
 
@@ -57,7 +57,9 @@ este repositorio porque es público.
 
 ### ¿Qué datos tratamos?
 
-**Si navegas sin aceptar las estadísticas**, no registramos nada sobre ti. El servidor web,
+**Si navegas sin aceptar las estadísticas**, no registramos nada sobre ti: solo sumamos uno
+al contador de visitas de cada página, una cifra por día que no guarda ningún dato tuyo ni
+lee o guarda nada en tu navegador (decisión de José del 24-10-2026). El servidor web,
 como cualquier otro, recibe tu dirección IP para poder enviarte las páginas; los registros
 técnicos que eso genere se usan solo para mantener el servicio y su seguridad, y se borran
 solos a los 14 días.
@@ -99,8 +101,7 @@ cuando quieras desde el enlace "Privacidad" del pie, sin que eso afecte a lo tra
 ### ¿Quién más accede?
 
 Nadie, salvo nuestro proveedor de alojamiento, que guarda los datos por cuenta nuestra:
-Hostinger International Limited **(por confirmar en una factura que es la entidad con la que
-está contratado)**. El servidor está en Reino Unido (Manchester). Reino Unido está fuera de la
+Hostinger International Limited. El servidor está en Reino Unido (Manchester). Reino Unido está fuera de la
 Unión Europea, pero la Comisión Europea reconoce que protege los datos personales a un nivel
 equivalente (decisión de adecuación, renovada hasta diciembre de 2031), por lo que la
 transferencia no necesita garantías adicionales.
@@ -157,9 +158,9 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 1. ~~Datos del responsable~~: José Ángel Aguilera Páez (24-10-2026). NIF y domicilio solo cuando haya actividad económica, en el aviso legal.
 2. ~~Correo para ejercer derechos~~: infometeoarchidona@meteoarchidona.com (24-10-2026).
 3. ~~Plazos de conservación~~: IP 6 meses, resto 25 meses, consentimiento 12 meses (aprobados por José el 24-10-2026).
-4. ~~Proveedor de alojamiento~~: servidor en Manchester (Reino Unido), red de Hostinger International Limited (comprobado desde el VPS el 24-10-2026). Reino Unido tiene decisión de adecuación de la UE hasta diciembre de 2031. **(Por confirmar en una factura la entidad contratante.)**
+4. ~~Proveedor de alojamiento~~: servidor en Manchester (Reino Unido), red de Hostinger International Limited (comprobado desde el VPS el 24-10-2026). Reino Unido tiene decisión de adecuación de la UE hasta diciembre de 2031. Entidad confirmada en el recibo de pago del VPS (KVM 4, 28-09-2026), emitido por Hostinger International Ltd.
 5. ~~Registros de Nginx~~: rotación diaria, se conservan 14 (comprobado en `/etc/logrotate.d/nginx` el 24-10-2026).
 6. ~~Retirada del consentimiento~~: se deja de registrar y lo anterior se conserva hasta su plazo, salvo petición expresa de borrado, que se atiende (decidido por José el 24-10-2026; el RGPD obliga a borrar si se pide tras retirar el consentimiento).
-7. Construir el aviso, la página "Privacidad" y el enlace del pie, y comprobar que nada se registra antes de "Aceptar".
+7. ~~Aviso, ventana "Privacidad" y enlace del pie~~: rama `feature/auditoria-consentimiento` (24-10-2026). La política va en `componentes/privacidad.html`, que abre `js/auditoria.js` en una ventana (no es una página propia, para no tocar menú, `.htaccess` ni sitemap). Probado en Chromium que nada se envía antes de "Aceptar" ni tras "Rechazar". Se usa el almacenamiento local del navegador, no cookies.
 8. ~~Purga automática~~: desplegada en la API el 24-10-2026 (cada día a las 04:47; IP a los 6 meses, resto a los 25).
 9. Recomendable: una revisión por un profesional antes de publicar.

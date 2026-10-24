@@ -1,0 +1,206 @@
+/*
+ * MeteoArchidona
+ * Aviso de privacidad y ventana de preferencias
+ *
+ * Estilos de lo que crea js/auditoria.js: el aviso al entrar, la
+ * ventana con componentes/privacidad.html y el botón «Privacidad» del
+ * pie. Los colores salen de css/paleta.css.
+ *
+ * «Aceptar» y «Rechazar» comparten exactamente el mismo estilo: la
+ * AEPD pide que ninguna opción destaque sobre la otra.
+ */
+
+
+/* ==========================================================
+   AVISO AL ENTRAR
+   ========================================================== */
+
+.aviso-privacidad {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    z-index: 1000;
+    max-width: 640px;
+    max-height: calc(100vh - 32px);
+    margin: 0 auto;
+    padding: 20px 22px;
+    overflow-y: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--panel);
+    box-shadow: var(--shadow-panel);
+    color: var(--text-soft);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.aviso-privacidad h2 {
+    margin: 0 0 8px;
+    color: var(--text);
+    font-size: 17px;
+}
+
+.aviso-privacidad p {
+    margin: 0 0 10px;
+}
+
+.aviso-privacidad-botones,
+.privacidad-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+}
+
+
+/* ==========================================================
+   BOTONES
+   ========================================================== */
+
+.aviso-boton {
+    min-width: 120px;
+    padding: 10px 18px;
+    border: 1px solid var(--border-amber);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    color: var(--text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.aviso-boton:hover,
+.aviso-boton:focus-visible {
+    border-color: var(--amber);
+}
+
+.aviso-boton[aria-pressed="true"] {
+    border-color: var(--amber);
+    color: var(--amber-light);
+}
+
+.aviso-enlace,
+.pie-sitio-boton {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.pie-sitio-boton {
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.aviso-enlace:hover,
+.pie-sitio-boton:hover {
+    color: var(--text);
+}
+
+
+/* ==========================================================
+   VENTANA DE PRIVACIDAD
+   ========================================================== */
+
+.ventana-privacidad {
+    width: min(760px, calc(100% - 32px));
+    max-height: calc(100vh - 32px);
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow-deep);
+    color: var(--text-soft);
+}
+
+.ventana-privacidad::backdrop {
+    background: rgba(3, 9, 20, 0.72);
+}
+
+.privacidad {
+    padding: 0 24px 24px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.privacidad-cabecera {
+    position: sticky;
+    top: 0;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 -24px 8px;
+    padding: 18px 24px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.privacidad h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 19px;
+}
+
+.privacidad h3 {
+    margin: 22px 0 6px;
+    color: var(--text);
+    font-size: 15px;
+}
+
+.privacidad p,
+.privacidad ul {
+    margin: 0 0 10px;
+}
+
+.privacidad ul {
+    padding-left: 20px;
+}
+
+.privacidad a {
+    color: var(--cyan);
+}
+
+.privacidad code {
+    color: var(--amber-light);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    word-break: break-all;
+}
+
+.privacidad-cerrar {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--card);
+    color: var(--text);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.privacidad-preferencias {
+    margin-top: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--border-amber);
+    border-radius: var(--radius-sm);
+    background: var(--card-soft);
+}
+
+.privacidad-preferencias h3 {
+    margin-top: 0;
+}
+
+.privacidad-fecha {
+    color: var(--text-faint);
+    font-size: 13px;
+}
+
+
+/* Fin de fichero: css/auditoria.css */
