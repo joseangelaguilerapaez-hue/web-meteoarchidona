@@ -45,11 +45,15 @@ Reglas de presentación (AEPD):
 
 ### ¿Quién es el responsable?
 
-- Responsable: **(por confirmar: nombre completo de la persona o razón social de "Y&Z Project", y NIF/CIF)**
-- Domicilio: **(por confirmar)**
+- Responsable: José Ángel Aguilera Páez.
 - Contacto para privacidad: infometeoarchidona@meteoarchidona.com **(por confirmar si se usa este u otro buzón)**
 
 No hay delegado de protección de datos: no es obligatorio para un sitio de este tipo.
+
+Decidido por José el 24-10-2026: en los textos solo figuran el nombre y el correo, suficientes
+para el RGPD. El NIF y el domicilio, que exige la LSSI en el aviso legal cuando la web tiene
+actividad económica (publicidad o patrocinios), se añadirán en ese momento. No se guardan en
+este repositorio porque es público.
 
 ### ¿Qué datos tratamos?
 
@@ -147,7 +151,7 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 
 ## Pendiente antes de publicar
 
-1. Datos del responsable: nombre o razón social, NIF/CIF y domicilio.
+1. ~~Datos del responsable~~: José Ángel Aguilera Páez (24-10-2026). NIF y domicilio solo cuando haya actividad económica, en el aviso legal.
 2. Correo para ejercer derechos.
 3. Plazos de conservación (propuestos: IP 6 meses, resto 25 meses, consentimiento 12 meses).
 4. Proveedor de alojamiento: entidad y país del centro de datos.
