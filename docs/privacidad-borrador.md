@@ -94,7 +94,7 @@ cuando quieras desde el enlace "Privacidad" del pie, sin que eso afecte a lo tra
 
 - Dirección IP: se borra a los 6 meses.
 - Resto de datos de visitas y navegación: 25 meses; después se borran o se reducen a cifras agregadas que no identifican a nadie.
-- Si retiras el consentimiento, dejamos de registrar en ese momento. **(Por confirmar: si además se borra lo ya registrado de ese navegador; técnicamente es posible porque el borrado del visitante arrastra sus visitas.)**
+- Si retiras el consentimiento, dejamos de registrar en ese momento. Lo ya registrado se conserva hasta que venzan los plazos anteriores, salvo que nos pidas que lo borremos (ver "¿Qué derechos tienes?"): en ese caso lo borramos.
 
 ### ¿Quién más accede?
 
@@ -159,7 +159,7 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 3. ~~Plazos de conservación~~: IP 6 meses, resto 25 meses, consentimiento 12 meses (aprobados por José el 24-10-2026).
 4. ~~Proveedor de alojamiento~~: servidor en Manchester (Reino Unido), red de Hostinger International Limited (comprobado desde el VPS el 24-10-2026). Reino Unido tiene decisión de adecuación de la UE hasta diciembre de 2031. **(Por confirmar en una factura la entidad contratante.)**
 5. Registros de Nginx: cuánto tiempo se guardan.
-6. Qué se borra al retirar el consentimiento.
+6. ~~Retirada del consentimiento~~: se deja de registrar y lo anterior se conserva hasta su plazo, salvo petición expresa de borrado, que se atiende (decidido por José el 24-10-2026; el RGPD obliga a borrar si se pide tras retirar el consentimiento).
 7. Construir el aviso, la página "Privacidad" y el enlace del pie, y comprobar que nada se registra antes de "Aceptar".
 8. Implementar en la API la purga automática de los plazos que se aprueben.
 9. Recomendable: una revisión por un profesional antes de publicar.
