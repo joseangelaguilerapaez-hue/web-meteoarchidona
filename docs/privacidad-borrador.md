@@ -36,7 +36,7 @@ Reglas de presentación (AEPD):
 - Cerrar el aviso o seguir navegando no es aceptar: hasta que se pulse "Aceptar" no se registra nada.
 - "Más información" enlaza a la política de privacidad.
 - Un enlace permanente en el pie, "Privacidad", permite cambiar la decisión en cualquier momento, con la misma facilidad con que se dio.
-- La decisión se recuerda y se vuelve a preguntar pasados 12 meses **(propuesta; la AEPD admite hasta 24)**.
+- La decisión se recuerda y se vuelve a preguntar pasados 12 meses.
 - No se restringe ningún contenido a quien rechace. (La idea antigua de ocultar datos meteorológicos a quien rechace, en `docs/auditoria.md` de la web, queda descartada: equivaldría a un "muro de cookies".)
 
 ---
@@ -92,8 +92,8 @@ cuando quieras desde el enlace "Privacidad" del pie, sin que eso afecte a lo tra
 
 ### ¿Cuánto tiempo?
 
-- Dirección IP: se borra a los **6 meses** **(propuesta, por confirmar)**.
-- Resto de datos de visitas y navegación: **25 meses** y después se borran o se reducen a cifras agregadas que no identifican a nadie **(propuesta, por confirmar)**.
+- Dirección IP: se borra a los 6 meses.
+- Resto de datos de visitas y navegación: 25 meses; después se borran o se reducen a cifras agregadas que no identifican a nadie.
 - Si retiras el consentimiento, dejamos de registrar en ese momento. **(Por confirmar: si además se borra lo ya registrado de ese navegador; técnicamente es posible porque el borrado del visitante arrastra sus visitas.)**
 
 ### ¿Quién más accede?
@@ -153,7 +153,7 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 
 1. ~~Datos del responsable~~: José Ángel Aguilera Páez (24-10-2026). NIF y domicilio solo cuando haya actividad económica, en el aviso legal.
 2. ~~Correo para ejercer derechos~~: infometeoarchidona@meteoarchidona.com (24-10-2026).
-3. Plazos de conservación (propuestos: IP 6 meses, resto 25 meses, consentimiento 12 meses).
+3. ~~Plazos de conservación~~: IP 6 meses, resto 25 meses, consentimiento 12 meses (aprobados por José el 24-10-2026).
 4. Proveedor de alojamiento: entidad y país del centro de datos.
 5. Registros de Nginx: cuánto tiempo se guardan.
 6. Qué se borra al retirar el consentimiento.
