@@ -682,4 +682,26 @@
 }
 
 
+/* ==========================================================
+   Texto del presentador
+   ========================================================== */
+
+.pred-presentador[hidden] {
+    display: none;
+}
+
+.pred-presentador-texto {
+    margin: 10px 0 0;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.pred-presentador-nota {
+    margin: 12px 0 0;
+    color: var(--text-faint);
+    font-size: 12px;
+}
+
+
 /* Fin de fichero: css/prediccion.css */

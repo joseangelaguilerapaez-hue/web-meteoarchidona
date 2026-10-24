@@ -497,6 +497,68 @@
 
 
     /* ------------------------------------------------------------
+       Texto del presentador (redactado por IA en la API)
+       ------------------------------------------------------------ */
+
+    function horaDe(instante) {
+        const fecha = new Date(instante);
+
+        if (Number.isNaN(fecha.getTime())) {
+            return null;
+        }
+
+        return new Intl.DateTimeFormat("es-ES", {
+            hour: "2-digit", minute: "2-digit", timeZone: ZONA
+        }).format(fecha);
+    }
+
+    function pintarPresentador(datos) {
+        const zona = document.getElementById("pred-presentador");
+
+        if (!datos || typeof datos.texto !== "string" || !datos.texto.trim()) {
+            zona.hidden = true;
+            zona.textContent = "";
+            return;
+        }
+
+        zona.textContent = "";
+        zona.append(crear("h2", "pred-hoy-titulo", "El tiempo hoy, contado por MeteoArchidona"));
+
+        for (const parrafo of datos.texto.split(/\n\s*\n/)) {
+            if (parrafo.trim()) {
+                zona.append(crear("p", "pred-presentador-texto", parrafo.trim()));
+            }
+        }
+
+        const hora = horaDe(datos.generado);
+        const estacion = datos.estacion ? ` y de nuestra estación ${datos.estacion}` : "";
+
+        zona.append(crear("p", "pred-presentador-nota",
+            "Texto redactado automáticamente" + (hora ? ` a las ${hora}` : "") +
+            ` a partir de la predicción de AEMET${estacion}.`));
+
+        zona.hidden = false;
+    }
+
+    async function cargarPresentador() {
+        const base = window.API_BASE || "/api";
+
+        try {
+            const respuesta = await fetch(`${base}/prediccion/${MUNICIPIO}/texto`, { cache: "no-store" });
+
+            if (!respuesta.ok) {
+                throw new Error(`HTTP ${respuesta.status}`);
+            }
+
+            pintarPresentador(await respuesta.json());
+        } catch (error) {
+            // Sin texto (o sin API) el bloque simplemente no aparece.
+            pintarPresentador(null);
+        }
+    }
+
+
+    /* ------------------------------------------------------------
        Carga de la predicción
        ------------------------------------------------------------ */
 
@@ -547,6 +609,7 @@
     }
 
     cargarAhora();
+    cargarPresentador();
     cargar();
 
     setInterval(() => {
@@ -558,6 +621,7 @@
     setInterval(() => {
         if (!document.hidden) {
             cargar();
+            cargarPresentador();
         }
     }, REFRESCO_MS);
 })();

@@ -63,7 +63,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/prediccion.css?v=20261025-ahora1"
+    href="../css/prediccion.css?v=20261025-presentador1"
 >
 
 
@@ -84,7 +84,7 @@
 ></script>
 
 <script
-    src="../js/prediccion.js?v=20261025-ahora1"
+    src="../js/prediccion.js?v=20261025-presentador1"
     defer
 ></script>
 
@@ -156,6 +156,19 @@
     class="pred-tarjeta pred-hoy pred-ahora"
     id="pred-ahora"
     aria-label="Ahora en Archidona"
+></section>
+
+
+<!--
+    Texto del presentador: lo redacta la IA en la API solo a partir de
+    la predicción de AEMET y de la observación de la estación. Oculto
+    mientras no haya texto del día.
+-->
+<section
+    class="pred-tarjeta pred-presentador"
+    id="pred-presentador"
+    aria-label="El tiempo hoy, contado por MeteoArchidona"
+    hidden
 ></section>
 
 
