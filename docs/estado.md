@@ -25,7 +25,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
-- Auditoría de uso, primera entrega (rama `feature/auditoria-consentimiento`): aviso de consentimiento, ventana de privacidad con preferencias (`componentes/privacidad.html`), botón «Privacidad» en el pie y `js/auditoria.js`, que envía a la API ACCESO, SALIDA y las visualizaciones marcadas con `data-auditoria-visualizacion` (Predicción, visor de Seguimiento, tabla de estaciones, Timelapses y fichas). Pendiente de fusionar y publicar. Segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores.
+- Auditoría de uso, primera entrega (rama `feature/auditoria-consentimiento`): aviso de consentimiento, ventana de privacidad con preferencias (`componentes/privacidad.html`), botón «Privacidad» en el pie y `js/auditoria.js`, que cuenta cada página vista de forma anónima para todos los visitantes (`/auditoria/vistas`, sin identificador ni nada en el navegador) y, solo con consentimiento, envía a la API ACCESO, SALIDA y las visualizaciones marcadas con `data-auditoria-visualizacion` (Predicción, visor de Seguimiento, tabla de estaciones, Timelapses y fichas). Pendiente de fusionar y publicar. Segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores.
 - **Predicción**: la página muestra datos de muestra desde el 22 sep porque `GET /prediccion/{municipio}` aún no existe. Está en el PR #10 de `api-meteoarchidona`; en cuanto se fusione y despliegue, la web pasa sola a datos reales. Contrato en `docs/prediccion-endpoint.md`.
 
 ## Pendiente
@@ -45,3 +45,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-24 · La API ya aplica los plazos de conservación de la política de privacidad.
 - 2026-10-24 · Registros de Nginx: 14 días; anotado en el borrador de privacidad.
 - 2026-10-24 · Auditoría de uso en la web: aviso de consentimiento, ventana de privacidad y envío de eventos de página y visualizaciones.
+- 2026-10-24 · Páginas vistas anónimas de todos los visitantes; textos del aviso y de la privacidad ajustados (decisión de José).

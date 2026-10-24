@@ -4,9 +4,14 @@
  *
  * Se carga en todas las páginas públicas (no en Administración).
  *
+ * 0. Página vista anónima. En cada carga, acepte o no el visitante,
+ *    se envía solo el código de la página a /auditoria/vistas para
+ *    contar el tráfico total (decisión de José del 24-10-2026): sin
+ *    identificador y sin leer ni guardar nada en el navegador.
+ *
  * 1. Consentimiento. Muestra el aviso la primera vez y cada 12 meses.
- *    Mientras no se pulse «Aceptar» no se envía ni se guarda nada
- *    salvo la propia elección (ma_consentimiento), que es técnica.
+ *    Mientras no se pulse «Aceptar» no se envía nada más ni se guarda
+ *    nada salvo la propia elección (ma_consentimiento), que es técnica.
  *    «Privacidad» (pie) y «Más información» (aviso) abren la ventana
  *    de componentes/privacidad.html, desde la que se cambia la elección.
  *
@@ -182,7 +187,7 @@ function mostrarAviso() {
             datos con nadie, ni los usamos para publicidad.
         </p>
         <p>
-            Si no aceptas, la web funciona exactamente igual y no registramos nada.
+            Si no aceptas, la web funciona exactamente igual: solo sumamos uno al contador de visitas de cada página, sin guardar ningún dato tuyo ni nada en tu navegador.
         </p>
         <div class="aviso-privacidad-botones">
             <button type="button" class="aviso-boton" data-consentimiento="aceptar">Aceptar</button>
@@ -259,7 +264,7 @@ function actualizarPreferencias() {
             decision === "aceptado"
                 ? "Has aceptado las estadísticas."
                 : decision === "rechazado"
-                    ? "Has rechazado las estadísticas: no registramos nada."
+                    ? "Has rechazado las estadísticas: solo contamos la visita a cada página, de forma anónima."
                     : "Todavía no has elegido.";
     }
 
@@ -644,8 +649,35 @@ document.addEventListener("visibilitychange", () => {
 
 
 // ==========================================================
+// PÁGINA VISTA (ANÓNIMA)
+// ==========================================================
+
+function contarVista() {
+    try {
+        const cuerpo = JSON.stringify({ pagina });
+        const destino = `${api()}/vistas`;
+
+        // Texto plano: sin permiso CORS previo; la API lo admite.
+        if (navigator.sendBeacon && navigator.sendBeacon(destino, cuerpo)) {
+            return;
+        }
+
+        fetch(destino, {
+            method: "POST",
+            body: cuerpo,
+            keepalive: true,
+        }).catch(() => {});
+    } catch (error) {
+        // El contador nunca debe afectar a la página.
+    }
+}
+
+
+// ==========================================================
 // ARRANQUE
 // ==========================================================
+
+contarVista();
 
 window.MeteoAuditoria = Object.freeze({
     registrar,

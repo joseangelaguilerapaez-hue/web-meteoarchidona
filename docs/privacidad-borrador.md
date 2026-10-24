@@ -26,7 +26,7 @@ artículo 22.2 de la Ley 34/2002 (LSSI) y la Guía sobre el uso de las cookies d
 > por la web. Son estadísticas propias: no usamos Google Analytics ni compartimos estos
 > datos con nadie, ni los usamos para publicidad.
 >
-> Si no aceptas, la web funciona exactamente igual y no registramos nada.
+> Si no aceptas, la web funciona exactamente igual: solo sumamos uno al contador de visitas de cada página, sin guardar ningún dato tuyo ni nada en tu navegador.
 >
 > [ Aceptar ]   [ Rechazar ]   Más información
 
@@ -57,7 +57,9 @@ este repositorio porque es público.
 
 ### ¿Qué datos tratamos?
 
-**Si navegas sin aceptar las estadísticas**, no registramos nada sobre ti. El servidor web,
+**Si navegas sin aceptar las estadísticas**, no registramos nada sobre ti: solo sumamos uno
+al contador de visitas de cada página, una cifra por día que no guarda ningún dato tuyo ni
+lee o guarda nada en tu navegador (decisión de José del 24-10-2026). El servidor web,
 como cualquier otro, recibe tu dirección IP para poder enviarte las páginas; los registros
 técnicos que eso genere se usan solo para mantener el servicio y su seguridad, y se borran
 solos a los 14 días.
