@@ -75,14 +75,14 @@ La procedencia de AEMET se muestra siempre. El texto de la IA lleva una nota del
 
 ### Cómo se genera el texto
 
-- En el servidor, **unas pocas veces al día**, cuando AEMET publica una predicción nueva; nunca por cada visita. Se guarda en PostgreSQL con la edición de AEMET y los datos usados, y la web lo lee de nuestra API.
+- En el servidor, **solo cuando AEMET publica una predicción nueva**; nunca por cada visita. La frecuencia de AEMET no está clara en su web **(por confirmar)**: en lugar de fijarla, se consulta a AEMET cada hora y solo se guarda la predicción y se genera el texto cuando cambia su hora de elaboración (`elaborado`). Así el sistema sigue el ritmo de AEMET, sea el que sea, y lo guardado dirá a qué horas publica realmente. Se guarda en PostgreSQL con la edición de AEMET y los datos usados, y la web lo lee de nuestra API.
 - Con la API de un proveedor de IA (Claude u otro). Su clave vive en el servidor, como la de AEMET.
 - Instrucciones estrictas: usar solo los datos recibidos, no inventar, citar AEMET como fuente.
 - Alcance inicial: hoy y mañana. Más adelante, ya se verá.
 
 ### Correo
 
-El mismo texto se enviará por correo a los usuarios suscritos, a diario o cuando cada uno lo configure. Depende del sistema de usuarios (`docs/Usuarios.md`).
+El mismo texto se enviará por correo a los usuarios suscritos. Cada usuario elige cuántas veces al día (una, dos o tres) y a qué horas (por ejemplo 8:00, 14:00 y 20:00); a cada hora se le envía el último texto disponible. Depende del sistema de usuarios (`docs/Usuarios.md`).
 
 ### Qué cambia respecto a lo construido (primera versión, 12-10-2026)
 
