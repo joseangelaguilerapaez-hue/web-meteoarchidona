@@ -160,6 +160,6 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 4. ~~Proveedor de alojamiento~~: servidor en Manchester (Reino Unido), red de Hostinger International Limited (comprobado desde el VPS el 24-10-2026). Reino Unido tiene decisión de adecuación de la UE hasta diciembre de 2031. **(Por confirmar en una factura la entidad contratante.)**
 5. ~~Registros de Nginx~~: rotación diaria, se conservan 14 (comprobado en `/etc/logrotate.d/nginx` el 24-10-2026).
 6. ~~Retirada del consentimiento~~: se deja de registrar y lo anterior se conserva hasta su plazo, salvo petición expresa de borrado, que se atiende (decidido por José el 24-10-2026; el RGPD obliga a borrar si se pide tras retirar el consentimiento).
-7. Construir el aviso, la página "Privacidad" y el enlace del pie, y comprobar que nada se registra antes de "Aceptar".
+7. ~~Aviso, ventana "Privacidad" y enlace del pie~~: rama `feature/auditoria-consentimiento` (24-10-2026). La política va en `componentes/privacidad.html`, que abre `js/auditoria.js` en una ventana (no es una página propia, para no tocar menú, `.htaccess` ni sitemap). Probado en Chromium que nada se envía antes de "Aceptar" ni tras "Rechazar". Se usa el almacenamiento local del navegador, no cookies.
 8. ~~Purga automática~~: desplegada en la API el 24-10-2026 (cada día a las 04:47; IP a los 6 meses, resto a los 25).
 9. Recomendable: una revisión por un profesional antes de publicar.

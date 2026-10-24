@@ -1,0 +1,188 @@
+<!--
+    MeteoArchidona · Privacidad
+
+    Lo carga js/auditoria.js dentro de una ventana (<dialog>) al pulsar
+    "Más información" en el aviso o "Privacidad" en el pie. No es una
+    página propia para no tocar el menú, .htaccess ni el sitemap.
+
+    Texto aprobado por José el 24-10-2026 a partir de
+    docs/privacidad-borrador.md. Si cambia lo que se guarda o los
+    plazos, hay que cambiar los dos.
+
+    El bloque "Tus preferencias" lo rellena js/auditoria.js:
+    [data-privacidad-estado], [data-privacidad-identificador] y los
+    botones [data-consentimiento].
+-->
+
+<article class="privacidad">
+
+<header class="privacidad-cabecera">
+    <h2 id="privacidad-titulo">Privacidad y estadísticas</h2>
+    <button
+        type="button"
+        class="privacidad-cerrar"
+        data-privacidad-cerrar
+        aria-label="Cerrar"
+    >&times;</button>
+</header>
+
+
+<section class="privacidad-preferencias" aria-labelledby="privacidad-preferencias-titulo">
+
+    <h3 id="privacidad-preferencias-titulo">Tus preferencias</h3>
+
+    <p data-privacidad-estado>
+        Todavía no has elegido.
+    </p>
+
+    <p class="privacidad-identificador" data-privacidad-identificador hidden>
+        Identificador de tu navegador:
+        <code></code>
+        <br>
+        Anótalo si quieres pedirnos que borremos tus datos.
+    </p>
+
+    <div class="privacidad-botones">
+        <button type="button" class="aviso-boton" data-consentimiento="aceptar">
+            Aceptar estadísticas
+        </button>
+        <button type="button" class="aviso-boton" data-consentimiento="rechazar">
+            Rechazar estadísticas
+        </button>
+    </div>
+
+</section>
+
+
+<section aria-labelledby="privacidad-responsable">
+    <h3 id="privacidad-responsable">¿Quién es el responsable?</h3>
+    <p>
+        José Ángel Aguilera Páez.
+        Contacto: <a href="mailto:infometeoarchidona@meteoarchidona.com">infometeoarchidona@meteoarchidona.com</a>
+    </p>
+</section>
+
+
+<section aria-labelledby="privacidad-datos">
+    <h3 id="privacidad-datos">¿Qué datos tratamos?</h3>
+
+    <p>
+        <strong>Si no aceptas las estadísticas</strong>, no registramos nada sobre ti.
+        El servidor, como cualquier otro, recibe tu dirección IP para poder enviarte
+        las páginas; esos registros técnicos se usan solo para mantener el servicio y
+        su seguridad, y se borran solos a los 14 días.
+    </p>
+
+    <p><strong>Si las aceptas</strong>, registramos:</p>
+
+    <ul>
+        <li>Un identificador aleatorio de tu navegador, que no contiene ningún dato tuyo, y otro de cada visita.</li>
+        <li>Tu dirección IP y la zona aproximada que se deduce de ella (país, región y localidad). No sirve para localizarte con precisión.</li>
+        <li>Datos técnicos de la visita: tipo de dispositivo, navegador y sistema operativo (sin versión), idioma, zona horaria, tamaño de pantalla y de ventana, si la pantalla es táctil y si usas modo oscuro.</li>
+        <li>De dónde llegas: solo el nombre de la web de origen (por ejemplo, google.com) y los parámetros de campaña del enlace, si los lleva.</li>
+        <li>Qué haces en la web: páginas visitadas, cámaras y emisiones elegidas, timelapses abiertos, capas y fondos del visor de Seguimiento, reproducciones, pantalla completa y qué bloques llegan a verse en pantalla.</li>
+    </ul>
+
+    <p>
+        No usamos técnicas para reconocer tu dispositivo sin tu permiso, no pedimos tu
+        nombre ni tu correo para estas estadísticas y no tomamos decisiones
+        automatizadas sobre ti. Si en el futuro inicias sesión con una cuenta, tu
+        navegación desde ese momento quedará asociada a ella; nunca guardamos en las
+        estadísticas tu contraseña ni otras credenciales.
+    </p>
+</section>
+
+
+<section aria-labelledby="privacidad-finalidad">
+    <h3 id="privacidad-finalidad">¿Para qué y con qué base legal?</h3>
+    <p>
+        Para conocer el uso de MeteoArchidona y mejorarla: qué contenidos interesan,
+        desde qué dispositivos se consulta, si algo falla o va lento y cómo cambia el
+        uso cuando hay fenómenos meteorológicos. Solo se publican o comparten cifras
+        agregadas, nunca datos de una visita concreta.
+    </p>
+    <p>
+        La base legal es tu consentimiento, que das al pulsar «Aceptar». Puedes
+        retirarlo cuando quieras desde aquí, sin que eso afecte a lo tratado antes.
+    </p>
+</section>
+
+
+<section aria-labelledby="privacidad-plazos">
+    <h3 id="privacidad-plazos">¿Cuánto tiempo?</h3>
+    <ul>
+        <li>Dirección IP: se borra a los 6 meses.</li>
+        <li>Resto de datos de visitas y navegación: 25 meses; después se borran o se reducen a cifras agregadas que no identifican a nadie.</li>
+        <li>Tu elección se recuerda 12 meses; pasado ese tiempo te volvemos a preguntar.</li>
+        <li>Si retiras el consentimiento, dejamos de registrar en ese momento. Lo ya registrado se conserva hasta que venzan esos plazos, salvo que nos pidas que lo borremos.</li>
+    </ul>
+</section>
+
+
+<section aria-labelledby="privacidad-terceros">
+    <h3 id="privacidad-terceros">¿Quién más accede?</h3>
+    <p>
+        Nadie, salvo nuestro proveedor de alojamiento, Hostinger International
+        Limited, que guarda los datos por cuenta nuestra en un servidor situado en
+        Reino Unido. Reino Unido está fuera de la Unión Europea, pero la Comisión
+        Europea reconoce que protege los datos personales a un nivel equivalente
+        (decisión de adecuación), por lo que la transferencia no necesita garantías
+        adicionales. No cedemos datos a terceros salvo obligación legal.
+    </p>
+    <p>
+        Las emisiones de YouTube de la sección En vivo no se cargan hasta que pulsas
+        «Reproducir». A partir de ese momento las sirve YouTube (Google) con su propia
+        política de privacidad. Las predicciones proceden de AEMET y no implican
+        ningún dato tuyo.
+    </p>
+</section>
+
+
+<section aria-labelledby="privacidad-derechos">
+    <h3 id="privacidad-derechos">¿Qué derechos tienes?</h3>
+    <p>
+        Acceder a tus datos, rectificarlos, suprimirlos, oponerte o limitar su
+        tratamiento, pedir su portabilidad y retirar tu consentimiento. Escribe a
+        <a href="mailto:infometeoarchidona@meteoarchidona.com">infometeoarchidona@meteoarchidona.com</a>
+        indicando el identificador de tu navegador que aparece arriba: como no te
+        pedimos nombre ni correo, es la única forma de encontrar tus datos.
+    </p>
+    <p>
+        Si crees que no hemos atendido bien tu petición, puedes reclamar ante la
+        Agencia Española de Protección de Datos
+        (<a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer">www.aepd.es</a>).
+    </p>
+</section>
+
+
+<section aria-labelledby="privacidad-almacenamiento">
+    <h3 id="privacidad-almacenamiento">Lo que guardamos en tu navegador</h3>
+    <p>No usamos cookies. Usamos el almacenamiento local del navegador:</p>
+    <ul>
+        <li><code>ma_consentimiento</code>: si aceptaste o rechazaste las estadísticas. Es técnico y no necesita consentimiento. 12 meses.</li>
+        <li><code>ma_visitor_id</code>: identificador aleatorio del navegador. Solo si aceptas; se borra al retirar el consentimiento.</li>
+        <li><code>ma_session_id</code>: identificador de la visita actual. Solo si aceptas; caduca tras 30 minutos sin actividad.</li>
+    </ul>
+    <p>
+        No usamos almacenamiento de terceros; YouTube puede guardar el suyo cuando
+        reproduces una de sus emisiones. Puedes borrar todo esto desde la
+        configuración de tu navegador.
+    </p>
+</section>
+
+
+<section aria-labelledby="privacidad-menores">
+    <h3 id="privacidad-menores">Menores y cambios</h3>
+    <p>
+        MeteoArchidona no está dirigida a menores de 14 años: si tienes menos de
+        14 años, no aceptes las estadísticas. Si cambia esta política, lo
+        indicaremos aquí y, si afecta a lo que aceptaste, te volveremos a preguntar.
+    </p>
+    <p class="privacidad-fecha">
+        Última actualización: <span data-privacidad-version>octubre de 2026</span>.
+    </p>
+</section>
+
+</article>
+
+<!-- Fin de fichero: componentes/privacidad.html -->
