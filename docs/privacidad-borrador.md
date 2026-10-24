@@ -59,8 +59,8 @@ este repositorio porque es público.
 
 **Si navegas sin aceptar las estadísticas**, no registramos nada sobre ti. El servidor web,
 como cualquier otro, recibe tu dirección IP para poder enviarte las páginas; los registros
-técnicos que eso genere se usan solo para mantener el servicio y su seguridad
-**(por confirmar: cuánto tiempo guarda Nginx sus registros de acceso en el VPS)**.
+técnicos que eso genere se usan solo para mantener el servicio y su seguridad, y se borran
+solos a los 14 días.
 
 **Si aceptas las estadísticas**, registramos:
 
@@ -158,7 +158,7 @@ Puedes borrar estos datos en cualquier momento desde la configuración de tu nav
 2. ~~Correo para ejercer derechos~~: infometeoarchidona@meteoarchidona.com (24-10-2026).
 3. ~~Plazos de conservación~~: IP 6 meses, resto 25 meses, consentimiento 12 meses (aprobados por José el 24-10-2026).
 4. ~~Proveedor de alojamiento~~: servidor en Manchester (Reino Unido), red de Hostinger International Limited (comprobado desde el VPS el 24-10-2026). Reino Unido tiene decisión de adecuación de la UE hasta diciembre de 2031. **(Por confirmar en una factura la entidad contratante.)**
-5. Registros de Nginx: cuánto tiempo se guardan.
+5. ~~Registros de Nginx~~: rotación diaria, se conservan 14 (comprobado en `/etc/logrotate.d/nginx` el 24-10-2026).
 6. ~~Retirada del consentimiento~~: se deja de registrar y lo anterior se conserva hasta su plazo, salvo petición expresa de borrado, que se atiende (decidido por José el 24-10-2026; el RGPD obliga a borrar si se pide tras retirar el consentimiento).
 7. Construir el aviso, la página "Privacidad" y el enlace del pie, y comprobar que nada se registra antes de "Aceptar".
 8. ~~Purga automática~~: desplegada en la API el 24-10-2026 (cada día a las 04:47; IP a los 6 meses, resto a los 25).
