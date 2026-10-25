@@ -55,3 +55,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Publicados «Ahora» con El Silo y el texto del presentador; primer texto real visible en la web. Detectado que Nginx no fija la caché del HTML.
 - 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.
 - 2026-10-25 · Auditoría: selecciones y activaciones declarativas (`data-auditoria-seleccion`, `data-auditoria-activacion`), YouTube desde su visor y copia del catálogo en `js/auditoria.js` para no perder lotes.
+- 2026-10-25 · Predicción: la flecha de viento de la tira de horas pasa de 11 a 15 px; heredaba el tamaño de su fila y no se distinguía la dirección. El hueco de las 00:00 en la probabilidad de lluvia es de la API (banda que cruza la medianoche) y va en su propio cambio.
