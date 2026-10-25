@@ -23,6 +23,7 @@ No se marca nada como hecho que no esté en `main`.
 - Timelapses en Actualidad y gestión de productos de timelapse en el panel de administración, con navegación Configuración/Productos (15–17 oct).
 - Visor de vídeo MP4 con controles temporales, adaptado a móvil y pantalla completa (16 oct).
 - En vivo: selector dinámico de directos de YouTube que carga las emisiones desde la API pública (Murcia, Nerja, puerto de Málaga), 15–21 oct.
+- El aviso de privacidad ocupa menos en el móvil y su fondo es opaco (25 oct).
 
 ## En construcción / abierto
 

@@ -22,13 +22,18 @@
     left: 16px;
     z-index: 1000;
     max-width: 640px;
-    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
     margin: 0 auto;
     padding: 20px 22px;
     overflow-y: auto;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius);
-    background: var(--panel);
+    /*
+     * Fondo opaco, no var(--panel), que deja un 6 % de transparencia:
+     * sobre las fichas de la portada se leían los grados y el viento
+     * por debajo del texto del aviso.
+     */
+    background: #0b1a2b;
     box-shadow: var(--shadow-panel);
     color: var(--text-soft);
     font-size: 14px;
@@ -200,6 +205,57 @@
 .privacidad-fecha {
     color: var(--text-faint);
     font-size: 13px;
+}
+
+
+
+
+/* ==========================================================
+   PANTALLAS PEQUEÑAS
+   ========================================================== */
+
+/*
+ * En un móvil de 844 px de alto el aviso ocupaba 479, más de media
+ * pantalla, y tapaba la primera estación nada más entrar. Aquí se
+ * aprieta sin tocar el texto: la AEPD exige que se lea entero y que
+ * «Aceptar» y «Rechazar» pesen lo mismo, así que no se recorta nada
+ * ni se esconde una opción detrás de la otra.
+ *
+ * Con el tope de altura, si aun así no cupiera, el aviso se
+ * desplaza por dentro en vez de crecer.
+ */
+@media (max-width: 620px) {
+
+    .aviso-privacidad {
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        max-height: calc(100dvh - 120px);
+        padding: 15px 16px;
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    .aviso-privacidad h2 {
+        margin-bottom: 6px;
+        font-size: 15px;
+    }
+
+    .aviso-privacidad p {
+        margin-bottom: 8px;
+    }
+
+    .aviso-privacidad-botones {
+        margin-top: 11px;
+        gap: 8px;
+    }
+
+    .aviso-privacidad .aviso-boton {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 10px 12px;
+    }
+
 }
 
 
