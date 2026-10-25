@@ -25,6 +25,8 @@ No se marca nada como hecho que no esté en `main`.
 - En vivo: selector dinámico de directos de YouTube que carga las emisiones desde la API pública (Murcia, Nerja, puerto de Málaga), 15–21 oct.
 - El aviso de privacidad ocupa menos en el móvil y su fondo es opaco (25 oct).
 - Actualidad avisa cuando una estación lleva más de una hora sin mandar datos: la ficha dice «Sin datos desde…» en vez de «En línea» y el punto deja de ser verde (25 oct).
+- Las fichas de estaciones sin cámara ya no muestran el recuadro «vídeo no disponible» ni cargan su visor (25 oct).
+- Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
 ## En construcción / abierto
 
@@ -70,6 +72,7 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Portada: «Condiciones actuales» enseña la lectura real de la estación de referencia, con su nombre y su hora, y pasa a otra estación si la de referencia está parada; se ve también en móvil, donde la columna estaba oculta (PR #26).
 - 2026-10-25 · Portada: adelanto de tres días de la predicción de AEMET con enlace a Predicción, y descripción propia para buscadores y para compartir (PR #26).
 - 2026-10-25 · Actualidad: el estado de la ficha se calcula con la antigüedad de la última lectura, no solo con el estado de la estación. La Vega llevaba doce días parada y seguía diciendo «En línea» sobre unos grados en blanco.
+- 2026-10-25 · Actualidad: la zona de cámara desaparece en las estaciones que no tienen ninguna publicada. Tres de las cuatro fichas enseñaban un recuadro negro con el logotipo y cargaban un iframe para no mostrar nada (PR #29).
 - 2026-10-25 · La tarjeta de la portada y la ficha de estación comparten la cuenta de «cuánto hace de esta lectura»: `resumen.js` la importa de `meteorologia.js` en vez de repetirla.
 - 2026-10-25 · Portada: la ficha sin cámara cierra su columna (quedaban 280 px vacíos de 511) y el timelapse baja de 1279 px de ancho a columnas de 560 como mucho.
 - 2026-10-25 · Portada: «Condiciones actuales» estrena icono del cielo, de AEMET para la hora en curso, con la lluvia medida por encima y luna con su fase de noche. Los dibujos pasan de `js/prediccion.js` a `js/iconos-tiempo.js`, compartidos por las dos páginas, y la predicción se pide una sola vez para toda la portada.
