@@ -175,6 +175,21 @@
 }
 
 
+/*
+ * Sin cámara, una sola columna.
+ *
+ * Esconder la zona de cámara no basta: la rejilla sigue guardando su
+ * columna y queda un hueco. Medido en la web a 1440 px, la fila medía
+ * 511 px con los datos apretados en 220 y 280 vacíos al lado.
+ */
+.ficha-estacion--vertical[data-sin-camara="1"]
+.estacion-superior,
+.ficha-estacion--horizontal[data-sin-camara="1"]
+.estacion-superior {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+
 /* ==========================================================
    IDENTIDAD + TEMPERATURA
    ========================================================== */

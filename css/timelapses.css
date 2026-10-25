@@ -135,10 +135,24 @@
    ========================================================== */
 
 
+/*
+ * Columnas de 560 px como mucho, centradas.
+ *
+ * A una sola columna, el visor ocupaba 1279 px de ancho en una pantalla
+ * de 1440: era lo más grande de la página con diferencia. Así cada
+ * cámara queda del tamaño de un vídeo normal y, cuando haya varias,
+ * la sección crece a lo ancho en vez de a lo alto.
+ */
 .timelapses-lista {
     display: grid;
 
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(320px, 560px)
+        );
+
+    justify-content: center;
 
     gap: 20px;
 
