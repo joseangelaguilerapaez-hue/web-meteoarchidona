@@ -39,6 +39,7 @@ const CAMPOS = {
     descripcion: "campoTimelapseDescripcion",
     camara_id: "campoTimelapseCamara",
     camara_preset_id: "campoTimelapsePreset",
+    nivel_zoom: "campoTimelapseZoom",
     tipo_programacion: "campoTimelapseTipo",
     evento_solar: "campoTimelapseEventoSolar",
     zona_horaria: "campoTimelapseZonaHoraria",
@@ -108,6 +109,11 @@ function enteroObligatorio(valor, etiqueta, minimo = 1){
 function enteroOpcional(valor, etiqueta){
     const texto = String(valor ?? "").trim();
     return texto ? enteroObligatorio(texto, etiqueta) : null;
+}
+
+function enteroOpcionalDesde(valor, etiqueta, minimo){
+    const texto = String(valor ?? "").trim();
+    return texto ? enteroObligatorio(texto, etiqueta, minimo) : null;
 }
 
 function textoOpcional(valor){
@@ -274,6 +280,7 @@ async function cargarPresetsSeleccionados(camaraId, presetId = null){
     const camara = camaraPorId(camaraId);
     const admite = admitePreset(camara);
     mostrarElemento("bloqueTimelapsePreset", admite);
+    mostrarElemento("bloqueTimelapseZoom", admite);
 
     if(!admite){
         return;
@@ -475,6 +482,7 @@ function nuevoFormulario(){
         new Option("Sin cambio de posición", "")
     );
     mostrarElemento("bloqueTimelapsePreset", false);
+    mostrarElemento("bloqueTimelapseZoom", false);
     $("tituloFormularioTimelapse").textContent = "Nueva programación";
     $("botonGuardarProgramacionTimelapse").textContent = "Crear programación";
     $("botonGuardarProgramacionTimelapse").disabled = false;
@@ -561,6 +569,11 @@ function leerFormulario(){
         throw new Error("Selecciona un preset disponible para esa cámara.");
     }
 
+    const zoom = enteroOpcionalDesde(valorCampo("nivel_zoom")?.value, "Zoom", 0);
+    if(zoom !== null && !presetId){
+        throw new Error("El zoom solo se aplica junto a un preset.");
+    }
+
     const solar = tipo === "EVENTO_SOLAR";
     const fija = tipo === "HORA_FIJA";
     const evento = solar ? valorCampo("evento_solar")?.value : null;
@@ -578,6 +591,7 @@ function leerFormulario(){
         descripcion: textoOpcional(valorCampo("descripcion")?.value),
         camara_id: camaraId,
         camara_preset_id: presetId ? Number(presetId) : null,
+        nivel_zoom: zoom,
         tipo_programacion: tipo,
         evento_solar: evento,
         zona_horaria: (valorCampo("zona_horaria")?.value || "").trim(),

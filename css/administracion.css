@@ -1297,4 +1297,72 @@ summary{
 }
 
 
+/* ==========================================================
+   PATRULLAS
+   ========================================================== */
+
+#modulo-patrullas h3.reglas-subtitulo{
+    margin:22px 0 8px;
+    color:var(--text, #e6edf3);
+    font-size:13px;
+    font-weight:700
+}
+
+#bloqueAccionesPatrulla{
+    margin-bottom:16px;
+    padding:12px 14px;
+    border:1px solid var(--border-strong);
+    border-radius:12px
+}
+
+#bloqueAccionesPatrulla p{
+    margin:0 0 10px
+}
+
+.orden-patrulla .regla-cabecera{
+    align-items:center;
+    margin-bottom:10px
+}
+
+.orden-patrulla .regla-cabecera select{
+    flex:1;
+    min-width:0
+}
+
+.orden-patrulla .acciones{
+    flex-wrap:nowrap
+}
+
+.dias-semana{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 14px;
+    border:0;
+    padding:0;
+    margin:0
+}
+
+.dias-semana legend{
+    margin-bottom:6px
+}
+
+#seccionProgramacionesPatrulla .formulario-grid{
+    margin-top:16px
+}
+
+@media(max-width:720px){
+    .orden-patrulla .regla-cabecera{
+        flex-direction:row;
+        flex-wrap:wrap;
+        align-items:center
+    }
+}
+
+.dias-semana label{
+    display:inline-flex;
+    align-items:center;
+    gap:4px
+}
+
+
 /* Fin de fichero: css/administracion.css */
