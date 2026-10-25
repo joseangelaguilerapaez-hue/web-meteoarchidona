@@ -163,9 +163,61 @@ let promesaModuloPatrullas = null;
    NAVEGACIÓN ENTRE MÓDULOS
    ========================================================== */
 
-export function activarModulo(
+/*
+ * Cada apartado ocupa la pantalla entera y tiene su propia dirección
+ * (administracion#patrullas, #sql...). El índice (resumen) muestra el
+ * menú; dentro de un apartado se oculta el menú y aparece la barra
+ * «← Administración». Así funcionan «atrás», los favoritos y abrir un
+ * apartado en otra pestaña.
+ */
+
+function moduloExiste(
     nombre
 ){
+    return Boolean(
+        nombre
+        &&
+        /^[a-z-]+$/.test(nombre)
+        &&
+        $(`modulo-${nombre}`)
+    );
+}
+
+
+function moduloDesdeDireccion(){
+
+    const nombre =
+        window.location.hash.replace("#", "");
+
+    return moduloExiste(nombre)
+        ? nombre
+        : "resumen";
+
+}
+
+
+function tituloModulo(
+    nombre
+){
+
+    const enlace =
+        document.querySelector(
+            `.modulo-boton[data-modulo="${nombre}"]`
+        );
+
+    return (enlace?.textContent || nombre).trim();
+
+}
+
+
+export function activarModulo(
+    nombre,
+    {actualizarDireccion = true} = {}
+){
+
+    if(!moduloExiste(nombre)){
+        nombre = "resumen";
+    }
 
     document.querySelectorAll(
         ".modulo"
@@ -189,6 +241,54 @@ export function activarModulo(
                 ===
                 nombre
             )
+    );
+
+    const enApartado =
+        nombre !== "resumen";
+
+    $("panelAdministracion")
+        ?.classList.toggle("en-modulo", enApartado);
+
+    const barra =
+        $("barraModulo");
+
+    if(barra){
+        barra.hidden = !enApartado;
+        barra.classList.toggle("oculto", !enApartado);
+    }
+
+    const titulo =
+        $("tituloModuloActual");
+
+    if(titulo){
+        titulo.textContent = enApartado ? tituloModulo(nombre) : "";
+    }
+
+    if(actualizarDireccion){
+
+        const deseado =
+            enApartado ? `#${nombre}` : "";
+
+        if(window.location.hash !== deseado){
+            history.pushState(
+                null,
+                "",
+                `${window.location.pathname}${window.location.search}${deseado}`
+            );
+        }
+
+    }
+
+    window.scrollTo(0, 0);
+
+}
+
+
+function seguirDireccion(){
+
+    activarModulo(
+        moduloDesdeDireccion(),
+        {actualizarDireccion: false}
     );
 
 }
@@ -717,9 +817,8 @@ async function alAbrirSesion(){
 
     await cargarDatosAdministracion();
 
-    activarModulo(
-        "resumen"
-    );
+    // Respeta el apartado pedido en la dirección (#patrullas...).
+    seguirDireccion();
 
 }
 
@@ -797,8 +896,15 @@ async function alCerrarSesion(){
         moduloPatrullas.limpiarPatrullas();
     }
 
+    history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}`
+    );
+
     activarModulo(
-        "resumen"
+        "resumen",
+        {actualizarDireccion: false}
     );
 
 }
@@ -862,16 +968,22 @@ function configurarEventosGenerales(){
                 void cargarDatosAdministracion()
         );
 
+    // Los apartados son enlaces (#patrullas...): el cambio de dirección
+    // activa el apartado. «Atrás» y «adelante» también.
+    window.addEventListener("hashchange", seguirDireccion);
+    window.addEventListener("popstate", seguirDireccion);
+
+    // «Resumen» del menú y «← Administración» vuelven al índice.
     document.querySelectorAll(
-        ".modulo-boton"
+        'button.modulo-boton[data-modulo="resumen"], #botonVolverAdministracion'
     ).forEach(
         boton=>
             boton.addEventListener(
                 "click",
-                ()=>
-                    activarModulo(
-                        boton.dataset.modulo
-                    )
+                evento=>{
+                    evento.preventDefault();
+                    activarModulo("resumen");
+                }
             )
     );
 
