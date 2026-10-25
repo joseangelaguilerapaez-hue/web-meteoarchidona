@@ -1657,6 +1657,81 @@ function montarIframeVisor(
 
 
     /*
+     * Sin cámara, el viento sube a ocupar ese sitio.
+     *
+     * Dejar la mitad derecha en blanco quedaba peor que el recuadro que
+     * se quitó: media ficha vacía con el nombre colgando en una punta.
+     * La veleta es lo que mejor llena ese hueco, y de paso la ficha
+     * entera queda más corta.
+     */
+    function colocarViento(ficha, arriba) {
+
+        const superior =
+            ficha.querySelector(
+                ".estacion-superior"
+            );
+
+        const secundarios =
+            ficha.querySelector(
+                ".estacion-secundarios"
+            );
+
+        const viento =
+            ficha.querySelector(
+                ".viento-panel"
+            );
+
+
+        if (
+            !superior
+            ||
+            !secundarios
+            ||
+            !viento
+        ) {
+
+            return;
+
+        }
+
+
+        const sitio = arriba
+            ? superior
+            : secundarios;
+
+
+        /* Ya está donde toca: no se toca el DOM por gusto. */
+        if (
+            viento.parentElement === sitio
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            arriba
+        ) {
+
+            superior.append(
+                viento
+            );
+
+
+            return;
+
+        }
+
+
+        secundarios.prepend(
+            viento
+        );
+
+    }
+
+
+    /*
      * Estación sin cámara: fuera la zona entera.
      *
      * Antes se montaba igualmente el visor para que enseñara el
@@ -1678,6 +1753,12 @@ function montarIframeVisor(
             .sinCamara = "1";
 
 
+        colocarViento(
+            ficha,
+            true
+        );
+
+
         contenedor.replaceChildren();
 
 
@@ -1696,6 +1777,12 @@ function montarIframeVisor(
 
     delete ficha.dataset
         .sinCamara;
+
+
+    colocarViento(
+        ficha,
+        false
+    );
 
 
     const url =

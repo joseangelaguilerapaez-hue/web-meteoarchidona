@@ -34,7 +34,7 @@ import {
     MINUTOS_PARA_CONSIDERAR_PARADA,
     instanteDeLaLectura,
     minutosSinDatos
-} from "./meteorologia.js?v=20261025-sin-datos1";
+} from "./meteorologia.js?v=20261025-viento1";
 
 
 import {

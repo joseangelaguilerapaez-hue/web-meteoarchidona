@@ -34,7 +34,7 @@ import {
     crearEstadoInicialEstacion,
     obtenerMetadatosEstacion,
     obtenerNombreVisibleEstacion
-} from "./estaciones.js?v=20261025-sin-camara1";
+} from "./estaciones.js?v=20261025-viento1";
 
 
 import {
