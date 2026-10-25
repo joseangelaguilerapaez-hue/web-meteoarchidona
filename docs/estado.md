@@ -23,6 +23,7 @@ No se marca nada como hecho que no esté en `main`.
 - Timelapses en Actualidad y gestión de productos de timelapse en el panel de administración, con navegación Configuración/Productos (15–17 oct).
 - Visor de vídeo MP4 con controles temporales, adaptado a móvil y pantalla completa (16 oct).
 - En vivo: selector dinámico de directos de YouTube que carga las emisiones desde la API pública (Murcia, Nerja, puerto de Málaga), 15–21 oct.
+- Actualidad avisa cuando una estación lleva más de una hora sin mandar datos: la ficha dice «Sin datos desde…» en vez de «En línea» y el punto deja de ser verde (25 oct).
 
 ## En construcción / abierto
 
@@ -55,3 +56,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Publicados «Ahora» con El Silo y el texto del presentador; primer texto real visible en la web. Detectado que Nginx no fija la caché del HTML.
 - 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.
 - 2026-10-25 · Auditoría: selecciones y activaciones declarativas (`data-auditoria-seleccion`, `data-auditoria-activacion`), YouTube desde su visor y copia del catálogo en `js/auditoria.js` para no perder lotes.
+- 2026-10-25 · Actualidad: el estado de la ficha se calcula con la antigüedad de la última lectura, no solo con el estado de la estación. La Vega llevaba doce días parada y seguía diciendo «En línea» sobre unos grados en blanco.

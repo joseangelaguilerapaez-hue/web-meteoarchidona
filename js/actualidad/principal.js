@@ -88,7 +88,7 @@ import {
     cargarCatalogoEstaciones,
     cargarCondiciones,
     refrescarCatalogo
-} from "./api.js?v=20261012-camara1";
+} from "./api.js?v=20261025-sin-datos1";
 
 
 /* ==========================================================
