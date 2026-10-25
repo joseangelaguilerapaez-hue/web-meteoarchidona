@@ -12,6 +12,9 @@
  * media de la comarca ni un cálculo nuestro, así que la tarjeta dice
  * siempre de qué estación es el dato y a qué hora se tomó.
  *
+ * La cuenta de cuánto hace de la lectura es la misma que usa la ficha
+ * de estación: se importa de meteorologia.js, no se repite aquí.
+ *
  * Si El Silo está parada se busca otra estación con lectura reciente,
  * porque la portada sin temperatura no sirve de nada; el nombre que se
  * lee bajo el título cambia con ella. Si no hay ninguna al día, no se
@@ -19,18 +22,14 @@
  * no hay datos.
  */
 
-const ESTACION_REFERENCIA = "EL_SILO";
+import {
+    MINUTOS_PARA_CONSIDERAR_PARADA,
+    instanteDeLaLectura,
+    minutosSinDatos
+} from "./meteorologia.js?v=20261025-sin-datos1";
 
-/*
- * A partir de esta edad, la lectura deja de presentarse como «ahora».
- * Las estaciones envían cada pocos minutos; una hora de silencio ya es
- * una avería, no un hueco.
- *
- * Nota: la ficha de estación hace esta misma cuenta en
- * js/actualidad/meteorologia.js. Cuando las dos estén en main, conviene
- * dejar una sola y que esta la importe.
- */
-const MINUTOS_PARA_CONSIDERAR_PARADA = 60;
+
+const ESTACION_REFERENCIA = "EL_SILO";
 
 const RUMBOS = [
     "N", "NNE", "NE", "ENE",
@@ -118,51 +117,6 @@ export function rumboDeGrados(grados) {
 
 
     return RUMBOS[indice];
-
-}
-
-
-/* «25/10/2026» + «16:12» en la hora del navegador, que es la de aquí. */
-export function instanteDeLaLectura(datos) {
-
-    const fecha = String(datos?.fecha_observacion || "");
-    const hora = String(datos?.hora_observacion || "");
-
-    const partesFecha = fecha.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-    const partesHora = hora.match(/^(\d{1,2}):(\d{2})$/);
-
-
-    if (!partesFecha || !partesHora) {
-
-        return null;
-
-    }
-
-
-    return new Date(
-        Number(partesFecha[3]),
-        Number(partesFecha[2]) - 1,
-        Number(partesFecha[1]),
-        Number(partesHora[1]),
-        Number(partesHora[2])
-    );
-
-}
-
-
-export function minutosSinDatos(datos, ahora) {
-
-    const instante = instanteDeLaLectura(datos);
-
-
-    if (!instante || Number.isNaN(instante.valueOf())) {
-
-        return null;
-
-    }
-
-
-    return (ahora.valueOf() - instante.valueOf()) / 60000;
 
 }
 

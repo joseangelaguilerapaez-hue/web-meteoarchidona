@@ -123,8 +123,128 @@ export function clasificarUv(
 }
 
 
+/*
+ * Minutos que puede pasar una estación sin mandar datos antes de que
+ * la ficha deje de decir "En línea".
+ *
+ * Las estaciones mandan una lectura por minuto. Una hora da margen
+ * suficiente para un corte de luz o de red sin alarmar, y evita que la
+ * web afirme que una estación está en línea cuando lleva días callada,
+ * como le pasó a La Vega en octubre de 2026: doce días parada y la
+ * ficha seguía diciendo "En línea" sobre unos grados en blanco.
+ */
+export const MINUTOS_PARA_CONSIDERAR_PARADA = 60;
+
+
+/*
+ * Convierte la fecha y la hora de una lectura en un instante.
+ *
+ * La API las manda por separado y en formato español, dd/mm/aaaa y
+ * hh:mm, ya en hora local de la estación.
+ */
+export function instanteDeLaLectura(
+    datos
+) {
+
+    const fecha =
+        datos?.fecha_observacion;
+
+    const hora =
+        datos?.hora_observacion;
+
+    if (
+        typeof fecha !== "string"
+        ||
+        typeof hora !== "string"
+    ) {
+
+        return null;
+
+    }
+
+
+    const partesFecha =
+        fecha.split(
+            "/"
+        );
+
+    const partesHora =
+        hora.split(
+            ":"
+        );
+
+    if (
+        partesFecha.length !== 3
+        ||
+        partesHora.length < 2
+    ) {
+
+        return null;
+
+    }
+
+
+    const instante =
+        new Date(
+            Number(partesFecha[2]),
+            Number(partesFecha[1]) - 1,
+            Number(partesFecha[0]),
+            Number(partesHora[0]),
+            Number(partesHora[1])
+        );
+
+    return Number.isNaN(
+        instante.valueOf()
+    )
+        ? null
+        : instante;
+
+}
+
+
+/*
+ * Desde cuándo no manda datos una estación, en minutos.
+ *
+ * Devuelve null cuando no se puede saber, para no acusar de parada a
+ * una estación por un dato que no se ha entendido.
+ */
+export function minutosSinDatos(
+    datos,
+    ahora
+) {
+
+    const instante =
+        instanteDeLaLectura(
+            datos
+        );
+
+    if (
+        !instante
+    ) {
+
+        return null;
+
+    }
+
+
+    const referencia =
+        ahora || new Date();
+
+    return Math.floor(
+        (
+            referencia - instante
+        )
+        /
+        60000
+    );
+
+}
+
+
 export function obtenerTextoEstadoFicha(
-    metadatos
+    metadatos,
+    datos,
+    ahora
 ) {
 
     if (
@@ -134,6 +254,59 @@ export function obtenerTextoEstadoFicha(
     ) {
 
         return "Datos simulados";
+
+    }
+
+
+    const minutos =
+        minutosSinDatos(
+            datos,
+            ahora
+        );
+
+    if (
+        minutos !== null
+        &&
+        minutos >= MINUTOS_PARA_CONSIDERAR_PARADA
+    ) {
+
+        const instante =
+            instanteDeLaLectura(
+                datos
+            );
+
+        const dia =
+            instante.toLocaleDateString(
+                "es-ES",
+                {
+                    day: "numeric",
+                    month: "short"
+                }
+            ).replace(
+                ".",
+                ""
+            );
+
+        const horas =
+            Math.floor(
+                minutos / 60
+            );
+
+        /*
+         * Dentro del mismo día basta la hora; a partir de ahí, el día
+         * dice más que un número de horas que nadie va a dividir.
+         */
+        return horas < 24
+            ? `Sin datos desde las ${
+                instante.toLocaleTimeString(
+                    "es-ES",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                )
+            }`
+            : `Sin datos desde el ${dia}`;
 
     }
 
@@ -374,12 +547,25 @@ export function mostrarDatosEstacion(
         estado
     ) {
 
+        const texto =
+            obtenerTextoEstadoFicha(
+                metadatos,
+                datos
+            );
+
+        /*
+         * La clase cambia el color del punto y del texto: verde
+         * mientras llegan datos, apagado cuando la estación calla.
+         */
+        estado.classList.toggle(
+            "sin-datos",
+            texto.startsWith(
+                "Sin datos"
+            )
+        );
+
         estado.innerHTML =
-            `<span class="punto"></span>${
-                obtenerTextoEstadoFicha(
-                    metadatos
-                )
-            }`;
+            `<span class="punto"></span>${texto}`;
 
     }
 
