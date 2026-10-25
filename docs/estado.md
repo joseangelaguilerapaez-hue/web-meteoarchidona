@@ -31,11 +31,15 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Pendiente
 
+- Caché de los estáticos en Nginx: `/css`, `/js` y `/assets` se sirven sin `Cache-Control`. Procedimiento listo en `scripts/configurar_cache_estaticos.py`, **pendiente de ejecutar en el servidor** (25 oct).
+
 
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
 - Estadísticas, usuarios, publicidad y redimensionamiento con nuevos puntos de medición: existen como documentos de especificación en `docs/`, pero no consta implementación en el historial reciente **(por confirmar cuáles se van a construir y en qué orden)**.
 - Observaciones: ver `docs/observaciones.md` para lo previsto **(por confirmar el estado real)**.
-- Portada (Actualidad): lista de mejoras en `docs/ideas-portada.md` (25 oct). Lo primero, los dos gráficos de la portada son datos de muestra escritos a mano y tres de los seis accesos apuntan a anclas que no existen. Los gráficos reales necesitan una ruta pública de histórico en `api-meteoarchidona`, que hoy no existe.
+- Portada, lo que queda de `docs/ideas-portada.md`: gráficos de temperatura y de lluvia con datos reales (necesitan una ruta pública de histórico en `api-meteoarchidona`: los datos ya se guardan en PostgreSQL, pero hoy solo los sirven las rutas de administración); tarjeta de rayos con la ruta pública de descargas eléctricas, que funciona y no se usa en toda la web; y decidir qué se enseña cuando no hay timelapse del día anterior.
+- Dar de alta en el catálogo de auditoría el adelanto de la predicción de la portada y el bloque del texto de Predicción.
+- Dejar una sola cuenta de «cuánto hace de esta lectura»: está en `js/actualidad/resumen.js` y en `js/actualidad/meteorologia.js` (rama `fix/estado-sin-datos`).
 
 ## Ramas antiguas
 
@@ -56,4 +60,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Publicados «Ahora» con El Silo y el texto del presentador; primer texto real visible en la web. Detectado que Nginx no fija la caché del HTML.
 - 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.
 - 2026-10-25 · Auditoría: selecciones y activaciones declarativas (`data-auditoria-seleccion`, `data-auditoria-activacion`), YouTube desde su visor y copia del catálogo en `js/auditoria.js` para no perder lotes.
-- 2026-10-25 · Repasada la portada y escritas las mejoras en `docs/ideas-portada.md`, para irlas aplicando por partes.
+- 2026-10-25 · Escrito `scripts/configurar_cache_estaticos.py` para que Nginx cachee `/css`, `/js` y `/assets` (un año los versionados, treinta días las imágenes), con cinco pruebas de su transformación del texto. Falta ejecutarlo en el VPS.

@@ -40,6 +40,25 @@ Copia de la configuración anterior: `/etc/nginx/meteoarchidona-web.antes-cache-
 
 Ojo: no dejar copias de seguridad dentro de `sites-enabled/`, porque Nginx las carga como sitios.
 
+Los estáticos (`/css`, `/js` y `/assets`) se sirven hoy **sin ninguna cabecera de caché**, solo con
+`ETag`: el navegador los vuelve a pedir en cada visita. Para arreglarlo hay un procedimiento
+equivalente al anterior, pendiente de ejecutar en el servidor:
+
+```
+sudo python3 scripts/configurar_cache_estaticos.py
+```
+
+Añade dentro del `server` del sitio `expires 1y;` para `/css` y `/js`, que van siempre versionados
+con `?v=`, y `expires 30d;` para `/assets`, que no se versiona: si algún día se cambia el logotipo,
+conviene que la gente lo vea en semanas y no en meses. Comprueba antes, hace copia, valida con
+`nginx -t`, recarga y restaura si algo falla. Se puede ejecutar dos veces sin que pase nada.
+
+Comprobación:
+
+```
+curl -sI https://meteoarchidona.com/css/cabecera.css | grep -i -E 'cache-control|expires'
+```
+
 Comprobación:
 
 ```
