@@ -17,14 +17,14 @@
 <link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
 <link rel="stylesheet" href="../css/pie.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/administracion.css?v=20260926-tarjetas1">
+<link rel="stylesheet" href="../css/administracion.css?v=20261025-patrullas1">
 
 <script src="../js/cabecera.js?v=20260926-menu1" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261017-pestanas1"
+    src="../js/administracion/principal.js?v=20261025-patrullas1"
 ></script>
 </head>
 
@@ -304,6 +304,14 @@
 <button
     type="button"
     class="modulo-boton"
+    data-modulo="patrullas"
+>
+    Patrullas
+</button>
+
+<button
+    type="button"
+    class="modulo-boton"
     data-modulo="weatherlink"
 >
     WeatherLink
@@ -467,6 +475,20 @@
 
     <div class="resumen-valor">
         Timelapses
+    </div>
+</button>
+
+<button
+    type="button"
+    class="resumen-card"
+    data-ir-modulo="patrullas"
+>
+    <div class="resumen-etiqueta">
+        Cámaras PTZ
+    </div>
+
+    <div class="resumen-valor">
+        Patrullas
     </div>
 </button>
 
@@ -2145,6 +2167,33 @@
 </div>
 
 
+<div
+    id="bloqueTimelapseZoom"
+    class="campo oculto"
+    hidden
+>
+
+<label for="campoTimelapseZoom">
+    Zoom en el preset
+</label>
+
+<input
+    id="campoTimelapseZoom"
+    type="number"
+    min="0"
+    step="1"
+    inputmode="numeric"
+    placeholder="Sin zoom"
+>
+
+<div class="campo-ayuda">
+    Opcional y solo junto a un preset. Pendiente de
+    comprobar que la cámara admite zoom por la API.
+</div>
+
+</div>
+
+
 <!-- =========================================================
      TIPO DE PROGRAMACIÓN
      ========================================================= -->
@@ -2503,6 +2552,539 @@
 ></div>
 
 </form>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     ADMINISTRACIÓN DE PATRULLAS
+     Mismo esquema que Timelapses: listado y editor.
+     Diseño: docs/patrullas.md de api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-patrullas"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Patrullas
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonRecargarPatrullas"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+<button
+    id="botonNuevaPatrulla"
+    type="button"
+    class="boton boton-principal"
+>
+    + Nueva
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Recorridos propios por los presets de una cámara PTZ.
+    Una patrulla <strong>activa</strong> se repite en bucle;
+    también puede darse una sola vuelta, a mano o programada.
+</p>
+
+<p class="modulo-intro">
+    MeteoCam aplicará lo que se guarde aquí cuando tenga
+    su ejecutor de patrullas. Mientras tanto se guarda
+    la configuración, pero la cámara no se mueve.
+</p>
+
+<div class="filtros">
+
+<div class="campo">
+
+<label for="filtroPatrullaTexto">
+    Buscar patrullas
+</label>
+
+<input
+    id="filtroPatrullaTexto"
+    type="search"
+    placeholder="Código, nombre o cámara..."
+    autocomplete="off"
+>
+
+</div>
+
+<div class="filtros-dobles">
+
+<div class="campo">
+
+<label for="filtroPatrullaCamara">
+    Cámara
+</label>
+
+<select id="filtroPatrullaCamara">
+    <option value="">
+        Todas las cámaras
+    </option>
+</select>
+
+</div>
+
+<div class="campo">
+
+<label for="filtroPatrullaEstado">
+    Estado
+</label>
+
+<select id="filtroPatrullaEstado">
+<option value="">Todas</option>
+<option value="activas">Activas</option>
+<option value="habilitadas">Habilitadas</option>
+<option value="deshabilitadas">Deshabilitadas</option>
+</select>
+
+</div>
+
+</div>
+</div>
+
+<div
+    id="estadoPatrullas"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="listaPatrullas"
+    class="lista-estaciones"
+></div>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     EDITOR DE PATRULLA
+     ========================================================= -->
+
+<section
+    id="panelFormularioPatrulla"
+    class="panel oculto"
+    hidden
+>
+
+<div class="panel-cabecera">
+
+<h2
+    id="tituloFormularioPatrulla"
+    class="panel-titulo"
+>
+    Nueva patrulla
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="bloqueAccionesPatrulla"
+    class="nota oculto"
+    hidden
+>
+
+<p id="estadoActivaPatrulla"></p>
+
+<div class="acciones">
+
+<button
+    id="botonActivarPatrulla"
+    type="button"
+    class="boton boton-principal"
+>
+    Activar
+</button>
+
+<button
+    id="botonVueltaPatrulla"
+    type="button"
+    class="boton boton-secundario"
+>
+    Ejecutar una vuelta ahora
+</button>
+
+<button
+    id="botonBorrarPatrulla"
+    type="button"
+    class="boton boton-peligro"
+>
+    Borrar
+</button>
+
+</div>
+</div>
+
+<form id="formularioPatrulla">
+
+<div class="formulario-grid">
+
+<div class="campo">
+
+<label for="campoPatrullaCodigo">
+    Código
+</label>
+
+<input
+    id="campoPatrullaCodigo"
+    type="text"
+    maxlength="100"
+    required
+    autocomplete="off"
+    placeholder="GENERAL"
+>
+
+<div class="campo-ayuda">
+    Único dentro de la cámara. Se guarda en mayúsculas.
+</div>
+
+</div>
+
+<div class="campo">
+
+<label for="campoPatrullaNombre">
+    Nombre
+</label>
+
+<input
+    id="campoPatrullaNombre"
+    type="text"
+    maxlength="250"
+    required
+    autocomplete="off"
+    placeholder="Patrulla general"
+>
+
+</div>
+
+<div class="campo campo-ancho">
+
+<label for="campoPatrullaDescripcion">
+    Descripción
+</label>
+
+<textarea
+    id="campoPatrullaDescripcion"
+    placeholder="Descripción opcional..."
+></textarea>
+
+</div>
+
+<div class="campo campo-ancho">
+
+<label for="campoPatrullaCamara">
+    Cámara
+</label>
+
+<select
+    id="campoPatrullaCamara"
+    required
+>
+    <option value="">
+        Selecciona una cámara PTZ
+    </option>
+</select>
+
+<div class="campo-ayuda">
+    Solo cámaras con movimiento (vista específica).
+    No se puede cambiar después de crearla.
+</div>
+
+</div>
+
+<div class="campo">
+
+<label for="campoPatrullaPresetInicial">
+    Preset inicial
+</label>
+
+<select
+    id="campoPatrullaPresetInicial"
+    required
+>
+    <option value="">
+        Elige antes la cámara
+    </option>
+</select>
+
+<div class="campo-ayuda">
+    La cámara va aquí antes de empezar
+    y vuelve aquí al terminar cada vuelta.
+</div>
+
+</div>
+
+<div class="campo">
+
+<label for="campoPatrullaVelocidad">
+    Velocidad por defecto (1-64)
+</label>
+
+<input
+    id="campoPatrullaVelocidad"
+    type="number"
+    min="1"
+    max="64"
+    step="1"
+    value="32"
+    required
+    inputmode="numeric"
+>
+
+<div class="campo-ayuda">
+    Para los movimientos que no indiquen la suya.
+</div>
+
+</div>
+
+<div class="campo campo-ancho">
+<div class="check-linea">
+<input
+    id="campoPatrullaHabilitada"
+    type="checkbox"
+    checked
+>
+<label for="campoPatrullaHabilitada">
+    Patrulla habilitada
+</label>
+</div>
+<div class="campo-ayuda">
+    Una patrulla deshabilitada se conserva, pero no
+    se puede activar ni ejecutar. Deshabilitar una
+    patrulla activa la para.
+</div>
+</div>
+
+</div>
+
+
+<!-- Órdenes -->
+
+<h3 class="reglas-subtitulo">
+    Órdenes
+</h3>
+
+<p
+    id="resumenVueltaPatrulla"
+    class="campo-ayuda"
+></p>
+
+<div
+    id="listaOrdenesPatrulla"
+    class="lista-reglas"
+></div>
+
+<div class="acciones">
+<button
+    id="botonAnadirOrdenPatrulla"
+    type="button"
+    class="boton boton-secundario"
+>
+    + Añadir orden
+</button>
+</div>
+
+<div class="acciones-formulario">
+
+<button
+    id="botonGuardarPatrulla"
+    type="submit"
+    class="boton boton-principal"
+>
+    Crear patrulla
+</button>
+
+<button
+    id="botonCancelarPatrulla"
+    type="button"
+    class="boton"
+>
+    Cerrar
+</button>
+
+</div>
+
+<div
+    id="estadoFormularioPatrulla"
+    class="estado-formulario"
+    role="status"
+    aria-live="polite"
+></div>
+
+</form>
+
+
+<!-- Programaciones -->
+
+<div
+    id="seccionProgramacionesPatrulla"
+    class="oculto"
+    hidden
+>
+
+<h3 class="reglas-subtitulo">
+    Programaciones
+</h3>
+
+<p class="campo-ayuda">
+    Horas de España. Si una vuelta coincide con un timelapse
+    de la misma cámara, se omite. No se permiten dos franjas
+    de activación que se solapen en la misma cámara.
+</p>
+
+<div
+    id="listaProgramacionesPatrulla"
+    class="lista-reglas"
+></div>
+
+<div class="formulario-grid">
+
+<div class="campo campo-ancho">
+
+<label for="campoProgramacionModo">
+    Nueva programación
+</label>
+
+<select id="campoProgramacionModo">
+<option value="VUELTA_FECHA">Una vuelta en fecha y hora concretas</option>
+<option value="VUELTA_DIARIA">Una vuelta cada día elegido</option>
+<option value="ACTIVACION">Activa en bucle en una franja horaria</option>
+</select>
+
+</div>
+
+<div
+    id="bloqueProgramacionFecha"
+    class="campo"
+>
+
+<label for="campoProgramacionFecha">
+    Día y hora
+</label>
+
+<input
+    id="campoProgramacionFecha"
+    type="datetime-local"
+    step="60"
+>
+
+</div>
+
+<div
+    id="bloqueProgramacionHoraInicio"
+    class="campo oculto"
+    hidden
+>
+
+<label
+    id="etiquetaProgramacionHoraInicio"
+    for="campoProgramacionHoraInicio"
+>
+    Hora de la vuelta
+</label>
+
+<input
+    id="campoProgramacionHoraInicio"
+    type="time"
+    step="60"
+>
+
+</div>
+
+<div
+    id="bloqueProgramacionHoraFin"
+    class="campo oculto"
+    hidden
+>
+
+<label for="campoProgramacionHoraFin">
+    Hasta
+</label>
+
+<input
+    id="campoProgramacionHoraFin"
+    type="time"
+    step="60"
+>
+
+<div class="campo-ayuda">
+    Si es anterior a la de inicio, termina al día siguiente.
+</div>
+
+</div>
+
+<fieldset
+    id="bloqueProgramacionDias"
+    class="campo campo-ancho dias-semana oculto"
+    hidden
+>
+
+<legend>Días</legend>
+
+<label><input type="checkbox" value="1" checked> L</label>
+<label><input type="checkbox" value="2" checked> M</label>
+<label><input type="checkbox" value="3" checked> X</label>
+<label><input type="checkbox" value="4" checked> J</label>
+<label><input type="checkbox" value="5" checked> V</label>
+<label><input type="checkbox" value="6" checked> S</label>
+<label><input type="checkbox" value="7" checked> D</label>
+
+</fieldset>
+
+<div class="campo campo-ancho">
+<div class="check-linea">
+<input
+    id="campoProgramacionHabilitada"
+    type="checkbox"
+    checked
+>
+<label for="campoProgramacionHabilitada">
+    Habilitada
+</label>
+</div>
+</div>
+
+</div>
+
+<div class="acciones">
+<button
+    id="botonAnadirProgramacionPatrulla"
+    type="button"
+    class="boton boton-secundario"
+>
+    + Añadir programación
+</button>
+</div>
+
+</div>
 
 </div>
 </section>

@@ -146,6 +146,20 @@ let promesaModuloProductosTimelapse = null;
 
 
 /* ==========================================================
+   ESTADO DEL MÓDULO DE PATRULLAS
+   ========================================================== */
+
+/*
+ * Mismo esquema que las programaciones de timelapse:
+ * patrullas.js solo se importa si existe modulo-patrullas.
+ */
+
+let moduloPatrullas = null;
+
+let promesaModuloPatrullas = null;
+
+
+/* ==========================================================
    NAVEGACIÓN ENTRE MÓDULOS
    ========================================================== */
 
@@ -266,7 +280,7 @@ async function obtenerModuloTimelapses(){
     ){
 
         promesaModuloTimelapses = import(
-            "./timelapses.js?v=20261012-nombres2"
+            "./timelapses.js?v=20261025-zoom1"
         );
 
     }
@@ -359,6 +373,64 @@ async function cargarModuloTimelapses(){
          * deben continuar funcionando.
          */
 
+    }
+
+}
+
+
+/* ==========================================================
+   PATRULLAS
+   ========================================================== */
+
+async function obtenerModuloPatrullas(){
+
+    if(!$("modulo-patrullas")){
+        return null;
+    }
+
+    if(promesaModuloPatrullas === null){
+        promesaModuloPatrullas = import(
+            "./patrullas.js?v=20261025-patrullas1"
+        );
+    }
+
+    try{
+        moduloPatrullas = await promesaModuloPatrullas;
+        return moduloPatrullas;
+    }catch(error){
+        promesaModuloPatrullas = null;
+        moduloPatrullas = null;
+        throw error;
+    }
+
+}
+
+
+async function cargarModuloPatrullas(){
+
+    if(!$("modulo-patrullas")){
+        return;
+    }
+
+    try{
+        const modulo = await obtenerModuloPatrullas();
+        if(!modulo){
+            return;
+        }
+        modulo.configurarEventosPatrullas();
+        await modulo.cargarPatrullas();
+    }catch(error){
+        console.error(
+            "No se ha podido cargar Administración de Patrullas.",
+            error
+        );
+        mostrarEstado(
+            $("estadoPatrullas"),
+            error.message
+            ||
+            "No se han podido cargar las patrullas.",
+            "error"
+        );
     }
 
 }
@@ -610,6 +682,8 @@ export async function cargarDatosAdministracion(){
 
         await cargarModuloProductosTimelapse();
 
+        await cargarModuloPatrullas();
+
         mostrarEstado(
             $("estadoPanel"),
             "Datos administrativos actualizados.",
@@ -711,6 +785,16 @@ async function alCerrarSesion(){
         moduloProductosTimelapse
             .limpiarProductosTimelapse();
 
+    }
+
+    if(
+        moduloPatrullas
+        &&
+        typeof moduloPatrullas.limpiarPatrullas
+        ===
+        "function"
+    ){
+        moduloPatrullas.limpiarPatrullas();
     }
 
     activarModulo(

@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-10-23.
+Última actualización: 2026-10-25.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -29,6 +29,8 @@ No se marca nada como hecho que no esté en `main`.
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
 ## En construcción / abierto
+
+- Patrullas de cámara en Administración, paso 2 de 4 (rama `feature/admin-patrullas`, 25 oct): módulo «Patrullas» con el mismo esquema que Timelapses (listado con filtros y editor) para crear patrullas sobre cámaras PTZ con preset inicial, velocidad, órdenes (mover a preset, esperar, zoom) y programaciones (una vuelta en fecha o diaria, activación por franja), y botones para activar/desactivar, dar una vuelta y borrar. Añade además el zoom opcional al formulario de timelapses. Usa `/admin/patrullas` de `api-meteoarchidona` (migración 0027 aplicada en producción el 25 oct). Probado en navegador contra una API simulada; falta probarlo con la API real. Diseño: `docs/patrullas.md` de `api-meteoarchidona`.
 
 - Auditoría, segunda entrega: selecciones (cámara de la ficha, día del timelapse, selectores de En vivo) y activaciones (abrir timelapse, «Reproducir» de YouTube) hechas en la rama `feature/auditoria-selecciones`; quedan los eventos del visor de vídeo y del visor de Seguimiento. Comprobar que la visualización de fichas ya llega a todos: desde el 25 oct Nginx sirve los `.html` con `no-cache`, así que probablemente ya no hace falta forzar la versión de `componentes/ficha-estacion.html` **(por confirmar)**.
 - **Predicción**: muestra datos reales de AEMET desde el 23 oct (API PR #10 y #14). Reorientación decidida el 25 oct (`docs/prediccion.md`, sección 2 bis): toda la predicción de AEMET, «Ahora» con datos reales de El Silo, texto propio redactado por IA y, más adelante, correo diario. Pasos 1 y 3 **publicados el 25 oct** (web en `a7b1427`, API en `1954a3c`): «Ahora en Archidona» con la observación real de El Silo, sin datos de muestra, y el texto del presentador redactado por Claude a partir de AEMET (se regenera con cada edición nueva de AEMET). El bloque aún no está en el catálogo de auditoría.
@@ -76,3 +78,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · La tarjeta de la portada y la ficha de estación comparten la cuenta de «cuánto hace de esta lectura»: `resumen.js` la importa de `meteorologia.js` en vez de repetirla.
 - 2026-10-25 · Portada: la ficha sin cámara cierra su columna (quedaban 280 px vacíos de 511) y el timelapse baja de 1279 px de ancho a columnas de 560 como mucho.
 - 2026-10-25 · Portada: «Condiciones actuales» estrena icono del cielo, de AEMET para la hora en curso, con la lluvia medida por encima y luna con su fase de noche. Los dibujos pasan de `js/prediccion.js` a `js/iconos-tiempo.js`, compartidos por las dos páginas, y la predicción se pide una sola vez para toda la portada.
+- 2026-10-25 · Módulo de patrullas en Administración y zoom en el formulario de timelapses (paso 2 de las patrullas).
