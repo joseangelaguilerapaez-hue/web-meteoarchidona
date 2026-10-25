@@ -35,7 +35,9 @@ No se marca nada como hecho que no esté en `main`.
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
 - Estadísticas, usuarios, publicidad y redimensionamiento con nuevos puntos de medición: existen como documentos de especificación en `docs/`, pero no consta implementación en el historial reciente **(por confirmar cuáles se van a construir y en qué orden)**.
 - Observaciones: ver `docs/observaciones.md` para lo previsto **(por confirmar el estado real)**.
-- Portada: gráficos de temperatura y de lluvia con datos reales. Los de muestra se quitaron el 25 de octubre; para rehacerlos de verdad hace falta una ruta pública de histórico en `api-meteoarchidona` (los datos ya se guardan en PostgreSQL, pero hoy solo los sirven las rutas de administración). Las demás mejoras de la portada, en `docs/ideas-portada.md`.
+- Portada, lo que queda de `docs/ideas-portada.md`: gráficos de temperatura y de lluvia con datos reales (necesitan una ruta pública de histórico en `api-meteoarchidona`: los datos ya se guardan en PostgreSQL, pero hoy solo los sirven las rutas de administración); tarjeta de rayos con la ruta pública de descargas eléctricas, que funciona y no se usa en toda la web; y decidir qué se enseña cuando no hay timelapse del día anterior.
+- Dar de alta en el catálogo de auditoría el adelanto de la predicción de la portada y el bloque del texto de Predicción.
+- Dejar una sola cuenta de «cuánto hace de esta lectura»: está en `js/actualidad/resumen.js` y en `js/actualidad/meteorologia.js` (rama `fix/estado-sin-datos`).
 
 ## Ramas antiguas
 
@@ -57,3 +59,6 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.
 - 2026-10-25 · Auditoría: selecciones y activaciones declarativas (`data-auditoria-seleccion`, `data-auditoria-activacion`), YouTube desde su visor y copia del catálogo en `js/auditoria.js` para no perder lotes.
 - 2026-10-25 · Portada: fuera los dos gráficos de muestra, que eran líneas y barras escritas a mano, y el acceso «Gráficos» que apuntaba a esa sección.
+- 2026-10-25 · Portada: los accesos del final llevan a secciones que existen (tenían tres anclas inexistentes) y estrenan iconos SVG en vez de emoji.
+- 2026-10-25 · Portada: «Condiciones actuales» enseña la lectura real de la estación de referencia, con su nombre y su hora, y pasa a otra estación si la de referencia está parada; se ve también en móvil, donde la columna estaba oculta.
+- 2026-10-25 · Portada: adelanto de tres días de la predicción de AEMET, con enlace a Predicción; y descripción propia para buscadores y para compartir.
