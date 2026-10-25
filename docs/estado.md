@@ -37,6 +37,9 @@ No se marca nada como hecho que no esté en `main`.
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
 - Estadísticas, usuarios, publicidad y redimensionamiento con nuevos puntos de medición: existen como documentos de especificación en `docs/`, pero no consta implementación en el historial reciente **(por confirmar cuáles se van a construir y en qué orden)**.
 - Observaciones: ver `docs/observaciones.md` para lo previsto **(por confirmar el estado real)**.
+- Portada, lo que queda de `docs/ideas-portada.md`: gráficos de temperatura y de lluvia con datos reales (necesitan una ruta pública de histórico en `api-meteoarchidona`: los datos ya se guardan en PostgreSQL, pero hoy solo los sirven las rutas de administración); tarjeta de rayos con la ruta pública de descargas eléctricas, que funciona y no se usa en toda la web; y decidir qué se enseña cuando no hay timelapse del día anterior.
+- Dar de alta en el catálogo de auditoría el adelanto de la predicción de la portada y el bloque del texto de Predicción.
+- Dejar una sola cuenta de «cuánto hace de esta lectura»: está en `js/actualidad/resumen.js` y en `js/actualidad/meteorologia.js` (rama `fix/estado-sin-datos`).
 
 ## Ramas antiguas
 
