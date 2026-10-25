@@ -1831,6 +1831,119 @@ button {
 
 
 /* ==========================================================
+   ADELANTO DE LA PREDICCIÓN
+   ========================================================== */
+
+
+.prediccion-breve {
+    margin-top: 14px;
+    padding: 18px;
+}
+
+
+.prediccion-breve-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+.prediccion-breve-fuente {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.prediccion-breve-enlace {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+.prediccion-breve-vieja {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.prediccion-breve-dias {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+    gap: 12px;
+    margin-top: 14px;
+}
+
+
+.pred-breve-dia {
+    padding: 14px;
+    border:
+        1px solid
+        var(--border);
+    border-radius: 8px;
+    background:
+        rgba(
+            12,
+            28,
+            43,
+            0.8
+        );
+}
+
+
+.pred-breve-cuando {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+
+.pred-breve-descripcion {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.pred-breve-temperaturas {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+.pred-breve-max {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+
+.pred-breve-min {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.pred-breve-lluvia {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+/* ==========================================================
    ACCESOS
    ========================================================== */
 
@@ -2215,6 +2328,11 @@ button {
 
 
     .accesos {
+        grid-template-columns: 1fr;
+    }
+
+
+    .prediccion-breve-dias {
         grid-template-columns: 1fr;
     }
 

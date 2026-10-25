@@ -102,6 +102,16 @@ import {
 
 
 /* ==========================================================
+   ADELANTO DE LA PREDICCIÓN
+   ========================================================== */
+
+
+import {
+    iniciarPrediccionBreve
+} from "./prediccion-breve.js?v=20261025-prediccion1";
+
+
+/* ==========================================================
    PLANTILLA DE ESTACIÓN
    ========================================================== */
 
@@ -384,6 +394,9 @@ async function arrancarActualidad() {
 
 
         await actualizarResumen();
+
+
+        iniciarPrediccionBreve();
 
 
         /* ==================================================

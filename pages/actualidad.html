@@ -62,7 +62,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/actualidad.css?v=20261025-resumen1"
+    href="../css/actualidad.css?v=20261025-portada1"
 >
 
 
@@ -93,7 +93,7 @@
 
 <script
     type="module"
-    src="../js/actualidad/principal.js?v=20261025-resumen1"
+    src="../js/actualidad/principal.js?v=20261025-portada1"
 ></script>
 
 
@@ -439,6 +439,72 @@
     id="timelapses-lista"
     class="timelapses-lista"
     aria-live="polite"
+></div>
+
+
+</section>
+
+
+<!-- ======================================================
+     ADELANTO DE LA PREDICCIÓN
+
+     Tres días en corto. Los rellena
+     js/actualidad/prediccion-breve.js con GET /prediccion/archidona;
+     la sección nace oculta y solo aparece si la predicción llega.
+     ====================================================== -->
+
+
+<section
+    class="tarjeta prediccion-breve"
+    id="prediccion-breve"
+    aria-labelledby="prediccion-breve-titulo"
+    hidden
+>
+
+
+<div class="prediccion-breve-cabecera">
+
+
+<div>
+
+    <h2
+        class="seccion-titulo"
+        id="prediccion-breve-titulo"
+    >
+        Los próximos días
+    </h2>
+
+    <p class="prediccion-breve-fuente">
+        Predicción de AEMET para Archidona.
+    </p>
+
+</div>
+
+
+<a
+    class="prediccion-breve-enlace"
+    href="/prediccion"
+>
+    Ver los siete días
+</a>
+
+
+</div>
+
+
+<p
+    class="prediccion-breve-vieja"
+    id="prediccion-breve-vieja"
+    hidden
+>
+    AEMET lleva un rato sin publicar: esta predicción no es la del último
+    boletín.
+</p>
+
+
+<div
+    class="prediccion-breve-dias"
+    id="prediccion-breve-dias"
 ></div>
 
 
