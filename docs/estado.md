@@ -35,6 +35,7 @@ No se marca nada como hecho que no esté en `main`.
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
 - Estadísticas, usuarios, publicidad y redimensionamiento con nuevos puntos de medición: existen como documentos de especificación en `docs/`, pero no consta implementación en el historial reciente **(por confirmar cuáles se van a construir y en qué orden)**.
 - Observaciones: ver `docs/observaciones.md` para lo previsto **(por confirmar el estado real)**.
+- Portada: gráficos de temperatura y de lluvia con datos reales. Los de muestra se quitaron el 25 de octubre; para rehacerlos de verdad hace falta una ruta pública de histórico en `api-meteoarchidona` (los datos ya se guardan en PostgreSQL, pero hoy solo los sirven las rutas de administración). Las demás mejoras de la portada, en `docs/ideas-portada.md`.
 
 ## Ramas antiguas
 
@@ -55,3 +56,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Publicados «Ahora» con El Silo y el texto del presentador; primer texto real visible en la web. Detectado que Nginx no fija la caché del HTML.
 - 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.
 - 2026-10-25 · Auditoría: selecciones y activaciones declarativas (`data-auditoria-seleccion`, `data-auditoria-activacion`), YouTube desde su visor y copia del catálogo en `js/auditoria.js` para no perder lotes.
+- 2026-10-25 · Portada: fuera los dos gráficos de muestra, que eran líneas y barras escritas a mano, y el acceso «Gráficos» que apuntaba a esa sección.
