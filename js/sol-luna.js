@@ -319,6 +319,31 @@
         poner("luna-proxima-nueva", proximas.nueva ? formatoFecha.format(proximas.nueva) : "--");
     }
 
+    /* Si a esta hora el sol ya se ha puesto, o aún no ha salido. */
+    function esDeNoche(instante) {
+        const momento = instante || new Date();
+        const hoy = horasDelSol(mediodiaDeHoy(momento));
+
+        return momento < hoy.amanecer || momento > hoy.atardecer;
+    }
+
+
+    /*
+     * Lo que sabemos del cielo por astronomía, para quien lo necesite.
+     *
+     * Lo usa js/iconos-tiempo.js para dibujar la luna de esta noche con
+     * su fase, y js/actualidad/resumen.js para saber si toca sol o luna:
+     * la predicción de AEMET marca la noche por horas enteras, así que a
+     * las siete menos cuarto de un día que anochece a las seis y media
+     * todavía decía que era de día.
+     */
+    window.MeteoLuna = {
+        iluminacionLunar: iluminacionLunar,
+        caminoLuna: caminoLuna,
+        esDeNoche: esDeNoche
+    };
+
+
     actualizar();
 
     // Cada diez minutos basta: la luna cambia despacio y el día, una vez.

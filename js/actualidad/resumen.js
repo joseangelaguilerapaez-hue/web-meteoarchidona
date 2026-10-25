@@ -15,6 +15,14 @@
  * La cuenta de cuánto hace de la lectura es la misma que usa la ficha
  * de estación: se importa de meteorologia.js, no se repite aquí.
  *
+ * El dibujo del cielo no lo miden nuestras estaciones: miden grados,
+ * agua y viento, no nubes. El estado del cielo es el que AEMET publica
+ * para la hora en curso, igual que en Predicción. Lo que sí es nuestro
+ * manda cuando contradice: si la estación está midiendo lluvia, el
+ * icono llueve, diga AEMET lo que diga. De noche, luna, y con la fase
+ * de esta noche, que la calcula js/sol-luna.js para la tarjeta de al
+ * lado.
+ *
  * Si El Silo está parada se busca otra estación con lectura reciente,
  * porque la portada sin temperatura no sirve de nada; el nombre que se
  * lee bajo el título cambia con ella. Si no hay ninguna al día, no se
@@ -27,6 +35,12 @@ import {
     instanteDeLaLectura,
     minutosSinDatos
 } from "./meteorologia.js?v=20261025-sin-datos1";
+
+
+import {
+    horaDeAhora,
+    obtenerPrediccion
+} from "./prediccion-fuente.js?v=20261025-icono1";
 
 
 const ESTACION_REFERENCIA = "EL_SILO";
@@ -178,6 +192,108 @@ export function textoEstadoResumen(datos, ahora) {
             }`,
         sinDatos: true
     };
+
+}
+
+
+/*
+ * El estado del cielo para este momento.
+ *
+ * Base: lo que AEMET publica para la hora en curso. Encima manda la
+ * estación: si está midiendo lluvia, llueve. Y si no hay predicción a
+ * mano, al menos se sabe si es de día o de noche.
+ */
+export function cieloDeAhora(datos, prediccion, ahora, esDeNoche) {
+
+    const hora = horaDeAhora(prediccion, ahora);
+
+    const lloviendo =
+        typeof datos?.tasa_lluvia_mm_h === "number"
+        &&
+        datos.tasa_lluvia_mm_h > 0;
+
+    /*
+     * Para saber si toca sol o luna manda el orto y el ocaso reales,
+     * que calcula js/sol-luna.js. La marca de AEMET va por horas
+     * enteras y a las 18:58 de un día que anochece a las 18:30 todavía
+     * decía que era de día.
+     */
+    const noche = typeof esDeNoche === "boolean"
+        ? esDeNoche
+        : (
+            window.MeteoLuna
+            && typeof window.MeteoLuna.esDeNoche === "function"
+                ? window.MeteoLuna.esDeNoche(ahora)
+                : Boolean(hora?.es_noche)
+        );
+
+
+    if (lloviendo) {
+
+        return {
+            condicion: "lluvia",
+            descripcion: "Lloviendo",
+            noche: noche,
+            fuente: "estacion"
+        };
+
+    }
+
+
+    if (!hora) {
+
+        return null;
+
+    }
+
+
+    return {
+        condicion: hora.condicion,
+        descripcion: hora.descripcion,
+        noche: noche,
+        fuente: "aemet"
+    };
+
+}
+
+
+function pintarCielo(cielo) {
+
+    const zona = document.getElementById("resumen-cielo");
+
+    const dibujo = document.getElementById("resumen-cielo-dibujo");
+
+    const texto = document.getElementById("resumen-cielo-texto");
+
+
+    if (!zona || !dibujo || !texto) {
+
+        return;
+
+    }
+
+
+    /* Sin estado del cielo, mejor nada que un icono inventado. */
+    if (!cielo || !window.IconosTiempo) {
+
+        zona.hidden = true;
+
+
+        return;
+
+    }
+
+
+    dibujo.innerHTML = window.IconosTiempo.icono(
+        cielo.condicion,
+        cielo.noche
+    );
+
+    texto.textContent = cielo.descripcion || "";
+
+    zona.dataset.fuente = cielo.fuente;
+
+    zona.hidden = false;
 
 }
 
@@ -340,6 +456,38 @@ async function obtenerCandidatas() {
 }
 
 
+/*
+ * Pide la predicción y pinta el cielo. Si no llega, la tarjeta se queda
+ * sin icono y con sus cifras, que es lo importante.
+ */
+async function actualizarCielo(datos, ahora) {
+
+    try {
+
+        pintarCielo(
+            cieloDeAhora(
+                datos,
+                await obtenerPrediccion(ahora),
+                ahora
+            )
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "No se ha podido saber cómo está el cielo:",
+            error
+        );
+
+
+        pintarCielo(null);
+
+    }
+
+}
+
+
 export async function actualizarResumen() {
 
     const tarjeta = document.getElementById("resumen-ahora");
@@ -387,6 +535,9 @@ export async function actualizarResumen() {
                 pintar(datos, ahora);
 
 
+                await actualizarCielo(datos, ahora);
+
+
                 return true;
 
             }
@@ -396,6 +547,10 @@ export async function actualizarResumen() {
 
         /* Ninguna al día: se cuenta lo que pasa con la de referencia. */
         pintar(primera || {}, ahora);
+
+
+        /* Sin lectura al día tampoco se dibuja el cielo. */
+        pintarCielo(null);
 
 
         return true;
@@ -410,6 +565,9 @@ export async function actualizarResumen() {
 
 
         vaciar();
+
+
+        pintarCielo(null);
 
 
         const linea = document.getElementById("resumen-estado");

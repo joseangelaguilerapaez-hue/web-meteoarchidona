@@ -8,40 +8,22 @@
  *
  * La predicción es de AEMET y se dice. MeteoArchidona no predice: lo
  * que se publica aquí es lo que manda GET /prediccion/archidona, tal
- * cual (formato en docs/prediccion-endpoint.md).
+ * cual (formato en docs/prediccion-endpoint.md). La petición la hace
+ * prediccion-fuente.js, que la comparte con el icono del tiempo.
  *
  * Si la petición falla, el bloque no aparece. Es un adelanto: la
  * portada se sostiene sin él, y vale más eso que un hueco con guiones.
  */
 
-const MUNICIPIO = "archidona";
+import {
+    obtenerPrediccion
+} from "./prediccion-fuente.js?v=20261025-icono1";
+
 
 const DIAS_QUE_SE_ADELANTAN = 3;
 
 /* AEMET publica unas pocas veces al día. */
 const REFRESCO_MS = 30 * 60 * 1000;
-
-
-function obtenerApiBase() {
-
-    const apiBase =
-        String(window.API_BASE || "")
-            .trim()
-            .replace(/\/+$/, "");
-
-
-    if (!apiBase) {
-
-        throw new Error(
-            "window.API_BASE no está definido. Debe cargarse js/api.js antes de Actualidad."
-        );
-
-    }
-
-
-    return apiBase;
-
-}
 
 
 function crear(etiqueta, clase, texto) {
@@ -276,27 +258,8 @@ export async function actualizarPrediccionBreve() {
 
     try {
 
-        const respuesta = await fetch(
-            `${
-                obtenerApiBase()
-            }/prediccion/${
-                encodeURIComponent(MUNICIPIO)
-            }`,
-            {
-                cache: "no-store"
-            }
-        );
-
-
-        if (!respuesta.ok) {
-
-            throw new Error(`HTTP ${respuesta.status}`);
-
-        }
-
-
         return pintar(
-            await respuesta.json()
+            await obtenerPrediccion()
         );
 
 

@@ -1,0 +1,83 @@
+/*
+ * MeteoArchidona · Colores de los iconos del tiempo
+ *
+ * Los dibuja js/iconos-tiempo.js. Están aquí, y no en prediccion.css,
+ * porque los usan Predicción y la tarjeta «Condiciones actuales» de
+ * Actualidad. Las medidas de cada sitio siguen en la hoja de su página.
+ */
+
+
+.ic {
+    display: block;
+    overflow: visible;
+}
+
+
+.ic-sol {
+    fill: var(--amber);
+}
+
+
+.ic-rayos line {
+    stroke: var(--amber);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+}
+
+
+.ic-luna {
+    fill: #dbe4ee;
+}
+
+
+/* La parte de la luna que no da luz, para que se vea el disco entero. */
+.ic-luna-sombra {
+    fill: #2a3950;
+}
+
+
+.ic-nube {
+    fill: #d9e2e9;
+}
+
+
+.ic-nube-clara {
+    fill: #eef3f7;
+}
+
+
+.ic-nube-oscura {
+    fill: #9fb0c1;
+}
+
+
+.ic-nube-fondo {
+    fill: #6f8295;
+}
+
+
+.ic-gota {
+    stroke: var(--blue);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+}
+
+
+.ic-rayo {
+    fill: #facc15;
+}
+
+
+.ic-copo {
+    fill: #f5f8fc;
+}
+
+
+.ic-niebla {
+    stroke: #aabdd0;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+}
+
+
+/* Fin de fichero: css/iconos-tiempo.css */

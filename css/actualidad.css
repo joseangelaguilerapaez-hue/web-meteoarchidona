@@ -632,6 +632,33 @@ button {
 }
 
 
+/*
+ * Estado del cielo: el dibujo y su palabra.
+ *
+ * El icono no lo miden nuestras estaciones; viene de la predicción de
+ * AEMET para la hora en curso, salvo que la estación mida lluvia. Por
+ * eso lleva su palabra debajo: así se ve de qué está hablando.
+ */
+.resumen-cielo {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+}
+
+
+.resumen-cielo-dibujo .ic {
+    width: 76px;
+    height: 76px;
+}
+
+
+.resumen-cielo-texto {
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+
 .resumen-temperatura {
     display: flex;
     align-items: baseline;
