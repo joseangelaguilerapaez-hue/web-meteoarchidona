@@ -26,12 +26,11 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
-- Auditoría, segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores; forzar la versión de `componentes/ficha-estacion.html` para que la visualización de fichas llegue a todos.
+- Auditoría, segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores; comprobar que la visualización de fichas ya llega a todos: desde el 25 oct Nginx sirve los `.html` con `no-cache`, así que probablemente ya no hace falta forzar la versión de `componentes/ficha-estacion.html` **(por confirmar)**.
 - **Predicción**: muestra datos reales de AEMET desde el 23 oct (API PR #10 y #14). Reorientación decidida el 25 oct (`docs/prediccion.md`, sección 2 bis): toda la predicción de AEMET, «Ahora» con datos reales de El Silo, texto propio redactado por IA y, más adelante, correo diario. Pasos 1 y 3 **publicados el 25 oct** (web en `a7b1427`, API en `1954a3c`): «Ahora en Archidona» con la observación real de El Silo, sin datos de muestra, y el texto del presentador redactado por Claude a partir de AEMET (se regenera con cada edición nueva de AEMET). El bloque aún no está en el catálogo de auditoría.
 
 ## Pendiente
 
-- Caché del HTML: Nginx no envía `Cache-Control` para las páginas (comprobado el 25 oct con `curl -sI`: solo `Last-Modified` y `ETag`), así que los navegadores pueden enseñar una versión vieja tras publicar. Las reglas del `.htaccess` no se aplican con Nginx. Propuesta: `Cache-Control: no-cache` para el HTML en el sitio `meteoarchidona-web`. **Pendiente de leer su configuración y de que José lo apruebe.**
 
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
 - Estadísticas, usuarios, publicidad y redimensionamiento con nuevos puntos de medición: existen como documentos de especificación en `docs/`, pero no consta implementación en el historial reciente **(por confirmar cuáles se van a construir y en qué orden)**.
@@ -54,3 +53,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Predicción: «Ahora» con datos reales de El Silo, bloque «Hoy» marcado como predicción de AEMET y fuera los datos de muestra.
 - 2026-10-25 · Predicción: bloque «El tiempo hoy, contado por MeteoArchidona» con el texto redactado por IA (`GET /prediccion/{municipio}/texto`); oculto si no hay texto.
 - 2026-10-25 · Publicados «Ahora» con El Silo y el texto del presentador; primer texto real visible en la web. Detectado que Nginx no fija la caché del HTML.
+- 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.

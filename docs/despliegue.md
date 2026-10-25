@@ -30,7 +30,24 @@ Es un sitio estático: no hay que reiniciar nada. El `git log` debe coincidir co
 Los `.js` y `.css` se cachean en el navegador y se versionan con `?v=`. Si cambias uno que ya está en
 producción, sube también su `?v=`; si no, los visitantes seguirán viendo la versión vieja.
 
+Las páginas y los componentes `.html` no se versionan: Nginx los sirve con `expires -1`
+(`Cache-Control: no-cache`), así que el navegador pregunta siempre si han cambiado y recibe la versión
+nueva en cuanto se publica. Aplicado el 2026-10-25 en `/etc/nginx/sites-enabled/meteoarchidona-web`
+(es un fichero, no un enlace): `expires -1` en `location = /`, `/prediccion` e `/informacion` (las demás
+páginas ya lo tenían) y una regla general `location ~ \.html$`. Se usa `expires` y no `add_header`
+porque un `add_header` dentro de un `location` anula las cabeceras de seguridad del `server`.
+Copia de la configuración anterior: `/etc/nginx/meteoarchidona-web.antes-cache-20261025`.
+
+Ojo: no dejar copias de seguridad dentro de `sites-enabled/`, porque Nginx las carga como sitios.
+
+Comprobación:
+
+```
+curl -sI https://meteoarchidona.com/prediccion | grep -i -E 'cache-control|expires|strict-transport'
+```
+
 ## Por confirmar
 
-- El `README.md` y el `.htaccess` hablan de LiteSpeed, pero el servidor usa Nginx. Hasta aclararlo, no
-  asumas que el `.htaccess` se aplica en producción.
+- El `README.md` y el `.htaccess` hablan de LiteSpeed, pero el servidor usa Nginx. El `.htaccess` **no se
+  aplica en producción** (confirmado el 2026-10-25: sus cabeceras de caché no llegaban). Cualquier regla
+  que haga falta va en la configuración de Nginx.
