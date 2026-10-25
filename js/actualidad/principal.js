@@ -92,6 +92,26 @@ import {
 
 
 /* ==========================================================
+   TARJETA DE CONDICIONES ACTUALES
+   ========================================================== */
+
+
+import {
+    actualizarResumen
+} from "./resumen.js?v=20261025-resumen1";
+
+
+/* ==========================================================
+   ADELANTO DE LA PREDICCIÓN
+   ========================================================== */
+
+
+import {
+    iniciarPrediccionBreve
+} from "./prediccion-breve.js?v=20261025-prediccion1";
+
+
+/* ==========================================================
    PLANTILLA DE ESTACIÓN
    ========================================================== */
 
@@ -373,6 +393,12 @@ async function arrancarActualidad() {
         await cargarCondiciones();
 
 
+        await actualizarResumen();
+
+
+        iniciarPrediccionBreve();
+
+
         /* ==================================================
            RESPONSIVE
            ================================================== */
@@ -386,6 +412,12 @@ async function arrancarActualidad() {
 
         window.setInterval(
             cargarCondiciones,
+            INTERVALO_CONDICIONES_MS
+        );
+
+
+        window.setInterval(
+            actualizarResumen,
             INTERVALO_CONDICIONES_MS
         );
 
