@@ -79,3 +79,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Portada: la ficha sin cámara cierra su columna (quedaban 280 px vacíos de 511) y el timelapse baja de 1279 px de ancho a columnas de 560 como mucho.
 - 2026-10-25 · Portada: «Condiciones actuales» estrena icono del cielo, de AEMET para la hora en curso, con la lluvia medida por encima y luna con su fase de noche. Los dibujos pasan de `js/prediccion.js` a `js/iconos-tiempo.js`, compartidos por las dos páginas, y la predicción se pide una sola vez para toda la portada.
 - 2026-10-25 · Módulo de patrullas en Administración y zoom en el formulario de timelapses (paso 2 de las patrullas).
+- 2026-10-25 · Administración por apartados: cada apartado ocupa la pantalla entera con su dirección (`administracion#patrullas`, `#sql`…) y botón «← Administración»; el índice muestra solo el menú y el resumen.

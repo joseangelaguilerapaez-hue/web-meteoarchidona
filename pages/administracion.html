@@ -17,14 +17,14 @@
 <link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
 <link rel="stylesheet" href="../css/pie.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/administracion.css?v=20261025-patrullas1">
+<link rel="stylesheet" href="../css/administracion.css?v=20261025-pantallas1">
 
 <script src="../js/cabecera.js?v=20260926-menu1" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261025-patrullas1"
+    src="../js/administracion/principal.js?v=20261025-pantallas1"
 ></script>
 </head>
 
@@ -277,63 +277,91 @@
     Resumen
 </button>
 
-<button
-    type="button"
+<a
+    href="#estaciones"
     class="modulo-boton"
     data-modulo="estaciones"
 >
     Estaciones
-</button>
+</a>
 
-<button
-    type="button"
+<a
+    href="#camaras"
     class="modulo-boton"
     data-modulo="camaras"
 >
     Cámaras
-</button>
+</a>
 
-<button
-    type="button"
+<a
+    href="#timelapses"
     class="modulo-boton"
     data-modulo="timelapses"
 >
     Timelapses
-</button>
+</a>
 
-<button
-    type="button"
+<a
+    href="#patrullas"
     class="modulo-boton"
     data-modulo="patrullas"
 >
     Patrullas
-</button>
+</a>
 
-<button
-    type="button"
+<a
+    href="#weatherlink"
     class="modulo-boton"
     data-modulo="weatherlink"
 >
     WeatherLink
-</button>
+</a>
 
-<button
-    type="button"
+<a
+    href="#eumetsat"
     class="modulo-boton"
     data-modulo="eumetsat"
 >
     EUMETSAT
-</button>
+</a>
 
-<button
-    type="button"
+<a
+    href="#sql"
     class="modulo-boton"
     data-modulo="sql"
 >
     SQL
-</button>
+</a>
 
 </nav>
+
+<!-- =========================================================
+     BARRA DE APARTADO
+     Cada apartado ocupa la pantalla entera (#patrullas, #sql...)
+     y se vuelve al índice con este botón o con «atrás».
+     ========================================================= -->
+
+<div
+    id="barraModulo"
+    class="barra-modulo oculto"
+    hidden
+>
+
+<a
+    id="botonVolverAdministracion"
+    href="#"
+    class="boton boton-secundario"
+>
+    ← Administración
+</a>
+
+<h2
+    id="tituloModuloActual"
+    class="barra-modulo-titulo"
+></h2>
+
+</div>
+
 
 <div
     id="estadoPanel"
