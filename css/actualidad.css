@@ -2140,13 +2140,60 @@ button {
 
 
     /*
-     * La columna lateral se esconde ya desde 1100 px: entre 1020 y 1100
-     * (tableta apaisada) le quedaban unos 130 px de ancho y salía
-     * estrecha y estirada, con el dibujo del tiempo suelto en medio.
+     * La columna lateral se escondía entera desde 1100 px: estrecha y
+     * estirada, con el dibujo del tiempo suelto en medio, no valía la
+     * pena. Ahora «Condiciones actuales» lleva la lectura de verdad, y
+     * esconderla dejaba sin temperatura justo a quien entra desde el
+     * teléfono. Se queda, en una sola fila y más compacta; «Sol y luna»
+     * sí se va, que es la que ocupaba sin contar nada urgente.
      */
-    .resumen,
     .columna-resumen {
+        grid-template-rows: auto;
+        align-self: start;
+    }
+
+
+    .sol-luna {
         display: none;
+    }
+
+
+    .resumen .resumen-ahora {
+        gap: 10px;
+        margin: 10px 0;
+    }
+
+
+    .resumen .resumen-temperatura {
+        font-size: 44px;
+    }
+
+}
+
+
+/*
+ * Entre 620 y 1100 px la tarjeta ocupa el ancho de la fila y la cifra
+ * se quedaba sola en medio de un campo vacío: aquí va en línea, con los
+ * detalles a su lado.
+ */
+@media (min-width: 621px) and (max-width: 1100px) {
+
+    .resumen .resumen-ahora {
+        grid-template-columns:
+            auto
+            minmax(240px, 360px);
+        align-items: center;
+        gap: 22px;
+        justify-content: start;
+    }
+
+
+    .resumen .resumen-detalles {
+        padding: 0 0 0 20px;
+        border-top: 0;
+        border-left:
+            1px solid
+            var(--border);
     }
 
 }
