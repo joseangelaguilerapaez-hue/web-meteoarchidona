@@ -33,7 +33,7 @@ import {
     estacionTieneFicha,
     obtenerCodigosConFicha,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261012-camara1";
+} from "./estaciones.js?v=20261025-sin-camara1";
 
 
 import {
@@ -44,7 +44,7 @@ import {
 import {
     mostrarDatosEstacion,
     mostrarErrorEstacion
-} from "./meteorologia.js?v=20261012-camara1";
+} from "./meteorologia.js?v=20261025-sin-camara1";
 
 
 function obtenerApiBase() {

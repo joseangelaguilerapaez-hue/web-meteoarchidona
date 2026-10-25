@@ -61,7 +61,7 @@ import {
     establecerModoFicha,
     montarVisorFicha,
     obtenerPlantillaFichaEstacion as obtenerPlantillaComponente
-} from "../ficha-estacion.js?v=20261012-camara1";
+} from "../ficha-estacion.js?v=20261025-sin-camara1";
 
 
 /* ==========================================================
