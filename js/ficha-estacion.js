@@ -1656,6 +1656,48 @@ function montarIframeVisor(
         );
 
 
+    /*
+     * Estación sin cámara: fuera la zona entera.
+     *
+     * Antes se montaba igualmente el visor para que enseñara el
+     * cartel "VÍDEO EN DIRECTO / NO DISPONIBLE EN ESTA ESTACIÓN".
+     * Ocupaba lo mismo que un directo, repetía el logotipo en tres
+     * de las cuatro fichas de la portada y, de paso, cargaba un
+     * iframe por estación para no enseñar nada.
+     *
+     * Con el atributo, css/ficha-estacion.css esconde .estacion-camara
+     * y la ficha reparte ese sitio entre sus datos. Si más adelante
+     * la estación estrena cámara, el atributo se quita solo en la
+     * siguiente pasada y el visor aparece.
+     */
+    if (
+        !publicacion
+    ) {
+
+        ficha.dataset
+            .sinCamara = "1";
+
+
+        contenedor.replaceChildren();
+
+
+        zonaVisor.dataset
+            .camaraDisponible = "0";
+
+
+        delete zonaVisor.dataset
+            .camaraId;
+
+
+        return null;
+
+    }
+
+
+    delete ficha.dataset
+        .sinCamara;
+
+
     const url =
         crearUrlVisorEstacion(
             codigoNormalizado,

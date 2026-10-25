@@ -454,6 +454,17 @@
 }
 
 
+/*
+ * Estación sin cámara: la zona desaparece y la ficha reparte ese
+ * sitio entre sus datos. Lo marca js/ficha-estacion.js cuando la
+ * estación no tiene ninguna publicación de vídeo.
+ */
+.ficha-estacion[data-sin-camara="1"]
+.estacion-camara {
+    display: none;
+}
+
+
 /* ==========================================================
    CONTROLES DE CÁMARA
    ========================================================== */

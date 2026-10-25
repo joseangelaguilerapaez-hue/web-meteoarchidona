@@ -76,7 +76,7 @@ import {
     cargarPlantillaFichaEstacion,
     capturarPlantillaFichaEstacion,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261012-camara1";
+} from "./estaciones.js?v=20261025-sin-camara1";
 
 
 /* ==========================================================
