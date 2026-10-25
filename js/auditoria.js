@@ -25,6 +25,18 @@
  *    una vez por carga de página cuando ha estado visible al menos un
  *    50 % durante 5 segundos con la pestaña activa.
  *
+ * Selecciones y activaciones, también declarativas (delegación en el
+ * documento; solo cuentan las acciones del visitante, no los cambios
+ * hechos por código):
+ *
+ *    <select data-auditoria-seleccion="COMPONENTE"> registra SELECCION
+ *    al cambiar, con el valor y el texto de la opción elegida.
+ *
+ *    <button data-auditoria-activacion="COMPONENTE"> registra
+ *    ACTIVACION_VISOR al pulsarlo. Si está dentro de un elemento con
+ *    data-auditoria-grupo, añade la opción elegida en el selector
+ *    auditado de ese grupo (por ejemplo, qué timelapse se abre).
+ *
  * Para el resto de la web (también desde los visores en iframe, que
  * son del mismo origen) queda:
  *
@@ -68,6 +80,46 @@ const PAGINAS = {
     "informacion": "INFORMACION",
     "en-vivo": "EN_VIVO",
 };
+
+// Copia del catálogo aprobado (api-meteoarchidona,
+// utilidades/constantes.py y migración 0023). La API rechaza el lote
+// entero si un evento no está en el catálogo, así que lo que no esté
+// aquí se descarta antes de enviarlo. Si el catálogo cambia en la API,
+// hay que cambiarlo también aquí.
+const EVENTOS_POR_COMPONENTE = {
+    FICHA_ESTACION: ["VISUALIZACION"],
+    SELECTOR_CAMARA: ["SELECCION"],
+    VISOR_VIDEO: [
+        "REPRODUCCION_INICIADA", "PAUSA", "REPRODUCCION_REANUDADA",
+        "REPRODUCCION_DETENIDA", "REPRODUCCION_FINALIZADA",
+        "ERROR_REPRODUCCION", "PANTALLA_COMPLETA",
+        "SALIDA_PANTALLA_COMPLETA", "CAMBIO_FOTOGRAMA",
+    ],
+    TIMELAPSES: ["VISUALIZACION", "SELECCION", "ACTIVACION_VISOR"],
+    VISOR_SEGUIMIENTO: [
+        "VISUALIZACION", "CAMBIO_FONDO", "ACTIVACION_CAPA",
+        "DESACTIVACION_CAPA", "ZOOM", "DESPLAZAMIENTO_MAPA",
+        "REPRODUCCION_INICIADA", "PAUSA", "CAMBIO_FOTOGRAMA", "RECARGA",
+    ],
+    TABLA_ESTACIONES: ["VISUALIZACION"],
+    SELECTOR_EMISION: ["SELECCION"],
+    VISOR_YOUTUBE: ["ACTIVACION_VISOR"],
+    PREDICCION_HOY: ["VISUALIZACION"],
+    PREDICCION_HORAS: ["VISUALIZACION"],
+    PREDICCION_DIAS: ["VISUALIZACION"],
+};
+
+const COMPONENTES_POR_PAGINA = {
+    ACTUALIDAD: ["FICHA_ESTACION", "SELECTOR_CAMARA", "VISOR_VIDEO", "TIMELAPSES"],
+    OBSERVACIONES: ["VISOR_SEGUIMIENTO", "TABLA_ESTACIONES"],
+    EN_VIVO: ["SELECTOR_EMISION", "VISOR_VIDEO", "VISOR_YOUTUBE"],
+    PREDICCION: ["PREDICCION_HOY", "PREDICCION_HORAS", "PREDICCION_DIAS"],
+    INFORMACION: [],
+};
+
+const EVENTOS_DE_PAGINA = ["ACCESO", "SALIDA"];
+
+const MAXIMO_TEXTO_DATO = 100;
 
 const pagina = PAGINAS[document.body?.dataset?.seccion || ""];
 
@@ -426,9 +478,23 @@ let cola = [];
 let temporizador = null;
 let enviando = false;
 
+function permitido(componente, evento) {
+    if (!componente) {
+        return EVENTOS_DE_PAGINA.includes(evento);
+    }
+
+    return (COMPONENTES_POR_PAGINA[pagina] || []).includes(componente)
+        && (EVENTOS_POR_COMPONENTE[componente] || []).includes(evento);
+}
+
 function registrar(componente, evento, datos) {
     try {
         if (!activa()) {
+            return;
+        }
+
+        if (!permitido(componente, evento)) {
+            console.warn("Auditoría: fuera del catálogo,", pagina, componente, evento);
             return;
         }
 
@@ -646,6 +712,60 @@ document.addEventListener("visibilitychange", () => {
         enviarAlSalir();
     }
 });
+
+
+// ==========================================================
+// SELECCIONES Y ACTIVACIONES (DECLARATIVAS)
+// ==========================================================
+
+function recortar(texto) {
+    const limpio = String(texto ?? "").replace(/\s+/g, " ").trim();
+    return limpio ? limpio.slice(0, MAXIMO_TEXTO_DATO) : null;
+}
+
+function opcionElegida(selector) {
+    const opcion = selector.selectedOptions?.[0];
+
+    return {
+        valor: recortar(selector.value),
+        texto: recortar(opcion?.textContent),
+    };
+}
+
+// En fase de captura: cuenta aunque el código de la página detenga
+// la propagación. isTrusted descarta los cambios hechos por código.
+document.addEventListener("change", (evento) => {
+    const selector = evento.target;
+
+    if (
+        !evento.isTrusted
+        || !(selector instanceof HTMLSelectElement)
+        || !selector.dataset.auditoriaSeleccion
+    ) {
+        return;
+    }
+
+    registrar(selector.dataset.auditoriaSeleccion, "SELECCION", opcionElegida(selector));
+}, true);
+
+document.addEventListener("click", (evento) => {
+    const objetivo = evento.target instanceof Element ? evento.target : null;
+    const boton = objetivo?.closest("[data-auditoria-activacion]");
+
+    if (!evento.isTrusted || !boton || boton.disabled) {
+        return;
+    }
+
+    const selector = boton
+        .closest("[data-auditoria-grupo]")
+        ?.querySelector("select[data-auditoria-seleccion]");
+
+    registrar(
+        boton.dataset.auditoriaActivacion,
+        "ACTIVACION_VISOR",
+        selector ? opcionElegida(selector) : null
+    );
+}, true);
 
 
 // ==========================================================

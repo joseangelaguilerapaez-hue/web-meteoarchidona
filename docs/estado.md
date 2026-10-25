@@ -26,7 +26,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
-- Auditoría, segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores; comprobar que la visualización de fichas ya llega a todos: desde el 25 oct Nginx sirve los `.html` con `no-cache`, así que probablemente ya no hace falta forzar la versión de `componentes/ficha-estacion.html` **(por confirmar)**.
+- Auditoría, segunda entrega: selecciones (cámara de la ficha, día del timelapse, selectores de En vivo) y activaciones (abrir timelapse, «Reproducir» de YouTube) hechas en la rama `feature/auditoria-selecciones`; quedan los eventos del visor de vídeo y del visor de Seguimiento. Comprobar que la visualización de fichas ya llega a todos: desde el 25 oct Nginx sirve los `.html` con `no-cache`, así que probablemente ya no hace falta forzar la versión de `componentes/ficha-estacion.html` **(por confirmar)**.
 - **Predicción**: muestra datos reales de AEMET desde el 23 oct (API PR #10 y #14). Reorientación decidida el 25 oct (`docs/prediccion.md`, sección 2 bis): toda la predicción de AEMET, «Ahora» con datos reales de El Silo, texto propio redactado por IA y, más adelante, correo diario. Pasos 1 y 3 **publicados el 25 oct** (web en `a7b1427`, API en `1954a3c`): «Ahora en Archidona» con la observación real de El Silo, sin datos de muestra, y el texto del presentador redactado por Claude a partir de AEMET (se regenera con cada edición nueva de AEMET). El bloque aún no está en el catálogo de auditoría.
 
 ## Pendiente
@@ -54,3 +54,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Predicción: bloque «El tiempo hoy, contado por MeteoArchidona» con el texto redactado por IA (`GET /prediccion/{municipio}/texto`); oculto si no hay texto.
 - 2026-10-25 · Publicados «Ahora» con El Silo y el texto del presentador; primer texto real visible en la web. Detectado que Nginx no fija la caché del HTML.
 - 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.
+- 2026-10-25 · Auditoría: selecciones y activaciones declarativas (`data-auditoria-seleccion`, `data-auditoria-activacion`), YouTube desde su visor y copia del catálogo en `js/auditoria.js` para no perder lotes.

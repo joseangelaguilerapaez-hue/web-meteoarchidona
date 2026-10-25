@@ -2,7 +2,28 @@
 
 ## Estado
 
-**Pendiente de desarrollo.**
+**Implementado en parte** (actualizado el 2026-10-25). El diseño vigente y el catálogo aprobado están en
+`docs/auditoria.md` del repositorio `api-meteoarchidona` (11.7); este documento es el planteamiento
+inicial y se conserva como referencia.
+
+Lo que la web envía hoy (`js/auditoria.js`, solo con consentimiento salvo la vista anónima):
+
+- Página vista anónima de todos los visitantes; ACCESO y SALIDA de cada página.
+- VISUALIZACION de los bloques marcados con `data-auditoria-visualizacion`: fichas de estación,
+  Timelapses, visor de Seguimiento, tabla de estaciones y los tres bloques de predicción.
+- SELECCION en los `<select data-auditoria-seleccion>`: cámara de la ficha (SELECTOR_CAMARA), día del
+  timelapse (TIMELAPSES) y los dos selectores de En vivo (SELECTOR_EMISION). Lleva el valor y el texto
+  de la opción elegida.
+- ACTIVACION_VISOR en los botones `data-auditoria-activacion`: abrir un timelapse (con el día elegido) y
+  la portada «Reproducir» del visor de YouTube (con el identificador del vídeo, desde
+  `visores/youtube.js`).
+
+Solo cuentan las acciones del visitante (`isTrusted`), no los cambios hechos por código. `js/auditoria.js`
+lleva una copia del catálogo y descarta lo que no esté en él, porque la API rechaza el lote entero: si el
+catálogo cambia en la API, hay que cambiar también esa copia.
+
+Falta: eventos del visor de vídeo y del visor de Seguimiento (radar), y catalogar los bloques nuevos de
+Predicción («Ahora» y el texto del presentador), que exige migración en la API.
 
 Este documento define el trabajo previsto para incorporar a MeteoArchidona un subsistema propio de auditoría, trazabilidad de sesiones y analítica de uso.
 
