@@ -31,6 +31,8 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Pendiente
 
+- Caché de los estáticos en Nginx: `/css`, `/js` y `/assets` se sirven sin `Cache-Control`. Procedimiento listo en `scripts/configurar_cache_estaticos.py`, **pendiente de ejecutar en el servidor** (25 oct).
+
 
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
 - Estadísticas, usuarios, publicidad y redimensionamiento con nuevos puntos de medición: existen como documentos de especificación en `docs/`, pero no consta implementación en el historial reciente **(por confirmar cuáles se van a construir y en qué orden)**.
@@ -58,7 +60,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Publicados «Ahora» con El Silo y el texto del presentador; primer texto real visible en la web. Detectado que Nginx no fija la caché del HTML.
 - 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.
 - 2026-10-25 · Auditoría: selecciones y activaciones declarativas (`data-auditoria-seleccion`, `data-auditoria-activacion`), YouTube desde su visor y copia del catálogo en `js/auditoria.js` para no perder lotes.
-- 2026-10-25 · Portada: fuera los dos gráficos de muestra, que eran líneas y barras escritas a mano, y el acceso «Gráficos» que apuntaba a esa sección.
-- 2026-10-25 · Portada: los accesos del final llevan a secciones que existen (tenían tres anclas inexistentes) y estrenan iconos SVG en vez de emoji.
-- 2026-10-25 · Portada: «Condiciones actuales» enseña la lectura real de la estación de referencia, con su nombre y su hora, y pasa a otra estación si la de referencia está parada; se ve también en móvil, donde la columna estaba oculta.
-- 2026-10-25 · Portada: adelanto de tres días de la predicción de AEMET, con enlace a Predicción; y descripción propia para buscadores y para compartir.
+- 2026-10-25 · Escrito `scripts/configurar_cache_estaticos.py` para que Nginx cachee `/css`, `/js` y `/assets` (un año los versionados, treinta días las imágenes), con cinco pruebas de su transformación del texto. Falta ejecutarlo en el VPS.
