@@ -454,7 +454,13 @@ button {
             2,
             minmax(0, 1fr)
         );
-    align-items: start;
+
+    /*
+     * Todas las fichas de una fila, igual de altas: con align-items
+     * start cada una medía lo suyo y los bordes de abajo quedaban a
+     * distinta altura, una escalera.
+     */
+    align-items: stretch;
     gap: 14px;
     min-width: 0;
 }
@@ -627,8 +633,43 @@ button {
     display: grid;
     flex: 1 1 auto;
     align-content: center;
+    justify-items: center;
     gap: 14px;
     margin: 13px 0;
+    width: 100%;
+}
+
+
+.resumen-ahora > * {
+    width: 100%;
+}
+
+
+/*
+ * Estado del cielo: el dibujo y su palabra.
+ *
+ * El icono no lo miden nuestras estaciones; viene de la predicción de
+ * AEMET para la hora en curso, salvo que la estación mida lluvia. Por
+ * eso lleva su palabra debajo: así se ve de qué está hablando.
+ */
+.resumen-cielo {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+
+.resumen-cielo-dibujo .ic {
+    width: 104px;
+    height: 104px;
+}
+
+
+.resumen-cielo-texto {
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
 }
 
 

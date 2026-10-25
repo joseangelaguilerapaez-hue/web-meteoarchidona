@@ -175,6 +175,27 @@
 }
 
 
+/*
+ * Sin cámara, el viento ocupa su sitio.
+ *
+ * Esconder la zona de cámara no basta: la rejilla sigue guardando su
+ * columna y queda un hueco. Medido en la web a 1440 px, la fila medía
+ * 511 px con los datos apretados en 220 y 280 vacíos al lado. Y
+ * cerrarla sin más dejaba media ficha en blanco, que no quedaba mejor.
+ *
+ * js/ficha-estacion.js sube el panel del viento a esa columna cuando la
+ * estación no tiene cámara, así que la fila sigue siendo de dos y no
+ * sobra nada.
+ */
+.ficha-estacion[data-sin-camara="1"]
+.estacion-superior
+.viento-panel {
+    align-self: stretch;
+
+    margin: 0;
+}
+
+
 /* ==========================================================
    IDENTIDAD + TEMPERATURA
    ========================================================== */

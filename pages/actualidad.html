@@ -62,19 +62,25 @@
 
 <link
     rel="stylesheet"
-    href="../css/actualidad.css?v=20261025-sin-datos2"
+    href="../css/iconos-tiempo.css?v=20261025-icono1"
 >
 
 
 <link
     rel="stylesheet"
-    href="../css/ficha-estacion.css?v=20261025-sin-camara1"
+    href="../css/actualidad.css?v=20261025-icono2"
 >
 
 
 <link
     rel="stylesheet"
-    href="../css/timelapses.css?v=20261015-timelapses1"
+    href="../css/ficha-estacion.css?v=20261025-hueco3"
+>
+
+
+<link
+    rel="stylesheet"
+    href="../css/timelapses.css?v=20261025-tamano1"
 >
 
 
@@ -92,8 +98,14 @@
 
 
 <script
+    src="../js/iconos-tiempo.js?v=20261025-icono1"
+    defer
+></script>
+
+
+<script
     type="module"
-    src="../js/actualidad/principal.js?v=20261025-sin-datos2"
+    src="../js/actualidad/principal.js?v=20261025-icono2"
 ></script>
 
 
@@ -104,7 +116,7 @@
 
 
 <script
-    src="../js/sol-luna.js?v=20260913-solluna1"
+    src="../js/sol-luna.js?v=20261025-icono1"
     defer
 ></script>
 
@@ -183,6 +195,31 @@
     class="resumen-ahora"
     id="resumen-ahora"
 >
+
+
+<!--
+    Estado del cielo. Lo rellena js/actualidad/resumen.js con la hora en
+    curso de la predicción de AEMET, salvo que la estación esté midiendo
+    lluvia. Nace oculto: sin dato no se dibuja nada.
+-->
+<div
+    class="resumen-cielo"
+    id="resumen-cielo"
+    hidden
+>
+
+    <div
+        class="resumen-cielo-dibujo"
+        id="resumen-cielo-dibujo"
+        aria-hidden="true"
+    ></div>
+
+    <div
+        class="resumen-cielo-texto"
+        id="resumen-cielo-texto"
+    ></div>
+
+</div>
 
 
 <div class="resumen-temperatura">

@@ -76,7 +76,7 @@ import {
     cargarPlantillaFichaEstacion,
     capturarPlantillaFichaEstacion,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261025-sin-camara1";
+} from "./estaciones.js?v=20261025-viento1";
 
 
 /* ==========================================================
@@ -88,7 +88,7 @@ import {
     cargarCatalogoEstaciones,
     cargarCondiciones,
     refrescarCatalogo
-} from "./api.js?v=20261025-sin-datos1";
+} from "./api.js?v=20261025-viento1";
 
 
 /* ==========================================================
@@ -98,7 +98,7 @@ import {
 
 import {
     actualizarResumen
-} from "./resumen.js?v=20261025-sin-datos2";
+} from "./resumen.js?v=20261025-icono2";
 
 
 /* ==========================================================
@@ -108,7 +108,7 @@ import {
 
 import {
     iniciarPrediccionBreve
-} from "./prediccion-breve.js?v=20261025-prediccion1";
+} from "./prediccion-breve.js?v=20261025-icono2";
 
 
 /* ==========================================================

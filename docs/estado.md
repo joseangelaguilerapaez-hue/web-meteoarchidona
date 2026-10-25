@@ -71,3 +71,5 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Portada: adelanto de tres días de la predicción de AEMET con enlace a Predicción, y descripción propia para buscadores y para compartir (PR #26).
 - 2026-10-25 · Actualidad: el estado de la ficha se calcula con la antigüedad de la última lectura, no solo con el estado de la estación. La Vega llevaba doce días parada y seguía diciendo «En línea» sobre unos grados en blanco.
 - 2026-10-25 · La tarjeta de la portada y la ficha de estación comparten la cuenta de «cuánto hace de esta lectura»: `resumen.js` la importa de `meteorologia.js` en vez de repetirla.
+- 2026-10-25 · Portada: la ficha sin cámara cierra su columna (quedaban 280 px vacíos de 511) y el timelapse baja de 1279 px de ancho a columnas de 560 como mucho.
+- 2026-10-25 · Portada: «Condiciones actuales» estrena icono del cielo, de AEMET para la hora en curso, con la lluvia medida por encima y luna con su fase de noche. Los dibujos pasan de `js/prediccion.js` a `js/iconos-tiempo.js`, compartidos por las dos páginas, y la predicción se pide una sola vez para toda la portada.
