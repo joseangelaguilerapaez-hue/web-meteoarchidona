@@ -144,6 +144,26 @@ línea breve explicando cada cuánto se publican. Esto es más una decisión que
 
 ---
 
+## Añadido el 25 de octubre, después de ver la página publicada
+
+Tres cosas que saltaron a la vista con los cambios ya en la web, y lo que se hizo:
+
+- **El hueco de las fichas sin cámara.** Esconder la zona con `display: none` no quitaba
+  su columna de la rejilla: la fila superior medía 511 px con los datos apretados en 220
+  y 280 vacíos al lado. Sin cámara, la zona superior pasa a una sola columna. **Hecho.**
+- **El timelapse, enorme.** Ocupaba 1279 px de ancho en una pantalla de 1440. La lista
+  pasa a columnas de 560 px como mucho, centradas. **Hecho.**
+- **El icono del tiempo.** Nuestras estaciones no miden el estado del cielo, así que se
+  toma el de AEMET para la hora en curso y manda nuestra medida cuando contradice (si
+  llueve, llueve). De noche, luna con su fase. **Hecho.**
+
+Queda de aquí:
+
+- Poner esos mismos iconos en el adelanto de tres días, que sigue sin ellos.
+- En la ficha sin cámara, cuando exista la ruta de histórico, la máxima y la mínima del
+  día, que es lo que más se echa de menos.
+- Plegar la sección de timelapses cuando haya tres o cuatro cámaras.
+
 ## Orden que propongo
 
 1. Quitar los gráficos de muestra (punto 1, paso corto).
