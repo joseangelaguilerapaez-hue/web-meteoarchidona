@@ -1883,7 +1883,7 @@ button {
     display: grid;
     grid-template-columns:
         repeat(
-            6,
+            5,
             1fr
         );
     gap: 12px;
@@ -1920,8 +1920,28 @@ button {
 }
 
 
+/*
+ * Los iconos son SVG propios y no emoji: cada sistema pinta los emoji a
+ * su manera y el del aviso salía siempre en su color, ajeno a la paleta.
+ */
 .acceso-icono {
-    font-size: 26px;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+    color: var(--accent);
+}
+
+
+.acceso-icono svg {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 
