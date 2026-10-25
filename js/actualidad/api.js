@@ -44,7 +44,7 @@ import {
 import {
     mostrarDatosEstacion,
     mostrarErrorEstacion
-} from "./meteorologia.js?v=20261012-camara1";
+} from "./meteorologia.js?v=20261025-sin-datos1";
 
 
 function obtenerApiBase() {

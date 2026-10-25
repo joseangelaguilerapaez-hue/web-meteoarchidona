@@ -947,6 +947,22 @@ button {
 }
 
 
+/*
+ * Estación parada: lleva más de una hora sin mandar datos. El punto
+ * deja de ser verde y de brillar, para que no parezca que sigue
+ * emitiendo mientras sus cifras están en blanco.
+ */
+.online.sin-datos {
+    color: var(--muted);
+}
+
+
+.online.sin-datos .punto {
+    background: var(--muted);
+    box-shadow: none;
+}
+
+
 .lectura-principal {
     display: grid;
     grid-template-columns:

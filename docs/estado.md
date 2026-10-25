@@ -24,6 +24,7 @@ No se marca nada como hecho que no esté en `main`.
 - Visor de vídeo MP4 con controles temporales, adaptado a móvil y pantalla completa (16 oct).
 - En vivo: selector dinámico de directos de YouTube que carga las emisiones desde la API pública (Murcia, Nerja, puerto de Málaga), 15–21 oct.
 - El aviso de privacidad ocupa menos en el móvil y su fondo es opaco (25 oct).
+- Actualidad avisa cuando una estación lleva más de una hora sin mandar datos: la ficha dice «Sin datos desde…» en vez de «En línea» y el punto deja de ser verde (25 oct).
 
 ## En construcción / abierto
 
@@ -40,7 +41,6 @@ No se marca nada como hecho que no esté en `main`.
 - Observaciones: ver `docs/observaciones.md` para lo previsto **(por confirmar el estado real)**.
 - Portada, lo que queda de `docs/ideas-portada.md`: gráficos de temperatura y de lluvia con datos reales (necesitan una ruta pública de histórico en `api-meteoarchidona`: los datos ya se guardan en PostgreSQL, pero hoy solo los sirven las rutas de administración); tarjeta de rayos con la ruta pública de descargas eléctricas, que funciona y no se usa en toda la web; y decidir qué se enseña cuando no hay timelapse del día anterior.
 - Dar de alta en el catálogo de auditoría el adelanto de la predicción de la portada y el bloque del texto de Predicción.
-- Dejar una sola cuenta de «cuánto hace de esta lectura»: está en `js/actualidad/resumen.js` y en `js/actualidad/meteorologia.js` (rama `fix/estado-sin-datos`).
 
 ## Ramas antiguas
 
@@ -69,3 +69,5 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Portada: los accesos del final llevan a secciones que existen (tenían tres anclas inexistentes) y estrenan iconos SVG en vez de emoji (PR #26).
 - 2026-10-25 · Portada: «Condiciones actuales» enseña la lectura real de la estación de referencia, con su nombre y su hora, y pasa a otra estación si la de referencia está parada; se ve también en móvil, donde la columna estaba oculta (PR #26).
 - 2026-10-25 · Portada: adelanto de tres días de la predicción de AEMET con enlace a Predicción, y descripción propia para buscadores y para compartir (PR #26).
+- 2026-10-25 · Actualidad: el estado de la ficha se calcula con la antigüedad de la última lectura, no solo con el estado de la estación. La Vega llevaba doce días parada y seguía diciendo «En línea» sobre unos grados en blanco.
+- 2026-10-25 · La tarjeta de la portada y la ficha de estación comparten la cuenta de «cuánto hace de esta lectura»: `resumen.js` la importa de `meteorologia.js` en vez de repetirla.

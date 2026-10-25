@@ -88,7 +88,7 @@ import {
     cargarCatalogoEstaciones,
     cargarCondiciones,
     refrescarCatalogo
-} from "./api.js?v=20261012-camara1";
+} from "./api.js?v=20261025-sin-datos1";
 
 
 /* ==========================================================
@@ -98,7 +98,7 @@ import {
 
 import {
     actualizarResumen
-} from "./resumen.js?v=20261025-resumen1";
+} from "./resumen.js?v=20261025-sin-datos2";
 
 
 /* ==========================================================
