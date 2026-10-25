@@ -206,7 +206,22 @@
        REPRODUCCIÓN
        ===================================================== */
 
-    boton.addEventListener('click', () => {
+    boton.addEventListener('click', (evento) => {
+
+        // Auditoría (docs/auditoria.md de la API, 11.7): sin la API de
+        // YouTube, lo único que se registra es esta pulsación. La
+        // auditoría vive en la página que contiene el visor.
+        try {
+            if (evento.isTrusted) {
+                window.parent?.MeteoAuditoria?.registrar(
+                    'VISOR_YOUTUBE',
+                    'ACTIVACION_VISOR',
+                    { video: id }
+                );
+            }
+        } catch (error) {
+            // La auditoría nunca debe impedir la reproducción.
+        }
 
         const reproductor = document.createElement(
             'iframe'
