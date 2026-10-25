@@ -92,6 +92,16 @@ import {
 
 
 /* ==========================================================
+   TARJETA DE CONDICIONES ACTUALES
+   ========================================================== */
+
+
+import {
+    actualizarResumen
+} from "./resumen.js?v=20261025-resumen1";
+
+
+/* ==========================================================
    PLANTILLA DE ESTACIÓN
    ========================================================== */
 
@@ -373,6 +383,9 @@ async function arrancarActualidad() {
         await cargarCondiciones();
 
 
+        await actualizarResumen();
+
+
         /* ==================================================
            RESPONSIVE
            ================================================== */
@@ -386,6 +399,12 @@ async function arrancarActualidad() {
 
         window.setInterval(
             cargarCondiciones,
+            INTERVALO_CONDICIONES_MS
+        );
+
+
+        window.setInterval(
+            actualizarResumen,
             INTERVALO_CONDICIONES_MS
         );
 

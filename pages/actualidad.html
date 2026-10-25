@@ -62,7 +62,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/actualidad.css?v=20261025-accesos1"
+    href="../css/actualidad.css?v=20261025-resumen1"
 >
 
 
@@ -93,7 +93,7 @@
 
 <script
     type="module"
-    src="../js/actualidad/principal.js?v=20261015-timelapses1"
+    src="../js/actualidad/principal.js?v=20261025-resumen1"
 ></script>
 
 
@@ -163,7 +163,10 @@
 </h2>
 
 
-<div class="estado">
+<div
+    class="estado"
+    id="resumen-estado"
+>
 
     <span class="punto"></span>
 
@@ -172,18 +175,55 @@
 </div>
 
 
-<div class="estado-grafico">
+<!--
+    La lectura de la estación de referencia (El Silo), la misma que usa
+    «Ahora en Archidona» en Predicción. La rellena js/actualidad/resumen.js.
+-->
+<div
+    class="resumen-ahora"
+    id="resumen-ahora"
+>
 
-    <div
-        class="tiempo-icono"
-        aria-hidden="true"
-    >
 
-        <div class="sol"></div>
+<div class="resumen-temperatura">
 
-        <div class="nube"></div>
+    <span id="resumen-temperatura">--</span><span class="resumen-unidad">°C</span>
 
-    </div>
+</div>
+
+
+<dl class="resumen-detalles">
+
+
+<div class="resumen-detalle">
+
+    <dt>Humedad</dt>
+
+    <dd id="resumen-humedad">--</dd>
+
+</div>
+
+
+<div class="resumen-detalle">
+
+    <dt>Viento</dt>
+
+    <dd id="resumen-viento">--</dd>
+
+</div>
+
+
+<div class="resumen-detalle">
+
+    <dt>Lluvia hoy</dt>
+
+    <dd id="resumen-lluvia">--</dd>
+
+</div>
+
+
+</dl>
+
 
 </div>
 
