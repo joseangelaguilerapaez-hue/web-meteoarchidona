@@ -190,6 +190,19 @@
 }
 
 
+/*
+ * Y el nombre, pegado a su logotipo.
+ *
+ * El texto de la identidad va alineado a la derecha para quedar contra
+ * la zona de cámara; sin ella, la fila es el doble de ancha y el nombre
+ * se iba al otro extremo de la ficha, lejos de su dibujo.
+ */
+.ficha-estacion[data-sin-camara="1"]
+.estacion-identidad-texto {
+    text-align: left;
+}
+
+
 /* ==========================================================
    IDENTIDAD + TEMPERATURA
    ========================================================== */
