@@ -402,74 +402,6 @@ button {
 
 
 /* ==========================================================
-   ICONO METEOROLÓGICO
-   ========================================================== */
-
-
-.sol {
-    position: absolute;
-    top: 3px;
-    left: 25px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background:
-        linear-gradient(
-            135deg,
-            #ffd44f,
-            var(--accent)
-        );
-    box-shadow:
-        0 0 24px
-        rgba(240, 165, 0, 0.28);
-}
-
-
-.nube {
-    position: absolute;
-    left: 10px;
-    bottom: 7px;
-    width: 52px;
-    height: 23px;
-    border:
-        2px solid
-        #e5edf5;
-    border-radius: 22px;
-    background: var(--bg);
-}
-
-
-.nube::before,
-.nube::after {
-    content: "";
-    position: absolute;
-    background: var(--bg);
-    border:
-        2px solid
-        #e5edf5;
-    border-bottom: 0;
-    border-radius:
-        50% 50% 0 0;
-}
-
-
-.nube::before {
-    width: 21px;
-    height: 17px;
-    left: 7px;
-    top: -13px;
-}
-
-
-.nube::after {
-    width: 25px;
-    height: 21px;
-    left: 23px;
-    top: -17px;
-}
-
-
-/* ==========================================================
    CONTENIDO DE ACTUALIDAD
    ========================================================== */
 
@@ -686,63 +618,87 @@ button {
 }
 
 
-.estado-grafico {
+/* ==========================================================
+   CONDICIONES ACTUALES · LECTURA DE LA ESTACIÓN
+   ========================================================== */
+
+
+.resumen-ahora {
     display: grid;
     flex: 1 1 auto;
-    place-items: center;
-    min-height: 220px;
+    align-content: center;
+    gap: 14px;
     margin: 13px 0;
 }
 
 
+.resumen-temperatura {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 2px;
+    font-size: 58px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+
+.resumen-unidad {
+    color: var(--muted);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+
 /*
- * El icono se dibuja con medidas fijas en px (sol, nube y sus
- * pseudoelementos), así que se agranda con scale en lugar de tocar cada
- * medida. min-height de .estado-grafico deja sitio a los 192 px finales.
+ * En fila, etiqueta a la izquierda y dato a la derecha: la columna mide
+ * 250 px y en tres columnas se partían «lluvia hoy» y «5 km/h del ONO».
  */
-.estado-grafico .tiempo-icono {
-    transform: scale(1.6);
+.resumen-detalles {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding-top: 12px;
+    border-top:
+        1px solid
+        var(--border);
 }
 
 
-.tiempo-icono {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border:
-        2px solid
-        #244567;
-    background:
-        radial-gradient(
-            circle,
-            #163354,
-            #0b1724 70%
-        );
+.resumen-detalle {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 
-.tiempo-icono .sol {
-    width: 42px;
-    height: 42px;
-    left: 27px;
-    top: 24px;
+.resumen-detalle dt {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
 
-.tiempo-icono .nube {
-    left: 43px;
-    bottom: 25px;
-    width: 61px;
-    background: #d9e2e9;
-    border: none;
+.resumen-detalle dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 
-.tiempo-icono .nube::before,
-.tiempo-icono .nube::after {
-    background: #d9e2e9;
-    border: none;
+/* Estación parada: el punto verde mentiría. */
+.estado.sin-datos {
+    color: var(--muted);
+}
+
+
+.estado.sin-datos .punto {
+    background: var(--muted);
+    box-shadow: none;
 }
 
 
@@ -1891,6 +1847,119 @@ button {
 
 
 /* ==========================================================
+   ADELANTO DE LA PREDICCIÓN
+   ========================================================== */
+
+
+.prediccion-breve {
+    margin-top: 14px;
+    padding: 18px;
+}
+
+
+.prediccion-breve-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+.prediccion-breve-fuente {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.prediccion-breve-enlace {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+.prediccion-breve-vieja {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.prediccion-breve-dias {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+    gap: 12px;
+    margin-top: 14px;
+}
+
+
+.pred-breve-dia {
+    padding: 14px;
+    border:
+        1px solid
+        var(--border);
+    border-radius: 8px;
+    background:
+        rgba(
+            12,
+            28,
+            43,
+            0.8
+        );
+}
+
+
+.pred-breve-cuando {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+
+.pred-breve-descripcion {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.pred-breve-temperaturas {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+.pred-breve-max {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+
+.pred-breve-min {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.pred-breve-lluvia {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+/* ==========================================================
    ACCESOS
    ========================================================== */
 
@@ -1899,7 +1968,7 @@ button {
     display: grid;
     grid-template-columns:
         repeat(
-            6,
+            5,
             1fr
         );
     gap: 12px;
@@ -1936,8 +2005,28 @@ button {
 }
 
 
+/*
+ * Los iconos son SVG propios y no emoji: cada sistema pinta los emoji a
+ * su manera y el del aviso salía siempre en su color, ajeno a la paleta.
+ */
 .acceso-icono {
-    font-size: 26px;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+    color: var(--accent);
+}
+
+
+.acceso-icono svg {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 
@@ -2067,13 +2156,60 @@ button {
 
 
     /*
-     * La columna lateral se esconde ya desde 1100 px: entre 1020 y 1100
-     * (tableta apaisada) le quedaban unos 130 px de ancho y salía
-     * estrecha y estirada, con el dibujo del tiempo suelto en medio.
+     * La columna lateral se escondía entera desde 1100 px: estrecha y
+     * estirada, con el dibujo del tiempo suelto en medio, no valía la
+     * pena. Ahora «Condiciones actuales» lleva la lectura de verdad, y
+     * esconderla dejaba sin temperatura justo a quien entra desde el
+     * teléfono. Se queda, en una sola fila y más compacta; «Sol y luna»
+     * sí se va, que es la que ocupaba sin contar nada urgente.
      */
-    .resumen,
     .columna-resumen {
+        grid-template-rows: auto;
+        align-self: start;
+    }
+
+
+    .sol-luna {
         display: none;
+    }
+
+
+    .resumen .resumen-ahora {
+        gap: 10px;
+        margin: 10px 0;
+    }
+
+
+    .resumen .resumen-temperatura {
+        font-size: 44px;
+    }
+
+}
+
+
+/*
+ * Entre 620 y 1100 px la tarjeta ocupa el ancho de la fila y la cifra
+ * se quedaba sola en medio de un campo vacío: aquí va en línea, con los
+ * detalles a su lado.
+ */
+@media (min-width: 621px) and (max-width: 1100px) {
+
+    .resumen .resumen-ahora {
+        grid-template-columns:
+            auto
+            minmax(240px, 360px);
+        align-items: center;
+        gap: 22px;
+        justify-content: start;
+    }
+
+
+    .resumen .resumen-detalles {
+        padding: 0 0 0 20px;
+        border-top: 0;
+        border-left:
+            1px solid
+            var(--border);
     }
 
 }
@@ -2255,6 +2391,11 @@ button {
 
 
     .accesos {
+        grid-template-columns: 1fr;
+    }
+
+
+    .prediccion-breve-dias {
         grid-template-columns: 1fr;
     }
 

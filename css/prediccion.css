@@ -375,10 +375,16 @@
 }
 
 
+/*
+ * La flecha señala hacia dónde sopla el viento. Heredaba los 11 px de
+ * su fila y quedaba como una pelusa al lado de la cifra; con 15 px se
+ * distingue de un vistazo la dirección sin tener que fijarse.
+ */
 .pred-flecha {
     display: inline-block;
     color: var(--amber);
     font-family: "Sora", sans-serif;
+    font-size: 15px;
     line-height: 1;
 }
 
