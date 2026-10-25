@@ -62,3 +62,10 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Nginx sirve páginas y componentes `.html` con `Cache-Control: no-cache` (aprobado y aplicado por José); el `.htaccess` no se aplica en producción.
 - 2026-10-25 · Auditoría: selecciones y activaciones declarativas (`data-auditoria-seleccion`, `data-auditoria-activacion`), YouTube desde su visor y copia del catálogo en `js/auditoria.js` para no perder lotes.
 - 2026-10-25 · Escrito `scripts/configurar_cache_estaticos.py` para que Nginx cachee `/css`, `/js` y `/assets` (un año los versionados, treinta días las imágenes), con cinco pruebas de su transformación del texto. Falta ejecutarlo en el VPS.
+- 2026-10-25 · Aviso de privacidad legible en el móvil: fondo sólido, menos alto y botones a la misma anchura (PR #20).
+- 2026-10-25 · Predicción: la flecha de viento de la tira de horas pasa de 11 a 15 px; heredaba el tamaño de su fila y no se distinguía la dirección (PR #23). El hueco de las 00:00 en la probabilidad de lluvia es de la API, banda que cruza la medianoche, y va en su propio cambio allí.
+- 2026-10-25 · Repasada la portada y escritas las mejoras en `docs/ideas-portada.md`, para irlas aplicando por partes (PR #24).
+- 2026-10-25 · Portada: fuera los dos gráficos de muestra, que eran líneas y barras escritas a mano, y el acceso «Gráficos» que apuntaba a esa sección (PR #25).
+- 2026-10-25 · Portada: los accesos del final llevan a secciones que existen (tenían tres anclas inexistentes) y estrenan iconos SVG en vez de emoji (PR #26).
+- 2026-10-25 · Portada: «Condiciones actuales» enseña la lectura real de la estación de referencia, con su nombre y su hora, y pasa a otra estación si la de referencia está parada; se ve también en móvil, donde la columna estaba oculta (PR #26).
+- 2026-10-25 · Portada: adelanto de tres días de la predicción de AEMET con enlace a Predicción, y descripción propia para buscadores y para compartir (PR #26).
