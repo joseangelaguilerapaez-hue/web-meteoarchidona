@@ -297,7 +297,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_los_scripts_cambiados_llevan_version_nueva(self):
         for ruta, patron in (
             ("js/actualidad/principal.js", r"/js/timelapses\.js\?v=20261026-titulo1"),
-            ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261026-nombre1"),
+            ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261026-nombre2"),
         ):
             self.assertRegex(leer(RAIZ / ruta), patron)
 

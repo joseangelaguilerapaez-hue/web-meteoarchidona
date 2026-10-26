@@ -455,7 +455,7 @@ function rellenarFormulario(datos){
         }else if(nombre === "publicacion_automatica"){
             campo.checked = datos.publicacion_automatica ?? false;
         }else if(nombre === "fecha_en_nombre"){
-            campo.checked = datos.fecha_en_nombre ?? false;
+            campo.checked = datos.fecha_en_nombre ?? true;
         }else if(nombre === "hora_local"){
             campo.value = horaParaInput(datos.hora_local);
         }else{
@@ -483,6 +483,7 @@ function nuevoFormulario(){
         duracion_segundos: 1800,
         intervalo_captura_segundos: 10,
         fps_salida: 25,
+        fecha_en_nombre: true,
         activa: true
     });
     valorCampo("camara_preset_id")?.replaceChildren(

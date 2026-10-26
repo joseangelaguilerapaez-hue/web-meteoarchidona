@@ -94,3 +94,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · Cuentas abiertas al público: botones de registro e inicio de sesión visibles para todos (decisión de José tras probarlas con cuentas reales).
 - 2026-10-26 · Timelapses: el título público sale del nombre de la programación, con la fecha si el check está marcado; ya no se monta fijo en la web.
 - 2026-10-26 · Timelapses: la web muestra el título que guarda la API en cada vídeo (migración 0031), sin montarlo; pendiente de fusionar y desplegar.
+- 2026-10-26 · Timelapses: el check «Añadir la fecha al nombre» arranca marcado en las programaciones nuevas.
