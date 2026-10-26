@@ -281,6 +281,30 @@ class TestModulosJavaScript(unittest.TestCase):
                 self.assertEqual(len(consultas), 1, f"versiones distintas: {sorted(consultas)}")
 
 
+class TestCuenta(unittest.TestCase):
+    """Los botones de cuenta de la cabecera (js/cuenta.js, css/cuenta.css)."""
+
+    def test_la_cabecera_tiene_el_hueco_y_carga_los_ficheros_versionados(self):
+        cabecera = sin_comentarios(RAIZ / "componentes" / "cabecera.html")
+        self.assertIn('id="cuenta-zona"', cabecera)
+        codigo = leer(RAIZ / "js" / "cabecera.js")
+        for ruta in ("/css/cuenta.css", "/js/cuenta.js"):
+            coincidencia = re.search(re.escape(ruta) + r"\?v=[\w-]+", codigo)
+            self.assertIsNotNone(coincidencia, f"cabecera.js no carga {ruta} con ?v=")
+            self.assertTrue((RAIZ / ruta.lstrip("/")).exists())
+
+    def test_los_botones_estan_ocultos_hasta_abrir_las_cuentas(self):
+        """Cambiar a true es una decisión de José, tras actualizar el aviso de privacidad."""
+        codigo = leer(RAIZ / "js" / "cuenta.js")
+        self.assertRegex(codigo, r"const CUENTAS_ABIERTAS = false;")
+
+    def test_cuenta_no_guarda_nada_sensible_en_el_navegador(self):
+        """El PIN y la sesión no se escriben en localStorage: la cookie es HttpOnly."""
+        codigo = leer(RAIZ / "js" / "cuenta.js")
+        self.assertNotIn("sessionStorage", codigo)
+        self.assertEqual(codigo.count("localStorage.setItem"), 1)
+
+
 class TestFicherosDelSitio(unittest.TestCase):
 
     def test_sitemap_es_xml_valido(self):
