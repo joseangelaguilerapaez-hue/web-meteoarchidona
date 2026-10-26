@@ -24,7 +24,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261026-cache1"
+    src="../js/administracion/principal.js?v=20261026-conserva1"
 ></script>
 </head>
 
@@ -2507,9 +2507,55 @@
 >
 
 <div class="campo-ayuda">
-    Opcional. Se utilizará para aplicar
-    la política de conservación cuando
-    esté implementado el sistema de vídeos.
+    Días que se conserva el MP4 después de generarse.
+    Al vencer se retira de la web y se borra, salvo que
+    esté protegido o pertenezca a un episodio.
+    Vacío: se conserva siempre.
+</div>
+
+</div>
+
+<div class="campo">
+
+<label for="campoTimelapseRetencionFotogramasDias">
+    Conservación de los fotogramas (días)
+</label>
+
+<input
+    id="campoTimelapseRetencionFotogramasDias"
+    type="number"
+    min="1"
+    step="1"
+    inputmode="numeric"
+    placeholder="3"
+>
+
+<div class="campo-ayuda">
+    Días que se guardan los JPEG después de generar el MP4,
+    por si hay que regenerarlo. Vacío: 3 días.
+    Si no se llega a generar el MP4, se borran a los 7 días.
+</div>
+
+</div>
+
+<div class="campo campo-ancho">
+
+<div class="check-linea">
+
+<input
+    id="campoTimelapsePublicacionAutomatica"
+    type="checkbox"
+>
+
+<label for="campoTimelapsePublicacionAutomatica">
+    Publicar automáticamente cada MP4
+</label>
+
+</div>
+
+<div class="campo-ayuda">
+    Cada vídeo generado se publica en la web sin pasar
+    por Productos (en menos de una hora).
 </div>
 
 </div>

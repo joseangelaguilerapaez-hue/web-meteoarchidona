@@ -16,6 +16,8 @@
  * GET  /admin/timelapses/productos
  * POST /admin/timelapses/productos/{id}/publicar
  * POST /admin/timelapses/productos/{id}/retirar
+ * POST /admin/timelapses/productos/{id}/proteger
+ * POST /admin/timelapses/productos/{id}/desproteger
  *
  * Funcionalidades:
  *
@@ -933,6 +935,44 @@ function crearAcciones(
 
     }
 
+    // Protección manual: un MP4 protegido no se purga nunca, ni sus JPEG.
+    if (!producto.fecha_purga) {
+
+        const protegido = producto.protegido === true;
+
+        const botonProteccion = elemento(
+            "button",
+            "boton boton-secundario",
+            protegido ? "Quitar protección" : "Proteger"
+        );
+
+        botonProteccion.type = "button";
+
+        botonProteccion.disabled = (
+            cargando ||
+            accionEnCurso
+        );
+
+        botonProteccion.title = protegido
+            ? "Volverá a borrarse cuando venza su conservación."
+            : "No se borrará nunca, aunque venza su conservación.";
+
+        botonProteccion.addEventListener(
+            "click",
+            () => {
+                void ejecutarAccion(
+                    producto,
+                    protegido ? "desproteger" : "proteger"
+                );
+            }
+        );
+
+        acciones.appendChild(
+            botonProteccion
+        );
+
+    }
+
     return acciones;
 
 }
@@ -1008,6 +1048,31 @@ function crearTarjeta(
             ? "chip-activa"
             : "chip-inactiva"
     );
+
+    if (producto.protegido) {
+
+        agregarChip(
+            chips,
+            "Protegido",
+            "chip-activa"
+        );
+
+    } else if (producto.fecha_purga) {
+
+        agregarChip(
+            chips,
+            "Purgado",
+            "chip-inactiva"
+        );
+
+    } else if (producto.retencion_dias) {
+
+        agregarChip(
+            chips,
+            `Se conserva ${producto.retencion_dias} días`
+        );
+
+    }
 
     if (producto.publicada) {
 
@@ -1400,10 +1465,50 @@ async function ejecutarAccion(
         return;
     }
 
-    if (
-        operacion !== "publicar" &&
-        operacion !== "retirar"
-    ) {
+    const ACCIONES = {
+        publicar: {
+            pregunta: (
+                `¿Publicar el timelapse #${producto.id} `
+                + `de ${nombreProducto(producto)}?`
+                + "\n\n"
+                + "Se creará una copia accesible públicamente."
+            ),
+            proceso: "Publicando MP4...",
+            hecho: `Timelapse #${producto.id} publicado correctamente.`
+        },
+        retirar: {
+            pregunta: (
+                `¿Retirar la publicación del timelapse `
+                + `#${producto.id}?`
+                + "\n\n"
+                + "El MP4 original se conservará."
+            ),
+            proceso: "Retirando publicación...",
+            hecho: `Publicación del timelapse #${producto.id} retirada.`
+        },
+        proteger: {
+            pregunta: (
+                `¿Proteger el timelapse #${producto.id}?`
+                + "\n\n"
+                + "No se borrará nunca, aunque venza su conservación."
+            ),
+            proceso: "Protegiendo...",
+            hecho: `Timelapse #${producto.id} protegido.`
+        },
+        desproteger: {
+            pregunta: (
+                `¿Quitar la protección del timelapse #${producto.id}?`
+                + "\n\n"
+                + "Se borrará cuando venza su conservación."
+            ),
+            proceso: "Quitando la protección...",
+            hecho: `Timelapse #${producto.id} sin protección.`
+        }
+    };
+
+    const accion = ACCIONES[operacion];
+
+    if (!accion) {
         return;
     }
 
@@ -1414,25 +1519,7 @@ async function ejecutarAccion(
         return;
     }
 
-    const esPublicacion = (
-        operacion === "publicar"
-    );
-
-    const mensaje = esPublicacion
-        ? (
-            `¿Publicar el timelapse #${producto.id} `
-            + `de ${nombreProducto(producto)}?`
-            + "\n\n"
-            + "Se creará una copia accesible públicamente."
-        )
-        : (
-            `¿Retirar la publicación del timelapse `
-            + `#${producto.id}?`
-            + "\n\n"
-            + "El MP4 original se conservará."
-        );
-
-    if (!window.confirm(mensaje)) {
+    if (!window.confirm(accion.pregunta)) {
         return;
     }
 
@@ -1443,9 +1530,7 @@ async function ejecutarAccion(
     bloquearControles(true);
 
     estado(
-        esPublicacion
-            ? "Publicando MP4..."
-            : "Retirando publicación...",
+        accion.proceso,
         "info"
     );
 
@@ -1483,9 +1568,7 @@ async function ejecutarAccion(
         if (actualizado) {
 
             estado(
-                esPublicacion
-                    ? `Timelapse #${producto.id} publicado correctamente.`
-                    : `Publicación del timelapse #${producto.id} retirada.`,
+                accion.hecho,
                 "ok"
             );
 
