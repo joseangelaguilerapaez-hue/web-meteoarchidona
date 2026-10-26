@@ -459,6 +459,14 @@ function normalizarTimelapse(
 
         tipo,
 
+        // Título propio de la programación que generó el vídeo; vacío
+        // en los antiguos o manuales.
+        programacionNombre:
+            texto(dato.programacion_nombre),
+
+        fechaEnNombre:
+            dato.fecha_en_nombre === true,
+
         url,
 
         duracionSegundos:
@@ -1013,6 +1021,34 @@ function abrirReproductor(
    ========================================================== */
 
 
+/*
+ * Título de un vídeo: el nombre de su programación y, si ella lo pide,
+ * la fecha de la captura. Sin programación (vídeos antiguos o manuales)
+ * se mantiene el de siempre: fecha y tipo.
+ */
+function tituloDelVideo(
+    video
+) {
+
+    if (
+        video.programacionNombre
+    ) {
+
+        return video.fechaEnNombre
+            ? `${video.programacionNombre} · ${formatearFecha(video.fecha)}`
+            : video.programacionNombre;
+
+    }
+
+    return `${formatearFecha(video.fecha)} · ${
+        video.tipo === "COMPLETO"
+            ? "Completo"
+            : "Parcial"
+    }`;
+
+}
+
+
 function actualizarInformacion(
     articulo,
     video
@@ -1043,9 +1079,11 @@ function actualizarInformacion(
     ) {
 
         fecha.textContent =
-            formatearFecha(
-                video.fecha
-            );
+            video.programacionNombre
+                ? tituloDelVideo(video)
+                : formatearFecha(
+                    video.fecha
+                );
 
         fecha.dateTime =
             video.fecha;
@@ -1057,9 +1095,11 @@ function actualizarInformacion(
     ) {
 
         tipo.textContent =
-            video.tipo === "COMPLETO"
-                ? "Día completo"
-                : "Avance parcial";
+            video.programacionNombre
+                ? ""
+                : video.tipo === "COMPLETO"
+                    ? "Día completo"
+                    : "Avance parcial";
 
     }
 
@@ -1079,9 +1119,11 @@ function actualizarInformacion(
     ) {
 
         detalle.textContent =
-            video.tipo === "COMPLETO"
-                ? "Timelapse diario completo."
-                : "Timelapse parcial disponible para esta fecha.";
+            video.programacionNombre
+                ? ""
+                : video.tipo === "COMPLETO"
+                    ? "Timelapse diario completo."
+                    : "Timelapse parcial disponible para esta fecha.";
 
     }
 
@@ -1199,18 +1241,8 @@ function crearFichaCamara(
             String(video.id);
 
         opcion.textContent =
-            (
-                formatearFecha(
-                    video.fecha
-                )
-                +
-                " · "
-                +
-                (
-                    video.tipo === "COMPLETO"
-                        ? "Completo"
-                        : "Parcial"
-                )
+            tituloDelVideo(
+                video
             );
 
         selector.appendChild(

@@ -52,6 +52,7 @@ const CAMPOS = {
     retencion_dias: "campoTimelapseRetencionDias",
     retencion_fotogramas_dias: "campoTimelapseRetencionFotogramasDias",
     publicacion_automatica: "campoTimelapsePublicacionAutomatica",
+    fecha_en_nombre: "campoTimelapseFechaEnNombre",
     activa: "campoTimelapseActiva"
 };
 
@@ -453,6 +454,8 @@ function rellenarFormulario(datos){
             campo.checked = datos.activa ?? true;
         }else if(nombre === "publicacion_automatica"){
             campo.checked = datos.publicacion_automatica ?? false;
+        }else if(nombre === "fecha_en_nombre"){
+            campo.checked = datos.fecha_en_nombre ?? false;
         }else if(nombre === "hora_local"){
             campo.value = horaParaInput(datos.hora_local);
         }else{
@@ -619,6 +622,9 @@ function leerFormulario(){
         ),
         publicacion_automatica: Boolean(
             valorCampo("publicacion_automatica")?.checked
+        ),
+        fecha_en_nombre: Boolean(
+            valorCampo("fecha_en_nombre")?.checked
         ),
         activa: Boolean(valorCampo("activa")?.checked)
     };

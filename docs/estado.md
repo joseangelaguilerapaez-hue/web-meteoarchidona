@@ -31,6 +31,8 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
+- Fecha en el nombre de los timelapses (rama `feature/timelapses-fecha-en-nombre`, 26 oct): check «Añadir la fecha al nombre» en la programación (Administración) y título público tomado de la programación. Necesita la migración 0030 de la API, que debe estar aplicada **antes** de desplegar esto.
+
 - Cuentas de usuario, segunda entrega (PR #39, **publicado el 26 oct**): «He olvidado mi PIN» (enlace del correo con el token en el fragmento `#nuevo-pin=`), ventana «Mi cuenta» al pulsar el nombre y «Borrar mi cuenta» (pide el PIN; la API borra a los 30 días), y **aviso de privacidad con las cuentas** (`componentes/privacidad.html`: datos, plazos, cookie `ma_sesion`, aviso a los responsables, 14 años). Texto de privacidad aprobado por José; usa el PR #44 de la API, ya en producción.
 - Cuentas de usuario, pantallas (PR #38, **publicado el 26 oct**, probado por José con una cuenta real): botones «Iniciar sesión» y «Registrarse» en la cabecera (o el nombre y «Salir»), formularios de registro (nombre, correo, PIN de 6 cifras repetido, casilla de 14 años) e inicio de sesión («Recordarme» 30 días) en una ventana sobre la página, y aviso de `?cuenta=activada` / `?cuenta=enlace-no-valido` al volver del correo. Usa `/usuarios` de `api-meteoarchidona` (PR #42, ya en producción desde el 26 oct). **Abiertas al público el 26 oct** (`CUENTAS_ABIERTAS = true` en `js/cuenta.js`, tras aprobar José el aviso de privacidad); poniéndolo en `false` se ocultan de golpe, y `?cuentas=ver` las muestra en un navegador aunque estén ocultas. Faltan las cuentas de administrador.
 
@@ -90,3 +92,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · Pantallas de cuenta en la cabecera (registro, inicio y cierre de sesión), ocultas hasta abrir las cuentas; `?cuentas=ver` las muestra en un navegador para probarlas.
 - 2026-10-26 · Pantallas de «PIN olvidado», «Mi cuenta» y borrado de cuenta, y aviso de privacidad con las cuentas; pendiente de aprobación de José y del PR #44 de la API.
 - 2026-10-26 · Cuentas abiertas al público: botones de registro e inicio de sesión visibles para todos (decisión de José tras probarlas con cuentas reales).
+- 2026-10-26 · Timelapses: el título público sale del nombre de la programación, con la fecha si el check está marcado; ya no se monta fijo en la web.

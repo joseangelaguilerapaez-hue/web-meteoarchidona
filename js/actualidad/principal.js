@@ -262,7 +262,7 @@ async function prepararTimelapses() {
 
         const modulo =
             await import(
-                "/js/timelapses.js?v=20261015-actualidad1"
+                "/js/timelapses.js?v=20261026-nombre1"
             );
 
 

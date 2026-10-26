@@ -281,6 +281,28 @@ class TestModulosJavaScript(unittest.TestCase):
                 self.assertEqual(len(consultas), 1, f"versiones distintas: {sorted(consultas)}")
 
 
+class TestFechaEnNombreTimelapse(unittest.TestCase):
+    """El título de un timelapse sale de su programación (nada cableado en la web)."""
+
+    def test_el_formulario_tiene_el_check_y_lo_envia(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('id="campoTimelapseFechaEnNombre"', pagina)
+        codigo = leer(RAIZ / "js" / "administracion" / "timelapses.js")
+        self.assertIn("fecha_en_nombre", codigo)
+
+    def test_la_web_publica_usa_el_nombre_de_la_programacion(self):
+        codigo = leer(RAIZ / "js" / "timelapses.js")
+        self.assertIn("programacion_nombre", codigo)
+        self.assertIn("fecha_en_nombre", codigo)
+
+    def test_los_scripts_cambiados_llevan_version_nueva(self):
+        for ruta, patron in (
+            ("js/actualidad/principal.js", r"/js/timelapses\.js\?v=20261026-nombre1"),
+            ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261026-nombre1"),
+        ):
+            self.assertRegex(leer(RAIZ / ruta), patron)
+
+
 class TestCuenta(unittest.TestCase):
     """Los botones de cuenta de la cabecera (js/cuenta.js, css/cuenta.css)."""
 
