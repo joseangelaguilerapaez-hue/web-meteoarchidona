@@ -294,6 +294,14 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         codigo = leer(RAIZ / "js" / "timelapses.js")
         self.assertIn("dato.titulo", codigo)
 
+    def test_las_paginas_cargan_los_principal_con_version_nueva(self):
+        """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
+        for pagina, patron in (
+            ("actualidad", r"actualidad/principal\.js\?v=20261026-titulo2"),
+            ("administracion", r"administracion/principal\.js\?v=20261026-nombre3"),
+        ):
+            self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
+
     def test_los_scripts_cambiados_llevan_version_nueva(self):
         for ruta, patron in (
             ("js/actualidad/principal.js", r"/js/timelapses\.js\?v=20261026-titulo1"),
