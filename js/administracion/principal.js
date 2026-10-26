@@ -45,18 +45,18 @@ import {
     estadoAdministracion,
     mostrarEstado,
     establecerCatalogos
-} from "./estado.js";
+} from "./estado.js?v=20261026-cache1";
 
 import {
     RUTA_CATALOGOS,
     peticionJson
-} from "./api.js";
+} from "./api.js?v=20261026-cache1";
 
 import {
     configurarCallbacksAcceso,
     configurarEventosAcceso,
     recuperarSesion
-} from "./acceso.js";
+} from "./acceso.js?v=20261026-cache1";
 
 import {
     configurarCallbacksEstaciones,
@@ -67,13 +67,13 @@ import {
     renderizarEstaciones,
     actualizarSelectReferenciaGeneral,
     seleccionarEstacion
-} from "./estaciones.js";
+} from "./estaciones.js?v=20261026-cache1";
 
 import {
     cargarCamaras,
     configurarEventosCamaras,
     limpiarCamaras
-} from "./camaras.js?v=20261011-presets1";
+} from "./camaras.js?v=20261026-cache1";
 
 import {
     configurarEventosSimulacion,
@@ -81,26 +81,26 @@ import {
     estacionesActualizadas,
     estacionSeleccionada,
     ocultarEditoresReglas
-} from "./simulacion.js";
+} from "./simulacion.js?v=20261026-cache1";
 
 import {
     configurarEventosWeatherlink,
     limpiarWeatherlink
-} from "./weatherlink.js";
+} from "./weatherlink.js?v=20261026-cache1";
 
 import {
     configurarEventosEumetsat,
     limpiarEumetsat
-} from "./eumetsat.js";
+} from "./eumetsat.js?v=20261026-cache1";
 
 import {
     configurarEventosSql,
     limpiarSql
-} from "./sql.js?v=20261009-sqlcopiar2";
+} from "./sql.js?v=20261026-cache1";
 
 import {
     configurarPestanasTimelapses
-} from "./timelapses-pestanas.js?v=20261017-pestanas1";
+} from "./timelapses-pestanas.js?v=20261026-cache1";
 
 
 /* ==========================================================
@@ -380,7 +380,7 @@ async function obtenerModuloTimelapses(){
     ){
 
         promesaModuloTimelapses = import(
-            "./timelapses.js?v=20261025-zoom1"
+            "./timelapses.js?v=20261026-cache1"
         );
 
     }
@@ -490,7 +490,7 @@ async function obtenerModuloPatrullas(){
 
     if(promesaModuloPatrullas === null){
         promesaModuloPatrullas = import(
-            "./patrullas.js?v=20261025-patrullas1"
+            "./patrullas.js?v=20261026-cache1"
         );
     }
 
@@ -564,7 +564,7 @@ async function obtenerModuloProductosTimelapse(){
     ){
 
         promesaModuloProductosTimelapse = import(
-            "./timelapses-productos.js?v=20261017-productos1"
+            "./timelapses-productos.js?v=20261026-cache1"
         );
 
     }

@@ -20,7 +20,7 @@
 
 import {
     estadoAdministracion
-} from "./estado.js";
+} from "./estado.js?v=20261026-cache1";
 
 
 /* ==========================================================
