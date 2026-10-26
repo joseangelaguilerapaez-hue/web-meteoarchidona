@@ -28,10 +28,10 @@
  * (#nuevo-pin=…), que el navegador no envía al servidor. Se lee, se
  * quita de la dirección al instante y se guarda solo en memoria.
  *
- * INTERRUPTOR: mientras CUENTAS_ABIERTAS sea false los botones no se
- * ven y no se hace ninguna petición. Para probarlo antes de abrirlo a
- * todos, entra en cualquier página con ?cuentas=ver (queda guardado en
- * ese navegador); con ?cuentas=ocultar se quita.
+ * INTERRUPTOR: con CUENTAS_ABIERTAS en true (abiertas al público el
+ * 26-10-2026) los botones salen para todos. Con false, no se ven ni se
+ * hace ninguna petición, salvo en un navegador que haya entrado con
+ * ?cuentas=ver (queda guardado); con ?cuentas=ocultar se quita.
  */
 
 (function () {
@@ -39,7 +39,7 @@
 "use strict";
 
 
-const CUENTAS_ABIERTAS = false;
+const CUENTAS_ABIERTAS = true;
 
 const CLAVE_VISTA_PREVIA = "ma_cuentas_vista_previa";
 

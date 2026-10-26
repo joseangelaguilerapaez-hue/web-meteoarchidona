@@ -293,10 +293,10 @@ class TestCuenta(unittest.TestCase):
             self.assertIsNotNone(coincidencia, f"cabecera.js no carga {ruta} con ?v=")
             self.assertTrue((RAIZ / ruta.lstrip("/")).exists())
 
-    def test_los_botones_estan_ocultos_hasta_abrir_las_cuentas(self):
-        """Cambiar a true es una decisión de José, tras actualizar el aviso de privacidad."""
+    def test_el_interruptor_de_las_cuentas_existe(self):
+        """Poner false las oculta de golpe para todos (decisión de José, 26-10-2026: abiertas)."""
         codigo = leer(RAIZ / "js" / "cuenta.js")
-        self.assertRegex(codigo, r"const CUENTAS_ABIERTAS = false;")
+        self.assertRegex(codigo, r"const CUENTAS_ABIERTAS = (true|false);")
 
     def test_la_privacidad_cuenta_lo_que_hacen_las_cuentas(self):
         """Si cuenta.js usa la cookie de sesión, el aviso de privacidad tiene que decirlo."""
