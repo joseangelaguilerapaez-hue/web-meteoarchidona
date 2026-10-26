@@ -50,6 +50,8 @@ const CAMPOS = {
     intervalo_captura_segundos: "campoTimelapseIntervaloCapturaSegundos",
     fps_salida: "campoTimelapseFpsSalida",
     retencion_dias: "campoTimelapseRetencionDias",
+    retencion_fotogramas_dias: "campoTimelapseRetencionFotogramasDias",
+    publicacion_automatica: "campoTimelapsePublicacionAutomatica",
     activa: "campoTimelapseActiva"
 };
 
@@ -449,6 +451,8 @@ function rellenarFormulario(datos){
         }
         if(nombre === "activa"){
             campo.checked = datos.activa ?? true;
+        }else if(nombre === "publicacion_automatica"){
+            campo.checked = datos.publicacion_automatica ?? false;
         }else if(nombre === "hora_local"){
             campo.value = horaParaInput(datos.hora_local);
         }else{
@@ -608,6 +612,13 @@ function leerFormulario(){
         fps_salida: enteroObligatorio(valorCampo("fps_salida")?.value, "FPS"),
         retencion_dias: enteroOpcional(
             valorCampo("retencion_dias")?.value, "Retención"
+        ),
+        retencion_fotogramas_dias: enteroOpcional(
+            valorCampo("retencion_fotogramas_dias")?.value,
+            "Conservación de los fotogramas"
+        ),
+        publicacion_automatica: Boolean(
+            valorCampo("publicacion_automatica")?.checked
         ),
         activa: Boolean(valorCampo("activa")?.checked)
     };

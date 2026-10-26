@@ -83,3 +83,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · Administración: todas las importaciones entre módulos llevan `?v=` (una sola versión por módulo) y una prueba lo exige en todo `js/`; requisito para activar la caché de un año en Nginx.
 - 2026-10-26 · `configurar_cache_estaticos.py` se paraba en el VPS: el fichero tiene dos `server` con el mismo nombre (HTTPS y la redirección de HTTP). Ahora elige el que tiene `root /srv/meteoarchidona/web`.
 - 2026-10-26 · Caché de los estáticos aplicada en el VPS; Nginx validado y recargado.
+- 2026-10-26 · Administración: botón «Proteger»/«Quitar protección» y etiquetas de conservación en Productos; campos «Conservación de los fotogramas» y «Publicar automáticamente» en las programaciones de timelapse (necesita el PR #40 de la API).

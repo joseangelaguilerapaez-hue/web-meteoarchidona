@@ -380,7 +380,7 @@ async function obtenerModuloTimelapses(){
     ){
 
         promesaModuloTimelapses = import(
-            "./timelapses.js?v=20261026-cache1"
+            "./timelapses.js?v=20261026-conserva1"
         );
 
     }
@@ -564,7 +564,7 @@ async function obtenerModuloProductosTimelapse(){
     ){
 
         promesaModuloProductosTimelapse = import(
-            "./timelapses-productos.js?v=20261026-cache1"
+            "./timelapses-productos.js?v=20261026-conserva1"
         );
 
     }
