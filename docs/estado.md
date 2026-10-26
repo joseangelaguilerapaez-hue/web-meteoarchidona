@@ -37,7 +37,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Pendiente
 
-- Caché de los estáticos en Nginx: `/css`, `/js` y `/assets` se sirven sin `Cache-Control`. Procedimiento listo en `scripts/configurar_cache_estaticos.py`, **pendiente de ejecutar en el servidor** (25 oct).
+- Caché de los estáticos en Nginx: `/css`, `/js` y `/assets` se sirven sin `Cache-Control`. Procedimiento listo en `scripts/configurar_cache_estaticos.py`, **pendiente de ejecutar en el servidor** (25 oct). Antes de ejecutarlo, los módulos de Administración tenían que versionar sus importaciones: se importaban entre sí sin `?v=` y con un año de caché no se habrían visto sus cambios. Corregido en la rama `fix/cache-modulos-administracion` (26 oct), con una prueba que lo exige para todo `js/`; tras fusionarla y desplegarla, ya se puede ejecutar el script.
 
 
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
@@ -80,3 +80,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Portada: «Condiciones actuales» estrena icono del cielo, de AEMET para la hora en curso, con la lluvia medida por encima y luna con su fase de noche. Los dibujos pasan de `js/prediccion.js` a `js/iconos-tiempo.js`, compartidos por las dos páginas, y la predicción se pide una sola vez para toda la portada.
 - 2026-10-25 · Módulo de patrullas en Administración y zoom en el formulario de timelapses (paso 2 de las patrullas).
 - 2026-10-25 · Administración por apartados: cada apartado ocupa la pantalla entera con su dirección (`administracion#patrullas`, `#sql`…) y botón «← Administración»; el índice muestra solo el menú y el resumen.
+- 2026-10-26 · Administración: todas las importaciones entre módulos llevan `?v=` (una sola versión por módulo) y una prueba lo exige en todo `js/`; requisito para activar la caché de un año en Nginx.

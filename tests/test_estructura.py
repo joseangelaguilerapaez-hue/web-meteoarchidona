@@ -241,6 +241,46 @@ class TestEnlaces(unittest.TestCase):
                     self.assertTrue("?v=" in valor, f"{valor} no lleva ?v=")
 
 
+IMPORTACION_RELATIVA = re.compile(
+    r"""(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)["'](\.{1,2}/[^"']+\.js(?:\?[^"']*)?)["']"""
+)
+
+
+class TestModulosJavaScript(unittest.TestCase):
+    """
+    Los módulos que importan a otros también deben versionar la dirección.
+
+    Nginx guarda /js/ en la caché del navegador un año (configurar_cache_estaticos.py).
+    La versión de la página llega al primer módulo, pero si este importa a otro sin
+    ?v=, el navegador seguiría usando el viejo aunque cambie. Y un mismo módulo debe
+    importarse siempre con la misma dirección: dos versiones distintas serían dos
+    copias del módulo, cada una con su propio estado.
+    """
+
+    def importaciones(self):
+        for fichero in sorted((RAIZ / "js").rglob("*.js")):
+            if "vendor" in fichero.parts:
+                continue
+            texto = fichero.read_text(encoding="utf-8")
+            for especificador in IMPORTACION_RELATIVA.findall(texto):
+                yield fichero, especificador
+
+    def test_importaciones_relativas_llevan_version(self):
+        for fichero, especificador in self.importaciones():
+            with self.subTest(fichero=relativa(fichero), importa=especificador):
+                self.assertIn("?v=", especificador, f"{especificador} no lleva ?v=")
+
+    def test_cada_modulo_se_importa_con_una_sola_direccion(self):
+        direcciones = {}
+        for fichero, especificador in self.importaciones():
+            ruta, _, consulta = especificador.partition("?")
+            destino = (fichero.parent / ruta).resolve()
+            direcciones.setdefault(destino, set()).add(consulta)
+        for destino, consultas in direcciones.items():
+            with self.subTest(modulo=relativa(destino)):
+                self.assertEqual(len(consultas), 1, f"versiones distintas: {sorted(consultas)}")
+
+
 class TestFicherosDelSitio(unittest.TestCase):
 
     def test_sitemap_es_xml_valido(self):
