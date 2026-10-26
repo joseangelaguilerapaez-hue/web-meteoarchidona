@@ -1,0 +1,256 @@
+/*
+ * MeteoArchidona
+ * Cuenta de usuario: botones de la cabecera y ventana de formularios
+ *
+ * Lo añade js/cabecera.js junto con js/cuenta.js. Usa solo los
+ * colores de paleta.css.
+ */
+
+
+/* ==========================================================
+   BOTONES EN LA CABECERA
+   ========================================================== */
+
+.cuenta-zona {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cuenta-zona[hidden] {
+    display: none;
+}
+
+.cuenta-nombre {
+    max-width: 150px;
+    overflow: hidden;
+    color: var(--text-soft);
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cuenta-boton {
+    padding: 7px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.cuenta-boton:hover,
+.cuenta-boton:focus-visible {
+    border-color: var(--amber);
+    outline: none;
+}
+
+.cuenta-boton-principal {
+    border-color: var(--border-amber);
+    background: var(--card);
+    color: var(--amber-light);
+}
+
+/*
+ * Fila propia sobre la hora y la firma, pegada a la derecha. No cabe
+ * al lado: la tercera columna de la cabecera mide 230 px y la hora y
+ * la firma ya la llenan; a su izquierda está el menú, que en
+ * escritorio ocupa dos filas.
+ */
+.zona-derecha:has(.cuenta-zona:not([hidden])) {
+    flex-wrap: wrap;
+    row-gap: 6px;
+}
+
+.cuenta-zona {
+    flex-basis: 100%;
+    order: -1;
+    justify-content: flex-end;
+}
+
+@media (max-width: 1050px) {
+
+    /* En móvil .zona-derecha es una rejilla: la fila ocupa las dos columnas. */
+    .cuenta-zona {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+
+}
+
+
+/* ==========================================================
+   VENTANA
+   ========================================================== */
+
+.cuenta-ventana {
+    width: min(420px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    padding: 0;
+    overflow: auto;
+    border: 1px solid var(--border-amber);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-deep);
+}
+
+.cuenta-ventana::backdrop {
+    background: rgba(3, 9, 20, 0.78);
+}
+
+.cuenta-ventana-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px 8px;
+}
+
+.cuenta-ventana-cabecera h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.cuenta-cerrar {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.cuenta-cerrar:hover,
+.cuenta-cerrar:focus-visible {
+    color: var(--text);
+    outline: none;
+}
+
+
+/* ==========================================================
+   FORMULARIO
+   ========================================================== */
+
+.cuenta-formulario,
+.cuenta-resultado {
+    display: grid;
+    gap: 14px;
+    padding: 8px 18px 20px;
+}
+
+.cuenta-resultado p {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.45;
+}
+
+.cuenta-campo {
+    display: grid;
+    gap: 5px;
+}
+
+.cuenta-etiqueta {
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.cuenta-campo input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--card-soft);
+    color: var(--text);
+    /* 16 px: por debajo, el móvil hace zoom al tocar el campo. */
+    font: inherit;
+    font-size: 16px;
+}
+
+.cuenta-campo input:focus-visible {
+    border-color: var(--cyan);
+    outline: none;
+}
+
+.cuenta-ayuda,
+.cuenta-nota {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.cuenta-casilla {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--text-soft);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.cuenta-casilla input {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+.cuenta-mensaje {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--red);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.cuenta-mensaje[hidden] {
+    display: none;
+}
+
+.cuenta-enviar {
+    padding: 12px 18px;
+    border: 1px solid var(--amber);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    color: var(--amber-light);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cuenta-enviar:hover,
+.cuenta-enviar:focus-visible {
+    background: var(--panel);
+    outline: none;
+}
+
+.cuenta-enviar:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+.cuenta-enlace {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--cyan);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+/* Fin de fichero: css/cuenta.css */

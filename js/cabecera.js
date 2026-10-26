@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261005-vps1";
+    "/componentes/cabecera.html?v=20261026-cuenta1";
 
 
 /* ==========================================================
@@ -274,6 +274,10 @@ function configurarMenu() {
 
 const RUTA_PIE = "/componentes/pie.html";
 
+const RUTA_CUENTA_CSS = "/css/cuenta.css?v=20261026-cuenta1";
+
+const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261026-cuenta1";
+
 
 /*
  * Monta componentes/pie.html en el <div id="pie"> de la página, si lo
@@ -370,6 +374,32 @@ async function montarPie() {
 }
 
 
+/*
+ * Los botones de cuenta (js/cuenta.js) se cargan desde aquí y no desde
+ * cada página: así las seis páginas no tienen que saber de ellos y la
+ * cabecera sigue siendo el único sitio que los conoce.
+ */
+function cargarCuenta() {
+
+    const hoja = document.createElement("link");
+
+    hoja.rel = "stylesheet";
+
+    hoja.href = RUTA_CUENTA_CSS;
+
+    document.head.appendChild(hoja);
+
+    const guion = document.createElement("script");
+
+    guion.src = RUTA_CUENTA_JS;
+
+    guion.defer = true;
+
+    document.head.appendChild(guion);
+
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -430,6 +460,8 @@ async function montarCabecera() {
     configurarMenu();
 
     recogerControlesDePagina();
+
+    cargarCuenta();
 
     /*
      * La cabecera llega después que el JS de la página, así que lo

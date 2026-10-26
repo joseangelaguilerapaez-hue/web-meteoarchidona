@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-10-25.
+Última actualización: 2026-10-26.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -30,6 +30,8 @@ No se marca nada como hecho que no esté en `main`.
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
 ## En construcción / abierto
+
+- Cuentas de usuario, pantallas (rama `feature/usuarios-pantallas`, 26 oct): botones «Iniciar sesión» y «Registrarse» en la cabecera (o el nombre y «Salir»), formularios de registro (nombre, correo, PIN de 6 cifras repetido, casilla de 14 años) e inicio de sesión («Recordarme» 30 días) en una ventana sobre la página, y aviso de `?cuenta=activada` / `?cuenta=enlace-no-valido` al volver del correo. Usa `/usuarios` de `api-meteoarchidona` (PR #42, ya en producción desde el 26 oct). **Ocultas a propósito** (`CUENTAS_ABIERTAS = false` en `js/cuenta.js`): para verlas en un navegador, `?cuentas=ver` en cualquier página (`?cuentas=ocultar` lo quita). No se abren al público hasta actualizar el aviso de privacidad con las cuentas y que José lo apruebe. Probado en navegador con una API simulada; falta probarlo con la API real tras fusionar. Faltan «PIN olvidado» y borrar la cuenta.
 
 - Patrullas de cámara en Administración, paso 2 de 4 (rama `feature/admin-patrullas`, 25 oct): módulo «Patrullas» con el mismo esquema que Timelapses (listado con filtros y editor) para crear patrullas sobre cámaras PTZ con preset inicial, velocidad, órdenes (mover a preset, esperar, zoom) y programaciones (una vuelta en fecha o diaria, activación por franja), y botones para activar/desactivar, dar una vuelta y borrar. Añade además el zoom opcional al formulario de timelapses. Usa `/admin/patrullas` de `api-meteoarchidona` (migración 0027 aplicada en producción el 25 oct). Probado en navegador contra una API simulada; falta probarlo con la API real. Diseño: `docs/patrullas.md` de `api-meteoarchidona`.
 
@@ -84,3 +86,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · `configurar_cache_estaticos.py` se paraba en el VPS: el fichero tiene dos `server` con el mismo nombre (HTTPS y la redirección de HTTP). Ahora elige el que tiene `root /srv/meteoarchidona/web`.
 - 2026-10-26 · Caché de los estáticos aplicada en el VPS; Nginx validado y recargado.
 - 2026-10-26 · Administración: botón «Proteger»/«Quitar protección» y etiquetas de conservación en Productos; campos «Conservación de los fotogramas» y «Publicar automáticamente» en las programaciones de timelapse (necesita el PR #40 de la API).
+- 2026-10-26 · Pantallas de cuenta en la cabecera (registro, inicio y cierre de sesión), ocultas hasta abrir las cuentas; `?cuentas=ver` las muestra en un navegador para probarlas.
