@@ -17,6 +17,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Hecho (en `main`)
 
+- Caché de los estáticos en Nginx (petición de Mario): `/css` y `/js` un año, `/assets` 30 días. **Aplicada en el VPS** el 26 oct con `scripts/configurar_cache_estaticos.py` (web en `3365b09`), tras versionar las importaciones de Administración (PR #34) y ajustar el script a los dos `server` del fichero real (PR #35). Copia de la configuración anterior en `/home/jose/meteoarchidona-web.nginx.20261026T084045…bak`.
 - Auditoría de uso, primera entrega (PR #12, publicada el 24 oct en `5a28551`): aviso de consentimiento, ventana de privacidad con preferencias (`componentes/privacidad.html`), botón «Privacidad» en el pie y `js/auditoria.js`, que cuenta cada página vista de forma anónima para todos los visitantes (`/auditoria/vistas`, sin identificador ni nada en el navegador) y, solo con consentimiento, envía a la API ACCESO, SALIDA y las visualizaciones marcadas con `data-auditoria-visualizacion` (Predicción, visor de Seguimiento, tabla de estaciones, Timelapses y fichas). Verificada con una visita real de José: aviso, aceptación, sesión y eventos llegan bien a la base. Segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores.
 - Visor de radar regional multirradar, con estilos y caché corregidos (PR #2 a #4, sep).
 - Panel de administración V2 (PR #6, sep).
@@ -37,7 +38,6 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Pendiente
 
-- Caché de los estáticos en Nginx: `/css`, `/js` y `/assets` se sirven sin `Cache-Control`. Procedimiento listo en `scripts/configurar_cache_estaticos.py`, **pendiente de ejecutar en el servidor** (25 oct). Antes de ejecutarlo, los módulos de Administración tenían que versionar sus importaciones: se importaban entre sí sin `?v=` y con un año de caché no se habrían visto sus cambios. Corregido en la rama `fix/cache-modulos-administracion` (26 oct), con una prueba que lo exige para todo `js/`; tras fusionarla y desplegarla, ya se puede ejecutar el script.
 
 
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
@@ -82,3 +82,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-25 · Administración por apartados: cada apartado ocupa la pantalla entera con su dirección (`administracion#patrullas`, `#sql`…) y botón «← Administración»; el índice muestra solo el menú y el resumen.
 - 2026-10-26 · Administración: todas las importaciones entre módulos llevan `?v=` (una sola versión por módulo) y una prueba lo exige en todo `js/`; requisito para activar la caché de un año en Nginx.
 - 2026-10-26 · `configurar_cache_estaticos.py` se paraba en el VPS: el fichero tiene dos `server` con el mismo nombre (HTTPS y la redirección de HTTP). Ahora elige el que tiene `root /srv/meteoarchidona/web`.
+- 2026-10-26 · Caché de los estáticos aplicada en el VPS; Nginx validado y recargado.
