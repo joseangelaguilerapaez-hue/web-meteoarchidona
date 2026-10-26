@@ -113,8 +113,10 @@ def localizar_bloque_server(
     """
     Localiza el server que atiende el sitio.
 
-    Tiene que haber exactamente uno con la raíz de la web; si hay
-    varios o ninguno, se aborta en lugar de adivinar.
+    Tiene que haber exactamente uno con la raíz de la web
+    (root /srv/meteoarchidona/web); si hay varios o ninguno, se aborta
+    en lugar de adivinar. El server de HTTP que solo redirige no la
+    tiene y se deja como está.
     """
 
     patron = re.compile(
@@ -128,13 +130,23 @@ def localizar_bloque_server(
         re.MULTILINE | re.DOTALL,
     )
 
+    # El fichero real tiene dos server con el mismo server_name: el de
+    # HTTPS, que sirve la web, y el de HTTP, que solo redirige a HTTPS
+    # (comprobado en el VPS el 26-10-2026). El que interesa es el que
+    # tiene la raíz de la web.
+    raiz_web = re.compile(
+        r"(?m)^[ \t]*root[ \t]+/srv/meteoarchidona/web/?[ \t]*;"
+    )
+
     candidatos = [
         bloque
         for bloque in patron.finditer(
             contenido
         )
-        if "meteoarchidona" in bloque.group(
-            "cuerpo"
+        if raiz_web.search(
+            bloque.group(
+                "cuerpo"
+            )
         )
     ]
 

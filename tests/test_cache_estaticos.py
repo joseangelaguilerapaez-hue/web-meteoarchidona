@@ -125,6 +125,37 @@ class TestCacheEstaticos(unittest.TestCase):
             informe,
         )
 
+    def test_con_el_server_de_redireccion_elige_el_de_la_web(self):
+        """Como en el VPS: HTTPS sirve la web y HTTP solo redirige."""
+
+        redireccion = (
+            "server {\n"
+            "    listen 80;\n"
+            "    server_name meteoarchidona.com www.meteoarchidona.com;\n"
+            "\n"
+            "    return 301 https://$host$request_uri;\n"
+            "}\n"
+        )
+        configuracion = CONFIGURACION + "\n" + redireccion
+
+        nuevo, informe = self.script.preparar_contenido(configuracion)
+
+        self.assertIsNotNone(nuevo)
+        self.assertEqual(len(informe), 2)
+        self.assertTrue(
+            nuevo.endswith(redireccion),
+            "el server de redirección no debe cambiar",
+        )
+        self.assertLess(
+            nuevo.find("location ~* ^/assets/"),
+            nuevo.find("listen 80;"),
+            "los bloques deben ir en el server de HTTPS",
+        )
+
+    def test_dos_server_con_la_raiz_de_la_web_se_planta(self):
+        with self.assertRaises(RuntimeError):
+            self.script.preparar_contenido(CONFIGURACION + "\n" + CONFIGURACION)
+
     def test_sin_server_del_sitio_se_planta(self):
         """Ante algo que no reconoce, no modifica Nginx."""
 
