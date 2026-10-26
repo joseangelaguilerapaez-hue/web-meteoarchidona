@@ -459,13 +459,9 @@ function normalizarTimelapse(
 
         tipo,
 
-        // Título propio de la programación que generó el vídeo; vacío
-        // en los antiguos o manuales.
-        programacionNombre:
-            texto(dato.programacion_nombre),
-
-        fechaEnNombre:
-            dato.fecha_en_nombre === true,
+        // Título ya compuesto y guardado con el vídeo por la API.
+        titulo:
+            texto(dato.titulo),
 
         url,
 
@@ -1022,21 +1018,18 @@ function abrirReproductor(
 
 
 /*
- * Título de un vídeo: el nombre de su programación y, si ella lo pide,
- * la fecha de la captura. Sin programación (vídeos antiguos o manuales)
- * se mantiene el de siempre: fecha y tipo.
+ * Título de un vídeo: el que guarda la API. Solo si faltara (respuesta
+ * antigua) se compone aquí con la fecha y el tipo.
  */
 function tituloDelVideo(
     video
 ) {
 
     if (
-        video.programacionNombre
+        video.titulo
     ) {
 
-        return video.fechaEnNombre
-            ? `${video.programacionNombre} · ${formatearFecha(video.fecha)}`
-            : video.programacionNombre;
+        return video.titulo;
 
     }
 
@@ -1079,8 +1072,8 @@ function actualizarInformacion(
     ) {
 
         fecha.textContent =
-            video.programacionNombre
-                ? tituloDelVideo(video)
+            video.titulo
+                ? video.titulo
                 : formatearFecha(
                     video.fecha
                 );
@@ -1095,7 +1088,7 @@ function actualizarInformacion(
     ) {
 
         tipo.textContent =
-            video.programacionNombre
+            video.titulo
                 ? ""
                 : video.tipo === "COMPLETO"
                     ? "Día completo"
@@ -1119,7 +1112,7 @@ function actualizarInformacion(
     ) {
 
         detalle.textContent =
-            video.programacionNombre
+            video.titulo
                 ? ""
                 : video.tipo === "COMPLETO"
                     ? "Timelapse diario completo."

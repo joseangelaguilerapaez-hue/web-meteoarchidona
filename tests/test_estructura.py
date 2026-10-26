@@ -282,7 +282,7 @@ class TestModulosJavaScript(unittest.TestCase):
 
 
 class TestFechaEnNombreTimelapse(unittest.TestCase):
-    """El título de un timelapse sale de su programación (nada cableado en la web)."""
+    """El título de un timelapse lo guarda la API; la web no lo monta."""
 
     def test_el_formulario_tiene_el_check_y_lo_envia(self):
         pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
@@ -292,12 +292,11 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
 
     def test_la_web_publica_usa_el_nombre_de_la_programacion(self):
         codigo = leer(RAIZ / "js" / "timelapses.js")
-        self.assertIn("programacion_nombre", codigo)
-        self.assertIn("fecha_en_nombre", codigo)
+        self.assertIn("dato.titulo", codigo)
 
     def test_los_scripts_cambiados_llevan_version_nueva(self):
         for ruta, patron in (
-            ("js/actualidad/principal.js", r"/js/timelapses\.js\?v=20261026-nombre1"),
+            ("js/actualidad/principal.js", r"/js/timelapses\.js\?v=20261026-titulo1"),
             ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261026-nombre1"),
         ):
             self.assertRegex(leer(RAIZ / ruta), patron)
