@@ -1,6 +1,6 @@
 # Privacidad y cookies — borrador
 
-**Estado: PUBLICADO el 24-10-2026** en `componentes/privacidad.html` (ventana «Privacidad»). Este documento queda como referencia; si se cambia la política, hay que cambiar los dos. Redactado el 24-10-2026 a partir de lo que la
+**Estado: PUBLICADO el 24-10-2026; el 26-10-2026 el texto vigente de `componentes/privacidad.html` añade las cuentas (sección «Si creas una cuenta», cookie `ma_sesion`, aviso a los responsables), pendiente de aprobación de José y no recogido aquí** en `componentes/privacidad.html` (ventana «Privacidad»). Este documento queda como referencia; si se cambia la política, hay que cambiar los dos. Redactado el 24-10-2026 a partir de lo que la
 auditoría guarda realmente (`api-meteoarchidona`, `docs/auditoria.md`, secciones 4.3 y 6.4).
 No lo ha revisado un profesional del derecho. Lo marcado **(por confirmar)** necesita
 un dato o una decisión de José antes de publicarlo.

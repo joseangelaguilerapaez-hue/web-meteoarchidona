@@ -274,9 +274,9 @@ function configurarMenu() {
 
 const RUTA_PIE = "/componentes/pie.html";
 
-const RUTA_CUENTA_CSS = "/css/cuenta.css?v=20261026-cuenta1";
+const RUTA_CUENTA_CSS = "/css/cuenta.css?v=20261026-cuenta2";
 
-const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261026-cuenta1";
+const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261026-cuenta2";
 
 
 /*

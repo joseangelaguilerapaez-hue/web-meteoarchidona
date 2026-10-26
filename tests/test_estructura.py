@@ -298,6 +298,15 @@ class TestCuenta(unittest.TestCase):
         codigo = leer(RAIZ / "js" / "cuenta.js")
         self.assertRegex(codigo, r"const CUENTAS_ABIERTAS = false;")
 
+    def test_la_privacidad_cuenta_lo_que_hacen_las_cuentas(self):
+        """Si cuenta.js usa la cookie de sesión, el aviso de privacidad tiene que decirlo."""
+        texto = sin_comentarios(RAIZ / "componentes" / "privacidad.html")
+        self.assertIn('id="privacidad-cuenta"', texto)
+        self.assertIn("ma_sesion", texto)
+        self.assertIn("30 días", texto)
+        self.assertIn("7 días", texto)
+        self.assertNotIn("No usamos cookies", texto)
+
     def test_cuenta_no_guarda_nada_sensible_en_el_navegador(self):
         """El PIN y la sesión no se escriben en localStorage: la cookie es HttpOnly."""
         codigo = leer(RAIZ / "js" / "cuenta.js")
