@@ -21,13 +21,11 @@
     display: none;
 }
 
-.cuenta-nombre {
+.cuenta-boton-nombre {
     max-width: 150px;
     overflow: hidden;
     color: var(--text-soft);
-    font-size: 13px;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .cuenta-boton {
@@ -240,6 +238,15 @@
 .cuenta-enviar:disabled {
     opacity: 0.55;
     cursor: wait;
+}
+
+.cuenta-enviar-peligro {
+    border-color: var(--red);
+    color: var(--text);
+}
+
+.cuenta-datos {
+    word-break: break-word;
 }
 
 .cuenta-enlace {

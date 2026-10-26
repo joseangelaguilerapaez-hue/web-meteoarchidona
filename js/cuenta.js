@@ -13,6 +13,9 @@
  *   POST   /usuarios/sesion   iniciar sesión (pone la cookie ma_sesion)
  *   DELETE /usuarios/sesion   cerrar sesión
  *   GET    /usuarios/yo       quién ha entrado (401 si nadie)
+ *   POST   /usuarios/pin-olvidado  pedir el enlace para elegir un PIN nuevo
+ *   POST   /usuarios/pin-nuevo     elegir el PIN nuevo con el token del enlace
+ *   POST   /usuarios/baja          pedir la baja (sesión y PIN); se borra a los 30 días
  *
  * La cookie es HttpOnly: este script nunca la ve. Solo sabe si hay
  * sesión preguntándoselo a la API.
@@ -20,6 +23,10 @@
  * El enlace del correo lo atiende la API y devuelve al visitante a
  * la web con ?cuenta=activada o ?cuenta=enlace-no-valido; aquí se
  * muestra el aviso y se limpia la dirección.
+ *
+ * El enlace de «He olvidado mi PIN» lleva el token en el fragmento
+ * (#nuevo-pin=…), que el navegador no envía al servidor. Se lee, se
+ * quita de la dirección al instante y se guarda solo en memoria.
  *
  * INTERRUPTOR: mientras CUENTAS_ABIERTAS sea false los botones no se
  * ven y no se hace ninguna petición. Para probarlo antes de abrirlo a
@@ -283,7 +290,16 @@ function pintarZona() {
     if (usuario) {
 
         zona.appendChild(
-            crear("span", { class: "cuenta-nombre", title: usuario.correo }, usuario.nombre_visible)
+            crear(
+                "button",
+                {
+                    type: "button",
+                    class: "cuenta-boton cuenta-boton-nombre",
+                    title: "Mi cuenta",
+                    "data-cuenta-accion": "cuenta",
+                },
+                usuario.nombre_visible
+            )
         );
 
         const salir = crear(
@@ -634,9 +650,183 @@ function abrirEntrada() {
         crear("button", { type: "button", class: "cuenta-enlace", "data-cuenta-accion": "registrar" }, "Regístrate")
     );
 
-    formulario.agregarPie("Entrar", cambio);
+    const olvido = crear("p", { class: "cuenta-nota" });
+
+    olvido.append(
+        "¿Has olvidado tu PIN? ",
+        crear("button", { type: "button", class: "cuenta-enlace", "data-cuenta-accion": "pin-olvidado" }, "Elige uno nuevo")
+    );
+
+    formulario.agregarPie("Entrar", olvido, cambio);
 
     abrirVentana("Iniciar sesión", formulario);
+
+}
+
+
+function abrirPinOlvidado() {
+
+    const formulario = construirFormulario(async (datos) => {
+
+        const respuesta = await llamar("POST", "/pin-olvidado", {
+            correo: datos.get("correo").trim(),
+        });
+
+        mostrarResultado(
+            "Revisa tu correo",
+            (respuesta && respuesta.mensaje)
+                || "Si el correo corresponde a una cuenta, te hemos enviado un enlace."
+        );
+
+    });
+
+    formulario.appendChild(
+        crear(
+            "p",
+            { class: "cuenta-nota" },
+            "Escribe el correo de tu cuenta y te mandaremos un enlace, válido una hora, para elegir un PIN nuevo."
+        )
+    );
+
+    formulario.appendChild(
+        campo("Correo electrónico", {
+            name: "correo",
+            type: "email",
+            autocomplete: "email",
+            maxlength: "320",
+            required: true,
+        })
+    );
+
+    formulario.agregarPie("Enviar enlace");
+
+    abrirVentana("He olvidado mi PIN", formulario);
+
+}
+
+
+function abrirPinNuevo(token) {
+
+    const formulario = construirFormulario(async (datos, este) => {
+
+        const pin = datos.get("pin");
+
+        if (pin !== datos.get("pin2")) {
+
+            este.mostrarMensaje("Los dos PIN no coinciden.");
+
+            return;
+
+        }
+
+        const respuesta = await llamar("POST", "/pin-nuevo", { token, pin });
+
+        // La API cierra todas las sesiones, también la de este navegador.
+        usuario = null;
+
+        pintarZona();
+
+        mostrarResultado(
+            "PIN cambiado",
+            (respuesta && respuesta.mensaje) || "Tu PIN se ha cambiado."
+        );
+
+    });
+
+    formulario.append(
+        campo(
+            "PIN nuevo de 6 cifras",
+            { name: "pin", ...atributosPin(true) },
+            "Evita fechas, series (123456) y repeticiones: se rechazan."
+        ),
+        campo("Repite el PIN nuevo", { name: "pin2", ...atributosPin(true) })
+    );
+
+    formulario.agregarPie("Guardar PIN nuevo");
+
+    abrirVentana("Elige un PIN nuevo", formulario);
+
+}
+
+
+function abrirMiCuenta() {
+
+    if (!usuario) {
+
+        return;
+
+    }
+
+    const contenido = crear("div", { class: "cuenta-resultado" });
+
+    const datos = crear("p", { class: "cuenta-datos" });
+
+    datos.append(
+        crear("strong", {}, usuario.nombre_visible),
+        crear("br"),
+        usuario.correo
+    );
+
+    contenido.appendChild(datos);
+
+    const salirBoton = crear(
+        "button",
+        { type: "button", class: "cuenta-enviar", "data-cuenta-accion": "salir" },
+        "Cerrar sesión"
+    );
+
+    salirBoton.addEventListener("click", cerrarVentana);
+
+    contenido.appendChild(salirBoton);
+
+    contenido.appendChild(
+        crear(
+            "button",
+            { type: "button", class: "cuenta-enviar cuenta-enviar-peligro", "data-cuenta-accion": "baja" },
+            "Borrar mi cuenta"
+        )
+    );
+
+    abrirVentana("Mi cuenta", contenido);
+
+}
+
+
+function abrirBaja() {
+
+    const formulario = construirFormulario(async (datos) => {
+
+        const respuesta = await llamar("POST", "/baja", { pin: datos.get("pin") });
+
+        // La API cierra las sesiones y borra la cookie.
+        usuario = null;
+
+        pintarZona();
+
+        mostrarResultado(
+            "Baja solicitada",
+            (respuesta && respuesta.mensaje)
+                || "Hemos recibido tu solicitud. Tu cuenta se borrará dentro de 30 días."
+        );
+
+    });
+
+    formulario.appendChild(
+        crear(
+            "p",
+            { class: "cuenta-nota" },
+            "Tu cuenta se desactivará ahora y se borrarán tus datos dentro de 30 días. "
+            + "Si cambias de idea, entra antes con tu correo y tu PIN y la baja se cancela."
+        )
+    );
+
+    formulario.appendChild(campo("Tu PIN, para confirmar", { name: "pin", ...atributosPin(false) }));
+
+    formulario.agregarPie("Pedir la baja");
+
+    formulario.querySelector(".cuenta-enviar").classList.add("cuenta-enviar-peligro");
+
+    abrirVentana("Borrar mi cuenta", formulario);
 
 }
 
@@ -747,7 +937,44 @@ function alPulsar(evento) {
 
         salir();
 
+    } else if (accion === "pin-olvidado") {
+
+        abrirPinOlvidado();
+
+    } else if (accion === "cuenta") {
+
+        abrirMiCuenta();
+
+    } else if (accion === "baja") {
+
+        abrirBaja();
+
     }
+
+}
+
+
+function atenderEnlaceDePin() {
+
+    const fragmento = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+
+    const token = fragmento.get("nuevo-pin");
+
+    if (!token) {
+
+        return;
+
+    }
+
+    // El token se quita de la dirección al momento: no queda en el
+    // historial ni se puede compartir sin querer.
+    window.history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search
+    );
+
+    abrirPinNuevo(token);
 
 }
 
@@ -764,9 +991,14 @@ function arrancar() {
 
     document.addEventListener("click", alPulsar);
 
+    // Un enlace pegado en una pestaña ya abierta solo cambia el fragmento.
+    window.addEventListener("hashchange", atenderEnlaceDePin);
+
     averiguarUsuario();
 
     atenderAvisoDeCuenta();
+
+    atenderEnlaceDePin();
 
 }
 
