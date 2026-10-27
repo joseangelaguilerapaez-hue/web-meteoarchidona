@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-10-26.
+Última actualización: 2026-10-27.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -43,6 +43,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Pendiente
 
+- Ventajas de registrarse: `docs/ventajas-registro.md` reúne qué gana el usuario registrado (estadísticas e informes propios, catálogo en sus dashboards, dashboards propios) y por qué importa a MeteoArchidona. Se irá ampliando; su texto se llevará a la web cuando cada ventaja funcione. Falta decidir dónde se muestra.
 
 
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
@@ -96,3 +97,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · Timelapses: la web muestra el título que guarda la API en cada vídeo (migración 0031), sin montarlo; pendiente de fusionar y desplegar.
 - 2026-10-26 · Timelapses: el check «Añadir la fecha al nombre» arranca marcado en las programaciones nuevas.
 - 2026-10-26 · Timelapses: corregido el versionado de los `principal.js` de Actualidad y Administración, que no llegaban a los navegadores con caché.
+- 2026-10-27 · Abierto `docs/ventajas-registro.md` con las primeras ventajas del usuario registrado (estadísticas propias, catálogo y dashboards), a petición de José.
