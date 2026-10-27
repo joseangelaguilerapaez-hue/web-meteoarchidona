@@ -45,6 +45,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Pendiente
 
+- Mejoras propuestas tras el repaso del 27 oct: `docs/mejoras.md` (código muerto, documentos desfasados, seguridad de la consola SQL por comprobar, pestañas en segundo plano, imágenes, accesibilidad…). **Por decidir con José** qué se hace y en qué orden.
 - Ventajas de registrarse: `docs/ventajas-registro.md` reúne qué gana el usuario registrado (estadísticas e informes propios, catálogo en sus dashboards, dashboards propios) y por qué importa a MeteoArchidona. Se irá ampliando; su texto se llevará a la web cuando cada ventaja funcione. Falta decidir dónde se muestra.
 
 
@@ -101,3 +102,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · Timelapses: corregido el versionado de los `principal.js` de Actualidad y Administración, que no llegaban a los navegadores con caché.
 - 2026-10-27 · Abierto `docs/ventajas-registro.md` con las primeras ventajas del usuario registrado (estadísticas propias, catálogo y dashboards), a petición de José.
 - 2026-10-27 · Informes y estadísticas: visor reutilizable (gráfica, tabla y PDF) y configurador con vista previa en Administración; pendiente de fusionar y publicar.
+- 2026-10-27 · Repaso del proyecto y lista de mejoras propuestas en `docs/mejoras.md`, para comentarla con José.
