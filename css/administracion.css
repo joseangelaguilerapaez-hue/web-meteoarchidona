@@ -1407,4 +1407,54 @@ a.modulo-boton{
 }
 
 
+/* ==========================================================
+   ESTADÍSTICAS E INFORMES (js/administracion/estadisticas.js)
+   ========================================================== */
+
+.series-estadistica{
+    display:grid;
+    gap:14px
+}
+
+.serie-estadistica{
+    --color-serie:var(--cyan);
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-left:4px solid var(--color-serie);
+    border-radius:12px;
+    background:var(--card-soft)
+}
+
+.serie-estadistica-cabecera{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px
+}
+
+.serie-estadistica-color{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:var(--color-serie)
+}
+
+.serie-estadistica-acciones{
+    display:flex;
+    gap:6px;
+    margin-left:auto
+}
+
+.serie-estadistica input[type="color"]{
+    width:100%;
+    min-height:40px;
+    padding:2px;
+    cursor:pointer
+}
+
+#avisoUnidadesEstadistica[hidden]{
+    display:none
+}
+
+
 /* Fin de fichero: css/administracion.css */

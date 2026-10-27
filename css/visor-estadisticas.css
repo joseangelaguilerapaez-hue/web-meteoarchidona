@@ -1,0 +1,448 @@
+/*
+ * MeteoArchidona
+ * Visor de estadísticas e informes (js/visor-estadisticas.js)
+ *
+ * Componente reutilizable: Administración, páginas públicas y
+ * dashboards. Usa los colores de css/paleta.css.
+ *
+ * Impresión («Descargar PDF»): solo se imprime el visor marcado, con
+ * el logotipo y la ficha arriba y, en el pie de cada página, el aviso
+ * de carácter informativo y el código de referencia.
+ */
+
+.visor-est {
+    --color-serie: var(--cyan);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+}
+
+.visor-est > * {
+    min-width: 0;
+}
+
+.visor-est-impresion {
+    display: none;
+}
+
+
+/* ---- Cabecera en pantalla ---- */
+
+.visor-est-barra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.visor-est-titulos {
+    min-width: 0;
+}
+
+.visor-est-titulo {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--text);
+}
+
+.visor-est-descripcion {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+}
+
+.visor-est-ficha {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.visor-est-estado {
+    margin: 0;
+    color: var(--muted);
+    min-height: 1.2em;
+}
+
+.visor-est.con-error .visor-est-estado {
+    color: var(--red);
+}
+
+.visor-est.cargando .visor-est-marco-grafica,
+.visor-est.cargando .visor-est-tabla-zona {
+    opacity: 0.45;
+    transition: opacity 0.2s;
+}
+
+
+/* ---- Leyenda ---- */
+
+.visor-est-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 0.88rem;
+    color: var(--text-soft);
+}
+
+.visor-est-leyenda-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.visor-est-leyenda-item small {
+    color: var(--muted);
+}
+
+.visor-est-muestra {
+    display: inline-block;
+    flex: none;
+    width: 18px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--color-serie);
+}
+
+.visor-est-muestra.trazo-barras,
+.visor-est-muestra.trazo-area {
+    height: 12px;
+    width: 12px;
+}
+
+.visor-est-muestra.trazo-puntos {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+
+/* ---- Gráfica ---- */
+
+.visor-est-marco-grafica {
+    position: relative;
+}
+
+.visor-est-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    touch-action: pan-y;
+}
+
+.visor-est-rejilla {
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+}
+
+.visor-est-cero {
+    stroke: var(--border-strong);
+    stroke-width: 1;
+}
+
+.visor-est-marca {
+    fill: var(--muted);
+    font-size: 11px;
+}
+
+.visor-est-unidad {
+    fill: var(--text-faint);
+    font-size: 11px;
+}
+
+.visor-est-serie {
+    color: var(--color-serie);
+}
+
+.visor-est-linea {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.visor-est-area {
+    fill: currentColor;
+    fill-opacity: 0.22;
+    stroke: none;
+}
+
+.visor-est-barra {
+    fill: currentColor;
+    fill-opacity: 0.85;
+}
+
+.visor-est-barra.incompleta {
+    fill-opacity: 0.35;
+    stroke: currentColor;
+    stroke-dasharray: 3 2;
+}
+
+.visor-est-punto {
+    fill: currentColor;
+}
+
+.visor-est-punto.incompleto {
+    fill: var(--bg);
+    stroke: currentColor;
+    stroke-width: 1.5;
+}
+
+.visor-est-cursor {
+    stroke: var(--text-faint);
+    stroke-dasharray: 3 3;
+}
+
+.visor-est-zona {
+    fill: transparent;
+    cursor: crosshair;
+}
+
+.visor-est-vacio {
+    margin: 0;
+    padding: 32px 0;
+    text-align: center;
+    color: var(--muted);
+}
+
+
+/* ---- Ventana de valores ---- */
+
+.visor-est-tooltip {
+    position: absolute;
+    top: 8px;
+    left: var(--x, 50%);
+    transform: translateX(12px);
+    z-index: 2;
+    min-width: 180px;
+    max-width: min(320px, 80%);
+    padding: 8px 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--panel);
+    box-shadow: var(--shadow);
+    font-size: 0.82rem;
+    pointer-events: none;
+}
+
+.visor-est-tooltip.a-la-izquierda {
+    transform: translateX(calc(-100% - 12px));
+}
+
+.visor-est-tooltip[hidden] {
+    display: none;
+}
+
+.visor-est-tooltip-fecha {
+    margin-bottom: 4px;
+    color: var(--muted);
+}
+
+.visor-est-tooltip-fila {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 6px;
+    align-items: center;
+    color: var(--text-soft);
+}
+
+.visor-est-tooltip-fila strong {
+    color: var(--text);
+    white-space: nowrap;
+}
+
+
+/* ---- Tabla ---- */
+
+.visor-est-tabla-marco {
+    overflow-x: auto;
+    max-height: 480px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.visor-est-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+}
+
+.visor-est-tabla th,
+.visor-est-tabla td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-subtle);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.visor-est-tabla thead th {
+    position: sticky;
+    top: 0;
+    background: var(--card);
+    color: var(--text-soft);
+    white-space: normal;
+    min-width: 7em;
+    vertical-align: bottom;
+}
+
+.visor-est-tabla thead th:first-child {
+    min-width: 0;
+}
+
+.visor-est-tabla thead th:not(:first-child) {
+    text-align: right;
+}
+
+.visor-est-tabla tfoot th,
+.visor-est-tabla tfoot td {
+    position: sticky;
+    bottom: 0;
+    background: var(--card);
+    color: var(--text);
+    font-weight: 600;
+}
+
+.visor-est-tabla small {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.visor-est-tabla .numero {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.visor-est-nota {
+    margin: 6px 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+
+/* ---- Pie: aviso y referencia ---- */
+
+.visor-est-pie,
+.visor-est-hoja-impresion {
+    display: none;
+}
+
+
+/* ==========================================================
+   IMPRESIÓN («Descargar PDF»)
+   ========================================================== */
+
+@media print {
+
+    @page {
+        margin: 14mm 12mm 26mm;
+    }
+
+    body.imprimiendo-estadistica {
+        background: #fff;
+    }
+
+    body.imprimiendo-estadistica .visor-est-hoja-impresion {
+        display: block;
+    }
+
+    body.imprimiendo-estadistica > :not(.visor-est-hoja-impresion) {
+        display: none !important;
+    }
+
+    .visor-est.imprimiendo {
+        color: #111;
+        --text: #111;
+        --text-soft: #222;
+        --muted: #555;
+        --text-faint: #666;
+        --border: #ccc;
+        --border-subtle: #ddd;
+        --border-strong: #999;
+        --card: #fff;
+        --bg: #fff;
+        --panel: #fff;
+    }
+
+    .visor-est.imprimiendo .visor-est-impresion {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .visor-est.imprimiendo .visor-est-logo {
+        width: 64px;
+        height: auto;
+    }
+
+    .visor-est.imprimiendo .visor-est-ficha-impresion {
+        display: grid;
+        gap: 2px;
+        font-size: 10pt;
+    }
+
+    .visor-est.imprimiendo .visor-est-ficha-impresion strong {
+        font-size: 13pt;
+    }
+
+    .visor-est.imprimiendo .visor-est-acciones,
+    .visor-est.imprimiendo .visor-est-estado,
+    .visor-est.imprimiendo .visor-est-tooltip,
+    .visor-est.imprimiendo .visor-est-cursor,
+    .visor-est.imprimiendo .visor-est-titulo,
+    .visor-est.imprimiendo .visor-est-ficha {
+        display: none;
+    }
+
+    .visor-est.imprimiendo .visor-est-tabla-marco {
+        max-height: none;
+        overflow: visible;
+        border: 0;
+    }
+
+    .visor-est.imprimiendo .visor-est-tabla thead th,
+    .visor-est.imprimiendo .visor-est-tabla tfoot th,
+    .visor-est.imprimiendo .visor-est-tabla tfoot td {
+        position: static;
+    }
+
+    .visor-est.imprimiendo .visor-est-tabla tr {
+        break-inside: avoid;
+    }
+
+    .visor-est.imprimiendo .visor-est-marco-grafica {
+        break-inside: avoid;
+    }
+
+    /* Fijo en el pie: se repite en todas las páginas. */
+    .visor-est.imprimiendo .visor-est-pie {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding-top: 4px;
+        border-top: 1px solid #ccc;
+        background: #fff;
+        font-size: 7.5pt;
+        color: #444;
+    }
+
+    .visor-est.imprimiendo .visor-est-aviso,
+    .visor-est.imprimiendo .visor-est-referencia {
+        margin: 0;
+    }
+
+    .visor-est.imprimiendo .visor-est-referencia {
+        margin-top: 2px;
+        font-weight: 600;
+    }
+}
+
+
+/* Fin de fichero: css/visor-estadisticas.css */
