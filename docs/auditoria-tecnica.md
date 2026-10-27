@@ -6,22 +6,27 @@ falla y qué conviene arreglar, con casillas para ir marcando el avance.
 No confundir con [auditoria.md](auditoria.md), que es el diseño del
 subsistema de analítica propia.
 
-**Última revisión: 12 de octubre de 2026.** Medido contra el sitio
-publicado y contra el repositorio, no de memoria.
+**Última revisión: 27 de octubre de 2026**, solo contra el repositorio y
+`docs/estado.md`: desde la sesión de Claude no se llega al sitio publicado,
+así que lo que dependa de medir en producción queda **por confirmar**. La
+primera revisión, del 12 de octubre, sí se midió contra el sitio.
+
+Las mejoras nuevas que salieron del repaso del 27 de octubre están en
+[mejoras.md](mejoras.md); aquí solo se sigue el estado de lo ya apuntado.
 
 
 ## Resumen
 
 | Área | Estado |
 | --- | --- |
-| Disponibilidad | Bien: las seis páginas y la API responden |
-| Velocidad | Bien: la API bajó de 11 s a 0,6 s con la mudanza al VPS |
-| Seguridad | **Mal: la consola SQL y la documentación de la API siguen públicas** |
-| Caché del navegador | Regular: los estáticos se vuelven a pedir en cada visita |
-| Contenido | Regular: la predicción aún enseña datos de muestra |
-| Calidad del código | Bien: 23 pruebas en verde y CI en verde |
+| Disponibilidad | Bien el 12-10; sin medir el 27-10 |
+| Velocidad | Bien: la API bajó de 11 s a 0,6 s con la mudanza al VPS (12-10) |
+| Seguridad | **Por confirmar: el 12-10 la consola SQL y la documentación de la API eran públicas, y no consta que se arreglara** |
+| Caché del navegador | Bien: estáticos un año en Nginx y HTML con `no-cache` (25 y 26-10) |
+| Contenido | Bien: la predicción usa datos reales de AEMET desde el 23-10 |
+| Calidad del código | Bien: 40 pruebas en verde y CI en verde (27-10) |
 
-Lo urgente es lo de seguridad. Lo demás es mejora.
+Lo urgente sigue siendo confirmar la seguridad. Lo demás es mejora.
 
 
 ## 1. Disponibilidad y velocidad
@@ -44,6 +49,7 @@ Medido el 12-10-2026 por la mañana.
 - El CI de GitHub está en verde, y las 23 pruebas del repositorio pasan.
 
 - [ ] Nada que arreglar aquí hoy. Volver a medir en la próxima revisión.
+- [ ] Medir de nuevo contra el sitio publicado (no se pudo el 27-10)
 
 
 ## 2. Seguridad · urgente
@@ -66,6 +72,9 @@ saca la consola del esquema y la deja en solo lectura salvo que el
 servidor diga lo contrario, con `SET TRANSACTION READ ONLY` para que
 quien rechace una escritura sea PostgreSQL. 975 pruebas pasan.
 
+El 27-10 no consta en este repositorio si se aplicó. **Por confirmar con
+José**; basta pedir esas cuatro direcciones y ver si responden.
+
 - [ ] Que Yoseba revise el parche
 - [ ] Aplicarlo y desplegar en el VPS
 - [ ] Cambiar la clave de administración, que lleva meses tecleándose
@@ -87,11 +96,12 @@ quien rechace una escritura sea PostgreSQL. 975 pruebas pasan.
   (commit `5b21c04`) mientras se buscaba la avería de la API, que
   resultó no tener relación.
 
-- [ ] Volver a poner los tres commits revertidos (están en la historia)
-- [ ] Configurar en nginx un año de caché para `/css`, `/js` y `/assets`,
-      que es seguro porque todo va versionado con `?v=`
-- [ ] Ejecutar el script en el VPS para que las seis páginas lleven
-      `expires -1`
+- [x] Volver a poner los tres commits revertidos: las importaciones de
+      Administración llevan `?v=` y una prueba lo exige (26-10)
+- [x] Configurar en nginx un año de caché para `/css`, `/js` y `/assets`,
+      que es seguro porque todo va versionado con `?v=` (aplicado el 26-10)
+- [x] Que las páginas lleven `expires -1`: Nginx sirve todos los `.html`
+      con `no-cache` desde el 25-10
 
 
 ## 4. Contenido pendiente
@@ -106,8 +116,9 @@ quien rechace una escritura sea PostgreSQL. 975 pruebas pasan.
   cámaras y un selector en la ficha de estación: hay que volver a mirar
   cómo queda eso antes de tocar nada.
 
-- [ ] Ruta `/prediccion/archidona` en la API
-- [ ] Revisar las tarjetas de cámaras de la portada con lo nuevo
+- [x] Ruta `/prediccion/archidona` en la API (datos reales desde el 23-10)
+- [x] Revisar las tarjetas de cámaras de la portada con lo nuevo: las
+      fichas sin cámara ya no enseñan el recuadro vacío (PR #29, 25-10)
 
 
 ## 5. Peso y limpieza
@@ -129,6 +140,10 @@ quien rechace una escritura sea PostgreSQL. 975 pruebas pasan.
 - [ ] Decidir el futuro del `.htaccess`: guardarlo como documentación o
       sustituirlo por la configuración real de nginx
 
+El 27-10 se retiraron además `js/actualidad.js` (61 KB) y
+`js/administracion.js` (85 KB), que ninguna página cargaba. El resto de
+este apartado sigue igual: ver los puntos 5 y 6 de [mejoras.md](mejoras.md).
+
 
 ## 6. Accesibilidad y buscadores
 
@@ -149,6 +164,7 @@ quien rechace una escritura sea PostgreSQL. 975 pruebas pasan.
 - La web usa recursos de terceros: IGN/CNIG y OpenTopoMap en los mapas,
   AEMET en el radar, y cámaras de Sierra Nevada en En vivo.
 
+- [x] Aviso de consentimiento y ventana de privacidad publicados (24 y 26-10)
 - [ ] Retomar el aviso legal cuando el usuario lo decida
 
 
@@ -157,5 +173,8 @@ quien rechace una escritura sea PostgreSQL. 975 pruebas pasan.
 - **12-10-2026.** Primera auditoría. La API, caída la víspera por un
   fallo de modelos de cámaras, está arreglada y rápida. Lo urgente pasa
   a ser la seguridad de la consola SQL.
+- **27-10-2026.** Segunda revisión, solo desde el repositorio. Caché,
+  predicción real y privacidad, hechas. La seguridad de la consola SQL,
+  por confirmar. Retirado el código muerto de Actualidad y Administración.
 
 <!-- Fin de fichero: docs/auditoria-tecnica.md -->

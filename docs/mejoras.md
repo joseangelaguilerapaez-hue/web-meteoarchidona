@@ -33,7 +33,8 @@ compilación. Lo que sigue es limpieza, rendimiento y orden, no averías.
 
 ### 1. Código muerto: `js/actualidad.js` y `js/administracion.js`
 
-- [ ] Hecho
+- [x] Hecho el 27 oct: borrados, comentarios corregidos y la prueba ahora comprueba
+  `js/actualidad/principal.js`.
 
 Son 61 KB y 85 KB. Desde que se partieron en `js/actualidad/` y `js/administracion/` ninguna página
 los carga (último cambio, 16 oct). Solo los nombran comentarios en `js/api.js`, `js/lluvia.js`,
@@ -48,7 +49,8 @@ prueba por la que tenga sentido hoy (por ejemplo, `lluvia.js` detrás de `actual
 
 ### 2. Documentos de estado desfasados
 
-- [ ] Hecho
+- [x] Hecho el 27 oct: `estado.md` al día y segunda revisión de `auditoria-tecnica.md`. Queda
+  por confirmar con José si el visor de estadísticas y la fecha de los timelapses están publicados.
 
 - `docs/estado.md` tiene en *En construcción* cosas que ya están en `main`: el visor de
   estadísticas (PR #46) y la fecha en el nombre de los timelapses (PR #41 a #43) aparecen como
