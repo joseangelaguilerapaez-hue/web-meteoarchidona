@@ -17,9 +17,9 @@
 
 /*
  * Todo va dentro de una función anónima para no dejar nada en el
- * ámbito global. No es manía: js/administracion.js tiene su propio
- * actualizarReloj —el de la caducidad de la sesión— y, al cargarse
- * después, se quedaba con el nombre. El reloj de la cabecera se
+ * ámbito global. No es manía: el antiguo js/administracion.js tenía su
+ * propio actualizarReloj —el de la caducidad de la sesión— y, al
+ * cargarse después, se quedaba con el nombre. El reloj de la cabecera se
  * paraba en --:-- en esa página.
  */
 
@@ -136,7 +136,7 @@ function recogerControlesDePagina() {
      * data-en-cabecera y se traen aquí al montar.
      *
      * No van en componentes/cabecera.html porque tienen que existir
-     * desde el primer momento: js/administracion.js busca su botón
+     * desde el primer momento: js/administracion/acceso.js busca su botón
      * por id nada más arrancar, y la cabecera llega después.
      */
 

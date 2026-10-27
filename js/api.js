@@ -3,11 +3,11 @@
  * Dirección de la API
  *
  * Un solo sitio donde se decide a quién se le piden los datos.
- * Publica window.API_BASE, que leen js/actualidad.js,
- * js/administracion.js y visores/radar.js.
+ * Publica window.API_BASE, que leen los scripts de cada página
+ * (js/actualidad/api.js, js/administracion/api.js, visores/radar.js…).
  *
- * En producción se habla directamente con la API en Render, que manda
- * las cabeceras CORS para meteoarchidona.com.
+ * En producción se pide a /api del mismo dominio: Nginx, en el VPS,
+ * la reenvía a la API.
  *
  * En local no: la API no autoriza a localhost, así que el navegador
  * descarta sus respuestas aunque lleguen bien, y las estaciones salen

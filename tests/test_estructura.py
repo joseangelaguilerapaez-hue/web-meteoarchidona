@@ -170,8 +170,9 @@ class TestPaginas(unittest.TestCase):
             with self.subTest(pagina=nombre(pagina)):
                 self.assertTrue("js/lluvia.js" in texto, "falta js/lluvia.js")
                 if nombre(pagina) in CON_LLUVIA_PROPIA:
-                    self.assertLess(texto.find("js/actualidad.js"), texto.find("js/lluvia.js"),
-                                    "lluvia.js tiene que ir detrás de actualidad.js")
+                    self.assertIn("js/actualidad/principal.js", texto, "falta js/actualidad/principal.js")
+                    self.assertLess(texto.find("js/actualidad/principal.js"), texto.find("js/lluvia.js"),
+                                    "lluvia.js tiene que ir detrás de actualidad/principal.js")
                     self.assertFalse("css/lluvia.css" in texto,
                                      "Actualidad tiene su propia hoja de lluvia; no debe cargar lluvia.css")
                 else:

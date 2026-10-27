@@ -10,7 +10,7 @@
  * Este fichero se carga en todas las páginas y trabaja de dos formas:
  *
  * - En Actualidad solo RECUERDA. Allí manda su propio motor
- *   (js/actualidad.js), que además responde a la lluvia real y al
+ *   (js/actualidad/simulacion.js y efectos-lluvia.js), que además responde a la lluvia real y al
  *   viento de cada estación. Aquí solo se restaura el nivel guardado
  *   usando su mando, y se guarda cada cambio mirando el cartel
  *   "Prueba ..." del logotipo. Su código no se toca.
