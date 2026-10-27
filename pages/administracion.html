@@ -17,14 +17,15 @@
 <link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
 <link rel="stylesheet" href="../css/pie.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/administracion.css?v=20261025-pantallas1">
+<link rel="stylesheet" href="../css/administracion.css?v=20261027-estadisticas1">
+<link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
 <script src="../js/cabecera.js?v=20261026-cuenta3" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261026-nombre3"
+    src="../js/administracion/principal.js?v=20261027-estadisticas1"
 ></script>
 </head>
 
@@ -307,6 +308,14 @@
     data-modulo="patrullas"
 >
     Patrullas
+</a>
+
+<a
+    href="#estadisticas"
+    class="modulo-boton"
+    data-modulo="estadisticas"
+>
+    Estadísticas
 </a>
 
 <a
@@ -3185,6 +3194,118 @@
 </section>
 
 </div>
+</section>
+
+
+<!-- =========================================================
+     ESTADÍSTICAS E INFORMES
+     Configurador con vista previa (js/administracion/estadisticas.js)
+     y visor reutilizable (js/visor-estadisticas.js).
+     ========================================================= -->
+
+<section
+    id="modulo-estadisticas"
+    class="modulo"
+>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Estadísticas e informes
+</h2>
+
+<button
+    id="botonNuevaEstadistica"
+    type="button"
+    class="boton"
+>
+    Empezar de nuevo
+</button>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Configura una gráfica o un informe y míralo al momento con datos
+    reales. El periodo y la agrupación son comunes; cada serie es de
+    una estación. Guardar y publicar en el catálogo llegará más
+    adelante.
+</p>
+
+<div
+    id="estadoEstadisticas"
+    class="estado"
+></div>
+
+<div id="cabeceraEstadistica"></div>
+
+</div>
+</section>
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Series
+</h2>
+
+<button
+    id="botonAnadirSerieEstadistica"
+    type="button"
+    class="boton boton-secundario"
+>
+    + Añadir serie
+</button>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<p
+    id="avisoUnidadesEstadistica"
+    class="estado error"
+    hidden
+></p>
+
+<div
+    id="seriesEstadistica"
+    class="series-estadistica"
+></div>
+
+</div>
+</section>
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Vista previa
+</h2>
+
+<button
+    id="botonActualizarEstadistica"
+    type="button"
+    class="boton"
+>
+    Actualizar
+</button>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<div id="visorEstadistica"></div>
+
+</div>
+</section>
+
 </section>
 
 

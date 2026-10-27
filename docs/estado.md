@@ -31,6 +31,8 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
+- Informes y estadísticas, visor y configurador (rama `feature/estadisticas-visor`, 27 oct). `js/visor-estadisticas.js` y `css/visor-estadisticas.css`: componente reutilizable que dibuja en SVG propio (sin librerías) la gráfica (líneas, barras, áreas, puntos, dos ejes, huecos, incompletos y ventana de valores), la tabla con fila de resumen y el PDF por la impresión del navegador con logotipo, ficha y aviso informativo en el pie. Apartado «Estadísticas» en Administración (`js/administracion/estadisticas.js`): cabecera, series (añadir copia la última, duplicar, quitar) y vista previa automática con `POST /estadisticas/vista-previa`. Usa la API desplegada el 27 oct (`4f46351`). Guardar y publicar en el catálogo, pendiente. Probado con Chromium sin pantalla y la API simulada, en ordenador y móvil.
+
 - Fecha en el nombre de los timelapses (rama `feature/timelapses-fecha-en-nombre`, 26 oct): check «Añadir la fecha al nombre» en la programación (Administración) y título público tomado de la programación. Necesita la migración 0030 de la API, que debe estar aplicada **antes** de desplegar esto.
 
 - Cuentas de usuario, segunda entrega (PR #39, **publicado el 26 oct**): «He olvidado mi PIN» (enlace del correo con el token en el fragmento `#nuevo-pin=`), ventana «Mi cuenta» al pulsar el nombre y «Borrar mi cuenta» (pide el PIN; la API borra a los 30 días), y **aviso de privacidad con las cuentas** (`componentes/privacidad.html`: datos, plazos, cookie `ma_sesion`, aviso a los responsables, 14 años). Texto de privacidad aprobado por José; usa el PR #44 de la API, ya en producción.
@@ -98,3 +100,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · Timelapses: el check «Añadir la fecha al nombre» arranca marcado en las programaciones nuevas.
 - 2026-10-26 · Timelapses: corregido el versionado de los `principal.js` de Actualidad y Administración, que no llegaban a los navegadores con caché.
 - 2026-10-27 · Abierto `docs/ventajas-registro.md` con las primeras ventajas del usuario registrado (estadísticas propias, catálogo y dashboards), a petición de José.
+- 2026-10-27 · Informes y estadísticas: visor reutilizable (gráfica, tabla y PDF) y configurador con vista previa en Administración; pendiente de fusionar y publicar.

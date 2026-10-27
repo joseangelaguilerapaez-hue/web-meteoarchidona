@@ -160,6 +160,20 @@ let promesaModuloPatrullas = null;
 
 
 /* ==========================================================
+   ESTADO DEL MÓDULO DE ESTADÍSTICAS
+   ========================================================== */
+
+/*
+ * estadisticas.js (configurador y visor) solo se importa si existe
+ * modulo-estadisticas.
+ */
+
+let moduloEstadisticas = null;
+
+let promesaModuloEstadisticas = null;
+
+
+/* ==========================================================
    NAVEGACIÓN ENTRE MÓDULOS
    ========================================================== */
 
@@ -479,6 +493,45 @@ async function cargarModuloTimelapses(){
 
 
 /* ==========================================================
+   ESTADÍSTICAS
+   ========================================================== */
+
+async function cargarModuloEstadisticas(){
+
+    if(!$("modulo-estadisticas")){
+        return;
+    }
+
+    try{
+        if(promesaModuloEstadisticas === null){
+            promesaModuloEstadisticas = import(
+                "./estadisticas.js?v=20261027-estadisticas1"
+            );
+        }
+
+        moduloEstadisticas = await promesaModuloEstadisticas;
+        moduloEstadisticas.configurarEventosEstadisticas();
+        await moduloEstadisticas.cargarEstadisticas();
+
+    }catch(error){
+        promesaModuloEstadisticas = null;
+        console.error(
+            "No se ha podido cargar Administración de Estadísticas.",
+            error
+        );
+        mostrarEstado(
+            $("estadoEstadisticas"),
+            error.message
+            ||
+            "No se ha podido cargar el configurador de estadísticas.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    PATRULLAS
    ========================================================== */
 
@@ -784,6 +837,8 @@ export async function cargarDatosAdministracion(){
 
         await cargarModuloPatrullas();
 
+        await cargarModuloEstadisticas();
+
         mostrarEstado(
             $("estadoPanel"),
             "Datos administrativos actualizados.",
@@ -894,6 +949,16 @@ async function alCerrarSesion(){
         "function"
     ){
         moduloPatrullas.limpiarPatrullas();
+    }
+
+    if(
+        moduloEstadisticas
+        &&
+        typeof moduloEstadisticas.limpiarEstadisticas
+        ===
+        "function"
+    ){
+        moduloEstadisticas.limpiarEstadisticas();
     }
 
     history.replaceState(
