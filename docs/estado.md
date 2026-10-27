@@ -57,7 +57,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Ramas antiguas
 
-`feature/administracion-v2` y `zonnen69` no tienen commits que no estén ya en `main`. **(por confirmar)** si se pueden borrar. No borrar ramas sin que José lo pida.
+`feature/administracion-v2` no tiene commits que no estén ya en `main`. `zonnen69` es desde el 27 oct la rama de trabajo (ver `CLAUDE.md`); su contenido antiguo, del 12 oct y sin historia común con `main`, se sustituyó por `main` (último commit viejo: `acfd6f0`). **(por confirmar)** si se pueden borrar. No borrar ramas sin que José lo pida.
 
 ## Registro
 
@@ -103,3 +103,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-27 · Abierto `docs/ventajas-registro.md` con las primeras ventajas del usuario registrado (estadísticas propias, catálogo y dashboards), a petición de José.
 - 2026-10-27 · Informes y estadísticas: visor reutilizable (gráfica, tabla y PDF) y configurador con vista previa en Administración; pendiente de fusionar y publicar.
 - 2026-10-27 · Repaso del proyecto y lista de mejoras propuestas en `docs/mejoras.md`, para comentarla con José.
+- 2026-10-27 · `zonnen69` pasa a ser la rama de trabajo; sustituida por `main` más lo de hoy, a petición de José.

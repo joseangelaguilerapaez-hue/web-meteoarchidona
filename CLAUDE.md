@@ -35,7 +35,7 @@ no autoriza a `localhost`, por lo que `servidor.py` hace de intermediario en `/a
 ## Cómo trabajar
 
 - Edita los archivos directamente. Varios archivos relacionados van en un mismo commit y un solo push.
-- Rama por funcionalidad (`feature/...`, `fix/...`, `docs/...`), PR a `main` cuando José lo pida. No empujes a `main` sin que se pida. Existe la rama `feature/administracion`.
+- **Se trabaja en la rama `zonnen69`**: todos los cambios van ahí, salvo que José diga otra cosa. PR a `main` cuando José lo pida. No empujes a `main` sin que se pida.
 - Commits al estilo del historial: `fix(en-vivo): descripción en español`, `feat(...)`, `docs(...)`.
 - No introduzcas herramientas de compilación ni dependencias nuevas sin que se pida.
 - El navegador cachea: si cambias un `.js` o `.css` que ya está en producción, mira cómo versiona el resto del proyecto los recursos antes de decidir.
