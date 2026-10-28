@@ -1,0 +1,97 @@
+/*
+ * MeteoArchidona
+ * Estadísticas del catálogo dentro de una página
+ * (js/estadisticas-incrustadas.js)
+ *
+ * El visor tiene su hoja (css/visor-estadisticas.css). Aquí va el marco
+ * de cada página que lo incrusta: hoy, Actualidad. Colores de
+ * css/paleta.css.
+ */
+
+
+.graficas-actualidad {
+    margin-top: 14px;
+    padding: clamp(14px, 2vw, 24px);
+    min-width: 0;
+}
+
+.graficas-actualidad[hidden] {
+    display: none;
+}
+
+.graficas-actualidad-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-bottom: 16px;
+}
+
+.graficas-actualidad-cabecera .seccion-titulo {
+    margin: 0;
+}
+
+.graficas-actualidad-enlace {
+    color: var(--cyan);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(54, 213, 255, 0.35);
+}
+
+.graficas-actualidad-enlace:hover,
+.graficas-actualidad-enlace:focus-visible {
+    border-bottom-color: var(--cyan);
+    outline: none;
+}
+
+.graficas-actualidad-lista {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+}
+
+.graficas-actualidad-visor {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(8, 13, 20, 0.45);
+}
+
+@media (min-width: 1100px) {
+    .graficas-actualidad-lista {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .graficas-actualidad-visor {
+        padding: 12px 10px;
+    }
+}
+
+
+/* El botón del PDF del visor, con el aspecto de la web pública. */
+
+[data-estadistica] .visor-est-pdf {
+    padding: 8px 14px;
+    border: 1px solid var(--border-amber);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    color: var(--amber-light);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+[data-estadistica] .visor-est-pdf:hover,
+[data-estadistica] .visor-est-pdf:focus-visible {
+    border-color: var(--amber);
+    outline: none;
+}
+
+
+/* Fin de fichero: css/estadisticas-incrustadas.css */

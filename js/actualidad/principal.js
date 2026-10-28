@@ -291,6 +291,67 @@ async function prepararTimelapses() {
 
 
 /* ==========================================================
+   GRÁFICAS DEL CATÁLOGO
+   ========================================================== */
+
+
+/*
+ * Como los timelapses: se carga aparte para que un fallo de las
+ * gráficas no afecte a las estaciones. La sección sigue oculta si no
+ * llega ninguna (js/estadisticas-incrustadas.js).
+ */
+
+
+async function prepararGraficas() {
+
+    const seccion =
+        document.getElementById(
+            "graficas-actualidad"
+        );
+
+
+    if (
+        !seccion
+    ) {
+
+        return false;
+
+    }
+
+
+    try {
+
+        const modulo =
+            await import(
+                "/js/estadisticas-incrustadas.js?v=20261029-actualidad1"
+            );
+
+
+        return await modulo.montarEstadisticas(
+            seccion
+        );
+
+    } catch (
+        error
+    ) {
+
+        seccion.hidden = true;
+
+
+        console.warn(
+            "No se han podido cargar las gráficas de Actualidad.",
+            error
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* ==========================================================
    ARRANQUE
    ========================================================== */
 
@@ -446,6 +507,8 @@ async function arrancarActualidad() {
          */
 
         void prepararTimelapses();
+
+        void prepararGraficas();
 
 
     } catch (
