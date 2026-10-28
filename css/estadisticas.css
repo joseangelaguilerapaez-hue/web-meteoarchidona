@@ -1,0 +1,347 @@
+/*
+ * MeteoArchidona
+ * Página Estadísticas
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/estadisticas.html
+ *
+ * El visor tiene su propia hoja (css/visor-estadisticas.css); aquí solo
+ * va lo de la página: aviso de registro, secciones, tarjetas del
+ * catálogo y el marco del visor. Colores de css/paleta.css.
+ */
+
+
+/* ==========================================================
+   CONTENEDOR
+   ========================================================== */
+
+.estadisticas {
+    width: min(1180px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+}
+
+.estadisticas [hidden] {
+    display: none !important;
+}
+
+
+.estadisticas-cabecera {
+    padding: 4px 4px 0;
+    max-width: 780px;
+}
+
+.estadisticas-etiqueta {
+    color: var(--cyan);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+}
+
+.estadisticas-cabecera h1 {
+    margin: 8px 0 0;
+    color: var(--text);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.estadisticas-entradilla {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.estadisticas-comprobando,
+.estadisticas-error {
+    margin: 0;
+    padding: 4px;
+    color: var(--muted);
+}
+
+.estadisticas-error {
+    color: var(--red);
+}
+
+
+/* ==========================================================
+   BLOQUES
+   ========================================================== */
+
+.estadisticas-registro,
+.estadisticas-lista,
+.estadisticas-visor {
+    padding: 24px 26px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(17, 30, 46, 0.98), rgba(9, 22, 34, 0.98));
+    box-shadow: var(--shadow);
+    min-width: 0;
+}
+
+.estadisticas-visor {
+    scroll-margin-top: 16px;
+}
+
+
+/* ==========================================================
+   AVISO DE REGISTRO
+   ========================================================== */
+
+.estadisticas-registro {
+    max-width: 780px;
+    border-color: var(--border-amber);
+}
+
+.estadisticas-registro h2 {
+    margin: 0 0 12px;
+    color: var(--accent);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.estadisticas-registro p {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.estadisticas-ventajas {
+    margin: 4px 0 18px;
+    padding-left: 20px;
+    color: var(--text-soft);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.estadisticas-registro-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.estadisticas-boton,
+.estadisticas-visor .visor-est-pdf {
+    padding: 10px 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.estadisticas-boton-principal,
+.estadisticas-visor .visor-est-pdf {
+    border-color: var(--border-amber);
+    background: var(--card);
+    color: var(--amber-light);
+}
+
+.estadisticas-boton:hover,
+.estadisticas-boton:focus-visible,
+.estadisticas-visor .visor-est-pdf:hover,
+.estadisticas-visor .visor-est-pdf:focus-visible {
+    border-color: var(--amber);
+    outline: none;
+}
+
+.estadisticas-visor .visor-est-pdf:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.estadisticas-registro .estadisticas-nota {
+    margin: 0;
+    color: var(--text-faint);
+    font-size: 13px;
+}
+
+
+/* ==========================================================
+   SECCIONES
+   ========================================================== */
+
+.estadisticas-catalogo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    min-width: 0;
+}
+
+.estadisticas-secciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.estadisticas-seccion {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card-soft);
+    color: var(--text-soft);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.estadisticas-seccion-cuenta {
+    min-width: 20px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+.estadisticas-seccion:hover,
+.estadisticas-seccion:focus-visible {
+    border-color: var(--border-cyan);
+    outline: none;
+}
+
+.estadisticas-seccion[aria-pressed="true"] {
+    border-color: var(--cyan);
+    background: rgba(54, 213, 255, 0.1);
+    color: var(--text);
+}
+
+
+/* ==========================================================
+   TARJETAS
+   ========================================================== */
+
+.estadisticas-lista-cabecera h2 {
+    margin: 0;
+    color: var(--accent);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.estadisticas-lista-cabecera p {
+    margin: 4px 0 16px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.estadisticas-rejilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+}
+
+.estadisticas-tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(8, 13, 20, 0.55);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.estadisticas-tarjeta:hover,
+.estadisticas-tarjeta:focus-visible {
+    border-color: var(--border-cyan);
+    outline: none;
+}
+
+.estadisticas-tarjeta[aria-pressed="true"] {
+    border-color: var(--cyan);
+    background: rgba(54, 213, 255, 0.08);
+}
+
+.estadisticas-tarjeta-tipo {
+    color: var(--cyan);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.estadisticas-tarjeta-nombre {
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.estadisticas-tarjeta-descripcion {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+}
+
+.estadisticas-tarjeta-detalle {
+    margin-top: auto;
+    padding-top: 4px;
+    color: var(--text-faint);
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   MÓVIL
+   ========================================================== */
+
+@media (max-width: 640px) {
+
+    .estadisticas {
+        width: calc(100% - 24px);
+        margin-top: 22px;
+    }
+
+    .estadisticas-registro,
+    .estadisticas-lista,
+    .estadisticas-visor {
+        padding: 18px 16px;
+    }
+
+    .estadisticas-secciones {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: thin;
+    }
+
+    .estadisticas-seccion {
+        flex: 0 0 auto;
+    }
+
+    .estadisticas-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .estadisticas-registro-botones .estadisticas-boton {
+        flex: 1 1 100%;
+    }
+}
+
+
+/* Fin de fichero: css/estadisticas.css */

@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-10-27.
+Última actualización: 2026-10-28.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -30,6 +30,8 @@ No se marca nada como hecho que no esté en `main`.
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
 ## En construcción / abierto
+
+- Sección **Estadísticas** (`/estadisticas`, rama `feature/estadisticas-seccion`, 28 oct, petición de José): apartado más del menú, tras Predicción, visible para todos. Sin sesión muestra que hace falta registrarse, con los botones de registro e inicio de sesión; con sesión de usuario, o con el token de Administración vigente en la pestaña, el catálogo por secciones (`GET /estadisticas/catalogo` de la API, desplegado el 28 oct) y, al pulsar una estadística, el visor con gráfica, tabla y PDF (`/catalogo/{id}/datos`). La dirección guarda la abierta (`/estadisticas#LLUVIA_HOY`). `js/cuenta.js` avisa con el evento `meteoarchidona:cuenta` al entrar y salir. Dada de alta en `servidor.py`, `.htaccess` y `sitemap.xml` (autorizado por José). **En producción necesita su bloque en Nginx**: `scripts/configurar_seccion_estadisticas.py` (ver `docs/despliegue.md`). Probado con Chromium contra la API simulada: sin sesión, entrar, catálogo, visor, salir, enlace directo y Administración, en ordenador y móvil. Falta dar de alta la página en el catálogo de auditoría.
 
 - Informes y estadísticas, visor y configurador (rama `feature/estadisticas-visor`, 27 oct). `js/visor-estadisticas.js` y `css/visor-estadisticas.css`: componente reutilizable que dibuja en SVG propio (sin librerías) la gráfica (líneas, barras, áreas, puntos, dos ejes, huecos, incompletos y ventana de valores), la tabla con fila de resumen y el PDF por la impresión del navegador con logotipo, ficha y aviso informativo en el pie. Apartado «Estadísticas» en Administración (`js/administracion/estadisticas.js`): cabecera, series (añadir copia la última, duplicar, quitar) y vista previa automática con `POST /estadisticas/vista-previa`. Usa la API desplegada el 27 oct (`4f46351`). Guardar y publicar en el catálogo, pendiente. Probado con Chromium sin pantalla y la API simulada, en ordenador y móvil.
 
@@ -101,3 +103,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · Timelapses: corregido el versionado de los `principal.js` de Actualidad y Administración, que no llegaban a los navegadores con caché.
 - 2026-10-27 · Abierto `docs/ventajas-registro.md` con las primeras ventajas del usuario registrado (estadísticas propias, catálogo y dashboards), a petición de José.
 - 2026-10-27 · Informes y estadísticas: visor reutilizable (gráfica, tabla y PDF) y configurador con vista previa en Administración; pendiente de fusionar y publicar.
+- 2026-10-28 · Estadísticas como sección pública del menú: aviso de registro sin sesión y catálogo con visor para usuarios y Administración; necesita el bloque de Nginx.

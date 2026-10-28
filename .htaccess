@@ -174,10 +174,18 @@ RewriteRule ^ /informacion [R=301,L]
 
 
 # ------------------------------------------------------------
+# Estadísticas
+# ------------------------------------------------------------
+
+RewriteCond %{THE_REQUEST} \s/+pages/estadisticas\.html[\s?] [NC]
+RewriteRule ^ /estadisticas [R=301,L]
+
+
+# ------------------------------------------------------------
 # Reescritura interna de direcciones limpias
 # ------------------------------------------------------------
 
-RewriteRule ^(observaciones|prediccion|en-vivo|administracion|informacion)/?$ pages/$1.html [L]
+RewriteRule ^(observaciones|prediccion|en-vivo|administracion|informacion|estadisticas)/?$ pages/$1.html [L]
 
 
 # ============================================================
