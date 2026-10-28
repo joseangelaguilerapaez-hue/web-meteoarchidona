@@ -101,7 +101,7 @@ Lo que debe quedar claro en el texto final:
 | Ventaja | Estado | Se puede anunciar |
 | --- | --- | --- |
 | 2.1 Estadísticas e informes propios | En construcción (catálogo de la API, PR #51) | No, hasta que funcione |
-| 2.2 Catálogo en los dashboards | DISEÑO PREVISTO | No |
+| 2.2 Catálogo en los dashboards | El catálogo ya se consulta en `/estadisticas` (28 oct); los dashboards, DISEÑO PREVISTO | Sí, la consulta del catálogo y el PDF (ya lo dice el aviso de `/estadisticas`) |
 | 2.3 Dashboards propios | DISEÑO PREVISTO; antes, el dashboard de MeteoArchidona | No |
 | 2.4 Otras candidatas | Por confirmar | No |
 | 3 Por qué registrarse | Borrador de Claude, pendiente de José | No |

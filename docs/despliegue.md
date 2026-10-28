@@ -25,6 +25,21 @@ git log --oneline -1
 Es un sitio estático: no hay que reiniciar nada. El `git log` debe coincidir con el último commit de
 `main` en GitHub. Si `git pull --ff-only` falla, hay cambios locales en el servidor: no forzar, avisar a José.
 
+## Sección nueva: Estadísticas (28-10-2026)
+
+Las direcciones limpias las sirve Nginx con un bloque por sección; el `.htaccess` no se aplica.
+Para que `/estadisticas` no dé 404, tras el `git pull` (José, desde Termius):
+
+```
+cd /srv/meteoarchidona/web
+sudo python3 scripts/configurar_seccion_estadisticas.py --simular
+sudo python3 scripts/configurar_seccion_estadisticas.py
+curl -s -o /dev/null -w '%{http_code}\n' https://meteoarchidona.com/estadisticas
+```
+
+Copia el bloque de `/informacion` cambiando el nombre, con copia de seguridad en `/home/jose`,
+`nginx -t` y vuelta atrás si algo falla. Se puede ejecutar dos veces. El `curl` debe dar `200`.
+
 ## Caché
 
 Los `.js` y `.css` se cachean en el navegador y se versionan con `?v=`. Si cambias uno que ya está en
