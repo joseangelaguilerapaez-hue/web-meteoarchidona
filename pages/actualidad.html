@@ -83,6 +83,16 @@
     href="../css/timelapses.css?v=20261025-tamano1"
 >
 
+<link
+    rel="stylesheet"
+    href="../css/visor-estadisticas.css?v=20261027-visor1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/estadisticas-incrustadas.css?v=20261029-actualidad1"
+>
+
 
 <script
     src="../js/cabecera.js?v=20261028-estadisticas1"
@@ -105,7 +115,7 @@
 
 <script
     type="module"
-    src="../js/actualidad/principal.js?v=20261026-titulo2"
+    src="../js/actualidad/principal.js?v=20261029-graficas1"
 ></script>
 
 
@@ -477,6 +487,63 @@
     class="timelapses-lista"
     aria-live="polite"
 ></div>
+
+
+</section>
+
+
+<!-- ======================================================
+     GRÁFICAS DEL CATÁLOGO DE ESTADÍSTICAS
+
+     Dos estadísticas del catálogo propio, por su código. Las monta
+     js/estadisticas-incrustadas.js con el visor común (gráfica, tabla
+     y PDF); la sección nace oculta y solo aparece si llega alguna.
+     Las elige José (29-10-2026). Cuando Actualidad sea un dashboard,
+     esto pasará a ser su configuración.
+     ====================================================== -->
+
+
+<section
+    class="tarjeta graficas-actualidad"
+    id="graficas-actualidad"
+    aria-labelledby="graficas-actualidad-titulo"
+    hidden
+>
+
+
+<div class="graficas-actualidad-cabecera">
+
+    <h2
+        class="seccion-titulo"
+        id="graficas-actualidad-titulo"
+    >
+        El Silo frente a Los Llanos
+    </h2>
+
+    <a
+        class="graficas-actualidad-enlace"
+        href="/estadisticas"
+    >
+        Más estadísticas
+    </a>
+
+</div>
+
+
+<div class="graficas-actualidad-lista">
+
+    <div
+        class="graficas-actualidad-visor"
+        data-estadistica="SILO_LLANOS_TEMPERATURA_7D"
+    ></div>
+
+    <div
+        class="graficas-actualidad-visor"
+        data-estadistica="SILO_LLANOS_MAXIMAS_MINIMAS_30D"
+        data-presentacion="GRAFICA"
+    ></div>
+
+</div>
 
 
 </section>

@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-10-28.
+Última actualización: 2026-10-29.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -31,6 +31,8 @@ No se marca nada como hecho que no esté en `main`.
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
 ## En construcción / abierto
+
+- Gráficas en Actualidad (rama `feature/actualidad-graficas`, 29 oct, elegidas por José): debajo de los timelapses, «El Silo frente a Los Llanos» con dos estadísticas del catálogo, `SILO_LLANOS_TEMPERATURA_7D` y `SILO_LLANOS_MAXIMAS_MINIMAS_30D` (esta solo la gráfica, `data-presentacion="GRAFICA"`), y enlace a «Más estadísticas». Las monta `js/estadisticas-incrustadas.js`, pieza reutilizable para los futuros dashboards: un `data-estadistica="CODIGO"` por hueco; la sección sigue oculta si no llega ninguna. Las ve cualquier visitante. **Necesita antes el PR #56 de la API** (pedir por código) desplegado.
 
 - Informes y estadísticas, visor y configurador (rama `feature/estadisticas-visor`, 27 oct). `js/visor-estadisticas.js` y `css/visor-estadisticas.css`: componente reutilizable que dibuja en SVG propio (sin librerías) la gráfica (líneas, barras, áreas, puntos, dos ejes, huecos, incompletos y ventana de valores), la tabla con fila de resumen y el PDF por la impresión del navegador con logotipo, ficha y aviso informativo en el pie. Apartado «Estadísticas» en Administración (`js/administracion/estadisticas.js`): cabecera, series (añadir copia la última, duplicar, quitar) y vista previa automática con `POST /estadisticas/vista-previa`. Usa la API desplegada el 27 oct (`4f46351`). Guardar y publicar en el catálogo, pendiente. Probado con Chromium sin pantalla y la API simulada, en ordenador y móvil.
 
@@ -104,3 +106,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-27 · Informes y estadísticas: visor reutilizable (gráfica, tabla y PDF) y configurador con vista previa en Administración; pendiente de fusionar y publicar.
 - 2026-10-28 · Estadísticas como sección pública del menú: aviso de registro sin sesión y catálogo con visor para usuarios y Administración; necesita el bloque de Nginx.
 - 2026-10-28 · Publicada la sección Estadísticas: web en `d01cbab` y bloque de Nginx aplicado; `/estadisticas` responde 200.
+- 2026-10-29 · Actualidad: gráficas de El Silo frente a Los Llanos (7 días y máximas y mínimas de 30 días) con el visor de estadísticas; pendiente de fusionar y publicar.
