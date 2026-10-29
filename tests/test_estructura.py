@@ -298,16 +298,31 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261029-graficas1"),
-            ("administracion", r"administracion/principal\.js\?v=20261027-estadisticas1"),
+            ("administracion", r"administracion/principal\.js\?v=20261029-una-vez1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
     def test_los_scripts_cambiados_llevan_version_nueva(self):
         for ruta, patron in (
             ("js/actualidad/principal.js", r"/js/timelapses\.js\?v=20261026-titulo1"),
-            ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261026-nombre2"),
+            ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261029-una-vez1"),
         ):
             self.assertRegex(leer(RAIZ / ruta), patron)
+
+
+class TestTimelapseUnaSolaVez(unittest.TestCase):
+    """Programaciones de una sola vez: fecha concreta, sin repetirse (29 oct)."""
+
+    def test_el_formulario_ofrece_el_tipo_y_la_fecha(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('value="UNA_VEZ"', pagina)
+        self.assertIn('id="campoTimelapseFechaLocal"', pagina)
+        self.assertIn('id="bloqueTimelapseFechaLocal"', pagina)
+
+    def test_el_editor_envia_la_fecha(self):
+        codigo = leer(RAIZ / "js" / "administracion" / "timelapses.js")
+        self.assertIn("UNA_VEZ", codigo)
+        self.assertIn("fecha_local: fecha", codigo)
 
 
 class TestCuenta(unittest.TestCase):
