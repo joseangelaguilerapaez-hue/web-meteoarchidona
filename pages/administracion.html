@@ -25,7 +25,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261027-estadisticas1"
+    src="../js/administracion/principal.js?v=20261029-una-vez1"
 ></script>
 </head>
 
@@ -2275,6 +2275,10 @@
     Hora fija
 </option>
 
+<option value="UNA_VEZ">
+    Una sola vez (fecha concreta)
+</option>
+
 <option value="MANUAL">
     Manual
 </option>
@@ -2380,6 +2384,30 @@
 <!-- =========================================================
      HORA FIJA
      ========================================================= -->
+
+<div
+    id="bloqueTimelapseFechaLocal"
+    class="campo oculto"
+    hidden
+>
+
+<label for="campoTimelapseFechaLocal">
+    Fecha
+</label>
+
+<input
+    id="campoTimelapseFechaLocal"
+    type="date"
+>
+
+<div class="campo-ayuda">
+    Día en que se graba, solo esa vez
+    (por ejemplo, una tormenta prevista).
+    Al terminar, la programación se desactiva sola;
+    para repetirla, cambia la fecha y vuelve a activarla.
+</div>
+
+</div>
 
 <div
     id="bloqueTimelapseHoraLocal"

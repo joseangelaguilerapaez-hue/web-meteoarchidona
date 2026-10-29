@@ -32,6 +32,8 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
+- Timelapses de una sola vez (rama `feature/timelapses-una-sola-vez`, 29 oct, decisión de José): tipo «Una sola vez (fecha concreta)» en el formulario de programaciones de Administración, con fecha y hora; en el listado se ve con su fecha y hora. Al terminar, la API la desactiva sola. Necesita el PR de `api-meteoarchidona` (tipo `UNA_VEZ`, campo `fecha_local`, migración 0033) **desplegado antes que esta web**: con la API antigua, guardar cualquier programación fallaría porque la web ya envía `fecha_local`.
+
 - Gráficas en Actualidad (rama `feature/actualidad-graficas`, 29 oct, elegidas por José): debajo de los timelapses, «El Silo frente a Los Llanos» con dos estadísticas del catálogo, `SILO_LLANOS_TEMPERATURA_7D` y `SILO_LLANOS_MAXIMAS_MINIMAS_30D` (esta solo la gráfica, `data-presentacion="GRAFICA"`), y enlace a «Más estadísticas». Las monta `js/estadisticas-incrustadas.js`, pieza reutilizable para los futuros dashboards: un `data-estadistica="CODIGO"` por hueco; la sección sigue oculta si no llega ninguna. Las ve cualquier visitante. **Necesita antes el PR #56 de la API** (pedir por código) desplegado.
 
 - Informes y estadísticas, visor y configurador (rama `feature/estadisticas-visor`, 27 oct). `js/visor-estadisticas.js` y `css/visor-estadisticas.css`: componente reutilizable que dibuja en SVG propio (sin librerías) la gráfica (líneas, barras, áreas, puntos, dos ejes, huecos, incompletos y ventana de valores), la tabla con fila de resumen y el PDF por la impresión del navegador con logotipo, ficha y aviso informativo en el pie. Apartado «Estadísticas» en Administración (`js/administracion/estadisticas.js`): cabecera, series (añadir copia la última, duplicar, quitar) y vista previa automática con `POST /estadisticas/vista-previa`. Usa la API desplegada el 27 oct (`4f46351`). Guardar y publicar en el catálogo, pendiente. Probado con Chromium sin pantalla y la API simulada, en ordenador y móvil.
@@ -107,3 +109,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-28 · Estadísticas como sección pública del menú: aviso de registro sin sesión y catálogo con visor para usuarios y Administración; necesita el bloque de Nginx.
 - 2026-10-28 · Publicada la sección Estadísticas: web en `d01cbab` y bloque de Nginx aplicado; `/estadisticas` responde 200.
 - 2026-10-29 · Actualidad: gráficas de El Silo frente a Los Llanos (7 días y máximas y mínimas de 30 días) con el visor de estadísticas; pendiente de fusionar y publicar.
+- 2026-10-29 · Timelapses de una sola vez en el formulario de Administración; pendiente de fusionar y de desplegar después de la API.
