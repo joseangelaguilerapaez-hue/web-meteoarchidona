@@ -122,8 +122,8 @@ function configurarLogotipoSeccion() {
 
     logo.src =
         seccion === "en-vivo"
-            ? "/assets/logo-camaras-cabecera.png"
-            : "/assets/logo-cabecera.png";
+            ? "/assets/logo-camaras-cabecera.png?v=20261101-nieve"
+            : "/assets/logo-cabecera.png?v=20261101-nieve";
 
 }
 
