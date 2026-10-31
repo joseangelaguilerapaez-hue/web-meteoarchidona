@@ -113,3 +113,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-29 · Actualidad: gráficas de El Silo frente a Los Llanos (7 días y máximas y mínimas de 30 días) con el visor de estadísticas; pendiente de fusionar y publicar.
 - 2026-10-29 · Timelapses de una sola vez en el formulario de Administración; pendiente de fusionar y de desplegar después de la API.
 - 2026-10-31 · El visor en directo deja de pintar cifras y marca porque el VPS las graba en el vídeo; pendiente de publicar tras activarlo en el VPS.
+- 2026-11-01 · Logotipo nuevo: la nube de la A lleva copos de nieve en lugar de gotas. Sustituidos el original, la cabecera, los iconos (192 y Apple) y el favicon con los mismos nombres; pendiente de fusionar y publicar.
