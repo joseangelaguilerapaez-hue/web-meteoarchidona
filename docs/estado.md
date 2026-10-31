@@ -17,6 +17,10 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Hecho (en `main`)
 
+- Directo con instrumentos (PR #53, **publicado el 31 oct**, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. Publicado después de activar los instrumentos en el VPS; José lo comprobó en las dos cámaras. Pendiente: el botón de pantalla completa tapa el centro de la barra de humedad de la panorámica.
+
+- Timelapses de una sola vez (PR #51, **publicado el 29 oct**, decisión de José): tipo «Una sola vez (fecha concreta)» en el formulario de programaciones de Administración, con fecha y hora; en el listado se ve con su fecha y hora. Al terminar, la API la desactiva sola. Depende de la API con el tipo `UNA_VEZ` (PR #59 de `api-meteoarchidona`, migración 0033), desplegada antes que esta web el mismo día.
+
 - Sección **Estadísticas** (`/estadisticas`, PR #48, **publicada el 28 oct** en `d01cbab`): apartado del menú tras Predicción, visible para todos. Sin sesión, aviso de que hace falta registrarse con los botones de cuenta; con sesión de usuario o token de Administración vigente en la pestaña, catálogo por secciones y visor con gráfica, tabla y PDF (`GET /estadisticas/catalogo` y `/catalogo/{id}/datos`). La dirección guarda la abierta (`/estadisticas#LLUVIA_HOY`). Nginx: bloque `location = /estadisticas` añadido con `scripts/configurar_seccion_estadisticas.py` (copia previa `/home/jose/meteoarchidona-web.nginx.20261028T135356838551Z.bak`); `curl` da 200. Falta darla de alta en el catálogo de auditoría.
 - Caché de los estáticos en Nginx (petición de Mario): `/css` y `/js` un año, `/assets` 30 días. **Aplicada en el VPS** el 26 oct con `scripts/configurar_cache_estaticos.py` (web en `3365b09`), tras versionar las importaciones de Administración (PR #34) y ajustar el script a los dos `server` del fichero real (PR #35). Copia de la configuración anterior en `/home/jose/meteoarchidona-web.nginx.20261026T084045…bak`.
 - Auditoría de uso, primera entrega (PR #12, publicada el 24 oct en `5a28551`): aviso de consentimiento, ventana de privacidad con preferencias (`componentes/privacidad.html`), botón «Privacidad» en el pie y `js/auditoria.js`, que cuenta cada página vista de forma anónima para todos los visitantes (`/auditoria/vistas`, sin identificador ni nada en el navegador) y, solo con consentimiento, envía a la API ACCESO, SALIDA y las visualizaciones marcadas con `data-auditoria-visualizacion` (Predicción, visor de Seguimiento, tabla de estaciones, Timelapses y fichas). Verificada con una visita real de José: aviso, aceptación, sesión y eventos llegan bien a la base. Segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores.
@@ -31,10 +35,6 @@ No se marca nada como hecho que no esté en `main`.
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
 ## En construcción / abierto
-
-- Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
-
-- Timelapses de una sola vez (rama `feature/timelapses-una-sola-vez`, 29 oct, decisión de José): tipo «Una sola vez (fecha concreta)» en el formulario de programaciones de Administración, con fecha y hora; en el listado se ve con su fecha y hora. Al terminar, la API la desactiva sola. Necesita el PR de `api-meteoarchidona` (tipo `UNA_VEZ`, campo `fecha_local`, migración 0033) **desplegado antes que esta web**: con la API antigua, guardar cualquier programación fallaría porque la web ya envía `fecha_local`.
 
 - Gráficas en Actualidad (rama `feature/actualidad-graficas`, 29 oct, elegidas por José): debajo de los timelapses, «El Silo frente a Los Llanos» con dos estadísticas del catálogo, `SILO_LLANOS_TEMPERATURA_7D` y `SILO_LLANOS_MAXIMAS_MINIMAS_30D` (esta solo la gráfica, `data-presentacion="GRAFICA"`), y enlace a «Más estadísticas». Las monta `js/estadisticas-incrustadas.js`, pieza reutilizable para los futuros dashboards: un `data-estadistica="CODIGO"` por hueco; la sección sigue oculta si no llega ninguna. Las ve cualquier visitante. **Necesita antes el PR #56 de la API** (pedir por código) desplegado.
 
@@ -113,3 +113,5 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-29 · Actualidad: gráficas de El Silo frente a Los Llanos (7 días y máximas y mínimas de 30 días) con el visor de estadísticas; pendiente de fusionar y publicar.
 - 2026-10-29 · Timelapses de una sola vez en el formulario de Administración; pendiente de fusionar y de desplegar después de la API.
 - 2026-10-31 · El visor en directo deja de pintar cifras y marca porque el VPS las graba en el vídeo; pendiente de publicar tras activarlo en el VPS.
+- 2026-10-29 · Publicados los timelapses de una sola vez (PR #51), después de la API y su migración 0033.
+- 2026-10-31 · Publicado el visor sin cifras ni marca en directo (PR #53): los instrumentos ya van grabados en el vídeo.
