@@ -335,7 +335,7 @@ class TestDirectoConInstrumentos(unittest.TestCase):
 
     def test_el_visor_carga_la_hoja_nueva(self):
         self.assertIn(
-            "visor-video.css?v=20261031-directo-instrumentos1",
+            "visor-video.css?v=20261101-nieve",
             leer(RAIZ / "visores" / "video.html"),
         )
 

@@ -82,7 +82,7 @@
 
 
 const RUTA_COMPONENTE =
-    "/componentes/ficha-estacion.html?v=20261012-camara1";
+    "/componentes/ficha-estacion.html?v=20261101-nieve";
 
 
 const MODOS_VALIDOS =
