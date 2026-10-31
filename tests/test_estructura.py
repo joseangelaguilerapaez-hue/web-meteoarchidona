@@ -325,6 +325,21 @@ class TestTimelapseUnaSolaVez(unittest.TestCase):
         self.assertIn("fecha_local: fecha", codigo)
 
 
+class TestDirectoConInstrumentos(unittest.TestCase):
+    """Desde el 31-10-2026 los instrumentos van grabados en el vídeo en directo."""
+
+    def test_en_directo_el_visor_no_repite_cifras_ni_marca(self):
+        css = leer(RAIZ / "css" / "visor-video.css")
+        self.assertRegex(css, r"\.visor-video:not\(\.modo-mp4\)\s*\.visor-video-meteo")
+        self.assertRegex(css, r"\.visor-video:not\(\.modo-mp4\)\s*\.visor-video-marca")
+
+    def test_el_visor_carga_la_hoja_nueva(self):
+        self.assertIn(
+            "visor-video.css?v=20261031-directo-instrumentos1",
+            leer(RAIZ / "visores" / "video.html"),
+        )
+
+
 class TestCuenta(unittest.TestCase):
     """Los botones de cuenta de la cabecera (js/cuenta.js, css/cuenta.css)."""
 

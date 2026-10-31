@@ -32,6 +32,8 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
+- Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
+
 - Timelapses de una sola vez (rama `feature/timelapses-una-sola-vez`, 29 oct, decisión de José): tipo «Una sola vez (fecha concreta)» en el formulario de programaciones de Administración, con fecha y hora; en el listado se ve con su fecha y hora. Al terminar, la API la desactiva sola. Necesita el PR de `api-meteoarchidona` (tipo `UNA_VEZ`, campo `fecha_local`, migración 0033) **desplegado antes que esta web**: con la API antigua, guardar cualquier programación fallaría porque la web ya envía `fecha_local`.
 
 - Gráficas en Actualidad (rama `feature/actualidad-graficas`, 29 oct, elegidas por José): debajo de los timelapses, «El Silo frente a Los Llanos» con dos estadísticas del catálogo, `SILO_LLANOS_TEMPERATURA_7D` y `SILO_LLANOS_MAXIMAS_MINIMAS_30D` (esta solo la gráfica, `data-presentacion="GRAFICA"`), y enlace a «Más estadísticas». Las monta `js/estadisticas-incrustadas.js`, pieza reutilizable para los futuros dashboards: un `data-estadistica="CODIGO"` por hueco; la sección sigue oculta si no llega ninguna. Las ve cualquier visitante. **Necesita antes el PR #56 de la API** (pedir por código) desplegado.
@@ -110,3 +112,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-28 · Publicada la sección Estadísticas: web en `d01cbab` y bloque de Nginx aplicado; `/estadisticas` responde 200.
 - 2026-10-29 · Actualidad: gráficas de El Silo frente a Los Llanos (7 días y máximas y mínimas de 30 días) con el visor de estadísticas; pendiente de fusionar y publicar.
 - 2026-10-29 · Timelapses de una sola vez en el formulario de Administración; pendiente de fusionar y de desplegar después de la API.
+- 2026-10-31 · El visor en directo deja de pintar cifras y marca porque el VPS las graba en el vídeo; pendiente de publicar tras activarlo en el VPS.

@@ -2075,5 +2075,22 @@ video {
 
 }
 
+/* ==========================================================
+   DIRECTO CON INSTRUMENTOS GRABADOS (31-10-2026)
+   ==========================================================
+   Desde el 31-10-2026 el VPS graba en el vídeo en directo el
+   termómetro, la probeta, la barra de humedad y el logotipo
+   (api-meteoarchidona, servicio meteoarchidona-capas-directo).
+   En directo el visor ya no pinta su línea de cifras ni su
+   marca: saldrían repetidas. Los MP4 (modo-mp4) no cambian.
+   ========================================================== */
+
+.visor-video:not(.modo-mp4)
+.visor-video-meteo,
+.visor-video:not(.modo-mp4)
+.visor-video-marca {
+    display: none !important;
+}
+
 
 /* Fin de fichero: css/visor-video.css */
