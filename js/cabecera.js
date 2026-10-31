@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261028-estadisticas1";
+    "/componentes/cabecera.html?v=20261101-nieve";
 
 
 /* ==========================================================
