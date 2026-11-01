@@ -55,9 +55,10 @@ Copia de la configuración anterior: `/etc/nginx/meteoarchidona-web.antes-cache-
 
 Ojo: no dejar copias de seguridad dentro de `sites-enabled/`, porque Nginx las carga como sitios.
 
-Los estáticos (`/css`, `/js` y `/assets`) se sirven hoy **sin ninguna cabecera de caché**, solo con
-`ETag`: el navegador los vuelve a pedir en cada visita. Para arreglarlo hay un procedimiento
-equivalente al anterior, pendiente de ejecutar en el servidor:
+Los estáticos (`/css`, `/js` y `/assets`) se servían **sin ninguna cabecera de caché**, solo con
+`ETag`: el navegador los volvía a pedir en cada visita. **Aplicado el 1 de noviembre de 2026**
+(`/css/actualidad.css` responde con `max-age=31536000`). El procedimiento, por si hay que
+repetirlo en otro servidor:
 
 ```
 sudo python3 scripts/configurar_cache_estaticos.py
@@ -79,6 +80,38 @@ Comprobación:
 ```
 curl -sI https://meteoarchidona.com/prediccion | grep -i -E 'cache-control|expires|strict-transport'
 ```
+
+## Aplicación instalable (PWA)
+
+La web se puede instalar en el teléfono: `manifest.webmanifest` y `sw.js`, los dos en la raíz
+del sitio, más `js/pwa.js`, que da de alta el trabajador de servicio (en `localhost` no lo da,
+a propósito).
+
+Nginx necesita dos cosas que no trae de serie, **pendientes de ejecutar en el servidor**:
+
+```
+sudo python3 scripts/configurar_pwa.py
+```
+
+Añade dentro del `server` del sitio el tipo `application/manifest+json` para el manifiesto, que
+Nginx no conoce, y `expires -1` para él y para `sw.js`: son los dos ficheros que dicen qué
+versión del sitio usar, y si se quedan cacheados una publicación nueva tarda en llegar. Comprueba
+antes, hace copia, valida con `nginx -t`, recarga y restaura si algo falla. Se puede ejecutar dos
+veces sin que pase nada.
+
+Comprobación:
+
+```
+curl -sI https://meteoarchidona.com/manifest.webmanifest | grep -i -E 'content-type|cache-control'
+```
+
+```
+curl -sI https://meteoarchidona.com/sw.js | grep -i -E 'cache-control|expires'
+```
+
+Para publicar una versión nueva del trabajador basta con cambiar `VERSION` en `sw.js`: tira la
+caché anterior entera. Los datos de la API nunca se guardan, así que una temperatura vieja no
+puede quedarse enseñada como si fuera de ahora.
 
 ## Por confirmar
 
