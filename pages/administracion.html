@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
 <link rel="stylesheet" href="../css/pie.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/administracion.css?v=20261027-estadisticas1">
+<link rel="stylesheet" href="../css/administracion.css?v=20261101-configuracion1">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
 <script src="../js/cabecera.js?v=20261101-nieve2" defer></script>
@@ -31,7 +31,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261029-una-vez1"
+    src="../js/administracion/principal.js?v=20261101-configuracion1"
 ></script>
 
 <script
@@ -344,6 +344,14 @@
     data-modulo="eumetsat"
 >
     EUMETSAT
+</a>
+
+<a
+    href="#configuracion"
+    class="modulo-boton"
+    data-modulo="configuracion"
+>
+    Configuración
 </a>
 
 <a
@@ -3698,6 +3706,66 @@
 </div>
 </section>
 
+</section>
+
+
+<!-- =========================================================
+     CONFIGURACIÓN
+     Parámetros de la web (js/administracion/configuracion.js).
+     Diseño: docs/configuracion.md de api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-configuracion"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Configuración
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonRecargarConfiguracion"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Parámetros de la web. Los cambios se guardan al momento y se
+    aplican solos: el directo los lee cada minuto, sin reiniciar nada.
+</p>
+
+<div
+    id="estadoConfiguracion"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="listaConfiguracion"
+    class="configuracion-lista"
+></div>
+
+</div>
+</section>
+
+</div>
 </section>
 
 
