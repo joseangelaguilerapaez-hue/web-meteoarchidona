@@ -36,6 +36,8 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
+- Configuración en Administración (rama `feature/configuracion`, 1 nov, decisiones de José; diseño en `docs/configuracion.md` de la API): nuevo módulo «Configuración» con pestañas por apartado (Apariencia, Otros; se recuerda la última abierta) y una ficha por parámetro (interruptor, desplegables según el icono, texto del día y guardar). Primer parámetro: el distintivo (lazo de 8 colores o monigote). **Necesita antes la API con la migración 0035** (`/admin/configuracion`). Probada en el navegador con la API simulada.
+
 - Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
 
 - Timelapses de una sola vez (rama `feature/timelapses-una-sola-vez`, 29 oct, decisión de José): tipo «Una sola vez (fecha concreta)» en el formulario de programaciones de Administración, con fecha y hora; en el listado se ve con su fecha y hora. Al terminar, la API la desactiva sola. Necesita el PR de `api-meteoarchidona` (tipo `UNA_VEZ`, campo `fecha_local`, migración 0033) **desplegado antes que esta web**: con la API antigua, guardar cualquier programación fallaría porque la web ya envía `fecha_local`.
@@ -128,3 +130,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-01 · Repasada la web en móvil (390 px) página por página: ninguna desborda a lo ancho. Pendiente: `/api/usuarios/yo` responde 401 a quien no ha entrado y deja un error rojo en la consola en todas las páginas.
 - 2026-11-01 · La web se puede instalar en el teléfono: manifiesto, trabajador de servicio con aviso de sin conexión y iconos propios. Falta el paso de Nginx en el VPS.
 - 2026-11-01 · Botón bajo el termómetro publicado en el VPS (`b9e0223`); José confirma que queda bien.
+- 2026-11-01 · Administración → Configuración: pantalla de parámetros de la web (primero, el distintivo del directo); pendiente de la API y de publicar.

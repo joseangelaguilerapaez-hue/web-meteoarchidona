@@ -1457,4 +1457,92 @@ a.modulo-boton{
 }
 
 
+/* ==========================================================
+   CONFIGURACIÓN (js/administracion/configuracion.js)
+   ========================================================== */
+
+.configuracion-pestanas{
+    flex-wrap:wrap;
+    margin-top:12px
+}
+
+.configuracion-pestanas .boton.activo{
+    border-color:var(--cyan);
+    color:var(--cyan)
+}
+
+.configuracion-lista{
+    display:grid;
+    gap:14px;
+    margin-top:12px
+}
+
+.configuracion-ficha{
+    padding:15px 17px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--card-soft)
+}
+
+.configuracion-cabecera{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px 12px;
+    margin-bottom:6px
+}
+
+.configuracion-titulo{
+    margin:0;
+    font-size:1.05rem;
+    color:var(--text)
+}
+
+.configuracion-ambito{
+    padding:3px 9px;
+    border:1px solid var(--border-strong);
+    border-radius:999px;
+    font-size:.78rem;
+    color:var(--muted)
+}
+
+.configuracion-ambito-publico{
+    border-color:var(--cyan);
+    color:var(--cyan)
+}
+
+.configuracion-formulario .formulario-grid{
+    margin-top:10px
+}
+
+.configuracion-formulario [hidden]{
+    display:none !important
+}
+
+.configuracion-significado{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    min-height:1.2em
+}
+
+.configuracion-muestra{
+    flex:0 0 auto;
+    width:14px;
+    height:14px;
+    border:1px solid var(--border-strong);
+    border-radius:50%
+}
+
+.configuracion-pie{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:12px
+}
+
+
 /* Fin de fichero: css/administracion.css */

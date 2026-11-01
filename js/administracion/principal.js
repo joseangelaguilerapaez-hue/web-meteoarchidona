@@ -158,6 +158,15 @@ let moduloPatrullas = null;
 
 let promesaModuloPatrullas = null;
 
+/*
+ * configuracion.js (parámetros de la web) solo se importa si existe
+ * modulo-configuracion.
+ */
+
+let moduloConfiguracion = null;
+
+let promesaModuloConfiguracion = null;
+
 
 /* ==========================================================
    ESTADO DEL MÓDULO DE ESTADÍSTICAS
@@ -590,6 +599,64 @@ async function cargarModuloPatrullas(){
 
 
 /* ==========================================================
+   CONFIGURACIÓN
+   ========================================================== */
+
+async function obtenerModuloConfiguracion(){
+
+    if(!$("modulo-configuracion")){
+        return null;
+    }
+
+    if(promesaModuloConfiguracion === null){
+        promesaModuloConfiguracion = import(
+            "./configuracion.js?v=20261101-configuracion1"
+        );
+    }
+
+    try{
+        moduloConfiguracion = await promesaModuloConfiguracion;
+        return moduloConfiguracion;
+    }catch(error){
+        promesaModuloConfiguracion = null;
+        moduloConfiguracion = null;
+        throw error;
+    }
+
+}
+
+
+async function cargarModuloConfiguracion(){
+
+    if(!$("modulo-configuracion")){
+        return;
+    }
+
+    try{
+        const modulo = await obtenerModuloConfiguracion();
+        if(!modulo){
+            return;
+        }
+        modulo.configurarEventosConfiguracion();
+        await modulo.cargarConfiguracion();
+    }catch(error){
+        console.error(
+            "No se ha podido cargar la Configuración.",
+            error
+        );
+        mostrarEstado(
+            $("estadoConfiguracion"),
+            error.message
+            ||
+            "No se ha podido cargar la configuración.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    IMPORTACIÓN DIFERIDA DE PRODUCTOS TIMELAPSE
    ========================================================== */
 
@@ -839,6 +906,8 @@ export async function cargarDatosAdministracion(){
 
         await cargarModuloEstadisticas();
 
+        await cargarModuloConfiguracion();
+
         mostrarEstado(
             $("estadoPanel"),
             "Datos administrativos actualizados.",
@@ -959,6 +1028,16 @@ async function alCerrarSesion(){
         "function"
     ){
         moduloEstadisticas.limpiarEstadisticas();
+    }
+
+    if(
+        moduloConfiguracion
+        &&
+        typeof moduloConfiguracion.limpiarConfiguracion
+        ===
+        "function"
+    ){
+        moduloConfiguracion.limpiarConfiguracion();
     }
 
     history.replaceState(
