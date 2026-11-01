@@ -32,7 +32,9 @@ No se marca nada como hecho que no esté en `main`.
 - Las fichas de estaciones sin cámara ya no muestran el recuadro «vídeo no disponible» ni cargan su visor (25 oct).
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
-- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. **Falta ejecutar `sudo python3 scripts/configurar_pwa.py` en el VPS** para el tipo del manifiesto y el `expires -1` de los dos ficheros.
+- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. Publicada y verificada en producción el 1 de noviembre, con el paso de Nginx aplicado (`scripts/configurar_pwa.py`): el manifiesto se sirve como `application/manifest+json`, el trabajador queda activo y en su caché no hay ninguna respuesta de la API.
+
+- Botón «Instalar la aplicación» en el pie, 1 nov: en Chrome, Edge y Samsung abre el diálogo del sistema; en Safari del iPhone explica los tres pasos de «Añadir a pantalla de inicio», que es lo único que deja hacer Apple; en los navegadores que no instalan, y a quien ya la tiene instalada, no se enseña.
 
 ## En construcción / abierto
 
@@ -128,3 +130,6 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-01 · Repasada la web en móvil (390 px) página por página: ninguna desborda a lo ancho. Pendiente: `/api/usuarios/yo` responde 401 a quien no ha entrado y deja un error rojo en la consola en todas las páginas.
 - 2026-11-01 · La web se puede instalar en el teléfono: manifiesto, trabajador de servicio con aviso de sin conexión y iconos propios. Falta el paso de Nginx en el VPS.
 - 2026-11-01 · Botón bajo el termómetro publicado en el VPS (`b9e0223`); José confirma que queda bien.
+- 2026-11-01 · PWA publicada en el VPS y comprobada en vivo: manifiesto con su tipo, trabajador activo controlando la página y cero respuestas de la API guardadas.
+- 2026-11-01 · José la instala desde Safari del iPhone; en el iPhone ningún otro navegador puede. De ahí el botón del pie.
+- 2026-11-01 · Botón «Instalar la aplicación» en el pie, con diálogo nativo donde lo hay y pasos de Safari donde no; escondido en los navegadores que no instalan.

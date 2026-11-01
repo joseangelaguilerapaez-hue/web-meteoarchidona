@@ -110,6 +110,119 @@
 
 
 /* ==========================================================
+   INSTALAR LA APLICACIÓN
+   ========================================================== */
+
+/*
+ * Escondido de salida. js/instalar.js pone data-instalable en <html>
+ * cuando el navegador sabe instalar y la web no está ya instalada;
+ * manda la hoja porque el pie llega cuando llega y el script no puede
+ * contar con que el botón exista. Ver js/instalar.js.
+ *
+ * El aspecto de .pie-sitio-boton está en css/auditoria.css, que lo
+ * estrenó con «Privacidad». Aquí solo el color, para que se lea como
+ * una acción y no como un enlace más.
+ */
+
+.pie-sitio-instalable {
+    display: none;
+}
+
+
+:root[data-instalable] .pie-sitio-instalable {
+    display: block;
+}
+
+
+.pie-sitio-instalar {
+    color: var(--accent);
+    text-align: left;
+}
+
+
+/* Los pasos del iPhone: no hay forma de instalar desde la página. */
+
+.instalar-ventana {
+    width: min(420px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    padding: 0 18px 18px;
+    overflow: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-deep);
+}
+
+
+.instalar-ventana::backdrop {
+    background: rgba(3, 9, 20, 0.78);
+}
+
+
+.instalar-ventana-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 0 4px;
+}
+
+
+.instalar-ventana-cabecera h2 {
+    margin: 0;
+    font-size: 17px;
+}
+
+
+.instalar-cerrar {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+
+.instalar-cerrar:hover,
+.instalar-cerrar:focus-visible {
+    color: var(--text);
+    outline: none;
+}
+
+
+.instalar-pasos {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+.instalar-pasos li + li {
+    margin-top: 10px;
+}
+
+
+.instalar-pasos strong {
+    color: var(--text);
+}
+
+
+.instalar-nota {
+    margin: 16px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
    BARRA FINAL
    ========================================================== */
 
@@ -152,7 +265,8 @@
         gap: 0;
     }
 
-    .pie-sitio-lista a {
+    .pie-sitio-lista a,
+    .pie-sitio-lista .pie-sitio-boton {
         display: flex;
         align-items: center;
         min-height: 44px;
