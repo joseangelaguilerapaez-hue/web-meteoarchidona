@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-10-29.
+Última actualización: 2026-11-01.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -31,6 +31,8 @@ No se marca nada como hecho que no esté en `main`.
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
 ## En construcción / abierto
+
+- Botón de pantalla completa bajo el termómetro (rama `fix/visor-boton-bajo-termometro`, 1 nov, decisión de José): en el directo los controles del visor dejan de ir centrados abajo, donde tapaban la barra de humedad grabada en el vídeo, y se colocan en la vertical del termómetro (5,5 % del ancho) y a la altura del logotipo (centro de la franja 75,4–97,2 % del alto), sobre el rectángulo real del vídeo para respetar las bandas negras. El MP4 de los timelapses conserva su barra centrada. Si con su tamaño normal llegarían al logotipo (vídeo muy pequeño, como la panorámica en un móvil en vertical), pasan a los botones pequeños de las fichas compactas (decisión de José).
 
 - Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
 
@@ -117,3 +119,5 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-01 · Versión `?v=20261101-nieve` en el logotipo de la cabecera, los iconos y el favicon para que los navegadores dejen la copia antigua en caché.
 - 2026-11-01 · Logotipos de Cámaras y Estaciones también con nieve en la nube de la A (originales, cabeceras de 128 px e iconos de 192 px), con versión en sus referencias para saltar la caché.
 - 2026-11-01 · La cabecera fijaba el logotipo desde `cabecera.js` sin versión y seguía saliendo el antiguo; ahora la ruta lleva `?v=20261101-nieve`.
+- 2026-11-01 · Directo: el botón de pantalla completa pasa de encima de la barra de humedad a debajo del termómetro, a la altura del logotipo.
+- 2026-11-01 · Directo: en vídeos muy pequeños los botones bajo el termómetro pasan a tamaño pequeño para no tapar el logotipo.
