@@ -345,6 +345,8 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         codigo = leer(RAIZ / "js" / "visor-video.js")
         self.assertIn("junto-termometro", codigo)
         self.assertIn("CONTROLES_TERMOMETRO_X", codigo)
+        # Vídeo muy pequeño: botones pequeños para no tapar el logotipo.
+        self.assertIn('"pequenos"', codigo)
         self.assertIn(
             "visor-video.js?v=20261101-termometro1",
             leer(RAIZ / "js" / "visor-video-multimedia.js"),
@@ -356,6 +358,10 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         self.assertRegex(
             leer(RAIZ / "css" / "visor-video.css"),
             r"\.visor-video-controles\.junto-termometro\s*\{",
+        )
+        self.assertRegex(
+            leer(RAIZ / "css" / "visor-video.css"),
+            r"\.visor-video-controles\.junto-termometro\.pequenos",
         )
 
 

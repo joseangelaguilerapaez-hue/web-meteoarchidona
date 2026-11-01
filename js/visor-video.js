@@ -1352,6 +1352,37 @@ const CONTROLES_LOGOTIPO_Y =
     (0.754 + 0.972) / 2;
 
 
+/*
+ * Logotipo grabado: cuadrado (assets/logo-meteoarchidona.png es de
+ * 1024×1024), centrado en el cuadro 7–33 % del ancho y 75,4–97,2 %
+ * del alto, sin deformarse.
+ */
+
+
+const LOGOTIPO_CENTRO_X =
+    (0.07 + 0.33) / 2;
+
+
+const LOGOTIPO_CUADRO_ANCHO =
+    0.33 - 0.07;
+
+
+const LOGOTIPO_CUADRO_ALTO =
+    0.972 - 0.754;
+
+
+/*
+ * Si con su tamaño normal los botones llegarían al logotipo
+ * (vídeo muy pequeño, como la panorámica en un móvil en
+ * vertical), se usan los botones pequeños de las fichas
+ * compactas (decisión de José, 1-11-2026).
+ */
+
+
+const SEPARACION_LOGOTIPO =
+    4;
+
+
 function colocarControles(
     video,
     controles,
@@ -1374,7 +1405,8 @@ function colocarControles(
     ) {
 
         controles.classList.remove(
-            "junto-termometro"
+            "junto-termometro",
+            "pequenos"
         );
 
 
@@ -1413,8 +1445,36 @@ function colocarControles(
         rectangulo.abajo;
 
 
+    const ladoLogotipo =
+        Math.min(
+            anchoVideo
+            *
+            LOGOTIPO_CUADRO_ANCHO,
+            altoVideo
+            *
+            LOGOTIPO_CUADRO_ALTO
+        );
+
+
+    const izquierdaLogotipo =
+        rectangulo.izquierda
+        +
+        anchoVideo
+        *
+        LOGOTIPO_CENTRO_X
+        -
+        ladoLogotipo
+        /
+        2;
+
+
     controles.classList.add(
         "junto-termometro"
+    );
+
+
+    controles.classList.remove(
+        "pequenos"
     );
 
 
@@ -1422,10 +1482,41 @@ function colocarControles(
         "auto";
 
 
-    const mitadAncho =
+    let centroX =
+        calcularCentroControles(
+            controles,
+            rectangulo,
+            anchoVideo,
+            margen
+        );
+
+
+    if (
+        centroX
+        +
         controles.offsetWidth
         /
-        2;
+        2
+        +
+        SEPARACION_LOGOTIPO
+        >
+        izquierdaLogotipo
+    ) {
+
+        controles.classList.add(
+            "pequenos"
+        );
+
+
+        centroX =
+            calcularCentroControles(
+                controles,
+                rectangulo,
+                anchoVideo,
+                margen
+            );
+
+    }
 
 
     const mitadAlto =
@@ -1434,22 +1525,7 @@ function colocarControles(
         2;
 
 
-    // Sin salirse del vídeo en pantallas muy pequeñas.
-    const centroX =
-        Math.max(
-            rectangulo.izquierda
-            +
-            anchoVideo
-            *
-            CONTROLES_TERMOMETRO_X,
-            rectangulo.izquierda
-            +
-            margen
-            +
-            mitadAncho
-        );
-
-
+    // Sin salirse del vídeo por abajo.
     const centroY =
         Math.min(
             rectangulo.arriba
@@ -1477,6 +1553,32 @@ function colocarControles(
         centroY
         +
         "px";
+
+}
+
+
+function calcularCentroControles(
+    controles,
+    rectangulo,
+    anchoVideo,
+    margen
+) {
+
+    // En la vertical del termómetro, sin salirse del vídeo por la izquierda.
+    return Math.max(
+        rectangulo.izquierda
+        +
+        anchoVideo
+        *
+        CONTROLES_TERMOMETRO_X,
+        rectangulo.izquierda
+        +
+        margen
+        +
+        controles.offsetWidth
+        /
+        2
+    );
 
 }
 

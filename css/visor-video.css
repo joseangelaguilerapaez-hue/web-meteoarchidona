@@ -2115,4 +2115,30 @@ video {
 }
 
 
+/*
+ * Vídeo tan pequeño que los botones normales llegarían al
+ * logotipo: mismos tamaños que en la ficha compacta.
+ */
+
+
+.visor-video-controles.junto-termometro.pequenos {
+    gap: 2px;
+
+    padding: 2px;
+
+    border-radius: 5px;
+}
+
+
+.visor-video-controles.junto-termometro.pequenos
+.visor-video-control {
+    width: 18px;
+    height: 18px;
+
+    border-radius: 4px;
+
+    font-size: 9px;
+}
+
+
 /* Fin de fichero: css/visor-video.css */
