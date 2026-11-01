@@ -36,7 +36,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
-- Configuración en Administración (rama `feature/configuracion`, 1 nov, decisiones de José; diseño en `docs/configuracion.md` de la API): nuevo módulo «Configuración» con una ficha por parámetro (interruptor, desplegables según el icono, texto del día y guardar). Primer parámetro: el distintivo (lazo de 8 colores o monigote). **Necesita antes la API con la migración 0035** (`/admin/configuracion`). Probada en el navegador con la API simulada.
+- Configuración en Administración (rama `feature/configuracion`, 1 nov, decisiones de José; diseño en `docs/configuracion.md` de la API): nuevo módulo «Configuración» con pestañas por apartado (Apariencia, Otros; se recuerda la última abierta) y una ficha por parámetro (interruptor, desplegables según el icono, texto del día y guardar). Primer parámetro: el distintivo (lazo de 8 colores o monigote). **Necesita antes la API con la migración 0035** (`/admin/configuracion`). Probada en el navegador con la API simulada.
 
 - Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
 

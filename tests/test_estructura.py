@@ -326,6 +326,8 @@ class TestConfiguracion(unittest.TestCase):
         codigo = leer(RAIZ / "js" / "administracion" / "configuracion.js")
         self.assertIn('"/admin/configuracion"', codigo)
         self.assertIn("valores_por_icono", codigo)
+        self.assertIn("/apartados", codigo)
+        self.assertIn("pestanasConfiguracion", codigo)
         self.assertIn("export async function cargarConfiguracion", codigo)
         self.assertIn(
             "administracion.css?v=20261101-configuracion1",

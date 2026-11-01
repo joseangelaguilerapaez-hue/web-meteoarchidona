@@ -5,7 +5,11 @@
  * Diseño: docs/configuracion.md de api-meteoarchidona.
  *
  * GET   /admin/configuracion
+ * GET   /admin/configuracion/apartados
  * PATCH /admin/configuracion/{codigo}
+ *
+ * Los parámetros se agrupan en pestañas por apartado (Apariencia, Otros…),
+ * en el orden del catálogo; se recuerda la última pestaña abierta.
  *
  * Una ficha por parámetro: interruptor, un control por cada valor que use
  * (desplegable, color, número o texto) y botón de guardar. Las opciones
@@ -33,7 +37,11 @@ const AMBITOS = {
     PUBLICO: "Público · cada usuario puede cambiarlo para sí"
 };
 
+const CLAVE_PESTANA = "meteoarchidona_configuracion_pestana";
+
 let parametros = [];
+let apartados = [];
+let pestanaActiva = null;
 let eventosConfigurados = false;
 
 
@@ -400,6 +408,81 @@ async function guardarParametro(parametro, formulario, estado, boton){
    CARGA
    ========================================================== */
 
+function leerPestanaGuardada(){
+
+    try{
+        return sessionStorage.getItem(CLAVE_PESTANA);
+    }catch(error){
+        return null;
+    }
+}
+
+
+function guardarPestana(codigo){
+
+    try{
+        sessionStorage.setItem(CLAVE_PESTANA, codigo);
+    }catch(error){
+        // Sin almacenamiento: la pestaña no se recuerda, nada más.
+    }
+}
+
+
+function renderizarPestanas(){
+
+    const lista = $("listaConfiguracion");
+    let barra = $("pestanasConfiguracion");
+
+    if(!barra){
+        barra = crear("div", "acciones configuracion-pestanas");
+        barra.id = "pestanasConfiguracion";
+        barra.setAttribute("role", "tablist");
+        lista.before(barra);
+    }
+
+    barra.replaceChildren();
+
+    for(const apartado of apartados){
+
+        const cuantos = parametros.filter(p => p.apartado === apartado.codigo).length;
+        const boton = crear("button", "boton boton-secundario", `${apartado.nombre} (${cuantos})`);
+        boton.type = "button";
+        boton.dataset.apartado = apartado.codigo;
+        boton.setAttribute("role", "tab");
+        boton.setAttribute("aria-controls", "listaConfiguracion");
+
+        boton.addEventListener("click", () => {
+            pestanaActiva = apartado.codigo;
+            guardarPestana(pestanaActiva);
+            renderizarLista();
+        });
+
+        barra.append(boton);
+    }
+}
+
+
+function renderizarLista(){
+
+    const lista = $("listaConfiguracion");
+
+    for(const boton of document.querySelectorAll("#pestanasConfiguracion [data-apartado]")){
+        const seleccionada = boton.dataset.apartado === pestanaActiva;
+        boton.setAttribute("aria-selected", String(seleccionada));
+        boton.tabIndex = seleccionada ? 0 : -1;
+        boton.classList.toggle("activo", seleccionada);
+    }
+
+    const visibles = parametros.filter(p => p.apartado === pestanaActiva);
+    lista.replaceChildren(...visibles.map(crearFicha));
+
+    if(!visibles.length){
+        const nombre = apartados.find(a => a.codigo === pestanaActiva)?.nombre || "este apartado";
+        lista.append(crear("p", "modulo-intro", `Todavía no hay parámetros en ${nombre}.`));
+    }
+}
+
+
 function renderizar(){
 
     const lista = $("listaConfiguracion");
@@ -408,11 +491,18 @@ function renderizar(){
         return;
     }
 
-    lista.replaceChildren(...parametros.map(crearFicha));
+    const codigos = apartados.map(a => a.codigo);
+    const guardada = leerPestanaGuardada();
 
-    if(!parametros.length){
-        lista.append(crear("p", "modulo-intro", "No hay parámetros."));
+    if(!codigos.includes(pestanaActiva)){
+        pestanaActiva = codigos.includes(guardada)
+            ? guardada
+            // Si no hay ninguna recordada, la primera que tenga parámetros.
+            : (codigos.find(c => parametros.some(p => p.apartado === c)) || codigos[0] || null);
     }
+
+    renderizarPestanas();
+    renderizarLista();
 }
 
 
@@ -422,7 +512,10 @@ export async function cargarConfiguracion(){
     mostrarEstado(estado, "Cargando…");
 
     try{
-        parametros = await peticionJson(RUTA);
+        [apartados, parametros] = await Promise.all([
+            peticionJson(`${RUTA}/apartados`),
+            peticionJson(RUTA)
+        ]);
         renderizar();
         mostrarEstado(estado, "");
     }catch(error){
@@ -453,6 +546,9 @@ export function configurarEventosConfiguracion(){
 export function limpiarConfiguracion(){
 
     parametros = [];
+    apartados = [];
+    pestanaActiva = null;
+    $("pestanasConfiguracion")?.remove();
     $("listaConfiguracion")?.replaceChildren();
     mostrarEstado($("estadoConfiguracion"), "");
 }
