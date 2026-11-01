@@ -87,7 +87,7 @@ La web se puede instalar en el teléfono: `manifest.webmanifest` y `sw.js`, los 
 del sitio, más `js/pwa.js`, que da de alta el trabajador de servicio (en `localhost` no lo da,
 a propósito).
 
-Nginx necesita dos cosas que no trae de serie, **pendientes de ejecutar en el servidor**:
+Nginx necesita dos cosas que no trae de serie (**aplicadas el 1 de noviembre de 2026**; el script se puede repetir sin efecto):
 
 ```
 sudo python3 scripts/configurar_pwa.py

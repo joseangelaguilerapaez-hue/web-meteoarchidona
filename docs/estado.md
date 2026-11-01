@@ -17,6 +17,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Hecho (en `main`)
 
+- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. Hecha por Mario (PR #59). **Publicada** el 1 nov (`68e420f`) y `scripts/configurar_pwa.py` ejecutado en el VPS por José: el manifiesto sale como `application/manifest+json` y los dos ficheros con `no-cache`. Copia de Nginx en `/home/jose/meteoarchidona-web.nginx.20261101T175029179953Z.bak`.
 - Botón de pantalla completa bajo el termómetro (PR #57, 1 nov, decisión de José; **publicado** el 1 nov, `b9e0223`, y comprobado por José en el móvil): en el directo los controles del visor dejan de ir centrados abajo, donde tapaban la barra de humedad grabada en el vídeo, y se colocan en la vertical del termómetro (5,5 % del ancho) y a la altura del logotipo (centro de la franja 75,4–97,2 % del alto), sobre el rectángulo real del vídeo para respetar las bandas negras. El MP4 de los timelapses conserva su barra centrada. Si con su tamaño normal llegarían al logotipo (vídeo muy pequeño, como la panorámica en un móvil en vertical), pasan a los botones pequeños de las fichas compactas (decisión de José).
 
 - Sección **Estadísticas** (`/estadisticas`, PR #48, **publicada el 28 oct** en `d01cbab`): apartado del menú tras Predicción, visible para todos. Sin sesión, aviso de que hace falta registrarse con los botones de cuenta; con sesión de usuario o token de Administración vigente en la pestaña, catálogo por secciones y visor con gráfica, tabla y PDF (`GET /estadisticas/catalogo` y `/catalogo/{id}/datos`). La dirección guarda la abierta (`/estadisticas#LLUVIA_HOY`). Nginx: bloque `location = /estadisticas` añadido con `scripts/configurar_seccion_estadisticas.py` (copia previa `/home/jose/meteoarchidona-web.nginx.20261028T135356838551Z.bak`); `curl` da 200. Falta darla de alta en el catálogo de auditoría.
@@ -32,7 +33,6 @@ No se marca nada como hecho que no esté en `main`.
 - Las fichas de estaciones sin cámara ya no muestran el recuadro «vídeo no disponible» ni cargan su visor (25 oct).
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
-- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. **Falta ejecutar `sudo python3 scripts/configurar_pwa.py` en el VPS** para el tipo del manifiesto y el `expires -1` de los dos ficheros.
 
 ## En construcción / abierto
 
@@ -126,3 +126,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-01 · Repasada la web en móvil (390 px) página por página: ninguna desborda a lo ancho. Pendiente: `/api/usuarios/yo` responde 401 a quien no ha entrado y deja un error rojo en la consola en todas las páginas.
 - 2026-11-01 · La web se puede instalar en el teléfono: manifiesto, trabajador de servicio con aviso de sin conexión y iconos propios. Falta el paso de Nginx en el VPS.
 - 2026-11-01 · Botón bajo el termómetro publicado en el VPS (`b9e0223`); José confirma que queda bien.
+- 2026-11-01 · Aplicación instalable publicada y Nginx configurado en el VPS (tipo del manifiesto y `no-cache` de `sw.js` y del manifiesto).
