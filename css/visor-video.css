@@ -2092,5 +2092,27 @@ video {
     display: none !important;
 }
 
+/* ==========================================================
+   CONTROLES BAJO EL TERMÓMETRO (DIRECTO)
+   ==========================================================
+ *
+ * visor-video.js coloca el centro del botón en la vertical
+ * del termómetro grabado en el vídeo y a la altura del
+ * logotipo (decisión de José, 1-11-2026), para no tapar la
+ * barra de humedad del centro. El MP4 no lleva esta clase.
+ */
+
+
+.visor-video-controles.junto-termometro {
+    right: auto !important;
+    bottom: auto;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+}
+
 
 /* Fin de fichero: css/visor-video.css */

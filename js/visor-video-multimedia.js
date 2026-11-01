@@ -52,7 +52,7 @@
         const script = document.createElement("script");
 
         script.src =
-            "../js/visor-video.js?v=20261009-video9";
+            "../js/visor-video.js?v=20261101-termometro1";
 
         document.head.appendChild(script);
 

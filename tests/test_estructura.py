@@ -335,8 +335,27 @@ class TestDirectoConInstrumentos(unittest.TestCase):
 
     def test_el_visor_carga_la_hoja_nueva(self):
         self.assertIn(
-            "visor-video.css?v=20261101-nieve",
+            "visor-video.css?v=20261101-termometro1",
             leer(RAIZ / "visores" / "video.html"),
+        )
+
+    def test_controles_bajo_el_termometro(self):
+        """Decisión de José del 1-11-2026: el botón no tapa la barra de humedad."""
+
+        codigo = leer(RAIZ / "js" / "visor-video.js")
+        self.assertIn("junto-termometro", codigo)
+        self.assertIn("CONTROLES_TERMOMETRO_X", codigo)
+        self.assertIn(
+            "visor-video.js?v=20261101-termometro1",
+            leer(RAIZ / "js" / "visor-video-multimedia.js"),
+        )
+        self.assertIn(
+            "visor-video-multimedia.js?v=20261101-termometro1",
+            leer(RAIZ / "visores" / "video.html"),
+        )
+        self.assertRegex(
+            leer(RAIZ / "css" / "visor-video.css"),
+            r"\.visor-video-controles\.junto-termometro\s*\{",
         )
 
 

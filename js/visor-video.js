@@ -1310,6 +1310,78 @@ function posicionarSuperposiciones() {
 
     if (controles) {
 
+        colocarControles(
+            video,
+            controles,
+            rectangulo,
+            margen
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   CONTROLES BAJO EL TERMÓMETRO
+   ==========================================================
+ *
+ * El directo lleva grabados en el propio vídeo el termómetro
+ * (a la izquierda), la probeta (a la derecha), la barra de
+ * humedad (abajo, en el centro) y el logotipo (abajo a la
+ * izquierda). Ver servicios/superposicion_meteorologica_fotograma.py
+ * en api-meteoarchidona.
+ *
+ * Centrado abajo, el botón tapaba la barra de humedad. Por
+ * decisión de José (1-11-2026) se coloca en la vertical del
+ * termómetro y a la altura del logotipo, a su izquierda.
+ *
+ * Las proporciones son las del dibujo del servidor y se aplican
+ * sobre el rectángulo real del vídeo, no sobre el recuadro: así
+ * se respeta con bandas negras arriba y abajo o a los lados.
+ *
+ * El modo MP4 conserva su barra centrada con el progreso.
+ */
+
+
+const CONTROLES_TERMOMETRO_X =
+    0.055;
+
+
+const CONTROLES_LOGOTIPO_Y =
+    (0.754 + 0.972) / 2;
+
+
+function colocarControles(
+    video,
+    controles,
+    rectangulo,
+    margen
+) {
+
+    const raiz =
+        controles.closest(
+            ".visor-video"
+        );
+
+
+    if (
+        raiz
+        &&
+        raiz.classList.contains(
+            "modo-mp4"
+        )
+    ) {
+
+        controles.classList.remove(
+            "junto-termometro"
+        );
+
+
+        controles.style.left = "";
+        controles.style.top = "";
+
+
         controles.style.bottom =
             (
                 rectangulo.abajo
@@ -1319,7 +1391,92 @@ function posicionarSuperposiciones() {
             +
             "px";
 
+
+        return;
+
     }
+
+
+    const anchoVideo =
+        video.clientWidth
+        -
+        rectangulo.izquierda
+        -
+        rectangulo.derecha;
+
+
+    const altoVideo =
+        video.clientHeight
+        -
+        rectangulo.arriba
+        -
+        rectangulo.abajo;
+
+
+    controles.classList.add(
+        "junto-termometro"
+    );
+
+
+    controles.style.bottom =
+        "auto";
+
+
+    const mitadAncho =
+        controles.offsetWidth
+        /
+        2;
+
+
+    const mitadAlto =
+        controles.offsetHeight
+        /
+        2;
+
+
+    // Sin salirse del vídeo en pantallas muy pequeñas.
+    const centroX =
+        Math.max(
+            rectangulo.izquierda
+            +
+            anchoVideo
+            *
+            CONTROLES_TERMOMETRO_X,
+            rectangulo.izquierda
+            +
+            margen
+            +
+            mitadAncho
+        );
+
+
+    const centroY =
+        Math.min(
+            rectangulo.arriba
+            +
+            altoVideo
+            *
+            CONTROLES_LOGOTIPO_Y,
+            rectangulo.arriba
+            +
+            altoVideo
+            -
+            margen
+            -
+            mitadAlto
+        );
+
+
+    controles.style.left =
+        centroX
+        +
+        "px";
+
+
+    controles.style.top =
+        centroY
+        +
+        "px";
 
 }
 
