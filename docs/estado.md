@@ -32,6 +32,8 @@ No se marca nada como hecho que no esté en `main`.
 - Las fichas de estaciones sin cámara ya no muestran el recuadro «vídeo no disponible» ni cargan su visor (25 oct).
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
+- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. **Falta ejecutar `sudo python3 scripts/configurar_pwa.py` en el VPS** para el tipo del manifiesto y el `expires -1` de los dos ficheros.
+
 ## En construcción / abierto
 
 - Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
@@ -121,4 +123,6 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-01 · La cabecera fijaba el logotipo desde `cabecera.js` sin versión y seguía saliendo el antiguo; ahora la ruta lleva `?v=20261101-nieve`.
 - 2026-11-01 · Directo: el botón de pantalla completa pasa de encima de la barra de humedad a debajo del termómetro, a la altura del logotipo.
 - 2026-11-01 · Directo: en vídeos muy pequeños los botones bajo el termómetro pasan a tamaño pequeño para no tapar el logotipo.
+- 2026-11-01 · Repasada la web en móvil (390 px) página por página: ninguna desborda a lo ancho. Pendiente: `/api/usuarios/yo` responde 401 a quien no ha entrado y deja un error rojo en la consola en todas las páginas.
+- 2026-11-01 · La web se puede instalar en el teléfono: manifiesto, trabajador de servicio con aviso de sin conexión y iconos propios. Falta el paso de Nginx en el VPS.
 - 2026-11-01 · Botón bajo el termómetro publicado en el VPS (`b9e0223`); José confirma que queda bien.
