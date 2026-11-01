@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-10-27.
+Última actualización: 2026-11-01.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -17,6 +17,9 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Hecho (en `main`)
 
+- Botón de pantalla completa bajo el termómetro (PR #57, 1 nov, decisión de José; **publicado** el 1 nov, `b9e0223`, y comprobado por José en el móvil): en el directo los controles del visor dejan de ir centrados abajo, donde tapaban la barra de humedad grabada en el vídeo, y se colocan en la vertical del termómetro (5,5 % del ancho) y a la altura del logotipo (centro de la franja 75,4–97,2 % del alto), sobre el rectángulo real del vídeo para respetar las bandas negras. El MP4 de los timelapses conserva su barra centrada. Si con su tamaño normal llegarían al logotipo (vídeo muy pequeño, como la panorámica en un móvil en vertical), pasan a los botones pequeños de las fichas compactas (decisión de José).
+
+- Sección **Estadísticas** (`/estadisticas`, PR #48, **publicada el 28 oct** en `d01cbab`): apartado del menú tras Predicción, visible para todos. Sin sesión, aviso de que hace falta registrarse con los botones de cuenta; con sesión de usuario o token de Administración vigente en la pestaña, catálogo por secciones y visor con gráfica, tabla y PDF (`GET /estadisticas/catalogo` y `/catalogo/{id}/datos`). La dirección guarda la abierta (`/estadisticas#LLUVIA_HOY`). Nginx: bloque `location = /estadisticas` añadido con `scripts/configurar_seccion_estadisticas.py` (copia previa `/home/jose/meteoarchidona-web.nginx.20261028T135356838551Z.bak`); `curl` da 200. Falta darla de alta en el catálogo de auditoría.
 - Caché de los estáticos en Nginx (petición de Mario): `/css` y `/js` un año, `/assets` 30 días. **Aplicada en el VPS** el 26 oct con `scripts/configurar_cache_estaticos.py` (web en `3365b09`), tras versionar las importaciones de Administración (PR #34) y ajustar el script a los dos `server` del fichero real (PR #35). Copia de la configuración anterior en `/home/jose/meteoarchidona-web.nginx.20261026T084045…bak`.
 - Auditoría de uso, primera entrega (PR #12, publicada el 24 oct en `5a28551`): aviso de consentimiento, ventana de privacidad con preferencias (`componentes/privacidad.html`), botón «Privacidad» en el pie y `js/auditoria.js`, que cuenta cada página vista de forma anónima para todos los visitantes (`/auditoria/vistas`, sin identificador ni nada en el navegador) y, solo con consentimiento, envía a la API ACCESO, SALIDA y las visualizaciones marcadas con `data-auditoria-visualizacion` (Predicción, visor de Seguimiento, tabla de estaciones, Timelapses y fichas). Verificada con una visita real de José: aviso, aceptación, sesión y eventos llegan bien a la base. Segunda entrega: eventos dentro de los visores (vídeo, radar, YouTube) y de los selectores.
 - Visor de radar regional multirradar, con estilos y caché corregidos (PR #2 a #4, sep).
@@ -29,7 +32,15 @@ No se marca nada como hecho que no esté en `main`.
 - Las fichas de estaciones sin cámara ya no muestran el recuadro «vídeo no disponible» ni cargan su visor (25 oct).
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
+- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. **Falta ejecutar `sudo python3 scripts/configurar_pwa.py` en el VPS** para el tipo del manifiesto y el `expires -1` de los dos ficheros.
+
 ## En construcción / abierto
+
+- Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
+
+- Timelapses de una sola vez (rama `feature/timelapses-una-sola-vez`, 29 oct, decisión de José): tipo «Una sola vez (fecha concreta)» en el formulario de programaciones de Administración, con fecha y hora; en el listado se ve con su fecha y hora. Al terminar, la API la desactiva sola. Necesita el PR de `api-meteoarchidona` (tipo `UNA_VEZ`, campo `fecha_local`, migración 0033) **desplegado antes que esta web**: con la API antigua, guardar cualquier programación fallaría porque la web ya envía `fecha_local`.
+
+- Gráficas en Actualidad (rama `feature/actualidad-graficas`, 29 oct, elegidas por José): debajo de los timelapses, «El Silo frente a Los Llanos» con dos estadísticas del catálogo, `SILO_LLANOS_TEMPERATURA_7D` y `SILO_LLANOS_MAXIMAS_MINIMAS_30D` (esta solo la gráfica, `data-presentacion="GRAFICA"`), y enlace a «Más estadísticas». Las monta `js/estadisticas-incrustadas.js`, pieza reutilizable para los futuros dashboards: un `data-estadistica="CODIGO"` por hueco; la sección sigue oculta si no llega ninguna. Las ve cualquier visitante. **Necesita antes el PR #56 de la API** (pedir por código) desplegado.
 
 - Informes y estadísticas, visor y configurador (rama `feature/estadisticas-visor`, 27 oct). `js/visor-estadisticas.js` y `css/visor-estadisticas.css`: componente reutilizable que dibuja en SVG propio (sin librerías) la gráfica (líneas, barras, áreas, puntos, dos ejes, huecos, incompletos y ventana de valores), la tabla con fila de resumen y el PDF por la impresión del navegador con logotipo, ficha y aviso informativo en el pie. Apartado «Estadísticas» en Administración (`js/administracion/estadisticas.js`): cabecera, series (añadir copia la última, duplicar, quitar) y vista previa automática con `POST /estadisticas/vista-previa`. Usa la API desplegada el 27 oct (`4f46351`). Guardar y publicar en el catálogo, pendiente. Probado con Chromium sin pantalla y la API simulada, en ordenador y móvil.
 
@@ -103,3 +114,17 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-27 · Abierto `docs/ventajas-registro.md` con las primeras ventajas del usuario registrado (estadísticas propias, catálogo y dashboards), a petición de José.
 - 2026-10-27 · Informes y estadísticas: visor reutilizable (gráfica, tabla y PDF) y configurador con vista previa en Administración; pendiente de fusionar y publicar.
 - 2026-10-27 · Repaso del proyecto y lista de mejoras propuestas en `docs/mejoras.md`, para comentarla con José.
+- 2026-10-28 · Estadísticas como sección pública del menú: aviso de registro sin sesión y catálogo con visor para usuarios y Administración; necesita el bloque de Nginx.
+- 2026-10-28 · Publicada la sección Estadísticas: web en `d01cbab` y bloque de Nginx aplicado; `/estadisticas` responde 200.
+- 2026-10-29 · Actualidad: gráficas de El Silo frente a Los Llanos (7 días y máximas y mínimas de 30 días) con el visor de estadísticas; pendiente de fusionar y publicar.
+- 2026-10-29 · Timelapses de una sola vez en el formulario de Administración; pendiente de fusionar y de desplegar después de la API.
+- 2026-10-31 · El visor en directo deja de pintar cifras y marca porque el VPS las graba en el vídeo; pendiente de publicar tras activarlo en el VPS.
+- 2026-11-01 · Logotipo nuevo: la nube de la A lleva copos de nieve en lugar de gotas. Sustituidos el original, la cabecera, los iconos (192 y Apple) y el favicon con los mismos nombres; pendiente de fusionar y publicar.
+- 2026-11-01 · Versión `?v=20261101-nieve` en el logotipo de la cabecera, los iconos y el favicon para que los navegadores dejen la copia antigua en caché.
+- 2026-11-01 · Logotipos de Cámaras y Estaciones también con nieve en la nube de la A (originales, cabeceras de 128 px e iconos de 192 px), con versión en sus referencias para saltar la caché.
+- 2026-11-01 · La cabecera fijaba el logotipo desde `cabecera.js` sin versión y seguía saliendo el antiguo; ahora la ruta lleva `?v=20261101-nieve`.
+- 2026-11-01 · Directo: el botón de pantalla completa pasa de encima de la barra de humedad a debajo del termómetro, a la altura del logotipo.
+- 2026-11-01 · Directo: en vídeos muy pequeños los botones bajo el termómetro pasan a tamaño pequeño para no tapar el logotipo.
+- 2026-11-01 · Repasada la web en móvil (390 px) página por página: ninguna desborda a lo ancho. Pendiente: `/api/usuarios/yo` responde 401 a quien no ha entrado y deja un error rojo en la consola en todas las páginas.
+- 2026-11-01 · La web se puede instalar en el teléfono: manifiesto, trabajador de servicio con aviso de sin conexión y iconos propios. Falta el paso de Nginx en el VPS.
+- 2026-11-01 · Botón bajo el termómetro publicado en el VPS (`b9e0223`); José confirma que queda bien.

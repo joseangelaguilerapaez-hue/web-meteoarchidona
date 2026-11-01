@@ -47,6 +47,7 @@ SECCIONES = (
     "en-vivo",
     "administracion",
     "informacion",
+    "estadisticas",
 )
 
 # La portada es Actualidad, servida en "/" sin redirigir.
@@ -90,6 +91,13 @@ PAUSA_ENTRE_INTENTOS = 2
 
 
 class ManejadorSinCache(SimpleHTTPRequestHandler):
+    # El manifiesto de la aplicación instalable. Python no conoce esta
+    # extensión, y sin tipo el navegador descarta el manifiesto.
+    extensions_map = {
+        **SimpleHTTPRequestHandler.extensions_map,
+        ".webmanifest": "application/manifest+json",
+    }
+
     def end_headers(self):
         self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         self.send_header("Pragma", "no-cache")

@@ -332,6 +332,14 @@ function pintarZona() {
 
     zona.hidden = false;
 
+    // Para las páginas que dependen de la sesión (js/estadisticas.js):
+    // se pinta al arrancar, al entrar y al salir.
+    document.dispatchEvent(
+        new CustomEvent("meteoarchidona:cuenta", {
+            detail: { conSesion: Boolean(usuario) },
+        })
+    );
+
 }
 
 

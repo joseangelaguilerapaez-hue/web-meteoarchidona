@@ -29,6 +29,7 @@ const RUTA_CAMARAS = "/admin/camaras";
 const TIPOS = {
     EVENTO_SOLAR: "Evento solar",
     HORA_FIJA: "Hora fija",
+    UNA_VEZ: "Una sola vez",
     PERIODICA: "Periódica",
     MANUAL: "Manual"
 };
@@ -44,6 +45,7 @@ const CAMPOS = {
     evento_solar: "campoTimelapseEventoSolar",
     zona_horaria: "campoTimelapseZonaHoraria",
     hora_local: "campoTimelapseHoraLocal",
+    fecha_local: "campoTimelapseFechaLocal",
     regla_recurrencia: "campoTimelapseReglaRecurrencia",
     desfase_inicio_segundos: "campoTimelapseDesfaseInicioSegundos",
     duracion_segundos: "campoTimelapseDuracionSegundos",
@@ -230,6 +232,17 @@ function horaParaInput(hora){
     return hora ? String(hora).slice(0, 5) : "";
 }
 
+/** Tipo para el listado; las de una sola vez llevan su fecha y hora. */
+function textoTipo(programacion){
+    const tipo = TIPOS[programacion.tipo_programacion]
+        || programacion.tipo_programacion;
+    if(programacion.tipo_programacion !== "UNA_VEZ" || !programacion.fecha_local){
+        return tipo;
+    }
+    const [anio, mes, dia] = String(programacion.fecha_local).split("-");
+    return `${tipo} · ${dia}/${mes}/${anio} ${horaParaInput(programacion.hora_local)}`;
+}
+
 /* ==========================================================
    CATÁLOGO DE CÁMARAS Y PRESETS
    ========================================================== */
@@ -346,7 +359,11 @@ function actualizarCamposTipo(){
     const tipo = valorCampo("tipo_programacion")?.value || "";
     mostrarElemento("bloqueTimelapseEventoSolar", tipo === "EVENTO_SOLAR");
     mostrarElemento("bloqueTimelapseDesfaseInicio", tipo === "EVENTO_SOLAR");
-    mostrarElemento("bloqueTimelapseHoraLocal", tipo === "HORA_FIJA");
+    mostrarElemento("bloqueTimelapseFechaLocal", tipo === "UNA_VEZ");
+    mostrarElemento(
+        "bloqueTimelapseHoraLocal",
+        tipo === "HORA_FIJA" || tipo === "UNA_VEZ"
+    );
     mostrarElemento("bloqueTimelapseRecurrencia", tipo === "PERIODICA");
 }
 
@@ -421,8 +438,7 @@ function renderizarListado(){
         );
         const chips = crearElemento("div", "chips");
         chips.append(
-            crearElemento("span", "chip", TIPOS[programacion.tipo_programacion]
-                || programacion.tipo_programacion),
+            crearElemento("span", "chip", textoTipo(programacion)),
             crearElemento(
                 "span",
                 `chip ${programacion.activa ? "chip-activa" : "chip-inactiva"}`,
@@ -583,9 +599,14 @@ function leerFormulario(){
     }
 
     const solar = tipo === "EVENTO_SOLAR";
-    const fija = tipo === "HORA_FIJA";
+    const unaVez = tipo === "UNA_VEZ";
+    const fija = tipo === "HORA_FIJA" || unaVez;
     const evento = solar ? valorCampo("evento_solar")?.value : null;
     const hora = fija ? textoOpcional(valorCampo("hora_local")?.value) : null;
+    const fecha = unaVez ? textoOpcional(valorCampo("fecha_local")?.value) : null;
+    if(unaVez && !/^\d{4}-\d{2}-\d{2}$/.test(fecha || "")){
+        throw new Error("Introduce la fecha de la grabación.");
+    }
     if(solar && !["AMANECER", "ATARDECER"].includes(evento)){
         throw new Error("Selecciona amanecer o atardecer.");
     }
@@ -604,6 +625,7 @@ function leerFormulario(){
         evento_solar: evento,
         zona_horaria: (valorCampo("zona_horaria")?.value || "").trim(),
         hora_local: hora,
+        fecha_local: fecha,
         regla_recurrencia: null,
         desfase_inicio_segundos: solar
             ? enteroObligatorio(

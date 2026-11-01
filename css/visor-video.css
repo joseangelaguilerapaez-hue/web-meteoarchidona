@@ -132,7 +132,7 @@ body {
     background-color: #050b12;
 
     background-image:
-        url("/assets/logo-camaras.png"),
+        url("/assets/logo-camaras.png?v=20261101-nieve"),
         radial-gradient(
             circle at 50% 45%,
             rgba(
@@ -2073,6 +2073,71 @@ video {
         gap: 3px;
     }
 
+}
+
+/* ==========================================================
+   DIRECTO CON INSTRUMENTOS GRABADOS (31-10-2026)
+   ==========================================================
+   Desde el 31-10-2026 el VPS graba en el vídeo en directo el
+   termómetro, la probeta, la barra de humedad y el logotipo
+   (api-meteoarchidona, servicio meteoarchidona-capas-directo).
+   En directo el visor ya no pinta su línea de cifras ni su
+   marca: saldrían repetidas. Los MP4 (modo-mp4) no cambian.
+   ========================================================== */
+
+.visor-video:not(.modo-mp4)
+.visor-video-meteo,
+.visor-video:not(.modo-mp4)
+.visor-video-marca {
+    display: none !important;
+}
+
+/* ==========================================================
+   CONTROLES BAJO EL TERMÓMETRO (DIRECTO)
+   ==========================================================
+ *
+ * visor-video.js coloca el centro del botón en la vertical
+ * del termómetro grabado en el vídeo y a la altura del
+ * logotipo (decisión de José, 1-11-2026), para no tapar la
+ * barra de humedad del centro. El MP4 no lleva esta clase.
+ */
+
+
+.visor-video-controles.junto-termometro {
+    right: auto !important;
+    bottom: auto;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+}
+
+
+/*
+ * Vídeo tan pequeño que los botones normales llegarían al
+ * logotipo: mismos tamaños que en la ficha compacta.
+ */
+
+
+.visor-video-controles.junto-termometro.pequenos {
+    gap: 2px;
+
+    padding: 2px;
+
+    border-radius: 5px;
+}
+
+
+.visor-video-controles.junto-termometro.pequenos
+.visor-video-control {
+    width: 18px;
+    height: 18px;
+
+    border-radius: 4px;
+
+    font-size: 9px;
 }
 
 

@@ -20,9 +20,15 @@
 </title>
 
 
-<link rel="icon" href="/assets/icono-192.png" type="image/png" sizes="192x192">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
 <link rel="canonical" href="https://meteoarchidona.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MeteoArchidona">
@@ -83,9 +89,19 @@
     href="../css/timelapses.css?v=20261025-tamano1"
 >
 
+<link
+    rel="stylesheet"
+    href="../css/visor-estadisticas.css?v=20261027-visor1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/estadisticas-incrustadas.css?v=20261029-actualidad1"
+>
+
 
 <script
-    src="../js/cabecera.js?v=20261026-cuenta3"
+    src="../js/cabecera.js?v=20261101-nieve2"
     defer
 ></script>
 <script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
@@ -105,7 +121,7 @@
 
 <script
     type="module"
-    src="../js/actualidad/principal.js?v=20261026-titulo2"
+    src="../js/actualidad/principal.js?v=20261029-graficas1"
 ></script>
 
 
@@ -117,6 +133,11 @@
 
 <script
     src="../js/sol-luna.js?v=20261025-icono1"
+    defer
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
     defer
 ></script>
 
@@ -477,6 +498,63 @@
     class="timelapses-lista"
     aria-live="polite"
 ></div>
+
+
+</section>
+
+
+<!-- ======================================================
+     GRÁFICAS DEL CATÁLOGO DE ESTADÍSTICAS
+
+     Dos estadísticas del catálogo propio, por su código. Las monta
+     js/estadisticas-incrustadas.js con el visor común (gráfica, tabla
+     y PDF); la sección nace oculta y solo aparece si llega alguna.
+     Las elige José (29-10-2026). Cuando Actualidad sea un dashboard,
+     esto pasará a ser su configuración.
+     ====================================================== -->
+
+
+<section
+    class="tarjeta graficas-actualidad"
+    id="graficas-actualidad"
+    aria-labelledby="graficas-actualidad-titulo"
+    hidden
+>
+
+
+<div class="graficas-actualidad-cabecera">
+
+    <h2
+        class="seccion-titulo"
+        id="graficas-actualidad-titulo"
+    >
+        El Silo frente a Los Llanos
+    </h2>
+
+    <a
+        class="graficas-actualidad-enlace"
+        href="/estadisticas"
+    >
+        Más estadísticas
+    </a>
+
+</div>
+
+
+<div class="graficas-actualidad-lista">
+
+    <div
+        class="graficas-actualidad-visor"
+        data-estadistica="SILO_LLANOS_TEMPERATURA_7D"
+    ></div>
+
+    <div
+        class="graficas-actualidad-visor"
+        data-estadistica="SILO_LLANOS_MAXIMAS_MINIMAS_30D"
+        data-presentacion="GRAFICA"
+    ></div>
+
+</div>
 
 
 </section>

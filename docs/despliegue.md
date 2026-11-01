@@ -25,6 +25,21 @@ git log --oneline -1
 Es un sitio estático: no hay que reiniciar nada. El `git log` debe coincidir con el último commit de
 `main` en GitHub. Si `git pull --ff-only` falla, hay cambios locales en el servidor: no forzar, avisar a José.
 
+## Sección nueva: Estadísticas (28-10-2026)
+
+Las direcciones limpias las sirve Nginx con un bloque por sección; el `.htaccess` no se aplica.
+Para que `/estadisticas` no dé 404, tras el `git pull` (José, desde Termius):
+
+```
+cd /srv/meteoarchidona/web
+sudo python3 scripts/configurar_seccion_estadisticas.py --simular
+sudo python3 scripts/configurar_seccion_estadisticas.py
+curl -s -o /dev/null -w '%{http_code}\n' https://meteoarchidona.com/estadisticas
+```
+
+Copia el bloque de `/informacion` cambiando el nombre, con copia de seguridad en `/home/jose`,
+`nginx -t` y vuelta atrás si algo falla. Se puede ejecutar dos veces. El `curl` debe dar `200`.
+
 ## Caché
 
 Los `.js` y `.css` se cachean en el navegador y se versionan con `?v=`. Si cambias uno que ya está en
@@ -40,9 +55,10 @@ Copia de la configuración anterior: `/etc/nginx/meteoarchidona-web.antes-cache-
 
 Ojo: no dejar copias de seguridad dentro de `sites-enabled/`, porque Nginx las carga como sitios.
 
-Los estáticos (`/css`, `/js` y `/assets`) se sirven hoy **sin ninguna cabecera de caché**, solo con
-`ETag`: el navegador los vuelve a pedir en cada visita. Para arreglarlo hay un procedimiento
-equivalente al anterior, pendiente de ejecutar en el servidor:
+Los estáticos (`/css`, `/js` y `/assets`) se servían **sin ninguna cabecera de caché**, solo con
+`ETag`: el navegador los volvía a pedir en cada visita. **Aplicado el 1 de noviembre de 2026**
+(`/css/actualidad.css` responde con `max-age=31536000`). El procedimiento, por si hay que
+repetirlo en otro servidor:
 
 ```
 sudo python3 scripts/configurar_cache_estaticos.py
@@ -64,6 +80,38 @@ Comprobación:
 ```
 curl -sI https://meteoarchidona.com/prediccion | grep -i -E 'cache-control|expires|strict-transport'
 ```
+
+## Aplicación instalable (PWA)
+
+La web se puede instalar en el teléfono: `manifest.webmanifest` y `sw.js`, los dos en la raíz
+del sitio, más `js/pwa.js`, que da de alta el trabajador de servicio (en `localhost` no lo da,
+a propósito).
+
+Nginx necesita dos cosas que no trae de serie, **pendientes de ejecutar en el servidor**:
+
+```
+sudo python3 scripts/configurar_pwa.py
+```
+
+Añade dentro del `server` del sitio el tipo `application/manifest+json` para el manifiesto, que
+Nginx no conoce, y `expires -1` para él y para `sw.js`: son los dos ficheros que dicen qué
+versión del sitio usar, y si se quedan cacheados una publicación nueva tarda en llegar. Comprueba
+antes, hace copia, valida con `nginx -t`, recarga y restaura si algo falla. Se puede ejecutar dos
+veces sin que pase nada.
+
+Comprobación:
+
+```
+curl -sI https://meteoarchidona.com/manifest.webmanifest | grep -i -E 'content-type|cache-control'
+```
+
+```
+curl -sI https://meteoarchidona.com/sw.js | grep -i -E 'cache-control|expires'
+```
+
+Para publicar una versión nueva del trabajador basta con cambiar `VERSION` en `sw.js`: tira la
+caché anterior entera. Los datos de la API nunca se guardan, así que una temperatura vieja no
+puede quedarse enseñada como si fuera de ahora.
 
 ## Por confirmar
 

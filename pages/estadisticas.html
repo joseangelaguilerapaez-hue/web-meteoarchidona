@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Estadísticas e informes de MeteoArchidona: gráficas y tablas de temperatura, lluvia, viento, humedad y más con los datos de nuestras estaciones, descargables en PDF. Para usuarios registrados."
+>
+
+<title>
+    Estadísticas · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/estadisticas">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Estadísticas · MeteoArchidona">
+<meta property="og:description" content="Estadísticas e informes de MeteoArchidona: gráficas y tablas de temperatura, lluvia, viento, humedad y más con los datos de nuestras estaciones, descargables en PDF. Para usuarios registrados.">
+<meta property="og:url" content="https://meteoarchidona.com/estadisticas">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20260926-giro2"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/visor-estadisticas.css?v=20261027-visor1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/estadisticas.css?v=20261028-seccion1"
+>
+
+
+<script
+    src="../js/cabecera.js?v=20261101-nieve2"
+    defer
+></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/estadisticas.js?v=20261028-seccion1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="estadisticas">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="estadisticas">
+
+
+<header class="estadisticas-cabecera">
+
+    <div class="estadisticas-etiqueta">
+        METEOARCHIDONA · ESTADÍSTICAS
+    </div>
+
+    <h1>
+        Estadísticas e informes
+    </h1>
+
+    <p class="estadisticas-entradilla">
+        Gráficas y tablas con los datos de nuestras estaciones: temperatura,
+        lluvia, viento, humedad, presión, radiación y comparativas entre
+        estaciones y entre años. Cada una se puede descargar en PDF.
+    </p>
+
+</header>
+
+
+<!--
+    Mientras se comprueba la sesión. js/estadisticas.js muestra
+    después el aviso de registro o el catálogo.
+-->
+<p
+    class="estadisticas-comprobando"
+    id="estadisticas-comprobando"
+>
+    Comprobando tu sesión…
+</p>
+
+
+<!-- ========================================================
+     AVISO PARA QUIEN NO HA ENTRADO
+     ======================================================== -->
+
+<section
+    class="estadisticas-registro"
+    id="estadisticas-registro"
+    aria-labelledby="titulo-registro"
+    hidden
+>
+
+    <h2 id="titulo-registro">
+        Esta sección es para usuarios registrados
+    </h2>
+
+    <p>
+        Para consultar las estadísticas e informes necesitas una cuenta de
+        MeteoArchidona. El registro es gratuito: solo te pedimos un nombre,
+        tu correo y un PIN de seis cifras.
+    </p>
+
+    <ul class="estadisticas-ventajas">
+        <li>Todo nuestro catálogo de gráficas e informes, ordenado por temas.</li>
+        <li>Datos reales de nuestras estaciones, de las últimas horas a varios años.</li>
+        <li>Cualquier gráfica o informe en PDF, listo para guardar o imprimir.</li>
+    </ul>
+
+    <div class="estadisticas-registro-botones">
+
+        <button
+            type="button"
+            class="estadisticas-boton estadisticas-boton-principal"
+            data-cuenta-accion="registrar"
+        >
+            Registrarme
+        </button>
+
+        <button
+            type="button"
+            class="estadisticas-boton"
+            data-cuenta-accion="entrar"
+        >
+            Ya tengo cuenta: iniciar sesión
+        </button>
+
+    </div>
+
+    <p class="estadisticas-nota">
+        El resto de MeteoArchidona sigue siendo libre: no hace falta registrarse
+        para ver las estaciones, la predicción o las cámaras.
+    </p>
+
+</section>
+
+
+<!-- ========================================================
+     CATÁLOGO Y VISOR
+     ======================================================== -->
+
+<section
+    class="estadisticas-catalogo"
+    id="estadisticas-catalogo"
+    aria-label="Catálogo de estadísticas"
+    hidden
+>
+
+    <nav
+        class="estadisticas-secciones"
+        id="estadisticas-secciones"
+        aria-label="Secciones del catálogo"
+    ></nav>
+
+    <div
+        class="estadisticas-lista"
+        id="estadisticas-lista"
+    ></div>
+
+</section>
+
+
+<section
+    class="estadisticas-visor"
+    id="estadisticas-visor"
+    aria-label="Estadística seleccionada"
+    hidden
+>
+
+    <div id="estadisticas-visor-contenido"></div>
+
+</section>
+
+
+<p
+    class="estadisticas-error"
+    id="estadisticas-error"
+    role="alert"
+    hidden
+></p>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>

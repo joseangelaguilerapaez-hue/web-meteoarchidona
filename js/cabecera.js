@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261026-cuenta1";
+    "/componentes/cabecera.html?v=20261101-nieve";
 
 
 /* ==========================================================
@@ -122,8 +122,8 @@ function configurarLogotipoSeccion() {
 
     logo.src =
         seccion === "en-vivo"
-            ? "/assets/logo-camaras-cabecera.png"
-            : "/assets/logo-cabecera.png";
+            ? "/assets/logo-camaras-cabecera.png?v=20261101-nieve"
+            : "/assets/logo-cabecera.png?v=20261101-nieve";
 
 }
 
@@ -276,7 +276,7 @@ const RUTA_PIE = "/componentes/pie.html";
 
 const RUTA_CUENTA_CSS = "/css/cuenta.css?v=20261026-cuenta3";
 
-const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261026-cuenta3";
+const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261028-estadisticas1";
 
 
 /*

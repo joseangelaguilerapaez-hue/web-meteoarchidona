@@ -394,7 +394,7 @@ async function obtenerModuloTimelapses(){
     ){
 
         promesaModuloTimelapses = import(
-            "./timelapses.js?v=20261026-nombre2"
+            "./timelapses.js?v=20261029-una-vez1"
         );
 
     }

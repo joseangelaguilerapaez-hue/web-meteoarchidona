@@ -297,17 +297,72 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261026-titulo2"),
-            ("administracion", r"administracion/principal\.js\?v=20261027-estadisticas1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261029-graficas1"),
+            ("administracion", r"administracion/principal\.js\?v=20261029-una-vez1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
     def test_los_scripts_cambiados_llevan_version_nueva(self):
         for ruta, patron in (
             ("js/actualidad/principal.js", r"/js/timelapses\.js\?v=20261026-titulo1"),
-            ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261026-nombre2"),
+            ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261029-una-vez1"),
         ):
             self.assertRegex(leer(RAIZ / ruta), patron)
+
+
+class TestTimelapseUnaSolaVez(unittest.TestCase):
+    """Programaciones de una sola vez: fecha concreta, sin repetirse (29 oct)."""
+
+    def test_el_formulario_ofrece_el_tipo_y_la_fecha(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('value="UNA_VEZ"', pagina)
+        self.assertIn('id="campoTimelapseFechaLocal"', pagina)
+        self.assertIn('id="bloqueTimelapseFechaLocal"', pagina)
+
+    def test_el_editor_envia_la_fecha(self):
+        codigo = leer(RAIZ / "js" / "administracion" / "timelapses.js")
+        self.assertIn("UNA_VEZ", codigo)
+        self.assertIn("fecha_local: fecha", codigo)
+
+
+class TestDirectoConInstrumentos(unittest.TestCase):
+    """Desde el 31-10-2026 los instrumentos van grabados en el vídeo en directo."""
+
+    def test_en_directo_el_visor_no_repite_cifras_ni_marca(self):
+        css = leer(RAIZ / "css" / "visor-video.css")
+        self.assertRegex(css, r"\.visor-video:not\(\.modo-mp4\)\s*\.visor-video-meteo")
+        self.assertRegex(css, r"\.visor-video:not\(\.modo-mp4\)\s*\.visor-video-marca")
+
+    def test_el_visor_carga_la_hoja_nueva(self):
+        self.assertIn(
+            "visor-video.css?v=20261101-termometro1",
+            leer(RAIZ / "visores" / "video.html"),
+        )
+
+    def test_controles_bajo_el_termometro(self):
+        """Decisión de José del 1-11-2026: el botón no tapa la barra de humedad."""
+
+        codigo = leer(RAIZ / "js" / "visor-video.js")
+        self.assertIn("junto-termometro", codigo)
+        self.assertIn("CONTROLES_TERMOMETRO_X", codigo)
+        # Vídeo muy pequeño: botones pequeños para no tapar el logotipo.
+        self.assertIn('"pequenos"', codigo)
+        self.assertIn(
+            "visor-video.js?v=20261101-termometro1",
+            leer(RAIZ / "js" / "visor-video-multimedia.js"),
+        )
+        self.assertIn(
+            "visor-video-multimedia.js?v=20261101-termometro1",
+            leer(RAIZ / "visores" / "video.html"),
+        )
+        self.assertRegex(
+            leer(RAIZ / "css" / "visor-video.css"),
+            r"\.visor-video-controles\.junto-termometro\s*\{",
+        )
+        self.assertRegex(
+            leer(RAIZ / "css" / "visor-video.css"),
+            r"\.visor-video-controles\.junto-termometro\.pequenos",
+        )
 
 
 class TestCuenta(unittest.TestCase):
