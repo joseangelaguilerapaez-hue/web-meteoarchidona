@@ -12,7 +12,7 @@
 
 <meta
     name="description"
-    content="Predicción meteorológica de Archidona: próximas horas, próximos siete días y avisos."
+    content="Predicción meteorológica de Archidona: AEMET (próximas horas, siete días y avisos) y modelos numéricos por conjuntos a quince días."
 >
 
 <title>
@@ -34,7 +34,7 @@
 <meta property="og:site_name" content="MeteoArchidona">
 <meta property="og:locale" content="es_ES">
 <meta property="og:title" content="Predicción · MeteoArchidona">
-<meta property="og:description" content="Predicción meteorológica de Archidona: próximas horas, próximos siete días y avisos.">
+<meta property="og:description" content="Predicción meteorológica de Archidona: AEMET (próximas horas, siete días y avisos) y modelos numéricos por conjuntos a quince días.">
 <meta property="og:url" content="https://meteoarchidona.com/prediccion">
 <meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
 <meta property="og:image:width" content="1200">
@@ -75,7 +75,12 @@
 
 <link
     rel="stylesheet"
-    href="../css/prediccion.css?v=20261025-icono1"
+    href="../css/prediccion.css?v=20261102-pestanas1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/modelos-numericos.css?v=20261102-modelos1"
 >
 
 
@@ -102,8 +107,8 @@
 
 
 <script
-    src="../js/prediccion.js?v=20261025-icono1"
-    defer
+    type="module"
+    src="../js/prediccion.js?v=20261102-pestanas1"
 ></script>
 
 <script
@@ -129,16 +134,9 @@
 
 
 <!--
-    Predicción de Archidona. Todo lo rellena js/prediccion.js:
-
-    - «Ahora en Archidona»: observación real de la estación El Silo
-      (GET /condiciones-actuales/EL_SILO).
-    - El resto: predicción de AEMET (GET /prediccion/archidona,
-      contrato en docs/prediccion-endpoint.md).
-
-    MeteoArchidona no predice: la predicción es toda de AEMET
-    (docs/prediccion.md, 2 bis). Si AEMET no está disponible se avisa
-    con #pred-error; nunca se enseñan datos inventados.
+    Predicción de Archidona, por pestañas. js/prediccion.js monta los
+    componentes de cada pestaña. MeteoArchidona no predice: cada pestaña
+    dice de dónde viene lo que enseña y nunca se inventan datos.
 -->
 <main class="prediccion">
 
@@ -153,146 +151,70 @@
         El tiempo en Archidona
     </h1>
 
-    <p
-        class="pred-fuente"
-        id="pred-fuente"
-    >
-        Cargando la predicción…
-    </p>
-
-    <p
-        class="pred-error"
-        id="pred-error"
-        hidden
-    >
-        La predicción de AEMET no está disponible en este momento.
-        Lo volvemos a intentar en unos minutos.
-    </p>
-
 </header>
 
 
-<section
-    class="pred-avisos"
-    id="pred-avisos"
-    aria-label="Avisos meteorológicos"
-    hidden
-></section>
-
-
-<section
-    class="pred-tarjeta pred-hoy pred-ahora"
-    id="pred-ahora"
-    aria-label="Ahora en Archidona"
-></section>
-
-
 <!--
-    Texto del presentador: lo redacta la IA en la API solo a partir de
-    la predicción de AEMET y de la observación de la estación. Oculto
-    mientras no haya texto del día.
+    Pestañas por fuente (decisión de José, 2-11-2026). Cada pestaña es un
+    componente que también se puede poner en otras páginas o dashboards:
+
+    - AEMET: js/prediccion-aemet.js (lo que era antes toda la página).
+    - Modelos numéricos: js/modelos-numericos.js (predicciones por
+      conjuntos de Open-Meteo, docs/predicciones-conjuntos.md de la API).
+
+    Para añadir otra (otra agencia, mapas isobáricos…): un botón con
+    data-pestana, su panel y su componente en js/prediccion.js.
+    La pestaña abierta queda en la dirección (/prediccion#modelos).
 -->
-<section
-    class="pred-tarjeta pred-presentador"
-    id="pred-presentador"
-    aria-label="El tiempo hoy, contado por MeteoArchidona"
+<nav
+    class="pred-pestanas"
+    role="tablist"
+    aria-label="Fuentes de la predicción"
+>
+
+    <button
+        type="button"
+        class="pred-pestana"
+        role="tab"
+        id="pestana-aemet"
+        data-pestana="aemet"
+        aria-controls="panel-aemet"
+        aria-selected="true"
+    >AEMET</button>
+
+    <button
+        type="button"
+        class="pred-pestana"
+        role="tab"
+        id="pestana-modelos"
+        data-pestana="modelos"
+        aria-controls="panel-modelos"
+        aria-selected="false"
+        tabindex="-1"
+    >Modelos numéricos</button>
+
+</nav>
+
+
+<div
+    class="pred-panel"
+    role="tabpanel"
+    id="panel-aemet"
+    aria-labelledby="pestana-aemet"
+>
+    <div data-componente="prediccion-aemet"></div>
+</div>
+
+
+<div
+    class="pred-panel"
+    role="tabpanel"
+    id="panel-modelos"
+    aria-labelledby="pestana-modelos"
     hidden
-></section>
-
-
-<section
-    class="pred-tarjeta pred-hoy"
-    id="pred-hoy"
-    data-auditoria-visualizacion="PREDICCION_HOY"
-    aria-label="Hoy en Archidona"
-></section>
-
-
-<section
-    class="pred-tarjeta"
-    aria-labelledby="pred-horas-titulo"
-    data-auditoria-visualizacion="PREDICCION_HORAS"
 >
-
-    <h2
-        class="pred-titulo"
-        id="pred-horas-titulo"
-    >
-        Próximas horas
-    </h2>
-
-    <div
-        class="pred-horas"
-        id="pred-horas"
-        tabindex="0"
-        aria-label="Predicción por horas; se desplaza de lado"
-    ></div>
-
-</section>
-
-
-<section
-    class="pred-tarjeta"
-    aria-labelledby="pred-dias-titulo"
-    data-auditoria-visualizacion="PREDICCION_DIAS"
->
-
-    <h2
-        class="pred-titulo"
-        id="pred-dias-titulo"
-    >
-        Próximos 7 días
-    </h2>
-
-    <ol
-        class="pred-dias"
-        id="pred-dias"
-    ></ol>
-
-</section>
-
-
-<section
-    class="pred-tarjeta pred-otras"
-    aria-labelledby="pred-otras-titulo"
->
-
-    <h2
-        class="pred-titulo"
-        id="pred-otras-titulo"
-    >
-        Otras predicciones
-    </h2>
-
-    <ul class="pred-enlaces">
-
-        <li>
-            <a
-                href="https://www.aemet.es/es/eltiempo/prediccion/municipios"
-                target="_blank"
-                rel="noopener"
-            >AEMET · predicción por municipios</a>
-        </li>
-
-        <li>
-            <a
-                href="https://www.aemet.es/es/eltiempo/prediccion/avisos"
-                target="_blank"
-                rel="noopener"
-            >AEMET · avisos</a>
-        </li>
-
-        <li>
-            <a
-                href="https://www.eltiempo.es/"
-                target="_blank"
-                rel="noopener"
-            >eltiempo.es</a>
-        </li>
-
-    </ul>
-
-</section>
+    <div data-componente="modelos-numericos"></div>
+</div>
 
 
 </main>
