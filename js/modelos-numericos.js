@@ -391,9 +391,34 @@ function dibujar(contenedor, datos) {
         ficha.hidden = true;
     }
 
-    zona.addEventListener("pointermove", enseñar);
-    zona.addEventListener("pointerdown", enseñar);
-    zona.addEventListener("pointerleave", ocultar);
+    // Con dos dedos (pellizco para hacer zoom) no se enseña el valor: el
+    // gesto es del navegador. Con uno, sí.
+    const dedos = new Set();
+
+    zona.addEventListener("pointerdown", (evento) => {
+        if (evento.pointerType === "touch") dedos.add(evento.pointerId);
+        if (dedos.size > 1) {
+            ocultar();
+            return;
+        }
+        enseñar(evento);
+    });
+    zona.addEventListener("pointermove", (evento) => {
+        if (dedos.size > 1) return;
+        enseñar(evento);
+    });
+    for (const fin of ["pointerup", "pointercancel"]) {
+        zona.addEventListener(fin, (evento) => {
+            dedos.delete(evento.pointerId);
+            if (fin === "pointercancel") ocultar();
+        });
+    }
+    // Con el dedo, el valor se queda al levantarlo (en el móvil, al soltar
+    // también salta pointerleave); con el ratón, se va al salir.
+    zona.addEventListener("pointerleave", (evento) => {
+        dedos.delete(evento.pointerId);
+        if (evento.pointerType !== "touch") ocultar();
+    });
 
     contenedor.append(lienzo, ficha);
 }
@@ -685,7 +710,7 @@ export function montarModelosNumericos(raiz) {
                         ...miembros.slice(1).map((serie) => ({valores: alinear(datos, serie, eje), color, clase: "mn-linea-miembro"})),
                         ...(miembros.length ? [{valores: alinear(datos, miembros[0], eje), color: COLOR_CONTROL, clase: "mn-linea-control"}] : []),
                         // La operativa debajo de la media: lo más probable es la media.
-                        ...(datos.operativa ? [{valores: alinear(datos.operativa, datos.operativa.valores, eje), color: "var(--amber)", clase: "mn-linea-operativa", realce: true}] : []),
+                        ...(datos.operativa ? [{valores: alinear(datos.operativa, datos.operativa.valores, eje), color: "var(--amber)", clase: "mn-linea-operativa"}] : []),
                         {valores: alinear(datos, datos.resumen.media, eje), color: "var(--text)", clase: "mn-linea-media", realce: true}
                     ],
                     lluvia: tramosLluvia(eje, lluviaPorHora),
