@@ -1,0 +1,319 @@
+/*
+ * MeteoArchidona
+ * Componente «Modelos numéricos» (js/modelos-numericos.js)
+ *
+ * Pestaña «Modelos numéricos» de Predicción y cualquier otra página o
+ * dashboard que lo ponga. Usa las tarjetas de css/prediccion.css
+ * (.pred-tarjeta, .pred-titulo) y la paleta de css/paleta.css.
+ *
+ * Colores de los modelos: fijos por modelo (en el JS), validados sobre
+ * el fondo de las tarjetas.
+ */
+
+
+.mn-resumen[hidden] {
+    display: none;
+}
+
+
+/* ----------------------------------------------------------
+   Controles
+   ---------------------------------------------------------- */
+
+.mn-controles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin-bottom: 12px;
+}
+
+.mn-grupo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.mn-grupo-etiqueta {
+    color: var(--text-faint);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.mn-opcion,
+.mn-selector {
+    min-height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    background: var(--card-soft);
+    color: var(--text-soft);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mn-opcion[aria-pressed="true"] {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.mn-opcion:focus-visible,
+.mn-selector:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) {
+    .mn-opcion:hover,
+    .mn-selector:hover {
+        border-color: var(--blue);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   Leyenda
+   ---------------------------------------------------------- */
+
+.mn-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-bottom: 8px;
+    color: var(--text-soft);
+    font-size: 12px;
+}
+
+.mn-leyenda-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mn-muestra {
+    display: inline-block;
+    flex: none;
+    width: 18px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.mn-muestra-fina {
+    height: 1px;
+    opacity: 0.8;
+}
+
+.mn-muestra-discontinua {
+    background: repeating-linear-gradient(90deg, #e66767 0 5px, transparent 5px 8px) !important;
+}
+
+.mn-muestra-banda {
+    height: 10px;
+    opacity: 0.35;
+}
+
+
+/* ----------------------------------------------------------
+   Gráfica
+   ---------------------------------------------------------- */
+
+.mn-lienzo {
+    position: relative;
+    min-height: 200px;
+    transition: opacity 0.2s;
+}
+
+.mn-cargando {
+    opacity: 0.45;
+}
+
+.mn-grafica {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    touch-action: pan-y;
+}
+
+.mn-rejilla {
+    stroke: var(--border);
+    stroke-width: 1;
+}
+
+.mn-rejilla-cero {
+    stroke: var(--border-strong);
+}
+
+.mn-dia {
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+}
+
+.mn-eje {
+    fill: var(--text-faint);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+}
+
+.mn-eje-titulo {
+    fill: var(--muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.mn-banda {
+    opacity: 0.16;
+}
+
+.mn-linea {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.mn-linea-miembro {
+    stroke-width: 1;
+    opacity: 0.42;
+}
+
+.mn-linea-operativa {
+    stroke-width: 2;
+}
+
+.mn-linea-control {
+    stroke-width: 1.6;
+    stroke-dasharray: 5 3;
+}
+
+.mn-linea-modelo {
+    stroke-width: 2;
+}
+
+.mn-linea-media {
+    stroke-width: 2.8;
+}
+
+/* Halo del color del fondo bajo la media, para que se lea encima de todo. */
+.mn-linea-realce {
+    fill: none;
+    stroke: #0d1a27;
+    stroke-width: 6;
+    stroke-linejoin: round;
+}
+
+.mn-desacuerdo {
+    fill: rgba(239, 68, 68, 0.09);
+}
+
+.mn-lluvia {
+    fill: var(--blue);
+}
+
+.mn-nieve {
+    fill: var(--white);
+}
+
+.mn-guia {
+    stroke: var(--muted);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+}
+
+.mn-zona {
+    fill: transparent;
+    cursor: crosshair;
+}
+
+
+/* Valor al pasar el ratón o el dedo. */
+.mn-ficha {
+    position: absolute;
+    top: 8px;
+    z-index: 2;
+    display: grid;
+    gap: 3px;
+    max-width: 260px;
+    padding: 9px 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    background: var(--panel);
+    color: var(--text-soft);
+    font-size: 12px;
+    pointer-events: none;
+    box-shadow: var(--shadow);
+}
+
+.mn-ficha[hidden] {
+    display: none;
+}
+
+.mn-ficha strong {
+    color: var(--text);
+    font-size: 12px;
+}
+
+.mn-ficha-fila {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mn-ficha-lluvia {
+    color: var(--muted);
+}
+
+
+/* ----------------------------------------------------------
+   Notas
+   ---------------------------------------------------------- */
+
+.mn-nota {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.mn-aviso[hidden] {
+    display: none;
+}
+
+.mn-fuente {
+    margin: 0;
+    color: var(--text-faint);
+    font-size: 12px;
+}
+
+.mn-fuente a {
+    color: var(--cyan);
+}
+
+
+@media (max-width: 620px) {
+    .mn-controles {
+        gap: 10px;
+    }
+
+    .mn-grupo {
+        width: 100%;
+    }
+
+    .mn-grupo-etiqueta {
+        width: 100%;
+    }
+
+    .mn-opcion {
+        flex: 1 1 auto;
+    }
+
+    .mn-selector {
+        flex: 1 1 100%;
+    }
+}
+
+
+/* Fin de fichero: css/modelos-numericos.css */
