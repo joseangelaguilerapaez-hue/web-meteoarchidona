@@ -15,7 +15,7 @@
  */
 
 import {montarPrediccionAemet} from "./prediccion-aemet.js?v=20261102-pestanas1";
-import {montarModelosNumericos} from "./modelos-numericos.js?v=20261102-modelos1";
+import {montarModelosNumericos} from "./modelos-numericos.js?v=20261102-casillas1";
 
 
 const COMPONENTES = {

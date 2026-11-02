@@ -94,6 +94,27 @@
     gap: 6px;
 }
 
+/* Casillas para marcar o desmarcar modelos en «Comparar modelos». */
+.mn-casilla {
+    min-height: 32px;
+    padding: 0 8px 0 4px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.mn-casilla input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--cyan);
+    cursor: pointer;
+}
+
+.mn-casilla:has(input:not(:checked)) {
+    opacity: 0.55;
+}
+
 .mn-muestra {
     display: inline-block;
     flex: none;

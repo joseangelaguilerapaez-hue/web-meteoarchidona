@@ -34,8 +34,8 @@
  * Todavía no está en el catálogo de auditoría: cuando se dé de alta (API),
  * se le pone data-auditoria-visualizacion como a las tarjetas de AEMET.
  *
- * La temperatura es en altura (850, 700 o 500 hPa), no la de Archidona,
- * y así se dice en la propia gráfica. Gráficas en SVG propio, sin
+ * Niveles: 2 m (superficie, orientativa) y 925, 850, 700 o 500 hPa (en
+ * altura, no la de Archidona); la nota de la gráfica lo dice. Gráficas en SVG propio, sin
  * librerías. Horas siempre en hora de Madrid.
  */
 
@@ -43,7 +43,11 @@ const ZONA = "Europe/Madrid";
 const REFRESCO_MS = 30 * 60 * 1000;
 const NS = "http://www.w3.org/2000/svg";
 
+// Nivel por defecto: 850 hPa. «2 m» es la de superficie y 925 hPa, el
+// nivel de presión de las estaciones (decisión de José del 2-11-2026).
 const VARIABLES_TEMPERATURA = [
+    {codigo: "TEMPERATURA_2M", nombre: "2 m", detalle: "superficie", superficie: true},
+    {codigo: "TEMPERATURA_925_HPA", nombre: "925 hPa", detalle: "unos 750 m"},
     {codigo: "TEMPERATURA_850_HPA", nombre: "850 hPa", detalle: "unos 1500 m"},
     {codigo: "TEMPERATURA_700_HPA", nombre: "700 hPa", detalle: "unos 3000 m"},
     {codigo: "TEMPERATURA_500_HPA", nombre: "500 hPa", detalle: "unos 5500 m"}
@@ -64,6 +68,12 @@ const COLORES_MODELO = {
 const COLOR_CONTROL = "#e66767";
 
 const HORAS_TRAMO_LLUVIA = 6;
+
+function textoNivel(variable) {
+    return variable.superficie
+        ? "Temperatura a 2 m del suelo según los modelos, orientativa: son modelos globales de unos 25 km que no ven los microclimas."
+        : "Temperatura en altura, en el aire libre, no la de Archidona.";
+}
 
 // Diferencia entre modelos a partir de la cual se sombrea el desacuerdo
 // (la misma que usa el resumen automático).
@@ -467,7 +477,7 @@ export function montarModelosNumericos(raiz) {
             {valor: "comparar", nombre: "Comparar modelos"}
         ], () => estado.vista, (valor) => { estado.vista = valor; }));
 
-        controles.append(grupo("Altura", VARIABLES_TEMPERATURA.map((v) => ({valor: v.codigo, nombre: v.nombre, titulo: v.detalle})),
+        controles.append(grupo("Nivel", VARIABLES_TEMPERATURA.map((v) => ({valor: v.codigo, nombre: v.nombre, titulo: v.detalle})),
             () => estado.variable, (valor) => { estado.variable = valor; }));
 
         if (estado.vista === "modelo" && estado.catalogo) {
@@ -509,6 +519,123 @@ export function montarModelosNumericos(raiz) {
 
     let ultimoDibujo = null;
 
+    // «Comparar modelos»: datos de la última petición y modelos ocultos.
+    // La selección se recuerda en este navegador (solo es una comodidad).
+    let comparacion = null;
+    const CLAVE_OCULTOS = "meteoarchidona.modelos.ocultos";
+    const ocultos = new Set((() => {
+        try {
+            return JSON.parse(localStorage.getItem(CLAVE_OCULTOS) || "[]");
+        } catch (error) {
+            return [];
+        }
+    })());
+
+    function guardarOcultos() {
+        try {
+            localStorage.setItem(CLAVE_OCULTOS, JSON.stringify([...ocultos]));
+        } catch (error) {
+            // Sin almacenamiento (modo privado…): se recuerda solo en esta visita.
+        }
+    }
+
+    function construirComparacion() {
+        const {temperatura, lluvia, variable} = comparacion;
+        const eje = ejeHoras(temperatura.modelos);
+        const todas = temperatura.modelos.map((m) => ({modelo: m, valores: alinear(m, m.resumen.media, eje)}));
+        // Si en este nivel no queda ninguno marcado (p. ej. solo el
+        // Canadiense, que no tiene 700 hPa), se enseñan todos.
+        const marcados = todas.filter((m) => !ocultos.has(m.modelo.modelo));
+        const medias = marcados.length ? marcados : todas;
+        const visibles = new Set(medias.map((m) => m.modelo.modelo));
+        const minimo = Math.min(3, medias.length);
+
+        const consenso = eje.map((_, i) => {
+            const valores = medias.map((m) => m.valores[i]).filter(esNumero);
+            return medias.length && valores.length >= minimo ? media(valores) : null;
+        });
+        const desacuerdo = eje.map((_, i) => {
+            const valores = medias.map((m) => m.valores[i]).filter(esNumero);
+            return valores.length >= 2 && Math.max(...valores) - Math.min(...valores) > UMBRAL_DESACUERDO_C;
+        });
+        const lluviaModelos = lluvia.modelos
+            .filter((m) => visibles.has(m.modelo))
+            .map((m) => alinear(m, m.resumen.media, eje));
+        const lluviaConsenso = eje.map((_, i) => media(lluviaModelos.map((serie) => serie[i])));
+
+        const todosVisibles = medias.length === todas.length;
+        const nombreConsenso = todosVisibles ? "Consenso" : "Consenso de los marcados";
+
+        titulo.textContent = `Comparar modelos · temperatura a ${variable.nombre} (${variable.detalle})`;
+
+        // Leyenda con una casilla por modelo.
+        leyenda.textContent = "";
+        for (const m of todas) {
+            const codigo = m.modelo.modelo;
+            const item = crear("label", "mn-leyenda-item mn-casilla");
+            const casilla = crear("input");
+            casilla.type = "checkbox";
+            casilla.checked = visibles.has(codigo);
+            casilla.addEventListener("change", () => {
+                if (casilla.checked) {
+                    ocultos.delete(codigo);
+                } else if (visibles.size > 1) {
+                    for (const otro of todas) {
+                        if (!visibles.has(otro.modelo.modelo)) ocultos.add(otro.modelo.modelo);
+                    }
+                    ocultos.add(codigo);
+                } else {
+                    // Siempre queda al menos un modelo.
+                    casilla.checked = true;
+                    return;
+                }
+                guardarOcultos();
+                construirComparacion();
+            });
+            const muestra = crear("span", "mn-muestra");
+            muestra.style.background = COLORES_MODELO[codigo] || "#888";
+            item.append(casilla, muestra, crear("span", null, m.modelo.nombre));
+            leyenda.append(item);
+        }
+        for (const elemento of [
+            {color: "var(--text)", texto: nombreConsenso},
+            {color: "rgba(239, 68, 68, 0.35)", clase: "mn-muestra-banda", texto: `Discrepan más de ${UMBRAL_DESACUERDO_C} °C`}
+        ]) {
+            const item = crear("span", "mn-leyenda-item");
+            const muestra = crear("span", `mn-muestra ${elemento.clase || ""}`);
+            muestra.style.background = elemento.color;
+            item.append(muestra, crear("span", null, elemento.texto));
+            leyenda.append(item);
+        }
+
+        ultimoDibujo = {
+            eje,
+            descripcion: `Media de cada modelo marcado y su consenso, temperatura a ${variable.nombre}.`,
+            desacuerdo,
+            lineas: [
+                ...medias.map((m) => ({valores: m.valores, color: COLORES_MODELO[m.modelo.modelo] || "#888", clase: "mn-linea-modelo"})),
+                {valores: consenso, color: "var(--text)", clase: "mn-linea-media", realce: true}
+            ],
+            lluvia: tramosLluvia(eje, lluviaConsenso),
+            nieve: [],
+            ficha(indice) {
+                return [
+                    {color: "var(--text)", texto: `${nombreConsenso}: ${cifra(consenso[indice])} °C`},
+                    ...medias.map((m) => ({color: COLORES_MODELO[m.modelo.modelo], texto: `${m.modelo.nombre}: ${cifra(m.valores[indice])} °C`}))
+                ];
+            }
+        };
+
+        nota.textContent =
+            `${textoNivel(variable)} Cada línea es la media de los escenarios de un modelo; ` +
+            (todosVisibles
+                ? "la blanca, el consenso de todos. Marca o desmarca modelos en la leyenda."
+                : "la blanca, el consenso solo de los modelos marcados (también la lluvia).");
+
+        aviso.hidden = true;
+        dibujar(lienzo, ultimoDibujo);
+    }
+
     async function cargarGrafica() {
         const variable = VARIABLES_TEMPERATURA.find((v) => v.codigo === estado.variable) || VARIABLES_TEMPERATURA[0];
         const punto = encodeURIComponent(estado.punto);
@@ -527,7 +654,7 @@ export function montarModelosNumericos(raiz) {
                 const datos = temperatura.modelos[0];
                 if (!datos) {
                     throw Object.assign(new Error("sin datos"), {
-                        mensaje: `${nombreModelo(estado.modelo)} no tiene temperatura a ${variable.nombre}. Elige otro modelo u otra altura.`
+                        mensaje: `${nombreModelo(estado.modelo)} no tiene temperatura a ${variable.nombre}. Elige otro modelo u otro nivel.`
                     });
                 }
 
@@ -580,7 +707,7 @@ export function montarModelosNumericos(raiz) {
 
                 const pasada = datos.pasada ? new Date(datos.pasada) : null;
                 nota.textContent =
-                    `Temperatura en altura, no la de Archidona. Pasada de las ${pasada ? formatoHora.format(pasada) : "--"} del ${pasada ? formatoDiaLargo.format(pasada) : "--"}; ` +
+                    `${textoNivel(variable)} Pasada de las ${pasada ? formatoHora.format(pasada) : "--"} del ${pasada ? formatoDiaLargo.format(pasada) : "--"}; ` +
                     "cada línea fina es un escenario del mismo modelo. " +
                     (datos.operativa
                         ? "La amarilla es su salida operativa, de más resolución, y la discontinua, el control (el escenario sin perturbar). Ninguna de las dos es la más probable: lo más probable es la media."
@@ -596,45 +723,9 @@ export function montarModelosNumericos(raiz) {
                     throw Object.assign(new Error("sin datos"), {mensaje: "Todavía no hay datos de los modelos."});
                 }
 
-                const eje = ejeHoras(temperatura.modelos);
-                const medias = temperatura.modelos.map((m) => ({modelo: m, valores: alinear(m, m.resumen.media, eje)}));
-                const consenso = eje.map((_, i) => {
-                    const valores = medias.map((m) => m.valores[i]).filter(esNumero);
-                    return valores.length >= Math.min(3, medias.length) ? media(valores) : null;
-                });
-                const desacuerdo = eje.map((_, i) => {
-                    const valores = medias.map((m) => m.valores[i]).filter(esNumero);
-                    return valores.length >= 3 && Math.max(...valores) - Math.min(...valores) > UMBRAL_DESACUERDO_C;
-                });
-                const lluviaModelos = lluvia.modelos.map((m) => alinear(m, m.resumen.media, eje));
-                const lluviaConsenso = eje.map((_, i) => media(lluviaModelos.map((serie) => serie[i])));
-
-                titulo.textContent = `Comparar modelos · temperatura a ${variable.nombre} (${variable.detalle})`;
-                pintarLeyenda([
-                    ...medias.map((m) => ({color: COLORES_MODELO[m.modelo.modelo] || "#888", texto: m.modelo.nombre})),
-                    {color: "var(--text)", texto: "Consenso"},
-                    {color: "rgba(239, 68, 68, 0.35)", clase: "mn-muestra-banda", texto: `Discrepan más de ${UMBRAL_DESACUERDO_C} °C`}
-                ]);
-
-                ultimoDibujo = {
-                    eje,
-                    descripcion: `Media de cada modelo y consenso de la temperatura a ${variable.nombre}.`,
-                    desacuerdo,
-                    lineas: [
-                        ...medias.map((m) => ({valores: m.valores, color: COLORES_MODELO[m.modelo.modelo] || "#888", clase: "mn-linea-modelo"})),
-                        {valores: consenso, color: "var(--text)", clase: "mn-linea-media", realce: true}
-                    ],
-                    lluvia: tramosLluvia(eje, lluviaConsenso),
-                    nieve: [],
-                    ficha(indice) {
-                        return [
-                            {color: "var(--text)", texto: `Consenso: ${cifra(consenso[indice])} °C`},
-                            ...medias.map((m) => ({color: COLORES_MODELO[m.modelo.modelo], texto: `${m.modelo.nombre}: ${cifra(m.valores[indice])} °C`}))
-                        ];
-                    }
-                };
-
-                nota.textContent = "Temperatura en altura, no la de Archidona. Cada línea es la media de los escenarios de un modelo; la blanca, el consenso de todos.";
+                comparacion = {temperatura, lluvia, variable};
+                construirComparacion();
+                return;
             }
 
             dibujar(lienzo, ultimoDibujo);
