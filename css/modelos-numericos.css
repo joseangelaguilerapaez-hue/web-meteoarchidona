@@ -157,7 +157,11 @@
     width: 100%;
     height: auto;
     overflow: visible;
-    touch-action: pan-y;
+    /* Un dedo de lado: el valor de cada hora (lo gestiona el JS).
+       Un dedo arriba o abajo: desplazar la página. Dos dedos: el zoom
+       del navegador (petición de José, 3-11-2026; antes quedaba
+       bloqueado). */
+    touch-action: pan-y pinch-zoom;
 }
 
 .mn-rejilla {
@@ -202,28 +206,30 @@
     opacity: 0.42;
 }
 
+/* Líneas más finas desde el 3-11-2026 (petición de José): con el trazo
+   gordo se perdía la precisión y tapaban el penacho. */
 .mn-linea-operativa {
-    stroke-width: 2;
+    stroke-width: 1.4;
 }
 
 .mn-linea-control {
-    stroke-width: 1.6;
-    stroke-dasharray: 5 3;
+    stroke-width: 1.2;
+    stroke-dasharray: 4 3;
 }
 
 .mn-linea-modelo {
-    stroke-width: 2;
+    stroke-width: 1.4;
 }
 
 .mn-linea-media {
-    stroke-width: 2.8;
+    stroke-width: 1.8;
 }
 
 /* Halo del color del fondo bajo la media, para que se lea encima de todo. */
 .mn-linea-realce {
     fill: none;
     stroke: #0d1a27;
-    stroke-width: 6;
+    stroke-width: 3.5;
     stroke-linejoin: round;
 }
 
