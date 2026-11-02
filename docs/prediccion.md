@@ -113,7 +113,7 @@ componente que se puede poner también en otras páginas o dashboards.
   predicciones por conjuntos de Open-Meteo que guarda la API (`docs/predicciones-conjuntos.md` de
   `api-meteoarchidona`). Resumen automático redactado por IA a partir del consenso de los modelos;
   vista «Por modelo» (penacho: un escenario por línea, media, franja del 80 % central y la salida
-  operativa del mismo centro en lugar del control, decisión de José; Google no tiene operativa) y
+  operativa del mismo centro y el control, decisiones de José; Google no tiene operativa) y
   «Comparar modelos» (media de cada modelo y consenso, con sombreado donde discrepan más de 2 °C);
   temperatura a 850, 700 o 500 hPa —en altura, no la de Archidona—, lluvia y nieve cada 6 horas;
   El Silo o Los Llanos. Se habla siempre de escenarios, no de probabilidad.

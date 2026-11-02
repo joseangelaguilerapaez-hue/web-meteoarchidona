@@ -107,6 +107,10 @@
     opacity: 0.8;
 }
 
+.mn-muestra-discontinua {
+    background: repeating-linear-gradient(90deg, #e66767 0 5px, transparent 5px 8px) !important;
+}
+
 .mn-muestra-banda {
     height: 10px;
     opacity: 0.35;
@@ -179,6 +183,11 @@
 
 .mn-linea-operativa {
     stroke-width: 2;
+}
+
+.mn-linea-control {
+    stroke-width: 1.6;
+    stroke-dasharray: 5 3;
 }
 
 .mn-linea-modelo {

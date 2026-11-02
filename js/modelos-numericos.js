@@ -23,8 +23,9 @@
  *   redactado por IA a partir de las cifras del consenso de los modelos.
  * - «Por modelo»: el penacho de un modelo, una línea por escenario
  *   (miembro), la media, la franja 10-90 y la salida operativa del
- *   mismo centro (la determinista de alta resolución; Google no tiene),
- *   que sustituye al control por decisión de José (2-11-2026)
+ *   mismo centro (la determinista de alta resolución; Google no tiene)
+ *   y el control (el escenario sin perturbar), los dos que miran los
+ *   aficionados (decisiones de José del 2-11-2026)
  *   (GET /prediccion-conjuntos/{punto}?modelo=…).
  * - «Comparar modelos»: la media de cada modelo y el consenso
  *   (…?miembros=false, solo los resúmenes: pesa poco).
@@ -57,6 +58,10 @@ const COLORES_MODELO = {
     google_weathernext2_ensemble: "#c98500",
     gem_global: "#d55181"
 };
+
+// Control: discontinua y en un tono propio, para no confundirla con la
+// operativa (ámbar) ni con la media (blanca).
+const COLOR_CONTROL = "#e66767";
 
 const HORAS_TRAMO_LLUVIA = 6;
 
@@ -537,7 +542,8 @@ export function montarModelosNumericos(raiz) {
                     {color, clase: "mn-muestra-fina", texto: `Escenarios (${miembros.length})`},
                     {color, clase: "mn-muestra-banda", texto: "Franja del 80 % central"},
                     {color: "var(--text)", texto: "Media de los escenarios"},
-                    ...(datos.operativa ? [{color: "var(--amber)", texto: "Operativa (alta resolución)"}] : [])
+                    ...(datos.operativa ? [{color: "var(--amber)", texto: "Operativa (alta resolución)"}] : []),
+                    ...(miembros.length ? [{color: COLOR_CONTROL, clase: "mn-muestra-discontinua", texto: "Control"}] : [])
                 ]);
 
                 ultimoDibujo = {
@@ -549,7 +555,8 @@ export function montarModelosNumericos(raiz) {
                         color
                     },
                     lineas: [
-                        ...miembros.map((serie) => ({valores: alinear(datos, serie, eje), color, clase: "mn-linea-miembro"})),
+                        ...miembros.slice(1).map((serie) => ({valores: alinear(datos, serie, eje), color, clase: "mn-linea-miembro"})),
+                        ...(miembros.length ? [{valores: alinear(datos, miembros[0], eje), color: COLOR_CONTROL, clase: "mn-linea-control"}] : []),
                         // La operativa debajo de la media: lo más probable es la media.
                         ...(datos.operativa ? [{valores: alinear(datos.operativa, datos.operativa.valores, eje), color: "var(--amber)", clase: "mn-linea-operativa", realce: true}] : []),
                         {valores: alinear(datos, datos.resumen.media, eje), color: "var(--text)", clase: "mn-linea-media", realce: true}
@@ -565,7 +572,8 @@ export function montarModelosNumericos(raiz) {
                         return [
                             {color: "var(--text)", texto: `Media de los escenarios: ${cifra(m.media[i])} °C`},
                             {color, texto: `El 80 % de los escenarios entre ${cifra(m.percentil_10[i])} y ${cifra(m.percentil_90[i])} °C`},
-                            ...(esNumero(operativa) ? [{color: "var(--amber)", texto: `Operativa: ${cifra(operativa)} °C`}] : [])
+                            ...(esNumero(operativa) ? [{color: "var(--amber)", texto: `Operativa: ${cifra(operativa)} °C`}] : []),
+                            ...(esNumero(miembros[0]?.[i]) ? [{color: COLOR_CONTROL, texto: `Control: ${cifra(miembros[0][i])} °C`}] : [])
                         ];
                     }
                 };
@@ -575,8 +583,8 @@ export function montarModelosNumericos(raiz) {
                     `Temperatura en altura, no la de Archidona. Pasada de las ${pasada ? formatoHora.format(pasada) : "--"} del ${pasada ? formatoDiaLargo.format(pasada) : "--"}; ` +
                     "cada línea fina es un escenario del mismo modelo. " +
                     (datos.operativa
-                        ? "La amarilla es su salida operativa, de más resolución: un escenario más, no el más probable; lo más probable es la media."
-                        : "Este modelo no publica salida operativa.");
+                        ? "La amarilla es su salida operativa, de más resolución, y la discontinua, el control (el escenario sin perturbar). Ninguna de las dos es la más probable: lo más probable es la media."
+                        : "La discontinua es el control (el escenario sin perturbar). Este modelo no publica salida operativa. Lo más probable es la media.");
 
             } else {
                 const [temperatura, lluvia] = await Promise.all([
