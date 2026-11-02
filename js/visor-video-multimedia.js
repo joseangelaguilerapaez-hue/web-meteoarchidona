@@ -52,7 +52,7 @@
         const script = document.createElement("script");
 
         script.src =
-            "../js/visor-video.js?v=20261009-video9";
+            "../js/visor-video.js?v=20261102-horizontal1";
 
         document.head.appendChild(script);
 
@@ -712,6 +712,64 @@
        PANTALLA COMPLETA
        ====================================================== */
 
+    /*
+     * La web instalada como aplicación fija la orientación
+     * vertical (manifest.webmanifest: portrait-primary), así que
+     * Android no gira la pantalla completa aunque el móvil tenga
+     * la rotación automática. Al entrar se pide horizontal y al
+     * salir se libera, que devuelve la orientación del manifiesto.
+     * En navegadores sin Screen Orientation API (iPhone) no hace
+     * nada y sigue mandando la rotación del teléfono.
+     */
+    async function bloquearHorizontal() {
+
+        try {
+
+            if (
+                screen.orientation &&
+                typeof screen.orientation.lock === "function"
+            ) {
+
+                await screen.orientation.lock("landscape");
+
+            }
+
+        } catch (error) {
+
+            console.debug(
+                "No se pudo girar a horizontal.",
+                error
+            );
+
+        }
+
+    }
+
+
+    function liberarOrientacion() {
+
+        try {
+
+            if (
+                screen.orientation &&
+                typeof screen.orientation.unlock === "function"
+            ) {
+
+                screen.orientation.unlock();
+
+            }
+
+        } catch (error) {
+
+            console.debug(
+                "No se pudo liberar la orientación.",
+                error
+            );
+
+        }
+
+    }
+
     function estaEnFullscreen() {
 
         const { raiz } = elementos();
@@ -767,11 +825,15 @@
 
                 await raiz.requestFullscreen();
 
+                await bloquearHorizontal();
+
             } else if (
                 raiz.webkitRequestFullscreen
                 ) {
 
                 raiz.webkitRequestFullscreen();
+
+                await bloquearHorizontal();
 
             } else {
 
@@ -888,6 +950,11 @@
 
             const tactil =
                 estaEnFullscreen();
+
+            // Al salir (botón, gesto atrás o tecla), vuelve a vertical.
+            if (!tactil) {
+                liberarOrientacion();
+            }
 
             raiz.style.touchAction =
                 tactil ? "none" : "";

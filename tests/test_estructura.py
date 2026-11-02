@@ -335,8 +335,42 @@ class TestDirectoConInstrumentos(unittest.TestCase):
 
     def test_el_visor_carga_la_hoja_nueva(self):
         self.assertIn(
-            "visor-video.css?v=20261031-directo-instrumentos1",
+            "visor-video.css?v=20261101-termometro1",
             leer(RAIZ / "visores" / "video.html"),
+        )
+
+    def test_pantalla_completa_en_horizontal(self):
+        """2-11-2026: la PWA fija vertical; la pantalla completa pide horizontal y la libera al salir."""
+
+        for nombre in ("visor-video.js", "visor-video-multimedia.js"):
+            codigo = leer(RAIZ / "js" / nombre)
+            self.assertIn('screen.orientation.lock("landscape")', codigo, nombre)
+            self.assertIn("screen.orientation.unlock()", codigo, nombre)
+            self.assertIn("liberarOrientacion();", codigo, nombre)
+
+    def test_controles_bajo_el_termometro(self):
+        """Decisión de José del 1-11-2026: el botón no tapa la barra de humedad."""
+
+        codigo = leer(RAIZ / "js" / "visor-video.js")
+        self.assertIn("junto-termometro", codigo)
+        self.assertIn("CONTROLES_TERMOMETRO_X", codigo)
+        # Vídeo muy pequeño: botones pequeños para no tapar el logotipo.
+        self.assertIn('"pequenos"', codigo)
+        self.assertIn(
+            "visor-video.js?v=20261102-horizontal1",
+            leer(RAIZ / "js" / "visor-video-multimedia.js"),
+        )
+        self.assertIn(
+            "visor-video-multimedia.js?v=20261102-horizontal1",
+            leer(RAIZ / "visores" / "video.html"),
+        )
+        self.assertRegex(
+            leer(RAIZ / "css" / "visor-video.css"),
+            r"\.visor-video-controles\.junto-termometro\s*\{",
+        )
+        self.assertRegex(
+            leer(RAIZ / "css" / "visor-video.css"),
+            r"\.visor-video-controles\.junto-termometro\.pequenos",
         )
 
 

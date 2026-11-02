@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-10-29.
+Última actualización: 2026-11-01.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -17,7 +17,11 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Hecho (en `main`)
 
-- Directo con instrumentos (PR #53, **publicado el 31 oct**, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. Publicado después de activar los instrumentos en el VPS; José lo comprobó en las dos cámaras. Pendiente: el botón de pantalla completa tapa el centro de la barra de humedad de la panorámica.
+- Pantalla completa en horizontal (PR #63, **publicado el 2 nov** en `aa7585d`, José confirma que funciona): con la web instalada como aplicación, el manifiesto fija `portrait-primary` y Android no giraba la pantalla completa aunque el móvil tuviera la rotación automática (lo vio José en su Samsung con un timelapse). Los dos visores (`js/visor-video-multimedia.js` para MP4 y `js/visor-video.js` para el directo) piden `screen.orientation.lock("landscape")` al entrar y la liberan al salir. En iPhone no existe esa orden y sigue mandando el giro del teléfono. Versión `?v=20261102-horizontal1`.
+
+- Botón de pantalla completa bajo el termómetro (PR #57, 1 nov, decisión de José; **publicado** el 1 nov, `b9e0223`, y comprobado por José en el móvil): en el directo los controles del visor dejan de ir centrados abajo, donde tapaban la barra de humedad grabada en el vídeo, y se colocan en la vertical del termómetro (5,5 % del ancho) y a la altura del logotipo (centro de la franja 75,4–97,2 % del alto), sobre el rectángulo real del vídeo para respetar las bandas negras. El MP4 de los timelapses conserva su barra centrada. Si con su tamaño normal llegarían al logotipo (vídeo muy pequeño, como la panorámica en un móvil en vertical), pasan a los botones pequeños de las fichas compactas (decisión de José).
+
+- Directo con instrumentos (PR #53, **publicado el 31 oct**, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. Publicado después de activar los instrumentos en el VPS; José lo comprobó en las dos cámaras. Lo que quedaba —el botón de pantalla completa tapaba el centro de la barra de humedad de la panorámica— se resolvió con el PR #57.
 
 - Timelapses de una sola vez (PR #51, **publicado el 29 oct**, decisión de José): tipo «Una sola vez (fecha concreta)» en el formulario de programaciones de Administración, con fecha y hora; en el listado se ve con su fecha y hora. Al terminar, la API la desactiva sola. Depende de la API con el tipo `UNA_VEZ` (PR #59 de `api-meteoarchidona`, migración 0033), desplegada antes que esta web el mismo día.
 
@@ -33,6 +37,10 @@ No se marca nada como hecho que no esté en `main`.
 - Actualidad avisa cuando una estación lleva más de una hora sin mandar datos: la ficha dice «Sin datos desde…» en vez de «En línea» y el punto deja de ser verde (25 oct).
 - Las fichas de estaciones sin cámara ya no muestran el recuadro «vídeo no disponible» ni cargan su visor (25 oct).
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
+
+- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. Publicada y verificada en producción el 1 de noviembre, con el paso de Nginx aplicado (`scripts/configurar_pwa.py`): el manifiesto se sirve como `application/manifest+json`, el trabajador queda activo y en su caché no hay ninguna respuesta de la API.
+
+- Botón «Instalar la aplicación» en el pie, 1 nov: en Chrome, Edge y Samsung abre el diálogo del sistema; en Safari del iPhone explica los tres pasos de «Añadir a pantalla de inicio», que es lo único que deja hacer Apple; en los navegadores que no instalan, y a quien ya la tiene instalada, no se enseña.
 
 ## En construcción / abierto
 
@@ -52,6 +60,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## Pendiente
 
+- Mejoras propuestas tras el repaso del 27 oct: `docs/mejoras.md` (código muerto, documentos desfasados, seguridad de la consola SQL por comprobar, pestañas en segundo plano, imágenes, accesibilidad…). **Por decidir con José** qué se hace y en qué orden.
 - Ventajas de registrarse: `docs/ventajas-registro.md` reúne qué gana el usuario registrado (estadísticas e informes propios, catálogo en sus dashboards, dashboards propios) y por qué importa a MeteoArchidona. Se irá ampliando; su texto se llevará a la web cuando cada ventaja funcione. Falta decidir dónde se muestra.
 
 
@@ -108,6 +117,7 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-26 · Timelapses: corregido el versionado de los `principal.js` de Actualidad y Administración, que no llegaban a los navegadores con caché.
 - 2026-10-27 · Abierto `docs/ventajas-registro.md` con las primeras ventajas del usuario registrado (estadísticas propias, catálogo y dashboards), a petición de José.
 - 2026-10-27 · Informes y estadísticas: visor reutilizable (gráfica, tabla y PDF) y configurador con vista previa en Administración; pendiente de fusionar y publicar.
+- 2026-10-27 · Repaso del proyecto y lista de mejoras propuestas en `docs/mejoras.md`, para comentarla con José.
 - 2026-10-28 · Estadísticas como sección pública del menú: aviso de registro sin sesión y catálogo con visor para usuarios y Administración; necesita el bloque de Nginx.
 - 2026-10-28 · Publicada la sección Estadísticas: web en `d01cbab` y bloque de Nginx aplicado; `/estadisticas` responde 200.
 - 2026-10-29 · Actualidad: gráficas de El Silo frente a Los Llanos (7 días y máximas y mínimas de 30 días) con el visor de estadísticas; pendiente de fusionar y publicar.
@@ -115,3 +125,17 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-10-31 · El visor en directo deja de pintar cifras y marca porque el VPS las graba en el vídeo; pendiente de publicar tras activarlo en el VPS.
 - 2026-10-29 · Publicados los timelapses de una sola vez (PR #51), después de la API y su migración 0033.
 - 2026-10-31 · Publicado el visor sin cifras ni marca en directo (PR #53): los instrumentos ya van grabados en el vídeo.
+- 2026-11-01 · Logotipo nuevo: la nube de la A lleva copos de nieve en lugar de gotas. Sustituidos el original, la cabecera, los iconos (192 y Apple) y el favicon con los mismos nombres; pendiente de fusionar y publicar.
+- 2026-11-01 · Versión `?v=20261101-nieve` en el logotipo de la cabecera, los iconos y el favicon para que los navegadores dejen la copia antigua en caché.
+- 2026-11-01 · Logotipos de Cámaras y Estaciones también con nieve en la nube de la A (originales, cabeceras de 128 px e iconos de 192 px), con versión en sus referencias para saltar la caché.
+- 2026-11-01 · La cabecera fijaba el logotipo desde `cabecera.js` sin versión y seguía saliendo el antiguo; ahora la ruta lleva `?v=20261101-nieve`.
+- 2026-11-01 · Directo: el botón de pantalla completa pasa de encima de la barra de humedad a debajo del termómetro, a la altura del logotipo.
+- 2026-11-01 · Directo: en vídeos muy pequeños los botones bajo el termómetro pasan a tamaño pequeño para no tapar el logotipo.
+- 2026-11-01 · Repasada la web en móvil (390 px) página por página: ninguna desborda a lo ancho. Pendiente: `/api/usuarios/yo` responde 401 a quien no ha entrado y deja un error rojo en la consola en todas las páginas.
+- 2026-11-01 · La web se puede instalar en el teléfono: manifiesto, trabajador de servicio con aviso de sin conexión y iconos propios. Falta el paso de Nginx en el VPS.
+- 2026-11-01 · Botón bajo el termómetro publicado en el VPS (`b9e0223`); José confirma que queda bien.
+- 2026-11-01 · PWA publicada en el VPS y comprobada en vivo: manifiesto con su tipo, trabajador activo controlando la página y cero respuestas de la API guardadas.
+- 2026-11-01 · José la instala desde Safari del iPhone; en el iPhone ningún otro navegador puede. De ahí el botón del pie.
+- 2026-11-01 · Botón «Instalar la aplicación» en el pie, con diálogo nativo donde lo hay y pasos de Safari donde no; escondido en los navegadores que no instalan.
+- 2026-11-02 · Visor de vídeo: la pantalla completa se pone en horizontal sola en Android y vuelve a vertical al salir; la PWA tenía la orientación bloqueada en vertical.
+- 2026-11-02 · Pantalla completa en horizontal publicada en el VPS (`aa7585d`); José la prueba en su Samsung y funciona.
