@@ -38,6 +38,8 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
+- Pantalla completa en horizontal (rama `fix/visor-pantalla-completa-horizontal`, 2 nov): con la web instalada como aplicación, el manifiesto fija `portrait-primary` y Android no giraba la pantalla completa aunque el móvil tuviera la rotación automática (lo vio José en su Samsung con un timelapse). Los dos visores (`js/visor-video-multimedia.js` para MP4 y `js/visor-video.js` para el directo) piden `screen.orientation.lock("landscape")` al entrar y la liberan al salir. En iPhone no existe esa orden y sigue mandando el giro del teléfono. Versión `?v=20261102-horizontal1`.
+
 - Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
 
 - Timelapses de una sola vez (rama `feature/timelapses-una-sola-vez`, 29 oct, decisión de José): tipo «Una sola vez (fecha concreta)» en el formulario de programaciones de Administración, con fecha y hora; en el listado se ve con su fecha y hora. Al terminar, la API la desactiva sola. Necesita el PR de `api-meteoarchidona` (tipo `UNA_VEZ`, campo `fecha_local`, migración 0033) **desplegado antes que esta web**: con la API antigua, guardar cualquier programación fallaría porque la web ya envía `fecha_local`.
@@ -133,3 +135,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-01 · PWA publicada en el VPS y comprobada en vivo: manifiesto con su tipo, trabajador activo controlando la página y cero respuestas de la API guardadas.
 - 2026-11-01 · José la instala desde Safari del iPhone; en el iPhone ningún otro navegador puede. De ahí el botón del pie.
 - 2026-11-01 · Botón «Instalar la aplicación» en el pie, con diálogo nativo donde lo hay y pasos de Safari donde no; escondido en los navegadores que no instalan.
+- 2026-11-02 · Visor de vídeo: la pantalla completa se pone en horizontal sola en Android y vuelve a vertical al salir; la PWA tenía la orientación bloqueada en vertical.
