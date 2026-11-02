@@ -60,6 +60,130 @@
 
 
     /* =====================================================
+       PANTALLA COMPLETA EN HORIZONTAL
+       =====================================================
+     *
+     * La web instalada como aplicación fija la orientación
+     * vertical (manifest.webmanifest: portrait-primary), así
+     * que en Android la pantalla completa de YouTube se quedaba
+     * en vertical y no llenaba la pantalla. Igual que los
+     * visores de vídeo (PR #63): al entrar se pide horizontal y
+     * al salir se libera.
+     *
+     * El botón es del reproductor de YouTube (otro dominio), así
+     * que no se puede escuchar; lo que sí llega a este documento
+     * es el cambio de pantalla completa. Se intenta primero desde
+     * aquí y, si el navegador no deja girar desde un iframe,
+     * desde la página que contiene el visor (mismo dominio).
+     *
+     * Ordenador, iPhone o navegador sin bloqueo de orientación:
+     * el intento falla en silencio y la pantalla completa sigue
+     * funcionando como siempre.
+     */
+
+    function pantallasDeOrientacion() {
+
+        const lista = [window.screen];
+
+        try {
+            if (
+                window.top &&
+                window.top !== window &&
+                window.top.screen
+            ) {
+                lista.push(window.top.screen);
+            }
+        } catch (error) {
+            // Página contenedora de otro dominio: solo la propia.
+        }
+
+        return lista;
+    }
+
+
+    async function bloquearHorizontal() {
+
+        for (const pantallaDispositivo of pantallasDeOrientacion()) {
+
+            try {
+
+                const orientacion =
+                    pantallaDispositivo.orientation;
+
+                if (
+                    orientacion &&
+                    typeof orientacion.lock === 'function'
+                ) {
+                    await orientacion.lock('landscape');
+                    return;
+                }
+
+            } catch (error) {
+                console.debug(
+                    'No se pudo girar a horizontal.',
+                    error
+                );
+            }
+        }
+    }
+
+
+    function liberarOrientacion() {
+
+        for (const pantallaDispositivo of pantallasDeOrientacion()) {
+
+            try {
+
+                const orientacion =
+                    pantallaDispositivo.orientation;
+
+                if (
+                    orientacion &&
+                    typeof orientacion.unlock === 'function'
+                ) {
+                    orientacion.unlock();
+                }
+
+            } catch (error) {
+                console.debug(
+                    'No se pudo liberar la orientación.',
+                    error
+                );
+            }
+        }
+    }
+
+
+    function documentoEnPantallaCompleta() {
+
+        return Boolean(
+            document.fullscreenElement ||
+            document.webkitFullscreenElement
+        );
+    }
+
+
+    function cambioPantallaCompleta() {
+
+        if (documentoEnPantallaCompleta()) {
+            bloquearHorizontal();
+        } else {
+            liberarOrientacion();
+        }
+    }
+
+    document.addEventListener(
+        'fullscreenchange',
+        cambioPantallaCompleta
+    );
+
+    document.addEventListener(
+        'webkitfullscreenchange',
+        cambioPantallaCompleta
+    );
+
+
+    /* =====================================================
        VALIDACIÓN DEL IDENTIFICADOR
        ===================================================== */
 
