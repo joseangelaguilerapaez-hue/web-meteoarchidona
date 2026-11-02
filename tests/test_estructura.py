@@ -298,7 +298,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261029-graficas1"),
-            ("administracion", r"administracion/principal\.js\?v=20261029-una-vez1"),
+            ("administracion", r"administracion/principal\.js\?v=20261101-configuracion1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -308,6 +308,31 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
             ("js/administracion/principal.js", r"\./timelapses\.js\?v=20261029-una-vez1"),
         ):
             self.assertRegex(leer(RAIZ / ruta), patron)
+
+
+class TestConfiguracion(unittest.TestCase):
+    """Administración → Configuración (parámetros de la web, 1 nov)."""
+
+    def test_menu_y_seccion(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('data-modulo="configuracion"', pagina)
+        self.assertIn('id="modulo-configuracion"', pagina)
+        self.assertIn('id="listaConfiguracion"', pagina)
+        self.assertIn('id="estadoConfiguracion"', pagina)
+
+    def test_modulo_y_version(self):
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn("./configuracion.js?v=20261101-configuracion1", principal)
+        codigo = leer(RAIZ / "js" / "administracion" / "configuracion.js")
+        self.assertIn('"/admin/configuracion"', codigo)
+        self.assertIn("valores_por_icono", codigo)
+        self.assertIn("/apartados", codigo)
+        self.assertIn("pestanasConfiguracion", codigo)
+        self.assertIn("export async function cargarConfiguracion", codigo)
+        self.assertIn(
+            "administracion.css?v=20261101-configuracion1",
+            leer(RAIZ / "pages" / "administracion.html"),
+        )
 
 
 class TestTimelapseUnaSolaVez(unittest.TestCase):
