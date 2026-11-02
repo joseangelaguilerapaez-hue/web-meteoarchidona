@@ -10,8 +10,10 @@
     que mantener. El año lo pone también el JS.
 
     «Privacidad» abre la ventana de privacidad y preferencias
-    (js/auditoria.js). Fuera, a propósito: el aviso legal (aplazado) y
-    los patrocinios (aún no son públicos). No se enlaza nada que no exista.
+    (js/auditoria.js). «Instalar la aplicación» la maneja js/instalar.js
+    y solo se ve si el navegador sabe instalar. Fuera, a propósito: el
+    aviso legal (aplazado) y los patrocinios (aún no son públicos). No
+    se enlaza nada que no exista.
 -->
 
 <footer class="pie-sitio">
@@ -71,6 +73,19 @@
 
         <li>
             <a href="/informacion">Más información</a>
+        </li>
+
+        <!--
+            Escondido salvo que el navegador sepa instalar: lo decide
+            js/instalar.js con data-instalable en <html>, y lo aplica
+            css/pie.css. Ver el porqué en la cabecera de instalar.js.
+        -->
+        <li class="pie-sitio-instalable">
+            <button
+                type="button"
+                class="pie-sitio-boton pie-sitio-instalar"
+                data-instalar
+            >Instalar la aplicación</button>
         </li>
 
         <li>
