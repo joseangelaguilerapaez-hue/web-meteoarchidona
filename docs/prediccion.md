@@ -115,7 +115,8 @@ componente que se puede poner también en otras páginas o dashboards.
   vista «Por modelo» (penacho: un escenario por línea, media, franja del 80 % central y la salida
   operativa del mismo centro y el control, decisiones de José; Google no tiene operativa) y
   «Comparar modelos» (media de cada modelo y consenso, con sombreado donde discrepan más de 2 °C);
-  temperatura a 850, 700 o 500 hPa —en altura, no la de Archidona—, lluvia y nieve cada 6 horas;
+  temperatura a 2 m (superficie, orientativa) o a 925, 850, 700 o 500 hPa —en altura, no la de
+  Archidona—, lluvia y nieve cada 6 horas;
   El Silo o Los Llanos. Se habla siempre de escenarios, no de probabilidad.
 - Previstas más adelante: otras agencias (Meteored u otra) y mapas isobáricos de modelos.
 

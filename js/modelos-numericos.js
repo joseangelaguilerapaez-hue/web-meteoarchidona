@@ -34,8 +34,8 @@
  * Todavía no está en el catálogo de auditoría: cuando se dé de alta (API),
  * se le pone data-auditoria-visualizacion como a las tarjetas de AEMET.
  *
- * La temperatura es en altura (850, 700 o 500 hPa), no la de Archidona,
- * y así se dice en la propia gráfica. Gráficas en SVG propio, sin
+ * Niveles: 2 m (superficie, orientativa) y 925, 850, 700 o 500 hPa (en
+ * altura, no la de Archidona); la nota de la gráfica lo dice. Gráficas en SVG propio, sin
  * librerías. Horas siempre en hora de Madrid.
  */
 
@@ -43,7 +43,11 @@ const ZONA = "Europe/Madrid";
 const REFRESCO_MS = 30 * 60 * 1000;
 const NS = "http://www.w3.org/2000/svg";
 
+// Nivel por defecto: 850 hPa. «2 m» es la de superficie y 925 hPa, el
+// nivel de presión de las estaciones (decisión de José del 2-11-2026).
 const VARIABLES_TEMPERATURA = [
+    {codigo: "TEMPERATURA_2M", nombre: "2 m", detalle: "superficie", superficie: true},
+    {codigo: "TEMPERATURA_925_HPA", nombre: "925 hPa", detalle: "unos 750 m"},
     {codigo: "TEMPERATURA_850_HPA", nombre: "850 hPa", detalle: "unos 1500 m"},
     {codigo: "TEMPERATURA_700_HPA", nombre: "700 hPa", detalle: "unos 3000 m"},
     {codigo: "TEMPERATURA_500_HPA", nombre: "500 hPa", detalle: "unos 5500 m"}
@@ -64,6 +68,12 @@ const COLORES_MODELO = {
 const COLOR_CONTROL = "#e66767";
 
 const HORAS_TRAMO_LLUVIA = 6;
+
+function textoNivel(variable) {
+    return variable.superficie
+        ? "Temperatura a 2 m del suelo según los modelos, orientativa: son modelos globales de unos 25 km que no ven los microclimas."
+        : "Temperatura en altura, en el aire libre, no la de Archidona.";
+}
 
 // Diferencia entre modelos a partir de la cual se sombrea el desacuerdo
 // (la misma que usa el resumen automático).
@@ -467,7 +477,7 @@ export function montarModelosNumericos(raiz) {
             {valor: "comparar", nombre: "Comparar modelos"}
         ], () => estado.vista, (valor) => { estado.vista = valor; }));
 
-        controles.append(grupo("Altura", VARIABLES_TEMPERATURA.map((v) => ({valor: v.codigo, nombre: v.nombre, titulo: v.detalle})),
+        controles.append(grupo("Nivel", VARIABLES_TEMPERATURA.map((v) => ({valor: v.codigo, nombre: v.nombre, titulo: v.detalle})),
             () => estado.variable, (valor) => { estado.variable = valor; }));
 
         if (estado.vista === "modelo" && estado.catalogo) {
@@ -527,7 +537,7 @@ export function montarModelosNumericos(raiz) {
                 const datos = temperatura.modelos[0];
                 if (!datos) {
                     throw Object.assign(new Error("sin datos"), {
-                        mensaje: `${nombreModelo(estado.modelo)} no tiene temperatura a ${variable.nombre}. Elige otro modelo u otra altura.`
+                        mensaje: `${nombreModelo(estado.modelo)} no tiene temperatura a ${variable.nombre}. Elige otro modelo u otro nivel.`
                     });
                 }
 
@@ -580,7 +590,7 @@ export function montarModelosNumericos(raiz) {
 
                 const pasada = datos.pasada ? new Date(datos.pasada) : null;
                 nota.textContent =
-                    `Temperatura en altura, no la de Archidona. Pasada de las ${pasada ? formatoHora.format(pasada) : "--"} del ${pasada ? formatoDiaLargo.format(pasada) : "--"}; ` +
+                    `${textoNivel(variable)} Pasada de las ${pasada ? formatoHora.format(pasada) : "--"} del ${pasada ? formatoDiaLargo.format(pasada) : "--"}; ` +
                     "cada línea fina es un escenario del mismo modelo. " +
                     (datos.operativa
                         ? "La amarilla es su salida operativa, de más resolución, y la discontinua, el control (el escenario sin perturbar). Ninguna de las dos es la más probable: lo más probable es la media."
@@ -634,7 +644,7 @@ export function montarModelosNumericos(raiz) {
                     }
                 };
 
-                nota.textContent = "Temperatura en altura, no la de Archidona. Cada línea es la media de los escenarios de un modelo; la blanca, el consenso de todos.";
+                nota.textContent = `${textoNivel(variable)} Cada línea es la media de los escenarios de un modelo; la blanca, el consenso de todos.`;
             }
 
             dibujar(lienzo, ultimoDibujo);
