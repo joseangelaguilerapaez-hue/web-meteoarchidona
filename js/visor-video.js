@@ -1885,6 +1885,64 @@ function documentoEnFullscreen() {
 }
 
 
+/*
+ * La web instalada como aplicación fija la orientación vertical
+ * (manifest.webmanifest: portrait-primary). Al entrar en pantalla
+ * completa se pide horizontal y al salir se libera. Sin Screen
+ * Orientation API (iPhone) no hace nada.
+ */
+async function bloquearHorizontal() {
+
+    try {
+
+        if (
+            screen.orientation
+            &&
+            typeof screen.orientation.lock === "function"
+        ) {
+
+            await screen.orientation.lock("landscape");
+
+        }
+
+    } catch (error) {
+
+        console.debug(
+            "No se pudo girar a horizontal.",
+            error
+        );
+
+    }
+
+}
+
+
+function liberarOrientacion() {
+
+    try {
+
+        if (
+            screen.orientation
+            &&
+            typeof screen.orientation.unlock === "function"
+        ) {
+
+            screen.orientation.unlock();
+
+        }
+
+    } catch (error) {
+
+        console.debug(
+            "No se pudo liberar la orientación.",
+            error
+        );
+
+    }
+
+}
+
+
 async function alternarFullscreen() {
 
     if (
@@ -1942,12 +2000,16 @@ async function alternarFullscreen() {
 
             await raiz.requestFullscreen();
 
+            await bloquearHorizontal();
+
 
         } else if (
             raiz.webkitRequestFullscreen
         ) {
 
             raiz.webkitRequestFullscreen();
+
+            await bloquearHorizontal();
 
         }
 
@@ -3518,6 +3580,14 @@ function cambioEstadoFullscreen() {
     reiniciarZoomVideo();
 
     configurarEstiloZoomFullscreen();
+
+
+    // Al salir (botón, gesto atrás o tecla), vuelve a vertical.
+    if (!documentoEnFullscreen()) {
+
+        liberarOrientacion();
+
+    }
 
 
     window.setTimeout(
