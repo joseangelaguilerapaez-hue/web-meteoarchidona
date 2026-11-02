@@ -110,6 +110,62 @@ class TestElScript(unittest.TestCase):
         self.assertIn('closest("[data-instalar]")', SCRIPT)
 
 
+class TestNoSeQuedaCallado(unittest.TestCase):
+    """
+    El fallo del 2 de noviembre: el botón se veía y no hacía nada.
+
+    El aviso de Chrome solo sirve una vez. Al cerrarlo sin instalar, el
+    código lo guardaba y lo reutilizaba; la segunda llamada lanza
+    InvalidStateError y, sin recogerlo, el botón parecía roto.
+    """
+
+    def test_la_peticion_se_suelta_antes_de_usarla(self):
+        """Gastada queda, se use bien o mal: no se puede reutilizar."""
+
+        cuerpo = SCRIPT.split("async function instalar(")[1]
+
+        soltar = cuerpo.find("peticionGuardada = null")
+        usar = cuerpo.find("peticion.prompt()")
+
+        self.assertGreater(soltar, -1, "no se suelta la petición")
+        self.assertGreater(usar, -1, "no se abre el diálogo")
+        self.assertLess(soltar, usar, "se usa antes de soltarla")
+
+    def test_el_dialogo_del_sistema_va_protegido(self):
+        """Si prompt() falla, se explica en vez de no hacer nada."""
+
+        cuerpo = SCRIPT.split("async function instalar(")[1]
+
+        self.assertIn("try {", cuerpo)
+        self.assertIn("} catch (error) {", cuerpo)
+
+    def test_sin_peticion_el_boton_explica(self):
+        manejador = SCRIPT.split('closest("[data-instalar]")')[1]
+
+        self.assertIn("explicar()", manejador)
+
+    def test_hay_pasos_para_cada_navegador_que_puede_instalar(self):
+        for familia in ("ios-safari", "samsung", "chrome", "edge"):
+            with self.subTest(familia=familia):
+                self.assertIn(familia, SCRIPT)
+
+    def test_el_boton_sale_aunque_no_haya_llegado_el_aviso(self):
+        """En Chrome o Samsung siempre se puede instalar a mano."""
+
+        self.assertIn("PUEDE_INSTALAR", SCRIPT)
+        self.assertIn('RAIZ.dataset.instalable = "manual"', SCRIPT)
+
+    def test_la_hoja_lo_enseña_sea_cual_sea_el_valor(self):
+        """nativo o manual: la regla mira si el atributo está, no qué vale."""
+
+        self.assertIn(":root[data-instalable] .pie-sitio-instalable", HOJA)
+        self.assertNotIn('data-instalable="nativo"', HOJA)
+
+    def test_si_no_hay_showModal_la_ventana_se_abre_igual(self):
+        self.assertIn("showModal", SCRIPT)
+        self.assertIn('setAttribute("open"', SCRIPT)
+
+
 class TestPaginas(unittest.TestCase):
 
     def test_las_paginas_publicas_con_pie_cargan_el_script(self):

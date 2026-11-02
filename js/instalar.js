@@ -1,32 +1,35 @@
 /*
  * MeteoArchidona · Botón de instalar del pie
  *
- * Enseña «Instalar la aplicación» en el pie, pero solo a quien pueda
- * hacer algo con él. Instalar no se parece en nada según el navegador:
+ * Regla de la casa: el botón nunca se queda callado. Si puede abrir el
+ * diálogo del sistema, lo abre; si no puede, explica dónde está la
+ * opción en ese navegador. Lo que no hace nunca es no hacer nada.
  *
- * - Chrome, Edge y Samsung Internet avisan con beforeinstallprompt y
- *   dejan abrir el diálogo nativo cuando queramos. Un clic y dentro.
- * - Safari del iPhone no tiene forma de pedirlo desde la página: solo
- *   se puede explicar dónde está el botón de Apple.
- * - Firefox y los demás no instalan nada. A esos no se les enseña el
- *   botón: un botón que no hace nada es peor que no tenerlo.
+ * Por qué hace falta la explicación, y no basta el diálogo:
  *
- * Quien ya la tiene instalada tampoco lo ve.
+ * - El aviso que mandan Chrome, Edge y Samsung (beforeinstallprompt)
+ *   SOLO SIRVE UNA VEZ. Si el visitante cierra el diálogo sin instalar,
+ *   ese aviso queda gastado: volver a usarlo lanza un error y el botón
+ *   parecería roto. Hasta que el navegador mande uno nuevo —y puede
+ *   tardar días— solo queda explicar.
+ * - Safari del iPhone no deja pedirlo desde la página: la opción está
+ *   en su menú de compartir y punto.
+ * - Chrome y Firefox del iPhone ni siquiera tienen esa opción.
  *
- * Por qué un atributo en <html> y no tocar el botón directamente:
- * el pie lo monta js/cabecera.js por su cuenta y tarda lo que tarde en
- * llegar, así que aquí no se sabe si existe todavía. Con
- * `data-instalable` en la raíz manda la hoja de estilos (css/pie.css),
- * y da igual quién llegue antes.
+ * El botón se esconde con CSS: el pie lo monta js/cabecera.js por su
+ * cuenta y aquí no se sabe si existe todavía. Este script pone
+ * data-instalable en <html> y manda css/pie.css. El clic se atiende por
+ * delegación en document, por lo mismo.
+ *
+ * Quien ya la tiene instalada no ve el botón.
  */
 
 (function () {
     "use strict";
 
-
     const RAIZ = document.documentElement;
 
-    /* Lo que Chrome nos da para abrir el diálogo cuando queramos. */
+    /* El aviso de Chrome, mientras esté sin gastar. */
     let peticionGuardada = null;
 
     let ventana = null;
@@ -44,44 +47,158 @@
     }
 
 
-    /*
-     * Safari del iPhone y del iPad. Chrome y Firefox de iOS llevan el
-     * mismo motor por dentro, pero sus menús no tienen «Añadir a
-     * pantalla de inicio», así que no sirve explicárselo.
-     */
-    function esSafariDeApple() {
+    /* ==========================================================
+       QUÉ NAVEGADOR ES
+       ========================================================== */
 
-        const agente = window.navigator.userAgent;
+    const AGENTE = window.navigator.userAgent;
 
-        const esDeApple =
-            /iPhone|iPod/.test(agente)
+
+    function esDeApple() {
+
+        return (
+            /iPhone|iPod/.test(AGENTE)
             ||
             // El iPad moderno se hace pasar por Mac: se le reconoce
             // porque es el único «Mac» con pantalla táctil.
-            (/Macintosh/.test(agente) && navigator.maxTouchPoints > 1);
-
-        if (!esDeApple) {
-
-            return false;
-
-        }
-
-
-        /* CriOS es Chrome; FxiOS, Firefox; EdgiOS, Edge. */
-        return !/CriOS|FxiOS|EdgiOS|OPiOS/.test(agente);
+            (/Macintosh/.test(AGENTE) && navigator.maxTouchPoints > 1)
+        );
 
     }
 
 
-    function esconderBoton() {
+    /*
+     * Qué explicación toca. Es lo único que decide qué ve el visitante
+     * cuando no hay diálogo del sistema que abrir.
+     */
+    function familia() {
 
-        delete RAIZ.dataset.instalable;
+        if (esDeApple()) {
+
+            /* CriOS es Chrome; FxiOS, Firefox; EdgiOS, Edge; OPiOS, Opera. */
+            return /CriOS|FxiOS|EdgiOS|OPiOS/.test(AGENTE)
+                ? "ios-otro"
+                : "ios-safari";
+
+        }
+
+        if (/SamsungBrowser/.test(AGENTE)) {
+
+            return "samsung";
+
+        }
+
+        if (/Firefox/.test(AGENTE)) {
+
+            return "firefox";
+
+        }
+
+        if (/Edg\//.test(AGENTE)) {
+
+            return "edge";
+
+        }
+
+        if (/Chrome|Chromium|CrMo/.test(AGENTE)) {
+
+            return "chrome";
+
+        }
+
+        return "otro";
+
+    }
+
+
+    const FAMILIA = familia();
+
+    const ES_MOVIL = /Android|iPhone|iPod|Mobile/.test(AGENTE);
+
+
+    /*
+     * Quién puede instalar de alguna manera, aunque sea a mano. A los
+     * demás no se les enseña el botón: no hay nada que contarles.
+     */
+    const PUEDE_INSTALAR = [
+        "ios-safari",
+        "samsung",
+        "edge",
+        "chrome"
+    ].includes(FAMILIA);
+
+
+    /* ==========================================================
+       PASOS, POR NAVEGADOR
+       ========================================================== */
+
+    const PASOS = {
+        "ios-safari": {
+            titulo: "Instalar en tu iPhone",
+            pasos: [
+                "Toca <strong>Compartir</strong>, el cuadrado con la flecha hacia arriba, abajo en la barra de Safari.",
+                "Baja por la lista y toca <strong>Añadir a pantalla de inicio</strong>.",
+                "Toca <strong>Añadir</strong> arriba a la derecha."
+            ],
+            nota: "En el iPhone solo Safari puede hacerlo: los demás navegadores no tienen esa opción."
+        },
+        samsung: {
+            titulo: "Instalar en tu móvil",
+            pasos: [
+                "Toca el <strong>menú</strong> (las tres rayas, abajo a la derecha).",
+                "Toca <strong>Añadir página a</strong> y después <strong>Pantalla de inicio</strong>.",
+                "Confirma con <strong>Añadir</strong>."
+            ],
+            nota: null
+        },
+        chrome: {
+            titulo: "Instalar en tu móvil",
+            pasos: [
+                "Toca el <strong>menú</strong> de Chrome (los tres puntos, arriba a la derecha).",
+                "Toca <strong>Añadir a pantalla de inicio</strong> o <strong>Instalar aplicación</strong>.",
+                "Confirma con <strong>Instalar</strong>."
+            ],
+            nota: "Si hace un momento cerraste el aviso de instalar, Chrome tarda en volver a ofrecerlo. Desde el menú se puede siempre."
+        },
+        edge: {
+            titulo: "Instalar la aplicación",
+            pasos: [
+                "Abre el <strong>menú</strong> de Edge (los tres puntos).",
+                "Entra en <strong>Aplicaciones</strong> y toca <strong>Instalar este sitio como aplicación</strong>.",
+                "Confirma con <strong>Instalar</strong>."
+            ],
+            nota: null
+        }
+    };
+
+
+    /* En el ordenador, Chrome lo tiene en la barra de direcciones. */
+    const PASOS_ESCRITORIO = {
+        titulo: "Instalar la aplicación",
+        pasos: [
+            "Mira al final de la barra de direcciones: hay un icono de <strong>instalar</strong> (una pantalla con una flecha).",
+            "Si no está, abre el <strong>menú</strong> del navegador (los tres puntos) y busca <strong>Instalar MeteoArchidona</strong>.",
+            "Confirma con <strong>Instalar</strong>."
+        ],
+        nota: "Se abrirá en su propia ventana, sin barra del navegador."
+    };
+
+
+    function textosDePasos() {
+
+        if (!ES_MOVIL && (FAMILIA === "chrome" || FAMILIA === "edge")) {
+
+            return PASOS_ESCRITORIO;
+
+        }
+
+        return PASOS[FAMILIA] || PASOS_ESCRITORIO;
 
     }
 
 
     /* ==========================================================
-       VENTANA DE PASOS (SOLO SAFARI)
+       VENTANA DE PASOS
        ========================================================== */
 
     function crearVentana() {
@@ -89,23 +206,6 @@
         const dialogo = document.createElement("dialog");
 
         dialogo.className = "instalar-ventana";
-
-        dialogo.innerHTML = `
-<header class="instalar-ventana-cabecera">
-    <h2>Instalar en tu iPhone</h2>
-    <button type="button" class="instalar-cerrar" aria-label="Cerrar">&times;</button>
-</header>
-
-<ol class="instalar-pasos">
-    <li>Toca <strong>Compartir</strong>, el cuadrado con la flecha hacia arriba, abajo en la barra de Safari.</li>
-    <li>Baja por la lista y toca <strong>Añadir a pantalla de inicio</strong>.</li>
-    <li>Toca <strong>Añadir</strong> arriba a la derecha.</li>
-</ol>
-
-<p class="instalar-nota">
-    En el iPhone solo Safari puede hacerlo: los demás navegadores no
-    tienen esa opción.
-</p>`;
 
         dialogo.addEventListener("click", (evento) => {
 
@@ -130,7 +230,9 @@
     }
 
 
-    function explicarEnSafari() {
+    function explicar() {
+
+        const textos = textosDePasos();
 
         if (!ventana) {
 
@@ -138,44 +240,81 @@
 
         }
 
-        ventana.showModal();
+        ventana.innerHTML = `
+<header class="instalar-ventana-cabecera">
+    <h2>${textos.titulo}</h2>
+    <button type="button" class="instalar-cerrar" aria-label="Cerrar">&times;</button>
+</header>
+
+<ol class="instalar-pasos">
+${textos.pasos.map(paso => `    <li>${paso}</li>`).join("\n")}
+</ol>
+${textos.nota ? `\n<p class="instalar-nota">${textos.nota}</p>` : ""}`;
+
+        /*
+         * showModal falta en navegadores viejos. Sin él, al menos que se
+         * vea la ventana en vez de no pasar nada.
+         */
+        if (typeof ventana.showModal === "function") {
+
+            ventana.showModal();
+
+
+            return;
+
+        }
+
+        ventana.setAttribute("open", "");
 
     }
 
 
     /* ==========================================================
-       INSTALACIÓN NATIVA
+       DIÁLOGO DEL SISTEMA
        ========================================================== */
 
-    async function instalar() {
-
-        const peticion = peticionGuardada;
+    async function instalar(peticion) {
 
         /*
-         * Solo vale una vez: después de usarla, Chrome no la da por
-         * buena otra vez y habría que esperar a un beforeinstallprompt
-         * nuevo.
+         * Gastado queda, se use bien o mal: volver a llamar a prompt()
+         * lanza InvalidStateError. Por eso se suelta antes de usarlo.
          */
         peticionGuardada = null;
 
-        esconderBoton();
+        try {
 
-        peticion.prompt();
+            peticion.prompt();
+
+        } catch (error) {
+
+            /* Ya estaba gastado: se explica a mano, que es lo que queda. */
+            RAIZ.dataset.instalable = "manual";
+
+            explicar();
 
 
-        const respuesta = await peticion.userChoice;
-
-        /*
-         * Si dice que no, el botón vuelve: puede cambiar de idea, y
-         * Chrome no siempre avisa otra vez.
-         */
-        if (respuesta && respuesta.outcome !== "accepted") {
-
-            peticionGuardada = peticion;
-
-            RAIZ.dataset.instalable = "nativo";
+            return;
 
         }
+
+
+        const respuesta = await peticion.userChoice.catch(() => null);
+
+        if (respuesta && respuesta.outcome === "accepted") {
+
+            delete RAIZ.dataset.instalable;
+
+
+            return;
+
+        }
+
+        /*
+         * Ha dicho que no, o ha cerrado el diálogo. El botón se queda,
+         * pero ya solo puede explicar: el aviso está gastado y el
+         * navegador tardará en mandar otro.
+         */
+        RAIZ.dataset.instalable = "manual";
 
     }
 
@@ -204,7 +343,7 @@
 
         peticionGuardada = null;
 
-        esconderBoton();
+        delete RAIZ.dataset.instalable;
 
     });
 
@@ -220,7 +359,7 @@
 
         if (peticionGuardada) {
 
-            instalar();
+            instalar(peticionGuardada);
 
 
             return;
@@ -228,14 +367,14 @@
         }
 
 
-        explicarEnSafari();
+        explicar();
 
     });
 
 
-    if (esSafariDeApple() && !yaInstalada()) {
+    if (PUEDE_INSTALAR && !yaInstalada()) {
 
-        RAIZ.dataset.instalable = "safari";
+        RAIZ.dataset.instalable = "manual";
 
     }
 
