@@ -38,7 +38,7 @@ No se marca nada como hecho que no esté en `main`.
 - Las fichas de estaciones sin cámara ya no muestran el recuadro «vídeo no disponible» ni cargan su visor (25 oct).
 - Portada: fuera los gráficos de muestra, accesos a secciones que existen con iconos propios, «Condiciones actuales» con la lectura real de una estación —y visible en móvil— y adelanto de tres días de la predicción de AEMET (25 oct, PR #24 a #26).
 
-- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. Publicada y verificada en producción el 1 de noviembre, con el paso de Nginx aplicado (`scripts/configurar_pwa.py`): el manifiesto se sirve como `application/manifest+json`, el trabajador queda activo y en su caché no hay ninguna respuesta de la API.
+- Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. Hecha por Mario (PR #59). **Publicada** el 1 nov en `68e420f` y `scripts/configurar_pwa.py` ejecutado en el VPS por José: el manifiesto se sirve como `application/manifest+json`, `sw.js` y el manifiesto van con `no-cache`, el trabajador queda activo y en su caché no hay ninguna respuesta de la API. Copia de la configuración anterior de Nginx en `/home/jose/meteoarchidona-web.nginx.20261101T175029179953Z.bak`.
 
 ## En construcción / abierto
 
@@ -46,6 +46,7 @@ No se marca nada como hecho que no esté en `main`.
 
 - Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
 - Botón «Instalar la aplicación» en el pie, 1 nov: en Chrome, Edge y Samsung abre el diálogo del sistema; en Safari del iPhone explica los tres pasos de «Añadir a pantalla de inicio», que es lo único que deja hacer Apple; en los navegadores que no instalan, y a quien ya la tiene instalada, no se enseña.
+- Botón «Instalar la aplicación» en el pie (PR #62, fusionado el 1 nov, **publicado el 2 nov** con el `git pull` del PR #63 y comprobado en vivo; decisión de José tras conseguir instalarla solo desde Safari): en Chrome, Edge y Samsung abre el diálogo del sistema; en Safari del iPhone explica los tres pasos de «Añadir a pantalla de inicio», que es lo único que deja hacer Apple; en los navegadores que no instalan, y a quien ya la tiene instalada, no se enseña.
 
 ## En construcción / abierto
 
