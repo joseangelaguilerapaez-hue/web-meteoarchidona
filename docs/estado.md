@@ -1,19 +1,27 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-11-01.
+Última actualización: 2026-11-02.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
 ## Cómo se mantiene este documento
 
-Es la fuente de verdad de "por dónde vamos". Al empezar una sesión se lee; al terminar
-cada tarea se actualiza **en el mismo PR que el cambio**:
+Es la fuente de verdad de "por dónde vamos". Al empezar una sesión se lee.
+
+**Este fichero no se toca en los PR de código.** Se actualiza en una rama propia de
+documentación (`docs/...`), al final de cada tanda de trabajo, cuando ya se sabe qué quedó
+fusionado y qué llegó al VPS. Regla nueva del 2 de noviembre de 2026, decidida por José
+después de que cuatro fusiones seguidas se comieran líneas de aquí: varios PR abiertos a la
+vez tocando este fichero garantizan el conflicto, y resolverlo a mano pierde texto.
+
+Qué lleva esa rama de documentación:
 
 1. Mover lo que corresponda entre *Hecho*, *En construcción* y *Pendiente*.
 2. Añadir una línea fechada al *Registro* (una línea, sin detalles de código).
 3. Si algún documento de `docs/` ya no es cierto, corregirlo o dejar aquí la nota de que está desfasado.
 
-No se marca nada como hecho que no esté en `main`.
+No se marca nada como hecho que no esté en `main`, ni como publicado lo que no se haya
+comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
@@ -143,3 +151,4 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-02 · Pantalla completa en horizontal publicada en el VPS (`aa7585d`); José la prueba en su Samsung y funciona.
 - 2026-11-02 · Configuración en Administración fusionada (PR #61); sigue sin publicar en el VPS.
 - 2026-11-02 · Reparado este documento: la fusión del PR #61 había devuelto el directo con instrumentos a «En construcción», duplicado el botón del pie y dejado dos veces la cabecera «En construcción / abierto».
+- 2026-11-02 · Norma nueva de José: `docs/estado.md` deja de tocarse en los PR de código; se actualiza en una rama de documentación propia al final de cada tanda.
