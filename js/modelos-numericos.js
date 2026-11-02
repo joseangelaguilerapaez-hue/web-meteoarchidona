@@ -22,7 +22,9 @@
  * - El resumen automático (GET /prediccion-conjuntos/resumen): texto
  *   redactado por IA a partir de las cifras del consenso de los modelos.
  * - «Por modelo»: el penacho de un modelo, una línea por escenario
- *   (miembro), la media, la franja 10-90 y el control
+ *   (miembro), la media, la franja 10-90 y la salida operativa del
+ *   mismo centro (la determinista de alta resolución; Google no tiene),
+ *   que sustituye al control por decisión de José (2-11-2026)
  *   (GET /prediccion-conjuntos/{punto}?modelo=…).
  * - «Comparar modelos»: la media de cada modelo y el consenso
  *   (…?miembros=false, solo los resúmenes: pesa poco).
@@ -534,8 +536,8 @@ export function montarModelosNumericos(raiz) {
                 pintarLeyenda([
                     {color, clase: "mn-muestra-fina", texto: `Escenarios (${miembros.length})`},
                     {color, clase: "mn-muestra-banda", texto: "Franja del 80 % central"},
-                    {color: "var(--text)", texto: "Media"},
-                    {color: "var(--amber)", clase: "mn-muestra-discontinua", texto: "Control"}
+                    {color: "var(--text)", texto: "Media de los escenarios"},
+                    ...(datos.operativa ? [{color: "var(--amber)", texto: "Operativa (alta resolución)"}] : [])
                 ]);
 
                 ultimoDibujo = {
@@ -547,8 +549,9 @@ export function montarModelosNumericos(raiz) {
                         color
                     },
                     lineas: [
-                        ...miembros.slice(1).map((serie) => ({valores: alinear(datos, serie, eje), color, clase: "mn-linea-miembro"})),
-                        {valores: alinear(datos, miembros[0] || [], eje), color: "var(--amber)", clase: "mn-linea-control"},
+                        ...miembros.map((serie) => ({valores: alinear(datos, serie, eje), color, clase: "mn-linea-miembro"})),
+                        // La operativa debajo de la media: lo más probable es la media.
+                        ...(datos.operativa ? [{valores: alinear(datos.operativa, datos.operativa.valores, eje), color: "var(--amber)", clase: "mn-linea-operativa", realce: true}] : []),
                         {valores: alinear(datos, datos.resumen.media, eje), color: "var(--text)", clase: "mn-linea-media", realce: true}
                     ],
                     lluvia: tramosLluvia(eje, lluviaPorHora),
@@ -556,16 +559,24 @@ export function montarModelosNumericos(raiz) {
                     ficha(indice) {
                         const m = datos.resumen;
                         const i = datos.horas.indexOf(datos.horas.find((h) => Date.parse(h) === eje[indice]));
+                        const operativa = datos.operativa
+                            ? alinear(datos.operativa, datos.operativa.valores, eje)[indice]
+                            : null;
                         return [
-                            {color: "var(--text)", texto: `Media: ${cifra(m.media[i])} °C`},
+                            {color: "var(--text)", texto: `Media de los escenarios: ${cifra(m.media[i])} °C`},
                             {color, texto: `El 80 % de los escenarios entre ${cifra(m.percentil_10[i])} y ${cifra(m.percentil_90[i])} °C`},
-                            {color: "var(--amber)", texto: `Control: ${cifra(miembros[0]?.[i])} °C`}
+                            ...(esNumero(operativa) ? [{color: "var(--amber)", texto: `Operativa: ${cifra(operativa)} °C`}] : [])
                         ];
                     }
                 };
 
                 const pasada = datos.pasada ? new Date(datos.pasada) : null;
-                nota.textContent = `Temperatura en altura, no la de Archidona. Pasada de las ${pasada ? formatoHora.format(pasada) : "--"} del ${pasada ? formatoDiaLargo.format(pasada) : "--"}; cada línea fina es un escenario del mismo modelo.`;
+                nota.textContent =
+                    `Temperatura en altura, no la de Archidona. Pasada de las ${pasada ? formatoHora.format(pasada) : "--"} del ${pasada ? formatoDiaLargo.format(pasada) : "--"}; ` +
+                    "cada línea fina es un escenario del mismo modelo. " +
+                    (datos.operativa
+                        ? "La amarilla es su salida operativa, de más resolución: un escenario más, no el más probable; lo más probable es la media."
+                        : "Este modelo no publica salida operativa.");
 
             } else {
                 const [temperatura, lluvia] = await Promise.all([

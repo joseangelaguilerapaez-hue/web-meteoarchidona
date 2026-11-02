@@ -112,10 +112,6 @@
     opacity: 0.35;
 }
 
-.mn-muestra-discontinua {
-    background: repeating-linear-gradient(90deg, var(--amber) 0 5px, transparent 5px 8px) !important;
-}
-
 
 /* ----------------------------------------------------------
    Gráfica
@@ -181,9 +177,8 @@
     opacity: 0.42;
 }
 
-.mn-linea-control {
-    stroke-width: 1.6;
-    stroke-dasharray: 5 3;
+.mn-linea-operativa {
+    stroke-width: 2;
 }
 
 .mn-linea-modelo {
