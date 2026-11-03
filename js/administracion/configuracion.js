@@ -265,6 +265,92 @@ function aplicarIcono(ficha, parametro, valoresIniciales){
 }
 
 
+/* ==========================================================
+   CUENTA ATRÁS DE LA VIGENCIA DEL DISTINTIVO
+   ==========================================================
+ * Decisión de José del 3-11-2026: la vigencia son días exactos de reloj
+ * desde que se guardó (fecha_actualizacion, con segundos). Junto al campo,
+ * lo que queda en días, horas, minutos y segundos. Solo cuenta lo guardado,
+ * no lo que se esté escribiendo sin guardar.
+ */
+
+const MS_DIA = 86400000;
+
+function finVigencia(parametro){
+
+    if(parametro.codigo !== "DISTINTIVO" || !parametro.activo){
+        return null;
+    }
+
+    const valor = parametro.valores.find(v => v.numero === 4);
+    const dias = Number(String(valor?.valor ?? "").replace(",", "."));
+    const guardado = Date.parse(parametro.fecha_actualizacion || "");
+
+    if(!Number.isFinite(dias) || dias <= 0 || !Number.isFinite(guardado)){
+        return null;
+    }
+
+    return guardado + dias * MS_DIA;
+}
+
+
+function textoCuentaAtras(fin){
+
+    let resto = Math.floor((fin - Date.now()) / 1000);
+
+    if(resto <= 0){
+        return "Vigencia cumplida: se apagará al recargar.";
+    }
+
+    const dias = Math.floor(resto / 86400);
+    resto %= 86400;
+    const horas = Math.floor(resto / 3600);
+    resto %= 3600;
+    const minutos = Math.floor(resto / 60);
+    const segundos = resto % 60;
+    const dos = n => String(n).padStart(2, "0");
+
+    return `Quedan ${dias} d ${dos(horas)} h ${dos(minutos)} min ${dos(segundos)} s`;
+}
+
+
+function ponerCuentaAtras(formulario, parametro){
+
+    const fin = finVigencia(parametro);
+    const campo = formulario.querySelector('.campo[data-numero="4"]');
+
+    if(fin === null || !campo){
+        return;
+    }
+
+    const contador = crear("p", "configuracion-cuenta-atras");
+    contador.setAttribute("aria-live", "off");
+    contador.title = "Se quitará el " + new Date(fin).toLocaleString("es-ES", {
+        timeZone: ZONA,
+        dateStyle: "short",
+        timeStyle: "medium"
+    }) + " (hora de Madrid)";
+    campo.append(contador);
+
+    // La ficha se crea antes de ponerla en la página; cuando se rehace al
+    // guardar, la vieja sale de la página y su reloj se para solo.
+    let enPagina = false;
+
+    const pintar = () => {
+        if(contador.isConnected){
+            enPagina = true;
+        }else if(enPagina){
+            window.clearInterval(reloj);
+            return;
+        }
+        contador.textContent = textoCuentaAtras(fin);
+    };
+
+    const reloj = window.setInterval(pintar, 1000);
+    pintar();
+}
+
+
 function crearFicha(parametro){
 
     const ficha = crear("article", "configuracion-ficha");
@@ -282,6 +368,11 @@ function crearFicha(parametro){
 
     if(parametro.descripcion){
         ficha.append(crear("p", "modulo-intro", parametro.descripcion));
+    }
+
+    // Nota de la API; p. ej., cuándo se apagará solo el distintivo.
+    if(parametro.aviso){
+        ficha.append(crear("p", "configuracion-aviso", parametro.aviso));
     }
 
     const formulario = crear("form", "configuracion-formulario");
@@ -323,6 +414,7 @@ function crearFicha(parametro){
     }
 
     aplicarIcono(formulario, parametro, true);
+    ponerCuentaAtras(formulario, parametro);
 
     const pie = crear("div", "configuracion-pie");
     const ultimo = crear(

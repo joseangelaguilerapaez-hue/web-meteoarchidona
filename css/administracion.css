@@ -1545,4 +1545,28 @@ a.modulo-boton{
 }
 
 
+
+/* Configuración: nota de la API (p. ej., fin de la vigencia del distintivo). */
+.configuracion-aviso {
+    margin: 0 0 12px;
+    padding: 8px 12px;
+    border-left: 3px solid var(--amber);
+    border-radius: 6px;
+    background: rgba(242, 191, 88, 0.08);
+    color: var(--amber-light);
+    font-size: 13px;
+}
+
+
+/* Cuenta atrás de la vigencia del distintivo, bajo su campo. */
+.configuracion-cuenta-atras {
+    margin: 6px 0 0;
+    color: var(--amber);
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+
 /* Fin de fichero: css/administracion.css */
