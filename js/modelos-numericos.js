@@ -425,6 +425,31 @@ function dibujar(contenedor, datos) {
 
 
 /* ------------------------------------------------------------
+   Compartir en Facebook (solo administradores; js/compartir-modelos.js)
+   ------------------------------------------------------------ */
+
+const CLAVE_TOKEN_ADMIN = "meteoarchidona_admin_token";
+const CLAVE_EXPIRA_ADMIN = "meteoarchidona_admin_expira_en";
+
+function hayAdministrador() {
+    try {
+        const expira = Number(sessionStorage.getItem(CLAVE_EXPIRA_ADMIN));
+        return Boolean(sessionStorage.getItem(CLAVE_TOKEN_ADMIN))
+            && Number.isFinite(expira) && expira > Date.now() / 1000;
+    } catch (error) {
+        return false;
+    }
+}
+
+function ponerCompartir(tarjeta, texto) {
+    if (!hayAdministrador()) return;
+    import("./compartir-modelos.js?v=20261103-compartir1")
+        .then((modulo) => modulo.ponerBotonCompartir(tarjeta, texto))
+        .catch((error) => console.warn("No se pudo cargar «Compartir en Facebook»:", error));
+}
+
+
+/* ------------------------------------------------------------
    Componente
    ------------------------------------------------------------ */
 
@@ -799,6 +824,7 @@ export function montarModelosNumericos(raiz) {
                 `Texto redactado automáticamente el ${formatoDiaLargo.format(generado)} a las ${formatoHora.format(generado)}, ` +
                 `a partir del consenso de los modelos por conjuntos (pasada del Europeo de las ${formatoHora.format(pasada)}).`));
             resumen.hidden = false;
+            ponerCompartir(resumen, datos.texto);
         } catch (error) {
             // Sin resumen, el bloque no aparece.
             resumen.hidden = true;

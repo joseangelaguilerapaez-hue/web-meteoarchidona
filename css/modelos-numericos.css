@@ -358,4 +358,68 @@
 }
 
 
+/* ------------------------------------------------------------
+   Compartir en Facebook (solo administradores; js/compartir-modelos.js)
+   ------------------------------------------------------------ */
+
+.mn-compartir {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.mn-compartir-boton {
+    padding: 10px 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--card-soft);
+    color: var(--text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mn-compartir-boton:hover:not(:disabled) {
+    border-color: var(--amber);
+}
+
+.mn-compartir-boton:disabled {
+    opacity: 0.6;
+    cursor: progress;
+}
+
+.mn-compartir-principal {
+    background: #1877f2;
+    border-color: #1877f2;
+    color: #ffffff;
+}
+
+.mn-compartir-estado {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.mn-compartir-listo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.mn-compartir-miniaturas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+}
+
+.mn-compartir-miniaturas img {
+    width: calc((100% - 32px) / 5);
+    min-width: 110px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+
 /* Fin de fichero: css/modelos-numericos.css */
