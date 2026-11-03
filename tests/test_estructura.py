@@ -422,6 +422,34 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         )
 
 
+class TestCompartirModelos(unittest.TestCase):
+    """Compartir en Facebook el resumen de los modelos (3-11-2026)."""
+
+    def test_solo_administradores_y_carga_diferida(self):
+        componente = leer(RAIZ / "js" / "modelos-numericos.js")
+        self.assertIn("hayAdministrador()", componente)
+        self.assertRegex(componente, r'import\("\./compartir-modelos\.js\?v=[\w-]+"\)')
+        codigo = leer(RAIZ / "js" / "compartir-modelos.js")
+        self.assertIn("meteoarchidona_admin_token", codigo)
+
+    def test_el_silo_a_todas_las_alturas(self):
+        codigo = leer(RAIZ / "js" / "compartir-modelos.js")
+        self.assertIn('const PUNTO = "EL_SILO"', codigo)
+        for variable in ("2M", "925_HPA", "850_HPA", "700_HPA", "500_HPA"):
+            self.assertIn(f'"TEMPERATURA_{variable}"', codigo)
+        # Facebook: fotos por el menú de compartir y el texto copiado.
+        self.assertIn("navigator.share", codigo)
+        self.assertIn("writeText", codigo)
+
+    def test_misma_version_del_componente_en_los_dos_sitios(self):
+        """Si no, el navegador cargaría el componente dos veces."""
+        version = re.compile(r"modelos-numericos\.js\?v=([\w-]+)")
+        prediccion = version.findall(leer(RAIZ / "js" / "prediccion.js"))
+        compartir = version.findall(leer(RAIZ / "js" / "compartir-modelos.js"))
+        self.assertTrue(prediccion and compartir)
+        self.assertEqual(set(prediccion), set(compartir))
+
+
 class TestDistintivo(unittest.TestCase):
     """Lazo o monigote bajo el logotipo (js/distintivo.js, 3-11-2026)."""
 
