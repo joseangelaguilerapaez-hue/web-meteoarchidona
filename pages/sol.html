@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="El Sol en directo y el tiempo espacial: corona solar, manchas, eyecciones de masa coronal, tormentas solares, alertas de la NOAA e índices Kp, viento solar y rayos X."
+>
+
+<title>
+    Sol · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/sol">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Sol · MeteoArchidona">
+<meta property="og:description" content="El Sol en directo y el tiempo espacial: tormentas solares, alertas e índices actualizados.">
+<meta property="og:url" content="https://meteoarchidona.com/sol">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20260926-giro2"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261101-instalar1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/sol.css?v=20261103-sol1"
+>
+
+
+<script
+    src="../js/cabecera.js?v=20261103-distintivo1"
+    defer
+></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    src="../js/sol.js?v=20261103-sol1"
+    defer
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="sol">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="sol">
+
+
+<header class="sol-cabecera">
+
+    <div class="sol-etiqueta">
+        METEOARCHIDONA · SOL
+    </div>
+
+    <h1>
+        El Sol y el tiempo espacial
+    </h1>
+
+    <p class="sol-entradilla">
+        Imágenes del Sol casi en directo, tormentas solares, alertas
+        e índices, tal como los publican la NASA, la ESA y la NOAA.
+    </p>
+
+    <p
+        class="sol-actualizado"
+        id="solActualizado"
+        aria-live="polite"
+    >
+        Cargando datos…
+    </p>
+
+</header>
+
+
+<!-- ========================================================
+     AHORA MISMO: escalas NOAA e índices
+     Los rellena js/sol.js.
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-ahora"
+>
+
+    <h2 id="titulo-ahora">
+        Ahora mismo
+    </h2>
+
+    <div
+        class="sol-escalas"
+        id="solEscalas"
+    >
+        <p class="sol-aviso">Cargando escalas…</p>
+    </div>
+
+    <div
+        class="sol-indices"
+        id="solIndices"
+    >
+        <p class="sol-aviso">Cargando índices…</p>
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     ALERTAS DE LA NOAA
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-alertas"
+>
+
+    <h2 id="titulo-alertas">
+        Alertas y avisos
+    </h2>
+
+    <p class="sol-nota">
+        Las emite el Centro de Predicción del Tiempo Espacial de la
+        NOAA. Se muestran traducidas; el texto original en inglés va
+        dentro de cada una.
+    </p>
+
+    <div
+        class="sol-alertas"
+        id="solAlertas"
+        aria-live="polite"
+    >
+        <p class="sol-aviso">Cargando alertas…</p>
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     SOL EN DIRECTO (SDO)
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-directo"
+>
+
+    <h2 id="titulo-directo">
+        El Sol en directo
+    </h2>
+
+    <div
+        class="sol-selector"
+        id="solSelector"
+        role="tablist"
+        aria-label="Filtro de la imagen del Sol"
+    ></div>
+
+    <figure class="sol-visor">
+
+        <a
+            class="sol-visor-enlace"
+            id="solVisorEnlace"
+            href="https://sdo.gsfc.nasa.gov/data/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <img
+                class="sol-visor-imagen"
+                id="solVisorImagen"
+                alt="Imagen más reciente del Sol"
+                width="1024"
+                height="1024"
+                decoding="async"
+            >
+        </a>
+
+        <figcaption
+            class="sol-visor-texto"
+            id="solVisorTexto"
+        ></figcaption>
+
+    </figure>
+
+    <p class="sol-nota">
+        Observatorio de Dinámica Solar (SDO) de la NASA. Las imágenes
+        se renuevan cada 15 minutos; toca la imagen para verla en
+        grande.
+    </p>
+
+</section>
+
+
+<!-- ========================================================
+     CORONA EXTERIOR (SOHO LASCO)
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-corona"
+>
+
+    <h2 id="titulo-corona">
+        Corona y eyecciones de masa coronal
+    </h2>
+
+    <p class="sol-nota">
+        El coronógrafo LASCO del satélite SOHO tapa el disco del Sol
+        (el círculo blanco marca su tamaño) para ver la corona
+        exterior. Las nubes que salen despedidas son eyecciones de
+        masa coronal: si vienen hacia la Tierra, pueden provocar
+        tormentas geomagnéticas y auroras uno a tres días después.
+    </p>
+
+    <div class="sol-pareja">
+
+        <figure class="sol-figura">
+            <a
+                href="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <img
+                    class="sol-imagen-viva"
+                    data-imagen="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"
+                    alt="Coronógrafo LASCO C2, imagen más reciente"
+                    width="1024"
+                    height="1024"
+                    decoding="async"
+                    loading="lazy"
+                >
+            </a>
+            <figcaption>
+                <strong>LASCO C2</strong>
+                Corona cercana, hasta unos 6 radios solares.
+            </figcaption>
+        </figure>
+
+        <figure class="sol-figura">
+            <a
+                href="https://soho.nascom.nasa.gov/data/realtime/c3/1024/latest.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <img
+                    class="sol-imagen-viva"
+                    data-imagen="https://soho.nascom.nasa.gov/data/realtime/c3/1024/latest.jpg"
+                    alt="Coronógrafo LASCO C3, imagen más reciente"
+                    width="1024"
+                    height="1024"
+                    decoding="async"
+                    loading="lazy"
+                >
+            </a>
+            <figcaption>
+                <strong>LASCO C3</strong>
+                Campo amplio, hasta unos 30 radios solares.
+            </figcaption>
+        </figure>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     ÍNDICE KP Y PREVISIÓN
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-kp"
+>
+
+    <h2 id="titulo-kp">
+        Índice Kp: últimos días y previsión
+    </h2>
+
+    <p class="sol-nota">
+        Mide cómo de agitado está el campo magnético de la Tierra, de
+        0 a 9, en tramos de 3 horas. Desde 5 hay tormenta geomagnética.
+        Las barras rayadas son previsión.
+    </p>
+
+    <div
+        class="sol-kp"
+        id="solKp"
+    >
+        <p class="sol-aviso">Cargando el índice Kp…</p>
+    </div>
+
+    <h3 class="sol-subtitulo">
+        Previsión de la NOAA para los próximos días
+    </h3>
+
+    <div
+        class="sol-prevision"
+        id="solPrevision"
+    >
+        <p class="sol-aviso">Cargando la previsión…</p>
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     FULGURACIONES
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-fulguraciones"
+>
+
+    <h2 id="titulo-fulguraciones">
+        Fulguraciones de los últimos 7 días
+    </h2>
+
+    <p class="sol-nota">
+        Destellos de rayos X medidos por los satélites GOES. Por
+        intensidad, de menor a mayor: A, B, C, M y X; cada letra es
+        diez veces más fuerte que la anterior. Las M y X pueden cortar
+        la radio de onda corta en la cara de la Tierra iluminada.
+    </p>
+
+    <div
+        class="sol-fulguraciones"
+        id="solFulguraciones"
+    >
+        <p class="sol-aviso">Cargando fulguraciones…</p>
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     AURORAS
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-auroras"
+>
+
+    <h2 id="titulo-auroras">
+        Óvalo de auroras
+    </h2>
+
+    <p class="sol-nota">
+        Previsión a corto plazo de la NOAA (modelo OVATION) de dónde
+        se pueden ver auroras en el hemisferio norte. Desde Andalucía
+        solo se ven con tormentas muy fuertes, de G4 o G5.
+    </p>
+
+    <figure class="sol-figura sol-figura-ancha">
+        <a
+            href="https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <img
+                class="sol-imagen-viva"
+                data-imagen="https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg"
+                alt="Previsión del óvalo de auroras del hemisferio norte"
+                width="800"
+                height="800"
+                decoding="async"
+                loading="lazy"
+            >
+        </a>
+    </figure>
+
+</section>
+
+
+<!-- ========================================================
+     GLOSARIO
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-glosario"
+>
+
+    <h2 id="titulo-glosario">
+        Qué significa cada cosa
+    </h2>
+
+    <dl class="sol-glosario">
+
+        <dt>Escala R · apagones de radio</dt>
+        <dd>
+            La provocan las fulguraciones. De R1 (menor) a R5
+            (extrema): cortes de la radio de onda corta y del GPS en
+            la cara iluminada de la Tierra.
+        </dd>
+
+        <dt>Escala S · tormenta de radiación</dt>
+        <dd>
+            Llegada de protones solares muy energéticos. De S1 a S5:
+            afecta a satélites, a astronautas y a vuelos polares.
+        </dd>
+
+        <dt>Escala G · tormenta geomagnética</dt>
+        <dd>
+            Sacudida del campo magnético terrestre por el viento solar
+            o una eyección. De G1 (Kp 5) a G5 (Kp 9): auroras, redes
+            eléctricas, satélites y GPS.
+        </dd>
+
+        <dt>Viento solar</dt>
+        <dd>
+            Chorro de partículas que sale del Sol sin parar. Lo normal
+            son unos 300 a 500 km/s; por encima de 600 km/s llega
+            revuelto.
+        </dd>
+
+        <dt>Bz</dt>
+        <dd>
+            Dirección norte-sur del campo magnético que trae el viento
+            solar, en nanoteslas. Cuando es negativo (hacia el sur) y
+            se mantiene, abre la puerta a las tormentas geomagnéticas.
+        </dd>
+
+        <dt>Flujo solar F10.7</dt>
+        <dd>
+            Radiación del Sol en 10,7 cm de longitud de onda. Sirve de
+            termómetro de la actividad solar: unos 70 con el Sol
+            tranquilo y 200 o más en los máximos.
+        </dd>
+
+    </dl>
+
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="sol-bloque"
+    aria-labelledby="titulo-fuentes-sol"
+>
+
+    <h2 id="titulo-fuentes-sol">
+        Fuentes
+    </h2>
+
+    <ul class="sol-fuentes">
+        <li>
+            Imágenes del disco solar:
+            <a href="https://sdo.gsfc.nasa.gov" target="_blank" rel="noopener noreferrer">NASA/SDO</a>
+            y los equipos científicos de AIA y HMI.
+        </li>
+        <li>
+            Coronógrafos:
+            <a href="https://soho.nascom.nasa.gov" target="_blank" rel="noopener noreferrer">SOHO</a>,
+            misión de la ESA y la NASA.
+        </li>
+        <li>
+            Alertas, escalas, índices, fulguraciones y auroras:
+            <a href="https://www.swpc.noaa.gov" target="_blank" rel="noopener noreferrer">NOAA Space Weather Prediction Center</a>.
+        </li>
+    </ul>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/sol.html -->
