@@ -102,6 +102,30 @@ El mismo texto se enviará por correo a los usuarios suscritos. Cada usuario eli
 Quedan fuera por ahora, sin descartarlas: la narrativa por catálogo cerrado de frases y refranes (secciones 33 a 38; el texto de la IA cumple esa función), las alertas propias y la comparación con otras fuentes.
 
 
+## 2 ter. Pestañas por fuente (2 de noviembre de 2026)
+
+Decisión de José: la página Predicción va por pestañas, una por fuente, y cada pestaña es un
+componente que se puede poner también en otras páginas o dashboards.
+
+- **AEMET** (`js/prediccion-aemet.js`, `data-componente="prediccion-aemet"`): todo lo que había
+  hasta ahora, sin cambios (Ahora en Archidona, presentador, hoy, próximas horas, 7 días, avisos).
+- **Modelos numéricos** (`js/modelos-numericos.js`, `data-componente="modelos-numericos"`):
+  predicciones por conjuntos de Open-Meteo que guarda la API (`docs/predicciones-conjuntos.md` de
+  `api-meteoarchidona`). Resumen automático redactado por IA a partir del consenso de los modelos;
+  vista «Por modelo» (penacho: un escenario por línea, media, franja del 80 % central y la salida
+  operativa del mismo centro y el control, decisiones de José; Google no tiene operativa) y
+  «Comparar modelos» (media de cada modelo y consenso, con sombreado donde discrepan más de 2 °C;
+  una casilla por modelo en la leyenda: al desmarcar, el consenso, el sombreado y la lluvia se calculan
+  solo con los marcados; la selección se recuerda en el navegador, decisión de José);
+  temperatura a 2 m (superficie, orientativa) o a 925, 850, 700 o 500 hPa —en altura, no la de
+  Archidona—, lluvia y nieve cada 6 horas;
+  El Silo o Los Llanos. Se habla siempre de escenarios, no de probabilidad.
+- Previstas más adelante: otras agencias (Meteored u otra) y mapas isobáricos de modelos.
+
+La pestaña abierta queda en la dirección (`/prediccion#modelos`). Cada componente se monta la
+primera vez que se abre su pestaña. Opciones del componente de modelos: `data-punto`,
+`data-vista` (`modelo` o `comparar`), `data-modelo`, `data-variable` y `data-resumen="no"`.
+
 ## 3. Principios generales
 
 El subsistema seguirá los siguientes principios:

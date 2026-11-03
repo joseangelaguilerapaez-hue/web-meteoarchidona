@@ -1,23 +1,34 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-11-01.
+Última actualización: 2026-11-02.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
 ## Cómo se mantiene este documento
 
-Es la fuente de verdad de "por dónde vamos". Al empezar una sesión se lee; al terminar
-cada tarea se actualiza **en el mismo PR que el cambio**:
+Es la fuente de verdad de "por dónde vamos". Al empezar una sesión se lee.
+
+**Este fichero no se toca en los PR de código.** Se actualiza en una rama propia de
+documentación (`docs/...`), al final de cada tanda de trabajo, cuando ya se sabe qué quedó
+fusionado y qué llegó al VPS. Regla nueva del 2 de noviembre de 2026, decidida por José
+después de que cuatro fusiones seguidas se comieran líneas de aquí: varios PR abiertos a la
+vez tocando este fichero garantizan el conflicto, y resolverlo a mano pierde texto.
+
+Qué lleva esa rama de documentación:
 
 1. Mover lo que corresponda entre *Hecho*, *En construcción* y *Pendiente*.
 2. Añadir una línea fechada al *Registro* (una línea, sin detalles de código).
 3. Si algún documento de `docs/` ya no es cierto, corregirlo o dejar aquí la nota de que está desfasado.
 
-No se marca nada como hecho que no esté en `main`.
+No se marca nada como hecho que no esté en `main`, ni como publicado lo que no se haya
+comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- **Predicción por pestañas** (PR #67, #68 y #71, 2 y 3 nov, decisiones de José; **publicada**, web en `38b3be6`, revisada por José en el móvil): pestañas «AEMET» (lo de siempre, ahora componente `js/prediccion-aemet.js`) y «Modelos numéricos» (`js/modelos-numericos.js`): resumen automático redactado por IA, penacho por modelo con escenarios, media, franja del 80 %, salida operativa y control, comparación de modelos con casillas para marcar o desmarcar, niveles 2 m, 925, 850, 700 y 500 hPa, lluvia y nieve cada 6 h, El Silo o Los Llanos, zoom con dos dedos. Detalle en `docs/prediccion.md`, 2 ter. Usa la API desplegada con las migraciones 0036 y 0037. Falta dar de alta sus bloques en el catálogo de auditoría.
+
 - Pantalla completa en horizontal (PR #63, **publicado el 2 nov** en `aa7585d`, José confirma que funciona): con la web instalada como aplicación, el manifiesto fija `portrait-primary` y Android no giraba la pantalla completa aunque el móvil tuviera la rotación automática (lo vio José en su Samsung con un timelapse). Los dos visores (`js/visor-video-multimedia.js` para MP4 y `js/visor-video.js` para el directo) piden `screen.orientation.lock("landscape")` al entrar y la liberan al salir. En iPhone no existe esa orden y sigue mandando el giro del teléfono. Versión `?v=20261102-horizontal1`.
+- Pantalla completa de YouTube en horizontal (PR #69, **publicado el 3 nov** en `3601c31`, José confirma que funciona en el móvil con la aplicación instalada): el PR #63 no tocó el visor de YouTube y al maximizar un directo de En vivo se quedaba en vertical. `visores/youtube.js` escucha el cambio de pantalla completa (el botón es de YouTube y no se puede escuchar), pide horizontal al entrar y la libera al salir; si el iframe no puede, lo pide la página contenedora. En ordenador e iPhone no hace nada y la pantalla completa sigue igual. Versión `?v=20261102-horizontal1`.
 
 - Botón de pantalla completa bajo el termómetro (PR #57, 1 nov, decisión de José; **publicado** el 1 nov, `b9e0223`, y comprobado por José en el móvil): en el directo los controles del visor dejan de ir centrados abajo, donde tapaban la barra de humedad grabada en el vídeo, y se colocan en la vertical del termómetro (5,5 % del ancho) y a la altura del logotipo (centro de la franja 75,4–97,2 % del alto), sobre el rectángulo real del vídeo para respetar las bandas negras. El MP4 de los timelapses conserva su barra centrada. Si con su tamaño normal llegarían al logotipo (vídeo muy pequeño, como la panorámica en un móvil en vertical), pasan a los botones pequeños de las fichas compactas (decisión de José).
 
@@ -40,15 +51,11 @@ No se marca nada como hecho que no esté en `main`.
 
 - Aplicación instalable (PWA), 1 nov: `manifest.webmanifest` y `sw.js` en la raíz, `js/pwa.js` que da de alta el trabajador (en `localhost` no), iconos de 512 y recortable, y etiquetas de tema e instalación en las seis páginas. Las páginas van primero a la red y guardan copia para enseñarla sin conexión; los datos de la API no se guardan nunca. Hecha por Mario (PR #59). **Publicada** el 1 nov en `68e420f` y `scripts/configurar_pwa.py` ejecutado en el VPS por José: el manifiesto se sirve como `application/manifest+json`, `sw.js` y el manifiesto van con `no-cache`, el trabajador queda activo y en su caché no hay ninguna respuesta de la API. Copia de la configuración anterior de Nginx en `/home/jose/meteoarchidona-web.nginx.20261101T175029179953Z.bak`.
 
-## En construcción / abierto
-
-- Configuración en Administración (rama `feature/configuracion`, 1 nov, decisiones de José; diseño en `docs/configuracion.md` de la API): nuevo módulo «Configuración» con pestañas por apartado (Apariencia, Timelapses, Seguimiento, Directo y cámaras, Predicción, Usuarios y Otros; se recuerda la última abierta) y una ficha por parámetro (desplegables según el icono, números con su unidad, rango y valor por defecto, texto del día y guardar; la casilla «Activo» solo en los que se encienden y apagan, hoy el distintivo). Once parámetros desde el 3 nov. **Necesita antes la API con la migración 0038** (`/admin/configuracion`). Probada en el navegador con la API simulada.
-
-- Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
-- Botón «Instalar la aplicación» en el pie, 1 nov: en Chrome, Edge y Samsung abre el diálogo del sistema; en Safari del iPhone explica los tres pasos de «Añadir a pantalla de inicio», que es lo único que deja hacer Apple; en los navegadores que no instalan, y a quien ya la tiene instalada, no se enseña.
 - Botón «Instalar la aplicación» en el pie (PR #62, fusionado el 1 nov, **publicado el 2 nov** con el `git pull` del PR #63 y comprobado en vivo; decisión de José tras conseguir instalarla solo desde Safari): en Chrome, Edge y Samsung abre el diálogo del sistema; en Safari del iPhone explica los tres pasos de «Añadir a pantalla de inicio», que es lo único que deja hacer Apple; en los navegadores que no instalan, y a quien ya la tiene instalada, no se enseña.
 
 ## En construcción / abierto
+
+- Configuración en Administración (PR #61, **fusionado el 2 nov**, decisiones de José; diseño en `docs/configuracion.md` de la API): nuevo módulo «Configuración» con pestañas por apartado (Apariencia, Otros; se recuerda la última abierta) y una ficha por parámetro (interruptor, desplegables según el icono, texto del día y guardar). Primer parámetro: el distintivo (lazo de 8 colores o monigote). **Necesita antes la API con la migración 0038**, que era la 0035 y se renumeró el 2 nov porque de la 0035 a la 0037 son las de los conjuntos (PR #68 de la API) (`/admin/configuracion`). Probada en el navegador con la API simulada. **Pendiente de publicar en el VPS**: el 2 de noviembre la web servía todavía `administracion.css?v=20261027-estadisticas1` y `js/administracion/configuracion.js` respondía 404.
 
 - Gráficas en Actualidad (rama `feature/actualidad-graficas`, 29 oct, elegidas por José): debajo de los timelapses, «El Silo frente a Los Llanos» con dos estadísticas del catálogo, `SILO_LLANOS_TEMPERATURA_7D` y `SILO_LLANOS_MAXIMAS_MINIMAS_30D` (esta solo la gráfica, `data-presentacion="GRAFICA"`), y enlace a «Más estadísticas». Las monta `js/estadisticas-incrustadas.js`, pieza reutilizable para los futuros dashboards: un `data-estadistica="CODIGO"` por hueco; la sección sigue oculta si no llega ninguna. Las ve cualquier visitante. **Necesita antes el PR #56 de la API** (pedir por código) desplegado.
 
@@ -68,7 +75,6 @@ No se marca nada como hecho que no esté en `main`.
 
 - Mejoras propuestas tras el repaso del 27 oct: `docs/mejoras.md` (código muerto, documentos desfasados, seguridad de la consola SQL por comprobar, pestañas en segundo plano, imágenes, accesibilidad…). **Por decidir con José** qué se hace y en qué orden.
 - Ventajas de registrarse: `docs/ventajas-registro.md` reúne qué gana el usuario registrado (estadísticas e informes propios, catálogo en sus dashboards, dashboards propios) y por qué importa a MeteoArchidona. Se irá ampliando; su texto se llevará a la web cuando cada ventaja funcione. Falta decidir dónde se muestra.
-
 
 - Privacidad y cookies: borrador del aviso de consentimiento, la política de privacidad y la de cookies en `docs/privacidad-borrador.md` (24 oct). Antes de publicarlo faltan los datos del responsable, los plazos de conservación y el proveedor de alojamiento **(por confirmar)**, y construir el aviso y la página.
 - Estadísticas, usuarios, publicidad y redimensionamiento con nuevos puntos de medición: existen como documentos de especificación en `docs/`, pero no consta implementación en el historial reciente **(por confirmar cuáles se van a construir y en qué orden)**.
@@ -141,9 +147,13 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-01 · La web se puede instalar en el teléfono: manifiesto, trabajador de servicio con aviso de sin conexión y iconos propios. Falta el paso de Nginx en el VPS.
 - 2026-11-01 · Botón bajo el termómetro publicado en el VPS (`b9e0223`); José confirma que queda bien.
 - 2026-11-01 · Administración → Configuración: pantalla de parámetros de la web (primero, el distintivo del directo); pendiente de la API y de publicar.
-- 2026-11-03 · Administración → Configuración: siete pestañas y once parámetros; sin casilla «Activo» en los que valen siempre, con unidad y rango en los números. Sin publicar.
 - 2026-11-01 · PWA publicada en el VPS y comprobada en vivo: manifiesto con su tipo, trabajador activo controlando la página y cero respuestas de la API guardadas.
 - 2026-11-01 · José la instala desde Safari del iPhone; en el iPhone ningún otro navegador puede. De ahí el botón del pie.
 - 2026-11-01 · Botón «Instalar la aplicación» en el pie, con diálogo nativo donde lo hay y pasos de Safari donde no; escondido en los navegadores que no instalan.
 - 2026-11-02 · Visor de vídeo: la pantalla completa se pone en horizontal sola en Android y vuelve a vertical al salir; la PWA tenía la orientación bloqueada en vertical.
 - 2026-11-02 · Pantalla completa en horizontal publicada en el VPS (`aa7585d`); José la prueba en su Samsung y funciona.
+- 2026-11-02 · Configuración en Administración fusionada (PR #61); sigue sin publicar en el VPS.
+- 2026-11-02 · Reparado este documento: la fusión del PR #61 había devuelto el directo con instrumentos a «En construcción», duplicado el botón del pie y dejado dos veces la cabecera «En construcción / abierto».
+- 2026-11-02 · Norma nueva de José: `docs/estado.md` deja de tocarse en los PR de código; se actualiza en una rama de documentación propia al final de cada tanda.
+- 2026-11-03 · Pantalla completa de YouTube en horizontal (PR #69) publicada en el VPS (`3601c31`); José la prueba en el móvil con la aplicación instalada y funciona.
+- 2026-11-03 · Predicción por pestañas (AEMET y Modelos numéricos) publicada y revisada por José; la Configuración de Administración necesita ahora la migración 0038 de la API.

@@ -638,4 +638,76 @@
 }
 
 
+
+/* ==========================================================
+   PESTAÑAS POR FUENTE (2-11-2026)
+   ========================================================== */
+
+
+.pred-pestanas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+
+.pred-pestana {
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: -1px;
+}
+
+
+.pred-pestana.activa,
+.pred-pestana[aria-selected="true"] {
+    border-color: var(--border);
+    background: var(--card);
+    color: var(--cyan);
+}
+
+
+.pred-pestana:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+
+@media (hover: hover) {
+    .pred-pestana:hover {
+        color: var(--text);
+    }
+}
+
+
+.pred-panel[hidden] {
+    display: none;
+}
+
+
+/* Cada componente ordena sus tarjetas como lo hacía la página. */
+.pred-componente,
+.mn {
+    display: grid;
+    gap: 16px;
+}
+
+
+@media (max-width: 620px) {
+    .pred-pestana {
+        flex: 1 1 0;
+        padding: 0 10px;
+        font-size: 13px;
+    }
+}
+
 /* Fin de fichero: css/prediccion.css */

@@ -379,6 +379,19 @@ class TestDirectoConInstrumentos(unittest.TestCase):
             self.assertIn("screen.orientation.unlock()", codigo, nombre)
             self.assertIn("liberarOrientacion();", codigo, nombre)
 
+    def test_pantalla_completa_youtube_en_horizontal(self):
+        """2-11-2026: la pantalla completa de YouTube también gira a horizontal."""
+
+        codigo = leer(RAIZ / "visores" / "youtube.js")
+        self.assertIn("orientacion.lock('landscape')", codigo)
+        self.assertIn("orientacion.unlock()", codigo)
+        self.assertIn("'fullscreenchange'", codigo)
+        self.assertIn("'webkitfullscreenchange'", codigo)
+        self.assertIn(
+            "youtube.js?v=20261102-horizontal1",
+            leer(RAIZ / "visores" / "youtube.html"),
+        )
+
     def test_controles_bajo_el_termometro(self):
         """Decisión de José del 1-11-2026: el botón no tapa la barra de humedad."""
 

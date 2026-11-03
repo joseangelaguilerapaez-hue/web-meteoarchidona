@@ -46,10 +46,19 @@ no autoriza a `localhost`, por lo que `servidor.py` hace de intermediario en `/a
 **Al empezar una sesión, lee `docs/estado.md`**: qué está hecho, qué está en construcción y qué
 queda pendiente. Es la fuente de verdad de "por dónde vamos".
 
-**Al terminar cada tarea, actualiza `docs/estado.md` en el mismo PR**: mueve lo que corresponda
-entre Hecho, En construcción y Pendiente, y añade una línea fechada al Registro. No marques como
-hecho nada que no esté en `main`. Si dudas del estado real de algo, déjalo "por confirmar" y
-pregúntaselo a José en vez de suponerlo.
+**Los PR de código no tocan `docs/estado.md`.** Se actualiza aparte, en una rama propia de
+documentación (`docs/...`), al final de cada tanda de trabajo: mueve lo que corresponda entre
+Hecho, En construcción y Pendiente, y añade una línea fechada al Registro. Así se escribe una
+sola vez, sabiendo ya qué quedó fusionado y qué llegó al VPS.
+
+El motivo: con varios PR abiertos a la vez anotando ese fichero, el último siempre llega con una
+copia vieja y la resolución del conflicto pierde líneas. Pasó cuatro veces seguidas entre el 29 de
+octubre y el 2 de noviembre de 2026 (la última, al fusionar el PR #61), y por eso José cambió la
+norma.
+
+No marques como hecho nada que no esté en `main`, ni como publicado nada que no hayas comprobado
+en meteoarchidona.com. Si dudas del estado real de algo, déjalo "por confirmar" y pregúntaselo a
+José en vez de suponerlo.
 
 ## Cosas que no se hacen sin orden expresa
 

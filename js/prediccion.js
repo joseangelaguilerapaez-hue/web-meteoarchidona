@@ -1,561 +1,111 @@
 /*
- * MeteoArchidona · Predicción
+ * MeteoArchidona · Página Predicción
  *
- * Dos fuentes, sin mezclarlas (docs/prediccion.md, 2 bis):
+ * Desde el 2-11-2026 la página va por pestañas, una por fuente (decisión
+ * de José). Este script solo las gobierna y monta el componente de cada
+ * una; lo que enseña cada pestaña vive en su propio módulo, para poder
+ * ponerlo también en otras páginas o dashboards:
  *
- * - «Ahora en Archidona»: observación real de la estación El Silo,
- *   GET /condiciones-actuales/EL_SILO. No es predicción.
- * - Todo lo demás: predicción de AEMET, GET /prediccion/archidona
- *   (formato en docs/prediccion-endpoint.md): hoy, próximas horas,
- *   próximos 7 días, avisos y procedencia.
+ *     data-componente="prediccion-aemet"   → js/prediccion-aemet.js
+ *     data-componente="modelos-numericos"  → js/modelos-numericos.js
  *
- * MeteoArchidona no predice ni inventa: si la predicción de AEMET no
- * llega, se avisa con #pred-error y se conserva la última buena que se
- * hubiera pintado.
+ * Cada componente se monta la primera vez que se abre su pestaña: quien
+ * solo mira AEMET no descarga los modelos. La pestaña abierta queda en la
+ * dirección (/prediccion#modelos) para poder enlazarla.
  */
 
-(function () {
-    "use strict";
-
-    const MUNICIPIO = "archidona";
-    const ESTACION_AHORA = "EL_SILO";
-    const ZONA = "Europe/Madrid";
-
-    // La predicción cambia pocas veces al día: basta con recargar cada 30 min.
-    const REFRESCO_MS = 30 * 60 * 1000;
-
-    // La observación de El Silo, más a menudo.
-    const REFRESCO_AHORA_MS = 5 * 60 * 1000;
-
-    const RUMBOS = {
-        N: 0, NE: 45, E: 90, SE: 135, S: 180, SO: 225, O: 270, NO: 315,
-        SW: 225, W: 270, NW: 315
-    };
+import {montarPrediccionAemet} from "./prediccion-aemet.js?v=20261102-pestanas1";
+import {montarModelosNumericos} from "./modelos-numericos.js?v=20261103-zoom1";
 
 
-    /* ------------------------------------------------------------
-       Utilidades
-       ------------------------------------------------------------ */
+const COMPONENTES = {
+    "prediccion-aemet": montarPrediccionAemet,
+    "modelos-numericos": montarModelosNumericos
+};
 
-    function crear(etiqueta, clase, texto) {
-        const elemento = document.createElement(etiqueta);
+const PESTANA_POR_DEFECTO = "aemet";
 
-        if (clase) {
-            elemento.className = clase;
+
+const pestanas = [...document.querySelectorAll(".pred-pestana[data-pestana]")];
+const montados = new WeakSet();
+
+
+function montarComponentes(panel) {
+    for (const hueco of panel.querySelectorAll("[data-componente]")) {
+        if (montados.has(hueco)) {
+            continue;
         }
 
-        if (texto !== undefined && texto !== null) {
-            elemento.textContent = texto;
+        const montar = COMPONENTES[hueco.dataset.componente];
+
+        if (!montar) {
+            continue;
         }
 
-        return elemento;
-    }
-
-    function numero(valor, sufijo) {
-        return typeof valor === "number" && Number.isFinite(valor)
-            ? `${Math.round(valor)}${sufijo || ""}`
-            : "--";
-    }
-
-    const formatoHora = new Intl.DateTimeFormat("es-ES", {
-        hour: "2-digit", minute: "2-digit", timeZone: ZONA
-    });
-
-    const formatoSoloHora = new Intl.DateTimeFormat("es-ES", {
-        hour: "numeric", hourCycle: "h23", timeZone: ZONA
-    });
-
-    const formatoDiaSemana = new Intl.DateTimeFormat("es-ES", {
-        weekday: "short", day: "numeric", timeZone: ZONA
-    });
-
-    const formatoDiaLargo = new Intl.DateTimeFormat("es-ES", {
-        weekday: "long", day: "numeric", month: "long", timeZone: ZONA
-    });
-
-    const formatoFechaIso = new Intl.DateTimeFormat("en-CA", {
-        year: "numeric", month: "2-digit", day: "2-digit", timeZone: ZONA
-    });
-
-    function fechaLocal(fecha) {
-        return formatoFechaIso.format(fecha);
-    }
-
-    /* «AAAA-MM-DD» como mediodía de ese día, para formatearlo sin saltos de zona. */
-    function desdeFechaIso(texto) {
-        return new Date(`${texto}T12:00:00Z`);
-    }
-
-    function nombreDia(textoFecha, hoy) {
-        const manana = fechaLocal(new Date(desdeFechaIso(hoy).valueOf() + 86400000));
-
-        if (textoFecha === hoy) return "Hoy";
-        if (textoFecha === manana) return "Mañana";
-
-        const texto = formatoDiaSemana.format(desdeFechaIso(textoFecha)).replace(".", "");
-        return texto.charAt(0).toUpperCase() + texto.slice(1);
-    }
-
-    function cuandoEmitida(fecha) {
-        const hoy = fechaLocal(new Date());
-        const ayer = fechaLocal(new Date(Date.now() - 86400000));
-        const dia = fechaLocal(fecha);
-        const hora = formatoHora.format(fecha);
-
-        if (dia === hoy) return `hoy a las ${hora}`;
-        if (dia === ayer) return `ayer a las ${hora}`;
-        return `el ${formatoDiaLargo.format(fecha)} a las ${hora}`;
-    }
-
-
-    /* ------------------------------------------------------------
-       Iconos
-       ------------------------------------------------------------
-
-       Los dibujos están en js/iconos-tiempo.js, que los comparte con la
-       tarjeta «Condiciones actuales» de Actualidad. Aquí solo se llama.
-    */
-
-    function icono(condicion, noche) {
-        return window.IconosTiempo
-            ? window.IconosTiempo.icono(condicion, noche)
-            : "";
-    }
-
-    function flechaViento(direccion) {
-        const grados = RUMBOS[String(direccion || "").toUpperCase()];
-        const flecha = crear("span", "pred-flecha", "↓");
-
-        // La flecha señala hacia dónde sopla: el viento del N baja hacia el S.
-        if (grados === undefined) {
-            flecha.hidden = true;
-        } else {
-            flecha.style.transform = `rotate(${grados}deg)`;
-        }
-
-        flecha.setAttribute("aria-hidden", "true");
-        return flecha;
-    }
-
-
-    /* ------------------------------------------------------------
-       Pintado
-       ------------------------------------------------------------ */
-
-    function pintarFuente(datos) {
-        const fuente = document.getElementById("pred-fuente");
-
-        fuente.textContent = "";
-        fuente.classList.toggle("pred-fuente-antigua", Boolean(datos.desactualizada));
-
-        const nombre = datos.fuente && datos.fuente.nombre ? datos.fuente.nombre : "AEMET";
-        const emitida = datos.fuente && datos.fuente.emitida ? new Date(datos.fuente.emitida) : null;
-
-        if (datos.fuente && datos.fuente.url) {
-            const enlace = crear("a", null, nombre);
-            enlace.href = datos.fuente.url;
-            enlace.target = "_blank";
-            enlace.rel = "noopener";
-            fuente.append("Fuente: ", enlace);
-        } else {
-            fuente.append(`Fuente: ${nombre}`);
-        }
-
-        if (emitida && !Number.isNaN(emitida.valueOf())) {
-            fuente.append(` · emitida ${cuandoEmitida(emitida)}`);
-        }
-
-        if (datos.desactualizada) {
-            fuente.append(" · puede estar desactualizada");
-        }
-    }
-
-    function pintarAvisos(avisos) {
-        const zona = document.getElementById("pred-avisos");
-        zona.textContent = "";
-        zona.hidden = !avisos || avisos.length === 0;
-
-        (avisos || []).forEach(aviso => {
-            const nivel = ["amarillo", "naranja", "rojo"].includes(aviso.nivel) ? aviso.nivel : "amarillo";
-            const caja = crear("article", `pred-aviso pred-aviso-${nivel}`);
-            const titulo = crear("strong", "pred-aviso-titulo",
-                `Aviso ${nivel} por ${aviso.fenomeno || "fenómenos adversos"}`);
-            caja.append(titulo);
-
-            const inicio = aviso.inicio ? new Date(aviso.inicio) : null;
-            const fin = aviso.fin ? new Date(aviso.fin) : null;
-
-            if (inicio && fin) {
-                caja.append(crear("span", "pred-aviso-periodo",
-                    `${cuandoEmitida(inicio)} – ${cuandoEmitida(fin)}`.replace(/^./, c => c.toUpperCase())));
-            }
-
-            if (aviso.descripcion) {
-                caja.append(crear("p", "pred-aviso-texto", aviso.descripcion));
-            }
-
-            caja.append(crear("span", "pred-aviso-fuente",
-                `${aviso.fuente || "AEMET"}${aviso.zona ? " · " + aviso.zona : ""}`));
-            zona.append(caja);
-        });
-    }
-
-    function pintarHoy(datos) {
-        const zona = document.getElementById("pred-hoy");
-        const dia = (datos.diaria || [])[0];
-        const hora = (datos.horaria || [])[0];
-        zona.textContent = "";
-
-        if (!dia) {
-            zona.append(crear("p", "pred-vacio", "No hay predicción para hoy."));
-            return;
-        }
-
-        // Cielo de la hora en curso si AEMET lo da; si no, el del día.
-        const noche = hora ? Boolean(hora.es_noche) : false;
-        const condicion = hora ? hora.condicion : dia.condicion;
-        const descripcion = dia.descripcion || (hora ? hora.descripcion : "");
-
-        const principal = crear("div", "pred-hoy-principal");
-        const dibujo = crear("div", "pred-hoy-icono");
-        dibujo.innerHTML = icono(condicion, noche);
-
-        const texto = crear("div", "pred-hoy-texto");
-        texto.append(
-            crear("h2", "pred-hoy-titulo", "Hoy · predicción de AEMET"),
-            crear("div", "pred-hoy-descripcion", descripcion || "")
-        );
-        principal.append(dibujo, texto);
-
-        const cifras = crear("dl", "pred-hoy-cifras");
-        const filas = [
-            ["Máxima", numero(dia.temperatura_max_c, " °C"), "pred-max"],
-            ["Mínima", numero(dia.temperatura_min_c, " °C"), "pred-min"],
-            ["Prob. de lluvia", numero(dia.prob_precipitacion_pct, " %"), "pred-lluvia"],
-            ["Viento", dia.viento_kmh === null || dia.viento_kmh === undefined
-                ? "--"
-                : `${dia.viento_direccion || ""} ${numero(dia.viento_kmh, " km/h")}`.trim(), ""],
-            ["Racha máxima", numero(dia.racha_max_kmh, " km/h"), ""],
-            ["Índice UV", numero(dia.uv_max), ""]
-        ];
-
-        filas.forEach(([etiqueta, valor, clase]) => {
-            const bloque = crear("div", "pred-cifra");
-            bloque.append(crear("dt", null, etiqueta), crear("dd", clase, valor));
-            cifras.append(bloque);
-        });
-
-        zona.append(principal, cifras);
-    }
-
-    function pintarHoras(horaria) {
-        const zona = document.getElementById("pred-horas");
-        zona.textContent = "";
-        let diaAnterior = null;
-
-        (horaria || []).forEach((hora, i) => {
-            const instante = new Date(hora.instante);
-            const dia = fechaLocal(instante);
-            const celda = crear("div", "pred-hora");
-
-            if (diaAnterior !== null && dia !== diaAnterior) {
-                celda.classList.add("pred-hora-nuevo-dia");
-                celda.dataset.dia = nombreDia(dia, fechaLocal(new Date()));
-            }
-
-            diaAnterior = dia;
-
-            const etiqueta = i === 0 ? "Ahora" : `${formatoSoloHora.format(instante)} h`;
-            const dibujo = crear("div", "pred-hora-icono");
-            dibujo.innerHTML = icono(hora.condicion, hora.es_noche);
-            dibujo.title = hora.descripcion || "";
-
-            const viento = crear("div", "pred-hora-viento");
-            viento.append(flechaViento(hora.viento_direccion), numero(hora.viento_kmh));
-
-            celda.append(
-                crear("div", "pred-hora-etiqueta", etiqueta),
-                dibujo,
-                crear("div", "pred-hora-temperatura", numero(hora.temperatura_c, "°")),
-                crear("div", "pred-hora-lluvia", numero(hora.prob_precipitacion_pct, "%")),
-                viento
-            );
-            zona.append(celda);
-        });
-    }
-
-    function pintarDias(diaria) {
-        const lista = document.getElementById("pred-dias");
-        const hoy = fechaLocal(new Date());
-        lista.textContent = "";
-
-        const conDato = (diaria || []).filter(d =>
-            typeof d.temperatura_min_c === "number" && typeof d.temperatura_max_c === "number");
-        const minimo = Math.min(...conDato.map(d => d.temperatura_min_c));
-        const maximo = Math.max(...conDato.map(d => d.temperatura_max_c));
-        const rango = Math.max(1, maximo - minimo);
-
-        (diaria || []).forEach(dia => {
-            const fila = crear("li", "pred-dia");
-            const dibujo = crear("div", "pred-dia-icono");
-            dibujo.innerHTML = icono(dia.condicion, false);
-
-            const barra = crear("div", "pred-dia-barra");
-            const tramo = crear("span", "pred-dia-tramo");
-
-            if (typeof dia.temperatura_min_c === "number" && typeof dia.temperatura_max_c === "number") {
-                tramo.style.left = `${((dia.temperatura_min_c - minimo) / rango) * 100}%`;
-                tramo.style.right = `${((maximo - dia.temperatura_max_c) / rango) * 100}%`;
-            } else {
-                tramo.hidden = true;
-            }
-
-            barra.append(tramo);
-
-            const viento = crear("div", "pred-dia-viento");
-            viento.append(flechaViento(dia.viento_direccion), numero(dia.viento_kmh, " km/h"));
-
-            fila.append(
-                crear("div", "pred-dia-nombre", nombreDia(dia.fecha, hoy)),
-                dibujo,
-                crear("div", "pred-dia-descripcion", dia.descripcion || ""),
-                crear("div", "pred-dia-lluvia", numero(dia.prob_precipitacion_pct, "%")),
-                crear("div", "pred-dia-min", numero(dia.temperatura_min_c, "°")),
-                barra,
-                crear("div", "pred-dia-max", numero(dia.temperatura_max_c, "°")),
-                viento
-            );
-            lista.append(fila);
-        });
-    }
-
-    function pintar(datos) {
-        pintarFuente(datos);
-        pintarAvisos(datos.avisos);
-        pintarHoy(datos);
-        pintarHoras(datos.horaria);
-        pintarDias(datos.diaria);
-    }
-
-
-    /* ------------------------------------------------------------
-       Ahora en Archidona (observación de El Silo)
-       ------------------------------------------------------------ */
-
-    const RUMBOS_8 = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"];
-
-    function rumbo(grados) {
-        return typeof grados === "number" && Number.isFinite(grados)
-            ? RUMBOS_8[Math.round((((grados % 360) + 360) % 360) / 45) % 8]
-            : null;
-    }
-
-    function hoyEnMadrid() {
-        return new Intl.DateTimeFormat("es-ES", {
-            day: "2-digit", month: "2-digit", year: "numeric", timeZone: ZONA
-        }).format(new Date());
-    }
-
-    function pintarAhora(datos) {
-        const zona = document.getElementById("pred-ahora");
-        zona.textContent = "";
-
-        const titulo = crear("h2", "pred-hoy-titulo", "Ahora en Archidona");
-
-        if (!datos) {
-            zona.append(titulo, crear("p", "pred-vacio",
-                "Los datos de la estación no están disponibles en este momento."));
-            return;
-        }
-
-        const fecha = datos.fecha_observacion_exterior || datos.fecha_observacion;
-        const hora = datos.hora_observacion_exterior || datos.hora_observacion;
-        const cuando = fecha && fecha !== hoyEnMadrid()
-            ? `dato del ${fecha.slice(0, 5)} a las ${hora}`
-            : `dato de las ${hora}`;
-
-        const principal = crear("div", "pred-hoy-principal");
-        const texto = crear("div", "pred-hoy-texto");
-        texto.append(
-            titulo,
-            crear("div", "pred-hoy-temperatura", numero(datos.temperatura_c, "°")),
-            crear("div", "pred-ahora-estacion",
-                `Estación ${datos.nombre_estacion || "El Silo"} · MeteoArchidona · ${cuando}`)
-        );
-        principal.append(texto);
-
-        const direccion = rumbo(datos.direccion_viento_grados);
-        const velocidad = datos.viento_medio_10_min_kmh ?? datos.viento_actual_kmh;
-
-        const cifras = crear("dl", "pred-hoy-cifras");
-        [
-            ["Humedad", numero(datos.humedad_pct, " %")],
-            ["Viento", velocidad === null || velocidad === undefined
-                ? "--"
-                : `${direccion || ""} ${numero(velocidad, " km/h")}`.trim()],
-            ["Racha", numero(datos.racha_10_min_kmh, " km/h")],
-            ["Lluvia hoy", typeof datos.lluvia_dia_mm === "number"
-                ? `${datos.lluvia_dia_mm.toLocaleString("es-ES", { maximumFractionDigits: 1 })} mm`
-                : "--"],
-            ["Presión", numero(datos.presion_hpa, " hPa")],
-            ["Índice UV", numero(datos.indice_uv)]
-        ].forEach(([etiqueta, valor]) => {
-            const bloque = crear("div", "pred-cifra");
-            bloque.append(crear("dt", null, etiqueta), crear("dd", null, valor));
-            cifras.append(bloque);
-        });
-
-        zona.append(principal, cifras);
-    }
-
-    async function cargarAhora() {
-        const base = window.API_BASE || "/api";
+        montados.add(hueco);
 
         try {
-            const respuesta = await fetch(
-                `${base}/condiciones-actuales/${ESTACION_AHORA}`,
-                { cache: "no-store" }
-            );
-
-            if (!respuesta.ok) {
-                throw new Error(`HTTP ${respuesta.status}`);
-            }
-
-            pintarAhora(await respuesta.json());
+            montar(hueco);
         } catch (error) {
-            pintarAhora(null);
+            console.error(`Predicción: no se pudo montar ${hueco.dataset.componente}`, error);
+        }
+    }
+}
+
+
+function abrir(nombre, {foco = false, guardar = true} = {}) {
+    const elegida = pestanas.find((pestana) => pestana.dataset.pestana === nombre)
+        || pestanas.find((pestana) => pestana.dataset.pestana === PESTANA_POR_DEFECTO);
+
+    for (const pestana of pestanas) {
+        const activa = pestana === elegida;
+        const panel = document.getElementById(pestana.getAttribute("aria-controls"));
+
+        pestana.setAttribute("aria-selected", String(activa));
+        pestana.tabIndex = activa ? 0 : -1;
+        pestana.classList.toggle("activa", activa);
+        panel.hidden = !activa;
+
+        if (activa) {
+            montarComponentes(panel);
         }
     }
 
-
-    /* ------------------------------------------------------------
-       Texto del presentador (redactado por IA en la API)
-       ------------------------------------------------------------ */
-
-    function horaDe(instante) {
-        const fecha = new Date(instante);
-
-        if (Number.isNaN(fecha.getTime())) {
-            return null;
-        }
-
-        return new Intl.DateTimeFormat("es-ES", {
-            hour: "2-digit", minute: "2-digit", timeZone: ZONA
-        }).format(fecha);
+    if (foco) {
+        elegida.focus();
     }
 
-    function pintarPresentador(datos) {
-        const zona = document.getElementById("pred-presentador");
-
-        if (!datos || typeof datos.texto !== "string" || !datos.texto.trim()) {
-            zona.hidden = true;
-            zona.textContent = "";
-            return;
-        }
-
-        zona.textContent = "";
-        zona.append(crear("h2", "pred-hoy-titulo", "El tiempo hoy, contado por MeteoArchidona"));
-
-        for (const parrafo of datos.texto.split(/\n\s*\n/)) {
-            if (parrafo.trim()) {
-                zona.append(crear("p", "pred-presentador-texto", parrafo.trim()));
-            }
-        }
-
-        const hora = horaDe(datos.generado);
-        const estacion = datos.estacion ? ` y de nuestra estación ${datos.estacion}` : "";
-
-        zona.append(crear("p", "pred-presentador-nota",
-            "Texto redactado automáticamente" + (hora ? ` a las ${hora}` : "") +
-            ` a partir de la predicción de AEMET${estacion}.`));
-
-        zona.hidden = false;
+    if (guardar) {
+        const hash = elegida.dataset.pestana === PESTANA_POR_DEFECTO ? "" : `#${elegida.dataset.pestana}`;
+        history.replaceState(null, "", `${location.pathname}${location.search}${hash}`);
     }
+}
 
-    async function cargarPresentador() {
-        const base = window.API_BASE || "/api";
 
-        try {
-            const respuesta = await fetch(`${base}/prediccion/${MUNICIPIO}/texto`, { cache: "no-store" });
+for (const pestana of pestanas) {
+    pestana.addEventListener("click", () => abrir(pestana.dataset.pestana));
 
-            if (!respuesta.ok) {
-                throw new Error(`HTTP ${respuesta.status}`);
-            }
+    pestana.addEventListener("keydown", (evento) => {
+        const indice = pestanas.indexOf(pestana);
+        let destino = null;
 
-            pintarPresentador(await respuesta.json());
-        } catch (error) {
-            // Sin texto (o sin API) el bloque simplemente no aparece.
-            pintarPresentador(null);
+        if (evento.key === "ArrowRight") destino = pestanas[(indice + 1) % pestanas.length];
+        if (evento.key === "ArrowLeft") destino = pestanas[(indice - 1 + pestanas.length) % pestanas.length];
+        if (evento.key === "Home") destino = pestanas[0];
+        if (evento.key === "End") destino = pestanas[pestanas.length - 1];
+
+        if (destino) {
+            evento.preventDefault();
+            abrir(destino.dataset.pestana, {foco: true});
         }
-    }
+    });
+}
 
+window.addEventListener("hashchange", () => {
+    abrir(location.hash.slice(1) || PESTANA_POR_DEFECTO, {guardar: false});
+});
 
-    /* ------------------------------------------------------------
-       Carga de la predicción
-       ------------------------------------------------------------ */
+abrir(location.hash.slice(1) || PESTANA_POR_DEFECTO, {guardar: false});
 
-    let hayPrediccion = false;
-
-    function avisarSinPrediccion() {
-        document.getElementById("pred-error").hidden = false;
-
-        if (hayPrediccion) {
-            // Se mantiene la última predicción buena, marcada como antigua.
-            document.getElementById("pred-fuente").classList.add("pred-fuente-antigua");
-            return;
-        }
-
-        document.getElementById("pred-fuente").textContent = "Fuente: AEMET";
-
-        for (const id of ["pred-hoy", "pred-horas", "pred-dias"]) {
-            const zona = document.getElementById(id);
-            zona.textContent = "";
-            zona.append(crear(id === "pred-dias" ? "li" : "p", "pred-vacio",
-                "Predicción no disponible."));
-        }
-    }
-
-    async function cargar() {
-        const base = window.API_BASE || "/api";
-
-        try {
-            const respuesta = await fetch(`${base}/prediccion/${MUNICIPIO}`, { cache: "no-store" });
-
-            if (!respuesta.ok) {
-                throw new Error(`HTTP ${respuesta.status}`);
-            }
-
-            const datos = await respuesta.json();
-
-            if (!Array.isArray(datos.diaria) || datos.diaria.length === 0) {
-                throw new Error("respuesta sin predicción diaria");
-            }
-
-            document.getElementById("pred-error").hidden = true;
-            pintar(datos);
-            hayPrediccion = true;
-        } catch (error) {
-            // Nunca se inventa: se avisa y, si la había, se deja la última.
-            avisarSinPrediccion();
-        }
-    }
-
-    cargarAhora();
-    cargarPresentador();
-    cargar();
-
-    setInterval(() => {
-        if (!document.hidden) {
-            cargarAhora();
-        }
-    }, REFRESCO_AHORA_MS);
-
-    setInterval(() => {
-        if (!document.hidden) {
-            cargar();
-            cargarPresentador();
-        }
-    }, REFRESCO_MS);
-})();
 
 /* Fin de fichero: js/prediccion.js */
