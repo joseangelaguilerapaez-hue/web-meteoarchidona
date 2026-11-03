@@ -42,7 +42,7 @@ No se marca nada como hecho que no esté en `main`.
 
 ## En construcción / abierto
 
-- Configuración en Administración (rama `feature/configuracion`, 1 nov, decisiones de José; diseño en `docs/configuracion.md` de la API): nuevo módulo «Configuración» con pestañas por apartado (Apariencia, Otros; se recuerda la última abierta) y una ficha por parámetro (interruptor, desplegables según el icono, texto del día y guardar). Primer parámetro: el distintivo (lazo de 8 colores o monigote). **Necesita antes la API con la migración 0035** (`/admin/configuracion`). Probada en el navegador con la API simulada.
+- Configuración en Administración (rama `feature/configuracion`, 1 nov, decisiones de José; diseño en `docs/configuracion.md` de la API): nuevo módulo «Configuración» con pestañas por apartado (Apariencia, Timelapses, Seguimiento, Directo y cámaras, Predicción, Usuarios y Otros; se recuerda la última abierta) y una ficha por parámetro (desplegables según el icono, números con su unidad, rango y valor por defecto, texto del día y guardar; la casilla «Activo» solo en los que se encienden y apagan, hoy el distintivo). Once parámetros desde el 3 nov. **Necesita antes la API con la migración 0038** (`/admin/configuracion`). Probada en el navegador con la API simulada.
 
 - Directo con instrumentos (rama `feature/directo-con-instrumentos`, 31 oct, decisión de José): el VPS graba termómetro, probeta, barra de humedad y logotipo en el vídeo en directo (PR de `api-meteoarchidona`). En directo el visor deja de pintar su línea de cifras y su marca, que saldrían repetidas; los MP4 no cambian. **Publicar solo después** de activar los instrumentos en el VPS, o el directo se quedaría un rato sin datos.
 - Botón «Instalar la aplicación» en el pie, 1 nov: en Chrome, Edge y Samsung abre el diálogo del sistema; en Safari del iPhone explica los tres pasos de «Añadir a pantalla de inicio», que es lo único que deja hacer Apple; en los navegadores que no instalan, y a quien ya la tiene instalada, no se enseña.
@@ -141,6 +141,7 @@ No se marca nada como hecho que no esté en `main`.
 - 2026-11-01 · La web se puede instalar en el teléfono: manifiesto, trabajador de servicio con aviso de sin conexión y iconos propios. Falta el paso de Nginx en el VPS.
 - 2026-11-01 · Botón bajo el termómetro publicado en el VPS (`b9e0223`); José confirma que queda bien.
 - 2026-11-01 · Administración → Configuración: pantalla de parámetros de la web (primero, el distintivo del directo); pendiente de la API y de publicar.
+- 2026-11-03 · Administración → Configuración: siete pestañas y once parámetros; sin casilla «Activo» en los que valen siempre, con unidad y rango en los números. Sin publicar.
 - 2026-11-01 · PWA publicada en el VPS y comprobada en vivo: manifiesto con su tipo, trabajador activo controlando la página y cero respuestas de la API guardadas.
 - 2026-11-01 · José la instala desde Safari del iPhone; en el iPhone ningún otro navegador puede. De ahí el botón del pie.
 - 2026-11-01 · Botón «Instalar la aplicación» en el pie, con diálogo nativo donde lo hay y pasos de Safari donde no; escondido en los navegadores que no instalan.
