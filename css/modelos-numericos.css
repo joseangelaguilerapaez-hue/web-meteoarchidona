@@ -115,6 +115,21 @@
     opacity: 0.55;
 }
 
+.mn-contador {
+    padding: 0 10px;
+    min-height: 32px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+    color: var(--text-soft);
+}
+
+.mn-contador strong {
+    margin-left: 6px;
+    white-space: nowrap;
+    color: var(--cyan);
+    font-family: "JetBrains Mono", monospace;
+}
+
 .mn-muestra {
     display: inline-block;
     flex: none;

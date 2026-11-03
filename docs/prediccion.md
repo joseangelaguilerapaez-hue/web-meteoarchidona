@@ -116,7 +116,8 @@ componente que se puede poner también en otras páginas o dashboards.
   operativa del mismo centro y el control, decisiones de José; Google no tiene operativa) y
   «Comparar modelos» (media de cada modelo y consenso, con sombreado donde discrepan más de 2 °C;
   una casilla por modelo en la leyenda: al desmarcar, el consenso, el sombreado y la lluvia se calculan
-  solo con los marcados; la selección se recuerda en el navegador, decisión de José);
+  solo con los marcados; la selección se recuerda en el navegador, decisión de José; y un contador
+  «Escenarios modelizados», por ejemplo «154 de 218», con la suma de escenarios de los marcados);
   temperatura a 2 m (superficie, orientativa) o a 925, 850, 700 o 500 hPa —en altura, no la de
   Archidona—, lluvia y nieve cada 6 horas;
   El Silo o Los Llanos. Se habla siempre de escenarios, no de probabilidad.
