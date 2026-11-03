@@ -278,6 +278,10 @@ const RUTA_CUENTA_CSS = "/css/cuenta.css?v=20261026-cuenta3";
 
 const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261028-estadisticas1";
 
+const RUTA_DISTINTIVO_CSS = "/css/distintivo.css?v=20261103-distintivo1";
+
+const RUTA_DISTINTIVO_JS = "/js/distintivo.js?v=20261103-distintivo1";
+
 
 /*
  * Monta componentes/pie.html en el <div id="pie"> de la página, si lo
@@ -400,6 +404,31 @@ function cargarCuenta() {
 }
 
 
+/*
+ * El distintivo (lazo o monigote bajo el logotipo, js/distintivo.js) se
+ * carga igual que la cuenta: desde aquí, para las seis páginas a la vez.
+ */
+function cargarDistintivo() {
+
+    const hoja = document.createElement("link");
+
+    hoja.rel = "stylesheet";
+
+    hoja.href = RUTA_DISTINTIVO_CSS;
+
+    document.head.appendChild(hoja);
+
+    const guion = document.createElement("script");
+
+    guion.src = RUTA_DISTINTIVO_JS;
+
+    guion.defer = true;
+
+    document.head.appendChild(guion);
+
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -462,6 +491,8 @@ async function montarCabecera() {
     recogerControlesDePagina();
 
     cargarCuenta();
+
+    cargarDistintivo();
 
     /*
      * La cabecera llega después que el JS de la página, así que lo

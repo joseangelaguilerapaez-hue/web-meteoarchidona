@@ -418,6 +418,28 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         )
 
 
+class TestDistintivo(unittest.TestCase):
+    """Lazo o monigote bajo el logotipo (js/distintivo.js, 3-11-2026)."""
+
+    def test_la_cabecera_carga_los_ficheros_versionados(self):
+        codigo = leer(RAIZ / "js" / "cabecera.js")
+        for ruta in ("/css/distintivo.css", "/js/distintivo.js"):
+            coincidencia = re.search(re.escape(ruta) + r"\?v=[\w-]+", codigo)
+            self.assertIsNotNone(coincidencia, f"cabecera.js no carga {ruta} con ?v=")
+            self.assertTrue((RAIZ / ruta.lstrip("/")).exists())
+        self.assertIn("cargarDistintivo();", codigo)
+
+    def test_lee_la_configuracion_publica_y_solo_pinta_si_esta_activo(self):
+        codigo = leer(RAIZ / "js" / "distintivo.js")
+        self.assertIn("/configuracion/publica", codigo)
+        self.assertIn("!distintivo.activo", codigo)
+        self.assertIn("MONIGOTE", codigo)
+        # En el móvil, el texto va en un globo grande al tocar el lazo.
+        self.assertIn("distintivo-globo", codigo)
+        hoja = leer(RAIZ / "css" / "distintivo.css")
+        self.assertIn("font-size: 18px", hoja)
+
+
 class TestCuenta(unittest.TestCase):
     """Los botones de cuenta de la cabecera (js/cuenta.js, css/cuenta.css)."""
 
