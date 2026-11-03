@@ -298,7 +298,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261029-graficas1"),
-            ("administracion", r"administracion/principal\.js\?v=20261101-configuracion1"),
+            ("administracion", r"administracion/principal\.js\?v=20261103-configuracion2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -322,15 +322,21 @@ class TestConfiguracion(unittest.TestCase):
 
     def test_modulo_y_version(self):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./configuracion.js?v=20261101-configuracion1", principal)
+        self.assertIn("./configuracion.js?v=20261103-configuracion2", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "configuracion.js")
         self.assertIn('"/admin/configuracion"', codigo)
         self.assertIn("valores_por_icono", codigo)
         self.assertIn("/apartados", codigo)
         self.assertIn("pestanasConfiguracion", codigo)
         self.assertIn("export async function cargarConfiguracion", codigo)
+        # Sin interruptor (todos menos el distintivo): ni casilla «Activo»
+        # ni otra cosa que activo = true al guardar.
+        self.assertIn("parametro.con_interruptor !== false", codigo)
+        self.assertIn("?.checked ?? true", codigo)
+        self.assertIn('valor.entero ? "1" : "any"', codigo)
+        self.assertIn("valor.unidad", codigo)
         self.assertIn(
-            "administracion.css?v=20261101-configuracion1",
+            "administracion.css?v=20261103-configuracion2",
             leer(RAIZ / "pages" / "administracion.html"),
         )
 

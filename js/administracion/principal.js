@@ -610,7 +610,7 @@ async function obtenerModuloConfiguracion(){
 
     if(promesaModuloConfiguracion === null){
         promesaModuloConfiguracion = import(
-            "./configuracion.js?v=20261101-configuracion1"
+            "./configuracion.js?v=20261103-configuracion2"
         );
     }
 

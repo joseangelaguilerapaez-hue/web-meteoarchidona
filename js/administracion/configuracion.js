@@ -109,7 +109,11 @@ function controlDeValor(parametro, valor){
     const campo = crear("div", valor.tipo === "TEXTO" ? "campo campo-ancho" : "campo");
     campo.dataset.numero = String(valor.numero);
 
-    const etiqueta = crear("label", "", valor.etiqueta);
+    const etiqueta = crear(
+        "label",
+        "",
+        valor.unidad ? `${valor.etiqueta} (${valor.unidad})` : valor.etiqueta
+    );
     etiqueta.htmlFor = id;
     campo.append(etiqueta);
 
@@ -132,7 +136,8 @@ function controlDeValor(parametro, valor){
 
         control = document.createElement("input");
         control.type = "number";
-        control.step = "any";
+        control.step = valor.entero ? "1" : "any";
+        control.inputMode = valor.entero ? "numeric" : "decimal";
 
         if(valor.minimo !== null && valor.minimo !== undefined){
             control.min = String(valor.minimo);
@@ -160,6 +165,18 @@ function controlDeValor(parametro, valor){
     if(valor.tipo === "OPCION"){
         const ayuda = crear("p", "campo-ayuda configuracion-significado");
         campo.append(ayuda);
+    }else if(valor.tipo === "NUMERO"){
+        const partes = [];
+        if(valor.minimo !== null && valor.minimo !== undefined
+            && valor.maximo !== null && valor.maximo !== undefined){
+            partes.push(`De ${valor.minimo} a ${valor.maximo}`);
+        }
+        if(valor.defecto !== null && valor.defecto !== undefined){
+            partes.push(`por defecto ${valor.defecto}`);
+        }
+        if(partes.length){
+            campo.append(crear("p", "campo-ayuda", partes.join(", ") + "."));
+        }
     }
 
     return campo;
@@ -270,16 +287,20 @@ function crearFicha(parametro){
     const formulario = crear("form", "configuracion-formulario");
     formulario.noValidate = true;
 
-    const linea = crear("div", "check-linea");
-    const interruptor = document.createElement("input");
-    interruptor.type = "checkbox";
-    interruptor.id = `configuracion-${parametro.codigo}-activo`;
-    interruptor.checked = Boolean(parametro.activo);
-    interruptor.dataset.campo = "activo";
-    const etiquetaInterruptor = crear("label", "", "Activo");
-    etiquetaInterruptor.htmlFor = interruptor.id;
-    linea.append(interruptor, etiquetaInterruptor);
-    formulario.append(linea);
+    // Solo llevan «Activo» los parámetros que se encienden y se apagan
+    // (el distintivo); los demás valen siempre.
+    if(parametro.con_interruptor !== false){
+        const linea = crear("div", "check-linea");
+        const interruptor = document.createElement("input");
+        interruptor.type = "checkbox";
+        interruptor.id = `configuracion-${parametro.codigo}-activo`;
+        interruptor.checked = Boolean(parametro.activo);
+        interruptor.dataset.campo = "activo";
+        const etiquetaInterruptor = crear("label", "", "Activo");
+        etiquetaInterruptor.htmlFor = interruptor.id;
+        linea.append(interruptor, etiquetaInterruptor);
+        formulario.append(linea);
+    }
 
     const rejilla = crear("div", "formulario-grid");
 
@@ -347,7 +368,7 @@ function crearFicha(parametro){
 async function guardarParametro(parametro, formulario, estado, boton){
 
     const cuerpo = {
-        activo: formulario.querySelector('[data-campo="activo"]').checked,
+        activo: formulario.querySelector('[data-campo="activo"]')?.checked ?? true,
         valores: {}
     };
 
