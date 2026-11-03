@@ -443,7 +443,7 @@ function hayAdministrador() {
 
 function ponerCompartir(tarjeta, texto) {
     if (!hayAdministrador()) return;
-    import("./compartir-modelos.js?v=20261103-compartir1")
+    import("./compartir-modelos.js?v=20261103-compartir2")
         .then((modulo) => modulo.ponerBotonCompartir(tarjeta, texto))
         .catch((error) => console.warn("No se pudo cargar «Compartir en Facebook»:", error));
 }

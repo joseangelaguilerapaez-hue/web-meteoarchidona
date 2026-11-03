@@ -22,7 +22,7 @@
  * las cinco gráficas lleva unos segundos.
  */
 
-import {montarModelosNumericos} from "./modelos-numericos.js?v=20261103-compartir1";
+import {montarModelosNumericos} from "./modelos-numericos.js?v=20261103-compartir2";
 
 
 const CLAVE_TOKEN = "meteoarchidona_admin_token";
@@ -30,7 +30,6 @@ const CLAVE_EXPIRACION = "meteoarchidona_admin_expira_en";
 
 const PUNTO = "EL_SILO";
 const NOMBRE_PUNTO = "El Silo (Archidona)";
-const URL_WEB = "https://meteoarchidona.com/prediccion";
 
 const GRAFICAS = [
     {variable: "TEMPERATURA_2M", titulo: "Temperatura a 2 m (superficie, orientativa)", fichero: "2m"},
@@ -89,10 +88,15 @@ function textoPublicacion(texto) {
         "",
         texto.trim(),
         "",
-        `Resumen automático del consenso de los modelos por conjuntos para ${NOMBRE_PUNTO}. ` +
-        "Las gráficas: temperatura a cada altura (media de cada modelo y el consenso) y, debajo, la lluvia.",
+        // Sin decir que el texto es automático (José, 3-11-2026).
+        `Las gráficas, de ${NOMBRE_PUNTO}: temperatura a cada altura ` +
+        "(media de cada modelo y el consenso) y, debajo, la lluvia.",
         "",
-        `Más en ${URL_WEB}`
+        // Aviso de José del 3-11-2026.
+        "⚠️ Esta tendencia no es definitiva. Los modelos se actualizan varias veces al día, " +
+        "normalmente cada 6 horas, y con cada nueva salida las cifras pueden cambiar, sobre todo " +
+        "en los días más lejanos. En meteoarchidona.com/prediccion la tienes siempre al día, " +
+        "con el resumen y las gráficas de la última actualización."
     ].join("\n");
 }
 
