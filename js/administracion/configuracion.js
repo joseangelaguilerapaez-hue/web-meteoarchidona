@@ -284,6 +284,11 @@ function crearFicha(parametro){
         ficha.append(crear("p", "modulo-intro", parametro.descripcion));
     }
 
+    // Nota de la API; p. ej., cuándo se apagará solo el distintivo.
+    if(parametro.aviso){
+        ficha.append(crear("p", "configuracion-aviso", parametro.aviso));
+    }
+
     const formulario = crear("form", "configuracion-formulario");
     formulario.noValidate = true;
 
