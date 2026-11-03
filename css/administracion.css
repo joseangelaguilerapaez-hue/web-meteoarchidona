@@ -1558,4 +1558,15 @@ a.modulo-boton{
 }
 
 
+/* Cuenta atrás de la vigencia del distintivo, bajo su campo. */
+.configuracion-cuenta-atras {
+    margin: 6px 0 0;
+    color: var(--amber);
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+
 /* Fin de fichero: css/administracion.css */
