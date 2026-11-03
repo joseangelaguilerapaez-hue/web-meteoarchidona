@@ -633,6 +633,21 @@ export function montarModelosNumericos(raiz) {
             leyenda.append(item);
         }
 
+        // Contador de escenarios (petición de José del 3-11-2026): los de
+        // los modelos marcados frente a todos los que tienen este nivel.
+        const escenarios = (m) =>
+            estado.catalogo?.modelos.find((x) => x.codigo === m.modelo.modelo)?.miembros
+            || Math.max(0, ...(m.modelo.resumen.miembros_con_dato || []));
+        const enConsenso = medias.reduce((suma, m) => suma + escenarios(m), 0);
+        const totalEscenarios = todas.reduce((suma, m) => suma + escenarios(m), 0);
+        const contador = crear("span", "mn-leyenda-item mn-contador");
+        contador.append(
+            crear("span", "mn-grupo-etiqueta", "Escenarios modelizados"),
+            crear("strong", null, `${enConsenso.toLocaleString("es-ES")} de ${totalEscenarios.toLocaleString("es-ES")}`)
+        );
+        contador.title = "Suma de los escenarios de los modelos marcados. El consenso da el mismo peso a cada modelo, tenga los escenarios que tenga.";
+        leyenda.append(contador);
+
         ultimoDibujo = {
             eje,
             descripcion: `Media de cada modelo marcado y su consenso, temperatura a ${variable.nombre}.`,
