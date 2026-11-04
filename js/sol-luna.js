@@ -340,7 +340,10 @@
     window.MeteoLuna = {
         iluminacionLunar: iluminacionLunar,
         caminoLuna: caminoLuna,
-        esDeNoche: esDeNoche
+        esDeNoche: esDeNoche,
+        // Los componentes «Condiciones actuales» y «Sol y luna» la llaman
+        // al montar su tarjeta (js/componentes/, 4-11-2026).
+        actualizar: actualizar
     };
 
 
