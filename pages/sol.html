@@ -68,7 +68,12 @@
 
 <link
     rel="stylesheet"
-    href="../css/sol.css?v=20261103-sol1"
+    href="../css/sol-componentes.css?v=20261104-componentes1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/sol.css?v=20261104-componentes1"
 >
 
 
@@ -84,8 +89,8 @@
 ></script>
 
 <script
-    src="../js/sol.js?v=20261103-sol1"
-    defer
+    type="module"
+    src="../js/sol.js?v=20261104-componentes1"
 ></script>
 
 <script
@@ -128,12 +133,9 @@
         e índices, tal como los publican la NASA, la ESA y la NOAA.
     </p>
 
-    <p
-        class="sol-actualizado"
-        id="solActualizado"
-        aria-live="polite"
-    >
-        Cargando datos…
+    <p class="sol-actualizado">
+        Los datos se renuevan solos cada 5 minutos y las imágenes
+        cada 15.
     </p>
 
 </header>
@@ -141,7 +143,7 @@
 
 <!-- ========================================================
      AHORA MISMO: escalas NOAA e índices
-     Los rellena js/sol.js.
+     Componente js/sol/tiempo-espacial.js, en modo ampliado.
      ======================================================== -->
 
 <section
@@ -154,24 +156,16 @@
     </h2>
 
     <div
-        class="sol-escalas"
-        id="solEscalas"
-    >
-        <p class="sol-aviso">Cargando escalas…</p>
-    </div>
-
-    <div
-        class="sol-indices"
-        id="solIndices"
-    >
-        <p class="sol-aviso">Cargando índices…</p>
-    </div>
+        data-componente="sol-tiempo-espacial"
+        data-modo="ampliado"
+    ></div>
 
 </section>
 
 
 <!-- ========================================================
      ALERTAS DE LA NOAA
+     Componente js/sol/alertas-solares.js.
      ======================================================== -->
 
 <section
@@ -190,18 +184,16 @@
     </p>
 
     <div
-        class="sol-alertas"
-        id="solAlertas"
-        aria-live="polite"
-    >
-        <p class="sol-aviso">Cargando alertas…</p>
-    </div>
+        data-componente="sol-alertas"
+        data-anteriores="si"
+    ></div>
 
 </section>
 
 
 <!-- ========================================================
      SOL EN DIRECTO (SDO)
+     Componente js/sol/sol-directo.js.
      ======================================================== -->
 
 <section
@@ -213,44 +205,7 @@
         El Sol en directo
     </h2>
 
-    <div
-        class="sol-selector"
-        id="solSelector"
-        role="tablist"
-        aria-label="Filtro de la imagen del Sol"
-    ></div>
-
-    <figure class="sol-visor">
-
-        <a
-            class="sol-visor-enlace"
-            id="solVisorEnlace"
-            href="https://sdo.gsfc.nasa.gov/data/"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <img
-                class="sol-visor-imagen"
-                id="solVisorImagen"
-                alt="Imagen más reciente del Sol"
-                width="1024"
-                height="1024"
-                decoding="async"
-            >
-        </a>
-
-        <figcaption
-            class="sol-visor-texto"
-            id="solVisorTexto"
-        ></figcaption>
-
-    </figure>
-
-    <p class="sol-nota">
-        Observatorio de Dinámica Solar (SDO) de la NASA. Las imágenes
-        se renuevan cada 15 minutos; toca la imagen para verla en
-        grande.
-    </p>
+    <div data-componente="sol-directo"></div>
 
 </section>
 
@@ -329,6 +284,8 @@
 
 <!-- ========================================================
      ÍNDICE KP Y PREVISIÓN
+     La gráfica es el componente js/sol/indice-kp.js; la tabla de
+     previsión es solo de esta página.
      ======================================================== -->
 
 <section
@@ -346,12 +303,7 @@
         Las barras rayadas son previsión.
     </p>
 
-    <div
-        class="sol-kp"
-        id="solKp"
-    >
-        <p class="sol-aviso">Cargando el índice Kp…</p>
-    </div>
+    <div data-componente="sol-indice-kp"></div>
 
     <h3 class="sol-subtitulo">
         Previsión de la NOAA para los próximos días
