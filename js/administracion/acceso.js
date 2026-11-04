@@ -11,7 +11,16 @@
  * - apertura y cierre visual del panel,
  * - reloj de caducidad,
  * - cierre de sesión,
- * - recuperación de una sesión todavía válida.
+ * - recuperación de una sesión todavía válida,
+ * - entrada sin PIN de los usuarios administradores.
+ *
+ * Usuarios administradores (docs/usuarios.md de la API, 2.7; José,
+ * 4-11-2026): si el usuario ha iniciado sesión en la web y su cuenta es
+ * administradora, POST /admin/acceso/cuenta entrega el mismo token de
+ * 15 minutos que el PIN. La página lo pide sola al abrirse y al caducar
+ * el token, así que el administrador no ve el teclado. Si cierra la
+ * sesión de Administración a mano, no se vuelve a entrar sola en esa
+ * pestaña: queda el botón «Entrar con mi cuenta».
  *
  * De momento este fichero se incorpora sin sustituir todavía al
  * código equivalente de js/administracion.js. La conexión definitiva
@@ -118,6 +127,189 @@ function teclas(){
             ".tecla"
         )
     )
+}
+
+
+/* ==========================================================
+   ENTRADA CON CUENTA DE ADMINISTRADOR
+   ========================================================== */
+
+const RUTA_ACCESO_CUENTA=
+    "/admin/acceso/cuenta";
+
+// Tras «Cerrar sesión», no entrar sola otra vez en esta pestaña.
+const CLAVE_SIN_ENTRADA_AUTOMATICA=
+    "meteoarchidona_admin_sin_cuenta";
+
+let renovacionEnCurso=null;
+
+
+function botonEntrarConCuenta(){
+
+    return $("botonEntrarConCuenta")
+}
+
+
+function leerSinEntradaAutomatica(){
+
+    try{
+        return sessionStorage.getItem(
+            CLAVE_SIN_ENTRADA_AUTOMATICA
+        )==="1"
+    }catch{
+        return false
+    }
+}
+
+
+function guardarSinEntradaAutomatica(
+    valor
+){
+
+    try{
+        if(valor){
+            sessionStorage.setItem(
+                CLAVE_SIN_ENTRADA_AUTOMATICA,
+                "1"
+            )
+        }else{
+            sessionStorage.removeItem(
+                CLAVE_SIN_ENTRADA_AUTOMATICA
+            )
+        }
+    }catch{
+    }
+}
+
+
+/*
+ * Pide el token con la cookie de la cuenta. Devuelve true si la cuenta
+ * es administradora; false si no hay sesión o no lo es (401). Nunca
+ * lanza: ante cualquier fallo se queda el PIN.
+ */
+async function pedirTokenConCuenta(){
+
+    try{
+
+        const respuesta=
+            await fetch(
+                URL_API
+                +
+                RUTA_ACCESO_CUENTA,
+                {
+                    method:"POST",
+                    credentials:"same-origin",
+                    cache:"no-store"
+                }
+            );
+
+        if(!respuesta.ok){
+            return false
+        }
+
+        const datos=
+            await respuesta.json();
+
+        if(
+            !datos?.token
+            ||
+            !datos?.expira_en
+        ){
+            return false
+        }
+
+        guardarSesion(
+            datos
+        );
+
+        return true
+
+    }catch(error){
+
+        console.warn(
+            "No se ha podido entrar con la cuenta.",
+            error
+        );
+
+        return false
+    }
+}
+
+
+/*
+ * Renueva el token cuando caduca. Varias llamadas a la vez comparten
+ * la misma petición.
+ */
+function renovarConCuenta(){
+
+    if(renovacionEnCurso===null){
+
+        renovacionEnCurso=
+            pedirTokenConCuenta()
+                .finally(
+                    ()=>{
+                        renovacionEnCurso=null
+                    }
+                )
+    }
+
+    return renovacionEnCurso
+}
+
+
+async function entrarConCuenta(){
+
+    const boton=
+        botonEntrarConCuenta();
+
+    if(boton){
+        boton.disabled=true
+    }
+
+    mostrarEstado(
+        estadoAcceso(),
+        "Comprobando tu cuenta...",
+        "info"
+    );
+
+    const correcto=
+        await pedirTokenConCuenta();
+
+    if(boton){
+        boton.disabled=false
+    }
+
+    if(!correcto){
+
+        mostrarEstado(
+            estadoAcceso(),
+            "Tu cuenta no es de administrador o no has iniciado sesión en la web.",
+            "error"
+        );
+
+        return
+    }
+
+    guardarSinEntradaAutomatica(
+        false
+    );
+
+    await abrirSesionConToken()
+}
+
+
+async function abrirSesionConToken(){
+
+    mostrarEstado(
+        estadoAcceso(),
+        ""
+    );
+
+    abrirPanel();
+
+    if(callbackSesionAbierta){
+        await callbackSesionAbierta()
+    }
 }
 
 
@@ -311,8 +503,21 @@ export function actualizarReloj(){
 
     if(restante<=0){
 
-        void cerrarSesion(
-            "La sesión administrativa ha caducado."
+        if(renovacionEnCurso!==null){
+            return
+        }
+
+        // Un administrador con cuenta sigue dentro sin notarlo.
+        void renovarConCuenta().then(
+            renovado=>{
+                if(renovado){
+                    actualizarReloj()
+                }else{
+                    void cerrarSesion(
+                        "La sesión administrativa ha caducado."
+                    )
+                }
+            }
         );
 
         return
@@ -460,6 +665,60 @@ export async function cerrarSesion(
                 error
             )
         }
+    }
+}
+
+
+/*
+ * «Cerrar sesión» pulsado por la persona: en esta pestaña ya no se
+ * entra sola con la cuenta; se ofrece el botón «Entrar con mi cuenta».
+ */
+async function cerrarSesionAMano(){
+
+    guardarSinEntradaAutomatica(
+        true
+    );
+
+    await cerrarSesion();
+
+    mostrarBotonCuenta()
+}
+
+
+async function mostrarBotonCuenta(){
+
+    const boton=
+        botonEntrarConCuenta();
+
+    if(!boton){
+        return
+    }
+
+    // Solo si la cuenta de la web es administradora.
+    try{
+
+        const respuesta=
+            await fetch(
+                `${URL_API}/usuarios/yo`,
+                {
+                    credentials:"same-origin",
+                    cache:"no-store"
+                }
+            );
+
+        const datos=
+            respuesta.ok
+            ?
+            await respuesta.json()
+            :
+            null;
+
+        boton.hidden=
+            !datos?.es_administrador
+
+    }catch{
+
+        boton.hidden=true
     }
 }
 
@@ -612,7 +871,39 @@ export async function recuperarSesion(){
 
         eliminarSesion();
 
+        // Usuario administrador con sesión en la web: entra sin PIN.
+        if(
+            !leerSinEntradaAutomatica()
+            &&
+            await pedirTokenConCuenta()
+        ){
+
+            try{
+
+                await abrirSesionConToken();
+
+                return true
+
+            }catch(error){
+
+                console.error(
+                    "Error al abrir Administración con la cuenta.",
+                    error
+                );
+
+                await cerrarSesion(
+                    "No ha sido posible abrir Administración."
+                );
+
+                return false
+            }
+        }
+
         mostrarAcceso();
+
+        if(leerSinEntradaAutomatica()){
+            void mostrarBotonCuenta()
+        }
 
         return false
     }
@@ -679,14 +970,21 @@ export function configurarEventosAcceso(){
         ?.addEventListener(
             "click",
             ()=>
-                void cerrarSesion()
+                void cerrarSesionAMano()
         );
 
     botonCerrarSesionCabecera()
         ?.addEventListener(
             "click",
             ()=>
-                void cerrarSesion()
+                void cerrarSesionAMano()
+        );
+
+    botonEntrarConCuenta()
+        ?.addEventListener(
+            "click",
+            ()=>
+                void entrarConCuenta()
         )
 }
 

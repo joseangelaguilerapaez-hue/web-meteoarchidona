@@ -56,7 +56,7 @@ import {
     configurarCallbacksAcceso,
     configurarEventosAcceso,
     recuperarSesion
-} from "./acceso.js?v=20261026-cache1";
+} from "./acceso.js?v=20261104-usuarios1";
 
 import {
     configurarCallbacksEstaciones,
@@ -164,6 +164,14 @@ let promesaModuloPatrullas = null;
  */
 
 let moduloConfiguracion = null;
+
+/*
+ * usuarios.js (Administración → Usuarios) solo se importa si existe
+ * modulo-usuarios.
+ */
+let moduloUsuarios = null;
+
+let promesaModuloUsuarios = null;
 
 let promesaModuloConfiguracion = null;
 
@@ -657,6 +665,64 @@ async function cargarModuloConfiguracion(){
 
 
 /* ==========================================================
+   USUARIOS
+   ========================================================== */
+
+async function obtenerModuloUsuarios(){
+
+    if(!$("modulo-usuarios")){
+        return null;
+    }
+
+    if(promesaModuloUsuarios === null){
+        promesaModuloUsuarios = import(
+            "./usuarios.js?v=20261104-usuarios1"
+        );
+    }
+
+    try{
+        moduloUsuarios = await promesaModuloUsuarios;
+        return moduloUsuarios;
+    }catch(error){
+        promesaModuloUsuarios = null;
+        moduloUsuarios = null;
+        throw error;
+    }
+
+}
+
+
+async function cargarModuloUsuarios(){
+
+    if(!$("modulo-usuarios")){
+        return;
+    }
+
+    try{
+        const modulo = await obtenerModuloUsuarios();
+        if(!modulo){
+            return;
+        }
+        modulo.configurarEventosUsuarios();
+        await modulo.cargarUsuarios();
+    }catch(error){
+        console.error(
+            "No se han podido cargar los Usuarios.",
+            error
+        );
+        mostrarEstado(
+            $("estadoUsuarios"),
+            error.message
+            ||
+            "No se han podido cargar los usuarios.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    IMPORTACIÓN DIFERIDA DE PRODUCTOS TIMELAPSE
    ========================================================== */
 
@@ -908,6 +974,8 @@ export async function cargarDatosAdministracion(){
 
         await cargarModuloConfiguracion();
 
+        await cargarModuloUsuarios();
+
         mostrarEstado(
             $("estadoPanel"),
             "Datos administrativos actualizados.",
@@ -1038,6 +1106,16 @@ async function alCerrarSesion(){
         "function"
     ){
         moduloConfiguracion.limpiarConfiguracion();
+    }
+
+    if(
+        moduloUsuarios
+        &&
+        typeof moduloUsuarios.limpiarUsuarios
+        ===
+        "function"
+    ){
+        moduloUsuarios.limpiarUsuarios();
     }
 
     history.replaceState(
