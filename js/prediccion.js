@@ -6,19 +6,24 @@
  * una; lo que enseña cada pestaña vive en su propio módulo, para poder
  * ponerlo también en otras páginas o dashboards:
  *
- *     data-componente="prediccion-aemet"   → js/prediccion-aemet.js
  *     data-componente="modelos-numericos"  → js/modelos-numericos.js
+ *
+ * La pestaña AEMET, desde el 4-11-2026, son piezas sueltas (avisos,
+ * ahora, presentador, hoy, horas y días; js/prediccion/*.js, listadas en
+ * COMPONENTES_PREDICCION de js/prediccion-aemet.js). «prediccion-aemet»
+ * sigue valiendo para montarlas todas en un solo hueco.
  *
  * Cada componente se monta la primera vez que se abre su pestaña: quien
  * solo mira AEMET no descarga los modelos. La pestaña abierta queda en la
  * dirección (/prediccion#modelos) para poder enlazarla.
  */
 
-import {montarPrediccionAemet} from "./prediccion-aemet.js?v=20261102-pestanas1";
+import {montarPrediccionAemet, COMPONENTES_PREDICCION} from "./prediccion-aemet.js?v=20261104-componentes1";
 import {montarModelosNumericos} from "./modelos-numericos.js?v=20261103-compartir2";
 
 
 const COMPONENTES = {
+    ...COMPONENTES_PREDICCION,
     "prediccion-aemet": montarPrediccionAemet,
     "modelos-numericos": montarModelosNumericos
 };

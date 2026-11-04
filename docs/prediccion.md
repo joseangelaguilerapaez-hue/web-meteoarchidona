@@ -127,6 +127,31 @@ La pestaña abierta queda en la dirección (`/prediccion#modelos`). Cada compone
 primera vez que se abre su pestaña. Opciones del componente de modelos: `data-punto`,
 `data-vista` (`modelo` o `comparar`), `data-modelo`, `data-variable` y `data-resumen="no"`.
 
+## 2 quater. Componentes (4 de noviembre de 2026)
+
+Decisión de José: como Sol, la pestaña AEMET deja de ser un bloque y cada pieza es un
+componente propio, para poder ponerla suelta en otras páginas y en los dashboards. Así se
+prepara también la predicción que se mandará a los usuarios suscritos.
+
+| `data-componente` | Módulo | Qué enseña | Opciones |
+| --- | --- | --- | --- |
+| `prediccion-avisos` | `js/prediccion/avisos.js` | Avisos de AEMET en vigor; sin avisos no ocupa sitio | `data-municipio` |
+| `prediccion-ahora` | `js/prediccion/ahora.js` | Observación real de una estación (no es predicción) | `data-estacion` (`EL_SILO`), `data-titulo` |
+| `prediccion-presentador` | `js/prediccion/presentador.js` | Texto del presentador; sin texto no ocupa sitio | `data-municipio` |
+| `prediccion-hoy` | `js/prediccion/hoy.js` | Hoy según AEMET | `data-municipio` |
+| `prediccion-horas` | `js/prediccion/horas.js` | Próximas horas | `data-horas`, `data-municipio` |
+| `prediccion-dias` | `js/prediccion/dias.js` | Próximos días | `data-dias`, `data-municipio` |
+
+- Lo común está en `js/prediccion/comun.js`: petición con caché de un minuto (hoy, horas y días
+  comparten una sola `GET /prediccion/{municipio}`), formatos en hora de Madrid, iconos,
+  refresco (predicción cada 30 minutos, observación cada 5, solo con la pestaña a la vista) y
+  la hoja `css/prediccion.css`, que cada componente carga si falta.
+- Cada tarjeta de AEMET lleva al pie su procedencia y hora de emisión (antes había una sola
+  línea arriba). Si AEMET no responde, la tarjeta avisa o conserva lo último marcado como
+  antiguo: nunca se inventa.
+- `prediccion-aemet` (`js/prediccion-aemet.js`) sigue existiendo y monta todas las piezas en
+  un solo hueco, en el orden de siempre.
+
 ## 3. Principios generales
 
 El subsistema seguirá los siguientes principios:

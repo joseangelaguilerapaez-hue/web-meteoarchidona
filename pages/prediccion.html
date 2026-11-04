@@ -75,7 +75,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/prediccion.css?v=20261102-pestanas1"
+    href="../css/prediccion.css?v=20261104-componentes1"
 >
 
 <link
@@ -108,7 +108,7 @@
 
 <script
     type="module"
-    src="../js/prediccion.js?v=20261103-compartir2"
+    src="../js/prediccion.js?v=20261104-componentes1"
 ></script>
 
 <script
@@ -158,7 +158,8 @@
     Pestañas por fuente (decisión de José, 2-11-2026). Cada pestaña es un
     componente que también se puede poner en otras páginas o dashboards:
 
-    - AEMET: js/prediccion-aemet.js (lo que era antes toda la página).
+    - AEMET: una pieza por componente en js/prediccion/ (avisos, ahora,
+      presentador, hoy, horas y días; 4-11-2026).
     - Modelos numéricos: js/modelos-numericos.js (predicciones por
       conjuntos de Open-Meteo, docs/predicciones-conjuntos.md de la API).
 
@@ -202,7 +203,67 @@
     id="panel-aemet"
     aria-labelledby="pestana-aemet"
 >
-    <div data-componente="prediccion-aemet"></div>
+    <!--
+        Cada pieza es un componente (js/prediccion/*.js, 4-11-2026), como
+        en Sol: se puede poner suelta en otras páginas o dashboards.
+    -->
+    <div class="pred-componente">
+
+        <div data-componente="prediccion-avisos"></div>
+
+        <div data-componente="prediccion-ahora"></div>
+
+        <div data-componente="prediccion-presentador"></div>
+
+        <div data-componente="prediccion-hoy"></div>
+
+        <div data-componente="prediccion-horas"></div>
+
+        <div data-componente="prediccion-dias"></div>
+
+        <section
+            class="pred-tarjeta pred-otras"
+            aria-labelledby="pred-otras-titulo"
+        >
+
+            <h2
+                class="pred-titulo"
+                id="pred-otras-titulo"
+            >
+                Otras predicciones
+            </h2>
+
+            <ul class="pred-enlaces">
+
+                <li>
+                    <a
+                        href="https://www.aemet.es/es/eltiempo/prediccion/municipios"
+                        target="_blank"
+                        rel="noopener"
+                    >AEMET · predicción por municipios</a>
+                </li>
+
+                <li>
+                    <a
+                        href="https://www.aemet.es/es/eltiempo/prediccion/avisos"
+                        target="_blank"
+                        rel="noopener"
+                    >AEMET · avisos</a>
+                </li>
+
+                <li>
+                    <a
+                        href="https://www.eltiempo.es/"
+                        target="_blank"
+                        rel="noopener"
+                    >eltiempo.es</a>
+                </li>
+
+            </ul>
+
+        </section>
+
+    </div>
 </div>
 
 
