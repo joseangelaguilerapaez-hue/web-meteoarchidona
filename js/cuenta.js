@@ -17,6 +17,10 @@
  *   POST   /usuarios/pin-nuevo     elegir el PIN nuevo con el token del enlace
  *   POST   /usuarios/baja          pedir la baja (sesión y PIN); se borra a los 30 días
  *
+ * El botón con el nombre lleva a la página «Mi cuenta» (/mi-cuenta,
+ * js/mi-cuenta.js). Esa página reutiliza las ventanas de aquí con
+ * data-cuenta-accion="pin-olvidado" y "baja".
+ *
  * La cookie es HttpOnly: este script nunca la ve. Solo sabe si hay
  * sesión preguntándoselo a la API.
  *
@@ -757,49 +761,6 @@ function abrirPinNuevo(token) {
 }
 
 
-function abrirMiCuenta() {
-
-    if (!usuario) {
-
-        return;
-
-    }
-
-    const contenido = crear("div", { class: "cuenta-resultado" });
-
-    const datos = crear("p", { class: "cuenta-datos" });
-
-    datos.append(
-        crear("strong", {}, usuario.nombre_visible),
-        crear("br"),
-        usuario.correo
-    );
-
-    contenido.appendChild(datos);
-
-    const salirBoton = crear(
-        "button",
-        { type: "button", class: "cuenta-enviar", "data-cuenta-accion": "salir" },
-        "Cerrar sesión"
-    );
-
-    salirBoton.addEventListener("click", cerrarVentana);
-
-    contenido.appendChild(salirBoton);
-
-    contenido.appendChild(
-        crear(
-            "button",
-            { type: "button", class: "cuenta-enviar cuenta-enviar-peligro", "data-cuenta-accion": "baja" },
-            "Borrar mi cuenta"
-        )
-    );
-
-    abrirVentana("Mi cuenta", contenido);
-
-}
-
-
 function abrirBaja() {
 
     const formulario = construirFormulario(async (datos) => {
@@ -951,7 +912,13 @@ function alPulsar(evento) {
 
     } else if (accion === "cuenta") {
 
-        abrirMiCuenta();
+        // «Mi cuenta» es una página propia desde el 4-11-2026
+        // (docs/usuarios.md de la API, 8.6).
+        if (window.location.pathname !== "/mi-cuenta") {
+
+            window.location.assign("/mi-cuenta");
+
+        }
 
     } else if (accion === "baja") {
 

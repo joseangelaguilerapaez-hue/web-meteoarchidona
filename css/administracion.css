@@ -1681,3 +1681,8 @@ a.modulo-boton{
 .usuarios-ficha .estado:empty{
     display:none
 }
+
+.usuarios-precio{
+    max-width:220px;
+    margin-top:12px
+}

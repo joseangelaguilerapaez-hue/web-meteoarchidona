@@ -6,6 +6,8 @@
  *
  * GET   /admin/usuarios
  * PATCH /admin/usuarios/{identificador}   {"es_administrador": true|false}
+ * GET   /admin/suscripciones/servicios
+ * PATCH /admin/suscripciones/servicios/{codigo}   {"precio", "disponible"}
  *
  * Una ficha por cuenta: nombre, correo, estado y fechas, con la casilla
  * «Administrador». Un administrador entra en Administración con su
@@ -24,6 +26,7 @@ import {
 
 
 const RUTA = "/admin/usuarios";
+const RUTA_SERVICIOS = "/admin/suscripciones/servicios";
 const ZONA = "Europe/Madrid";
 
 const ESTADOS = {
@@ -33,6 +36,7 @@ const ESTADOS = {
 };
 
 let usuarios = [];
+let servicios = [];
 let filtro = "";
 let eventosConfigurados = false;
 
@@ -199,6 +203,154 @@ async function cambiarAdministrador(usuario, casilla, estado){
 
 
 /* ==========================================================
+   SERVICIOS DE SUSCRIPCIÓN (docs/usuarios.md de la API, 8.5)
+   ========================================================== */
+
+const euros = new Intl.NumberFormat("es-ES", {style: "currency", currency: "EUR"});
+
+
+function fichaServicio(servicio){
+
+    const tarjeta = crear("form", "usuarios-ficha");
+    tarjeta.noValidate = true;
+
+    const cabecera = crear("div", "usuarios-cabecera");
+    cabecera.append(crear("h3", "usuarios-nombre", servicio.nombre));
+
+    const etiquetas = crear("div", "usuarios-etiquetas");
+    etiquetas.append(
+        crear(
+            "span",
+            servicio.disponible ? "usuarios-estado usuarios-estado-activo" : "usuarios-estado",
+            servicio.disponible ? "Disponible" : "Retirado"
+        ),
+        crear(
+            "span",
+            "usuarios-estado",
+            `${servicio.suscripciones_activas} ${servicio.suscripciones_activas === 1 ? "suscripción activa" : "suscripciones activas"}`
+        )
+    );
+    cabecera.append(etiquetas);
+    tarjeta.append(cabecera);
+
+    if(servicio.descripcion){
+        tarjeta.append(crear("p", "usuarios-correo", servicio.descripcion));
+    }
+
+    const campo = crear("div", "campo usuarios-precio");
+    const idPrecio = `servicio-precio-${servicio.codigo}`;
+    const etiqueta = crear("label", "", "Precio (€)");
+    etiqueta.htmlFor = idPrecio;
+    const entrada = document.createElement("input");
+    entrada.id = idPrecio;
+    entrada.type = "number";
+    entrada.min = "0";
+    entrada.step = "0.01";
+    entrada.inputMode = "decimal";
+    entrada.value = Number(servicio.precio).toFixed(2);
+    campo.append(
+        etiqueta,
+        entrada,
+        crear(
+            "p",
+            "campo-ayuda",
+            Number(servicio.precio) === 0 ? "Hoy: gratis." : `Hoy: ${euros.format(servicio.precio)}.`
+        )
+    );
+    tarjeta.append(campo);
+
+    const linea = crear("div", "check-linea usuarios-permiso");
+    const casilla = document.createElement("input");
+    casilla.type = "checkbox";
+    casilla.id = `servicio-disponible-${servicio.codigo}`;
+    casilla.checked = Boolean(servicio.disponible);
+    const etiquetaCasilla = crear("label", "", "Disponible");
+    etiquetaCasilla.htmlFor = casilla.id;
+    linea.append(casilla, etiquetaCasilla);
+    tarjeta.append(linea);
+
+    const pie = crear("div", "configuracion-pie");
+    const estado = crear("div", "estado");
+    estado.setAttribute("role", "status");
+    const guardar = crear("button", "boton", "Guardar");
+    guardar.type = "submit";
+    pie.append(estado, guardar);
+    tarjeta.append(pie);
+
+    tarjeta.addEventListener("submit", async evento => {
+        evento.preventDefault();
+
+        const valor = Number(entrada.value);
+
+        if(!Number.isFinite(valor) || valor < 0){
+            mostrarEstado(estado, "El precio no puede ser negativo.", "error");
+            return;
+        }
+
+        guardar.disabled = true;
+        mostrarEstado(estado, "Guardando…", "info");
+
+        try{
+            const actualizado = await peticionJson(
+                `${RUTA_SERVICIOS}/${encodeURIComponent(servicio.codigo)}`,
+                {
+                    method: "PATCH",
+                    body: JSON.stringify({
+                        precio: valor.toFixed(2),
+                        disponible: casilla.checked
+                    })
+                }
+            );
+            servicios = servicios.map(s => s.codigo === actualizado.codigo ? actualizado : s);
+            renderizarServicios();
+            mostrarEstado($("estadoServiciosSuscripcion"), `${actualizado.nombre}: guardado.`, "ok");
+        }catch(error){
+            mostrarEstado(estado, error.message || "No se ha podido guardar.", "error");
+            guardar.disabled = false;
+        }
+    });
+
+    return tarjeta;
+}
+
+
+function renderizarServicios(){
+
+    const lista = $("listaServiciosSuscripcion");
+
+    if(!lista){
+        return;
+    }
+
+    lista.replaceChildren(...servicios.map(fichaServicio));
+}
+
+
+async function cargarServicios(){
+
+    const estado = $("estadoServiciosSuscripcion");
+
+    if(!estado){
+        return;
+    }
+
+    mostrarEstado(estado, "Cargando…");
+
+    try{
+        servicios = await peticionJson(RUTA_SERVICIOS);
+        renderizarServicios();
+        mostrarEstado(estado, "");
+    }catch(error){
+        mostrarEstado(
+            estado,
+            error.message || "No se han podido cargar los servicios.",
+            "error"
+        );
+    }
+}
+
+
+/* ==========================================================
    LISTA
    ========================================================== */
 
@@ -241,6 +393,9 @@ export async function cargarUsuarios(){
     const estado = $("estadoUsuarios");
     mostrarEstado(estado, "Cargando…");
 
+    // Los servicios van aparte: si fallan, la lista de usuarios se ve.
+    void cargarServicios();
+
     try{
         usuarios = await peticionJson(RUTA);
         renderizarLista();
@@ -278,7 +433,10 @@ export function configurarEventosUsuarios(){
 export function limpiarUsuarios(){
 
     usuarios = [];
+    servicios = [];
     filtro = "";
+    $("listaServiciosSuscripcion")?.replaceChildren();
+    mostrarEstado($("estadoServiciosSuscripcion"), "");
     const buscador = $("buscarUsuarios");
     if(buscador){
         buscador.value = "";

@@ -1,0 +1,346 @@
+/*
+ * MeteoArchidona
+ * Página «Mi cuenta» (pages/mi-cuenta.html, js/mi-cuenta.js).
+ *
+ * Una columna pensada primero para el móvil, como Sol e Información.
+ */
+
+
+/* ==========================================================
+   CONTENEDOR
+   ========================================================== */
+
+.mi-cuenta {
+    width: min(760px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 16px;
+}
+
+
+.mi-cuenta [hidden] {
+    display: none !important;
+}
+
+
+.mi-cuenta-cabecera {
+    padding: 4px 4px 0;
+}
+
+
+.mi-cuenta-etiqueta {
+    color: var(--amber);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+}
+
+
+.mi-cuenta-cabecera h1 {
+    margin: 8px 0 0;
+    color: var(--text);
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   PESTAÑAS
+   ========================================================== */
+
+.mi-cuenta-pestanas {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    margin-bottom: 14px;
+    scrollbar-width: none;
+}
+
+
+.mi-cuenta-pestana {
+    flex: 0 0 auto;
+    padding: 9px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
+.mi-cuenta-pestana.activa {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: rgba(54, 213, 255, 0.08);
+}
+
+
+/* ==========================================================
+   BLOQUES Y FICHAS
+   ========================================================== */
+
+.mi-cuenta-bloque {
+    padding: 18px 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    color: var(--text-soft);
+}
+
+
+.mi-cuenta-bloque h2 {
+    margin: 0 0 12px;
+    color: var(--text);
+    font-size: 19px;
+}
+
+
+.mi-cuenta-bloque h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 16px;
+}
+
+
+.mi-cuenta-datos {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 16px;
+}
+
+
+.mi-cuenta-datos dt {
+    color: var(--text-faint);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+
+.mi-cuenta-datos dd {
+    margin: 2px 0 0;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+
+.mi-cuenta-lista {
+    display: grid;
+    gap: 12px;
+    margin: 14px 0;
+}
+
+
+.mi-cuenta-ficha {
+    padding: 14px 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-soft);
+    min-width: 0;
+}
+
+
+.mi-cuenta-ficha.pausada {
+    opacity: 0.75;
+}
+
+
+.mi-cuenta-ficha-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 10px;
+}
+
+
+.mi-cuenta-etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+
+.mi-cuenta-precio,
+.mi-cuenta-etiqueta-estado {
+    padding: 3px 9px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+
+.mi-cuenta-precio {
+    border-color: var(--green);
+    color: var(--mint);
+}
+
+
+.mi-cuenta-etiqueta-estado.activa {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+
+.mi-cuenta-etiqueta-estado.retirada {
+    border-color: var(--amber);
+    color: var(--amber-light);
+}
+
+
+.mi-cuenta-localidad {
+    margin: 6px 0 0;
+    color: var(--text);
+}
+
+
+.mi-cuenta-vacio {
+    margin: 0;
+    color: var(--muted);
+}
+
+
+/* ==========================================================
+   TEXTOS
+   ========================================================== */
+
+.mi-cuenta-nota {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+.mi-cuenta-aviso {
+    margin: 12px 0 0;
+    padding: 9px 12px;
+    border-left: 3px solid var(--amber);
+    border-radius: 6px;
+    background: rgba(242, 191, 88, 0.08);
+    color: var(--amber-light);
+    font-size: 14px;
+}
+
+
+.mi-cuenta-estado {
+    min-height: 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+
+.mi-cuenta-estado:empty {
+    display: none;
+}
+
+
+.mi-cuenta-estado[data-tipo="error"] {
+    color: var(--red);
+}
+
+
+.mi-cuenta-estado[data-tipo="ok"] {
+    color: var(--mint);
+}
+
+
+/* ==========================================================
+   FORMULARIOS Y BOTONES
+   ========================================================== */
+
+.mi-cuenta-formulario {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+
+.mi-cuenta-campos {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+
+@media (min-width: 560px) {
+
+    .mi-cuenta-campos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+.mi-cuenta-campo {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+}
+
+
+.mi-cuenta-campo span {
+    color: var(--text-faint);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+
+.mi-cuenta-campo select,
+.mi-cuenta-campo input {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 15px;
+}
+
+
+.mi-cuenta-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+
+.mi-cuenta-boton {
+    padding: 9px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-soft);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
+.mi-cuenta-boton:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+
+.mi-cuenta-boton-principal {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+
+.mi-cuenta-boton-peligro {
+    border-color: rgba(239, 68, 68, 0.6);
+    color: #fca5a5;
+}

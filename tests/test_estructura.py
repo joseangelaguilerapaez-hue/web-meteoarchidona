@@ -42,7 +42,10 @@ HOJAS_DEL_SITIO = sorted((RAIZ / "css").glob("*.css")) + [RAIZ / "visores" / "ra
 PORTADA = "actualidad"
 
 # Páginas que no deben aparecer en buscadores ni en el sitemap.
-PRIVADAS = {"administracion"}
+PRIVADAS = {"administracion", "mi-cuenta"}
+
+# Se llega desde el botón con el nombre del usuario, no desde el menú.
+FUERA_DEL_MENU = {"mi-cuenta"}
 
 # Observaciones no lleva pie: su mapa ocupa la pantalla entera.
 SIN_PIE = {"observaciones"}
@@ -108,7 +111,7 @@ class TestSecciones(unittest.TestCase):
 
     def test_cada_pagina_esta_en_el_menu(self):
         del_menu = set(re.findall(r'data-seccion="([a-z-]+)"', self.cabecera))
-        esperadas = set(servidor.SECCIONES) | {PORTADA}
+        esperadas = (set(servidor.SECCIONES) - FUERA_DEL_MENU) | {PORTADA}
         self.assertEqual(del_menu, esperadas,
                          "el menú de componentes/cabecera.html no coincide con las secciones")
 
@@ -298,7 +301,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261029-graficas1"),
-            ("administracion", r"administracion/principal\.js\?v=20261104-usuarios1"),
+            ("administracion", r"administracion/principal\.js\?v=20261104-suscripciones1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -340,7 +343,7 @@ class TestConfiguracion(unittest.TestCase):
         self.assertIn("function ponerCuentaAtras", codigo)
         self.assertIn("fecha_actualizacion", codigo)
         self.assertIn(
-            "administracion.css?v=20261104-usuarios1",
+            "administracion.css?v=20261104-suscripciones1",
             leer(RAIZ / "pages" / "administracion.html"),
         )
 
@@ -358,7 +361,7 @@ class TestUsuariosAdministracion(unittest.TestCase):
 
     def test_modulo(self):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./usuarios.js?v=20261104-usuarios1", principal)
+        self.assertIn("./usuarios.js?v=20261104-suscripciones1", principal)
         self.assertIn("./acceso.js?v=20261104-usuarios1", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "usuarios.js")
         self.assertIn('"/admin/usuarios"', codigo)
@@ -370,6 +373,41 @@ class TestUsuariosAdministracion(unittest.TestCase):
         self.assertIn('"/admin/acceso/cuenta"', codigo)
         self.assertIn('credentials:"same-origin"', codigo)
         self.assertIn("renovarConCuenta", codigo)
+
+
+class TestMiCuenta(unittest.TestCase):
+    """Página «Mi cuenta» y suscripciones (4 nov; docs/usuarios.md de la API, 8.5 y 8.6)."""
+
+    def test_pagina(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "mi-cuenta.html")
+        for identificador in (
+            "pestana-datos",
+            "pestana-suscripciones",
+            "pestana-preferencias",
+            "listaSuscripciones",
+            "formularioSuscripcion",
+            "listaPreferencias",
+        ):
+            self.assertIn(f'id="{identificador}"', pagina)
+        self.assertIn('data-cuenta-accion="baja"', pagina)
+        self.assertIn('data-cuenta-accion="pin-olvidado"', pagina)
+        self.assertIn("mi-cuenta.js?v=20261104-mi-cuenta1", pagina)
+        self.assertIn('name="robots" content="noindex, nofollow"', pagina)
+
+    def test_modulo(self):
+        codigo = leer(RAIZ / "js" / "mi-cuenta.js")
+        self.assertIn('"/usuarios/suscripciones/catalogo"', codigo)
+        self.assertIn('"/configuracion/usuario"', codigo)
+        self.assertIn("Gratis", codigo)
+        self.assertIn('credentials: "same-origin"', codigo)
+
+    def test_el_nombre_lleva_a_mi_cuenta(self):
+        self.assertIn('window.location.assign("/mi-cuenta")', leer(RAIZ / "js" / "cuenta.js"))
+        self.assertIn("/js/cuenta.js?v=20261104-mi-cuenta1", leer(RAIZ / "js" / "cabecera.js"))
+
+    def test_precios_en_administracion(self):
+        self.assertIn('id="listaServiciosSuscripcion"', sin_comentarios(RAIZ / "pages" / "administracion.html"))
+        self.assertIn('"/admin/suscripciones/servicios"', leer(RAIZ / "js" / "administracion" / "usuarios.js"))
 
 
 class TestTimelapseUnaSolaVez(unittest.TestCase):
