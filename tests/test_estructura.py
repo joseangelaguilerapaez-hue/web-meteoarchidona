@@ -518,5 +518,45 @@ class TestFicherosDelSitio(unittest.TestCase):
                         "robots.txt no excluye la administración")
 
 
+class TestComponentesSol(unittest.TestCase):
+    """Componentes del Sol para los dashboards (4-11-2026)."""
+
+    COMPONENTES = {
+        "sol-tiempo-espacial": ("tiempo-espacial.js", "montarTiempoEspacial"),
+        "sol-alertas": ("alertas-solares.js", "montarAlertasSolares"),
+        "sol-directo": ("sol-directo.js", "montarSolDirecto"),
+        "sol-indice-kp": ("indice-kp.js", "montarIndiceKp"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "sol.html")
+        principal = leer(RAIZ / "js" / "sol.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "sol" / fichero)
+                self.assertIn(f"export function {funcion}(raiz)", codigo)
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "sol" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_existe(self):
+        comun = leer(RAIZ / "js" / "sol" / "comun.js")
+        ruta = re.search(r'"(/css/sol-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertTrue((RAIZ / "css" / "sol-componentes.css").is_file())
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "sol.html").replace("../", ""))
+        self.assertIn("container-type: inline-size", leer(RAIZ / "css" / "sol-componentes.css"))
+
+    def test_la_pagina_carga_el_modulo(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "sol.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/sol\.js\?v=[\w-]+"')
+
+
 if __name__ == "__main__":
     unittest.main()

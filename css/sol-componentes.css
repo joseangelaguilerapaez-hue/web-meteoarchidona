@@ -1,0 +1,583 @@
+/*
+ * MeteoArchidona
+ * Componentes del Sol
+ *
+ * Estilos de los componentes reutilizables de js/sol/:
+ *
+ *     sol-tiempo-espacial · sol-alertas · sol-directo · sol-indice-kp
+ *
+ * Valen igual en la página Sol que en cualquier dashboard. Cada
+ * componente la carga solo si la página no la tiene (js/sol/comun.js).
+ * Se adaptan al ancho de su hueco, no al de la pantalla: cada raíz es
+ * un contenedor (container-type) y las reglas de tamaño van con
+ * @container. Los colores salen de css/paleta.css.
+ *
+ * Niveles de las escalas NOAA: nivel-0 a nivel-5, más nivel-activo
+ * para Kp 4. Los usan también la tabla y las marcas de la página Sol.
+ */
+
+
+/* ==========================================================
+   NIVELES
+   ========================================================== */
+
+.sol,
+.sol-componente {
+    --nivel-0: var(--green);
+    --nivel-activo: #facc15;
+    --nivel-1: #fb923c;
+    --nivel-2: var(--red);
+    --nivel-3: #e11d48;
+    --nivel-4: #c026d3;
+    --nivel-5: #7c3aed;
+}
+
+.sol .nivel-0, .sol-componente .nivel-0 { --color-nivel: var(--nivel-0); }
+.sol .nivel-activo, .sol-componente .nivel-activo { --color-nivel: var(--nivel-activo); }
+.sol .nivel-1, .sol-componente .nivel-1 { --color-nivel: var(--nivel-1); }
+.sol .nivel-2, .sol-componente .nivel-2 { --color-nivel: var(--nivel-2); }
+.sol .nivel-3, .sol-componente .nivel-3 { --color-nivel: var(--nivel-3); }
+.sol .nivel-4, .sol-componente .nivel-4 { --color-nivel: var(--nivel-4); }
+.sol .nivel-5, .sol-componente .nivel-5 { --color-nivel: var(--nivel-5); }
+
+
+/* ==========================================================
+   RAÍZ COMÚN
+   ========================================================== */
+
+.sol-componente {
+    container-type: inline-size;
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+}
+
+
+.sol-aviso {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+
+.sol-pie-componente {
+    margin: 0;
+    color: var(--text-faint);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+}
+
+
+.sol-pie-componente.error {
+    color: var(--amber);
+}
+
+
+.sol-componente a {
+    color: var(--cyan);
+    text-decoration: none;
+}
+
+
+/* ==========================================================
+   ESCALAS R · S · G
+   ========================================================== */
+
+.sol-escalas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+
+.sol-escala {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid color-mix(in srgb, var(--color-nivel) 45%, transparent);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--color-nivel) 10%, rgba(8, 13, 20, 0.6));
+}
+
+
+.sol-escala-letra {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--color-nivel);
+    color: #071018;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+.sol-escala-textos {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+
+.sol-escala-nombre {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+
+.sol-escala-estado {
+    color: var(--color-nivel);
+    font-size: 13px;
+}
+
+
+/* ==========================================================
+   ÍNDICES
+   ========================================================== */
+
+.sol-indices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+}
+
+
+.sol-indice {
+    display: grid;
+    gap: 3px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--color-nivel, var(--border));
+    border-radius: 12px;
+    background: rgba(8, 13, 20, 0.55);
+}
+
+
+.sol-indice-nombre {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+
+.sol-indice-valor {
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+
+.sol-indice-valor small {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+.sol-indice-estado {
+    color: var(--color-nivel, var(--text-soft));
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.sol-indice-cuando {
+    color: var(--text-faint);
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   MARCAS (G1, R2...)
+   ========================================================== */
+
+.sol-marca {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-nivel) 20%, transparent);
+    color: var(--color-nivel);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ALERTAS
+   ========================================================== */
+
+.sol-alertas-lista {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+.sol-alerta {
+    --color-tipo: var(--cyan);
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--color-tipo);
+    border-radius: 10px;
+    background: rgba(8, 13, 20, 0.55);
+}
+
+
+.sol-alerta.tipo-alerta { --color-tipo: var(--red); }
+.sol-alerta.tipo-aviso { --color-tipo: var(--orange); }
+.sol-alerta.tipo-vigilancia { --color-tipo: var(--amber); }
+.sol-alerta.tipo-resumen { --color-tipo: var(--cyan); }
+.sol-alerta.tipo-cancelada { --color-tipo: var(--muted-dark); }
+
+
+.sol-alerta-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+}
+
+
+.sol-alerta-tipo {
+    color: var(--color-tipo);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+
+.sol-alerta-fecha {
+    margin-left: auto;
+    color: var(--text-faint);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+}
+
+
+.sol-alerta-titular {
+    margin: 6px 0 4px;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+
+.sol-alerta-original summary,
+.sol-alertas-anteriores > summary {
+    cursor: pointer;
+    color: var(--cyan);
+    font-size: 13px;
+}
+
+
+.sol-alerta-original pre {
+    margin: 8px 0 0;
+    padding: 10px;
+    overflow-x: auto;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    color: var(--text-soft);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+
+.sol-alertas-anteriores {
+    margin-top: 14px;
+}
+
+
+.sol-alertas-anteriores > summary {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.sol-calma {
+    padding: 12px 14px;
+    border: 1px solid color-mix(in srgb, var(--green) 35%, transparent);
+    border-radius: 10px;
+    color: var(--mint);
+}
+
+
+/* ==========================================================
+   VISOR DEL SOL (SDO)
+   ========================================================== */
+
+.sol-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+}
+
+
+.sol-selector-boton {
+    flex: none;
+    padding: 8px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: rgba(8, 13, 20, 0.6);
+    color: var(--text-soft);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
+.sol-selector-boton.activo {
+    border-color: var(--accent);
+    background: rgba(240, 165, 0, 0.16);
+    color: var(--amber-light);
+    font-weight: 600;
+}
+
+
+.sol-visor {
+    margin: 0;
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+}
+
+
+.sol-visor-enlace {
+    display: block;
+    width: min(100%, 560px);
+}
+
+
+.sol-visor-imagen,
+.sol-figura img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    background: #000;
+}
+
+
+.sol-visor-texto {
+    max-width: 620px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.55;
+    text-align: center;
+}
+
+
+/* La imagen no ha llegado: un hueco con aviso en vez del icono roto. */
+.sin-imagen img {
+    visibility: hidden;
+}
+
+
+.sin-imagen > a::after {
+    content: "Imagen no disponible ahora";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--text-faint);
+    font-size: 13px;
+}
+
+
+.sol-figura.sin-imagen > a,
+.sol-visor.sin-imagen > a {
+    position: relative;
+    display: block;
+    border: 1px dashed var(--border-strong);
+    border-radius: 12px;
+}
+
+
+.sol-visor.sin-imagen > a {
+    width: min(100%, 560px);
+}
+
+
+/* ==========================================================
+   GRÁFICA DEL KP
+   ========================================================== */
+
+.sol-kp-figura {
+    margin: 0;
+}
+
+
+.sol-kp-grafica {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+
+.sol-kp-rejilla {
+    stroke: var(--border);
+    stroke-width: 1;
+}
+
+
+.sol-kp-umbral {
+    stroke: var(--nivel-1);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+    opacity: 0.7;
+}
+
+
+.sol-kp-ahora {
+    stroke: var(--text);
+    stroke-width: 1.5;
+    stroke-dasharray: 2 3;
+}
+
+
+.sol-kp-texto {
+    fill: var(--text-faint);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+}
+
+
+.sol-kp-barra {
+    fill: var(--color-nivel, var(--nivel-0));
+}
+
+
+.sol-kp-barra.prevision {
+    opacity: 0.45;
+}
+
+
+.sol-kp-raya {
+    fill: rgba(8, 13, 20, 0.55);
+}
+
+
+.sol-kp-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.sol-kp-leyenda-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+.sol-kp-muestra {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    background: var(--color-nivel);
+}
+
+
+/* ==========================================================
+   TIEMPO ESPACIAL COMPACTO (el modo de los dashboards)
+   ========================================================== */
+
+/* Las tres escalas en fila, solo con su círculo y el estado, y el Kp
+ * debajo a lo ancho. */
+.sol-tiempo-espacial:not(.ampliado) .sol-escala {
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 6px;
+    text-align: center;
+}
+
+
+.sol-tiempo-espacial:not(.ampliado) .sol-escala-nombre {
+    font-size: 12px;
+}
+
+
+.sol-tiempo-espacial:not(.ampliado) .sol-escala-textos {
+    justify-items: center;
+}
+
+
+.sol-tiempo-espacial:not(.ampliado) .sol-indices {
+    grid-template-columns: 1fr;
+}
+
+
+/* ==========================================================
+   SEGÚN EL ANCHO DEL HUECO
+   ========================================================== */
+
+@container (max-width: 560px) {
+
+    .sol-tiempo-espacial.ampliado .sol-escalas {
+        grid-template-columns: 1fr;
+    }
+
+    .sol-escala-letra {
+        width: 40px;
+        height: 40px;
+        font-size: 15px;
+    }
+
+    .sol-indices {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sol-indice-valor {
+        font-size: 24px;
+    }
+
+    .sol-alerta-fecha {
+        margin-left: 0;
+        width: 100%;
+    }
+
+}
+
+
+@container (max-width: 300px) {
+
+    .sol-tiempo-espacial:not(.ampliado) .sol-escala-nombre {
+        font-size: 11px;
+    }
+
+    .sol-escala-letra {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+}
+
+
+/* Fin de fichero: css/sol-componentes.css */
