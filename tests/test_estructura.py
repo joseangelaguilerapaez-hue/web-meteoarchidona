@@ -300,7 +300,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261029-graficas1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261104-componentes1"),
             ("administracion", r"administracion/principal\.js\?v=20261104-suscripciones1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)

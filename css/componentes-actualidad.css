@@ -1,0 +1,544 @@
+/*
+ * MeteoArchidona
+ * Componentes de Actualidad (4-11-2026)
+ *
+ * Estilos de las tarjetas que se pueden poner en cualquier página o
+ * dashboard (js/componentes/*.js): Condiciones actuales, Sol y luna,
+ * Los próximos días y Accesos. Antes estaban en css/actualidad.css; la
+ * maquetación de la portada y sus ajustes para móvil siguen allí.
+ *
+ * Cada componente carga esta hoja si la página no la tiene.
+ */
+
+
+.tarjeta {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17, 30, 46, 0.98),
+            rgba(9, 22, 34, 0.98)
+        );
+    border:
+        1px solid
+        var(--border);
+    border-radius: 11px;
+    box-shadow: var(--shadow);
+}
+
+
+/* ==========================================================
+   RESUMEN
+   ========================================================== */
+
+
+.resumen {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+
+.seccion-titulo {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+.estado {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.punto {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow:
+        0 0 12px
+        rgba(34, 197, 94, 0.5);
+}
+
+
+/* ==========================================================
+   CONDICIONES ACTUALES · LECTURA DE LA ESTACIÓN
+   ========================================================== */
+
+
+.resumen-ahora {
+    display: grid;
+    flex: 1 1 auto;
+    align-content: center;
+    justify-items: center;
+    gap: 14px;
+    margin: 13px 0;
+    width: 100%;
+}
+
+
+.resumen-ahora > * {
+    width: 100%;
+}
+
+
+/*
+ * Estado del cielo: el dibujo y su palabra.
+ *
+ * El icono no lo miden nuestras estaciones; viene de la predicción de
+ * AEMET para la hora en curso, salvo que la estación mida lluvia. Por
+ * eso lleva su palabra debajo: así se ve de qué está hablando.
+ */
+.resumen-cielo {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+
+.resumen-cielo-dibujo .ic {
+    width: 104px;
+    height: 104px;
+}
+
+
+.resumen-cielo-texto {
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+
+.resumen-temperatura {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 2px;
+    font-size: 58px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+
+.resumen-unidad {
+    color: var(--muted);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+
+/*
+ * En fila, etiqueta a la izquierda y dato a la derecha: la columna mide
+ * 250 px y en tres columnas se partían «lluvia hoy» y «5 km/h del ONO».
+ */
+.resumen-detalles {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding-top: 12px;
+    border-top:
+        1px solid
+        var(--border);
+}
+
+
+.resumen-detalle {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+
+.resumen-detalle dt {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+
+.resumen-detalle dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* Estación parada: el punto verde mentiría. */
+.estado.sin-datos {
+    color: var(--muted);
+}
+
+
+.estado.sin-datos .punto {
+    background: var(--muted);
+    box-shadow: none;
+}
+
+
+.ubicacion {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.ubicacion-sub {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.sol-horas {
+    display: grid;
+    grid-template-columns:
+        1fr 1fr;
+    gap: 10px;
+    margin-top: 19px;
+    padding-top: 16px;
+    border-top:
+        1px solid
+        var(--border);
+}
+
+
+.sol-hora {
+    font-family:
+        "JetBrains Mono",
+        monospace;
+    font-size: 12px;
+}
+
+
+.sol-hora span {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-family:
+        "Sora",
+        sans-serif;
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   SOL Y LUNA
+   ========================================================== */
+
+/*
+ * Columna izquierda del panel: «Condiciones actuales» y, debajo,
+ * «Sol y luna». Las rellena js/sol-luna.js.
+ */
+/*
+ * Dentro, el bloque de la luna se centra en el alto sobrante y las
+ * fechas de luna llena y nueva bajan al pie de la tarjeta.
+ */
+.sol-luna {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+
+.sol-luna-dia {
+    display: grid;
+    gap: 4px;
+    margin-top: 14px;
+}
+
+
+.sol-luna-etiqueta {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+
+.sol-luna-duracion {
+    color: var(--amber);
+    font-family:
+        "JetBrains Mono",
+        monospace;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+
+.sol-luna-nota {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+.luna {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top:
+        1px solid
+        var(--border);
+}
+
+
+.luna-dibujo {
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
+    filter:
+        drop-shadow(
+            0 0 10px
+            rgba(217, 226, 233, 0.18)
+        );
+}
+
+
+.luna-sombra {
+    fill: #1a2a3c;
+    stroke: #244567;
+    stroke-width: 2;
+}
+
+
+.luna-luz {
+    fill: #e4ebf1;
+}
+
+
+.luna-fase {
+    margin-bottom: 3px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.sol-luna .luna {
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+}
+
+
+.sol-luna .luna-dibujo {
+    width: 150px;
+    height: 150px;
+}
+
+
+.sol-luna .sol-horas {
+    margin-top: 16px;
+}
+
+
+/* ==========================================================
+   ADELANTO DE LA PREDICCIÓN
+   ========================================================== */
+
+
+.prediccion-breve {
+    margin-top: 14px;
+    padding: 18px;
+}
+
+
+.prediccion-breve-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+.prediccion-breve-fuente {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.prediccion-breve-enlace {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+.prediccion-breve-vieja {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.prediccion-breve-dias {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+    gap: 12px;
+    margin-top: 14px;
+}
+
+
+.pred-breve-dia {
+    padding: 14px;
+    border:
+        1px solid
+        var(--border);
+    border-radius: 8px;
+    background:
+        rgba(
+            12,
+            28,
+            43,
+            0.8
+        );
+}
+
+
+.pred-breve-cuando {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+
+.pred-breve-descripcion {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+.pred-breve-temperaturas {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+.pred-breve-max {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+
+.pred-breve-min {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.pred-breve-lluvia {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   ACCESOS
+   ========================================================== */
+
+
+.accesos {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            5,
+            1fr
+        );
+    gap: 12px;
+    margin-top: 14px;
+    padding: 18px;
+}
+
+
+.acceso {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 14px;
+    border:
+        1px solid
+        var(--border);
+    border-radius: 8px;
+    background:
+        rgba(
+            12,
+            28,
+            43,
+            0.8
+        );
+}
+
+
+@media (hover: hover) {
+.acceso:hover {
+    border-color: #315579;
+    transform: translateY(-1px);
+}
+}
+
+
+/*
+ * Los iconos son SVG propios y no emoji: cada sistema pinta los emoji a
+ * su manera y el del aviso salía siempre en su color, ajeno a la paleta.
+ */
+.acceso-icono {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+    color: var(--accent);
+}
+
+
+.acceso-icono svg {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+
+.acceso-titulo {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.acceso-subtitulo {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 9px;
+}
+
+
+
+/* Fin de fichero: css/componentes-actualidad.css */

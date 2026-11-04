@@ -96,9 +96,59 @@ import {
    ========================================================== */
 
 
+/*
+ * Desde el 4-11-2026 la tarjeta de condiciones actuales, la de sol y
+ * luna, el adelanto de la predicción y los accesos son componentes
+ * (js/componentes/), que se pueden poner en cualquier página o
+ * dashboard. Aquí solo se montan en sus huecos; cada uno se renueva solo.
+ */
+
 import {
-    actualizarResumen
-} from "./resumen.js?v=20261025-icono2";
+    montarCondicionesActuales
+} from "../componentes/condiciones-actuales.js?v=20261104-componentes1";
+
+import {
+    montarSolLuna
+} from "../componentes/tarjeta-sol-luna.js?v=20261104-componentes1";
+
+import {
+    montarPrediccionBreve
+} from "../componentes/prediccion-breve.js?v=20261104-componentes1";
+
+import {
+    montarAccesos
+} from "../componentes/accesos.js?v=20261104-componentes1";
+
+
+const COMPONENTES_ACTUALIDAD = {
+    "condiciones-actuales": montarCondicionesActuales,
+    "sol-luna": montarSolLuna,
+    "prediccion-breve": montarPrediccionBreve,
+    "accesos": montarAccesos
+};
+
+
+function montarComponentes() {
+
+    for (const hueco of document.querySelectorAll("[data-componente]")) {
+
+        const montar = COMPONENTES_ACTUALIDAD[hueco.dataset.componente];
+
+        if (!montar) {
+            continue;
+        }
+
+        try {
+            montar(hueco);
+        } catch (error) {
+            console.error(
+                `Actualidad: no se pudo montar ${hueco.dataset.componente}`,
+                error
+            );
+        }
+    }
+
+}
 
 
 /* ==========================================================
@@ -106,9 +156,7 @@ import {
    ========================================================== */
 
 
-import {
-    iniciarPrediccionBreve
-} from "./prediccion-breve.js?v=20261025-icono2";
+
 
 
 /* ==========================================================
@@ -360,6 +408,13 @@ async function arrancarActualidad() {
 
     try {
 
+        /*
+         * Componentes: primero, para que no esperen a las fichas ni
+         * caigan con ellas si algo falla.
+         */
+        montarComponentes();
+
+
         /* ==================================================
            CABECERA DINÁMICA
            ================================================== */
@@ -454,12 +509,6 @@ async function arrancarActualidad() {
         await cargarCondiciones();
 
 
-        await actualizarResumen();
-
-
-        iniciarPrediccionBreve();
-
-
         /* ==================================================
            RESPONSIVE
            ================================================== */
@@ -473,12 +522,6 @@ async function arrancarActualidad() {
 
         window.setInterval(
             cargarCondiciones,
-            INTERVALO_CONDICIONES_MS
-        );
-
-
-        window.setInterval(
-            actualizarResumen,
             INTERVALO_CONDICIONES_MS
         );
 
