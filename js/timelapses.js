@@ -1382,6 +1382,172 @@ function crearFichaCamara(
  */
 
 
+/*
+ * Una sola consulta al catálogo aunque se monten a la vez varios
+ * componentes (por ejemplo, un dashboard con un timelapse por cámara).
+ * La consulta compartida se olvida al terminar, así que cada montaje
+ * posterior vuelve a pedir el catálogo fresco.
+ */
+let consultaEnCurso = null;
+
+function consultarCatalogoCompartido() {
+
+    if (
+        !consultaEnCurso
+    ) {
+
+        consultaEnCurso =
+            consultarCatalogo()
+                .finally(() => {
+                    consultaEnCurso = null;
+                });
+
+    }
+
+    return consultaEnCurso;
+
+}
+
+
+/*
+ * Timelapses de una sola cámara (4-11-2026, decisión de José: un
+ * componente al que se le pasa la cámara y trae su visor y el selector
+ * de sus timelapses, rellenado con las mismas reglas que Actualidad:
+ * últimos siete días con vídeo, uno por día, COMPLETO antes que PARCIAL
+ * y el día anterior seleccionado de entrada).
+ *
+ * Monta solo la ficha de esa cámara, sin la cabecera «Timelapses» de la
+ * sección. Si la cámara no tiene timelapses publicados, lo dice en el
+ * propio hueco en vez de desaparecer, para que en un dashboard no quede
+ * un agujero sin explicación.
+ *
+ *     await montarTimelapsesCamara(hueco, 1);
+ */
+export async function montarTimelapsesCamara(
+    contenedor,
+    camaraId
+) {
+
+    const destino =
+        obtenerElemento(
+            contenedor
+        );
+
+    const camara =
+        enteroPositivo(
+            camaraId
+        );
+
+    if (
+        !destino
+        ||
+        !camara
+    ) {
+
+        console.warn(
+            "Timelapses de cámara: falta el contenedor o el número de cámara.",
+            contenedor
+        );
+
+        return false;
+
+    }
+
+    const avisar = mensaje => {
+
+        const aviso =
+            document.createElement(
+                "p"
+            );
+
+        aviso.className =
+            "timelapses-estado";
+
+        aviso.textContent =
+            mensaje;
+
+        destino.replaceChildren(
+            aviso
+        );
+
+        destino.hidden = false;
+
+    };
+
+    try {
+
+        const [
+            plantillas,
+            registros
+        ] = await Promise.all([
+            cargarPlantillas(),
+            consultarCatalogoCompartido()
+        ]);
+
+        const grupo =
+            agruparPorCamara(
+                registros
+            ).find(
+                candidato =>
+                    candidato.id === camara
+            );
+
+        if (
+            !grupo
+        ) {
+
+            avisar(
+                "Esta cámara todavía no tiene timelapses publicados."
+            );
+
+            return false;
+
+        }
+
+        const envoltorio =
+            document.createElement(
+                "div"
+            );
+
+        envoltorio.className =
+            "timelapses-componente timelapses-componente--camara";
+
+        envoltorio.appendChild(
+            crearFichaCamara(
+                plantillas.camara,
+                grupo,
+                ++contadorInstancias
+            )
+        );
+
+        destino.replaceChildren(
+            envoltorio
+        );
+
+        destino.hidden = false;
+
+        return true;
+
+    } catch (
+        error
+    ) {
+
+        console.error(
+            `No se pudieron montar los timelapses de la cámara ${camara}.`,
+            error
+        );
+
+        avisar(
+            "No se han podido cargar los timelapses."
+        );
+
+        return false;
+
+    }
+
+}
+
+
 export async function montarTimelapses(
     contenedor
 ) {
@@ -1412,7 +1578,7 @@ export async function montarTimelapses(
             registros
         ] = await Promise.all([
             cargarPlantillas(),
-            consultarCatalogo()
+            consultarCatalogoCompartido()
         ]);
 
         const grupos =
