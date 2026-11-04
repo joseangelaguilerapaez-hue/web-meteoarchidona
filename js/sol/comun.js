@@ -35,7 +35,7 @@ export const IMAGENES_CADA_MS = 15 * 60 * 1000;
 const ESPERA_MAXIMA_MS = 20000;
 const CACHE_MS = 60 * 1000;
 
-const HOJA = "/css/sol-componentes.css?v=20261104-componentes1";
+const HOJA = "/css/sol-componentes.css?v=20261104-componentes2";
 
 const ZONA = "Europe/Madrid";
 

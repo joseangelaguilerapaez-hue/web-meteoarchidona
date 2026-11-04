@@ -25,7 +25,7 @@ import {
     crear, vaciar, aviso, prepararRaiz, ponerPie,
     pedir, comoObjetos, numero, fechaUTC, hora, formatoDia,
     textoKp, claseKp, nivelEscala, nivelFulguracion, cadaRato
-} from "./comun.js?v=20261104-componentes1";
+} from "./comun.js?v=20261104-componentes2";
 
 
 /* Letra, nombre y nombre corto (el del modo compacto). */

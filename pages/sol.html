@@ -68,12 +68,12 @@
 
 <link
     rel="stylesheet"
-    href="../css/sol-componentes.css?v=20261104-componentes1"
+    href="../css/sol-componentes.css?v=20261104-componentes2"
 >
 
 <link
     rel="stylesheet"
-    href="../css/sol.css?v=20261104-componentes1"
+    href="../css/sol.css?v=20261104-componentes2"
 >
 
 
@@ -90,7 +90,7 @@
 
 <script
     type="module"
-    src="../js/sol.js?v=20261104-componentes1"
+    src="../js/sol.js?v=20261104-componentes2"
 ></script>
 
 <script
@@ -231,61 +231,15 @@
         tormentas geomagnéticas y auroras uno a tres días después.
     </p>
 
-    <div class="sol-pareja">
-
-        <figure class="sol-figura">
-            <a
-                href="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <img
-                    class="sol-imagen-viva"
-                    data-imagen="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"
-                    alt="Coronógrafo LASCO C2, imagen más reciente"
-                    width="1024"
-                    height="1024"
-                    decoding="async"
-                    loading="lazy"
-                >
-            </a>
-            <figcaption>
-                <strong>LASCO C2</strong>
-                Corona cercana, hasta unos 6 radios solares.
-            </figcaption>
-        </figure>
-
-        <figure class="sol-figura">
-            <a
-                href="https://soho.nascom.nasa.gov/data/realtime/c3/1024/latest.jpg"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <img
-                    class="sol-imagen-viva"
-                    data-imagen="https://soho.nascom.nasa.gov/data/realtime/c3/1024/latest.jpg"
-                    alt="Coronógrafo LASCO C3, imagen más reciente"
-                    width="1024"
-                    height="1024"
-                    decoding="async"
-                    loading="lazy"
-                >
-            </a>
-            <figcaption>
-                <strong>LASCO C3</strong>
-                Campo amplio, hasta unos 30 radios solares.
-            </figcaption>
-        </figure>
-
-    </div>
+    <div data-componente="sol-coronografos"></div>
 
 </section>
 
 
 <!-- ========================================================
      ÍNDICE KP Y PREVISIÓN
-     La gráfica es el componente js/sol/indice-kp.js; la tabla de
-     previsión es solo de esta página.
+     La gráfica es el componente js/sol/indice-kp.js y la tabla de
+     previsión, js/sol/prevision-noaa.js.
      ======================================================== -->
 
 <section
@@ -309,12 +263,7 @@
         Previsión de la NOAA para los próximos días
     </h3>
 
-    <div
-        class="sol-prevision"
-        id="solPrevision"
-    >
-        <p class="sol-aviso">Cargando la previsión…</p>
-    </div>
+    <div data-componente="sol-prevision-noaa"></div>
 
 </section>
 
@@ -339,12 +288,7 @@
         la radio de onda corta en la cara de la Tierra iluminada.
     </p>
 
-    <div
-        class="sol-fulguraciones"
-        id="solFulguraciones"
-    >
-        <p class="sol-aviso">Cargando fulguraciones…</p>
-    </div>
+    <div data-componente="sol-fulguraciones"></div>
 
 </section>
 
@@ -368,23 +312,7 @@
         solo se ven con tormentas muy fuertes, de G4 o G5.
     </p>
 
-    <figure class="sol-figura sol-figura-ancha">
-        <a
-            href="https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <img
-                class="sol-imagen-viva"
-                data-imagen="https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg"
-                alt="Previsión del óvalo de auroras del hemisferio norte"
-                width="800"
-                height="800"
-                decoding="async"
-                loading="lazy"
-            >
-        </a>
-    </figure>
+    <div data-componente="sol-auroras"></div>
 
 </section>
 
