@@ -67,7 +67,7 @@ import {configurarPatrocinios} from "../actualidad/patrocinios.js?v=20260914-mod
 import {establecerModoFicha, montarVisorFicha} from "../ficha-estacion.js?v=20261101-nieve";
 
 
-const HOJA = "/css/ficha-estacion.css?v=20261025-hueco3";
+const HOJA = "/css/ficha-estacion.css?v=20261104-viento1";
 
 const SCRIPT_API = "/js/api.js?v=20261003-vps1";
 
