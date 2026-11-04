@@ -49,6 +49,7 @@ SECCIONES = (
     "informacion",
     "estadisticas",
     "sol",
+    "mi-cuenta",
 )
 
 # La portada es Actualidad, servida en "/" sin redirigir.

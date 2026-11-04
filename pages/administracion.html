@@ -23,15 +23,15 @@
 <link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
 <link rel="stylesheet" href="../css/pie.css?v=20261101-instalar1">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/administracion.css?v=20261104-usuarios1">
+<link rel="stylesheet" href="../css/administracion.css?v=20261104-suscripciones1">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
-<script src="../js/cabecera.js?v=20261103-distintivo1" defer></script>
+<script src="../js/cabecera.js?v=20261104-mi-cuenta1" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261104-usuarios1"
+    src="../js/administracion/principal.js?v=20261104-suscripciones1"
 ></script>
 
 <script
@@ -3854,6 +3854,40 @@
 
 <div
     id="listaUsuarios"
+    class="usuarios-lista"
+></div>
+
+</div>
+</section>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Servicios de suscripción
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Lo que pueden recibir los usuarios desde «Mi cuenta». El precio
+    nuevo vale para las suscripciones que se hagan a partir de ahora;
+    las que ya existen conservan el suyo. Si un servicio no está
+    disponible, no admite altas nuevas.
+</p>
+
+<div
+    id="estadoServiciosSuscripcion"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="listaServiciosSuscripcion"
     class="usuarios-lista"
 ></div>
 

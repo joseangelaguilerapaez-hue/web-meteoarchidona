@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Tu cuenta de MeteoArchidona: tus datos, tus suscripciones y tus preferencias de la web."
+>
+
+<meta name="robots" content="noindex, nofollow">
+
+<title>
+    Mi cuenta · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+
+<link rel="stylesheet" href="../css/fuentes.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/paleta.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+<link rel="stylesheet" href="../css/pie.css?v=20261101-instalar1">
+<link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/mi-cuenta.css?v=20261104-mi-cuenta1">
+
+<script src="../js/cabecera.js?v=20261104-mi-cuenta1" defer></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+<script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
+<script src="../js/api.js?v=20261003-vps1" defer></script>
+<script type="module" src="../js/mi-cuenta.js?v=20261104-mi-cuenta1"></script>
+<script src="../js/pwa.js?v=20261101-pwa1" defer></script>
+<script src="../js/instalar.js?v=20261102-manual1" defer></script>
+
+</head>
+
+
+<body data-seccion="mi-cuenta">
+
+<div class="pagina">
+
+<div id="cabecera"></div>
+
+
+<!-- =========================================================
+     MI CUENTA
+     Diseño: docs/usuarios.md de api-meteoarchidona, 8.5 y 8.6.
+     Tres pestañas: Mis datos, Suscripciones y Preferencias de la web.
+     ========================================================= -->
+
+<main class="mi-cuenta">
+
+<header class="mi-cuenta-cabecera">
+
+    <div class="mi-cuenta-etiqueta">
+        METEOARCHIDONA · MI CUENTA
+    </div>
+
+    <h1 id="tituloMiCuenta">
+        Mi cuenta
+    </h1>
+
+</header>
+
+
+<!-- Sin sesión -->
+<section
+    id="miCuentaSinSesion"
+    class="mi-cuenta-bloque"
+    hidden
+>
+    <p>
+        Para ver tu cuenta tienes que iniciar sesión.
+    </p>
+
+    <div class="mi-cuenta-acciones">
+        <button type="button" class="mi-cuenta-boton mi-cuenta-boton-principal" data-cuenta-accion="entrar">
+            Iniciar sesión
+        </button>
+        <button type="button" class="mi-cuenta-boton" data-cuenta-accion="registrar">
+            Registrarse
+        </button>
+    </div>
+</section>
+
+
+<div
+    id="miCuentaEstado"
+    class="mi-cuenta-estado"
+    role="status"
+    aria-live="polite"
+>
+    Cargando…
+</div>
+
+
+<!-- Con sesión -->
+<div
+    id="miCuentaContenido"
+    hidden
+>
+
+<nav
+    class="mi-cuenta-pestanas"
+    role="tablist"
+    aria-label="Apartados de mi cuenta"
+>
+    <button type="button" role="tab" class="mi-cuenta-pestana" data-pestana="datos" aria-selected="true">
+        Mis datos
+    </button>
+    <button type="button" role="tab" class="mi-cuenta-pestana" data-pestana="suscripciones" aria-selected="false">
+        Suscripciones
+    </button>
+    <button type="button" role="tab" class="mi-cuenta-pestana" data-pestana="preferencias" aria-selected="false">
+        Preferencias de la web
+    </button>
+</nav>
+
+
+<!-- ---------------- MIS DATOS ---------------- -->
+
+<section
+    id="pestana-datos"
+    class="mi-cuenta-bloque"
+    role="tabpanel"
+>
+
+    <h2>Mis datos</h2>
+
+    <dl class="mi-cuenta-datos">
+        <div>
+            <dt>Nombre</dt>
+            <dd id="datoNombre">—</dd>
+        </div>
+        <div>
+            <dt>Correo</dt>
+            <dd id="datoCorreo">—</dd>
+        </div>
+        <div>
+            <dt>Cuenta creada</dt>
+            <dd id="datoAlta">—</dd>
+        </div>
+        <div id="datoAdministrador" hidden>
+            <dt>Permisos</dt>
+            <dd>Administrador</dd>
+        </div>
+    </dl>
+
+    <div class="mi-cuenta-acciones">
+        <button type="button" class="mi-cuenta-boton" data-cuenta-accion="pin-olvidado">
+            Cambiar mi PIN
+        </button>
+        <button type="button" class="mi-cuenta-boton" data-cuenta-accion="salir">
+            Cerrar sesión
+        </button>
+        <button type="button" class="mi-cuenta-boton mi-cuenta-boton-peligro" data-cuenta-accion="baja">
+            Borrar mi cuenta
+        </button>
+    </div>
+
+    <p class="mi-cuenta-nota">
+        Para cambiar el PIN te mandamos un enlace a tu correo, válido una hora.
+    </p>
+
+</section>
+
+
+<!-- ---------------- SUSCRIPCIONES ---------------- -->
+
+<section
+    id="pestana-suscripciones"
+    class="mi-cuenta-bloque"
+    role="tabpanel"
+    hidden
+>
+
+    <h2>Suscripciones</h2>
+
+    <p class="mi-cuenta-nota">
+        Lo que quieres recibir de MeteoArchidona. Puedes tener varias a la vez,
+        por ejemplo la predicción de dos localidades, y pausarlas o borrarlas
+        cuando quieras. Las horas de envío las fija MeteoArchidona.
+    </p>
+
+    <p class="mi-cuenta-aviso">
+        Los envíos todavía no han empezado: lo que elijas aquí queda guardado
+        y te llegará en cuanto pongamos en marcha el servicio.
+    </p>
+
+    <div
+        id="listaSuscripciones"
+        class="mi-cuenta-lista"
+    ></div>
+
+    <form
+        id="formularioSuscripcion"
+        class="mi-cuenta-formulario"
+        novalidate
+    >
+
+        <h3>Añadir una suscripción</h3>
+
+        <div class="mi-cuenta-campos">
+
+            <label class="mi-cuenta-campo">
+                <span>Servicio</span>
+                <select id="campoServicio" required></select>
+            </label>
+
+            <label
+                id="bloqueLocalidad"
+                class="mi-cuenta-campo"
+            >
+                <span>Localidad</span>
+                <select id="campoLocalidad"></select>
+            </label>
+
+        </div>
+
+        <p
+            id="descripcionServicio"
+            class="mi-cuenta-nota"
+        ></p>
+
+        <div class="mi-cuenta-acciones">
+            <button type="submit" class="mi-cuenta-boton mi-cuenta-boton-principal">
+                Suscribirme
+            </button>
+        </div>
+
+        <div
+            id="estadoSuscripcion"
+            class="mi-cuenta-estado"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+    </form>
+
+</section>
+
+
+<!-- ---------------- PREFERENCIAS DE LA WEB ---------------- -->
+
+<section
+    id="pestana-preferencias"
+    class="mi-cuenta-bloque"
+    role="tabpanel"
+    hidden
+>
+
+    <h2>Preferencias de la web</h2>
+
+    <p class="mi-cuenta-nota">
+        Cómo quieres ver la web. Solo cambian para ti; si no eliges nada,
+        ves lo de por defecto.
+    </p>
+
+    <div
+        id="listaPreferencias"
+        class="mi-cuenta-lista"
+    ></div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+
+<div id="pie"></div>
+
+</body>
+
+</html>
