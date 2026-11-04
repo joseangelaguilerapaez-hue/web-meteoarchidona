@@ -623,5 +623,28 @@ class TestComponentesSol(unittest.TestCase):
         self.assertRegex(pagina, r'type="module"\s+src="\.\./js/sol\.js\?v=[\w-]+"')
 
 
+
+class TestComponenteEstadistica(unittest.TestCase):
+    """Estadística del catálogo como componente montable (José, 5-11-2026)."""
+
+    def setUp(self):
+        self.codigo = leer(RAIZ / "js" / "componentes" / "estadistica.js")
+
+    def test_exporta_su_funcion_y_reutiliza_el_incrustador(self):
+        self.assertIn("export async function montarComponenteEstadistica(hueco)", self.codigo)
+        self.assertIn("export async function montarEstadistica(hueco, urlApi)",
+                      leer(RAIZ / "js" / "estadisticas-incrustadas.js"))
+        ruta = re.search(r'"\.\./estadisticas-incrustadas\.js\?v=[\w-]+"', self.codigo)
+        self.assertIsNotNone(ruta)
+
+    def test_sin_id_para_poder_repetirlo(self):
+        self.assertNotIn("getElementById", self.codigo)
+        self.assertIsNone(re.search(r"\.id\s*=(?!=)", self.codigo), "asigna un id")
+
+    def test_carga_la_hoja_del_visor(self):
+        ruta = re.search(r'"/(css/visor-estadisticas\.css)\?v=[\w-]+"', self.codigo)
+        self.assertIsNotNone(ruta)
+        self.assertTrue((RAIZ / ruta.group(1)).is_file())
+
 if __name__ == "__main__":
     unittest.main()

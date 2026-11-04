@@ -23,7 +23,11 @@
  *
  * La sección sigue oculta hasta que llega al menos una; el hueco que
  * falla se quita sin molestar al resto de la página. Primera página que
- * lo usa: Actualidad (29-10-2026). Es la pieza de los futuros dashboards.
+ * lo usa: Actualidad (29-10-2026).
+ *
+ * montarEstadistica (una sola, en su hueco) la usa también el componente
+ * montable «Estadística» (js/componentes/estadistica.js), el de los
+ * dashboards (5-11-2026).
  */
 
 import {
@@ -31,7 +35,7 @@ import {
 } from "./visor-estadisticas.js?v=20261027-visor1";
 
 
-async function montarUna(hueco, urlApi){
+export async function montarEstadistica(hueco, urlApi){
 
     const codigo = hueco.dataset.estadistica;
 
@@ -67,7 +71,7 @@ export async function montarEstadisticas(seccion){
     const huecos = [...seccion.querySelectorAll("[data-estadistica]")];
 
     const resultados = await Promise.allSettled(
-        huecos.map(hueco => montarUna(hueco, urlApi))
+        huecos.map(hueco => montarEstadistica(hueco, urlApi))
     );
 
     let alguna = false;
