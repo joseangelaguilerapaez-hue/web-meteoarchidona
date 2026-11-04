@@ -2377,6 +2377,29 @@
 }
 
 
+/*
+ * Ficha estrecha sin cámara.
+ *
+ * El viento sube a la columna derecha de la zona superior (ver «Sin
+ * cámara, el viento ocupa su sitio»). Por debajo de unos 560 px esa
+ * columna se queda en unos 200: la veleta se come la mitad y a los
+ * datos les quedan 70 px, así que «Media 2 min» y «Media 10 min» se
+ * montan una encima de otra. Pasaba en el móvil y en las columnas de un
+ * dashboard (4-11-2026). Aquí la zona superior pasa a una columna: la
+ * estación y la temperatura arriba, y el viento debajo a todo lo ancho,
+ * como en la ficha con cámara cuando es estrecha.
+ */
+@container (max-width: 560px) {
+
+    .ficha-estacion[data-sin-camara="1"]
+    .estacion-superior {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
 /* ==========================================================
    MOVIMIENTO REDUCIDO
    ========================================================== */
