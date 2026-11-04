@@ -25,6 +25,8 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- **Administración → Usuarios y entrada sin PIN** (PR #82, 4 nov, decisión de José; **publicada**, web en `3d3d74d`, con la API `37ee9f2` y la migración 0039): lista de cuentas con buscador y casilla «Administrador»; un usuario administrador con sesión en la web entra en Administración sin el PIN y el permiso se renueva solo; tras «Cerrar sesión», botón «Entrar con mi cuenta». Diseño en `docs/usuarios.md` de la API, 2.7. Por confirmar: prueba de José en producción.
+
 - **Predicción por pestañas** (PR #67, #68 y #71, 2 y 3 nov, decisiones de José; **publicada**, web en `38b3be6`, revisada por José en el móvil): pestañas «AEMET» (lo de siempre, ahora componente `js/prediccion-aemet.js`) y «Modelos numéricos» (`js/modelos-numericos.js`): resumen automático redactado por IA, penacho por modelo con escenarios, media, franja del 80 %, salida operativa y control, comparación de modelos con casillas para marcar o desmarcar, niveles 2 m, 925, 850, 700 y 500 hPa, lluvia y nieve cada 6 h, El Silo o Los Llanos, zoom con dos dedos. Detalle en `docs/prediccion.md`, 2 ter. Usa la API desplegada con las migraciones 0036 y 0037. Falta dar de alta sus bloques en el catálogo de auditoría.
 
 - Pantalla completa en horizontal (PR #63, **publicado el 2 nov** en `aa7585d`, José confirma que funciona): con la web instalada como aplicación, el manifiesto fija `portrait-primary` y Android no giraba la pantalla completa aunque el móvil tuviera la rotación automática (lo vio José en su Samsung con un timelapse). Los dos visores (`js/visor-video-multimedia.js` para MP4 y `js/visor-video.js` para el directo) piden `screen.orientation.lock("landscape")` al entrar y la liberan al salir. En iPhone no existe esa orden y sigue mandando el giro del teléfono. Versión `?v=20261102-horizontal1`.
@@ -158,3 +160,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-03 · Pantalla completa de YouTube en horizontal (PR #69) publicada en el VPS (`3601c31`); José la prueba en el móvil con la aplicación instalada y funciona.
 - 2026-11-03 · Predicción por pestañas (AEMET y Modelos numéricos) publicada y revisada por José; la Configuración de Administración necesita ahora la migración 0038 de la API.
 - 2026-11-03 · Configuración publicada con siete pestañas y once parámetros; distintivo en la cabecera (globo grande en el móvil); vigencia del distintivo con cuenta atrás en Configuración. Comprobado por José.
+- 2026-11-04 · Administración → Usuarios y entrada sin PIN de los administradores publicadas (web `3d3d74d`, API `37ee9f2` con la migración 0039).
