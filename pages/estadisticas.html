@@ -95,7 +95,7 @@
 
 <script
     type="module"
-    src="../js/estadisticas.js?v=20261028-seccion1"
+    src="../js/estadisticas.js?v=20261104-componentes1"
 ></script>
 
 <script
@@ -143,115 +143,10 @@
 
 
 <!--
-    Mientras se comprueba la sesión. js/estadisticas.js muestra
-    después el aviso de registro o el catálogo.
+    Aviso de registro, catálogo y visor (4-11-2026): componente
+    js/componentes/catalogo-estadisticas.js.
 -->
-<p
-    class="estadisticas-comprobando"
-    id="estadisticas-comprobando"
->
-    Comprobando tu sesión…
-</p>
-
-
-<!-- ========================================================
-     AVISO PARA QUIEN NO HA ENTRADO
-     ======================================================== -->
-
-<section
-    class="estadisticas-registro"
-    id="estadisticas-registro"
-    aria-labelledby="titulo-registro"
-    hidden
->
-
-    <h2 id="titulo-registro">
-        Esta sección es para usuarios registrados
-    </h2>
-
-    <p>
-        Para consultar las estadísticas e informes necesitas una cuenta de
-        MeteoArchidona. El registro es gratuito: solo te pedimos un nombre,
-        tu correo y un PIN de seis cifras.
-    </p>
-
-    <ul class="estadisticas-ventajas">
-        <li>Todo nuestro catálogo de gráficas e informes, ordenado por temas.</li>
-        <li>Datos reales de nuestras estaciones, de las últimas horas a varios años.</li>
-        <li>Cualquier gráfica o informe en PDF, listo para guardar o imprimir.</li>
-    </ul>
-
-    <div class="estadisticas-registro-botones">
-
-        <button
-            type="button"
-            class="estadisticas-boton estadisticas-boton-principal"
-            data-cuenta-accion="registrar"
-        >
-            Registrarme
-        </button>
-
-        <button
-            type="button"
-            class="estadisticas-boton"
-            data-cuenta-accion="entrar"
-        >
-            Ya tengo cuenta: iniciar sesión
-        </button>
-
-    </div>
-
-    <p class="estadisticas-nota">
-        El resto de MeteoArchidona sigue siendo libre: no hace falta registrarse
-        para ver las estaciones, la predicción o las cámaras.
-    </p>
-
-</section>
-
-
-<!-- ========================================================
-     CATÁLOGO Y VISOR
-     ======================================================== -->
-
-<section
-    class="estadisticas-catalogo"
-    id="estadisticas-catalogo"
-    aria-label="Catálogo de estadísticas"
-    hidden
->
-
-    <nav
-        class="estadisticas-secciones"
-        id="estadisticas-secciones"
-        aria-label="Secciones del catálogo"
-    ></nav>
-
-    <div
-        class="estadisticas-lista"
-        id="estadisticas-lista"
-    ></div>
-
-</section>
-
-
-<section
-    class="estadisticas-visor"
-    id="estadisticas-visor"
-    aria-label="Estadística seleccionada"
-    hidden
->
-
-    <div id="estadisticas-visor-contenido"></div>
-
-</section>
-
-
-<p
-    class="estadisticas-error"
-    id="estadisticas-error"
-    role="alert"
-    hidden
-></p>
+<div data-componente="catalogo-estadisticas"></div>
 
 
 </main>
