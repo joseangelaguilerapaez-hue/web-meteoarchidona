@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
 <link rel="stylesheet" href="../css/pie.css?v=20261101-instalar1">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/administracion.css?v=20261103-vigencia2">
+<link rel="stylesheet" href="../css/administracion.css?v=20261104-usuarios1">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
 <script src="../js/cabecera.js?v=20261103-distintivo1" defer></script>
@@ -31,7 +31,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261103-vigencia2"
+    src="../js/administracion/principal.js?v=20261104-usuarios1"
 ></script>
 
 <script
@@ -209,6 +209,18 @@
     aria-live="polite"
 ></div>
 
+<!-- Usuarios administradores (docs/usuarios.md de la API, 2.7):
+     la página entra sola con la cuenta; este botón solo aparece si
+     el administrador ha cerrado la sesión de Administración. -->
+<button
+    id="botonEntrarConCuenta"
+    type="button"
+    class="boton boton-secundario boton-entrar-cuenta"
+    hidden
+>
+    Entrar con mi cuenta
+</button>
+
 <div class="nota-seguridad">
     El PIN no se almacena en esta página.
     La API valida el acceso y entrega una
@@ -352,6 +364,14 @@
     data-modulo="configuracion"
 >
     Configuración
+</a>
+
+<a
+    href="#usuarios"
+    class="modulo-boton"
+    data-modulo="usuarios"
+>
+    Usuarios
 </a>
 
 <a
@@ -3760,6 +3780,81 @@
 <div
     id="listaConfiguracion"
     class="configuracion-lista"
+></div>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     USUARIOS
+     Cuentas de los usuarios registrados (js/administracion/usuarios.js).
+     Diseño: docs/usuarios.md de api-meteoarchidona, 2.7.
+     ========================================================= -->
+
+<section
+    id="modulo-usuarios"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Usuarios
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonRecargarUsuarios"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Cuentas de los usuarios registrados. Un administrador entra en
+    Administración con su cuenta, sin el PIN. Solo una cuenta activa
+    puede ser administradora.
+</p>
+
+<div class="campo usuarios-buscador">
+    <label for="buscarUsuarios">Buscar por nombre o correo</label>
+    <input
+        id="buscarUsuarios"
+        type="search"
+        autocomplete="off"
+    >
+</div>
+
+<p
+    id="resumenUsuarios"
+    class="usuarios-resumen"
+></p>
+
+<div
+    id="estadoUsuarios"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="listaUsuarios"
+    class="usuarios-lista"
 ></div>
 
 </div>

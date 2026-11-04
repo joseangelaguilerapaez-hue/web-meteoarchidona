@@ -298,7 +298,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261029-graficas1"),
-            ("administracion", r"administracion/principal\.js\?v=20261103-vigencia2"),
+            ("administracion", r"administracion/principal\.js\?v=20261104-usuarios1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -340,9 +340,36 @@ class TestConfiguracion(unittest.TestCase):
         self.assertIn("function ponerCuentaAtras", codigo)
         self.assertIn("fecha_actualizacion", codigo)
         self.assertIn(
-            "administracion.css?v=20261103-vigencia2",
+            "administracion.css?v=20261104-usuarios1",
             leer(RAIZ / "pages" / "administracion.html"),
         )
+
+
+class TestUsuariosAdministracion(unittest.TestCase):
+    """Administración → Usuarios y entrada sin PIN de los administradores (4 nov)."""
+
+    def test_pagina(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('data-modulo="usuarios"', pagina)
+        self.assertIn('id="modulo-usuarios"', pagina)
+        self.assertIn('id="listaUsuarios"', pagina)
+        self.assertIn('id="buscarUsuarios"', pagina)
+        self.assertIn('id="botonEntrarConCuenta"', pagina)
+
+    def test_modulo(self):
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn("./usuarios.js?v=20261104-usuarios1", principal)
+        self.assertIn("./acceso.js?v=20261104-usuarios1", principal)
+        codigo = leer(RAIZ / "js" / "administracion" / "usuarios.js")
+        self.assertIn('"/admin/usuarios"', codigo)
+        self.assertIn("es_administrador", codigo)
+        self.assertIn('method: "PATCH"', codigo)
+
+    def test_entrada_con_cuenta(self):
+        codigo = leer(RAIZ / "js" / "administracion" / "acceso.js")
+        self.assertIn('"/admin/acceso/cuenta"', codigo)
+        self.assertIn('credentials:"same-origin"', codigo)
+        self.assertIn("renovarConCuenta", codigo)
 
 
 class TestTimelapseUnaSolaVez(unittest.TestCase):

@@ -1570,3 +1570,114 @@ a.modulo-boton{
 
 
 /* Fin de fichero: css/administracion.css */
+
+
+/* =========================================================
+   USUARIOS (js/administracion/usuarios.js)
+   ========================================================= */
+
+.boton-entrar-cuenta{
+    display:block;
+    width:100%;
+    margin-top:14px
+}
+
+.boton-entrar-cuenta[hidden]{
+    display:none
+}
+
+.usuarios-buscador{
+    max-width:420px;
+    margin-top:12px
+}
+
+.usuarios-resumen{
+    margin:10px 0 0;
+    color:var(--muted);
+    font-size:.9rem
+}
+
+.usuarios-lista{
+    display:grid;
+    gap:14px;
+    margin-top:12px
+}
+
+.usuarios-ficha{
+    padding:15px 17px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--card-soft);
+    min-width:0
+}
+
+.usuarios-cabecera{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px 12px
+}
+
+.usuarios-nombre{
+    margin:0;
+    font-size:1.05rem;
+    color:var(--text)
+}
+
+.usuarios-etiquetas{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px
+}
+
+.usuarios-estado,
+.usuarios-admin{
+    padding:3px 9px;
+    border:1px solid var(--border-strong);
+    border-radius:999px;
+    font-size:.78rem;
+    color:var(--muted)
+}
+
+.usuarios-estado-activo{
+    border-color:var(--cyan);
+    color:var(--cyan)
+}
+
+.usuarios-estado-baja_solicitada{
+    border-color:var(--amber);
+    color:var(--amber-light)
+}
+
+.usuarios-admin{
+    border-color:var(--amber);
+    color:var(--amber-light)
+}
+
+.usuarios-correo{
+    margin:6px 0 0;
+    color:var(--muted);
+    overflow-wrap:anywhere
+}
+
+.usuarios-datos{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 18px;
+    margin-top:8px;
+    font-size:.88rem
+}
+
+.usuarios-dato-etiqueta{
+    color:var(--muted);
+    margin-right:6px
+}
+
+.usuarios-permiso{
+    margin-top:12px
+}
+
+.usuarios-ficha .estado:empty{
+    display:none
+}
