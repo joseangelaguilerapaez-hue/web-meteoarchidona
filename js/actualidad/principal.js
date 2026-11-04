@@ -310,7 +310,7 @@ async function prepararTimelapses() {
 
         const modulo =
             await import(
-                "/js/timelapses.js?v=20261026-titulo1"
+                "/js/timelapses.js?v=20261104-camara1"
             );
 
 
