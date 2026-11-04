@@ -23,7 +23,7 @@ import {
     FUENTES, DATOS_CADA_MS,
     crear, vaciar, aviso, prepararRaiz, ponerPie,
     pedir, fechaUTC, fechaHora, cadaRato
-} from "./comun.js?v=20261104-componentes1";
+} from "./comun.js?v=20261104-componentes2";
 
 
 const TIPOS_ALERTA = [

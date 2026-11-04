@@ -28,6 +28,14 @@ poder ponerlos en los dashboards configurables. La página Sol se monta con ello
 | Alertas solares | `sol-alertas` | `js/sol/alertas-solares.js` | `montarAlertasSolares` |
 | El Sol en directo | `sol-directo` | `js/sol/sol-directo.js` | `montarSolDirecto` |
 | Índice Kp con previsión | `sol-indice-kp` | `js/sol/indice-kp.js` | `montarIndiceKp` |
+| Previsión de la NOAA a 3 días | `sol-prevision-noaa` | `js/sol/prevision-noaa.js` | `montarPrevisionNoaa` |
+| Fulguraciones de 7 días | `sol-fulguraciones` | `js/sol/fulguraciones.js` | `montarFulguraciones` |
+| Corona y eyecciones (LASCO C2 y C3) | `sol-coronografos` | `js/sol/coronografos.js` | `montarCoronografos` |
+| Óvalo de auroras | `sol-auroras` | `js/sol/auroras.js` | `montarAuroras` |
+
+Los cuatro últimos se sacaron de la página el 4-11-2026 por la tarde (decisión de José: «ya que
+nos ponemos, lo configuramos todo»). Sus estilos pasaron de `css/sol.css` a
+`css/sol-componentes.css`.
 
 Uso en cualquier página:
 
@@ -35,7 +43,7 @@ Uso en cualquier página:
 <div data-componente="sol-alertas"></div>
 
 <script type="module">
-import {montarAlertasSolares} from "/js/sol/alertas-solares.js?v=20261104-componentes1";
+import {montarAlertasSolares} from "/js/sol/alertas-solares.js?v=20261104-componentes2";
 montarAlertasSolares(document.querySelector('[data-componente="sol-alertas"]'));
 </script>
 ```
@@ -51,6 +59,9 @@ Opciones, por atributos del hueco:
 - `sol-directo`: `data-filtro` con el filtro de entrada (`0193` corona por defecto, `0171`,
   `0304`, `0131`, `HMIIC` manchas, `HMIB` magnetismo).
 - `sol-indice-kp`: `data-dias` hacia atrás (3 por defecto, de 1 a 7).
+- `sol-fulguraciones`: `data-cuantas`, cuántas de las más fuertes se listan (8 por defecto; `0`
+  deja solo el recuento de X, M y C).
+- `sol-coronografos`: `data-camaras`, `C2`, `C3` o `C2,C3` (las dos por defecto).
 
 Lo que tienen en común:
 
@@ -66,10 +77,9 @@ Lo que tienen en común:
 
 ## Solo en la página
 
-La tabla de previsión de la NOAA a 3 días, las fulguraciones de la semana, los coronógrafos, el
-óvalo de auroras, el glosario y las fuentes. Los monta `js/sol.js`.
+Solo el glosario y las fuentes (texto). Todo lo demás son componentes, que monta `js/sol.js`.
 
 ## Pendiente
 
-- Dar de alta los cuatro componentes en el catálogo de los dashboards cuando exista.
+- Los ocho componentes están en el catálogo de componentes de la API (`utilidades/componentes.py`).
 - Dar de alta sus bloques en el catálogo de auditoría (`data-auditoria-visualizacion`).

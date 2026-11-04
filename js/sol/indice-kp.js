@@ -24,7 +24,7 @@ import {
     crear, vaciar, aviso, prepararRaiz, ponerPie,
     pedir, comoObjetos, numero, fechaUTC, fechaHora,
     formatoDia, formatoHoraMadrid, claseKp, cadaRato
-} from "./comun.js?v=20261104-componentes1";
+} from "./comun.js?v=20261104-componentes2";
 
 
 const NS = "http://www.w3.org/2000/svg";

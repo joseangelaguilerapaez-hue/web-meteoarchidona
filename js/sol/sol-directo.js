@@ -22,7 +22,7 @@
 import {
     IMAGENES_CADA_MS,
     crear, prepararRaiz, conMarca, prepararImagen, cadaRato
-} from "./comun.js?v=20261104-componentes1";
+} from "./comun.js?v=20261104-componentes2";
 
 
 const SDO = "https://sdo.gsfc.nasa.gov/assets/img/latest";
