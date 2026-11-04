@@ -710,4 +710,23 @@
     }
 }
 
+/* ==========================================================
+   COMPONENTES (4-11-2026): js/prediccion/*.js
+   ========================================================== */
+
+/* Un componente sin nada que enseñar (sin avisos, sin texto del
+ * presentador) no ocupa sitio. */
+.pred-componente-pieza[hidden],
+.pred-avisos[hidden] {
+    display: none;
+}
+
+
+/* Procedencia al pie de cada tarjeta de AEMET. */
+.pred-pie {
+    margin-top: 14px;
+    font-size: 12px;
+}
+
+
 /* Fin de fichero: css/prediccion.css */
