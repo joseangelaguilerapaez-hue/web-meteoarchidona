@@ -48,9 +48,11 @@
 <link rel="stylesheet" href="../css/pie.css?v=20261101-instalar1">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
 
+<link rel="stylesheet" href="../css/componentes-en-vivo.css?v=20261104-componentes1">
+
 <link
     rel="stylesheet"
-    href="../css/en-vivo.css?v=20261004-meteocam3"
+    href="../css/en-vivo.css?v=20261104-componentes1"
 >
 
 
@@ -59,8 +61,8 @@
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 
 <script
-    src="../js/en-vivo.js?v=20261006-visor2"
-    defer
+    type="module"
+    src="../js/en-vivo.js?v=20261104-componentes1"
 ></script>
 
 <script
@@ -143,101 +145,11 @@
 
 
 <!-- ======================================================
-     SELECTOR DE ZONAS EXISTENTE
-
-     Gestionado por:
-         js/en-vivo.js
-
-     No se modifica su funcionamiento.
+     CÁMARAS (4-11-2026): componente js/componentes/camaras-en-vivo.js,
+     que pone el selector de zona y la rejilla de cámaras.
      ====================================================== -->
 
-<section
-    class="selector-panel"
-    aria-labelledby="titulo-selector"
->
-
-    <div class="selector-contenido">
-
-        <div class="selector-texto">
-
-            <h2 id="titulo-selector">
-                Selecciona una zona
-            </h2>
-
-            <p>
-                Elige la zona cuyas cámaras quieres consultar.
-                Las cámaras de Los Llanos pertenecen a la red
-                propia de MeteoArchidona.
-            </p>
-
-        </div>
-
-
-        <div class="selector-control">
-
-            <label for="selector-zona">
-                ZONA
-            </label>
-
-            <select
-                id="selector-zona"
-                data-auditoria-seleccion="SELECTOR_EMISION"
-                aria-label="Seleccionar zona de cámaras"
-            ></select>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ======================================================
-     CÁMARAS EXISTENTES
-
-     - MeteoCam Los Llanos
-     - Sierra Nevada
-     - Fuentes externas
-
-     Gestionadas por:
-         js/en-vivo.js
-     ====================================================== -->
-
-<section
-    class="seccion-camaras"
-    aria-live="polite"
->
-
-    <div class="cabecera-zona">
-
-        <div>
-
-            <h2 id="titulo-zona"></h2>
-
-            <p id="descripcion-zona"></p>
-
-        </div>
-
-        <div
-            class="contador-zona"
-            id="contador-zona"
-        ></div>
-
-    </div>
-
-
-    <div
-        class="rejilla-camaras"
-        id="rejilla-camaras"
-    ></div>
-
-
-    <div
-        class="nota-proveedor"
-        id="nota-proveedor"
-    ></div>
-
-</section>
+<div data-componente="camaras-en-vivo"></div>
 
 
 <!-- ======================================================
