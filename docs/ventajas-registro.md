@@ -96,18 +96,42 @@ Lo que debe quedar claro en el texto final:
 - Que el registro no obliga a recibir nada: cada permiso (correo, notificaciones, publicidad) es
   independiente (`docs/usuarios.md` de la API, sección 5).
 
-## 4. Estado de cada ventaja
+## 4. Estado de cada ventaja (revisado el 2026-11-05)
 
 | Ventaja | Estado | Se puede anunciar |
 | --- | --- | --- |
-| 2.1 Estadísticas e informes propios | En construcción (catálogo de la API, PR #51) | No, hasta que funcione |
-| 2.2 Catálogo en los dashboards | El catálogo ya se consulta en `/estadisticas` (28 oct); los dashboards, DISEÑO PREVISTO | Sí, la consulta del catálogo y el PDF (ya lo dice el aviso de `/estadisticas`) |
-| 2.3 Dashboards propios | DISEÑO PREVISTO; antes, el dashboard de MeteoArchidona | No |
-| 2.4 Otras candidatas | Por confirmar | No |
-| 3 Por qué registrarse | Borrador de Claude, pendiente de José | No |
+| «Mi cuenta» (datos, cambiar el PIN, borrar la cuenta) | Publicada (4 nov) | Sí |
+| Suscripciones: predicción diaria, presentador, alertas y boletín, por municipio de Málaga, gratis | Se guardan (4 nov); los envíos esperan a Amazon SES | Sí, diciendo que los envíos empiezan en cuanto se pongan en marcha |
+| Preferencias (parámetros públicos de la configuración: el tema) | Se guardan; el tema claro aún no existe | No, hasta que el tema claro funcione |
+| 2.1 Estadísticas e informes propios | Vista previa con sesión en la API; falta la herramienta para usuarios en la web y guardar | Como «muy pronto» |
+| 2.2 Catálogo completo en los dashboards | El catálogo se consulta en `/estadisticas`; hoy todas son de MeteoArchidona y las ve cualquiera | Como «muy pronto» (lo que aporten otros usuarios) |
+| 2.3 Dashboards propios, «Mi web» (hasta tres pestañas) y portada propia | API fusionada (PR #92); falta la web | Como «muy pronto» |
+| 2.4 Ideas nuevas (sección 6) | Aprobadas por José como ideas el 5 nov; sin diseño | Solo como ideas que se estudian |
+| 3 Por qué registrarse | Aprobado por José el 5 nov | Sí |
+
+## 6. Ideas nuevas (José, 2026-11-05)
+
+Propuestas de Claude que José aprueba como ideas («no quito nada»). Cada una necesitará su diseño:
+
+- **Alertas a medida** de nuestras estaciones: heladas, lluvia por encima de un umbral, viento fuerte.
+- **Notificaciones en el móvil** con la web instalada como aplicación (avisos de AEMET, tormentas, rayos cerca).
+- **Favoritos**: embalses (el componente de la comarca con los suyos), cámaras y localidades.
+- **Descarga de datos** de las estaciones en CSV o Excel.
+- **Timelapses a la carta**: guardar los que gusten o pedir el de un día concreto.
+- **Observaciones de los vecinos**: fotos y avisos que el equipo revisa y publica (encaja con el foro).
+- **Resumen mensual del tiempo** por correo.
+- **Sin publicidad** para los registrados, cuando la web lleve anuncios.
+- **Ver antes que nadie** las secciones nuevas en pruebas.
+
+## 7. Dónde se cuenta
+
+- Primera novedad de la portada (5-11-2026): «¿Por qué registrarte en MeteoArchidona?», con capturas
+  de ejemplo en `assets/novedades/registro-*.webp` (alta, Mi cuenta, suscripciones, estadísticas,
+  una gráfica y un panel propio). Distingue lo que ya hay de lo que viene. Sus bloques están en
+  `datos/novedades/registro.json` de la API.
 
 ## 5. Pendiente
 
-- Dónde se muestra en la web: página propia, ventana desde el botón de registro, o ambas.
+- Página propia o ventana desde el botón de registro, además de la novedad (sección 7).
 - Texto definitivo de cada ventaja y de la sección 3.
 - Revisar y ampliar la lista con cada subsistema nuevo.
