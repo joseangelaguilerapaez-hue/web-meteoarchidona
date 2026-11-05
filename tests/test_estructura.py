@@ -300,7 +300,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261105-dashboards1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261105-embalses1"),
             ("administracion", r"administracion/principal\.js\?v=20261104-suscripciones1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -622,6 +622,58 @@ class TestComponentesSol(unittest.TestCase):
         pagina = sin_comentarios(RAIZ / "pages" / "sol.html")
         self.assertRegex(pagina, r'type="module"\s+src="\.\./js/sol\.js\?v=[\w-]+"')
 
+
+
+class TestComponentesEmbalses(unittest.TestCase):
+    """Componentes de embalses para la página y los dashboards (5-11-2026)."""
+
+    COMPONENTES = {
+        "embalses-resumen": ("resumen.js", "montarResumenEmbalses"),
+        "embalses-cuencas": ("cuencas.js", "montarCuencasEmbalses"),
+        "embalses-anio-hidrologico": ("anio-hidrologico.js", "montarAnioHidrologico"),
+        "embalses-lista": ("lista.js", "montarListaEmbalses"),
+        "embalses-ficha": ("ficha.js", "montarFichaEmbalse"),
+        "embalses-comarca": ("comarca.js", "montarComarcaEmbalses"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "embalses.html")
+        principal = leer(RAIZ / "js" / "embalses.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "embalses" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/embalses/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "embalses" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_paleta(self):
+        comun = leer(RAIZ / "js" / "embalses" / "comun.js")
+        ruta = re.search(r'"(/css/embalses-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "embalses.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "embalses-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # La paleta de agua va en la hoja de los componentes, no en paleta.css.
+        self.assertIn("--emb-profundo", hoja)
+        self.assertNotIn("--emb-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_carga_el_modulo_y_la_api(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "embalses.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/embalses\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "embalses"', leer(RAIZ / "scripts" / "configurar_seccion_embalses.py"))
 
 
 class TestComponenteEstadistica(unittest.TestCase):

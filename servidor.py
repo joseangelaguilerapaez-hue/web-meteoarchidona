@@ -49,6 +49,7 @@ SECCIONES = (
     "informacion",
     "estadisticas",
     "sol",
+    "embalses",
     "mi-cuenta",
 )
 

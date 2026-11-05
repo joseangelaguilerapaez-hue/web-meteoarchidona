@@ -1,0 +1,243 @@
+/*
+ * MeteoArchidona
+ * Página Embalses
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/embalses.html
+ *
+ * Decisión de José del 5-11-2026: esta página va al revés que el resto
+ * del sitio, en blanco y azules de agua, del celeste claro al azul
+ * profundo. Conserva la estructura de Sol e Información (una columna de
+ * bloques con bordes finos y radios de 14 px, etiquetas en JetBrains
+ * Mono); la cabecera y el pie siguen siendo los oscuros de siempre y
+ * enmarcan la página.
+ *
+ * La paleta de agua (--emb-*) está en css/embalses-componentes.css, que
+ * se carga antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="embalses"] {
+    background:
+        radial-gradient(ellipse at top, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #f5fbfe 0%, #e6f5fc 55%, #c9e9f8 100%);
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.embalses {
+    width: min(1040px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--emb-texto);
+}
+
+
+.embalses-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+
+.embalses-cabecera h1 {
+    margin: 0;
+    color: var(--emb-profundo);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+
+.embalses-titulo-ambito {
+    color: var(--emb-azul);
+}
+
+
+.embalses-entradilla {
+    margin: 0;
+    max-width: 760px;
+    color: var(--emb-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+.embalses-selector {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-top: 4px;
+}
+
+
+.embalses-selector label {
+    color: var(--emb-texto-suave);
+    font-size: 14px;
+}
+
+
+.embalses-selector select {
+    flex: 0 1 340px;
+    min-width: 0;
+    padding: 9px 12px;
+    color: var(--emb-texto);
+    background: var(--emb-blanco);
+    border: 1px solid var(--emb-borde-fuerte);
+    border-radius: 10px;
+    box-shadow: var(--emb-sombra);
+    font: inherit;
+    font-size: 15px;
+}
+
+
+.embalses-selector select:focus {
+    outline: 2px solid var(--emb-agua);
+    outline-offset: 1px;
+}
+
+
+.embalses-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+
+@media (max-width: 860px) {
+    .embalses-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+.embalses-bloque {
+    min-width: 0;
+    padding: 22px 24px;
+    background: linear-gradient(170deg, var(--emb-blanco) 0%, var(--emb-espuma) 75%, var(--emb-celeste-claro) 100%);
+    border: 1px solid var(--emb-borde);
+    border-radius: 14px;
+    box-shadow: var(--emb-sombra);
+}
+
+
+.embalses-bloque[hidden] {
+    display: none;
+}
+
+
+.embalses-bloque-ficha {
+    border-color: var(--emb-borde-fuerte);
+    border-top: 4px solid var(--emb-azul);
+}
+
+
+.embalses-bloque h2 {
+    margin: 0 0 12px;
+    color: var(--emb-azul-oscuro);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.embalses-nota {
+    margin: 0 0 14px;
+    color: var(--emb-texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+.embalses-bloque > .embalses-nota:last-child {
+    margin: 12px 0 0;
+}
+
+
+.embalses-bloque a {
+    color: var(--emb-azul);
+    text-decoration: none;
+}
+
+
+.embalses-bloque a:hover {
+    text-decoration: underline;
+}
+
+
+.embalses-cerrar {
+    float: right;
+    padding: 4px 12px;
+    color: var(--emb-azul-oscuro);
+    background: var(--emb-blanco);
+    border: 1px solid var(--emb-borde-fuerte);
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+
+@media (max-width: 560px) {
+    .embalses-bloque {
+        padding: 18px 16px;
+    }
+}
+
+
+/* ==========================================================
+   GLOSARIO Y FUENTES
+   ========================================================== */
+
+.embalses-glosario {
+    display: grid;
+    gap: 6px 18px;
+    grid-template-columns: max-content minmax(0, 1fr);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+
+.embalses-glosario dt {
+    color: var(--emb-azul-oscuro);
+    font-weight: 700;
+}
+
+
+.embalses-glosario dd {
+    margin: 0;
+    color: var(--emb-texto-suave);
+}
+
+
+@media (max-width: 560px) {
+    .embalses-glosario {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .embalses-glosario dd {
+        margin-bottom: 8px;
+    }
+}
+
+
+.embalses-fuentes {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--emb-texto-suave);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* Fin de fichero: css/embalses.css */

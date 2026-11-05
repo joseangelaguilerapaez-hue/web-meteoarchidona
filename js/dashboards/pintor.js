@@ -50,7 +50,14 @@ const COMPONENTES = {
     "sol-prevision-noaa": ["/js/sol/prevision-noaa.js?v=20261104-componentes2", "montarPrevisionNoaa"],
     "sol-fulguraciones": ["/js/sol/fulguraciones.js?v=20261104-componentes2", "montarFulguraciones"],
     "sol-coronografos": ["/js/sol/coronografos.js?v=20261104-componentes2", "montarCoronografos"],
-    "sol-auroras": ["/js/sol/auroras.js?v=20261104-componentes2", "montarAuroras"]
+    "sol-auroras": ["/js/sol/auroras.js?v=20261104-componentes2", "montarAuroras"],
+    // Embalses
+    "embalses-resumen": ["/js/embalses/resumen.js?v=20261105-embalses1", "montarResumenEmbalses"],
+    "embalses-cuencas": ["/js/embalses/cuencas.js?v=20261105-embalses1", "montarCuencasEmbalses"],
+    "embalses-anio-hidrologico": ["/js/embalses/anio-hidrologico.js?v=20261105-embalses1", "montarAnioHidrologico"],
+    "embalses-lista": ["/js/embalses/lista.js?v=20261105-embalses1", "montarListaEmbalses"],
+    "embalses-ficha": ["/js/embalses/ficha.js?v=20261105-embalses1", "montarFichaEmbalse"],
+    "embalses-comarca": ["/js/embalses/comarca.js?v=20261105-embalses1", "montarComarcaEmbalses"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";
