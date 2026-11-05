@@ -1,0 +1,203 @@
+/*
+ * MeteoArchidona
+ * Novedades
+ *
+ * Ventana de novedades de la portada (js/novedades.js) y la vista previa
+ * de Administración → Novedades, que usa las mismas piezas. Aspecto
+ * oscuro del sitio; colores de css/paleta.css.
+ */
+
+
+/* ==========================================================
+   FONDO Y VENTANA
+   ========================================================== */
+
+.novedades-abiertas,
+.novedades-abiertas body {
+    overflow: hidden;
+}
+
+.novedades-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(3, 9, 20, 0.72);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+
+.novedades-fondo.visible {
+    opacity: 1;
+}
+
+.novedades-fondo.cerrando {
+    opacity: 0;
+}
+
+.novedades-ventana {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    width: min(620px, 100%);
+    max-height: min(86vh, 900px);
+    max-height: min(86dvh, 900px);
+    overflow: hidden;
+    color: var(--text);
+    background: linear-gradient(160deg, var(--card) 0%, var(--surface) 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    font-family: "Sora", sans-serif;
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.18s ease;
+}
+
+.novedades-fondo.visible .novedades-ventana {
+    transform: none;
+}
+
+.novedades-barra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px 12px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.novedades-etiqueta {
+    color: var(--accent);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+.novedades-x {
+    width: 34px;
+    height: 34px;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.novedades-x:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+}
+
+.novedades-cuerpo {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 18px 20px 6px;
+}
+
+.novedades-pie {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--border);
+}
+
+.novedades-boton {
+    padding: 10px 26px;
+    color: var(--bg);
+    background: var(--accent);
+    border: 0;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.novedades-boton:hover {
+    background: var(--amber);
+}
+
+
+/* ==========================================================
+   UNA NOVEDAD
+   ========================================================== */
+
+.novedad + .novedad {
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px dashed var(--border-strong);
+}
+
+.novedad-cabeza {
+    margin-bottom: 12px;
+}
+
+.novedad-titulo {
+    margin: 0;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.novedad-fecha {
+    margin: 4px 0 0;
+    color: var(--text-faint);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+}
+
+.novedad-bloque {
+    margin-bottom: 14px;
+}
+
+.novedad-imagen {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.novedad-texto {
+    margin: 0 0 10px;
+    color: var(--text-soft);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.novedad-texto:last-child {
+    margin-bottom: 0;
+}
+
+.novedad-texto a {
+    color: var(--cyan);
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .novedades-fondo {
+        padding: 10px;
+    }
+
+    .novedades-cuerpo {
+        padding: 16px 16px 4px;
+    }
+
+    .novedades-pie {
+        padding: 10px 16px 14px;
+    }
+
+    .novedades-boton {
+        width: 100%;
+    }
+}
+
+
+/* Fin de fichero: css/novedades.css */

@@ -1,0 +1,2 @@
+Imágenes de las novedades de la portada (docs/novedades.md de api-meteoarchidona).
+Cada novedad las usa con su ruta: /assets/novedades/nombre.png
