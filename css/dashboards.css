@@ -1,0 +1,135 @@
+/*
+ * MeteoArchidona
+ * Dashboards (js/dashboards/*.js)
+ *
+ * La rejilla: filas de una columna (todo el ancho de la página) o de dos
+ * recuadros iguales. En móvil todo va a una columna; si un dashboard de PC
+ * se abre en una pantalla estrecha, sus filas de dos también se apilan.
+ * Y la barra del selector («Fijar») de Actualidad y de «Mi web».
+ * Colores de css/paleta.css.
+ */
+
+
+.dash-rejilla {
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+}
+
+.dash-fila {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.dash-fila-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dash-recuadro {
+    min-width: 0;
+}
+
+/* Un componente que se oculta solo (Avisos sin avisos) no deja hueco. */
+.dash-recuadro:has(> [data-componente][hidden]) {
+    display: none;
+}
+
+.dash-fila-1:has(> .dash-recuadro > [data-componente][hidden]) {
+    display: none;
+}
+
+@media (max-width: 850px) {
+    .dash-fila-2 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-recuadro-vacio {
+        display: none;
+    }
+}
+
+.dash-aviso {
+    margin: 0;
+    padding: 16px;
+    color: var(--muted);
+    border: 1px dashed var(--border-strong);
+    border-radius: 11px;
+}
+
+.dash-vacio {
+    margin: 24px 0;
+    color: var(--muted);
+    text-align: center;
+}
+
+
+/* ==========================================================
+   SELECTOR («Fijar»)
+   ========================================================== */
+
+.dash-barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    color: var(--text-soft);
+    font-size: 14px;
+}
+
+.dash-barra label {
+    color: var(--muted);
+}
+
+.dash-barra select {
+    flex: 1 1 220px;
+    min-width: 0;
+    max-width: 420px;
+    padding: 7px 10px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    font: inherit;
+}
+
+.dash-barra button {
+    padding: 7px 14px;
+    color: var(--bg);
+    background: var(--cyan);
+    border: 0;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dash-barra button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.dash-barra-estado {
+    color: var(--text-faint);
+}
+
+.dash-titulo {
+    margin: 0 0 4px;
+    color: var(--text);
+    font-size: clamp(20px, 2.2vw, 26px);
+}
+
+.dash-descripcion {
+    margin: 0 0 14px;
+    color: var(--muted);
+}
+
+
+/* Fin de fichero: css/dashboards.css */
