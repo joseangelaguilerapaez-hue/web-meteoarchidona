@@ -25,6 +25,10 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- **Embalses** (PR #96, 5 nov, decisión de José: nivel nacional y aspecto de agua; **publicada**, web en `22ca082`, con la API y la migración 0043): página `/embalses` con selector de ámbito (Andalucía por defecto, cuencas, comunidades, provincias y toda España) y seis componentes montables en dashboards (`js/embalses/`), con la paleta clara de agua en `css/embalses-componentes.css`. Alta en el menú, `.htaccess` y `sitemap.xml` con permiso de José.
+
+- **Novedades** (PR #97, 5 nov, decisiones de José; **publicada**, web en `34c4a56`, con la API y la migración 0044): ventana encima de la portada con las novedades vigentes, una vez por visita (`js/novedades.js`, `css/novedades.css`); cabecera y bloques de imagen (`/assets/...`) y texto; editor en Administración → Novedades con caducidad. Primera novedad «¿Por qué registrarte en MeteoArchidona?» (PR #98, imágenes de ejemplo en `assets/novedades/registro-*.webp`; **publicada** y cargada en la API el 5 nov, vigente hasta el 5-12-2026 14:03); ventajas al día en `docs/ventajas-registro.md`.
+
 - **Administración → Usuarios y entrada sin PIN** (PR #82, 4 nov, decisión de José; **publicada**, web en `3d3d74d`, con la API `37ee9f2` y la migración 0039): lista de cuentas con buscador y casilla «Administrador»; un usuario administrador con sesión en la web entra en Administración sin el PIN y el permiso se renueva solo; tras «Cerrar sesión», botón «Entrar con mi cuenta». José ya es administrador. Diseño en `docs/usuarios.md` de la API, 2.7.
 
 - **Mi cuenta** (PR #84 y #85, 4 nov, decisiones de José; **publicada**, web en `a875042`, con la API `c2e3623` y la migración 0040; bloque de Nginx dado de alta con `scripts/configurar_seccion_mi_cuenta.py`): página `/mi-cuenta`, privada, a la que lleva el nombre de la cabecera, con pestañas Mis datos, Suscripciones (precio «Gratis · 0,00 €», pausar, reanudar, borrar y alta por servicio y localidad) y Preferencias. En Administración → Usuarios, precio y disponibilidad de los servicios. Comprobada por José en el móvil. Diseño en `docs/usuarios.md` de la API, 8.5 y 8.6.
@@ -163,3 +167,5 @@ comprobado en meteoarchidona.com.
 - 2026-11-03 · Predicción por pestañas (AEMET y Modelos numéricos) publicada y revisada por José; la Configuración de Administración necesita ahora la migración 0038 de la API.
 - 2026-11-03 · Configuración publicada con siete pestañas y once parámetros; distintivo en la cabecera (globo grande en el móvil); vigencia del distintivo con cuenta atrás en Configuración. Comprobado por José.
 - 2026-11-04 · Publicadas Administración → Usuarios con entrada sin PIN (`3d3d74d`) y la página Mi cuenta con suscripciones (`a875042`); comprobadas por José.
+- 2026-11-05 · Embalses publicada (`22ca082`) y componentes de embalses montables en dashboards.
+- 2026-11-05 · Novedades publicadas (`34c4a56`); primera novedad, la del registro, publicada y vigente hasta el 5-12-2026 (`2856c0c`).
