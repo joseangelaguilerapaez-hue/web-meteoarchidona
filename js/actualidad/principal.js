@@ -406,6 +406,31 @@ async function prepararGraficas() {
 
 async function arrancarActualidad() {
 
+    /*
+     * Actualidad como dashboard (José, 5-11-2026): de momento solo con
+     * /actualidad?dashboard, para revisarla antes de sustituir esta.
+     */
+    if (new URLSearchParams(window.location.search).has("dashboard")) {
+
+        document.addEventListener(
+            "cabecera:montada",
+            () => {
+                configurarControlesLluvia();
+                actualizarIndicadorSimulacion("GLOBAL");
+            },
+            {once: true}
+        );
+
+        try {
+            const modulo = await import("/js/dashboards/actualidad.js?v=20261105-dashboards1");
+            await modulo.arrancarActualidadDashboard(document.getElementById("actual"));
+        } catch (error) {
+            console.error("Actualidad: no se ha podido montar el dashboard.", error);
+        }
+
+        return;
+    }
+
     try {
 
         /*

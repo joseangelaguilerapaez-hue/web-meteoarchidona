@@ -300,7 +300,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261104-timelapses1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261105-dashboards1"),
             ("administracion", r"administracion/principal\.js\?v=20261104-suscripciones1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -645,6 +645,33 @@ class TestComponenteEstadistica(unittest.TestCase):
         ruta = re.search(r'"/(css/visor-estadisticas\.css)\?v=[\w-]+"', self.codigo)
         self.assertIsNotNone(ruta)
         self.assertTrue((RAIZ / ruta.group(1)).is_file())
+
+
+class TestDashboards(unittest.TestCase):
+    """Pintor de dashboards y Actualidad como dashboard (José, 5-11-2026)."""
+
+    def setUp(self):
+        self.pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+
+    def test_cada_componente_del_pintor_existe_y_exporta_su_funcion(self):
+        entradas = re.findall(r'"([\w-]+)": \["/(js/[\w/.-]+\.js)\?v=[\w-]+", "(\w+)"\]', self.pintor)
+        self.assertGreaterEqual(len(entradas), 25)
+        for etiqueta, ruta, funcion in entradas:
+            with self.subTest(componente=etiqueta):
+                self.assertTrue((RAIZ / ruta).is_file(), ruta)
+                self.assertRegex(leer(RAIZ / ruta), rf"export (async )?function {funcion}\(")
+
+    def test_la_hoja_existe(self):
+        ruta = re.search(r'"/(css/dashboards\.css)\?v=[\w-]+"', self.pintor)
+        self.assertIsNotNone(ruta)
+        self.assertTrue((RAIZ / ruta.group(1)).is_file())
+
+    def test_actualidad_solo_con_el_parametro(self):
+        principal = leer(RAIZ / "js" / "actualidad" / "principal.js")
+        self.assertIn('has("dashboard")', principal)
+        self.assertIn("/js/dashboards/actualidad.js?v=", principal)
+        self.assertIn("export async function arrancarActualidadDashboard(contenedor)",
+                      leer(RAIZ / "js" / "dashboards" / "actualidad.js"))
 
 if __name__ == "__main__":
     unittest.main()
