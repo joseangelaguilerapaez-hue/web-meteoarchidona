@@ -1,0 +1,62 @@
+/*
+ * MeteoArchidona
+ * Contador de visitas
+ *
+ * Recuadro pequeño de js/componentes/contador-visitas.js: título y una
+ * tabla de dos columnas (hoy, semana, mes y año). José, 5-11-2026: que
+ * no sea grande ni con letras grandes; pensado para la cabecera o para
+ * cualquier hueco, sitio por decidir. Ocupa solo su contenido.
+ *
+ * Usa los colores de css/paleta.css.
+ */
+
+.contador-visitas {
+    display: inline-block;
+    padding: 6px 10px;
+    border: 1px solid var(--border, #1a2d42);
+    border-radius: 10px;
+    background: var(--card-soft, #0d1a27);
+    color: var(--text-soft, #c9d6e5);
+    font-size: 0.75rem;
+    line-height: 1.35;
+}
+
+.contador-visitas[hidden] {
+    display: none;
+}
+
+.contador-visitas-tabla {
+    border-collapse: collapse;
+}
+
+.contador-visitas-titulo {
+    padding-bottom: 3px;
+    color: var(--muted, #aabdd0);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.contador-visitas-tabla th,
+.contador-visitas-tabla td {
+    padding: 1px 0;
+    font-weight: 400;
+}
+
+.contador-visitas-tabla th {
+    padding-right: 12px;
+    color: var(--muted, #aabdd0);
+    text-align: left;
+}
+
+.contador-visitas-tabla td {
+    color: var(--text, #f6f8fb);
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+
+/* Fin de fichero: css/contador-visitas.css */
