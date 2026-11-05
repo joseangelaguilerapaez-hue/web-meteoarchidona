@@ -24,6 +24,8 @@
 <link rel="stylesheet" href="../css/pie.css?v=20261101-instalar1">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/administracion.css?v=20261104-suscripciones1">
+<link rel="stylesheet" href="../css/novedades.css?v=20261105-novedades1">
+<link rel="stylesheet" href="../css/novedades-admin.css?v=20261105-novedades1">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
 <script src="../js/cabecera.js?v=20261104-mi-cuenta1" defer></script>
@@ -31,7 +33,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261104-suscripciones1"
+    src="../js/administracion/principal.js?v=20261105-novedades1"
 ></script>
 
 <script
@@ -372,6 +374,14 @@
     data-modulo="usuarios"
 >
     Usuarios
+</a>
+
+<a
+    href="#novedades"
+    class="modulo-boton"
+    data-modulo="novedades"
+>
+    Novedades
 </a>
 
 <a
@@ -3889,6 +3899,206 @@
 <div
     id="listaServiciosSuscripcion"
     class="usuarios-lista"
+></div>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     NOVEDADES
+     Ventana de novedades de la portada (js/administracion/novedades.js).
+     Diseño: docs/novedades.md de api-meteoarchidona (José, 5-11-2026).
+     ========================================================= -->
+
+<section
+    id="modulo-novedades"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Novedades
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonNuevaNovedad"
+    type="button"
+    class="boton boton-principal"
+>
+    Nueva novedad
+</button>
+
+<button
+    id="botonRecargarNovedades"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Lo que sale en una ventana al abrir la portada mientras está
+    vigente: cada vez que alguien entra en la web. Si hay varias
+    vigentes, salen todas, de la más reciente a la más antigua. Las
+    imágenes son nuestras, con su ruta /assets/…
+</p>
+
+<div
+    id="estadoNovedades"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="listaNovedades"
+    class="novedades-admin-lista"
+></div>
+
+</div>
+</section>
+
+<section
+    id="editorNovedad"
+    class="panel"
+    hidden
+>
+
+<div class="panel-cabecera">
+
+<h2
+    id="tituloEditorNovedad"
+    class="panel-titulo"
+>
+    Nueva novedad
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<div class="formulario-grid">
+
+<div class="campo campo-ancho">
+    <label for="tituloNovedad">Título</label>
+    <input
+        id="tituloNovedad"
+        type="text"
+        maxlength="120"
+        autocomplete="off"
+    >
+</div>
+
+<div class="campo">
+    <label for="inicioNovedad">Visible desde (hora de Madrid)</label>
+    <input
+        id="inicioNovedad"
+        type="datetime-local"
+    >
+</div>
+
+<div class="campo">
+    <label for="caducidadNovedad">Caduca el (hora de Madrid)</label>
+    <input
+        id="caducidadNovedad"
+        type="datetime-local"
+    >
+    <div class="novedades-admin-dias">
+        <button type="button" class="boton boton-secundario boton-mini" data-dias-novedad="1">1 día</button>
+        <button type="button" class="boton boton-secundario boton-mini" data-dias-novedad="3">3 días</button>
+        <button type="button" class="boton boton-secundario boton-mini" data-dias-novedad="7">7 días</button>
+        <button type="button" class="boton boton-secundario boton-mini" data-dias-novedad="15">15 días</button>
+    </div>
+</div>
+
+<div class="campo campo-ancho">
+    <div class="check-linea">
+        <input
+            id="activaNovedad"
+            type="checkbox"
+            checked
+        >
+        <label for="activaNovedad">Activa (desmárcala para quitarla de la portada sin borrarla)</label>
+    </div>
+</div>
+
+</div>
+
+<h3 class="novedades-admin-subtitulo">
+    Bloques, en orden: imagen y texto, imagen y texto…
+</h3>
+
+<div
+    id="bloquesNovedad"
+    class="novedades-admin-bloques"
+></div>
+
+<button
+    id="botonAnadirBloque"
+    type="button"
+    class="boton boton-secundario"
+>
+    Añadir bloque
+</button>
+
+<div class="acciones-formulario">
+
+<button
+    id="botonGuardarNovedad"
+    type="button"
+    class="boton boton-principal"
+>
+    Guardar
+</button>
+
+<button
+    id="botonPreviaNovedad"
+    type="button"
+    class="boton boton-secundario"
+>
+    Vista previa
+</button>
+
+<button
+    id="botonCancelarNovedad"
+    type="button"
+    class="boton boton-secundario"
+>
+    Cancelar
+</button>
+
+<button
+    id="botonBorrarNovedad"
+    type="button"
+    class="boton boton-peligro"
+    hidden
+>
+    Borrar
+</button>
+
+</div>
+
+<div
+    id="estadoEditorNovedad"
+    class="estado-editor"
+    role="status"
+    aria-live="polite"
 ></div>
 
 </div>

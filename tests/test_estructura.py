@@ -301,7 +301,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261105-embalses1"),
-            ("administracion", r"administracion/principal\.js\?v=20261104-suscripciones1"),
+            ("administracion", r"administracion/principal\.js\?v=20261105-novedades1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -674,6 +674,28 @@ class TestComponentesEmbalses(unittest.TestCase):
 
     def test_el_alta_en_nginx_existe(self):
         self.assertIn('modulo.SECCION = "embalses"', leer(RAIZ / "scripts" / "configurar_seccion_embalses.py"))
+
+
+class TestNovedades(unittest.TestCase):
+    """Ventana de novedades en la portada y su Administración (5-11-2026)."""
+
+    def test_la_portada_carga_la_ventana(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "actualidad.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/novedades\.js\?v=[\w-]+"')
+        codigo = leer(RAIZ / "js" / "novedades.js")
+        self.assertIn("/novedades", codigo)
+        self.assertIn("sessionStorage", codigo)
+        # El texto nunca se mete como HTML.
+        self.assertNotIn("innerHTML", codigo)
+
+    def test_administracion_tiene_su_apartado(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('data-modulo="novedades"', pagina)
+        self.assertIn('id="modulo-novedades"', pagina)
+        self.assertIn("css/novedades-admin.css", pagina)
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn('"./novedades.js?v=', principal)
+        self.assertNotIn("innerHTML", leer(RAIZ / "js" / "administracion" / "novedades.js"))
 
 
 class TestComponenteEstadistica(unittest.TestCase):

@@ -692,6 +692,48 @@ async function obtenerModuloUsuarios(){
 }
 
 
+/* ==========================================================
+   NOVEDADES
+   Ventana de novedades de la portada (docs/novedades.md de la
+   API). novedades.js solo se importa si existe modulo-novedades.
+   ========================================================== */
+
+let promesaModuloNovedades = null;
+
+async function cargarModuloNovedades(){
+
+    if(!$("modulo-novedades")){
+        return;
+    }
+
+    if(promesaModuloNovedades === null){
+        promesaModuloNovedades = import(
+            "./novedades.js?v=20261105-novedades1"
+        );
+    }
+
+    try{
+        const modulo = await promesaModuloNovedades;
+        modulo.configurarEventosNovedades();
+        await modulo.cargarNovedades();
+    }catch(error){
+        promesaModuloNovedades = null;
+        console.error(
+            "No se han podido cargar las Novedades.",
+            error
+        );
+        mostrarEstado(
+            $("estadoNovedades"),
+            error.message
+            ||
+            "No se han podido cargar las novedades.",
+            "error"
+        );
+    }
+
+}
+
+
 async function cargarModuloUsuarios(){
 
     if(!$("modulo-usuarios")){
@@ -975,6 +1017,8 @@ export async function cargarDatosAdministracion(){
         await cargarModuloConfiguracion();
 
         await cargarModuloUsuarios();
+
+        await cargarModuloNovedades();
 
         mostrarEstado(
             $("estadoPanel"),

@@ -1,0 +1,112 @@
+/*
+ * MeteoArchidona
+ * Administración · Novedades
+ *
+ * Lista y editor de js/administracion/novedades.js. La ventana de vista
+ * previa usa css/novedades.css, la misma de la portada.
+ */
+
+.novedades-admin-lista {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.novedades-admin-ficha {
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(8, 20, 31, 0.65);
+}
+
+.novedades-admin-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px 10px;
+}
+
+.novedades-admin-titulo {
+    margin: 0;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.novedades-admin-estado {
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--muted-dark);
+}
+
+.novedades-admin-estado.estado-vigente { background: var(--green); }
+.novedades-admin-estado.estado-programada { background: var(--cyan); }
+.novedades-admin-estado.estado-caducada { background: var(--muted-dark); }
+.novedades-admin-estado.estado-desactivada { background: var(--orange); }
+
+.novedades-admin-datos {
+    margin: 6px 0 10px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.novedades-admin-dias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.novedades-admin-subtitulo {
+    margin: 20px 0 10px;
+    color: var(--text-soft);
+    font-size: 13px;
+}
+
+.novedades-admin-bloques {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.novedades-admin-bloque {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 10px;
+}
+
+.novedades-admin-bloque-cabeza {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.novedades-admin-bloque-numero {
+    color: var(--accent);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.novedades-admin-previa {
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.novedades-admin-previa[hidden] {
+    display: none;
+}
+
+/* Fin de fichero: css/novedades-admin.css */
