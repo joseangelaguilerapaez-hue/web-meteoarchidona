@@ -583,6 +583,31 @@ class TestFicherosDelSitio(unittest.TestCase):
                         "robots.txt no excluye la administración")
 
 
+class TestContadorVisitas(unittest.TestCase):
+    """Contador de visitas, montable en cualquier hueco (5-11-2026)."""
+
+    def test_exporta_su_funcion_y_el_pintor_lo_conoce(self):
+        codigo = leer(RAIZ / "js" / "componentes" / "contador-visitas.js")
+        self.assertIn("export async function montarContadorVisitas(hueco)", codigo)
+        self.assertIn("/auditoria/contador-visitas", codigo)
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        self.assertRegex(
+            pintor,
+            r'"contador-visitas": \["/js/componentes/contador-visitas\.js\?v=[\w-]+", "montarContadorVisitas"\]',
+        )
+
+    def test_sin_id_para_poder_repetirlo(self):
+        codigo = leer(RAIZ / "js" / "componentes" / "contador-visitas.js")
+        self.assertNotIn("getElementById", codigo)
+        self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_existe(self):
+        codigo = leer(RAIZ / "js" / "componentes" / "contador-visitas.js")
+        ruta = re.search(r'"/(css/contador-visitas\.css)\?v=[\w-]+"', codigo)
+        self.assertIsNotNone(ruta)
+        self.assertTrue((RAIZ / ruta.group(1)).is_file())
+
+
 class TestComponentesSol(unittest.TestCase):
     """Componentes del Sol para los dashboards (4-11-2026)."""
 
