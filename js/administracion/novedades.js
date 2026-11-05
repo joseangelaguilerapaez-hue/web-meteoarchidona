@@ -11,7 +11,7 @@
  *
  * Lista de novedades con su estado (vigente, programada, caducada o
  * desactivada) y un editor: título, visible desde, caduca el (con
- * botones de 1, 3, 7 y 15 días), activa y los bloques en orden, cada uno
+ * botones de 1, 3, 5, 7 y 15 días; 5 por defecto, decisión de José del 5-11-2026), activa y los bloques en orden, cada uno
  * con su imagen (/assets/...) con vista previa y su texto. «Vista previa»
  * abre la misma ventana que verá el visitante en la portada.
  *
@@ -329,7 +329,7 @@ function abrirEditor(novedad = null){
     const ahora = new Date();
     $("inicioNovedad").value = aCampo(novedad ? new Date(novedad.inicio) : ahora);
     $("caducidadNovedad").value = aCampo(
-        novedad ? new Date(novedad.caducidad) : new Date(ahora.getTime() + 7 * 86400000)
+        novedad ? new Date(novedad.caducidad) : new Date(ahora.getTime() + 5 * 86400000)
     );
     $("activaNovedad").checked = novedad ? novedad.activa : true;
 
