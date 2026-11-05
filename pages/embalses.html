@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Embalses de Andalucía y de toda España: agua embalsada cada semana por cuenca, comunidad y provincia, comparada con el año anterior y con las medias de 5 y 10 años."
+>
+
+<title>
+    Embalses · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/embalses">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Embalses · MeteoArchidona">
+<meta property="og:description" content="Cómo están los embalses de Andalucía y de toda España, semana a semana.">
+<meta property="og:url" content="https://meteoarchidona.com/embalses">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20260926-giro2"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261101-instalar1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/embalses-componentes.css?v=20261105-embalses1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/embalses.css?v=20261105-embalses1"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261104-mi-cuenta1"
+    defer
+></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/embalses.js?v=20261105-embalses1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="embalses">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="embalses">
+
+
+<header class="embalses-cabecera">
+
+    <div class="emb-etiqueta">
+        METEOARCHIDONA · EMBALSES
+    </div>
+
+    <h1>
+        Embalses de <span class="embalses-titulo-ambito">Andalucía</span>
+    </h1>
+
+    <p class="embalses-entradilla">
+        El agua que guardan los embalses semana a semana, comparada con
+        la del año pasado y con lo normal de los últimos 5 y 10 años.
+        Elige Andalucía, toda España o cualquier comunidad, cuenca o
+        provincia.
+    </p>
+
+    <div class="embalses-selector">
+        <label for="embalses-ambito">Ver</label>
+        <select id="embalses-ambito">
+            <option value="COMUNIDAD|Andalucía">Andalucía</option>
+            <option value="ESPANA|">Toda España</option>
+        </select>
+    </div>
+
+</header>
+
+
+<!-- ========================================================
+     FICHA DE UN EMBALSE
+     Se abre al tocar un embalse de la lista o de la comarca.
+     Componente js/embalses/ficha.js.
+     ======================================================== -->
+
+<section
+    class="embalses-bloque embalses-bloque-ficha"
+    aria-label="Ficha del embalse"
+    hidden
+>
+
+    <button class="embalses-cerrar" type="button">Cerrar</button>
+
+    <div data-componente="embalses-ficha"></div>
+
+</section>
+
+
+<div class="embalses-rejilla">
+
+    <!-- ====================================================
+         RESUMEN DEL ÁMBITO
+         Componente js/embalses/resumen.js.
+         ==================================================== -->
+
+    <section
+        class="embalses-bloque"
+        aria-labelledby="titulo-esta-semana"
+    >
+
+        <h2 id="titulo-esta-semana">
+            Esta semana
+        </h2>
+
+        <div
+            data-componente="embalses-resumen"
+            data-sigue-ambito
+            data-titulo="no"
+        ></div>
+
+    </section>
+
+
+    <!-- ====================================================
+         EMBALSES DE LA COMARCA
+         Componente js/embalses/comarca.js, fijo.
+         ==================================================== -->
+
+    <section
+        class="embalses-bloque"
+        aria-labelledby="titulo-comarca"
+    >
+
+        <h2 id="titulo-comarca">
+            Los de nuestra comarca
+        </h2>
+
+        <div
+            data-componente="embalses-comarca"
+            data-titulo="no"
+        ></div>
+
+    </section>
+
+</div>
+
+
+<!-- ========================================================
+     AÑO HIDROLÓGICO
+     Componente js/embalses/anio-hidrologico.js.
+     ======================================================== -->
+
+<section
+    class="embalses-bloque"
+    aria-labelledby="titulo-anio"
+>
+
+    <h2 id="titulo-anio">
+        Cómo va el año hidrológico
+    </h2>
+
+    <p class="embalses-nota">
+        Porcentaje de agua embalsada cada semana desde el 1 de octubre,
+        frente al año pasado y a las medias de los 5 y 10 años
+        anteriores. La franja de fondo va del año más seco al más
+        húmedo de esos diez.
+    </p>
+
+    <div
+        data-componente="embalses-anio-hidrologico"
+        data-sigue-ambito
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     POR CUENCAS
+     Componente js/embalses/cuencas.js.
+     ======================================================== -->
+
+<section
+    class="embalses-bloque"
+    aria-labelledby="titulo-cuencas"
+>
+
+    <h2 id="titulo-cuencas">
+        Por cuencas
+    </h2>
+
+    <p class="embalses-nota">
+        Cada cuenca cuenta solo sus embalses dentro de lo elegido. Toca
+        una para verla entera.
+    </p>
+
+    <div
+        data-componente="embalses-cuencas"
+        data-sigue-ambito
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     TODOS LOS EMBALSES
+     Componente js/embalses/lista.js.
+     ======================================================== -->
+
+<section
+    class="embalses-bloque"
+    aria-labelledby="titulo-lista"
+>
+
+    <h2 id="titulo-lista">
+        Embalse a embalse
+    </h2>
+
+    <div
+        data-componente="embalses-lista"
+        data-sigue-ambito
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     GLOSARIO
+     ======================================================== -->
+
+<section
+    class="embalses-bloque"
+    aria-labelledby="titulo-glosario-embalses"
+>
+
+    <h2 id="titulo-glosario-embalses">
+        Qué significa cada cosa
+    </h2>
+
+    <dl class="embalses-glosario">
+
+        <dt>Año hidrológico</dt>
+        <dd>
+            Va del 1 de octubre al 30 de septiembre: empieza cuando
+            suelen llegar las lluvias de otoño, después del verano, que
+            es cuando más agua se gasta.
+        </dd>
+
+        <dt>hm³</dt>
+        <dd>
+            Hectómetro cúbico: mil millones de litros. La capacidad es lo
+            que cabe en el embalse a su nivel máximo normal.
+        </dd>
+
+        <dt>Estados</dt>
+        <dd>
+            Crítico por debajo del 25 %, bajo hasta el 50 %, bueno hasta
+            el 75 % y lleno desde ahí.
+        </dd>
+
+        <dt>Medias</dt>
+        <dd>
+            El porcentaje de esa misma semana en los 5 o los 10 años
+            anteriores. La línea discontinua del vaso marca la de 10
+            años.
+        </dd>
+
+        <dt>Cuenca y comunidad</dt>
+        <dd>
+            El Guadalquivir y el Guadiana pasan por varias comunidades;
+            al elegir Andalucía solo cuentan sus embalses andaluces.
+        </dd>
+
+    </dl>
+
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="embalses-bloque"
+    aria-labelledby="titulo-fuentes-embalses"
+>
+
+    <h2 id="titulo-fuentes-embalses">
+        Fuentes
+    </h2>
+
+    <ul class="embalses-fuentes">
+        <li>
+            Agua embalsada y capacidad: Boletín Hidrológico semanal del
+            <a href="https://www.miteco.gob.es/es/agua/temas/evaluacion-de-los-recursos-hidricos/boletin-hidrologico.html" target="_blank" rel="noopener noreferrer">Ministerio para la Transición Ecológica</a>,
+            con los datos de las confederaciones hidrográficas y de las
+            administraciones hidráulicas de las comunidades. Se publica
+            los martes; los datos son provisionales.
+        </li>
+        <li>
+            Histórico semanal de cada embalse desde 1988, del mismo
+            Ministerio. Gráficas y cálculos, de MeteoArchidona.
+        </li>
+    </ul>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/embalses.html -->

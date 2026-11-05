@@ -40,6 +40,17 @@ curl -s -o /dev/null -w '%{http_code}\n' https://meteoarchidona.com/estadisticas
 Copia el bloque de `/informacion` cambiando el nombre, con copia de seguridad en `/home/jose`,
 `nginx -t` y vuelta atrás si algo falla. Se puede ejecutar dos veces. El `curl` debe dar `200`.
 
+## Sección nueva: Embalses (5-11-2026)
+
+Igual que Estadísticas, para que `/embalses` no dé 404 (José, desde Termius, tras el `git pull`):
+
+```
+cd /srv/meteoarchidona/web
+sudo python3 scripts/configurar_seccion_embalses.py --simular
+sudo python3 scripts/configurar_seccion_embalses.py
+curl -s -o /dev/null -w '%{http_code}\n' https://meteoarchidona.com/embalses
+```
+
 ## Caché
 
 Los `.js` y `.css` se cachean en el navegador y se versionan con `?v=`. Si cambias uno que ya está en
