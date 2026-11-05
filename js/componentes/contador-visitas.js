@@ -11,10 +11,18 @@
  *     import {montarContadorVisitas} from "/js/componentes/contador-visitas.js?v=…";
  *     montarContadorVisitas(hueco);
  *
- * Los datos salen de GET /auditoria/contador-visitas de la API: páginas
- * vistas del contador anónimo, que suma a todos los visitantes, acepten o
- * no las estadísticas. La semana va de lunes a hoy y las fechas son las
- * de Madrid. Se refresca cada 5 minutos.
+ * Los datos salen de GET /auditoria/contador-visitas de la API. La
+ * semana va de lunes a hoy y las fechas son las de Madrid. Se refresca
+ * cada 5 minutos.
+ *
+ * Una casilla «Usuarios» (José, 5-11-2026) cambia lo que se cuenta:
+ *   - sin marcar (por defecto), «Visitas»: páginas vistas del contador
+ *     anónimo, que suma a todos, acepten o no las estadísticas;
+ *   - marcada, «Usuarios»: visitantes distintos, cada navegador una vez
+ *     por periodo aunque entre varias veces. Solo cuenta a quienes
+ *     aceptaron las estadísticas: de los demás no se guarda nada que los
+ *     distinga.
+ * La elección no se guarda en el navegador: al recargar vuelve a Visitas.
  *
  * Nace oculto y solo aparece si la API responde. Sin id fijos: admite
  * varios en la misma página.
@@ -23,7 +31,7 @@
 import {asegurarHoja, asegurarScript} from "./comun.js?v=20261104-componentes1";
 
 
-const HOJA = "/css/contador-visitas.css?v=20261105-contador1";
+const HOJA = "/css/contador-visitas.css?v=20261105-contador2";
 
 const SCRIPT_API = "/js/api.js?v=20261003-vps1";
 
@@ -38,6 +46,12 @@ const FILAS = [
 
 const FORMATO = new Intl.NumberFormat("es-ES");
 
+const AYUDA = {
+    visitas: "Páginas vistas en meteoarchidona.com",
+    usuarios: "Visitantes distintos (cada uno una vez por periodo); "
+        + "solo de quienes aceptan las estadísticas",
+};
+
 
 function construir(hueco) {
 
@@ -50,7 +64,18 @@ function construir(hueco) {
 
     const titulo = document.createElement("caption");
     titulo.className = "contador-visitas-titulo";
-    titulo.textContent = "Visitas";
+
+    const nombre = document.createElement("span");
+    nombre.textContent = "Visitas";
+
+    const opcion = document.createElement("label");
+    opcion.className = "contador-visitas-opcion";
+
+    const casilla = document.createElement("input");
+    casilla.type = "checkbox";
+
+    opcion.append(casilla, " Usuarios");
+    titulo.append(nombre, opcion);
     tabla.appendChild(titulo);
 
     const cuerpo = document.createElement("tbody");
@@ -74,11 +99,26 @@ function construir(hueco) {
     tabla.appendChild(cuerpo);
     hueco.appendChild(tabla);
 
-    return celdas;
+    return {celdas, casilla, nombre, datos: null};
 }
 
 
-async function actualizar(hueco, celdas) {
+function pintar(hueco, estado) {
+
+    const usuarios = estado.casilla.checked;
+    const fuente = usuarios ? estado.datos?.visitantes : estado.datos;
+
+    estado.nombre.textContent = usuarios ? "Usuarios" : "Visitas";
+    hueco.title = AYUDA[usuarios ? "usuarios" : "visitas"];
+
+    for (const [clave] of FILAS) {
+        const numero = Number(fuente?.[clave]);
+        estado.celdas[clave].textContent = Number.isFinite(numero) ? FORMATO.format(numero) : "–";
+    }
+}
+
+
+async function actualizar(hueco, estado) {
 
     try {
         const respuesta = await fetch(
@@ -90,14 +130,8 @@ async function actualizar(hueco, celdas) {
             throw new Error(`HTTP ${respuesta.status}`);
         }
 
-        const datos = await respuesta.json();
-
-        for (const [clave] of FILAS) {
-            const numero = Number(datos[clave]);
-            celdas[clave].textContent = Number.isFinite(numero) ? FORMATO.format(numero) : "–";
-        }
-
-        hueco.title = "Páginas vistas en meteoarchidona.com";
+        estado.datos = await respuesta.json();
+        pintar(hueco, estado);
         hueco.hidden = false;
         return true;
 
@@ -118,12 +152,14 @@ export async function montarContadorVisitas(hueco) {
     asegurarHoja(HOJA);
     await asegurarScript(SCRIPT_API, "API_BASE");
 
-    const celdas = construir(hueco);
-    const correcto = await actualizar(hueco, celdas);
+    const estado = construir(hueco);
+    estado.casilla.addEventListener("change", () => pintar(hueco, estado));
+
+    const correcto = await actualizar(hueco, estado);
 
     setInterval(() => {
         if (document.visibilityState === "visible" && hueco.isConnected) {
-            void actualizar(hueco, celdas);
+            void actualizar(hueco, estado);
         }
     }, MINUTOS_REFRESCO * 60 * 1000);
 
