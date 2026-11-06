@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- **Polen** (PR #110, 6 nov, decisión de José: alergias al polen sin AEMET, mismo aspecto que Embalses en verdes y marrones; **publicada** el 7 nov, web en `ca1b74e`, `/polen` da 200 tras el alta en Nginx; con la API en `0945e2e` y la migración 0046): página `/polen` con cinco componentes montables en dashboards (`js/polen/`: hoy, próximos días, lo medido en Granada, semana a semana y calendario polínico), con la paleta de campo en `css/polen-componentes.css`. Previsión del modelo CAMS para Archidona (en noviembre, todo nulo) y recuentos de la UGR (Granada, última semana 37). Alta en el menú, `.htaccess` y `sitemap.xml` con permiso de José. **(por confirmar)** la revisión visual de José en el navegador.
 - **Embalses** (PR #96, 5 nov, decisión de José: nivel nacional y aspecto de agua; **publicada**, web en `22ca082`, con la API y la migración 0043): página `/embalses` con selector de ámbito (Andalucía por defecto, cuencas, comunidades, provincias y toda España) y seis componentes montables en dashboards (`js/embalses/`), con la paleta clara de agua en `css/embalses-componentes.css`. Alta en el menú, `.htaccess` y `sitemap.xml` con permiso de José.
 
 - **Novedades** (PR #97, 5 nov, decisiones de José; **publicada**, web en `34c4a56`, con la API y la migración 0044): ventana encima de la portada con las novedades vigentes, una vez por visita (`js/novedades.js`, `css/novedades.css`); cabecera y bloques de imagen (`/assets/...`) y texto; editor en Administración → Novedades con caducidad. Primera novedad «¿Por qué registrarte en MeteoArchidona?» (PR #98, imágenes de ejemplo en `assets/novedades/registro-*.webp`; **publicada** y cargada en la API el 5 nov, caducidad ajustable en Administración → Novedades); ventajas al día en `docs/ventajas-registro.md`.
@@ -171,3 +172,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-05 · Embalses publicada (`22ca082`) y componentes de embalses montables en dashboards.
 - 2026-11-05 · Novedades publicadas (`34c4a56`); primera novedad, la del registro, publicada (`2856c0c`), caducidad ajustable en Administración.
 - 2026-11-06 · Contador de visitas publicado en la cabecera (páginas, únicos y registrados); revisado por José en el móvil.
+- 2026-11-07 · Polen publicada (`ca1b74e`): `/polen` en Nginx, API con migración 0046 y primeras cargas (15 días de previsión, 3.445 semanas de la UGR).
