@@ -15,14 +15,18 @@
  * semana va de lunes a hoy y las fechas son las de Madrid. Se refresca
  * cada 5 minutos.
  *
- * Una casilla «Usuarios» (José, 5-11-2026) cambia lo que se cuenta:
- *   - sin marcar (por defecto), «Visitas»: páginas vistas del contador
+ * El título es siempre «Visitas». Una casilla «Únicos» (José, 5 y
+ * 6-11-2026) cambia lo que cuenta la primera columna, y su cabecera lo
+ * dice:
+ *   - sin marcar (por defecto), «Páginas»: páginas vistas del contador
  *     anónimo, que suma a todos, acepten o no las estadísticas;
- *   - marcada, «Usuarios»: visitantes distintos, cada navegador una vez
+ *   - marcada, «Únicos»: visitantes distintos, cada navegador una vez
  *     por periodo aunque entre varias veces. Solo cuenta a quienes
  *     aceptaron las estadísticas: de los demás no se guarda nada que los
  *     distinga.
- * La elección no se guarda en el navegador: al recargar vuelve a Visitas.
+ * Al principio la casilla se llamaba «Usuarios» y cambiaba el título; José
+ * vio que así no se entendía qué contaba cada cifra.
+ * La elección no se guarda en el navegador: al recargar vuelve a Páginas.
  *
  * Una tercera columna, «Registrados» (José, 5-11-2026), da los usuarios
  * con cuenta distintos que han entrado con ella en cada periodo; no
@@ -79,18 +83,21 @@ function construir(hueco) {
     const casilla = document.createElement("input");
     casilla.type = "checkbox";
 
-    opcion.append(casilla, " Usuarios");
+    opcion.append(casilla, " Únicos");
     titulo.append(nombre, opcion);
     tabla.appendChild(titulo);
 
     const cabecera = document.createElement("thead");
     const filaCabecera = document.createElement("tr");
 
-    for (const texto of ["", "Todos", "Registrados"]) {
+    const columnas = [];
+
+    for (const texto of ["", "Páginas", "Registrados"]) {
         const celda = document.createElement("th");
         celda.scope = "col";
         celda.textContent = texto;
         filaCabecera.appendChild(celda);
+        columnas.push(celda);
     }
 
     cabecera.appendChild(filaCabecera);
@@ -122,7 +129,7 @@ function construir(hueco) {
     tabla.appendChild(cuerpo);
     hueco.appendChild(tabla);
 
-    return {celdas, registrados, casilla, nombre, datos: null};
+    return {celdas, registrados, casilla, columna: columnas[1], datos: null};
 }
 
 
@@ -131,7 +138,7 @@ function pintar(hueco, estado) {
     const usuarios = estado.casilla.checked;
     const fuente = usuarios ? estado.datos?.visitantes : estado.datos;
 
-    estado.nombre.textContent = usuarios ? "Usuarios" : "Visitas";
+    estado.columna.textContent = usuarios ? "Únicos" : "Páginas";
     hueco.title = `${AYUDA[usuarios ? "usuarios" : "visitas"]}. ${AYUDA.registrados}.`;
 
     const texto = valor => {
