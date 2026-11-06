@@ -35,7 +35,7 @@
 import {asegurarHoja, asegurarScript} from "./comun.js?v=20261104-componentes1";
 
 
-const HOJA = "/css/contador-visitas.css?v=20261105-contador3";
+const HOJA = "/css/contador-visitas.css?v=20261106-contador4";
 
 const SCRIPT_API = "/js/api.js?v=20261003-vps1";
 

@@ -203,6 +203,19 @@
 
 
 <!--
+    Contador de visitas (js/componentes/contador-visitas.js). Lo monta
+    js/cabecera.js y nace oculto: solo aparece si la API responde. En
+    móvil queda entre la hora y el logotipo, bajo los botones de cuenta
+    (José, 6-11-2026). Su colocación aquí la lleva css/contador-visitas.css.
+-->
+<div
+    class="cabecera-contador"
+    data-componente="contador-visitas"
+    hidden
+></div>
+
+
+<!--
     El logotipo de Y&Z es el mando de la lluvia de prueba: dos toques
     seguidos suben de nivel y una pulsación larga la apagan. Lo lleva
     configurarControlLluvia() de js/actualidad.js, que lo reconoce por
