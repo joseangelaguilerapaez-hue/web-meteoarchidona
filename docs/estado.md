@@ -25,6 +25,8 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- **Aviso de envíos en Mi cuenta → Suscripciones** (PR #108, 6 nov; **publicado**, web en `3c3894a`): los envíos empiezan en breve; predicción diaria y texto del presentador juntos cada mañana hacia las 07:30; alertas y boletín, más adelante. Acompaña al correo diario por Amazon SES (PR #106 de la API, desplegado con el interruptor apagado). Cuando se encienda, retocar o quitar la primera frase.
+
 - **Embalses** (PR #96, 5 nov, decisión de José: nivel nacional y aspecto de agua; **publicada**, web en `22ca082`, con la API y la migración 0043): página `/embalses` con selector de ámbito (Andalucía por defecto, cuencas, comunidades, provincias y toda España) y seis componentes montables en dashboards (`js/embalses/`), con la paleta clara de agua en `css/embalses-componentes.css`. Alta en el menú, `.htaccess` y `sitemap.xml` con permiso de José.
 
 - **Novedades** (PR #97, 5 nov, decisiones de José; **publicada**, web en `34c4a56`, con la API y la migración 0044): ventana encima de la portada con las novedades vigentes, una vez por visita (`js/novedades.js`, `css/novedades.css`); cabecera y bloques de imagen (`/assets/...`) y texto; editor en Administración → Novedades con caducidad. Primera novedad «¿Por qué registrarte en MeteoArchidona?» (PR #98, imágenes de ejemplo en `assets/novedades/registro-*.webp`; **publicada** y cargada en la API el 5 nov, caducidad ajustable en Administración → Novedades); ventajas al día en `docs/ventajas-registro.md`.
@@ -171,3 +173,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-05 · Embalses publicada (`22ca082`) y componentes de embalses montables en dashboards.
 - 2026-11-05 · Novedades publicadas (`34c4a56`); primera novedad, la del registro, publicada (`2856c0c`), caducidad ajustable en Administración.
 - 2026-11-06 · Contador de visitas publicado en la cabecera (páginas, únicos y registrados); revisado por José en el móvil.
+- 2026-11-06 · Publicado el aviso de envíos de Mi cuenta (`3c3894a`), con el correo diario por Amazon SES ya desplegado en la API y aún apagado.
