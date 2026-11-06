@@ -59,7 +59,13 @@ const COMPONENTES = {
     "embalses-anio-hidrologico": ["/js/embalses/anio-hidrologico.js?v=20261105-embalses1", "montarAnioHidrologico"],
     "embalses-lista": ["/js/embalses/lista.js?v=20261105-embalses1", "montarListaEmbalses"],
     "embalses-ficha": ["/js/embalses/ficha.js?v=20261105-embalses1", "montarFichaEmbalse"],
-    "embalses-comarca": ["/js/embalses/comarca.js?v=20261105-embalses1", "montarComarcaEmbalses"]
+    "embalses-comarca": ["/js/embalses/comarca.js?v=20261105-embalses1", "montarComarcaEmbalses"],
+    // Polen
+    "polen-hoy": ["/js/polen/hoy.js?v=20261106-polen1", "montarPolenHoy"],
+    "polen-prevision": ["/js/polen/prevision.js?v=20261106-polen1", "montarPolenPrevision"],
+    "polen-semana": ["/js/polen/semana.js?v=20261106-polen1", "montarPolenSemana"],
+    "polen-serie": ["/js/polen/serie.js?v=20261106-polen1", "montarPolenSerie"],
+    "polen-calendario": ["/js/polen/calendario.js?v=20261106-polen1", "montarPolenCalendario"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";
