@@ -1,0 +1,221 @@
+/*
+ * MeteoArchidona
+ * Página Polen
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/polen.html
+ *
+ * Decisión de José del 6-11-2026: el mismo aspecto que Embalses (blanco,
+ * al revés que el resto del sitio), pero en verdes y marrones de campo en
+ * vez de azules de agua. Una columna de bloques con bordes finos y radios
+ * de 14 px; la cabecera y el pie siguen siendo los oscuros de siempre.
+ *
+ * La paleta (--pol-*) está en css/polen-componentes.css, que se carga
+ * antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="polen"] {
+    background:
+        radial-gradient(ellipse at top, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #fbfdf7 0%, #eef6e4 50%, #e9dfc8 100%);
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.polen {
+    width: min(1040px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--pol-texto);
+}
+
+
+.polen-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+
+.polen-cabecera h1 {
+    margin: 0;
+    color: var(--pol-bosque);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+
+.polen-cabecera h1 span {
+    color: var(--pol-tierra);
+}
+
+
+.polen-entradilla {
+    margin: 0;
+    max-width: 760px;
+    color: var(--pol-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+.polen-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 18px;
+}
+
+
+@media (max-width: 860px) {
+    .polen-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+.polen-bloque {
+    min-width: 0;
+    padding: 22px 24px;
+    background: linear-gradient(170deg, var(--pol-blanco) 0%, var(--pol-rocio) 70%, var(--pol-brote) 100%);
+    border: 1px solid var(--pol-borde);
+    border-radius: 14px;
+    box-shadow: var(--pol-sombra);
+}
+
+
+.polen-bloque-tierra {
+    background: linear-gradient(170deg, var(--pol-blanco) 0%, #fdfaf3 65%, var(--pol-arena) 100%);
+    border-color: var(--pol-trigo);
+}
+
+
+.polen-bloque h2 {
+    margin: 0 0 12px;
+    color: var(--pol-olivo);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.polen-bloque-tierra h2 {
+    color: var(--pol-corteza);
+}
+
+
+.polen-nota {
+    margin: 0 0 14px;
+    color: var(--pol-texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+.polen-bloque a {
+    color: var(--pol-olivo);
+    text-decoration: none;
+}
+
+
+.polen-bloque a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 560px) {
+    .polen-bloque {
+        padding: 18px 16px;
+    }
+}
+
+
+/* ==========================================================
+   NIVELES, GLOSARIO, CONSEJOS Y FUENTES
+   ========================================================== */
+
+.polen-umbrales {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+
+.polen-umbrales th,
+.polen-umbrales td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--pol-borde);
+    text-align: left;
+}
+
+
+.polen-umbrales th {
+    color: var(--pol-texto-suave);
+    font-weight: 600;
+}
+
+
+.polen-umbrales td.pol-cifra {
+    text-align: right;
+    white-space: nowrap;
+}
+
+
+.polen-tabla-desliza {
+    overflow-x: auto;
+}
+
+
+.polen-glosario {
+    display: grid;
+    gap: 6px 18px;
+    grid-template-columns: max-content minmax(0, 1fr);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+
+.polen-glosario dt {
+    color: var(--pol-corteza);
+    font-weight: 700;
+}
+
+
+.polen-glosario dd {
+    margin: 0;
+    color: var(--pol-texto-suave);
+}
+
+
+@media (max-width: 560px) {
+    .polen-glosario {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .polen-glosario dd {
+        margin-bottom: 8px;
+    }
+}
+
+
+.polen-consejos,
+.polen-fuentes {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--pol-texto-suave);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* Fin de fichero: css/polen.css */

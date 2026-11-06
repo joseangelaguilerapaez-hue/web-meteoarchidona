@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261106-contador1";
+    "/componentes/cabecera.html?v=20261106-polen1";
 
 
 /* ==========================================================
