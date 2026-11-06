@@ -693,6 +693,51 @@ async function obtenerModuloUsuarios(){
 
 
 /* ==========================================================
+   AUDITORÍA
+   Consultas de la auditoría de uso, en pestañas; la primera,
+   «Visitas» (José, 6-11-2026). auditoria.js solo se importa si
+   existe modulo-auditoria.
+   ========================================================== */
+
+let promesaModuloAuditoria = null;
+
+let moduloAuditoria = null;
+
+async function cargarModuloAuditoria(){
+
+    if(!$("modulo-auditoria")){
+        return;
+    }
+
+    if(promesaModuloAuditoria === null){
+        promesaModuloAuditoria = import(
+            "./auditoria.js?v=20261106-visitas1"
+        );
+    }
+
+    try{
+        moduloAuditoria = await promesaModuloAuditoria;
+        moduloAuditoria.configurarEventosAuditoria();
+        await moduloAuditoria.cargarVisitas();
+    }catch(error){
+        promesaModuloAuditoria = null;
+        console.error(
+            "No se ha podido cargar la Auditoría.",
+            error
+        );
+        mostrarEstado(
+            $("estadoAuditoria"),
+            error.message
+            ||
+            "No se han podido cargar las visitas.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    NOVEDADES
    Ventana de novedades de la portada (docs/novedades.md de la
    API). novedades.js solo se importa si existe modulo-novedades.
@@ -1020,6 +1065,8 @@ export async function cargarDatosAdministracion(){
 
         await cargarModuloNovedades();
 
+        await cargarModuloAuditoria();
+
         mostrarEstado(
             $("estadoPanel"),
             "Datos administrativos actualizados.",
@@ -1160,6 +1207,16 @@ async function alCerrarSesion(){
         "function"
     ){
         moduloUsuarios.limpiarUsuarios();
+    }
+
+    if(
+        moduloAuditoria
+        &&
+        typeof moduloAuditoria.limpiarAuditoria
+        ===
+        "function"
+    ){
+        moduloAuditoria.limpiarAuditoria();
     }
 
     history.replaceState(

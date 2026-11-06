@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="../css/administracion.css?v=20261104-suscripciones1">
 <link rel="stylesheet" href="../css/novedades.css?v=20261105-novedades1">
 <link rel="stylesheet" href="../css/novedades-admin.css?v=20261105-novedades1">
+<link rel="stylesheet" href="../css/auditoria-admin.css?v=20261106-visitas1">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
 <script src="../js/cabecera.js?v=20261106-contador2" defer></script>
@@ -33,7 +34,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261105-novedades2"
+    src="../js/administracion/principal.js?v=20261106-auditoria1"
 ></script>
 
 <script
@@ -374,6 +375,14 @@
     data-modulo="usuarios"
 >
     Usuarios
+</a>
+
+<a
+    href="#auditoria"
+    class="modulo-boton"
+    data-modulo="auditoria"
+>
+    Auditoría
 </a>
 
 <a
@@ -3900,6 +3909,130 @@
     id="listaServiciosSuscripcion"
     class="usuarios-lista"
 ></div>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     AUDITORÍA
+     Consultas de la auditoría de uso (js/administracion/auditoria.js),
+     en pestañas. La primera, «Visitas» (José, 5 y 6-11-2026).
+     Diseño: docs/auditoria.md de api-meteoarchidona, fase 6.
+     ========================================================= -->
+
+<section
+    id="modulo-auditoria"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<div
+    class="acciones auditoria-pestanas"
+    role="tablist"
+    aria-label="Consultas de auditoría"
+>
+    <button
+        type="button"
+        class="boton boton-secundario activo"
+        role="tab"
+        aria-selected="true"
+        aria-controls="pestanaAuditoriaVisitas"
+    >
+        Visitas
+    </button>
+</div>
+
+<div class="acciones">
+
+<button
+    id="botonRecargarAuditoria"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div
+    id="pestanaAuditoriaVisitas"
+    class="panel-cuerpo"
+    role="tabpanel"
+>
+
+<div class="auditoria-filtros">
+
+<div
+    id="periodosAuditoria"
+    class="auditoria-periodos"
+    role="group"
+    aria-label="Periodo"
+>
+    <button type="button" class="boton boton-mini" data-periodo="hoy">Hoy</button>
+    <button type="button" class="boton boton-mini" data-periodo="semana">Semana</button>
+    <button type="button" class="boton boton-mini" data-periodo="mes">Mes</button>
+    <button type="button" class="boton boton-mini" data-periodo="fechas">Fechas</button>
+</div>
+
+<div
+    id="fechasAuditoria"
+    class="auditoria-fechas"
+    hidden
+>
+    <label>Desde <input id="desdeAuditoria" type="date"></label>
+    <label>Hasta <input id="hastaAuditoria" type="date"></label>
+</div>
+
+<div class="auditoria-opciones">
+    <label><input id="unicosAuditoria" type="checkbox"> Una por visitante</label>
+    <label><input id="propiasAuditoria" type="checkbox"> Incluir las propias</label>
+</div>
+
+</div>
+
+<p
+    id="resumenAuditoria"
+    class="auditoria-resumen"
+></p>
+
+<div
+    id="estadoAuditoria"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<ul
+    id="listaAuditoriaVisitas"
+    class="auditoria-lista"
+></ul>
+
+<div id="finAuditoria" class="auditoria-fin"></div>
+
+<button
+    id="botonMasAuditoria"
+    type="button"
+    class="boton boton-secundario auditoria-mas"
+    hidden
+>
+    Cargar más
+</button>
+
+<p class="modulo-intro auditoria-nota">
+    Solo aparecen las visitas de quienes aceptan las estadísticas. Las
+    propias son las de los navegadores desde los que se ha entrado alguna
+    vez con una cuenta de administrador.
+</p>
 
 </div>
 </section>
