@@ -23,7 +23,7 @@
 /* data-componente → [módulo, función de montaje] */
 const COMPONENTES = {
     // Comunes
-    "contador-visitas": ["/js/componentes/contador-visitas.js?v=20261106-contador4", "montarContadorVisitas"],
+    "contador-visitas": ["/js/componentes/contador-visitas.js?v=20261106-contador5", "montarContadorVisitas"],
     // Actualidad
     "condiciones-actuales": ["/js/componentes/condiciones-actuales.js?v=20261104-componentes1", "montarCondicionesActuales"],
     "sol-luna": ["/js/componentes/tarjeta-sol-luna.js?v=20261104-componentes1", "montarSolLuna"],

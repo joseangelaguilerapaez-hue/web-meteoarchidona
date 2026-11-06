@@ -281,7 +281,7 @@ const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261104-mi-cuenta1";
 const RUTA_DISTINTIVO_CSS = "/css/distintivo.css?v=20261103-distintivo1";
 
 const RUTA_DISTINTIVO_JS = "/js/distintivo.js?v=20261103-distintivo1";
-const RUTA_CONTADOR_JS = "/js/componentes/contador-visitas.js?v=20261106-contador4";
+const RUTA_CONTADOR_JS = "/js/componentes/contador-visitas.js?v=20261106-contador5";
 
 
 /*
