@@ -3,8 +3,8 @@
  * Contador de visitas
  *
  * Recuadro pequeño de js/componentes/contador-visitas.js: título y una
- * tabla de dos columnas (hoy, semana, mes y año), con una casilla
- * «Usuarios» en el título. José, 5-11-2026: que
+ * tabla (hoy, semana, mes y año), con una casilla
+ * «Usuarios» en el título y una tercera columna, «Registrados». José, 5-11-2026: que
  * no sea grande ni con letras grandes; pensado para la cabecera o para
  * cualquier hueco, sitio por decidir. Ocupa solo su contenido.
  *
@@ -75,10 +75,25 @@
     font-weight: 400;
 }
 
+.contador-visitas-tabla thead th {
+    padding-bottom: 2px;
+    color: var(--muted, #aabdd0);
+    font-size: 0.64rem;
+    text-align: right;
+}
+
+.contador-visitas-tabla td + td {
+    padding-left: 12px;
+}
+
 .contador-visitas-tabla th {
     padding-right: 12px;
     color: var(--muted, #aabdd0);
     text-align: left;
+}
+
+.contador-visitas-tabla thead th:first-child {
+    padding-right: 0;
 }
 
 .contador-visitas-tabla td {

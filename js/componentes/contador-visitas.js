@@ -24,6 +24,10 @@
  *     distinga.
  * La elección no se guarda en el navegador: al recargar vuelve a Visitas.
  *
+ * Una tercera columna, «Registrados» (José, 5-11-2026), da los usuarios
+ * con cuenta distintos que han entrado con ella en cada periodo; no
+ * cambia con la casilla. También solo de quienes aceptan las estadísticas.
+ *
  * Nace oculto y solo aparece si la API responde. Sin id fijos: admite
  * varios en la misma página.
  */
@@ -31,7 +35,7 @@
 import {asegurarHoja, asegurarScript} from "./comun.js?v=20261104-componentes1";
 
 
-const HOJA = "/css/contador-visitas.css?v=20261105-contador2";
+const HOJA = "/css/contador-visitas.css?v=20261105-contador3";
 
 const SCRIPT_API = "/js/api.js?v=20261003-vps1";
 
@@ -50,6 +54,7 @@ const AYUDA = {
     visitas: "Páginas vistas en meteoarchidona.com",
     usuarios: "Visitantes distintos (cada uno una vez por periodo); "
         + "solo de quienes aceptan las estadísticas",
+    registrados: "Registrados: usuarios con cuenta distintos que han entrado con ella",
 };
 
 
@@ -78,8 +83,22 @@ function construir(hueco) {
     titulo.append(nombre, opcion);
     tabla.appendChild(titulo);
 
+    const cabecera = document.createElement("thead");
+    const filaCabecera = document.createElement("tr");
+
+    for (const texto of ["", "Todos", "Registrados"]) {
+        const celda = document.createElement("th");
+        celda.scope = "col";
+        celda.textContent = texto;
+        filaCabecera.appendChild(celda);
+    }
+
+    cabecera.appendChild(filaCabecera);
+    tabla.appendChild(cabecera);
+
     const cuerpo = document.createElement("tbody");
     const celdas = {};
+    const registrados = {};
 
     for (const [clave, texto] of FILAS) {
         const fila = document.createElement("tr");
@@ -91,15 +110,19 @@ function construir(hueco) {
         const valor = document.createElement("td");
         valor.textContent = "–";
 
-        fila.append(etiqueta, valor);
+        const registrado = document.createElement("td");
+        registrado.textContent = "–";
+
+        fila.append(etiqueta, valor, registrado);
         cuerpo.appendChild(fila);
         celdas[clave] = valor;
+        registrados[clave] = registrado;
     }
 
     tabla.appendChild(cuerpo);
     hueco.appendChild(tabla);
 
-    return {celdas, casilla, nombre, datos: null};
+    return {celdas, registrados, casilla, nombre, datos: null};
 }
 
 
@@ -109,11 +132,16 @@ function pintar(hueco, estado) {
     const fuente = usuarios ? estado.datos?.visitantes : estado.datos;
 
     estado.nombre.textContent = usuarios ? "Usuarios" : "Visitas";
-    hueco.title = AYUDA[usuarios ? "usuarios" : "visitas"];
+    hueco.title = `${AYUDA[usuarios ? "usuarios" : "visitas"]}. ${AYUDA.registrados}.`;
+
+    const texto = valor => {
+        const numero = Number(valor);
+        return Number.isFinite(numero) ? FORMATO.format(numero) : "–";
+    };
 
     for (const [clave] of FILAS) {
-        const numero = Number(fuente?.[clave]);
-        estado.celdas[clave].textContent = Number.isFinite(numero) ? FORMATO.format(numero) : "–";
+        estado.celdas[clave].textContent = texto(fuente?.[clave]);
+        estado.registrados[clave].textContent = texto(estado.datos?.registrados?.[clave]);
     }
 }
 
