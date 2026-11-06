@@ -27,6 +27,8 @@
 }
 
 .contador-visitas-tabla {
+    width: auto;
+    min-width: 0;
     border-collapse: collapse;
 }
 
@@ -63,8 +65,11 @@
 
 .contador-visitas-opcion input {
     width: 11px;
+    min-width: 0;
     height: 11px;
+    min-height: 0;
     margin: 0;
+    padding: 0;
     accent-color: var(--accent, #f0a500);
     cursor: pointer;
 }
@@ -72,7 +77,10 @@
 .contador-visitas-tabla th,
 .contador-visitas-tabla td {
     padding: 1px 0;
+    border: 0;
+    font-size: inherit;
     font-weight: 400;
+    vertical-align: baseline;
 }
 
 .contador-visitas-tabla thead th {
@@ -103,5 +111,164 @@
     text-align: right;
 }
 
+
+
+/* ==========================================================
+   EN LA CABECERA (José, 6-11-2026)
+   ========================================================== */
+
+/*
+ * Más pequeño que suelto, para no hacer crecer la cabecera.
+ */
+.cabecera .contador-visitas {
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.cabecera .contador-visitas-titulo {
+    padding-bottom: 1px;
+    font-size: 9px;
+}
+
+.cabecera .contador-visitas-opcion {
+    font-size: 9px;
+}
+
+.cabecera .contador-visitas-opcion input {
+    width: 10px;
+    height: 10px;
+}
+
+.cabecera .contador-visitas-tabla thead th {
+    padding-bottom: 1px;
+    font-size: 9px;
+}
+
+.cabecera .contador-visitas-tabla th {
+    padding-right: 8px;
+}
+
+.cabecera .contador-visitas-tabla td + td {
+    padding-left: 8px;
+}
+
+/*
+ * Con el contador a la vista, la zona derecha de la cabecera pasa a una
+ * rejilla de tres columnas y dos filas:
+ *
+ *   fila 1: [controles de página]  [botones de cuenta ··········]
+ *   fila 2: [hora]                 [contador]          [Y&Z]
+ *
+ * Los controles de página solo los pone Administración (Cerrar sesión);
+ * si no hay, los botones de cuenta ocupan la fila entera. En escritorio
+ * las columnas se ajustan al contenido y van a la derecha; en móvil la
+ * del contador se estira y lo deja centrado entre la hora y el logotipo.
+ *
+ * Sin rejilla, en escritorio la fila flexible no medía más que los
+ * botones de cuenta y el contador mandaba el logotipo a otra línea.
+ */
+@media (min-height: 561px) and (min-width: 340px) {
+
+    .zona-derecha:has(.contador-visitas:not([hidden])) {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        justify-content: end;
+        align-items: center;
+        column-gap: 14px;
+        row-gap: 6px;
+    }
+
+    .zona-derecha:has(.contador-visitas:not([hidden])) .cabecera-acciones {
+        grid-row: 1;
+        grid-column: 1;
+    }
+
+    .zona-derecha:has(.contador-visitas:not([hidden])) .cuenta-zona {
+        grid-row: 1;
+        grid-column: 1 / -1;
+    }
+
+    .zona-derecha:has(.contador-visitas:not([hidden])):has(.cabecera-acciones:not(:empty)) .cuenta-zona {
+        grid-column: 2 / -1;
+    }
+
+    .zona-derecha:has(.contador-visitas:not([hidden])) .hora {
+        grid-row: 2;
+        grid-column: 1;
+    }
+
+    .cabecera .contador-visitas {
+        grid-row: 2;
+        grid-column: 2;
+    }
+
+    .zona-derecha:has(.contador-visitas:not([hidden])) .firma-proyecto {
+        grid-row: 2;
+        grid-column: 3;
+    }
+
+}
+
+@media (max-width: 1050px) and (min-height: 561px) and (min-width: 340px) {
+
+    .zona-derecha:has(.contador-visitas:not([hidden])) {
+        grid-template-columns: auto 1fr auto;
+        justify-content: stretch;
+        column-gap: 10px;
+    }
+
+    .cabecera .contador-visitas {
+        justify-self: center;
+    }
+
+}
+
+/*
+ * Escritorio estrecho: con el contador, la zona derecha mide unos 430 px
+ * y por debajo de unos 1480 px pisaba el menú. Se hace lo mismo que
+ * css/cabecera.css hace por debajo de 1250 px: el menú baja a su propia
+ * fila, a lo ancho. Copia de esas reglas; si cambian allí, cambiar aquí.
+ */
+@media (min-width: 1251px) and (max-width: 1480px) and (min-height: 561px) {
+
+    .cabecera:has(.contador-visitas:not([hidden])) {
+        grid-template-columns: 1fr auto;
+        gap: 8px 20px;
+    }
+
+    .cabecera:has(.contador-visitas:not([hidden])) .navegacion {
+        grid-column: 1 / -1;
+        order: 3;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        justify-content: stretch;
+        gap: 8px;
+        width: min(900px, 100%);
+        margin: 0 auto;
+        padding: 7px 0;
+        overflow: visible;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .cabecera:has(.contador-visitas:not([hidden])) .navegacion a {
+        min-height: 34px;
+        padding: 7px 9px;
+        font-size: 10px;
+    }
+
+}
+
+/*
+ * Móvil tumbado (la cabecera se queda en una fila de unos 60 px) y
+ * pantallas muy estrechas: no cabe, así que no se enseña.
+ */
+@media (max-height: 560px), (max-width: 339px) {
+
+    .cabecera .contador-visitas {
+        display: none;
+    }
+
+}
 
 /* Fin de fichero: css/contador-visitas.css */
