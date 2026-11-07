@@ -534,8 +534,62 @@ function mostrarEditor(visible){
     mostrarElemento("panelFormularioPatrulla", visible);
 }
 
+/* Códigos de patrulla habituales (desplegable). «Otro…» permite uno nuevo. */
+const CODIGOS_PATRULLA = [
+    ["GENERAL", "Vuelta general"],
+    ["AMANECER", "Amanecer"],
+    ["ATARDECER", "Atardecer"],
+    ["NOCHE", "Noche"],
+    ["TORMENTAS", "Tormentas"],
+    ["LLUVIA", "Lluvia"],
+    ["NIEVE", "Nieve"],
+    ["NIEBLA", "Niebla"],
+    ["VIGILANCIA", "Vigilancia"],
+    ["PRUEBA", "Prueba"]
+];
+const CODIGO_OTRO = "__OTRO__";
+
+function prepararCampoCodigo(codigoActual){
+    const campo = $("campoPatrullaCodigo");
+    const otro = $("campoPatrullaCodigoOtro");
+    campo.replaceChildren();
+    campo.append(new Option("Elige un código…", ""));
+    for(const [codigo, nombre] of CODIGOS_PATRULLA){
+        campo.append(new Option(`${codigo} — ${nombre}`, codigo));
+    }
+    const conocido = CODIGOS_PATRULLA.some(([codigo]) => codigo === codigoActual);
+    if(codigoActual && !conocido){
+        campo.append(new Option(codigoActual, codigoActual));
+    }
+    campo.append(new Option("Otro…", CODIGO_OTRO));
+    campo.value = codigoActual || "";
+    otro.value = "";
+    otro.hidden = true;
+
+    campo.onchange = () => {
+        otro.hidden = campo.value !== CODIGO_OTRO;
+        if(!otro.hidden){
+            otro.focus();
+            return;
+        }
+        const nombre = $("campoPatrullaNombre");
+        const elegido = CODIGOS_PATRULLA.find(([codigo]) => codigo === campo.value);
+        if(elegido && nombre && !nombre.value.trim()){
+            nombre.value = elegido[1];
+        }
+    };
+}
+
+function codigoElegido(){
+    const valor = $("campoPatrullaCodigo")?.value || "";
+    if(valor === CODIGO_OTRO){
+        return ($("campoPatrullaCodigoOtro")?.value || "").trim();
+    }
+    return valor.trim();
+}
+
 function rellenarFormulario(datos){
-    $("campoPatrullaCodigo").value = datos.codigo ?? "";
+    prepararCampoCodigo(datos.codigo ?? "");
     $("campoPatrullaNombre").value = datos.nombre ?? "";
     $("campoPatrullaDescripcion").value = datos.descripcion ?? "";
     $("campoPatrullaCamara").value = datos.camara_id ? String(datos.camara_id) : "";
@@ -620,7 +674,7 @@ async function seleccionarPatrulla(id, mensaje = ""){
 }
 
 function leerFormulario(){
-    const codigo = ($("campoPatrullaCodigo")?.value || "").trim();
+    const codigo = codigoElegido();
     const nombre = ($("campoPatrullaNombre")?.value || "").trim();
     if(!codigo || !nombre){
         throw new Error("Código y nombre son obligatorios.");
