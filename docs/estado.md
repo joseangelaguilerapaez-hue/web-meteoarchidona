@@ -173,3 +173,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-05 · Novedades publicadas (`34c4a56`); primera novedad, la del registro, publicada (`2856c0c`), caducidad ajustable en Administración.
 - 2026-11-06 · Contador de visitas publicado en la cabecera (páginas, únicos y registrados); revisado por José en el móvil.
 - 2026-11-07 · Polen publicada (`ca1b74e`): `/polen` en Nginx, API con migración 0046 y primeras cargas (15 días de previsión, 3.445 semanas de la UGR).
+- 2026-11-07 · Patrullas: el código pasa a ser un desplegable (GENERAL, AMANECER, ATARDECER, NOCHE, TORMENTAS, LLUVIA, NIEVE, NIEBLA, VIGILANCIA, PRUEBA) con «Otro…» para uno nuevo; al elegirlo rellena el nombre si está vacío.
