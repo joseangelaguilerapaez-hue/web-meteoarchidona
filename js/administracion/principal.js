@@ -560,7 +560,7 @@ async function obtenerModuloPatrullas(){
 
     if(promesaModuloPatrullas === null){
         promesaModuloPatrullas = import(
-            "./patrullas.js?v=20261026-cache1"
+            "./patrullas.js?v=20261107-codigo1"
         );
     }
 
