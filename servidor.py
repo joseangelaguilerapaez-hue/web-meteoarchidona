@@ -51,6 +51,7 @@ SECCIONES = (
     "sol",
     "embalses",
     "polen",
+    "sismologia",
     "mi-cuenta",
 )
 
