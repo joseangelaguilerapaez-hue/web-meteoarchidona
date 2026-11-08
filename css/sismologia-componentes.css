@@ -603,6 +603,12 @@
 .sis-mapa.leaflet-zoom-anim .leaflet-zoom-animated { transition: transform 0.25s cubic-bezier(0, 0, 0.25, 1); }
 .sis-mapa .leaflet-interactive { cursor: pointer; }
 
+/* Leaflet deja el SVG de las capas sin eventos y se los devuelve solo a
+ * lo que se puede tocar (los terremotos): sin esta regla, tocar un
+ * terremoto no abría su ficha. */
+.sis-mapa .leaflet-pane > svg path { pointer-events: none; }
+.sis-mapa .leaflet-pane > svg path.leaflet-interactive { pointer-events: visiblePainted; pointer-events: auto; }
+
 .sis-mapa .leaflet-control { position: relative; z-index: 800; float: left; clear: both; pointer-events: auto; }
 .sis-mapa .leaflet-top,
 .sis-mapa .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; }

@@ -17,7 +17,7 @@
  * al granate (5 o más), pasando por amarillo, naranja y rojo lava.
  */
 
-const HOJA = "/css/sismologia-componentes.css?v=20261108-sismo2";
+const HOJA = "/css/sismologia-componentes.css?v=20261108-sismo3";
 
 const LEAFLET = "/js/vendor/leaflet-1.9.4.js";
 

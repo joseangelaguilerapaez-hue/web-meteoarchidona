@@ -29,7 +29,7 @@ import {
     pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
     cargarLeaflet, colorTramo, magnitud, kilometros, fechaHora, lugar, enlaceFicha,
     horaActualizacion, TRAMOS, NOMBRES_TRAMO, ARCHIDONA, PIZARRA, MAGMA, FUENTE
-} from "./comun.js?v=20261108-sismo2";
+} from "./comun.js?v=20261108-sismo3";
 
 
 const FONDOS = {

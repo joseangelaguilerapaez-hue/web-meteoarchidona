@@ -16,7 +16,7 @@
 import {
     pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero,
     magnitud, kilometros, fechaHora, lugar
-} from "./comun.js?v=20261108-sismo2";
+} from "./comun.js?v=20261108-sismo3";
 
 
 export function rutaResumen(raiz) {

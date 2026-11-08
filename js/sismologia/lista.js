@@ -18,7 +18,7 @@
 import {
     pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
     pastillaMagnitud, kilometros, fechaHora, lugar, enlaceFicha, horaActualizacion, FUENTE
-} from "./comun.js?v=20261108-sismo2";
+} from "./comun.js?v=20261108-sismo3";
 
 
 function fila(sismo) {

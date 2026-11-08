@@ -16,7 +16,7 @@
 import {
     pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
     magnitud, kilometros, fechaLarga, horaExacta, haceCuanto, lugar, enlaceFicha, FUENTE
-} from "./comun.js?v=20261108-sismo2";
+} from "./comun.js?v=20261108-sismo3";
 
 
 export async function montarUltimoTerremoto(raiz) {

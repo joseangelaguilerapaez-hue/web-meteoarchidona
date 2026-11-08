@@ -18,8 +18,8 @@
 
 import {
     pedir, crear, aviso, prepararRaiz, titulo, pie, magnitud, TRAMOS, NOMBRES_TRAMO, MESES
-} from "./comun.js?v=20261108-sismo2";
-import { rutaResumen } from "./resumen.js?v=20261108-sismo2";
+} from "./comun.js?v=20261108-sismo3";
+import { rutaResumen } from "./resumen.js?v=20261108-sismo3";
 
 
 function graficaMeses(datos) {
