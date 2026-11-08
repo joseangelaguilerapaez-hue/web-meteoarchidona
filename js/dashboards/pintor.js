@@ -65,7 +65,14 @@ const COMPONENTES = {
     "polen-prevision": ["/js/polen/prevision.js?v=20261106-polen1", "montarPolenPrevision"],
     "polen-semana": ["/js/polen/semana.js?v=20261106-polen1", "montarPolenSemana"],
     "polen-serie": ["/js/polen/serie.js?v=20261106-polen1", "montarPolenSerie"],
-    "polen-calendario": ["/js/polen/calendario.js?v=20261106-polen1", "montarPolenCalendario"]
+    "polen-calendario": ["/js/polen/calendario.js?v=20261106-polen1", "montarPolenCalendario"],
+    // Sismología
+    "sismologia-aviso": ["/js/sismologia/aviso.js?v=20261108-sismo1", "montarAvisoTerremoto"],
+    "sismologia-ultimo": ["/js/sismologia/ultimo.js?v=20261108-sismo1", "montarUltimoTerremoto"],
+    "sismologia-resumen": ["/js/sismologia/resumen.js?v=20261108-sismo1", "montarResumenSismico"],
+    "sismologia-mapa": ["/js/sismologia/mapa.js?v=20261108-sismo1", "montarMapaTerremotos"],
+    "sismologia-lista": ["/js/sismologia/lista.js?v=20261108-sismo1", "montarListaTerremotos"],
+    "sismologia-estadisticas": ["/js/sismologia/estadisticas.js?v=20261108-sismo1", "montarEstadisticasSismicas"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";

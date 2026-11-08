@@ -300,7 +300,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261106-polen1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261108-sismo1"),
             ("administracion", r"administracion/principal\.js\?v=20261108-ficha1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -704,6 +704,66 @@ class TestComponentesEmbalses(unittest.TestCase):
 
     def test_el_alta_en_nginx_existe(self):
         self.assertIn('modulo.SECCION = "embalses"', leer(RAIZ / "scripts" / "configurar_seccion_embalses.py"))
+
+
+class TestComponentesSismologia(unittest.TestCase):
+    """Componentes de sismología para la página y los dashboards (8-11-2026)."""
+
+    COMPONENTES = {
+        "sismologia-aviso": ("aviso.js", "montarAvisoTerremoto"),
+        "sismologia-ultimo": ("ultimo.js", "montarUltimoTerremoto"),
+        "sismologia-resumen": ("resumen.js", "montarResumenSismico"),
+        "sismologia-mapa": ("mapa.js", "montarMapaTerremotos"),
+        "sismologia-lista": ("lista.js", "montarListaTerremotos"),
+        "sismologia-estadisticas": ("estadisticas.js", "montarEstadisticasSismicas"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "sismologia.html")
+        principal = leer(RAIZ / "js" / "sismologia.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "sismologia" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/sismologia/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "sismologia" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_paleta_basalto_y_magma(self):
+        comun = leer(RAIZ / "js" / "sismologia" / "comun.js")
+        ruta = re.search(r'"(/css/sismologia-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "sismologia.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "sismologia-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # «Basalto y magma» (José, 8-11-2026): los cinco colores de magnitud.
+        for color in ("#c7cdd3", "#f2b705", "#f27405", "#d92b04", "#7a0b0b", "#d9480f", "#2f3b45"):
+            self.assertIn(color, hoja.lower())
+        for color in ("#C7CDD3", "#F2B705", "#F27405", "#D92B04", "#7A0B0B"):
+            self.assertIn(color, comun)
+        self.assertNotIn("--sis-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_leaflet_es_el_del_sitio(self):
+        comun = leer(RAIZ / "js" / "sismologia" / "comun.js")
+        self.assertIn('"/js/vendor/leaflet-1.9.4.js"', comun)
+        self.assertTrue((RAIZ / "js" / "vendor" / "leaflet-1.9.4.js").is_file())
+
+    def test_la_pagina_carga_el_modulo_y_la_api(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "sismologia.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/sismologia\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "sismologia"', leer(RAIZ / "scripts" / "configurar_seccion_sismologia.py"))
 
 
 class TestComponentesPolen(unittest.TestCase):
