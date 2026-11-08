@@ -174,3 +174,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-06 · Contador de visitas publicado en la cabecera (páginas, únicos y registrados); revisado por José en el móvil.
 - 2026-11-07 · Polen publicada (`ca1b74e`): `/polen` en Nginx, API con migración 0046 y primeras cargas (15 días de previsión, 3.445 semanas de la UGR).
 - 2026-11-07 · Patrullas: el código pasa a ser un desplegable (GENERAL, AMANECER, ATARDECER, NOCHE, TORMENTAS, LLUVIA, NIEVE, NIEBLA, VIGILANCIA, PRUEBA) con «Otro…» para uno nuevo; al elegirlo rellena el nombre si está vacío.
+- 2026-11-08 · Administración → Patrullas: apartado «Enviar la cámara a un preset» (cámara PTZ, preset, estado de la orden en vivo y directo de la cámara al lado) y botón «Leer presets de la cámara».
