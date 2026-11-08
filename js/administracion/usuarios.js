@@ -6,6 +6,7 @@
  *
  * GET   /admin/usuarios
  * PATCH /admin/usuarios/{identificador}   {"es_administrador": true|false}
+ * POST  /admin/usuarios/{identificador}/reenviar-activacion   (8-11-2026)
  * GET   /admin/suscripciones/servicios
  * PATCH /admin/suscripciones/servicios/{codigo}   {"precio", "disponible"}
  *
@@ -13,6 +14,9 @@
  * «Administrador». Un administrador entra en Administración con su
  * sesión, sin el PIN. De momento es lo único que se cambia; más
  * adelante, otros datos de la cuenta (por ejemplo, permisos del foro).
+ *
+ * Las cuentas sin confirmar llevan además «Reenviar activación», por si
+ * el correo de activación se perdió (por ejemplo, borrado en spam).
  */
 
 import {
@@ -145,6 +149,15 @@ function ficha(usuario){
         void cambiarAdministrador(usuario, casilla, estado);
     });
 
+    if(usuario.estado === "PENDIENTE"){
+        const reenviar = crear("button", "boton boton-secundario boton-mini usuarios-reenviar", "Reenviar activación");
+        reenviar.type = "button";
+        reenviar.addEventListener("click", () => {
+            void reenviarActivacion(usuario, reenviar, estado);
+        });
+        tarjeta.insertBefore(reenviar, estado);
+    }
+
     return tarjeta;
 }
 
@@ -198,6 +211,40 @@ async function cambiarAdministrador(usuario, casilla, estado){
             error.message || "No se ha podido guardar el cambio.",
             "error"
         );
+    }
+}
+
+
+async function reenviarActivacion(usuario, boton, estado){
+
+    const pregunta = `¿Reenviar el correo de activación a ${usuario.correo}? `
+        + "Recibirá un enlace nuevo y entrará con el PIN que eligió al registrarse.";
+
+    if(!window.confirm(pregunta)){
+        return;
+    }
+
+    boton.disabled = true;
+    mostrarEstado(estado, "Enviando…", "info");
+
+    try{
+        const respuesta = await peticionJson(
+            `${RUTA}/${encodeURIComponent(usuario.identificador)}/reenviar-activacion`,
+            {method: "POST"}
+        );
+        mostrarEstado(
+            estado,
+            `${respuesta.mensaje} Que mire también en correo no deseado.`,
+            "ok"
+        );
+    }catch(error){
+        mostrarEstado(
+            estado,
+            error.message || "No se ha podido reenviar la activación.",
+            "error"
+        );
+    }finally{
+        boton.disabled = false;
     }
 }
 
