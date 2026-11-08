@@ -259,7 +259,21 @@ export async function montarMapaTerremotos(raiz) {
         maxZoom: 19
     });
     // En el redondo el círculo del radio llena justo el mapa.
-    mapa.fitBounds(zona, { padding: redondo ? [0, 0] : [8, 8] });
+    const relleno = redondo ? [0, 0] : [8, 8];
+    mapa.fitBounds(zona, { padding: relleno });
+
+    // Mientras el usuario no mueva el mapa, si el hueco cambia de tamaño
+    // (en el móvil el mapa redondo puede medir 0 al crearse y quedarse muy
+    // acercado: José, 8-11-2026) se vuelve a encuadrar el círculo entero.
+    let tocado = false;
+    let ajustando = false;
+    mapa.on("zoomstart movestart", () => { if (!ajustando) tocado = true; });
+    const encuadrar = () => {
+        ajustando = true;
+        mapa.invalidateSize({ animate: false });
+        if (!tocado) mapa.fitBounds(zona, { padding: relleno, animate: false });
+        ajustando = false;
+    };
 
     let capaFondo = null;
     const ponerFondo = (clave) => {
@@ -293,7 +307,9 @@ export async function montarMapaTerremotos(raiz) {
     // Los pequeños primero, para que los grandes queden encima.
     const sismos = [...datos.terremotos].sort((a, b) => (a.magnitud ?? 0) - (b.magnitud ?? 0));
 
-    const zoomInicial = mapa.getZoom();
+    // El zoom «de partida» es el que encuadra el círculo, no el que tenga
+    // el mapa en este momento.
+    const zoomInicial = () => mapa.getBoundsZoom(zona, false, L.point(relleno[0] * 2, relleno[1] * 2));
     const puntos = [];
 
     for (const sismo of sismos) {
@@ -311,14 +327,17 @@ export async function montarMapaTerremotos(raiz) {
 
     mapa.on("zoomend", () => {
         const zoom = mapa.getZoom();
-        for (const [punto, valor] of puntos) punto.setRadius(radioConZoom(valor, zoom, zoomInicial));
+        for (const [punto, valor] of puntos) punto.setRadius(radioConZoom(valor, zoom, zoomInicial()));
     });
 
     // En un dashboard el hueco puede cambiar de tamaño tras montarse.
     raiz._sisMapa = mapa;
 
+    // Y una vez más cuando la página ya está pintada.
+    requestAnimationFrame(() => requestAnimationFrame(encuadrar));
+
     if (window.ResizeObserver) {
-        raiz._sisObservador = new ResizeObserver(() => mapa.invalidateSize());
+        raiz._sisObservador = new ResizeObserver(encuadrar);
         raiz._sisObservador.observe(lienzo);
     }
 
