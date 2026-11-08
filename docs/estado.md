@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-11-02.
+Última actualización: 2026-11-08.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -64,6 +64,7 @@ comprobado en meteoarchidona.com.
 - Botón «Instalar la aplicación» en el pie (PR #62, fusionado el 1 nov, **publicado el 2 nov** con el `git pull` del PR #63 y comprobado en vivo; decisión de José tras conseguir instalarla solo desde Safari): en Chrome, Edge y Samsung abre el diálogo del sistema; en Safari del iPhone explica los tres pasos de «Añadir a pantalla de inicio», que es lo único que deja hacer Apple; en los navegadores que no instalan, y a quien ya la tiene instalada, no se enseña.
 - Configuración en Administración (PR #61, #74 y #76; diseño en `docs/configuracion.md` de la API). **Publicada el 3 nov** (web `5b80a56`, API con la migración 0038) y comprobada por José en el móvil: siete pestañas (Apariencia, Timelapses, Seguimiento, Directo y cámaras, Predicción, Usuarios y Otros) con los once parámetros; casilla «Activo» solo en el distintivo; números con unidad, rango y valor por defecto; en el distintivo, aviso de cuándo se quita y cuenta atrás de la vigencia (días exactos de reloj desde que se guarda).
 - Distintivo en la cabecera (PR #75), **publicado el 3 nov** (`0b0f303`) y comprobado por José: bajo el logotipo, lazo del color de Configuración (o monigote); en el ordenador, el texto del día pequeño debajo; en el móvil y la tableta, solo el lazo y, al tocarlo, un globo con el texto en letra grande. Lo lee de `/configuracion/publica` cada 10 minutos.
+- Botón «Reenviar activación» en Administración → Usuarios para las cuentas sin confirmar (web PR #116 y API PR #116, decisión de José del 8 nov porque a una cuenta el correo de activación le llegó a spam y lo borró). **Publicado el 8 nov** (web `f4bfbb8`, API `3d63995`, sin migración). La purga de 7 días de la API respeta las cuentas con un enlace de activación vigente.
 
 ## En construcción / abierto
 
@@ -175,3 +176,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-07 · Polen publicada (`ca1b74e`): `/polen` en Nginx, API con migración 0046 y primeras cargas (15 días de previsión, 3.445 semanas de la UGR).
 - 2026-11-07 · Patrullas: el código pasa a ser un desplegable (GENERAL, AMANECER, ATARDECER, NOCHE, TORMENTAS, LLUVIA, NIEVE, NIEBLA, VIGILANCIA, PRUEBA) con «Otro…» para uno nuevo; al elegirlo rellena el nombre si está vacío.
 - 2026-11-08 · Administración → Patrullas: apartado «Enviar la cámara a un preset» (cámara PTZ, preset, estado de la orden en vivo y directo de la cámara al lado) y botón «Leer presets de la cámara».
+- 2026-11-08 · Reenviar la activación desde Administración → Usuarios (PR #116 en web y API), publicado en el VPS (`f4bfbb8` / `3d63995`); de paso, el visor de «Enviar la cámara a un preset» pasa su estilo en línea a CSS.
