@@ -14,7 +14,7 @@
  */
 
 import {
-    pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero,
+    pedir, crear, aviso, prepararRaiz, esVigente, titulo, pie, leerRadio, leerNumero,
     magnitud, kilometros, fechaHora, lugar
 } from "./comun.js?v=20261108-sismo3";
 
@@ -36,7 +36,7 @@ function cifra(etiqueta, valor, detalle, clase = "") {
 
 
 export async function montarResumenSismico(raiz) {
-    prepararRaiz(raiz, "sismologia-resumen");
+    const turno = prepararRaiz(raiz, "sismologia-resumen");
     const { radio, anio, ruta } = rutaResumen(raiz);
 
     aviso(raiz, "Contando los terremotos del año…");
@@ -46,10 +46,12 @@ export async function montarResumenSismico(raiz) {
     try {
         datos = await pedir(ruta);
     } catch (error) {
+        if (!esVigente(raiz, turno)) return;
         aviso(raiz, "No se ha podido leer el resumen del año.", true);
         return;
     }
 
+    if (!esVigente(raiz, turno)) return;
     raiz.textContent = "";
     titulo(raiz, `Año ${anio}`, `Terremotos a menos de ${radio} km`);
 

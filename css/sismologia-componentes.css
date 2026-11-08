@@ -743,4 +743,52 @@
 }
 
 
+/* Mapa redondo (data-forma="redondo"): el propio mapa es el círculo del
+ * radio, cuadrado de lado el ancho disponible (hasta 620 px) y con los
+ * bordes redondeados del todo. Botones encima, créditos en el pie. */
+.sis-mapa-marco.redondo {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+}
+
+.sis-mapa.redondo {
+    width: min(100%, 620px);
+    aspect-ratio: 1 / 1;
+    border: 2px solid var(--sis-magma);
+    border-radius: 50%;
+    box-shadow: 0 10px 30px rgba(47, 59, 69, 0.22);
+    /* Safari: que el recorte redondo también afecte a las teselas. */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
+.sis-mapa-barra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    width: min(100%, 620px);
+}
+
+.sis-mapa-barra .sis-mapa-fondos,
+.sis-mapa-zoom {
+    position: static;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--sis-borde-fuerte);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(47, 59, 69, 0.15);
+}
+
+.sis-mapa-zoom .sis-mapa-fondo {
+    min-width: 36px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.sis-mapa-zoom .sis-mapa-fondo + .sis-mapa-fondo {
+    border-left: 1px solid var(--sis-borde);
+}
+
+
 /* Fin de fichero: css/sismologia-componentes.css */

@@ -17,7 +17,7 @@
  */
 
 import {
-    pedir, crear, aviso, prepararRaiz, titulo, pie, magnitud, TRAMOS, NOMBRES_TRAMO, MESES
+    pedir, crear, aviso, prepararRaiz, esVigente, titulo, pie, magnitud, TRAMOS, NOMBRES_TRAMO, MESES
 } from "./comun.js?v=20261108-sismo3";
 import { rutaResumen } from "./resumen.js?v=20261108-sismo3";
 
@@ -82,7 +82,7 @@ function graficaTramos(datos) {
 
 
 export async function montarEstadisticasSismicas(raiz) {
-    prepararRaiz(raiz, "sismologia-estadisticas");
+    const turno = prepararRaiz(raiz, "sismologia-estadisticas");
     const { radio, anio, ruta } = rutaResumen(raiz);
 
     aviso(raiz, "Preparando las gráficas…");
@@ -92,10 +92,12 @@ export async function montarEstadisticasSismicas(raiz) {
     try {
         datos = await pedir(ruta);
     } catch (error) {
+        if (!esVigente(raiz, turno)) return;
         aviso(raiz, "No se han podido leer las estadísticas.", true);
         return;
     }
 
+    if (!esVigente(raiz, turno)) return;
     raiz.textContent = "";
     titulo(raiz, `Estadísticas ${anio}`, `Terremotos a menos de ${radio} km`);
 

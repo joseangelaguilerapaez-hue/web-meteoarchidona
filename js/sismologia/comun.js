@@ -249,12 +249,21 @@ export function asegurarHoja() {
     document.head.appendChild(enlace);
 }
 
-/* Raíz común de todos los componentes de sismología. */
+/* Raíz común de todos los componentes de sismología. Devuelve el turno
+ * de este montaje: si el componente se vuelve a montar mientras espera a
+ * la API (al cambiar el radio en la página), el montaje viejo lo ve con
+ * esVigente() y no pinta encima del nuevo. */
 export function prepararRaiz(raiz, clase) {
     asegurarHoja();
     raiz.hidden = false;
     raiz.classList.add("sis-componente", clase);
     vaciar(raiz);
+    raiz._sisTurno = (raiz._sisTurno || 0) + 1;
+    return raiz._sisTurno;
+}
+
+export function esVigente(raiz, turno) {
+    return raiz._sisTurno === turno;
 }
 
 /* Título opcional (data-titulo="no" lo quita). */

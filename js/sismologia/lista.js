@@ -16,7 +16,7 @@
  */
 
 import {
-    pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
+    pedir, crear, aviso, prepararRaiz, esVigente, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
     pastillaMagnitud, kilometros, fechaHora, lugar, enlaceFicha, horaActualizacion, FUENTE
 } from "./comun.js?v=20261108-sismo3";
 
@@ -47,7 +47,7 @@ function fila(sismo) {
 
 
 export async function montarListaTerremotos(raiz) {
-    prepararRaiz(raiz, "sismologia-lista");
+    const turno = prepararRaiz(raiz, "sismologia-lista");
 
     const radio = leerRadio(raiz, 150);
     const dias = Math.round(leerNumero(raiz, "dias", 30, 1, 3650));
@@ -61,10 +61,12 @@ export async function montarListaTerremotos(raiz) {
     try {
         datos = await pedir(rutaTerremotos({ radio, dias, limite, magnitud: minima }));
     } catch (error) {
+        if (!esVigente(raiz, turno)) return;
         aviso(raiz, "No se han podido leer los terremotos. Se puede volver a intentar más tarde.", true);
         return;
     }
 
+    if (!esVigente(raiz, turno)) return;
     raiz.textContent = "";
     titulo(raiz, "Últimos terremotos", `A menos de ${radio} km de Archidona`);
 
