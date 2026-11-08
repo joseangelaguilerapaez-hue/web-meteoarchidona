@@ -19,12 +19,12 @@
  * Detalle de datos y fuentes en docs/sismologia.md de api-meteoarchidona.
  */
 
-import {montarAvisoTerremoto} from "./sismologia/aviso.js?v=20261108-sismo1";
-import {montarUltimoTerremoto} from "./sismologia/ultimo.js?v=20261108-sismo1";
-import {montarResumenSismico} from "./sismologia/resumen.js?v=20261108-sismo1";
-import {montarMapaTerremotos} from "./sismologia/mapa.js?v=20261108-sismo1";
-import {montarListaTerremotos} from "./sismologia/lista.js?v=20261108-sismo1";
-import {montarEstadisticasSismicas} from "./sismologia/estadisticas.js?v=20261108-sismo1";
+import {montarAvisoTerremoto} from "./sismologia/aviso.js?v=20261108-sismo2";
+import {montarUltimoTerremoto} from "./sismologia/ultimo.js?v=20261108-sismo2";
+import {montarResumenSismico} from "./sismologia/resumen.js?v=20261108-sismo2";
+import {montarMapaTerremotos} from "./sismologia/mapa.js?v=20261108-sismo2";
+import {montarListaTerremotos} from "./sismologia/lista.js?v=20261108-sismo2";
+import {montarEstadisticasSismicas} from "./sismologia/estadisticas.js?v=20261108-sismo2";
 
 
 export const COMPONENTES_SISMOLOGIA = {

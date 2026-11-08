@@ -13,10 +13,14 @@
  *
  * data-radio: km desde Archidona (150 por defecto, 300 como mucho).
  * data-dias: días hacia atrás (30). data-magnitud: mínima (todas).
- * data-altura: alto del mapa en píxeles (380).
+ * data-altura: alto del mapa en píxeles (380). data-fondo: «satelite»
+ * (por defecto) o «mapa».
  *
- * Leaflet se carga solo si hay un mapa (js/vendor/leaflet-1.9.4.js);
- * el fondo es el de OpenStreetMap, como en el visor del radar.
+ * Leaflet se carga solo si hay un mapa (js/vendor/leaflet-1.9.4.js).
+ * Fondo (José, 8-11-2026): las ortofotos PNOA del IGN, las mismas del
+ * visor de seguimiento, con un botón para pasar al mapa de
+ * OpenStreetMap; zoom hasta el nivel de calle. Todo lo que queda fuera
+ * del radio se oscurece (la API solo da los sismos de dentro).
  *
  * API: GET /sismologia/terremotos?radio_km&dias&limite=1000
  */
@@ -25,7 +29,88 @@ import {
     pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
     cargarLeaflet, colorTramo, magnitud, kilometros, fechaHora, lugar, enlaceFicha,
     horaActualizacion, TRAMOS, NOMBRES_TRAMO, ARCHIDONA, PIZARRA, MAGMA, FUENTE
-} from "./comun.js?v=20261108-sismo1";
+} from "./comun.js?v=20261108-sismo2";
+
+
+const FONDOS = {
+    satelite: {
+        nombre: "Satélite",
+        url: "https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{-y}.jpeg",
+        opciones: {
+            maxNativeZoom: 19,
+            maxZoom: 19,
+            attribution: 'Ortofotos: &copy; <a href="https://www.ign.es/" target="_blank" rel="noopener">IGN/CNIG</a> · PNOA · Datos: IGN, EMSC'
+        }
+    },
+    mapa: {
+        nombre: "Mapa",
+        url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        opciones: {
+            maxNativeZoom: 19,
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · Datos: IGN, EMSC'
+        }
+    }
+};
+
+const RADIO_TIERRA_KM = 6371;
+
+
+/* Puntos del círculo de radio km alrededor de un centro (sobre la esfera). */
+function puntosCirculo(centro, radioKm, pasos = 180) {
+    const lat1 = centro[0] * Math.PI / 180;
+    const lon1 = centro[1] * Math.PI / 180;
+    const angular = radioKm / RADIO_TIERRA_KM;
+    const puntos = [];
+
+    for (let paso = 0; paso < pasos; paso += 1) {
+        const rumbo = (paso / pasos) * 2 * Math.PI;
+        const lat2 = Math.asin(Math.sin(lat1) * Math.cos(angular) + Math.cos(lat1) * Math.sin(angular) * Math.cos(rumbo));
+        const lon2 = lon1 + Math.atan2(
+            Math.sin(rumbo) * Math.sin(angular) * Math.cos(lat1),
+            Math.cos(angular) - Math.sin(lat1) * Math.sin(lat2)
+        );
+        puntos.push([lat2 * 180 / Math.PI, lon2 * 180 / Math.PI]);
+    }
+
+    return puntos;
+}
+
+
+/* Velo oscuro sobre todo el mapa menos el círculo (polígono con agujero). */
+function veloFuera(L, centro, radioKm) {
+    const mundo = [[-85, -180], [-85, 180], [85, 180], [85, -180]];
+    return L.polygon([mundo, puntosCirculo(centro, radioKm)], {
+        stroke: false,
+        fillColor: "#0b1015",
+        fillOpacity: 0.55,
+        interactive: false
+    });
+}
+
+
+function botonesFondo(marco, alCambiar, inicial) {
+    const caja = crear("div", "sis-mapa-fondos");
+    caja.setAttribute("role", "group");
+    caja.setAttribute("aria-label", "Fondo del mapa");
+    const botones = {};
+
+    for (const [clave, fondo] of Object.entries(FONDOS)) {
+        const boton = crear("button", "sis-mapa-fondo", fondo.nombre);
+        boton.type = "button";
+        boton.setAttribute("aria-pressed", String(clave === inicial));
+        boton.addEventListener("click", () => {
+            for (const [otra, otro] of Object.entries(botones)) {
+                otro.setAttribute("aria-pressed", String(otra === clave));
+            }
+            alCambiar(clave);
+        });
+        botones[clave] = boton;
+        caja.appendChild(boton);
+    }
+
+    marco.appendChild(caja);
+}
 
 
 function radioPunto(valor) {
@@ -84,11 +169,15 @@ export async function montarMapaTerremotos(raiz) {
 
     titulo(raiz, "Terremotos", `Últimos ${dias} días a menos de ${radio} km`);
 
+    const fondoInicial = raiz.dataset.fondo === "mapa" ? "mapa" : "satelite";
+
+    const marco = crear("div", "sis-mapa-marco");
     const lienzo = crear("div", "sis-mapa");
     lienzo.style.height = `${altura}px`;
     lienzo.setAttribute("role", "region");
     lienzo.setAttribute("aria-label", `Mapa de terremotos a menos de ${radio} km de Archidona`);
-    raiz.appendChild(lienzo);
+    marco.appendChild(lienzo);
+    raiz.appendChild(marco);
 
     const estado = crear("div");
     raiz.appendChild(estado);
@@ -111,18 +200,25 @@ export async function montarMapaTerremotos(raiz) {
 
     // La vista antes que las capas: el círculo necesita un mapa ya situado.
     const zona = L.latLng(ARCHIDONA).toBounds(radio * 2000);
-    const mapa = L.map(lienzo, { scrollWheelZoom: false, attributionControl: true });
+    const mapa = L.map(lienzo, { scrollWheelZoom: true, attributionControl: true, maxZoom: 19 });
     mapa.fitBounds(zona, { padding: [8, 8] });
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 13,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Datos: IGN, EMSC'
-    }).addTo(mapa);
+    let capaFondo = null;
+    const ponerFondo = (clave) => {
+        if (capaFondo) capaFondo.remove();
+        capaFondo = L.tileLayer(FONDOS[clave].url, FONDOS[clave].opciones).addTo(mapa);
+        capaFondo.bringToBack();
+        lienzo.dataset.fondo = clave;
+    };
+    ponerFondo(fondoInicial);
+    botonesFondo(marco, ponerFondo, fondoInicial);
+
+    veloFuera(L, ARCHIDONA, radio).addTo(mapa);
 
     L.circle(ARCHIDONA, {
         radius: radio * 1000,
         color: MAGMA,
-        weight: 1.5,
+        weight: 2,
         dashArray: "6 6",
         fill: false,
         interactive: false
@@ -142,8 +238,9 @@ export async function montarMapaTerremotos(raiz) {
     for (const sismo of sismos) {
         L.circleMarker([sismo.latitud, sismo.longitud], {
             radius: radioPunto(sismo.magnitud),
-            color: sismo.sentido ? MAGMA : PIZARRA,
-            weight: sismo.sentido ? 2.5 : 0.8,
+            // Borde blanco para que se vean sobre el satélite.
+            color: sismo.sentido ? MAGMA : "#ffffff",
+            weight: sismo.sentido ? 2.5 : 1,
             dashArray: sismo.provisional ? "3 3" : null,
             fillColor: colorTramo(sismo.tramo_magnitud),
             fillOpacity: 0.82

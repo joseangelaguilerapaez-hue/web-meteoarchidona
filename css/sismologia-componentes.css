@@ -695,4 +695,46 @@
 }
 
 
+/* Marco del mapa con los botones de fondo (satélite o mapa). */
+.sis-mapa-marco {
+    position: relative;
+}
+
+.sis-mapa-fondos {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1100;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--sis-borde-fuerte);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(47, 59, 69, 0.25);
+}
+
+.sis-mapa-fondo {
+    padding: 6px 10px;
+    border: 0;
+    background: var(--sis-blanco);
+    color: var(--sis-pizarra);
+    font-family: "Sora", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.sis-mapa-fondo + .sis-mapa-fondo {
+    border-left: 1px solid var(--sis-borde);
+}
+
+.sis-mapa-fondo[aria-pressed="true"] {
+    background: var(--sis-pizarra);
+    color: #ffffff;
+}
+
+.sis-mapa[data-fondo="satelite"] {
+    background: #0b1015;
+}
+
+
 /* Fin de fichero: css/sismologia-componentes.css */

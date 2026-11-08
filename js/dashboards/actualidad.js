@@ -17,7 +17,7 @@
  * propios refrescos periódicos y así no se quedan funcionando detrás.
  */
 
-import {pintarDashboard} from "./pintor.js?v=20261108-sismo1";
+import {pintarDashboard} from "./pintor.js?v=20261108-sismo2";
 
 
 const CORTE_MOVIL = "(max-width: 850px)";
