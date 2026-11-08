@@ -301,7 +301,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261106-polen1"),
-            ("administracion", r"administracion/principal\.js\?v=20261108-reenviar1"),
+            ("administracion", r"administracion/principal\.js\?v=20261108-ficha1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -343,7 +343,7 @@ class TestConfiguracion(unittest.TestCase):
         self.assertIn("function ponerCuentaAtras", codigo)
         self.assertIn("fecha_actualizacion", codigo)
         self.assertIn(
-            "administracion.css?v=20261108-reenviar1",
+            "administracion.css?v=20261108-ficha1",
             leer(RAIZ / "pages" / "administracion.html"),
         )
 
@@ -361,13 +361,17 @@ class TestUsuariosAdministracion(unittest.TestCase):
 
     def test_modulo(self):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./usuarios.js?v=20261108-reenviar1", principal)
+        self.assertIn("./usuarios.js?v=20261108-ficha1", principal)
         self.assertIn("./acceso.js?v=20261104-usuarios1", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "usuarios.js")
         self.assertIn('"/admin/usuarios"', codigo)
         self.assertIn("es_administrador", codigo)
         self.assertIn('method: "PATCH"', codigo)
         self.assertIn("/reenviar-activacion", codigo)
+        self.assertIn("./ficha-usuario.js?v=20261108-ficha1", codigo)
+        ficha = leer(RAIZ / "js" / "administracion" / "ficha-usuario.js")
+        for ruta in ("/estado", "/enviar-cambio-pin", "/cerrar-sesiones", "/borrar", "/suscripciones"):
+            self.assertIn(ruta, ficha)
 
     def test_entrada_con_cuenta(self):
         codigo = leer(RAIZ / "js" / "administracion" / "acceso.js")

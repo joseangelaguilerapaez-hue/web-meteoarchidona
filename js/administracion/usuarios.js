@@ -17,6 +17,9 @@
  *
  * Las cuentas sin confirmar llevan además «Reenviar activación», por si
  * el correo de activación se perdió (por ejemplo, borrado en spam).
+ *
+ * Al pulsar una cuenta se abre su ficha de mantenimiento
+ * (ficha-usuario.js, docs/usuarios.md de la API, 2.8; 8-11-2026).
  */
 
 import {
@@ -27,6 +30,11 @@ import {
 import {
     peticionJson
 } from "./api.js?v=20261026-cache1";
+
+import {
+    abrirFichaUsuario,
+    cerrarFichaUsuario
+} from "./ficha-usuario.js?v=20261108-ficha1";
 
 
 const RUTA = "/admin/usuarios";
@@ -149,6 +157,31 @@ function ficha(usuario){
         void cambiarAdministrador(usuario, casilla, estado);
     });
 
+    // Pulsar la tarjeta (fuera de la casilla y los botones) abre la ficha.
+    tarjeta.classList.add("usuarios-ficha-abrible");
+    tarjeta.tabIndex = 0;
+    tarjeta.setAttribute("aria-label", `Abrir la ficha de ${usuario.nombre_visible}`);
+    const abrir = () => {
+        void abrirFichaUsuario(usuario.identificador, actualizarDesdeFicha);
+    };
+    tarjeta.addEventListener("click", evento => {
+        if(evento.target.closest("input, label, button, a")){
+            return;
+        }
+        abrir();
+    });
+    tarjeta.addEventListener("keydown", evento => {
+        if(evento.target === tarjeta && (evento.key === "Enter" || evento.key === " ")){
+            evento.preventDefault();
+            abrir();
+        }
+    });
+
+    const verFicha = crear("button", "boton boton-secundario boton-mini usuarios-reenviar", "Ver ficha");
+    verFicha.type = "button";
+    verFicha.addEventListener("click", abrir);
+    tarjeta.insertBefore(verFicha, estado);
+
     if(usuario.estado === "PENDIENTE"){
         const reenviar = crear("button", "boton boton-secundario boton-mini usuarios-reenviar", "Reenviar activación");
         reenviar.type = "button";
@@ -159,6 +192,25 @@ function ficha(usuario){
     }
 
     return tarjeta;
+}
+
+
+/*
+ * La ficha avisa de cada cambio: se actualiza la cuenta en la lista, o
+ * se quita si se ha borrado.
+ */
+function actualizarDesdeFicha(actualizado, borrado){
+
+    if(actualizado){
+        const posicion = usuarios.findIndex(u => u.identificador === actualizado.identificador);
+        if(posicion >= 0){
+            usuarios[posicion] = actualizado;
+        }
+    }else if(borrado){
+        usuarios = usuarios.filter(u => u.identificador !== borrado);
+    }
+
+    renderizarLista();
 }
 
 
@@ -479,6 +531,7 @@ export function configurarEventosUsuarios(){
 
 export function limpiarUsuarios(){
 
+    cerrarFichaUsuario();
     usuarios = [];
     servicios = [];
     filtro = "";
