@@ -343,7 +343,7 @@ class TestConfiguracion(unittest.TestCase):
         self.assertIn("function ponerCuentaAtras", codigo)
         self.assertIn("fecha_actualizacion", codigo)
         self.assertIn(
-            "administracion.css?v=20261104-suscripciones1",
+            "administracion.css?v=20261108-reenviar1",
             leer(RAIZ / "pages" / "administracion.html"),
         )
 
@@ -361,12 +361,13 @@ class TestUsuariosAdministracion(unittest.TestCase):
 
     def test_modulo(self):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./usuarios.js?v=20261104-suscripciones1", principal)
+        self.assertIn("./usuarios.js?v=20261108-reenviar1", principal)
         self.assertIn("./acceso.js?v=20261104-usuarios1", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "usuarios.js")
         self.assertIn('"/admin/usuarios"', codigo)
         self.assertIn("es_administrador", codigo)
         self.assertIn('method: "PATCH"', codigo)
+        self.assertIn("/reenviar-activacion", codigo)
 
     def test_entrada_con_cuenta(self):
         codigo = leer(RAIZ / "js" / "administracion" / "acceso.js")
