@@ -761,7 +761,7 @@ class TestNovedades(unittest.TestCase):
         self.assertRegex(pagina, r'type="module"\s+src="\.\./js/novedades\.js\?v=[\w-]+"')
         codigo = leer(RAIZ / "js" / "novedades.js")
         self.assertIn("/novedades", codigo)
-        self.assertIn("sessionStorage", codigo)
+        self.assertIn("localStorage", codigo)
         # El texto nunca se mete como HTML.
         self.assertNotIn("innerHTML", codigo)
 

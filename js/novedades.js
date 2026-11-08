@@ -8,10 +8,12 @@
  * debajo. Se cierra con «Entendido», con la X, con Escape o tocando
  * fuera.
  *
- * Sale cada vez que se entra en la web: una vez por visita. Si en la
- * misma visita se vuelve a la portada desde otra sección, no se repite
- * (sessionStorage, que se borra al cerrar la pestaña o el navegador).
- * Una novedad nueva o cambiada sí vuelve a salir.
+ * Cambio de José del 8-11-2026: cada novedad sale una sola vez por
+ * navegador. Al cerrar la ventana se apunta en localStorage (que no se
+ * borra al cerrar el navegador) qué novedades se han visto; al volver
+ * solo salen las nuevas o las que hayan cambiado. Vale igual para
+ * visitantes y registrados, sin tocar la base de datos: en otro
+ * navegador o dispositivo volverán a salir una vez.
  *
  * El texto va como texto: saltos de línea respetados y direcciones
  * convertidas en enlaces; nada de HTML. Las imágenes son siempre
@@ -22,7 +24,7 @@
  */
 
 const HOJA = "/css/novedades.css?v=20261105-novedades1";
-const CLAVE_VISITA = "ma_novedades_vistas";
+const CLAVE_VISTAS = "ma_novedades_vistas_v2";
 
 const formatoFecha = new Intl.DateTimeFormat("es-ES", {
     timeZone: "Europe/Madrid",
@@ -105,22 +107,29 @@ export function pintarNovedad(novedad) {
     return articulo;
 }
 
-/* Huella de lo que hay vigente: si cambia algo, se vuelve a enseñar. */
-function huella(novedades) {
-    return novedades.map(n => `${n.id}:${n.titulo.length}:${(n.bloques || []).length}`).join("|");
+/* Huella de cada novedad: si cambia algo, se vuelve a enseñar. */
+function huella(novedad) {
+    const bloques = novedad.bloques || [];
+    const textos = bloques.reduce((total, b) => total + (b.texto || "").length, 0);
+    return `${novedad.titulo.length}:${bloques.length}:${textos}`;
 }
 
-function yaVistas(marca) {
+/* Lo visto en este navegador: { id: huella }. */
+function leerVistas() {
     try {
-        return sessionStorage.getItem(CLAVE_VISITA) === marca;
+        const datos = JSON.parse(localStorage.getItem(CLAVE_VISTAS) || "{}");
+        return datos && typeof datos === "object" ? datos : {};
     } catch {
-        return false;
+        return {};
     }
 }
 
-function marcarVistas(marca) {
+function marcarVistas(novedades) {
+    // Solo se guardan las vigentes: las caducadas se van solas de la lista.
+    const vistas = {};
+    for (const novedad of novedades) vistas[novedad.id] = huella(novedad);
     try {
-        sessionStorage.setItem(CLAVE_VISITA, marca);
+        localStorage.setItem(CLAVE_VISTAS, JSON.stringify(vistas));
     } catch {
         // Sin almacenamiento (modo privado estricto): saldrá otra vez, sin más.
     }
@@ -213,10 +222,11 @@ export async function mostrarNovedades() {
     const novedades = (datos && datos.novedades) || [];
     if (!novedades.length) return;
 
-    const marca = huella(novedades);
-    if (yaVistas(marca)) return;
+    const vistas = leerVistas();
+    const pendientes = novedades.filter(n => vistas[n.id] !== huella(n));
+    if (!pendientes.length) return;
 
-    abrirVentana(novedades, { alCerrar: () => marcarVistas(marca) });
+    abrirVentana(pendientes, { alCerrar: () => marcarVistas(novedades) });
 }
 
 
