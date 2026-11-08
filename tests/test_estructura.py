@@ -300,7 +300,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261108-sismo4"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261109-heli1"),
             ("administracion", r"administracion/principal\.js\?v=20261108-ficha1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -716,6 +716,7 @@ class TestComponentesSismologia(unittest.TestCase):
         "sismologia-mapa": ("mapa.js", "montarMapaTerremotos"),
         "sismologia-lista": ("lista.js", "montarListaTerremotos"),
         "sismologia-estadisticas": ("estadisticas.js", "montarEstadisticasSismicas"),
+        "sismologia-helicorder": ("helicorder.js", "montarHelicorder"),
     }
 
     def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):

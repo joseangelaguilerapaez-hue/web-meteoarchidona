@@ -15,6 +15,7 @@
  *     data-componente="sismologia-mapa"           → js/sismologia/mapa.js
  *     data-componente="sismologia-lista"          → js/sismologia/lista.js
  *     data-componente="sismologia-estadisticas"   → js/sismologia/estadisticas.js
+ *     data-componente="sismologia-helicorder"     → js/sismologia/helicorder.js
  *
  * Selector de radio (José, 8-11-2026): arriba, 100, 150, 200, 250 o 300
  * km, con 200 por defecto. Al cambiarlo se vuelven a montar los
@@ -27,12 +28,13 @@
  * Detalle de datos y fuentes en docs/sismologia.md de api-meteoarchidona.
  */
 
-import {montarAvisoTerremoto} from "./sismologia/aviso.js?v=20261108-sismo3";
-import {montarUltimoTerremoto} from "./sismologia/ultimo.js?v=20261108-sismo3";
-import {montarResumenSismico} from "./sismologia/resumen.js?v=20261108-sismo3";
-import {montarMapaTerremotos} from "./sismologia/mapa.js?v=20261108-sismo4";
-import {montarListaTerremotos} from "./sismologia/lista.js?v=20261108-sismo3";
-import {montarEstadisticasSismicas} from "./sismologia/estadisticas.js?v=20261108-sismo3";
+import {montarAvisoTerremoto} from "./sismologia/aviso.js?v=20261109-heli1";
+import {montarUltimoTerremoto} from "./sismologia/ultimo.js?v=20261109-heli1";
+import {montarResumenSismico} from "./sismologia/resumen.js?v=20261109-heli1";
+import {montarMapaTerremotos} from "./sismologia/mapa.js?v=20261109-heli1";
+import {montarListaTerremotos} from "./sismologia/lista.js?v=20261109-heli1";
+import {montarEstadisticasSismicas} from "./sismologia/estadisticas.js?v=20261109-heli1";
+import {montarHelicorder} from "./sismologia/helicorder.js?v=20261109-heli1";
 
 
 export const COMPONENTES_SISMOLOGIA = {
@@ -41,7 +43,8 @@ export const COMPONENTES_SISMOLOGIA = {
     "sismologia-resumen": montarResumenSismico,
     "sismologia-mapa": montarMapaTerremotos,
     "sismologia-lista": montarListaTerremotos,
-    "sismologia-estadisticas": montarEstadisticasSismicas
+    "sismologia-estadisticas": montarEstadisticasSismicas,
+    "sismologia-helicorder": montarHelicorder
 };
 
 
