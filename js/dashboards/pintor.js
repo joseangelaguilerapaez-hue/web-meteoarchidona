@@ -70,7 +70,7 @@ const COMPONENTES = {
     "sismologia-aviso": ["/js/sismologia/aviso.js?v=20261108-sismo3", "montarAvisoTerremoto"],
     "sismologia-ultimo": ["/js/sismologia/ultimo.js?v=20261108-sismo3", "montarUltimoTerremoto"],
     "sismologia-resumen": ["/js/sismologia/resumen.js?v=20261108-sismo3", "montarResumenSismico"],
-    "sismologia-mapa": ["/js/sismologia/mapa.js?v=20261108-sismo3", "montarMapaTerremotos"],
+    "sismologia-mapa": ["/js/sismologia/mapa.js?v=20261108-sismo4", "montarMapaTerremotos"],
     "sismologia-lista": ["/js/sismologia/lista.js?v=20261108-sismo3", "montarListaTerremotos"],
     "sismologia-estadisticas": ["/js/sismologia/estadisticas.js?v=20261108-sismo3", "montarEstadisticasSismicas"]
 };
