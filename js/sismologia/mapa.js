@@ -119,6 +119,20 @@ function radioPunto(valor) {
 }
 
 
+/* Tamaño en pantalla según el zoom (José, 8-11-2026: al acercar casi a
+ * pie de calle, los círculos se quedaban muy pequeños para tocarlos con
+ * el dedo). Crecen con cada nivel de zoom por encima del inicial y nunca
+ * bajan de un mínimo cómodo para el dedo. */
+const MINIMO_DEDO = 11;
+
+function radioConZoom(valor, zoom, zoomInicial) {
+    const base = radioPunto(valor);
+    const factor = Math.min(2.6, 1 + Math.max(0, zoom - zoomInicial) * 0.22);
+    const minimo = zoom > zoomInicial + 1 ? MINIMO_DEDO : 0;
+    return Math.max(minimo, base * factor);
+}
+
+
 function ficha(sismo) {
     const caja = crear("div", "sis-mapa-ficha");
     caja.appendChild(crear("strong", null, `M ${magnitud(sismo.magnitud)} · ${lugar(sismo)}`));
@@ -235,8 +249,11 @@ export async function montarMapaTerremotos(raiz) {
     // Los pequeños primero, para que los grandes queden encima.
     const sismos = [...datos.terremotos].sort((a, b) => (a.magnitud ?? 0) - (b.magnitud ?? 0));
 
+    const zoomInicial = mapa.getZoom();
+    const puntos = [];
+
     for (const sismo of sismos) {
-        L.circleMarker([sismo.latitud, sismo.longitud], {
+        const punto = L.circleMarker([sismo.latitud, sismo.longitud], {
             radius: radioPunto(sismo.magnitud),
             // Borde blanco para que se vean sobre el satélite.
             color: sismo.sentido ? MAGMA : "#ffffff",
@@ -245,7 +262,13 @@ export async function montarMapaTerremotos(raiz) {
             fillColor: colorTramo(sismo.tramo_magnitud),
             fillOpacity: 0.82
         }).bindPopup(ficha(sismo)).addTo(mapa);
+        puntos.push([punto, sismo.magnitud]);
     }
+
+    mapa.on("zoomend", () => {
+        const zoom = mapa.getZoom();
+        for (const [punto, valor] of puntos) punto.setRadius(radioConZoom(valor, zoom, zoomInicial));
+    });
 
     // En un dashboard el hueco puede cambiar de tamaño tras montarse.
     if (window.ResizeObserver) {
