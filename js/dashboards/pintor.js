@@ -67,12 +67,13 @@ const COMPONENTES = {
     "polen-serie": ["/js/polen/serie.js?v=20261106-polen1", "montarPolenSerie"],
     "polen-calendario": ["/js/polen/calendario.js?v=20261106-polen1", "montarPolenCalendario"],
     // Sismología
-    "sismologia-aviso": ["/js/sismologia/aviso.js?v=20261108-sismo3", "montarAvisoTerremoto"],
-    "sismologia-ultimo": ["/js/sismologia/ultimo.js?v=20261108-sismo3", "montarUltimoTerremoto"],
-    "sismologia-resumen": ["/js/sismologia/resumen.js?v=20261108-sismo3", "montarResumenSismico"],
-    "sismologia-mapa": ["/js/sismologia/mapa.js?v=20261108-sismo4", "montarMapaTerremotos"],
-    "sismologia-lista": ["/js/sismologia/lista.js?v=20261108-sismo3", "montarListaTerremotos"],
-    "sismologia-estadisticas": ["/js/sismologia/estadisticas.js?v=20261108-sismo3", "montarEstadisticasSismicas"]
+    "sismologia-aviso": ["/js/sismologia/aviso.js?v=20261109-heli1", "montarAvisoTerremoto"],
+    "sismologia-ultimo": ["/js/sismologia/ultimo.js?v=20261109-heli1", "montarUltimoTerremoto"],
+    "sismologia-resumen": ["/js/sismologia/resumen.js?v=20261109-heli1", "montarResumenSismico"],
+    "sismologia-mapa": ["/js/sismologia/mapa.js?v=20261109-heli1", "montarMapaTerremotos"],
+    "sismologia-lista": ["/js/sismologia/lista.js?v=20261109-heli1", "montarListaTerremotos"],
+    "sismologia-estadisticas": ["/js/sismologia/estadisticas.js?v=20261109-heli1", "montarEstadisticasSismicas"],
+    "sismologia-helicorder": ["/js/sismologia/helicorder.js?v=20261109-heli1", "montarHelicorder"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";

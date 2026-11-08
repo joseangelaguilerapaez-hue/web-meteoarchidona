@@ -791,4 +791,72 @@
 }
 
 
+/* ==========================================================
+   HELICORDER
+   ========================================================== */
+
+.sis-heli-barra {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.sis-heli-fecha {
+    color: var(--sis-pizarra);
+    font-size: 14px;
+    text-align: center;
+}
+
+.sis-heli-boton {
+    padding: 7px 12px;
+    background: var(--sis-blanco);
+    border: 1px solid var(--sis-borde-fuerte);
+    border-radius: 999px;
+    color: var(--sis-pizarra);
+    font-family: "Sora", sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.sis-heli-boton:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.sis-heli-marco {
+    display: block;
+    overflow: hidden;
+    background: var(--sis-blanco);
+    border: 1px solid var(--sis-borde);
+    border-radius: 12px;
+}
+
+.sis-heli-imagen {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 120px;
+}
+
+.sis-heli-ayuda {
+    margin: 0;
+    color: var(--sis-texto-suave);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+@container (max-width: 460px) {
+    .sis-heli-barra {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .sis-heli-fecha {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+}
+
+
 /* Fin de fichero: css/sismologia-componentes.css */

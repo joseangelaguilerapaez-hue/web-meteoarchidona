@@ -102,6 +102,11 @@ body[data-seccion="sismologia"] {
     font-weight: 700;
 }
 
+.sismologia-subtitulo {
+    color: var(--sis-texto-suave);
+    font-weight: 500;
+}
+
 .sismologia-bloque h3 {
     margin: 18px 0 8px;
     color: var(--sis-magma);
