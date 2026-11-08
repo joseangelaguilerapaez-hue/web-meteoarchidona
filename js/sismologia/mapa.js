@@ -14,7 +14,10 @@
  * data-radio: km desde Archidona (150 por defecto, 300 como mucho).
  * data-dias: días hacia atrás (30). data-magnitud: mínima (todas).
  * data-altura: alto del mapa en píxeles (380). data-fondo: «satelite»
- * (por defecto) o «mapa».
+ * (por defecto) o «mapa». data-forma: «rectangulo» (por defecto) o
+ * «redondo»: el propio mapa es el círculo del radio, como una pantalla
+ * de radar (prueba pedida por José el 8-11-2026); los botones van encima
+ * y las atribuciones, debajo.
  *
  * Leaflet se carga solo si hay un mapa (js/vendor/leaflet-1.9.4.js).
  * Fondo (José, 8-11-2026): las ortofotos PNOA del IGN, las mismas del
@@ -26,10 +29,10 @@
  */
 
 import {
-    pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
+    pedir, crear, aviso, prepararRaiz, esVigente, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
     cargarLeaflet, colorTramo, magnitud, kilometros, fechaHora, lugar, enlaceFicha,
     horaActualizacion, TRAMOS, NOMBRES_TRAMO, ARCHIDONA, PIZARRA, MAGMA, FUENTE
-} from "./comun.js?v=20261108-sismo2";
+} from "./comun.js?v=20261108-sismo3";
 
 
 const FONDOS = {
@@ -89,7 +92,7 @@ function veloFuera(L, centro, radioKm) {
 }
 
 
-function botonesFondo(marco, alCambiar, inicial) {
+function botonesFondo(marco, alCambiar, inicial, mapa = null) {
     const caja = crear("div", "sis-mapa-fondos");
     caja.setAttribute("role", "group");
     caja.setAttribute("aria-label", "Fondo del mapa");
@@ -109,6 +112,24 @@ function botonesFondo(marco, alCambiar, inicial) {
         caja.appendChild(boton);
     }
 
+    // En el mapa redondo el zoom de Leaflet quedaría cortado por el borde:
+    // va aquí, con los botones de fondo.
+    if (mapa) {
+        const zoom = crear("div", "sis-mapa-zoom");
+        for (const [texto, etiqueta, accion] of [["+", "Acercar", () => mapa.zoomIn()], ["−", "Alejar", () => mapa.zoomOut()]]) {
+            const boton = crear("button", "sis-mapa-fondo", texto);
+            boton.type = "button";
+            boton.setAttribute("aria-label", etiqueta);
+            boton.addEventListener("click", accion);
+            zoom.appendChild(boton);
+        }
+        const barra = crear("div", "sis-mapa-barra");
+        barra.appendChild(zoom);
+        barra.appendChild(caja);
+        marco.prepend(barra);
+        return;
+    }
+
     marco.appendChild(caja);
 }
 
@@ -116,6 +137,20 @@ function botonesFondo(marco, alCambiar, inicial) {
 function radioPunto(valor) {
     if (valor === null || valor === undefined) return 4;
     return Math.max(3.5, Math.min(22, 3 + valor * valor * 0.9));
+}
+
+
+/* Tamaño en pantalla según el zoom (José, 8-11-2026: al acercar casi a
+ * pie de calle, los círculos se quedaban muy pequeños para tocarlos con
+ * el dedo). Crecen con cada nivel de zoom por encima del inicial y nunca
+ * bajan de un mínimo cómodo para el dedo. */
+const MINIMO_DEDO = 11;
+
+function radioConZoom(valor, zoom, zoomInicial) {
+    const base = radioPunto(valor);
+    const factor = Math.min(2.6, 1 + Math.max(0, zoom - zoomInicial) * 0.22);
+    const minimo = zoom > zoomInicial + 1 ? MINIMO_DEDO : 0;
+    return Math.max(minimo, base * factor);
 }
 
 
@@ -160,7 +195,18 @@ function leyenda(datos, radio, dias) {
 
 
 export async function montarMapaTerremotos(raiz) {
-    prepararRaiz(raiz, "sismologia-mapa");
+    // Al volver a montarlo (p. ej. al cambiar el radio en la página), fuera
+    // el mapa anterior.
+    if (raiz._sisMapa) {
+        raiz._sisMapa.remove();
+        raiz._sisMapa = null;
+    }
+    if (raiz._sisObservador) {
+        raiz._sisObservador.disconnect();
+        raiz._sisObservador = null;
+    }
+
+    const turno = prepararRaiz(raiz, "sismologia-mapa");
 
     const radio = leerRadio(raiz, 150);
     const dias = Math.round(leerNumero(raiz, "dias", 30, 1, 3650));
@@ -170,10 +216,11 @@ export async function montarMapaTerremotos(raiz) {
     titulo(raiz, "Terremotos", `Últimos ${dias} días a menos de ${radio} km`);
 
     const fondoInicial = raiz.dataset.fondo === "mapa" ? "mapa" : "satelite";
+    const redondo = raiz.dataset.forma === "redondo";
 
-    const marco = crear("div", "sis-mapa-marco");
-    const lienzo = crear("div", "sis-mapa");
-    lienzo.style.height = `${altura}px`;
+    const marco = crear("div", redondo ? "sis-mapa-marco redondo" : "sis-mapa-marco");
+    const lienzo = crear("div", redondo ? "sis-mapa redondo" : "sis-mapa");
+    if (!redondo) lienzo.style.height = `${altura}px`;
     lienzo.setAttribute("role", "region");
     lienzo.setAttribute("aria-label", `Mapa de terremotos a menos de ${radio} km de Archidona`);
     marco.appendChild(lienzo);
@@ -192,16 +239,27 @@ export async function montarMapaTerremotos(raiz) {
             pedir(rutaTerremotos({ radio, dias, limite: 1000, magnitud: minima }))
         ]);
     } catch (error) {
+        if (!esVigente(raiz, turno)) return;
         aviso(estado, "No se han podido cargar los terremotos. Se puede volver a intentar más tarde.", true);
         return;
     }
 
     estado.remove();
 
+    // Si mientras llegaban los datos se ha vuelto a montar, este ya sobra.
+    if (!esVigente(raiz, turno) || !lienzo.isConnected) return;
+
     // La vista antes que las capas: el círculo necesita un mapa ya situado.
     const zona = L.latLng(ARCHIDONA).toBounds(radio * 2000);
-    const mapa = L.map(lienzo, { scrollWheelZoom: true, attributionControl: true, maxZoom: 19 });
-    mapa.fitBounds(zona, { padding: [8, 8] });
+    const mapa = L.map(lienzo, {
+        scrollWheelZoom: true,
+        attributionControl: !redondo,
+        zoomControl: !redondo,
+        zoomSnap: redondo ? 0.25 : 1,
+        maxZoom: 19
+    });
+    // En el redondo el círculo del radio llena justo el mapa.
+    mapa.fitBounds(zona, { padding: redondo ? [0, 0] : [8, 8] });
 
     let capaFondo = null;
     const ponerFondo = (clave) => {
@@ -211,7 +269,7 @@ export async function montarMapaTerremotos(raiz) {
         lienzo.dataset.fondo = clave;
     };
     ponerFondo(fondoInicial);
-    botonesFondo(marco, ponerFondo, fondoInicial);
+    botonesFondo(marco, ponerFondo, fondoInicial, redondo ? mapa : null);
 
     veloFuera(L, ARCHIDONA, radio).addTo(mapa);
 
@@ -235,8 +293,11 @@ export async function montarMapaTerremotos(raiz) {
     // Los pequeños primero, para que los grandes queden encima.
     const sismos = [...datos.terremotos].sort((a, b) => (a.magnitud ?? 0) - (b.magnitud ?? 0));
 
+    const zoomInicial = mapa.getZoom();
+    const puntos = [];
+
     for (const sismo of sismos) {
-        L.circleMarker([sismo.latitud, sismo.longitud], {
+        const punto = L.circleMarker([sismo.latitud, sismo.longitud], {
             radius: radioPunto(sismo.magnitud),
             // Borde blanco para que se vean sobre el satélite.
             color: sismo.sentido ? MAGMA : "#ffffff",
@@ -245,17 +306,27 @@ export async function montarMapaTerremotos(raiz) {
             fillColor: colorTramo(sismo.tramo_magnitud),
             fillOpacity: 0.82
         }).bindPopup(ficha(sismo)).addTo(mapa);
+        puntos.push([punto, sismo.magnitud]);
     }
 
+    mapa.on("zoomend", () => {
+        const zoom = mapa.getZoom();
+        for (const [punto, valor] of puntos) punto.setRadius(radioConZoom(valor, zoom, zoomInicial));
+    });
+
     // En un dashboard el hueco puede cambiar de tamaño tras montarse.
+    raiz._sisMapa = mapa;
+
     if (window.ResizeObserver) {
-        new ResizeObserver(() => mapa.invalidateSize()).observe(lienzo);
+        raiz._sisObservador = new ResizeObserver(() => mapa.invalidateSize());
+        raiz._sisObservador.observe(lienzo);
     }
 
     raiz.appendChild(leyenda(datos, radio, dias));
 
     const actualizado = horaActualizacion(datos.actualizado);
-    pie(raiz, `${FUENTE}${actualizado ? ` · actualizado ${actualizado}` : ""}`);
+    const creditos = redondo ? " · Ortofotos PNOA © IGN/CNIG · Mapa © OpenStreetMap · Leaflet" : "";
+    pie(raiz, `${FUENTE}${actualizado ? ` · actualizado ${actualizado}` : ""}${creditos}`);
 }
 
 

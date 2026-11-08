@@ -603,6 +603,12 @@
 .sis-mapa.leaflet-zoom-anim .leaflet-zoom-animated { transition: transform 0.25s cubic-bezier(0, 0, 0.25, 1); }
 .sis-mapa .leaflet-interactive { cursor: pointer; }
 
+/* Leaflet deja el SVG de las capas sin eventos y se los devuelve solo a
+ * lo que se puede tocar (los terremotos): sin esta regla, tocar un
+ * terremoto no abría su ficha. */
+.sis-mapa .leaflet-pane > svg path { pointer-events: none; }
+.sis-mapa .leaflet-pane > svg path.leaflet-interactive { pointer-events: visiblePainted; pointer-events: auto; }
+
 .sis-mapa .leaflet-control { position: relative; z-index: 800; float: left; clear: both; pointer-events: auto; }
 .sis-mapa .leaflet-top,
 .sis-mapa .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; }
@@ -734,6 +740,54 @@
 
 .sis-mapa[data-fondo="satelite"] {
     background: #0b1015;
+}
+
+
+/* Mapa redondo (data-forma="redondo"): el propio mapa es el círculo del
+ * radio, cuadrado de lado el ancho disponible (hasta 620 px) y con los
+ * bordes redondeados del todo. Botones encima, créditos en el pie. */
+.sis-mapa-marco.redondo {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+}
+
+.sis-mapa.redondo {
+    width: min(100%, 620px);
+    aspect-ratio: 1 / 1;
+    border: 2px solid var(--sis-magma);
+    border-radius: 50%;
+    box-shadow: 0 10px 30px rgba(47, 59, 69, 0.22);
+    /* Safari: que el recorte redondo también afecte a las teselas. */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
+.sis-mapa-barra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    width: min(100%, 620px);
+}
+
+.sis-mapa-barra .sis-mapa-fondos,
+.sis-mapa-zoom {
+    position: static;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--sis-borde-fuerte);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(47, 59, 69, 0.15);
+}
+
+.sis-mapa-zoom .sis-mapa-fondo {
+    min-width: 36px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.sis-mapa-zoom .sis-mapa-fondo + .sis-mapa-fondo {
+    border-left: 1px solid var(--sis-borde);
 }
 
 

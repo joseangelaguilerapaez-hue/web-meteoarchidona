@@ -18,7 +18,7 @@
 import {
     pedir, crear, prepararRaiz, leerRadio, leerNumero, pastillaMagnitud, magnitud,
     kilometros, fechaHora, haceCuanto, lugar, enlaceFicha, FUENTE
-} from "./comun.js?v=20261108-sismo2";
+} from "./comun.js?v=20261108-sismo3";
 
 
 export async function montarAvisoTerremoto(raiz) {

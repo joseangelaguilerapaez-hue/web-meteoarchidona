@@ -68,12 +68,12 @@
 
 <link
     rel="stylesheet"
-    href="../css/sismologia-componentes.css?v=20261108-sismo2"
+    href="../css/sismologia-componentes.css?v=20261108-sismo3"
 >
 
 <link
     rel="stylesheet"
-    href="../css/sismologia.css?v=20261108-sismo2"
+    href="../css/sismologia.css?v=20261108-sismo3"
 >
 
 
@@ -95,7 +95,7 @@
 
 <script
     type="module"
-    src="../js/sismologia.js?v=20261108-sismo2"
+    src="../js/sismologia.js?v=20261108-sismo3"
 ></script>
 
 <script
@@ -141,6 +141,11 @@
         de Madrid.
     </p>
 
+    <fieldset class="sismologia-selector">
+        <legend>Radio alrededor de Archidona</legend>
+        <div class="sismologia-radios"></div>
+    </fieldset>
+
 </header>
 
 
@@ -175,7 +180,8 @@
 
         <div
             data-componente="sismologia-ultimo"
-            data-radio="100"
+            data-radio-pagina
+            data-radio="200"
             data-titulo="no"
         ></div>
 
@@ -198,7 +204,8 @@
 
         <div
             data-componente="sismologia-resumen"
-            data-radio="150"
+            data-radio-pagina
+            data-radio="200"
             data-titulo="no"
         ></div>
 
@@ -222,8 +229,9 @@
     </h2>
 
     <p class="sismologia-nota">
-        Sobre las ortofotos del IGN, el círculo marca 150 km alrededor de
-        Archidona y lo de fuera queda oscurecido. Cada terremoto lleva el
+        Sobre las ortofotos del IGN, el mapa es el círculo de
+        <span class="sismologia-radio">200 km</span> alrededor de Archidona
+        (el radio se cambia arriba). Cada terremoto lleva el
         color de su magnitud y es más grande cuanto mayor es; los que se
         sintieron llevan el borde naranja y los provisionales, el borde
         discontinuo. Acerca el mapa para ver bien la zona, cambia a
@@ -233,9 +241,10 @@
 
     <div
         data-componente="sismologia-mapa"
-        data-radio="150"
+        data-radio-pagina
+        data-radio="200"
         data-dias="30"
-        data-altura="440"
+        data-forma="redondo"
         data-titulo="no"
     ></div>
 
@@ -258,7 +267,8 @@
 
     <div
         data-componente="sismologia-lista"
-        data-radio="150"
+        data-radio-pagina
+        data-radio="200"
         data-dias="30"
         data-limite="25"
         data-titulo="no"
@@ -282,7 +292,7 @@
     </h2>
 
     <p class="sismologia-nota">
-        Terremotos a menos de 150 km registrados por el Instituto
+        Terremotos a menos de <span class="sismologia-radio">200 km</span> registrados por el Instituto
         Geográfico Nacional este año. MeteoArchidona empezó a guardarlos en
         noviembre de 2026, con los 30 días anteriores; el resto del año se
         completará cuando se cargue el catálogo histórico.
@@ -290,7 +300,8 @@
 
     <div
         data-componente="sismologia-estadisticas"
-        data-radio="150"
+        data-radio-pagina
+        data-radio="200"
         data-titulo="no"
     ></div>
 

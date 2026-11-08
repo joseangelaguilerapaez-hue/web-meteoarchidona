@@ -14,13 +14,13 @@
  */
 
 import {
-    pedir, crear, aviso, prepararRaiz, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
+    pedir, crear, aviso, prepararRaiz, esVigente, titulo, pie, leerRadio, leerNumero, rutaTerremotos,
     magnitud, kilometros, fechaLarga, horaExacta, haceCuanto, lugar, enlaceFicha, FUENTE
-} from "./comun.js?v=20261108-sismo2";
+} from "./comun.js?v=20261108-sismo3";
 
 
 export async function montarUltimoTerremoto(raiz) {
-    prepararRaiz(raiz, "sismologia-ultimo");
+    const turno = prepararRaiz(raiz, "sismologia-ultimo");
 
     const radio = leerRadio(raiz, 100);
     const minima = raiz.dataset.magnitud ? leerNumero(raiz, "magnitud", 0, 0, 9) : null;
@@ -32,10 +32,12 @@ export async function montarUltimoTerremoto(raiz) {
     try {
         datos = await pedir(rutaTerremotos({ radio, dias: 365, limite: 1, magnitud: minima }));
     } catch (error) {
+        if (!esVigente(raiz, turno)) return;
         aviso(raiz, "No se ha podido leer el último terremoto.", true);
         return;
     }
 
+    if (!esVigente(raiz, turno)) return;
     raiz.textContent = "";
     titulo(raiz, "Último terremoto", `A menos de ${radio} km`);
 

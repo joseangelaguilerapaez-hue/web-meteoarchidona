@@ -204,4 +204,61 @@ body[data-seccion="sismologia"] {
 }
 
 
+/* ==========================================================
+   SELECTOR DE RADIO
+   ========================================================== */
+
+.sismologia-selector {
+    display: grid;
+    gap: 8px;
+    margin: 6px 0 0;
+    padding: 0;
+    border: 0;
+}
+
+.sismologia-selector legend {
+    margin-bottom: 8px;
+    padding: 0;
+    color: var(--sis-texto-suave);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.sismologia-radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.sismologia-radio-opcion {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background: var(--sis-blanco);
+    border: 1px solid var(--sis-borde-fuerte);
+    border-radius: 999px;
+    color: var(--sis-pizarra);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.sismologia-radio-opcion input {
+    accent-color: var(--sis-magma);
+    margin: 0;
+}
+
+.sismologia-radio-opcion:has(input:checked) {
+    background: var(--sis-pizarra);
+    border-color: var(--sis-pizarra);
+    color: #ffffff;
+}
+
+.sismologia-radio-opcion:has(input:focus-visible) {
+    outline: 2px solid var(--sis-magma);
+    outline-offset: 2px;
+}
+
+
 /* Fin de fichero: css/sismologia.css */
