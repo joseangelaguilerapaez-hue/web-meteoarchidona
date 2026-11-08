@@ -1655,6 +1655,13 @@ a.modulo-boton{
     color:var(--amber-light)
 }
 
+.visor-envio-preset{
+    margin-top:12px;
+    aspect-ratio:16 / 9;
+    width:100%;
+    max-width:960px
+}
+
 .usuarios-reenviar{
     margin-top:10px
 }
