@@ -17,8 +17,9 @@
  * DELETE /admin/patrullas/{id}/programaciones/{programacion}
  *
  * Mismo esquema que timelapses.js: listado con filtros y editor.
- * Este módulo no mueve la cámara: guarda la configuración y el estado
- * que después aplicará MeteoCam en el mini PC.
+ * Las patrullas se guardan aquí y MeteoCam (mini PC) las aplica.
+ * «Enviar la cámara a un preset» crea una orden POSICIONAR_PRESET,
+ * sigue su estado y enseña el directo de la cámara para verla moverse.
  */
 
 import {
@@ -73,6 +74,9 @@ let eventosConfigurados = false;
 let secuenciaCarga = 0;
 let secuenciaSeleccion = 0;
 let secuenciaPresets = 0;
+let presetsEnvio = [];
+let seguimientoEnvio = null;
+let visorEnvioCamara = null;
 
 /* ==========================================================
    UTILIDADES
@@ -996,6 +1000,193 @@ async function anadirProgramacion(){
    CARGA, EVENTOS Y LIMPIEZA
    ========================================================== */
 
+
+/* ==========================================================
+   ENVIAR LA CÁMARA A UN PRESET
+   ========================================================== */
+
+const ESTADOS_ORDEN = {
+    PENDIENTE: ["Orden enviada; esperando a que MeteoCam la recoja (unos 5 s)...", "info"],
+    EN_PROCESO: ["MeteoCam la está ejecutando: la cámara se está moviendo...", "info"],
+    COMPLETADA: ["Hecho: la cámara está en el preset.", "ok"],
+    ERROR: ["MeteoCam no pudo ejecutarla", "error"],
+    CADUCADA: ["Caducada: MeteoCam no la recogió a tiempo (¿mini PC sin conexión?).", "error"]
+};
+
+function vistaDirecto(camara){
+    return camara?.tipo_vista === "PANORAMICA" ? "panoramica" : "ptz";
+}
+
+function mostrarVisorEnvio(camara){
+    const contenedor = $("visorEnvioPreset");
+    if(!contenedor){
+        return;
+    }
+    if(!camara){
+        contenedor.replaceChildren();
+        visorEnvioCamara = null;
+        return;
+    }
+    if(visorEnvioCamara === camara.id && contenedor.querySelector("iframe")){
+        return;
+    }
+    visorEnvioCamara = camara.id;
+    const visor = document.createElement("iframe");
+    visor.src = "/visores/video.html?camara=los-llanos"
+        + `&vista=${vistaDirecto(camara)}`
+        + "&interactivo=1&autoplay=1&controles=1";
+    visor.title = `Directo de ${descripcionCamara(camara)}`;
+    visor.setAttribute("allowfullscreen", "");
+    visor.setAttribute("allow", "autoplay; fullscreen");
+    visor.style.cssText = "width: 100%; height: 100%; border: 0; border-radius: 12px; background: #000;";
+    contenedor.replaceChildren(visor);
+}
+
+function actualizarSelectEnvio(){
+    const selector = $("campoEnvioCamara");
+    if(!selector){
+        return;
+    }
+    const anterior = selector.value;
+    selector.replaceChildren(new Option("Selecciona una cámara PTZ", ""));
+    for(const camara of camaras.filter(esPtz).filter(camara => camara.habilitada)){
+        selector.add(new Option(descripcionCamara(camara), String(camara.id)));
+    }
+    if([...selector.options].some(opcion => opcion.value === anterior)){
+        selector.value = anterior;
+    }else if(selector.options.length === 2){
+        selector.value = selector.options[1].value;
+    }
+    void cambiarCamaraEnvio();
+}
+
+async function cambiarCamaraEnvio(){
+    const camaraId = Number($("campoEnvioCamara")?.value) || null;
+    const selector = $("campoEnvioPreset");
+    const camara = camaraPorId(camaraId);
+    mostrarVisorEnvio(camara);
+    presetsEnvio = [];
+    if(!selector){
+        return;
+    }
+    if(!camaraId){
+        selector.replaceChildren(new Option("Elige antes la cámara", ""));
+        return;
+    }
+    const anterior = selector.value;
+    selector.replaceChildren(new Option("Cargando presets...", ""));
+    try{
+        const lista = await peticionJson(`${RUTA_CAMARAS}/${camaraId}/presets?solo_disponibles=true`);
+        presetsEnvio = Array.isArray(lista) ? lista : [];
+        selector.replaceChildren(new Option(
+            presetsEnvio.length ? "Elige el preset" : "Sin presets: pulsa «Leer presets de la cámara»",
+            ""
+        ));
+        for(const preset of presetsEnvio){
+            selector.add(new Option(nombrePreset(preset), String(preset.id)));
+        }
+        if([...selector.options].some(opcion => opcion.value === anterior)){
+            selector.value = anterior;
+        }
+    }catch(error){
+        selector.replaceChildren(new Option("Error al cargar presets", ""));
+        mostrarEstado($("estadoEnvioPreset"), textoError(error), "error");
+    }
+}
+
+function pararSeguimientoEnvio(){
+    if(seguimientoEnvio){
+        window.clearTimeout(seguimientoEnvio);
+        seguimientoEnvio = null;
+    }
+}
+
+async function seguirOrden(camaraId, ordenId, descripcion, intento = 0){
+    let estado = "PENDIENTE";
+    let detalle = "";
+    try{
+        const lista = await peticionJson(`${RUTA_CAMARAS}/${camaraId}/comandos?limite=10`);
+        const orden = (Array.isArray(lista) ? lista : []).find(item => item.id === ordenId);
+        if(orden){
+            estado = orden.estado;
+            detalle = orden.mensaje_error || "";
+        }
+    }catch(error){
+        mostrarEstado($("estadoEnvioPreset"), textoError(error), "error");
+        return;
+    }
+
+    const [texto, tipo] = ESTADOS_ORDEN[estado] || [`Estado: ${estado}`, "info"];
+    mostrarEstado(
+        $("estadoEnvioPreset"),
+        `${descripcion} · ${texto}${detalle ? `: ${detalle}` : ""}`,
+        tipo
+    );
+
+    const terminada = ["COMPLETADA", "ERROR", "CADUCADA"].includes(estado);
+    if(terminada){
+        if(estado === "COMPLETADA" && descripcion.startsWith("Leer presets")){
+            void cambiarCamaraEnvio();
+        }
+        return;
+    }
+    if(intento >= 150){
+        mostrarEstado(
+            $("estadoEnvioPreset"),
+            `${descripcion} · Sigue sin terminar; mira el estado más tarde.`,
+            "error"
+        );
+        return;
+    }
+    seguimientoEnvio = window.setTimeout(
+        () => void seguirOrden(camaraId, ordenId, descripcion, intento + 1),
+        2000
+    );
+}
+
+async function crearOrdenEnvio(cuerpo, descripcion){
+    const camaraId = Number($("campoEnvioCamara")?.value) || null;
+    if(!camaraId){
+        mostrarEstado($("estadoEnvioPreset"), "Selecciona una cámara PTZ.", "error");
+        return;
+    }
+    pararSeguimientoEnvio();
+    for(const id of ["botonEnviarPreset", "botonLeerPresets"]){
+        $(id).disabled = true;
+    }
+    try{
+        mostrarEstado($("estadoEnvioPreset"), `${descripcion} · Enviando...`, "info");
+        const orden = await peticionJson(`${RUTA_CAMARAS}/${camaraId}/comandos`, {
+            method: "POST",
+            body: JSON.stringify(cuerpo)
+        });
+        void seguirOrden(camaraId, orden.id, descripcion);
+    }catch(error){
+        mostrarEstado($("estadoEnvioPreset"), textoError(error), "error");
+    }finally{
+        for(const id of ["botonEnviarPreset", "botonLeerPresets"]){
+            $(id).disabled = false;
+        }
+    }
+}
+
+function enviarAPreset(){
+    const presetId = Number($("campoEnvioPreset")?.value) || null;
+    const preset = presetsEnvio.find(item => item.id === presetId);
+    if(!preset){
+        mostrarEstado($("estadoEnvioPreset"), "Elige el preset.", "error");
+        return;
+    }
+    void crearOrdenEnvio(
+        {tipo: "POSICIONAR_PRESET", preset_id: preset.id},
+        `Ir a ${nombrePreset(preset)}`
+    );
+}
+
+function leerPresetsCamara(){
+    void crearOrdenEnvio({tipo: "SINCRONIZAR_PRESETS"}, "Leer presets de la cámara");
+}
+
 export async function cargarPatrullas(){
     if(!$("modulo-patrullas")){
         return;
@@ -1016,6 +1207,7 @@ export async function cargarPatrullas(){
         camaras = datosCamaras;
         patrullas = datosPatrullas;
         actualizarSelectCamaras();
+        actualizarSelectEnvio();
         renderizarListado();
         const activas = patrullas.filter(patrulla => patrulla.activa).length;
         mostrarEstado(
@@ -1064,6 +1256,10 @@ export function configurarEventosPatrullas(){
     $("campoProgramacionModo")?.addEventListener("change", actualizarCamposProgramacion);
     $("botonAnadirProgramacionPatrulla")?.addEventListener("click", () => void anadirProgramacion());
 
+    $("campoEnvioCamara")?.addEventListener("change", () => void cambiarCamaraEnvio());
+    $("botonEnviarPreset")?.addEventListener("click", enviarAPreset);
+    $("botonLeerPresets")?.addEventListener("click", leerPresetsCamara);
+
     actualizarCamposProgramacion();
     mostrarEditor(false);
 }
@@ -1083,6 +1279,10 @@ export function limpiarPatrullas(){
     mostrarEditor(false);
     $("listaPatrullas")?.replaceChildren();
     mostrarEstado($("estadoPatrullas"), "");
+    pararSeguimientoEnvio();
+    presetsEnvio = [];
+    mostrarVisorEnvio(null);
+    mostrarEstado($("estadoEnvioPreset"), "");
     estadoFormulario("");
 }
 

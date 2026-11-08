@@ -34,7 +34,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261107-codigo1"
+    src="../js/administracion/principal.js?v=20261108-preset1"
 ></script>
 
 <script
@@ -2764,6 +2764,77 @@
 
 <div class="admin-grid">
 
+<section class="panel" id="panelEnviarPreset">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Enviar la cámara a un preset
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Mueve la cámara PTZ a un preset ahora mismo y míralo en el directo.
+    Si hay una patrulla activa, la cámara va al preset y después la
+    patrulla sigue sola.
+</p>
+
+<div class="filtros">
+
+<div class="campo">
+<label for="campoEnvioCamara">Cámara</label>
+<select id="campoEnvioCamara"></select>
+</div>
+
+<div class="campo">
+<label for="campoEnvioPreset">Preset</label>
+<select id="campoEnvioPreset">
+    <option value="">Elige antes la cámara</option>
+</select>
+</div>
+
+</div>
+
+<div class="acciones">
+
+<button
+    id="botonEnviarPreset"
+    type="button"
+    class="boton boton-principal"
+>
+    Enviar al preset
+</button>
+
+<button
+    id="botonLeerPresets"
+    type="button"
+    class="boton boton-secundario"
+    title="Lee los presets de la cámara y los guarda (por si se han cambiado en la app de Reolink)"
+>
+    Leer presets de la cámara
+</button>
+
+</div>
+
+<div
+    id="estadoEnvioPreset"
+    class="estado"
+    aria-live="polite"
+></div>
+
+<div
+    id="visorEnvioPreset"
+    class="visor-envio-preset"
+    style="margin-top: 12px; aspect-ratio: 16 / 9; width: 100%; max-width: 960px;"
+></div>
+
+</div>
+</section>
+
+
 <section class="panel">
 
 <div class="panel-cabecera">
@@ -2802,9 +2873,8 @@
 </p>
 
 <p class="modulo-intro">
-    MeteoCam aplicará lo que se guarde aquí cuando tenga
-    su ejecutor de patrullas. Mientras tanto se guarda
-    la configuración, pero la cámara no se mueve.
+    MeteoCam, en el mini PC de la estación, recoge lo que se
+    guarde aquí en unos segundos y mueve la cámara.
 </p>
 
 <div class="filtros">
