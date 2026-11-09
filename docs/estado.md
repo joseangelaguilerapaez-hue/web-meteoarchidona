@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-11-08.
+Última actualización: 2026-11-09.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- El Olivar · agrometeorología del olivar (PR #126, **publicada** el 9 nov, `8677b70`): página `/olivar` con la gama «Aceite y oro» sobre fondo blanco, en el menú, en el sitemap y en `.htaccess` (aprobado por José), alta en Nginx con `scripts/configurar_seccion_olivar.py`; componentes `olivar-aviso`, `olivar-resumen`, `olivar-frio` y `olivar-heladas`, también en los dashboards. Datos de la API (migración 0048, `docs/olivar.md` de la API). Comprobado: `/olivar` responde 200.
 - **Sismología** (PR #120, #122, #123, #124 y #125, 8 y 9 nov; **publicada**, web en `3877143` y luego con el helicorder): página `/sismologia` en blanco con la gama «Basalto y magma»: aviso, último cercano, año en cifras, mapa redondo sobre las ortofotos PNOA (botón Satélite/Mapa, fuera del radio oscurecido, fichas al tocar y terremotos que crecen al acercar), lista, Helicorder de EGOR · sismograma de 24 horas (días anteriores con botones), estadísticas y textos divulgativos. Radio a elegir arriba (100 a 300 km, 200 por defecto). Todo en componentes montables en dashboards. José lo revisó en el móvil y lo dio por bueno.
 - **Polen** (PR #110, 6 nov, decisión de José: alergias al polen sin AEMET, mismo aspecto que Embalses en verdes y marrones; **publicada** el 7 nov, web en `ca1b74e`, `/polen` da 200 tras el alta en Nginx; con la API en `0945e2e` y la migración 0046): página `/polen` con cinco componentes montables en dashboards (`js/polen/`: hoy, próximos días, lo medido en Granada, semana a semana y calendario polínico), con la paleta de campo en `css/polen-componentes.css`. Previsión del modelo CAMS para Archidona (en noviembre, todo nulo) y recuentos de la UGR (Granada, última semana 37). Alta en el menú, `.htaccess` y `sitemap.xml` con permiso de José. Revisada por José en el navegador el 7 nov («lo veo perfecto»).
 - **Embalses** (PR #96, 5 nov, decisión de José: nivel nacional y aspecto de agua; **publicada**, web en `22ca082`, con la API y la migración 0043): página `/embalses` con selector de ámbito (Andalucía por defecto, cuencas, comunidades, provincias y toda España) y seis componentes montables en dashboards (`js/embalses/`), con la paleta clara de agua en `css/embalses-componentes.css`. Alta en el menú, `.htaccess` y `sitemap.xml` con permiso de José.
@@ -182,3 +183,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-08 · Reenviar la activación desde Administración → Usuarios (PR #116 en web y API), publicado en el VPS (`f4bfbb8` / `3d63995`); de paso, el visor de «Enviar la cámara a un preset» pasa su estilo en línea a CSS.
 - 2026-11-08 · Ficha de mantenimiento del usuario en Administración (PR #118 web, #117 API), publicada en el VPS.
 - 2026-11-09 · Sismología publicada y revisada por José: mapa redondo con radio a elegir y Helicorder de EGOR.
+- 2026-11-09 · El Olivar (frío y heladas) publicado en el VPS (`8677b70`): página `/olivar` y cuatro componentes.
