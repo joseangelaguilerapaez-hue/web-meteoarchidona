@@ -44,6 +44,7 @@ const COMPONENTES = {
     "prediccion-dias": ["/js/prediccion/dias.js?v=20261104-componentes1", "montarDias"],
     "prediccion-aemet": ["/js/prediccion-aemet.js?v=20261104-componentes1", "montarPrediccionAemet"],
     "modelos-numericos": ["/js/modelos-numericos.js?v=20261103-compartir2", "montarModelosNumericos"],
+    "mapas-modelos": ["/js/mapas-modelos.js?v=20261110-modelos1", "montarMapasModelos"],
     // Sol
     "sol-tiempo-espacial": ["/js/sol/tiempo-espacial.js?v=20261104-componentes2", "montarTiempoEspacial"],
     "sol-alertas": ["/js/sol/alertas-solares.js?v=20261104-componentes2", "montarAlertasSolares"],

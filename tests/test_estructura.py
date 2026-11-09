@@ -520,6 +520,29 @@ class TestCompartirModelos(unittest.TestCase):
         self.assertEqual(set(prediccion), set(compartir))
 
 
+class TestMapasModelos(unittest.TestCase):
+    """Pestaña «Mapas» de Predicción con los mapas del Europeo (9-11-2026)."""
+
+    def test_pestana_y_componente(self):
+        pagina = leer(RAIZ / "pages" / "prediccion.html")
+        self.assertIn('data-pestana="mapas"', pagina)
+        self.assertIn('data-componente="mapas-modelos"', pagina)
+        self.assertRegex(pagina, r"css/mapas-modelos\.css\?v=[\w-]+")
+
+    def test_misma_version_en_prediccion_y_dashboards(self):
+        version = re.compile(r"mapas-modelos\.js\?v=([\w-]+)")
+        prediccion = version.findall(leer(RAIZ / "js" / "prediccion.js"))
+        dashboards = version.findall(leer(RAIZ / "js" / "dashboards" / "pintor.js"))
+        self.assertTrue(prediccion and dashboards)
+        self.assertEqual(set(prediccion), set(dashboards))
+
+    def test_la_hoja_del_componente_coincide(self):
+        componente = leer(RAIZ / "js" / "mapas-modelos.js")
+        pagina = leer(RAIZ / "pages" / "prediccion.html")
+        hoja = re.search(r"/css/mapas-modelos\.css\?v=([\w-]+)", componente).group(1)
+        self.assertIn(f"mapas-modelos.css?v={hoja}", pagina)
+
+
 class TestDistintivo(unittest.TestCase):
     """Lazo o monigote bajo el logotipo (js/distintivo.js, 3-11-2026)."""
 

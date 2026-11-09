@@ -83,6 +83,11 @@
     href="../css/modelos-numericos.css?v=20261103-compartir2"
 >
 
+<link
+    rel="stylesheet"
+    href="../css/mapas-modelos.css?v=20261110-modelos1"
+>
+
 
 <script
     src="../js/cabecera.js?v=20261108-sismo1"
@@ -108,7 +113,7 @@
 
 <script
     type="module"
-    src="../js/prediccion.js?v=20261104-componentes1"
+    src="../js/prediccion.js?v=20261110-modelos1"
 ></script>
 
 <script
@@ -162,6 +167,9 @@
       presentador, hoy, horas y días; 4-11-2026).
     - Modelos numéricos: js/modelos-numericos.js (predicciones por
       conjuntos de Open-Meteo, docs/predicciones-conjuntos.md de la API).
+    - Mapas: js/mapas-modelos.js (mapas animados de los modelos que
+      dibuja la API, con desplegable de modelo; docs/mapas-modelos.md de
+      la API; 9 y 10-11-2026).
 
     Para añadir otra (otra agencia, mapas isobáricos…): un botón con
     data-pestana, su panel y su componente en js/prediccion.js.
@@ -193,6 +201,17 @@
         aria-selected="false"
         tabindex="-1"
     >Modelos numéricos</button>
+
+    <button
+        type="button"
+        class="pred-pestana"
+        role="tab"
+        id="pestana-mapas"
+        data-pestana="mapas"
+        aria-controls="panel-mapas"
+        aria-selected="false"
+        tabindex="-1"
+    >Mapas</button>
 
 </nav>
 
@@ -275,6 +294,17 @@
     hidden
 >
     <div data-componente="modelos-numericos"></div>
+</div>
+
+
+<div
+    class="pred-panel"
+    role="tabpanel"
+    id="panel-mapas"
+    aria-labelledby="pestana-mapas"
+    hidden
+>
+    <div data-componente="mapas-modelos"></div>
 </div>
 
 
