@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- **Sismología** (PR #120, #122, #123, #124 y #125, 8 y 9 nov; **publicada**, web en `3877143` y luego con el helicorder): página `/sismologia` en blanco con la gama «Basalto y magma»: aviso, último cercano, año en cifras, mapa redondo sobre las ortofotos PNOA (botón Satélite/Mapa, fuera del radio oscurecido, fichas al tocar y terremotos que crecen al acercar), lista, Helicorder de EGOR · sismograma de 24 horas (días anteriores con botones), estadísticas y textos divulgativos. Radio a elegir arriba (100 a 300 km, 200 por defecto). Todo en componentes montables en dashboards. José lo revisó en el móvil y lo dio por bueno.
 - **Polen** (PR #110, 6 nov, decisión de José: alergias al polen sin AEMET, mismo aspecto que Embalses en verdes y marrones; **publicada** el 7 nov, web en `ca1b74e`, `/polen` da 200 tras el alta en Nginx; con la API en `0945e2e` y la migración 0046): página `/polen` con cinco componentes montables en dashboards (`js/polen/`: hoy, próximos días, lo medido en Granada, semana a semana y calendario polínico), con la paleta de campo en `css/polen-componentes.css`. Previsión del modelo CAMS para Archidona (en noviembre, todo nulo) y recuentos de la UGR (Granada, última semana 37). Alta en el menú, `.htaccess` y `sitemap.xml` con permiso de José. Revisada por José en el navegador el 7 nov («lo veo perfecto»).
 - **Embalses** (PR #96, 5 nov, decisión de José: nivel nacional y aspecto de agua; **publicada**, web en `22ca082`, con la API y la migración 0043): página `/embalses` con selector de ámbito (Andalucía por defecto, cuencas, comunidades, provincias y toda España) y seis componentes montables en dashboards (`js/embalses/`), con la paleta clara de agua en `css/embalses-componentes.css`. Alta en el menú, `.htaccess` y `sitemap.xml` con permiso de José.
 
@@ -85,6 +86,7 @@ comprobado en meteoarchidona.com.
 
 ## Pendiente
 
+- Sismología: histórico desde 1370 (aplazado; descarga manual en CSV desde el ordenador) y, como ideas, sismógrafo propio en tiempo real (Raspberry Shake) o pedir al IGN acceso en tiempo real.
 - Mejoras propuestas tras el repaso del 27 oct: `docs/mejoras.md` (código muerto, documentos desfasados, seguridad de la consola SQL por comprobar, pestañas en segundo plano, imágenes, accesibilidad…). **Por decidir con José** qué se hace y en qué orden.
 - Ventajas de registrarse: `docs/ventajas-registro.md` reúne qué gana el usuario registrado (estadísticas e informes propios, catálogo en sus dashboards, dashboards propios) y por qué importa a MeteoArchidona. Se irá ampliando; su texto se llevará a la web cuando cada ventaja funcione. Falta decidir dónde se muestra.
 
@@ -179,3 +181,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-08 · Administración → Patrullas: apartado «Enviar la cámara a un preset» (cámara PTZ, preset, estado de la orden en vivo y directo de la cámara al lado) y botón «Leer presets de la cámara».
 - 2026-11-08 · Reenviar la activación desde Administración → Usuarios (PR #116 en web y API), publicado en el VPS (`f4bfbb8` / `3d63995`); de paso, el visor de «Enviar la cámara a un preset» pasa su estilo en línea a CSS.
 - 2026-11-08 · Ficha de mantenimiento del usuario en Administración (PR #118 web, #117 API), publicada en el VPS.
+- 2026-11-09 · Sismología publicada y revisada por José: mapa redondo con radio a elegir y Helicorder de EGOR.
