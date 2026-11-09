@@ -3,8 +3,8 @@
  *
  * Visor animado de los mapas que dibuja la API con los datos abiertos de
  * los modelos (docs/mapas-modelos.md de la API; decisiones de José del
- * 9-11-2026): Europeo (ECMWF), Europeo IA (AIFS), Americano (GFS), Alemán
- * (ICON-EU) y Francés (ARPEGE), con un desplegable de modelo. Presión y
+ * 9-11-2026): Europeo (ECMWF), Europeo IA (AIFS), Americano (GFS) y Alemán
+ * (ICON-EU), con un desplegable de modelo. Presión y
  * lluvia, geopotencial a 500 hPa y temperatura a 850 hPa, en los pasos de
  * cada modelo (cada 3 horas; cada 6 en el AIFS).
  *
@@ -12,7 +12,7 @@
  * o dashboard:
  *
  *     <div data-componente="mapas-modelos"
- *          data-modelo="ecmwf"            (opcional; o aifs, gfs, icon-eu, arpege)
+ *          data-modelo="ecmwf"            (opcional; o aifs, gfs, icon-eu)
  *          data-mapa="presion-lluvia"     (opcional; o geopotencial-500,
  *                                          temperatura-850)
  *          data-titulo="no"               (opcional; sin título)
