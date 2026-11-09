@@ -68,12 +68,12 @@
 
 <link
     rel="stylesheet"
-    href="../css/olivar-componentes.css?v=20261109-olivar1"
+    href="../css/olivar-componentes.css?v=20261109-olivar2"
 >
 
 <link
     rel="stylesheet"
-    href="../css/olivar.css?v=20261109-olivar1"
+    href="../css/olivar.css?v=20261109-olivar2"
 >
 
 
@@ -95,7 +95,7 @@
 
 <script
     type="module"
-    src="../js/olivar.js?v=20261109-olivar1"
+    src="../js/olivar.js?v=20261109-olivar2"
 ></script>
 
 <script
@@ -136,8 +136,9 @@
     <p class="olivar-entradilla">
         Información del tiempo pensada para el olivar de Archidona,
         calculada con nuestras dos estaciones: el frío que va acumulando el
-        olivo para florecer, las heladas de la temporada y las mínimas de
-        los próximos días con aviso de helada. Todo por estación, porque
+        olivo para florecer, las heladas y las mínimas de los próximos días
+        con aviso de helada, los grados-día del olivo y de la mosca, y la
+        lluvia frente a la evapotranspiración. Todo por estación, porque
         El Silo y Los Llanos están a la misma altura pero no tienen el
         mismo clima: en Los Llanos hace bastante más frío.
     </p>
@@ -230,6 +231,61 @@
 
 
 <!-- ========================================================
+     GRADOS-DÍA
+     Componente js/olivar/grados-dia.js.
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-grados-dia"
+>
+
+    <h2 id="titulo-olivar-grados-dia">
+        Grados-día
+    </h2>
+
+    <p class="olivar-nota">
+        El calor que va sumando el año desde el 1 de enero: marca el ritmo
+        del olivo (brotación, floración, cuajado) y el de la mosca del
+        olivo, que completa una generación de huevo a adulto con unos 379
+        grados-día. La mosca deja de desarrollarse por encima de 35 °C, así
+        que el calor fuerte del verano no le suma.
+    </p>
+
+    <div data-componente="olivar-grados-dia"></div>
+
+</section>
+
+
+<!-- ========================================================
+     BALANCE HÍDRICO
+     Componente js/olivar/balance.js.
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-balance"
+>
+
+    <h2 id="titulo-olivar-balance">
+        Balance hídrico
+    </h2>
+
+    <p class="olivar-nota">
+        La lluvia frente a la evapotranspiración de referencia (ET0): el
+        agua que se iría de un césped bien regado con el sol, el viento y la
+        sequedad del aire de cada día, calculada con los sensores de cada
+        estación. El olivar gasta una parte de esa ET0 que depende de la
+        plantación y de la época: el coeficiente de cultivo lo da el
+        técnico. Es una orientación para el riego, no una dosis.
+    </p>
+
+    <div data-componente="olivar-balance"></div>
+
+</section>
+
+
+<!-- ========================================================
      GLOSARIO
      ======================================================== -->
 
@@ -267,6 +323,29 @@
             La temporada de heladas va de julio a junio.
         </dd>
 
+        <dt>Grados-día</dt>
+        <dd>
+            Los grados por encima de una temperatura base, sumados hora a
+            hora y divididos entre 24. Para el olivo la base es 10 °C; para
+            la mosca, 9 °C, y lo que pase de 35 °C no cuenta.
+        </dd>
+
+        <dt>ET0</dt>
+        <dd>
+            Evapotranspiración de referencia en milímetros, por el método
+            FAO-56 de Penman-Monteith con la temperatura, la humedad, el
+            viento y la radiación de la estación. El viento se lleva a 2 m
+            de altura (el anemómetro de El Silo está a 15 m y el de Los
+            Llanos a 5 m). Si un día falta algún dato, sale por Hargreaves,
+            solo con las temperaturas.
+        </dd>
+
+        <dt>Balance</dt>
+        <dd>
+            Lluvia menos ET0. Negativo: el suelo va perdiendo agua. Se suma
+            por año hidrológico, desde el 1 de octubre.
+        </dd>
+
         <dt>Mínima corregida</dt>
         <dd>
             La mínima del modelo ajustada con lo que se ha quedado de media
@@ -299,8 +378,6 @@
     </h2>
 
     <ul class="olivar-lista">
-        <li>Grados-día para seguir el desarrollo del cultivo y de la mosca del olivo.</li>
-        <li>Evapotranspiración (ET0) y balance hídrico como orientación para el riego.</li>
         <li>Riesgo de repilo y de mosca del olivo según el tiempo de cada estación.</li>
         <li>Avisos de helada por correo para quien se suscriba.</li>
     </ul>
@@ -327,9 +404,14 @@
             El Silo (742 m) y Los Llanos (743 m). Cálculos de MeteoArchidona.
         </li>
         <li>
-            Previsión de mínimas:
+            Previsión de mínimas, ET0 y lluvia:
             <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>,
             corregida para cada estación. Se actualiza a las 07:17 y a las 19:17.
+        </li>
+        <li>
+            Evapotranspiración: Allen, R. G. y otros (1998), «Crop
+            evapotranspiration» (FAO Irrigation and Drainage Paper 56).
+            Grados-día de la mosca: Crovetti y otros (1987).
         </li>
         <li>
             Unidades de frío: De Melo-Abreu, J. P. y otros (2004), «Modelling

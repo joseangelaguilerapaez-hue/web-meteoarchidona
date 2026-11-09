@@ -5,6 +5,7 @@
  * Estilos de los componentes reutilizables de js/olivar/:
  *
  *     olivar-aviso · olivar-resumen · olivar-frio · olivar-heladas
+ *     olivar-grados-dia · olivar-balance
  *
  * Decisión de José del 9-11-2026: El Olivar va con el mismo aspecto que
  * Embalses y Polen (fondo blanco, al revés que el resto del sitio, que es
@@ -55,6 +56,11 @@
     --oli-helada-moderada: #4f7fb3;
     --oli-helada-fuerte: #2b4e7e;
     --oli-escarcha: #eaf2fa;
+
+    /* Lluvia en el balance hídrico (azul de agua, más vivo que la
+     * escarcha) frente a la ET0 en ámbar. */
+    --oli-lluvia: #4a86c5;
+    --oli-evapo: #d4a72c;
 
     /* Curvas de las temporadas: la actual en ámbar fuerte, las
      * anteriores en tonos cada vez más suaves. */
@@ -584,6 +590,108 @@
     .oli-prevision td small {
         display: none;
     }
+}
+
+
+/* ==========================================================
+   GRADOS-DÍA (olivar-grados-dia)
+   ========================================================== */
+
+.oli-grafica .generacion {
+    stroke: var(--oli-aceite);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+}
+
+.oli-grafica .texto-generacion {
+    fill: var(--oli-aceite);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   BALANCE HÍDRICO (olivar-balance)
+   ========================================================== */
+
+.oli-grafica .barra-lluvia {
+    fill: var(--oli-lluvia);
+}
+
+.oli-grafica .barra-evapo {
+    fill: var(--oli-evapo);
+}
+
+.oli-grafica .barra-evapo.hargreaves {
+    fill: var(--oli-oro-claro);
+}
+
+.oli-grafica .cero {
+    stroke: var(--oli-texto-tenue);
+    stroke-width: 1;
+}
+
+.oli-leyenda .oli-leyenda-barra::before {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.oli-agua {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin: 0;
+}
+
+.oli-agua div {
+    padding: 10px 12px;
+    background: var(--oli-crema);
+    border-radius: 10px;
+}
+
+.oli-agua dt {
+    color: var(--oli-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.oli-agua dd {
+    margin: 2px 0 0;
+    color: var(--oli-texto);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.oli-agua dd small {
+    display: block;
+    color: var(--oli-texto-suave);
+    font-family: "Sora", sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.oli-agua .oli-agua-lluvia dd {
+    color: var(--oli-lluvia);
+}
+
+.oli-agua .oli-agua-evapo dd {
+    color: var(--oli-ambar);
+}
+
+.oli-agua .oli-agua-balance.negativo dd {
+    color: #a8361f;
+}
+
+.oli-agua .oli-agua-balance.positivo dd {
+    color: var(--oli-lluvia);
+}
+
+.oli-prevision td.oli-con-lluvia {
+    background: #e7f0fa;
 }
 
 

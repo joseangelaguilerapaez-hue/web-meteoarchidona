@@ -5,7 +5,7 @@
  * del olivar con nuestras dos Davis (El Silo y Los Llanos), todo por
  * estación y comparable, en componentes que se puedan poner en los
  * dashboards, con fondo blanco y la gama «Aceite y oro». Primera entrega:
- * frío invernal y heladas.
+ * frío invernal y heladas; segunda: grados-día, ET0 y balance hídrico.
  *
  * Componentes (cada uno en su módulo, con su hoja
  * css/olivar-componentes.css):
@@ -14,21 +14,27 @@
  *     data-componente="olivar-resumen"   → js/olivar/resumen.js
  *     data-componente="olivar-frio"      → js/olivar/frio.js
  *     data-componente="olivar-heladas"   → js/olivar/heladas.js
+ *     data-componente="olivar-grados-dia" → js/olivar/grados-dia.js
+ *     data-componente="olivar-balance"   → js/olivar/balance.js
  *
  * Detalle de datos y modelos en docs/olivar.md de api-meteoarchidona.
  */
 
-import {montarAvisoOlivar} from "./olivar/aviso.js?v=20261109-olivar1";
-import {montarResumenOlivar} from "./olivar/resumen.js?v=20261109-olivar1";
-import {montarFrioOlivar} from "./olivar/frio.js?v=20261109-olivar1";
-import {montarHeladasOlivar} from "./olivar/heladas.js?v=20261109-olivar1";
+import {montarAvisoOlivar} from "./olivar/aviso.js?v=20261109-olivar2";
+import {montarResumenOlivar} from "./olivar/resumen.js?v=20261109-olivar2";
+import {montarFrioOlivar} from "./olivar/frio.js?v=20261109-olivar2";
+import {montarHeladasOlivar} from "./olivar/heladas.js?v=20261109-olivar2";
+import {montarGradosDiaOlivar} from "./olivar/grados-dia.js?v=20261109-olivar2";
+import {montarBalanceOlivar} from "./olivar/balance.js?v=20261109-olivar2";
 
 
 export const COMPONENTES_OLIVAR = {
     "olivar-aviso": montarAvisoOlivar,
     "olivar-resumen": montarResumenOlivar,
     "olivar-frio": montarFrioOlivar,
-    "olivar-heladas": montarHeladasOlivar
+    "olivar-heladas": montarHeladasOlivar,
+    "olivar-grados-dia": montarGradosDiaOlivar,
+    "olivar-balance": montarBalanceOlivar
 };
 
 

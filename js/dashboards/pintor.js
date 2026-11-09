@@ -75,10 +75,12 @@ const COMPONENTES = {
     "sismologia-estadisticas": ["/js/sismologia/estadisticas.js?v=20261109-heli1", "montarEstadisticasSismicas"],
     "sismologia-helicorder": ["/js/sismologia/helicorder.js?v=20261109-heli1", "montarHelicorder"],
     // El Olivar
-    "olivar-aviso": ["/js/olivar/aviso.js?v=20261109-olivar1", "montarAvisoOlivar"],
-    "olivar-resumen": ["/js/olivar/resumen.js?v=20261109-olivar1", "montarResumenOlivar"],
-    "olivar-frio": ["/js/olivar/frio.js?v=20261109-olivar1", "montarFrioOlivar"],
-    "olivar-heladas": ["/js/olivar/heladas.js?v=20261109-olivar1", "montarHeladasOlivar"]
+    "olivar-aviso": ["/js/olivar/aviso.js?v=20261109-olivar2", "montarAvisoOlivar"],
+    "olivar-resumen": ["/js/olivar/resumen.js?v=20261109-olivar2", "montarResumenOlivar"],
+    "olivar-frio": ["/js/olivar/frio.js?v=20261109-olivar2", "montarFrioOlivar"],
+    "olivar-heladas": ["/js/olivar/heladas.js?v=20261109-olivar2", "montarHeladasOlivar"],
+    "olivar-grados-dia": ["/js/olivar/grados-dia.js?v=20261109-olivar2", "montarGradosDiaOlivar"],
+    "olivar-balance": ["/js/olivar/balance.js?v=20261109-olivar2", "montarBalanceOlivar"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";

@@ -21,7 +21,7 @@ import {
     pedir, crear, vaciar, aviso, prepararRaiz, pie, leerEstacion, pastillaNivel,
     entero, grados, horas, diaCorto, fechaCorta, fechaLarga, cuando,
     ESTACIONES, NOMBRES_ESTACION, NOMBRES_NIVEL, FUENTE_ESTACIONES, FUENTE_PREVISION
-} from "./comun.js?v=20261109-olivar1";
+} from "./comun.js?v=20261109-olivar2";
 
 
 const MAXIMO_HELADAS_LISTA = 15;

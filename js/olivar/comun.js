@@ -19,7 +19,7 @@
  * 9-11-2026), así se ve igual en la página que en un dashboard oscuro.
  */
 
-const HOJA = "/css/olivar-componentes.css?v=20261109-olivar1";
+const HOJA = "/css/olivar-componentes.css?v=20261109-olivar2";
 
 const CACHE_MS = 5 * 60 * 1000;
 

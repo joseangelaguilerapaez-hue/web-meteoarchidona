@@ -300,7 +300,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261109-olivar1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261109-olivar2"),
             ("administracion", r"administracion/principal\.js\?v=20261108-ficha1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -827,6 +827,8 @@ class TestComponentesOlivar(unittest.TestCase):
         "olivar-resumen": ("resumen.js", "montarResumenOlivar"),
         "olivar-frio": ("frio.js", "montarFrioOlivar"),
         "olivar-heladas": ("heladas.js", "montarHeladasOlivar"),
+        "olivar-grados-dia": ("grados-dia.js", "montarGradosDiaOlivar"),
+        "olivar-balance": ("balance.js", "montarBalanceOlivar"),
     }
 
     def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):

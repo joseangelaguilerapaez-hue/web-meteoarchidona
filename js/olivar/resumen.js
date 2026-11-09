@@ -8,6 +8,8 @@
  *   - horas y unidades de frío de la temporada, con lo que llevaba la
  *     temporada anterior a la misma fecha;
  *   - heladas de la temporada (días, primera y la más fuerte);
+ *   - grados-día del año (olivo y mosca) y el agua del año hidrológico
+ *     (lluvia, ET0 y balance; desde el 9-11-2026, segunda entrega);
  *   - la mínima prevista para esta noche, con aviso si hiela.
  *
  *     <div data-componente="olivar-resumen"></div>
@@ -19,7 +21,7 @@
 import {
     pedir, crear, aviso, prepararRaiz, titulo, pie, leerEstaciones, pastillaNivel,
     entero, grados, horas, fechaCorta, cuando, NOMBRES_NIVEL, FUENTE_ESTACIONES
-} from "./comun.js?v=20261109-olivar1";
+} from "./comun.js?v=20261109-olivar2";
 
 
 function cifra(lista, etiqueta, valor, nota, clase) {
@@ -71,6 +73,28 @@ function tarjeta(estacion) {
             ? `En ${anterior.temporada} la primera fue el ${fechaCorta(anterior.primera)}`
             : "Ninguna en lo que va de temporada";
         cifra(lista, "Heladas", "0", nota, "oli-cifra-helada");
+    }
+
+    const gradosDia = estacion.grados_dia;
+    if (gradosDia) {
+        const nota = gradosDia.anterior_olivo !== null && gradosDia.anterior_olivo !== undefined
+            ? `${gradosDia.anio - 1}: ${entero(gradosDia.anterior_olivo)} a estas alturas`
+            : `mosca: ${entero(gradosDia.grados_dia_mosca)} (unas ${gradosDia.generaciones_mosca.toLocaleString("es-ES", { maximumFractionDigits: 1 })} generaciones)`;
+        cifra(lista, `Grados-día ${gradosDia.anio}`, entero(gradosDia.grados_dia_olivo), nota);
+    }
+
+    const agua = estacion.agua;
+    if (agua) {
+        const signo = agua.balance > 0 ? "+" : agua.balance < 0 ? "−" : "";
+        const ultima = agua.ultima_evapotranspiracion !== null && agua.ultima_evapotranspiracion !== undefined
+            ? `ET0 del ${fechaCorta(agua.ultimo_dia)}: ${agua.ultima_evapotranspiracion.toLocaleString("es-ES", { maximumFractionDigits: 1 })} mm`
+            : null;
+        cifra(
+            lista,
+            `Balance ${agua.temporada}`,
+            `${signo}${entero(Math.abs(agua.balance))} mm`,
+            [`${entero(agua.lluvia)} mm de lluvia, ${entero(agua.evapotranspiracion)} de ET0`, ultima].filter(Boolean).join("; ")
+        );
     }
 
     if (dia) {
