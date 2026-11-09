@@ -1,15 +1,18 @@
 /*
  * MeteoArchidona · Componente «Mapas de modelos»
  *
- * Visor animado de los mapas que dibuja la API con los datos abiertos del
- * modelo Europeo (ECMWF) (docs/mapas-modelos.md de la API; decisión de
- * José del 9-11-2026): presión y lluvia (la lluvia a 9 km), geopotencial
- * a 500 hPa y temperatura a 850 hPa, cada 3 horas hasta +144 h.
+ * Visor animado de los mapas que dibuja la API con los datos abiertos de
+ * los modelos (docs/mapas-modelos.md de la API; decisiones de José del
+ * 9-11-2026): Europeo (ECMWF), Europeo IA (AIFS), Americano (GFS), Alemán
+ * (ICON-EU) y Francés (ARPEGE), con un desplegable de modelo. Presión y
+ * lluvia, geopotencial a 500 hPa y temperatura a 850 hPa, en los pasos de
+ * cada modelo (cada 3 horas; cada 6 en el AIFS).
  *
  * Pestaña «Mapas» de Predicción; se puede poner en cualquier otra página
  * o dashboard:
  *
  *     <div data-componente="mapas-modelos"
+ *          data-modelo="ecmwf"            (opcional; o aifs, gfs, icon-eu, arpege)
  *          data-mapa="presion-lluvia"     (opcional; o geopotencial-500,
  *                                          temperatura-850)
  *          data-titulo="no"               (opcional; sin título)
@@ -22,14 +25,15 @@
  *     GET /mapas-modelos                                   catálogo y pasadas
  *     GET /mapas-modelos/{modelo}/{pasada}/{mapa}/{paso}   imagen WebP
  *
- * Al abrir enseña el paso más cercano a la hora actual. Los fotogramas se
+ * Al abrir enseña el paso más cercano a la hora actual; al cambiar de
+ * modelo o de pasada se queda en la misma hora si la tiene. Los fotogramas se
  * van cargando por detrás; la animación espera al siguiente si aún no ha
  * llegado. Horas en hora de Madrid (la pasada, en UTC, como la nombra todo
  * el mundo). Trae su propia hoja de estilos para funcionar en dashboards.
  */
 
 const ZONA = "Europe/Madrid";
-const HOJA = "/css/mapas-modelos.css?v=20261109-mapas1";
+const HOJA = "/css/mapas-modelos.css?v=20261110-modelos1";
 const MS_FOTOGRAMA = 650;
 const MS_PAUSA_FINAL = 1600;
 const REFRESCO_MS = 30 * 60 * 1000;
@@ -105,6 +109,7 @@ export function montarMapasModelos(raiz) {
     const estado = {
         catalogo: null,
         modelo: null,
+        modeloPedido: raiz.dataset.modelo || "ecmwf",
         pasada: null,
         mapa: raiz.dataset.mapa || "presion-lluvia",
         indice: 0,
@@ -115,17 +120,23 @@ export function montarMapasModelos(raiz) {
 
     const tarjeta = crear("section", "pred-tarjeta mm-tarjeta");
     if (raiz.dataset.titulo !== "no") {
-        tarjeta.append(crear("h2", "pred-titulo", "Mapas del modelo Europeo · 6 días"));
+        tarjeta.append(crear("h2", "pred-titulo", "Mapas de los modelos"));
     }
 
     const mapas = crear("div", "mm-mapas");
     mapas.setAttribute("role", "group");
     mapas.setAttribute("aria-label", "Mapa");
 
-    const filaPasada = crear("label", "mm-pasada");
-    filaPasada.append(crear("span", "mm-etiqueta", "Pasada"));
+    const filaPasada = crear("div", "mm-pasada");
+    const cajaModelo = crear("label", "mm-campo");
+    cajaModelo.append(crear("span", "mm-etiqueta", "Modelo"));
+    const selectorModelo = crear("select", "mm-selector");
+    cajaModelo.append(selectorModelo);
+    const cajaPasada = crear("label", "mm-campo");
+    cajaPasada.append(crear("span", "mm-etiqueta", "Pasada"));
     const selectorPasada = crear("select", "mm-selector");
-    filaPasada.append(selectorPasada);
+    cajaPasada.append(selectorPasada);
+    filaPasada.append(cajaModelo, cajaPasada);
 
     const marco = crear("a", "mm-marco");
     marco.target = "_blank";
@@ -226,6 +237,23 @@ export function montarMapasModelos(raiz) {
         }
     }
 
+    function modelosConMapas() {
+        return (estado.catalogo?.modelos || []).filter((modelo) => modelo.pasadas?.length);
+    }
+
+    function pintarModelos() {
+        const modelos = modelosConMapas();
+        selectorModelo.textContent = "";
+        for (const modelo of modelos) {
+            const opcion = crear("option", null, `${modelo.nombre} · ${modelo.resolucion}`);
+            opcion.value = modelo.codigo;
+            opcion.selected = modelo.codigo === estado.modelo.codigo;
+            selectorModelo.append(opcion);
+        }
+        // Con un solo modelo no hace falta elegir.
+        cajaModelo.hidden = modelos.length < 2;
+    }
+
     function pintarPasadas() {
         selectorPasada.textContent = "";
         estado.modelo.pasadas.forEach((pasada, indice) => {
@@ -251,7 +279,7 @@ export function montarMapasModelos(raiz) {
         barra.max = String(lista.length - 1);
         barra.value = String(estado.indice);
         valido.textContent = `${mayuscula(formatoValido.format(new Date(paso.valido_utc)))} · +${paso.paso} h`;
-        descripcion.textContent = mapa?.descripcion || "";
+        descripcion.textContent = `${mapa?.descripcion || ""} ${estado.modelo.nombre}: ${estado.modelo.resolucion}, hasta +${estado.modelo.horas} h.`;
     }
 
     function irA(indice) {
@@ -302,17 +330,50 @@ export function montarMapasModelos(raiz) {
     siguiente.addEventListener("click", () => { parar(); irA(estado.indice + 1); });
     barra.addEventListener("input", () => { parar(); irA(Number(barra.value)); });
 
+    // Al cambiar de pasada o de modelo se queda en la misma hora válida si
+    // la tiene: así se comparan pasadas y modelos para el mismo momento.
+    function mismaHora(valida) {
+        const instante = Date.parse(valida);
+        const mismo = pasos().findIndex((paso) => Date.parse(paso.valido_utc) === instante);
+        estado.indice = mismo >= 0 ? mismo : pasoMasCercano(pasos(), instante || Date.now());
+    }
+
     selectorPasada.addEventListener("change", () => {
         parar();
         const valida = pasos()[estado.indice]?.valido_utc;
         estado.pasada = estado.modelo.pasadas.find((pasada) => pasada.codigo === selectorPasada.value) || estado.pasada;
-        // Se queda en la misma hora válida si la nueva pasada la tiene: así
-        // se comparan dos pasadas para el mismo momento.
-        const mismo = pasos().findIndex((paso) => paso.valido_utc === valida);
-        estado.indice = mismo >= 0 ? mismo : pasoMasCercano(pasos());
+        mismaHora(valida);
         precargar();
         mostrar();
     });
+
+    selectorModelo.addEventListener("change", () => {
+        parar();
+        const valida = pasos()[estado.indice]?.valido_utc;
+        const modelo = modelosConMapas().find((candidato) => candidato.codigo === selectorModelo.value);
+        if (!modelo) return;
+        estado.modelo = modelo;
+        estado.modeloPedido = modelo.codigo;
+        estado.pasada = modelo.pasadas[0];
+        mismaHora(valida);
+        pintarMapas();
+        pintarPasadas();
+        pintarFuente();
+        precargar();
+        mostrar();
+    });
+
+    function pintarFuente() {
+        const modelo = estado.modelo;
+        fuente.textContent = "";
+        fuente.append(
+            `${modelo.nombre}: datos de `,
+            Object.assign(crear("a", null, modelo.fuente), {href: modelo.url_datos, target: "_blank", rel: "noopener"}),
+            " (",
+            Object.assign(crear("a", null, modelo.licencia), {href: modelo.url_licencia, target: "_blank", rel: "noopener"}),
+            "), modificados. Mapas dibujados por MeteoArchidona; el punto rojo es Archidona. MeteoArchidona no predice: enseña lo que dicen los modelos."
+        );
+    }
 
 
     /* ---------- Carga del catálogo ---------- */
@@ -330,15 +391,17 @@ export function montarMapasModelos(raiz) {
             return;
         }
 
-        const modelo = datos.modelos?.find((candidato) => candidato.pasadas?.length);
+        const conMapas = (datos.modelos || []).filter((candidato) => candidato.pasadas?.length);
+        const modelo = conMapas.find((candidato) => candidato.codigo === estado.modeloPedido) || conMapas[0];
         if (!modelo) {
-            aviso.textContent = "Todavía no hay mapas: se dibujan cuando el ECMWF publica cada pasada, cuatro veces al día.";
+            aviso.textContent = "Todavía no hay mapas: se dibujan cuando cada centro publica su pasada.";
             return;
         }
 
         const ultima = modelo.pasadas[0];
         const nueva = !estado.pasada || estado.pasada.codigo !== ultima.codigo;
-        const enLaUltima = !estado.pasada || estado.pasada.codigo === estado.modelo?.pasadas[0]?.codigo;
+        const otroModelo = estado.modelo && estado.modelo.codigo !== modelo.codigo;
+        const enLaUltima = !estado.pasada || otroModelo || estado.pasada.codigo === estado.modelo?.pasadas[0]?.codigo;
 
         estado.catalogo = datos;
         estado.modelo = modelo;
@@ -348,9 +411,14 @@ export function montarMapasModelos(raiz) {
 
         // Solo se salta a la pasada nueva si se estaba mirando la última
         // y no se está reproduciendo; si no, se respeta lo que se mira.
-        if (nueva && enLaUltima && !estado.reproduciendo) {
+        if ((nueva && enLaUltima && !estado.reproduciendo) || otroModelo) {
+            const valida = estado.pasada ? pasos()[estado.indice]?.valido_utc : null;
             estado.pasada = ultima;
-            estado.indice = pasoMasCercano(ultima.pasos);
+            if (valida) {
+                mismaHora(valida);
+            } else {
+                estado.indice = pasoMasCercano(ultima.pasos);
+            }
         } else {
             estado.pasada = modelo.pasadas.find((pasada) => pasada.codigo === estado.pasada.codigo) || ultima;
         }
@@ -360,17 +428,10 @@ export function montarMapasModelos(raiz) {
             elemento.hidden = false;
         }
 
-        fuente.textContent = "";
-        fuente.append(
-            "Datos: ",
-            Object.assign(crear("a", null, "ECMWF"), {href: "https://www.ecmwf.int/en/forecasts/datasets/open-data", target: "_blank", rel: "noopener"}),
-            " (",
-            Object.assign(crear("a", null, modelo.licencia), {href: modelo.url_licencia, target: "_blank", rel: "noopener"}),
-            "), modificados. Mapas dibujados por MeteoArchidona; el punto rojo es Archidona. MeteoArchidona no predice: enseña lo que dice el modelo."
-        );
-
+        pintarModelos();
         pintarMapas();
         pintarPasadas();
+        pintarFuente();
         precargar();
         mostrar();
     }

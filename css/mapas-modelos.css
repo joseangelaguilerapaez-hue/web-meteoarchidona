@@ -2,7 +2,8 @@
  * MeteoArchidona
  * Componente «Mapas de modelos» (js/mapas-modelos.js)
  *
- * Pestaña «Mapas» de Predicción y cualquier otra página o dashboard que
+ * Pestaña «Mapas» de Predicción (desplegables de modelo y pasada desde el
+ * 10-11-2026) y cualquier otra página o dashboard que
  * lo ponga. Usa la paleta de css/paleta.css; la tarjeta repite lo justo
  * de .pred-tarjeta para verse igual fuera de Predicción.
  */
@@ -76,9 +77,22 @@
 
 .mm-pasada {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+    margin-bottom: 12px;
+}
+
+.mm-campo {
+    display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
+    min-width: 0;
+}
+
+.mm-campo .mm-selector {
+    min-width: 0;
+    max-width: 100%;
 }
 
 .mm-etiqueta {
