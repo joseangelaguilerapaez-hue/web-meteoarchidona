@@ -22,7 +22,7 @@
 import {
     pedir, crear, vaciar, aviso, prepararRaiz, pie, leerEstacion,
     entero, fechaLarga, MESES, ESTACIONES, NOMBRES_ESTACION, FUENTE_ESTACIONES
-} from "./comun.js?v=20261109-olivar1";
+} from "./comun.js?v=20261109-olivar2";
 
 
 const NS = "http://www.w3.org/2000/svg";

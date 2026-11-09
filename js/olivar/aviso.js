@@ -11,7 +11,7 @@
  * No pide nada a la API.
  */
 
-import {crear, prepararRaiz} from "./comun.js?v=20261109-olivar1";
+import {crear, prepararRaiz} from "./comun.js?v=20261109-olivar2";
 
 
 export function montarAvisoOlivar(raiz) {
