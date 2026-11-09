@@ -1,0 +1,193 @@
+/*
+ * MeteoArchidona
+ * Página El Olivar
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/olivar.html
+ *
+ * Decisión de José del 9-11-2026: el mismo aspecto que Embalses y Polen
+ * (blanco, al revés que el resto del sitio), con la gama «Aceite y oro».
+ * Una columna de bloques con bordes finos y radios de 14 px; la cabecera
+ * y el pie siguen siendo los oscuros de siempre.
+ *
+ * La paleta (--oli-*) está en css/olivar-componentes.css, que se carga
+ * antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="olivar"] {
+    background:
+        radial-gradient(ellipse at top, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #fffdf6 0%, #fbf3dc 50%, #f1e2b4 100%);
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.olivar {
+    width: min(1040px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--oli-texto);
+}
+
+
+.olivar-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+
+.olivar-cabecera .oli-etiqueta {
+    color: var(--oli-ambar);
+}
+
+
+.olivar-cabecera h1 {
+    margin: 0;
+    color: var(--oli-aceituna);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+
+.olivar-cabecera h1 span {
+    color: var(--oli-ambar);
+}
+
+
+.olivar-entradilla {
+    margin: 0;
+    max-width: 760px;
+    color: var(--oli-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+.olivar-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+
+@media (max-width: 860px) {
+    .olivar-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+.olivar-bloque {
+    min-width: 0;
+    padding: 22px 24px;
+    background: linear-gradient(170deg, var(--oli-blanco) 0%, var(--oli-crema) 70%, var(--oli-paja) 100%);
+    border: 1px solid var(--oli-borde);
+    border-radius: 14px;
+    box-shadow: var(--oli-sombra);
+}
+
+
+.olivar-bloque-escarcha {
+    background: linear-gradient(170deg, var(--oli-blanco) 0%, #f8fbfe 65%, var(--oli-escarcha) 100%);
+    border-color: #d6e3f1;
+}
+
+
+.olivar-bloque h2 {
+    margin: 0 0 12px;
+    color: var(--oli-aceituna);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.olivar-bloque-escarcha h2 {
+    color: var(--oli-helada-fuerte);
+}
+
+
+.olivar-nota {
+    margin: 0 0 14px;
+    color: var(--oli-texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+.olivar-bloque a {
+    color: var(--oli-aceite);
+    text-decoration: none;
+}
+
+
+.olivar-bloque a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 560px) {
+    .olivar-bloque {
+        padding: 18px 16px;
+    }
+}
+
+
+/* ==========================================================
+   GLOSARIO, PRÓXIMAMENTE Y FUENTES
+   ========================================================== */
+
+.olivar-glosario {
+    display: grid;
+    gap: 6px 18px;
+    grid-template-columns: max-content minmax(0, 1fr);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+
+.olivar-glosario dt {
+    color: var(--oli-ambar);
+    font-weight: 700;
+}
+
+
+.olivar-glosario dd {
+    margin: 0;
+    color: var(--oli-texto-suave);
+}
+
+
+@media (max-width: 560px) {
+    .olivar-glosario {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .olivar-glosario dd {
+        margin-bottom: 8px;
+    }
+}
+
+
+.olivar-lista {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--oli-texto-suave);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* Fin de fichero: css/olivar.css */

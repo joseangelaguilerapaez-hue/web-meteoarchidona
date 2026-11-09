@@ -73,7 +73,12 @@ const COMPONENTES = {
     "sismologia-mapa": ["/js/sismologia/mapa.js?v=20261109-heli1", "montarMapaTerremotos"],
     "sismologia-lista": ["/js/sismologia/lista.js?v=20261109-heli1", "montarListaTerremotos"],
     "sismologia-estadisticas": ["/js/sismologia/estadisticas.js?v=20261109-heli1", "montarEstadisticasSismicas"],
-    "sismologia-helicorder": ["/js/sismologia/helicorder.js?v=20261109-heli1", "montarHelicorder"]
+    "sismologia-helicorder": ["/js/sismologia/helicorder.js?v=20261109-heli1", "montarHelicorder"],
+    // El Olivar
+    "olivar-aviso": ["/js/olivar/aviso.js?v=20261109-olivar1", "montarAvisoOlivar"],
+    "olivar-resumen": ["/js/olivar/resumen.js?v=20261109-olivar1", "montarResumenOlivar"],
+    "olivar-frio": ["/js/olivar/frio.js?v=20261109-olivar1", "montarFrioOlivar"],
+    "olivar-heladas": ["/js/olivar/heladas.js?v=20261109-olivar1", "montarHeladasOlivar"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";

@@ -64,6 +64,19 @@ sudo python3 scripts/configurar_seccion_polen.py
 curl -s -o /dev/null -w '%{http_code}\n' https://meteoarchidona.com/polen
 ```
 
+## Sección nueva: El Olivar (9-11-2026)
+
+Igual que Polen, para que `/olivar` no dé 404 (José, desde Termius, tras el `git pull`). Los datos
+salen de la API (migración 0048 de `api-meteoarchidona`, `docs/olivar.md`), que tiene que estar
+actualizada, migrada y con la primera carga hecha antes:
+
+```
+cd /srv/meteoarchidona/web
+sudo python3 scripts/configurar_seccion_olivar.py --simular
+sudo python3 scripts/configurar_seccion_olivar.py
+curl -s -o /dev/null -w '%{http_code}\n' https://meteoarchidona.com/olivar
+```
+
 ## Caché
 
 Los `.js` y `.css` se cachean en el navegador y se versionan con `?v=`. Si cambias uno que ya está en

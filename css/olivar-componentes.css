@@ -1,0 +1,590 @@
+/*
+ * MeteoArchidona
+ * Componentes de El Olivar
+ *
+ * Estilos de los componentes reutilizables de js/olivar/:
+ *
+ *     olivar-aviso · olivar-resumen · olivar-frio · olivar-heladas
+ *
+ * Decisión de José del 9-11-2026: El Olivar va con el mismo aspecto que
+ * Embalses y Polen (fondo blanco, al revés que el resto del sitio, que es
+ * oscuro), con su propia gama «Aceite y oro»: crema, paja, dorados y
+ * ámbar de aceite nuevo, y el verde amarillento de la aceituna. Distinta
+ * de Polen, que es verde y marrón. El único color frío es el azul de las
+ * heladas. Las líneas y la forma de las tarjetas son las de siempre
+ * (bordes finos, radios de 14 px, etiquetas en JetBrains Mono).
+ *
+ * La paleta está aquí, acotada a .oli-componente (y a la página El
+ * Olivar, .olivar), y no en css/paleta.css: así un componente se ve igual
+ * en su página que dentro de un dashboard oscuro.
+ *
+ * Cada componente carga esta hoja solo si la página no la tiene
+ * (js/olivar/comun.js) y se adapta al ancho de su hueco: cada raíz es un
+ * contenedor (container-type) y las reglas de tamaño van con @container.
+ */
+
+
+/* ==========================================================
+   PALETA «ACEITE Y ORO»
+   ========================================================== */
+
+.olivar,
+.oli-componente {
+    --oli-blanco: #ffffff;
+    --oli-crema: #fdf9ec;
+    --oli-paja: #f6ecc8;
+    --oli-trigo: #eddcaa;
+    --oli-oro-claro: #ecd27a;
+    --oli-oro: #d4a72c;
+    --oli-ambar: #b9821a;
+    --oli-aceite: #8f8a1e;
+    --oli-aceituna: #5f5c17;
+    --oli-hueso: #3f3a12;
+
+    --oli-texto: #2f2a14;
+    --oli-texto-suave: #5d5636;
+    --oli-texto-tenue: #8c8463;
+    --oli-borde: #ece2c0;
+    --oli-borde-fuerte: #d9c78e;
+
+    --oli-sombra: 0 10px 28px rgba(120, 95, 20, 0.10);
+
+    /* Heladas: el único frío de la gama. */
+    --oli-helada: #4f7fb3;
+    --oli-helada-debil: #8fb2d6;
+    --oli-helada-moderada: #4f7fb3;
+    --oli-helada-fuerte: #2b4e7e;
+    --oli-escarcha: #eaf2fa;
+
+    /* Curvas de las temporadas: la actual en ámbar fuerte, las
+     * anteriores en tonos cada vez más suaves. */
+    --oli-temporada-0: #b9821a;
+    --oli-temporada-1: #8f8a1e;
+    --oli-temporada-2: #c9b45e;
+    --oli-temporada-3: #a99b7a;
+}
+
+.oli-componente .nivel-DEBIL, .olivar .nivel-DEBIL { --oli-nivel: var(--oli-helada-debil); }
+.oli-componente .nivel-MODERADA, .olivar .nivel-MODERADA { --oli-nivel: var(--oli-helada-moderada); }
+.oli-componente .nivel-FUERTE, .olivar .nivel-FUERTE { --oli-nivel: var(--oli-helada-fuerte); }
+
+
+/* ==========================================================
+   RAÍZ COMÚN
+   ========================================================== */
+
+.oli-componente {
+    container-type: inline-size;
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+    padding: 18px 20px;
+    color: var(--oli-texto);
+    background: linear-gradient(170deg, var(--oli-blanco) 0%, var(--oli-crema) 65%, var(--oli-paja) 100%);
+    border: 1px solid var(--oli-borde);
+    border-radius: 14px;
+    box-shadow: var(--oli-sombra);
+    font-family: "Sora", sans-serif;
+}
+
+/* En la página El Olivar el bloque ya es la tarjeta: el componente va
+ * sin marco propio. */
+.olivar-bloque > .oli-componente {
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+.oli-titulo {
+    margin: 0;
+    color: var(--oli-aceituna);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.oli-etiqueta {
+    color: var(--oli-ambar);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.oli-aviso {
+    margin: 0;
+    color: var(--oli-texto-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.oli-aviso.error {
+    color: #a8361f;
+}
+
+.oli-pie {
+    margin: 0;
+    color: var(--oli-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.oli-componente a {
+    color: var(--oli-aceite);
+    text-decoration: none;
+}
+
+.oli-componente a:hover {
+    text-decoration: underline;
+}
+
+.oli-cifra {
+    font-family: "JetBrains Mono", monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Pastilla de helada */
+.oli-nivel {
+    display: inline-block;
+    padding: 2px 9px;
+    color: var(--oli-blanco);
+    background: var(--oli-nivel, var(--oli-texto-tenue));
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.oli-nivel.nivel-DEBIL {
+    color: var(--oli-helada-fuerte);
+}
+
+/* Selectores dentro de un componente */
+.oli-controles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+}
+
+.oli-controles label {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    color: var(--oli-texto-suave);
+    font-size: 13px;
+}
+
+.oli-controles select {
+    padding: 6px 10px;
+    color: var(--oli-texto);
+    background: var(--oli-blanco);
+    border: 1px solid var(--oli-borde-fuerte);
+    border-radius: 9px;
+    font: inherit;
+    font-size: 14px;
+}
+
+.oli-controles select:focus {
+    outline: 2px solid var(--oli-oro-claro);
+    outline-offset: 1px;
+}
+
+
+/* ==========================================================
+   AVISO (olivar-aviso)
+   ========================================================== */
+
+.oli-componente.olivar-aviso {
+    gap: 6px;
+    padding: 12px 16px;
+    background: var(--oli-crema);
+    border-left: 4px solid var(--oli-oro);
+}
+
+.olivar-aviso p {
+    margin: 0;
+    color: var(--oli-texto-suave);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.olivar-aviso strong {
+    color: var(--oli-aceituna);
+}
+
+
+/* ==========================================================
+   RESUMEN (olivar-resumen)
+   ========================================================== */
+
+.oli-estaciones {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+.oli-estacion {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding: 16px;
+    background: var(--oli-blanco);
+    border: 1px solid var(--oli-borde);
+    border-top: 4px solid var(--oli-oro);
+    border-radius: 12px;
+}
+
+.oli-estacion h4 {
+    margin: 0;
+    color: var(--oli-aceituna);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.oli-estacion h4 small {
+    display: block;
+    color: var(--oli-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+}
+
+.oli-cifras {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+}
+
+.oli-cifras div {
+    padding: 10px 12px;
+    background: var(--oli-crema);
+    border-radius: 10px;
+}
+
+.oli-cifras dt {
+    color: var(--oli-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.oli-cifras dd {
+    margin: 2px 0 0;
+    color: var(--oli-texto);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 20px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.oli-cifras dd small {
+    display: block;
+    color: var(--oli-texto-suave);
+    font-family: "Sora", sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.oli-cifras .oli-cifra-helada {
+    background: var(--oli-escarcha);
+}
+
+.oli-cifras .oli-cifra-helada dd {
+    color: var(--oli-helada-fuerte);
+}
+
+.oli-noche {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: center;
+    padding: 9px 12px;
+    color: var(--oli-texto-suave);
+    background: var(--oli-paja);
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.oli-noche.nivel-DEBIL,
+.oli-noche.nivel-MODERADA,
+.oli-noche.nivel-FUERTE {
+    color: var(--oli-helada-fuerte);
+    background: var(--oli-escarcha);
+    border-left: 4px solid var(--oli-nivel);
+}
+
+.oli-noche strong {
+    font-family: "JetBrains Mono", monospace;
+}
+
+.oli-incompleto {
+    color: var(--oli-texto-tenue);
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   FRÍO ACUMULADO (olivar-frio)
+   ========================================================== */
+
+.oli-grafica {
+    width: 100%;
+    min-height: 220px;
+}
+
+.oli-grafica svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.oli-grafica .eje {
+    stroke: var(--oli-borde-fuerte);
+    stroke-width: 1;
+}
+
+.oli-grafica .rejilla {
+    stroke: var(--oli-borde);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+}
+
+.oli-grafica .texto-eje {
+    fill: var(--oli-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+}
+
+.oli-grafica .curva {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.oli-grafica .curva.actual {
+    stroke-width: 3;
+}
+
+.oli-grafica .area-actual {
+    fill: var(--oli-oro-claro);
+    opacity: 0.28;
+}
+
+.oli-grafica .referencia {
+    stroke: var(--oli-aceituna);
+    stroke-width: 1;
+    stroke-dasharray: 6 4;
+}
+
+.oli-grafica .texto-referencia {
+    fill: var(--oli-aceituna);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+}
+
+.oli-grafica .hoy {
+    fill: var(--oli-ambar);
+    stroke: var(--oli-blanco);
+    stroke-width: 2;
+}
+
+.oli-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin: 0;
+    color: var(--oli-texto-suave);
+    font-size: 12px;
+}
+
+.oli-leyenda span {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.oli-leyenda span::before {
+    content: "";
+    width: 14px;
+    height: 3px;
+    background: var(--oli-color, var(--oli-ambar));
+    border-radius: 2px;
+}
+
+.oli-leyenda .oli-leyenda-referencia::before {
+    height: 0;
+    border-top: 1px dashed var(--oli-aceituna);
+    background: none;
+}
+
+
+/* ==========================================================
+   HELADAS (olivar-heladas)
+   ========================================================== */
+
+.oli-prevision {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px;
+    font-size: 13px;
+}
+
+.oli-prevision th {
+    padding: 4px 6px;
+    color: var(--oli-texto-suave);
+    font-weight: 600;
+    text-align: center;
+}
+
+.oli-prevision th small {
+    display: block;
+    color: var(--oli-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.oli-prevision td {
+    padding: 8px 4px;
+    color: var(--oli-texto);
+    background: var(--oli-crema);
+    border-radius: 8px;
+    font-family: "JetBrains Mono", monospace;
+    text-align: center;
+}
+
+.oli-prevision td small {
+    display: block;
+    color: var(--oli-texto-tenue);
+    font-size: 10px;
+}
+
+.oli-prevision td.nivel-DEBIL,
+.oli-prevision td.nivel-MODERADA,
+.oli-prevision td.nivel-FUERTE {
+    color: var(--oli-blanco);
+    background: var(--oli-nivel);
+}
+
+.oli-prevision td.nivel-DEBIL {
+    color: var(--oli-helada-fuerte);
+}
+
+.oli-prevision td.nivel-DEBIL small,
+.oli-prevision td.nivel-MODERADA small,
+.oli-prevision td.nivel-FUERTE small {
+    color: inherit;
+    opacity: 0.85;
+}
+
+.oli-tabla-desliza {
+    overflow-x: auto;
+}
+
+.oli-avisos {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.oli-avisos li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: center;
+    padding: 9px 12px;
+    color: var(--oli-helada-fuerte);
+    background: var(--oli-escarcha);
+    border-left: 4px solid var(--oli-nivel, var(--oli-helada));
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.oli-temporada {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin: 0;
+}
+
+.oli-temporada div {
+    padding: 10px 12px;
+    background: var(--oli-escarcha);
+    border-radius: 10px;
+}
+
+.oli-temporada dt {
+    color: var(--oli-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.oli-temporada dd {
+    margin: 2px 0 0;
+    color: var(--oli-helada-fuerte);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.oli-lista-heladas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.oli-lista-heladas th,
+.oli-lista-heladas td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--oli-borde);
+    text-align: left;
+}
+
+.oli-lista-heladas th {
+    color: var(--oli-texto-suave);
+    font-weight: 600;
+}
+
+.oli-lista-heladas td.oli-cifra {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.oli-lista-heladas td.oli-minima {
+    color: var(--oli-helada-fuerte);
+    font-weight: 600;
+}
+
+.oli-subtitulo {
+    margin: 4px 0 0;
+    color: var(--oli-aceituna);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+@container (max-width: 420px) {
+    .oli-cifras dd {
+        font-size: 17px;
+    }
+
+    .oli-prevision td small {
+        display: none;
+    }
+}
+
+
+/* Fin de fichero: css/olivar-componentes.css */
