@@ -52,6 +52,7 @@ SECCIONES = (
     "embalses",
     "polen",
     "sismologia",
+    "olivar",
     "mi-cuenta",
 )
 

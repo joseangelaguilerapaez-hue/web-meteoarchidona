@@ -300,7 +300,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261109-heli1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261109-olivar1"),
             ("administracion", r"administracion/principal\.js\?v=20261108-ficha1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -817,6 +817,61 @@ class TestComponentesPolen(unittest.TestCase):
 
     def test_el_alta_en_nginx_existe(self):
         self.assertIn('modulo.SECCION = "polen"', leer(RAIZ / "scripts" / "configurar_seccion_polen.py"))
+
+
+class TestComponentesOlivar(unittest.TestCase):
+    """Componentes de El Olivar para la página y los dashboards (9-11-2026)."""
+
+    COMPONENTES = {
+        "olivar-aviso": ("aviso.js", "montarAvisoOlivar"),
+        "olivar-resumen": ("resumen.js", "montarResumenOlivar"),
+        "olivar-frio": ("frio.js", "montarFrioOlivar"),
+        "olivar-heladas": ("heladas.js", "montarHeladasOlivar"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "olivar.html")
+        principal = leer(RAIZ / "js" / "olivar.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "olivar" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/olivar/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "olivar" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_aceite_y_oro(self):
+        comun = leer(RAIZ / "js" / "olivar" / "comun.js")
+        ruta = re.search(r'"(/css/olivar-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "olivar.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "olivar-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # «Aceite y oro» (José, 9-11-2026), en la hoja de los componentes.
+        for variable in ("--oli-oro", "--oli-ambar", "--oli-aceite", "--oli-helada"):
+            self.assertIn(variable, hoja)
+        self.assertNotIn("--oli-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_carga_el_modulo_la_api_y_el_aviso(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "olivar.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/olivar\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn("técnico agrícola", pagina)
+
+    def test_esta_en_el_menu(self):
+        self.assertIn('href="/olivar"', leer(RAIZ / "componentes" / "cabecera.html"))
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "olivar"', leer(RAIZ / "scripts" / "configurar_seccion_olivar.py"))
 
 
 class TestNovedades(unittest.TestCase):
