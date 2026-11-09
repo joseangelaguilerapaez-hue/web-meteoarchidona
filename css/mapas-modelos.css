@@ -1,0 +1,190 @@
+/*
+ * MeteoArchidona
+ * Componente «Mapas de modelos» (js/mapas-modelos.js)
+ *
+ * Pestaña «Mapas» de Predicción y cualquier otra página o dashboard que
+ * lo ponga. Usa la paleta de css/paleta.css; la tarjeta repite lo justo
+ * de .pred-tarjeta para verse igual fuera de Predicción.
+ */
+
+
+.mm-tarjeta {
+    min-width: 0;
+    padding: 20px 22px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: linear-gradient(145deg, rgba(17, 30, 46, 0.98), rgba(9, 22, 34, 0.98));
+}
+
+.mm .pred-titulo {
+    margin: 0 0 14px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.mm [hidden] {
+    display: none !important;
+}
+
+
+/* Selector de mapa y de pasada */
+
+.mm-mapas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.mm-opcion,
+.mm-selector,
+.mm-boton {
+    min-height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    background: var(--card-soft);
+    color: var(--text-soft);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mm-opcion[aria-pressed="true"] {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.mm-opcion:focus-visible,
+.mm-selector:focus-visible,
+.mm-boton:focus-visible,
+.mm-barra:focus-visible,
+.mm-marco:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) {
+    .mm-opcion:hover,
+    .mm-selector:hover,
+    .mm-boton:hover {
+        border-color: var(--blue);
+    }
+}
+
+.mm-pasada {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.mm-etiqueta {
+    color: var(--text-faint);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+
+/* Mapa */
+
+.mm-valido {
+    margin: 0 0 8px;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.mm-marco {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #ffffff;
+    /* Proporción de los mapas (1100 × 860): no salta al cambiar de imagen. */
+    aspect-ratio: 1100 / 860;
+}
+
+.mm-imagen {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+
+/* Reproductor */
+
+.mm-reproductor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.mm-boton {
+    flex: 0 0 auto;
+    min-width: 40px;
+    padding: 0 10px;
+    font-size: 16px;
+}
+
+.mm-reproducir {
+    min-width: 48px;
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.mm-barra {
+    flex: 1 1 auto;
+    min-width: 80px;
+    accent-color: var(--cyan);
+}
+
+.mm-carga {
+    flex: 0 0 auto;
+    min-width: 0;
+    color: var(--text-faint);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.mm-descripcion {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.mm-fuente {
+    margin: 10px 2px 0;
+    color: var(--text-faint);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.mm-fuente a {
+    color: var(--text-soft);
+}
+
+
+@media (max-width: 640px) {
+    .mm-tarjeta {
+        padding: 16px 12px;
+    }
+
+    .mm-opcion {
+        flex: 1 1 auto;
+    }
+
+    .mm-carga {
+        display: none;
+    }
+}
+
+
+/* Fin de fichero: css/mapas-modelos.css */

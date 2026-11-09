@@ -7,6 +7,7 @@
  * ponerlo también en otras páginas o dashboards:
  *
  *     data-componente="modelos-numericos"  → js/modelos-numericos.js
+ *     data-componente="mapas-modelos"      → js/mapas-modelos.js (9-11-2026)
  *
  * La pestaña AEMET, desde el 4-11-2026, son piezas sueltas (avisos,
  * ahora, presentador, hoy, horas y días; js/prediccion/*.js, listadas en
@@ -20,12 +21,14 @@
 
 import {montarPrediccionAemet, COMPONENTES_PREDICCION} from "./prediccion-aemet.js?v=20261104-componentes1";
 import {montarModelosNumericos} from "./modelos-numericos.js?v=20261103-compartir2";
+import {montarMapasModelos} from "./mapas-modelos.js?v=20261109-mapas1";
 
 
 const COMPONENTES = {
     ...COMPONENTES_PREDICCION,
     "prediccion-aemet": montarPrediccionAemet,
-    "modelos-numericos": montarModelosNumericos
+    "modelos-numericos": montarModelosNumericos,
+    "mapas-modelos": montarMapasModelos
 };
 
 const PESTANA_POR_DEFECTO = "aemet";
