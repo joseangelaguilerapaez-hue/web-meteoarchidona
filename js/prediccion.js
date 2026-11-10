@@ -21,7 +21,7 @@
 
 import {montarPrediccionAemet, COMPONENTES_PREDICCION} from "./prediccion-aemet.js?v=20261104-componentes1";
 import {montarModelosNumericos} from "./modelos-numericos.js?v=20261103-compartir2";
-import {montarMapasModelos} from "./mapas-modelos.js?v=20261110-modelos1";
+import {montarMapasModelos} from "./mapas-modelos.js?v=20261110-t2m1";
 
 
 const COMPONENTES = {
