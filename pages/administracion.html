@@ -27,6 +27,8 @@
 <link rel="stylesheet" href="../css/novedades.css?v=20261105-novedades1">
 <link rel="stylesheet" href="../css/novedades-admin.css?v=20261105-novedades1">
 <link rel="stylesheet" href="../css/auditoria-admin.css?v=20261106-visitas1">
+<link rel="stylesheet" href="../css/procesos-admin.css?v=20261110-procesos1">
+<link rel="stylesheet" href="../css/barra-progreso.css?v=20261110-procesos1">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
 <script src="../js/cabecera.js?v=20261108-sismo1" defer></script>
@@ -34,7 +36,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261108-ficha1"
+    src="../js/administracion/principal.js?v=20261110-procesos1"
 ></script>
 
 <script
@@ -391,6 +393,14 @@
     data-modulo="novedades"
 >
     Novedades
+</a>
+
+<a
+    href="#procesos"
+    class="modulo-boton"
+    data-modulo="procesos"
+>
+    Procesos
 </a>
 
 <a
@@ -4106,6 +4116,190 @@
     Solo aparecen las visitas de quienes aceptan las estadísticas. Las
     propias son las de los navegadores desde los que se ha entrado alguna
     vez con una cuenta de administrador.
+</p>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     PROCESOS
+     Pool de procesos (js/administracion/procesos.js) con la barra de
+     progreso reutilizable (js/componentes/barra-progreso.js).
+     Decisiones de José del 10-11-2026: docs/procesos.md de
+     api-meteoarchidona. La web encarga y el worker del VPS ejecuta.
+     ========================================================= -->
+
+<section
+    id="modulo-procesos"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    De un vistazo
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonRecargarProcesos"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="resumenProcesos"
+    class="procesos-resumen-vistazo"
+></div>
+
+</div>
+</section>
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Lanzar un proceso
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<div class="procesos-lanzador">
+
+<div class="procesos-campo">
+<label for="tipoNuevoProceso">
+    Proceso
+</label>
+<select id="tipoNuevoProceso"></select>
+</div>
+
+<div
+    id="parametrosNuevoProceso"
+    class="procesos-parametros"
+></div>
+
+<button
+    id="botonLanzarProceso"
+    type="button"
+    class="boton boton-principal"
+>
+    Lanzar
+</button>
+
+</div>
+
+<p
+    id="descripcionNuevoProceso"
+    class="modulo-intro procesos-descripcion"
+></p>
+
+<div
+    id="estadoLanzarProceso"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<p class="modulo-intro procesos-nota">
+    Lo ejecuta el worker del servidor en segundo plano, uno a la vez: se
+    puede cerrar la página y volver luego. Si ya hay uno en marcha, hay
+    que esperar a que termine o cancelarlo.
+</p>
+
+</div>
+</section>
+
+
+<section class="panel procesos-panel-lista">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Procesos
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<div class="procesos-filtros">
+
+<label>
+    Estado
+    <select id="filtroEstadoProcesos"></select>
+</label>
+
+<label>
+    Tipo
+    <select id="filtroTipoProcesos"></select>
+</label>
+
+<label>
+    Desde
+    <input id="desdeProcesos" type="date">
+</label>
+
+<label>
+    Hasta
+    <input id="hastaProcesos" type="date">
+</label>
+
+<button
+    id="botonLimpiarFiltrosProcesos"
+    type="button"
+    class="boton boton-mini boton-secundario"
+>
+    Quitar filtros
+</button>
+
+</div>
+
+<div
+    id="estadoProcesos"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<ul
+    id="listaProcesos"
+    class="procesos-lista"
+></ul>
+
+<div id="finProcesos" class="procesos-fin"></div>
+
+<button
+    id="botonMasProcesos"
+    type="button"
+    class="boton boton-secundario procesos-mas"
+    hidden
+>
+    Cargar más
+</button>
+
+<p class="modulo-intro procesos-nota">
+    Se guardan 6 meses (Configuración → Otros). Las horas, en hora de
+    Madrid.
 </p>
 
 </div>

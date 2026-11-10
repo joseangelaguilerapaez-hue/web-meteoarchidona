@@ -301,7 +301,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261109-olivar2"),
-            ("administracion", r"administracion/principal\.js\?v=20261108-ficha1"),
+            ("administracion", r"administracion/principal\.js\?v=20261110-procesos1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -969,6 +969,33 @@ class TestDashboards(unittest.TestCase):
         self.assertIn("/js/dashboards/actualidad.js?v=", principal)
         self.assertIn("export async function arrancarActualidadDashboard(contenedor)",
                       leer(RAIZ / "js" / "dashboards" / "actualidad.js"))
+
+class TestPoolDeProcesos(unittest.TestCase):
+    """Administración → Procesos y barra de progreso reutilizable (José, 10-11-2026)."""
+
+    def test_administracion_tiene_su_apartado(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('data-modulo="procesos"', pagina)
+        self.assertIn('id="modulo-procesos"', pagina)
+        self.assertIn("css/procesos-admin.css", pagina)
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn('"./procesos.js?v=', principal)
+
+    def test_la_barra_es_un_componente_sin_ids_ni_html(self):
+        codigo = leer(RAIZ / "js" / "componentes" / "barra-progreso.js")
+        self.assertIn("export function crearBarraProgreso(", codigo)
+        self.assertIn("export function seguirProceso(", codigo)
+        self.assertNotIn("getElementById", codigo)
+        self.assertNotIn("innerHTML", codigo)
+        self.assertTrue((RAIZ / "css" / "barra-progreso.css").is_file())
+
+    def test_el_pool_usa_la_barra_y_no_mete_html(self):
+        codigo = leer(RAIZ / "js" / "administracion" / "procesos.js")
+        self.assertIn("../componentes/barra-progreso.js?v=", codigo)
+        self.assertNotIn("innerHTML", codigo)
+        for ruta in ("/tipos", "/resumen", "/progreso", "/cancelar"):
+            self.assertIn(ruta, codigo)
+
 
 if __name__ == "__main__":
     unittest.main()
