@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- Pestaña «Mapas» de Predicción (PR #130, publicada en el VPS el 10 nov, `8d52093`): visor animado de los mapas de modelos que dibuja la API (Europeo, Europeo IA, Americano y Alemán), con desplegables de modelo y pasada, tres mapas, reproducción y barra; componente `mapas-modelos` también para dashboards. Pendiente de que José lo revise en la web.
 - El Olivar, segunda entrega (PR #128, **publicada** el 9 nov, `53522b6`): componentes `olivar-grados-dia` (olivo o mosca, año frente al anterior, generaciones teóricas de la mosca) y `olivar-balance` (lluvia frente a ET0, año hidrológico y previsión), en la página, en los dashboards y en el resumen. Datos de la API (migración 0049).
 - El Olivar · agrometeorología del olivar (PR #126, **publicada** el 9 nov, `8677b70`): página `/olivar` con la gama «Aceite y oro» sobre fondo blanco, en el menú, en el sitemap y en `.htaccess` (aprobado por José), alta en Nginx con `scripts/configurar_seccion_olivar.py`; componentes `olivar-aviso`, `olivar-resumen`, `olivar-frio` y `olivar-heladas`, también en los dashboards. Datos de la API (migración 0048, `docs/olivar.md` de la API). Comprobado: `/olivar` responde 200.
 - **Sismología** (PR #120, #122, #123, #124 y #125, 8 y 9 nov; **publicada**, web en `3877143` y luego con el helicorder): página `/sismologia` en blanco con la gama «Basalto y magma»: aviso, último cercano, año en cifras, mapa redondo sobre las ortofotos PNOA (botón Satélite/Mapa, fuera del radio oscurecido, fichas al tocar y terremotos que crecen al acercar), lista, Helicorder de EGOR · sismograma de 24 horas (días anteriores con botones), estadísticas y textos divulgativos. Radio a elegir arriba (100 a 300 km, 200 por defecto). Todo en componentes montables en dashboards. José lo revisó en el móvil y lo dio por bueno.
@@ -186,3 +187,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-09 · Sismología publicada y revisada por José: mapa redondo con radio a elegir y Helicorder de EGOR.
 - 2026-11-09 · El Olivar (frío y heladas) publicado en el VPS (`8677b70`): página `/olivar` y cuatro componentes.
 - 2026-11-09 · El Olivar, segunda entrega (grados-día y balance hídrico) publicada en el VPS (`53522b6`).
+- 2026-11-10 · Pestaña «Mapas» de Predicción con los mapas de cuatro modelos publicada en el VPS (`8d52093`); el Francés (ARPEGE) se quitó en la API por lo que descargaba.
