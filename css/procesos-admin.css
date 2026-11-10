@@ -488,4 +488,198 @@
 }
 
 
+/* ==========================================================
+   INCIDENCIAS AGRUPADAS (por estación y tipo; se despliegan)
+   ========================================================== */
+
+.procesos-grupos{
+    display:grid;
+    gap:6px
+}
+
+.procesos-grupo{
+    --nivel-color:var(--muted);
+    border-left:3px solid var(--nivel-color);
+    background:rgba(255,255,255,.025)
+}
+
+.procesos-grupo[data-nivel="AVISO"]{ --nivel-color:var(--amber) }
+.procesos-grupo[data-nivel="ERROR"]{ --nivel-color:var(--red) }
+
+.procesos-grupo-resumen{
+    display:grid;
+    grid-template-columns:76px minmax(0,1fr);
+    gap:10px;
+    padding:7px 8px;
+    color:var(--text);
+    cursor:pointer;
+    list-style:none
+}
+
+.procesos-grupo-resumen::-webkit-details-marker{
+    display:none
+}
+
+.procesos-grupo-resumen::after{
+    content:"▸";
+    position:absolute;
+    right:10px;
+    color:var(--muted)
+}
+
+.procesos-grupo{
+    position:relative
+}
+
+.procesos-grupo[open] > .procesos-grupo-resumen::after{
+    content:"▾"
+}
+
+.procesos-grupo-resumen .procesos-incidencia-nivel{
+    color:var(--nivel-color)
+}
+
+.procesos-grupo-texto{
+    padding-right:18px
+}
+
+.procesos-grupo > .procesos-incidencias{
+    padding:0 0 8px 8px
+}
+
+.procesos-grupo .procesos-incidencia{
+    background:none
+}
+
+.procesos-hoja-impresion{
+    display:none
+}
+
+
+/* ==========================================================
+   PDF (impresión del navegador, «Guardar como PDF»)
+   Solo se imprime la hoja blanca que se cuelga del <body>.
+   ========================================================== */
+
+@media print{
+
+    @page{
+        margin:14mm 12mm 18mm
+    }
+
+    body.imprimiendo-proceso{
+        background:#fff
+    }
+
+    body.imprimiendo-proceso > :not(.procesos-hoja-impresion){
+        display:none !important
+    }
+
+    body.imprimiendo-proceso .procesos-hoja-impresion{
+        display:block;
+        color:#111;
+        font-family:Arial,Helvetica,sans-serif;
+        font-size:9pt;
+        line-height:1.35
+    }
+
+    .procesos-impresion-cabecera{
+        display:flex;
+        gap:14px;
+        align-items:center;
+        padding-bottom:8px;
+        border-bottom:1px solid #ccc
+    }
+
+    .procesos-impresion-logo{
+        width:64px;
+        height:auto
+    }
+
+    .procesos-hoja-impresion h1{
+        margin:0;
+        font-size:14pt
+    }
+
+    .procesos-hoja-impresion h1 + p{
+        margin:2px 0 0;
+        color:#444
+    }
+
+    .procesos-hoja-impresion h2{
+        margin:14px 0 6px;
+        font-size:11pt;
+        break-after:avoid
+    }
+
+    .procesos-hoja-impresion pre{
+        padding:0;
+        border:0;
+        border-radius:0;
+        background:none;
+        color:#111;
+        margin:0;
+        font-family:Arial,Helvetica,sans-serif;
+        font-size:9pt;
+        white-space:pre-wrap
+    }
+
+    .procesos-hoja-impresion table{
+        width:100%;
+        border-collapse:collapse;
+        margin-top:8px
+    }
+
+    .procesos-hoja-impresion th,
+    .procesos-hoja-impresion td{
+        padding:3px 5px;
+        border-bottom:1px solid #ddd;
+        color:#111;
+        text-align:left;
+        vertical-align:top
+    }
+
+    .procesos-hoja-impresion th{
+        background:#f2f2f2;
+        font-size:8pt
+    }
+
+    .procesos-hoja-impresion thead{
+        display:table-header-group
+    }
+
+    .procesos-hoja-impresion tr{
+        break-inside:avoid
+    }
+
+    .procesos-impresion-datos td:first-child{
+        width:90px;
+        color:#555
+    }
+
+    .procesos-impresion-incidencias td{
+        font-size:8pt
+    }
+
+    .procesos-impresion-incidencias td:nth-child(4),
+    .procesos-impresion-incidencias td:nth-child(5),
+    .procesos-impresion-incidencias td:nth-child(6){
+        white-space:nowrap
+    }
+
+    .procesos-impresion-grupos{
+        margin:0;
+        padding-left:16px
+    }
+
+    .procesos-impresion-pie{
+        margin-top:16px;
+        padding-top:4px;
+        border-top:1px solid #ccc;
+        color:#555;
+        font-size:7.5pt
+    }
+}
+
+
 /* Fin de fichero: css/procesos-admin.css */

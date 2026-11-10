@@ -619,15 +619,21 @@ function pintarFicha(contenedor, ficha){
         "procesos-subtitulo",
         `Incidencias (${ficha.incidencias.length})`
     );
-    const lista = crear("ul", "procesos-incidencias");
-    lista.append(...ficha.incidencias.map(i => lineaIncidencia(i)));
-    if(!ficha.incidencias.length){
-        lista.append(crear("li", "procesos-incidencia procesos-sin", "Sin incidencias."));
-    }
-    piezas.push(titulo, lista);
+    piezas.push(titulo, incidenciasAgrupadas(ficha.incidencias));
+
+    const acciones = crear("div", "acciones procesos-acciones");
+
+    const pdf = crear("button", "boton boton-secundario", "Descargar PDF");
+    pdf.type = "button";
+    pdf.addEventListener("click", () => imprimirFicha(ficha));
+
+    const json = crear("button", "boton boton-secundario", "Descargar JSON");
+    json.type = "button";
+    json.addEventListener("click", () => descargarJson(ficha));
+
+    acciones.append(pdf, json);
 
     if(activo(ficha)){
-        const acciones = crear("div", "acciones procesos-acciones");
         const cancelar = crear(
             "button",
             "boton boton-peligro",
@@ -642,10 +648,237 @@ function pintarFicha(contenedor, ficha){
             "Se para al acabar el paso en curso; lo hecho queda guardado."
         );
         acciones.append(cancelar, nota);
-        piezas.push(acciones);
     }
 
+    piezas.push(acciones);
+
     contenedor.replaceChildren(...piezas);
+}
+
+
+/* ==========================================================
+   INCIDENCIAS AGRUPADAS, PDF Y JSON
+   Decisión de José del 10-11-2026: con 30 días salen muchos avisos
+   seguidos. En la ficha se agrupan por estación y tipo (se despliegan);
+   el PDF (impresión del navegador, «Guardar como PDF») y el JSON llevan
+   todas, una a una.
+   ========================================================== */
+
+const ORDEN_NIVEL = {ERROR: 0, AVISO: 1, INFORMACION: 2};
+
+
+function grupos(incidencias){
+
+    const mapa = new Map();
+
+    for(const incidencia of incidencias){
+        const clave = `${incidencia.estacion_nombre || ""}|${incidencia.codigo}`;
+        if(!mapa.has(clave)){
+            mapa.set(clave, {
+                estacion: incidencia.estacion_nombre || "",
+                codigo: incidencia.codigo,
+                nombre: incidencia.codigo_nombre,
+                nivel: incidencia.nivel,
+                nivelNombre: incidencia.nivel_nombre,
+                incidencias: [],
+                minutos: 0
+            });
+        }
+        const grupo = mapa.get(clave);
+        grupo.incidencias.push(incidencia);
+        grupo.minutos += Number(incidencia.datos?.minutos || 0);
+        if(ORDEN_NIVEL[incidencia.nivel] < ORDEN_NIVEL[grupo.nivel]){
+            grupo.nivel = incidencia.nivel;
+            grupo.nivelNombre = incidencia.nivel_nombre;
+        }
+    }
+
+    return [...mapa.values()].sort((a, b) =>
+        (ORDEN_NIVEL[a.nivel] - ORDEN_NIVEL[b.nivel])
+        || a.estacion.localeCompare(b.estacion, "es")
+        || a.nombre.localeCompare(b.nombre, "es")
+    );
+}
+
+
+function textoGrupo(grupo){
+
+    const cuantas = grupo.incidencias.length;
+    const unidad = grupo.codigo === "HUECO_PROVEEDOR"
+        ? (cuantas === 1 ? "tramo" : "tramos")
+        : (cuantas === 1 ? "vez" : "veces");
+    const partes = [`${cuantas} ${unidad}`];
+
+    if(grupo.minutos){
+        partes.push(`${duracion(grupo.minutos * 60)} en total`);
+    }
+
+    return [grupo.estacion, grupo.nombre].filter(Boolean).join(" · ") + ": " + partes.join(", ");
+}
+
+
+function incidenciasAgrupadas(incidencias){
+
+    const caja = crear("div", "procesos-grupos");
+
+    if(!incidencias.length){
+        caja.append(crear("p", "procesos-incidencia procesos-sin", "Sin incidencias."));
+        return caja;
+    }
+
+    for(const grupo of grupos(incidencias)){
+        const desplegable = crear("details", "procesos-grupo");
+        desplegable.dataset.nivel = grupo.nivel;
+        // Los errores, abiertos; lo demás, cerrado.
+        desplegable.open = grupo.nivel === "ERROR";
+
+        const resumen = crear("summary", "procesos-grupo-resumen");
+        resumen.append(
+            crear("span", "procesos-incidencia-nivel", grupo.nivelNombre),
+            crear("span", "procesos-grupo-texto", textoGrupo(grupo))
+        );
+
+        const lista = crear("ul", "procesos-incidencias");
+        lista.append(...grupo.incidencias.map(i => lineaIncidencia(i)));
+
+        desplegable.append(resumen, lista);
+        caja.append(desplegable);
+    }
+
+    return caja;
+}
+
+
+function nombreFichero(ficha, extension){
+
+    const dia = diaMadrid(new Date(ficha.fecha_encargo));
+    const tipo = String(ficha.tipo || "proceso").toLowerCase().replaceAll("_", "-");
+    return `proceso-${ficha.id}-${tipo}-${dia}.${extension}`;
+}
+
+
+function descargarJson(ficha){
+
+    const datos = {
+        generado_en: new Date().toISOString(),
+        origen: "MeteoArchidona · Administración → Procesos",
+        ...ficha
+    };
+    const blob = new Blob([JSON.stringify(datos, null, 2)], {type: "application/json"});
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = nombreFichero(ficha, "json");
+    document.body.append(enlace);
+    enlace.click();
+    enlace.remove();
+    setTimeout(() => URL.revokeObjectURL(enlace.href), 10000);
+}
+
+
+function celdas(fila, valores, etiqueta = "td"){
+
+    for(const valor of valores){
+        fila.append(crear(etiqueta, "", valor === null || valor === undefined || valor === "" ? "—" : String(valor)));
+    }
+    return fila;
+}
+
+
+/*
+ * Hoja blanca colgada del <body>; al imprimir solo se ve ella (css).
+ * Lleva todo: datos, mensaje, resumen, tabla por estación, el resumen
+ * por grupos y cada incidencia en una fila.
+ */
+function imprimirFicha(ficha){
+
+    document.querySelector(".procesos-hoja-impresion")?.remove();
+
+    const hoja = crear("div", "procesos-hoja-impresion");
+
+    const cabecera = crear("header", "procesos-impresion-cabecera");
+    const logo = crear("img", "procesos-impresion-logo");
+    logo.src = "/assets/logo-meteoarchidona.png";
+    logo.alt = "MeteoArchidona";
+    const titulos = crear("div");
+    titulos.append(
+        crear("h1", "", `Proceso n.º ${ficha.id} · ${ficha.tipo_nombre}`),
+        crear("p", "", `${ficha.parametros_texto} · ${ficha.estado_nombre} · lanzado por ${ficha.lanzado_por}`)
+    );
+    cabecera.append(logo, titulos);
+    hoja.append(cabecera);
+
+    const datos = crear("table", "procesos-impresion-datos");
+    const cuerpoDatos = crear("tbody");
+    for(const [etiqueta, valor] of [
+        ["Encargado", fechaCompleta(ficha.fecha_encargo)],
+        ["Inicio", fechaCompleta(ficha.fecha_inicio)],
+        ["Fin", fechaCompleta(ficha.fecha_fin)],
+        ["Duración", duracion(ficha.duracion_segundos)],
+        ["Pasos", ficha.pasos_total ? `${ficha.pasos_hechos} de ${ficha.pasos_total}` : "—"],
+        ["Mensaje", ficha.mensaje]
+    ]){
+        cuerpoDatos.append(celdas(crear("tr"), [etiqueta, valor]));
+    }
+    datos.append(cuerpoDatos);
+    hoja.append(datos);
+
+    if(ficha.resumen){
+        hoja.append(crear("h2", "", "Resumen"), crear("pre", "", ficha.resumen));
+    }
+
+    const tabla = tablaEstaciones(ficha.contadores);
+    if(tabla){
+        hoja.append(crear("h2", "", "Por estación"), tabla);
+    }
+
+    hoja.append(crear("h2", "", `Incidencias (${ficha.incidencias.length})`));
+
+    if(ficha.incidencias.length){
+        const lista = crear("ul", "procesos-impresion-grupos");
+        lista.append(...grupos(ficha.incidencias).map(g => crear("li", "", `${g.nivelNombre} · ${textoGrupo(g)}`)));
+        hoja.append(lista);
+
+        const detalle = crear("table", "procesos-impresion-incidencias");
+        const cabeza = crear("thead");
+        cabeza.append(celdas(crear("tr"), ["Nivel", "Estación", "Tipo", "Desde", "Hasta", "Duración", "Mensaje"], "th"));
+        const cuerpo = crear("tbody");
+        for(const incidencia of ficha.incidencias){
+            const minutos = incidencia.datos?.minutos;
+            cuerpo.append(celdas(crear("tr"), [
+                incidencia.nivel_nombre,
+                incidencia.estacion_nombre,
+                incidencia.codigo_nombre,
+                incidencia.tramo_desde ? fechaHora(incidencia.tramo_desde) : fechaHora(incidencia.momento),
+                incidencia.tramo_hasta && incidencia.tramo_hasta !== incidencia.tramo_desde
+                    ? fechaHora(incidencia.tramo_hasta)
+                    : "",
+                minutos ? duracion(minutos * 60) : "",
+                incidencia.mensaje
+            ]));
+        }
+        detalle.append(cabeza, cuerpo);
+        hoja.append(detalle);
+    }else{
+        hoja.append(crear("p", "", "Sin incidencias."));
+    }
+
+    hoja.append(crear(
+        "footer",
+        "procesos-impresion-pie",
+        `MeteoArchidona · Administración → Procesos · Documento interno generado el ${fechaCompleta(new Date().toISOString())} (hora de Madrid).`
+    ));
+
+    document.body.append(hoja);
+    document.body.classList.add("imprimiendo-proceso");
+
+    const terminar = () => {
+        document.body.classList.remove("imprimiendo-proceso");
+        hoja.remove();
+        window.removeEventListener("afterprint", terminar);
+    };
+
+    window.addEventListener("afterprint", terminar);
+    window.print();
 }
 
 
