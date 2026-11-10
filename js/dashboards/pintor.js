@@ -67,6 +67,14 @@ const COMPONENTES = {
     "polen-semana": ["/js/polen/semana.js?v=20261106-polen1", "montarPolenSemana"],
     "polen-serie": ["/js/polen/serie.js?v=20261106-polen1", "montarPolenSerie"],
     "polen-calendario": ["/js/polen/calendario.js?v=20261106-polen1", "montarPolenCalendario"],
+    // Calidad del aire y calima
+    "calima-aviso": ["/js/calidad-aire/aviso-calima.js?v=20261111-aire1", "montarAvisoCalima"],
+    "aire-indice": ["/js/calidad-aire/indice.js?v=20261111-aire1", "montarAireIndice"],
+    "aire-dias": ["/js/calidad-aire/dias.js?v=20261111-aire1", "montarAireDias"],
+    "aire-horas": ["/js/calidad-aire/horas.js?v=20261111-aire1", "montarAireHoras"],
+    "aire-particulas": ["/js/calidad-aire/particulas.js?v=20261111-aire1", "montarAireParticulas"],
+    "calima-episodios": ["/js/calidad-aire/episodios.js?v=20261111-aire1", "montarEpisodiosCalima"],
+    "aire-divulgacion": ["/js/calidad-aire/divulgacion.js?v=20261111-aire1", "montarAireDivulgacion"],
     // Sismología
     "sismologia-aviso": ["/js/sismologia/aviso.js?v=20261109-heli1", "montarAvisoTerremoto"],
     "sismologia-ultimo": ["/js/sismologia/ultimo.js?v=20261109-heli1", "montarUltimoTerremoto"],

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Calidad del aire y calima en Archidona: índice de hoy, previsión por horas y por días de partículas, ozono y dióxido de nitrógeno, y aviso de polvo del Sáhara y lluvia de barro."
+>
+
+<title>
+    Calidad del aire · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/calidad-aire">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Calidad del aire · MeteoArchidona">
+<meta property="og:description" content="Cómo está hoy el aire en Archidona y si viene calima.">
+<meta property="og:url" content="https://meteoarchidona.com/calidad-aire">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20260926-giro2"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261101-instalar1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/calidad-aire-componentes.css?v=20261111-aire1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/calidad-aire.css?v=20261111-aire1"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261111-aire1"
+    defer
+></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/calidad-aire.js?v=20261111-aire1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="calidad-aire">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="aire">
+
+
+<header class="aire-cabecera">
+
+    <div class="air-etiqueta">
+        METEOARCHIDONA · CALIDAD DEL AIRE
+    </div>
+
+    <h1>
+        Calidad del aire en <span>Archidona</span>
+    </h1>
+
+    <p class="aire-entradilla">
+        Cómo está el aire que respiramos: el índice de ahora y de los
+        próximos días, hora a hora, y el aviso de calima, el polvo del
+        Sáhara que tanto nos visita y que deja el cielo blanquecino y la
+        lluvia de barro.
+    </p>
+
+</header>
+
+
+<!-- ========================================================
+     AVISO DE CALIMA
+     Componente js/calidad-aire/aviso-calima.js.
+     ======================================================== -->
+
+<div data-componente="calima-aviso"></div>
+
+
+<div class="aire-rejilla">
+
+    <!-- ====================================================
+         AHORA
+         Componente js/calidad-aire/indice.js.
+         ==================================================== -->
+
+    <section
+        class="aire-bloque"
+        aria-labelledby="titulo-aire-ahora"
+    >
+        <h2 id="titulo-aire-ahora">
+            Ahora en Archidona
+        </h2>
+
+        <div
+            data-componente="aire-indice"
+            data-titulo="no"
+        ></div>
+    </section>
+
+
+    <!-- ====================================================
+         PRÓXIMOS DÍAS
+         Componente js/calidad-aire/dias.js.
+         ==================================================== -->
+
+    <section
+        class="aire-bloque"
+        aria-labelledby="titulo-aire-dias"
+    >
+        <h2 id="titulo-aire-dias">
+            Próximos días
+        </h2>
+
+        <div
+            data-componente="aire-dias"
+            data-titulo="no"
+        ></div>
+    </section>
+
+</div>
+
+
+<!-- ========================================================
+     POR HORAS
+     Componente js/calidad-aire/horas.js.
+     ======================================================== -->
+
+<section
+    class="aire-bloque"
+    aria-labelledby="titulo-aire-horas"
+>
+    <h2 id="titulo-aire-horas">
+        Hora a hora
+    </h2>
+
+    <p class="aire-nota">
+        Cada casilla es una hora, con el color de su categoría. La primera
+        fila es el índice (el peor de los cuatro contaminantes) y las demás,
+        cada contaminante por separado.
+    </p>
+
+    <div
+        data-componente="aire-horas"
+        data-titulo="no"
+    ></div>
+</section>
+
+
+<!-- ========================================================
+     PARTÍCULAS Y POLVO
+     Componente js/calidad-aire/particulas.js.
+     ======================================================== -->
+
+<section
+    class="aire-bloque aire-bloque-arena"
+    aria-labelledby="titulo-aire-particulas"
+>
+    <h2 id="titulo-aire-particulas">
+        Partículas y polvo
+    </h2>
+
+    <p class="aire-nota">
+        Las partículas PM10 y PM2,5 y el polvo en suspensión que prevé el
+        modelo para los próximos días. Cuando llega la calima, la línea del
+        polvo sube y arrastra con ella las PM10. Las franjas de fondo marcan
+        la calima leve, moderada y fuerte.
+    </p>
+
+    <div
+        data-componente="aire-particulas"
+        data-titulo="no"
+    ></div>
+</section>
+
+
+<!-- ========================================================
+     EPISODIOS DE CALIMA
+     Componente js/calidad-aire/episodios.js.
+     ======================================================== -->
+
+<section
+    class="aire-bloque aire-bloque-arena"
+    aria-labelledby="titulo-aire-episodios"
+>
+    <h2 id="titulo-aire-episodios">
+        Episodios de calima
+    </h2>
+
+    <p class="aire-nota">
+        Los días seguidos con calima quedan guardados como un episodio,
+        para llevar la cuenta de cada año.
+    </p>
+
+    <div
+        data-componente="calima-episodios"
+        data-titulo="no"
+    ></div>
+</section>
+
+
+<!-- ========================================================
+     QUÉ RESPIRAMOS
+     Componente js/calidad-aire/divulgacion.js.
+     ======================================================== -->
+
+<section
+    class="aire-bloque"
+    aria-labelledby="titulo-aire-divulgacion"
+>
+    <h2 id="titulo-aire-divulgacion">
+        Qué respiramos
+    </h2>
+
+    <div
+        data-componente="aire-divulgacion"
+        data-titulo="no"
+    ></div>
+</section>
+
+
+<!-- ========================================================
+     CATEGORÍAS DEL ÍNDICE
+     La tabla la rellena js/calidad-aire.js con /aire/contaminantes.
+     ======================================================== -->
+
+<section
+    class="aire-bloque"
+    aria-labelledby="titulo-aire-limites"
+>
+    <h2 id="titulo-aire-limites">
+        Qué significa cada categoría
+    </h2>
+
+    <p class="aire-nota">
+        Las seis categorías del Índice Nacional de Calidad del Aire, en
+        microgramos por metro cúbico. Las partículas se miran con la media
+        de las últimas 24 horas y los gases con el valor de cada hora; el
+        índice es la peor categoría de los cuatro.
+    </p>
+
+    <div class="aire-tabla-desliza">
+        <table class="aire-limites">
+            <thead>
+                <tr>
+                    <th>Contaminante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cargando las categorías…</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="aire-bloque"
+    aria-labelledby="titulo-aire-fuentes"
+>
+    <h2 id="titulo-aire-fuentes">
+        Fuentes
+    </h2>
+
+    <ul class="aire-fuentes">
+        <li>
+            Previsión: modelos europeo y global de calidad del aire del
+            <a href="https://atmosphere.copernicus.eu/" target="_blank" rel="noopener noreferrer">Servicio de Vigilancia Atmosférica de Copernicus (CAMS)</a>,
+            servidos por
+            <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noopener noreferrer">Open-Meteo</a>.
+            Se actualiza dos veces al día.
+        </li>
+        <li>
+            Categorías y consejos:
+            <a href="https://www.miteco.gob.es/es/calidad-y-evaluacion-ambiental/temas/atmosfera-y-calidad-del-aire/visualizacion-datos-calidad-del-aire/ica.html" target="_blank" rel="noopener noreferrer">Índice Nacional de Calidad del Aire</a>
+            (Ministerio para la Transición Ecológica).
+        </li>
+        <li>
+            Mapas de polvo del Sáhara:
+            <a href="https://dust.aemet.es/" target="_blank" rel="noopener noreferrer">Centro Regional de Polvo de Barcelona de la OMM (AEMET y BSC)</a>.
+        </li>
+        <li>
+            Gráficas, niveles de calima y episodios, de MeteoArchidona. Es
+            información orientativa, no oficial: ante síntomas, lo que diga
+            el médico.
+        </li>
+    </ul>
+</section>
+
+
+</main>
+
+
+</div>
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/calidad-aire.html -->

@@ -300,7 +300,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261109-olivar2"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261111-aire1"),
             ("administracion", r"administracion/principal\.js\?v=20261110-salud1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -840,6 +840,69 @@ class TestComponentesPolen(unittest.TestCase):
 
     def test_el_alta_en_nginx_existe(self):
         self.assertIn('modulo.SECCION = "polen"', leer(RAIZ / "scripts" / "configurar_seccion_polen.py"))
+
+
+class TestComponentesCalidadAire(unittest.TestCase):
+    """Componentes de calidad del aire y calima para la página y los dashboards (10-11-2026)."""
+
+    COMPONENTES = {
+        "calima-aviso": ("aviso-calima.js", "montarAvisoCalima"),
+        "aire-indice": ("indice.js", "montarAireIndice"),
+        "aire-dias": ("dias.js", "montarAireDias"),
+        "aire-horas": ("horas.js", "montarAireHoras"),
+        "aire-particulas": ("particulas.js", "montarAireParticulas"),
+        "calima-episodios": ("episodios.js", "montarEpisodiosCalima"),
+        "aire-divulgacion": ("divulgacion.js", "montarAireDivulgacion"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "calidad-aire.html")
+        principal = leer(RAIZ / "js" / "calidad-aire.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "calidad-aire" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/calidad-aire/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "calidad-aire" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_misma_version_en_la_pagina_y_en_los_dashboards(self):
+        version = re.compile(r"calidad-aire/[\w-]+\.js\?v=([\w-]+)")
+        pagina = set(version.findall(leer(RAIZ / "js" / "calidad-aire.js")))
+        dashboards = set(version.findall(leer(RAIZ / "js" / "dashboards" / "pintor.js")))
+        self.assertEqual(len(pagina), 1)
+        self.assertEqual(pagina, dashboards)
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_arena_y_cielo(self):
+        comun = leer(RAIZ / "js" / "calidad-aire" / "comun.js")
+        ruta = re.search(r'"(/css/calidad-aire-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "calidad-aire.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "calidad-aire-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # Ocres y arena para la calima, celestes para el aire limpio (José, 10-11-2026).
+        for variable in ("--air-duna", "--air-ocre", "--air-celeste", "--air-azul"):
+            self.assertIn(variable, hoja)
+        self.assertNotIn("--air-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_carga_el_modulo_y_la_api_y_esta_en_el_menu(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "calidad-aire.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/calidad-aire\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn('<body data-seccion="calidad-aire">', pagina)
+        self.assertIn('href="/calidad-aire"', leer(RAIZ / "componentes" / "cabecera.html"))
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "calidad-aire"', leer(RAIZ / "scripts" / "configurar_seccion_calidad_aire.py"))
 
 
 class TestComponentesOlivar(unittest.TestCase):
