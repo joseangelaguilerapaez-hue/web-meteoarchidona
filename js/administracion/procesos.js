@@ -238,10 +238,19 @@ function dejarDeSeguirTodos(){
 
 
 /* Barra que se actualiza sola hasta que el proceso termina. */
-function barraViva(proceso, {compacta}){
+function barraViva(proceso, {compacta, alActualizar = null}){
 
     const barra = crearBarraProgreso({compacta});
     barra.actualizar(proceso);
+
+    // Lo que acompaña a la barra (p. ej. la etiqueta del estado en la
+    // línea) se pone al día con cada consulta.
+    const seguida = {
+        actualizar(progreso){
+            barra.actualizar(progreso);
+            alActualizar?.(progreso);
+        }
+    };
 
     if(activo(proceso)){
         const clave = `${proceso.id}-${compacta ? "c" : "g"}-${Math.random()}`;
@@ -249,7 +258,7 @@ function barraViva(proceso, {compacta}){
         const consultar = () => moduloVisible()
             ? pedirProgreso(proceso.id)
             : Promise.reject(new Error("Apartado oculto"));
-        const detener = seguirProceso(barra, consultar, {
+        const detener = seguirProceso(seguida, consultar, {
             cadaMs: REFRESCO_MS,
             alTerminar: () => {
                 seguimientos.delete(clave);
@@ -474,9 +483,19 @@ function linea(proceso){
     boton.type = "button";
     boton.setAttribute("aria-expanded", "false");
 
+    const chip = chipEstado(proceso.estado, proceso.estado_nombre);
+
     const progreso = crear("span", "procesos-progreso");
     if(activo(proceso)){
-        progreso.append(barraViva(proceso, {compacta: true}));
+        progreso.append(barraViva(proceso, {
+            compacta: true,
+            alActualizar: actual => {
+                chip.dataset.estado = actual.estado;
+                chip.textContent = actual.cancelacion_solicitada && !actual.terminado
+                    ? "Cancelando…"
+                    : actual.estado_nombre;
+            }
+        }));
     }else{
         progreso.textContent = textoIncidencias(proceso);
         progreso.classList.toggle("con-errores", proceso.incidencias_error > 0);
@@ -485,7 +504,7 @@ function linea(proceso){
     boton.append(
         crear("span", "procesos-numero", `${proceso.id}`),
         crear("span", "procesos-tipo", `${proceso.tipo_nombre} · ${proceso.parametros_texto}`),
-        chipEstado(proceso.estado, proceso.estado_nombre),
+        chip,
         crear("span", "procesos-quien", proceso.lanzado_por),
         crear("span", "procesos-cuando", fechaHora(proceso.fecha_encargo)),
         crear("span", "procesos-duracion", duracion(proceso.duracion_segundos)),

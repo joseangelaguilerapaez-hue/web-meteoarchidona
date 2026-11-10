@@ -755,7 +755,7 @@ async function cargarModuloProcesos(){
 
     if(promesaModuloProcesos === null){
         promesaModuloProcesos = import(
-            "./procesos.js?v=20261110-procesos1"
+            "./procesos.js?v=20261110-procesos2"
         );
     }
 
