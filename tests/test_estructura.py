@@ -301,7 +301,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261109-olivar2"),
-            ("administracion", r"administracion/principal\.js\?v=20261110-procesos2"),
+            ("administracion", r"administracion/principal\.js\?v=20261110-salud1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -995,6 +995,37 @@ class TestPoolDeProcesos(unittest.TestCase):
         self.assertNotIn("innerHTML", codigo)
         for ruta in ("/tipos", "/resumen", "/progreso", "/cancelar"):
             self.assertIn(ruta, codigo)
+
+
+class TestSaludEstaciones(unittest.TestCase):
+    """Salud de estaciones (José, 10-11-2026): semáforo, franja y apartado."""
+
+    def test_la_cabecera_carga_la_salud_en_todas_las_paginas(self):
+        cabecera = leer(RAIZ / "js" / "cabecera.js")
+        self.assertIn("/js/salud-publica.js?v=", cabecera)
+        self.assertIn("/css/salud-publica.css?v=", cabecera)
+        self.assertIn("cargarSalud();", cabecera)
+        self.assertTrue((RAIZ / "css" / "salud-publica.css").is_file())
+
+    def test_semaforo_y_franja_sin_html(self):
+        codigo = leer(RAIZ / "js" / "salud-publica.js")
+        self.assertIn('"/salud/semaforo"', codigo)
+        self.assertIn('"/salud/alertas"', codigo)
+        self.assertIn("meteoarchidona:cuenta", codigo)
+        self.assertIn("/administracion#salud", codigo)
+        self.assertNotIn("innerHTML", codigo)
+
+    def test_apartado_de_administracion(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('id="modulo-salud"', pagina)
+        self.assertIn('data-modulo="salud"', pagina)
+        self.assertIn("salud-admin.css?v=", pagina)
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn('"./salud.js?v=', principal)
+        codigo = leer(RAIZ / "js" / "administracion" / "salud.js")
+        self.assertIn('"/admin/salud"', codigo)
+        self.assertIn("/series?horas=", codigo)
+        self.assertNotIn("innerHTML", codigo)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,140 @@
+/*
+ * MeteoArchidona
+ * Salud de las estaciones en todas las páginas (js/salud-publica.js):
+ * el semáforo de las fichas y la franja roja de los administradores.
+ */
+
+
+/* ---- Semáforo de las fichas ---- */
+
+.salud-semaforo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3px;
+
+    margin-top: 5px;
+}
+
+.salud-semaforo i {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.salud-semaforo[data-nivel="ROJO"] i[data-luz="ROJO"] {
+    background: var(--red);
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.75);
+}
+
+.salud-semaforo[data-nivel="AMBAR"] i[data-luz="AMBAR"] {
+    background: var(--orange);
+    box-shadow: 0 0 6px rgba(249, 115, 22, 0.7);
+}
+
+.salud-semaforo[data-nivel="VERDE"] i[data-luz="VERDE"] {
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+}
+
+
+/* ---- Franja de los administradores ---- */
+
+.salud-franja {
+    position: relative;
+    z-index: 40;
+
+    display: flex;
+    align-items: stretch;
+
+    background: #b91c1c;
+    color: #fff;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.salud-franja-enlace {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 9px 16px;
+
+    color: inherit;
+    text-decoration: none;
+
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.salud-franja-enlace:hover .salud-franja-ver,
+.salud-franja-enlace:focus-visible .salud-franja-ver {
+    text-decoration: underline;
+}
+
+.salud-franja-icono {
+    font-size: 18px;
+}
+
+.salud-franja-textos {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    font-weight: 600;
+}
+
+.salud-franja-ver {
+    white-space: nowrap;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.salud-franja-cerrar {
+    flex: 0 0 auto;
+
+    padding: 0 16px;
+
+    border: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+
+    background: transparent;
+    color: inherit;
+
+    font-size: 22px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.salud-franja-cerrar:hover,
+.salud-franja-cerrar:focus-visible {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 640px) {
+
+    .salud-franja-enlace {
+        flex-wrap: wrap;
+        gap: 4px 10px;
+    }
+
+    .salud-franja-ver {
+        width: 100%;
+        padding-left: 30px;
+    }
+
+}
+
+
+/* Fin de fichero: css/salud-publica.css */

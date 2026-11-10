@@ -29,14 +29,15 @@
 <link rel="stylesheet" href="../css/auditoria-admin.css?v=20261106-visitas1">
 <link rel="stylesheet" href="../css/procesos-admin.css?v=20261110-procesos2">
 <link rel="stylesheet" href="../css/barra-progreso.css?v=20261110-procesos1">
+<link rel="stylesheet" href="../css/salud-admin.css?v=20261110-salud1">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
-<script src="../js/cabecera.js?v=20261108-sismo1" defer></script>
+<script src="../js/cabecera.js?v=20261110-salud1" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261110-procesos2"
+    src="../js/administracion/principal.js?v=20261110-salud1"
 ></script>
 
 <script
@@ -401,6 +402,14 @@
     data-modulo="procesos"
 >
     Procesos
+</a>
+
+<a
+    href="#salud"
+    class="modulo-boton"
+    data-modulo="salud"
+>
+    Salud de estaciones
 </a>
 
 <a
@@ -4117,6 +4126,134 @@
     propias son las de los navegadores desde los que se ha entrado alguna
     vez con una cuenta de administrador.
 </p>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     SALUD DE ESTACIONES
+     Semáforo, indicadores, alertas y gráficas de radio, wifi y
+     recepción (js/administracion/salud.js). Decisiones de José del
+     10-11-2026: docs/salud-estaciones.md de api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-salud"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel salud-panel-estaciones">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Estado de las estaciones
+</h2>
+
+<div class="acciones">
+
+<span id="horaSalud" class="salud-hora"></span>
+
+<button
+    id="botonRecargarSalud"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="estadoSalud"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="tarjetasSalud"
+    class="salud-tarjetas"
+></div>
+
+<p class="modulo-intro salud-nota">
+    Rojo si lleva más de 15 min sin datos, radio del ISS por debajo de
+    −85 dBm, recepción de la última hora por debajo del 80 %, wifi por
+    debajo de −80 dBm o batería del transmisor baja. Ámbar: más de
+    5 min, −80 dBm, 95 % y −70 dBm. Se evalúa cada 5 minutos y se avisa
+    por correo al ponerse en rojo y al volver a la normalidad.
+</p>
+
+</div>
+</section>
+
+
+<section class="panel salud-panel-graficas">
+
+<div class="panel-cabecera">
+
+<h2
+    id="tituloGraficasSalud"
+    class="panel-titulo"
+>
+    Gráficas
+</h2>
+
+<div class="acciones">
+
+<select
+    id="estacionGraficasSalud"
+    aria-label="Estación de las gráficas"
+></select>
+
+<div
+    class="salud-periodo"
+    role="group"
+    aria-label="Periodo"
+>
+<button type="button" class="boton boton-mini" data-horas="24" aria-pressed="true">24 h</button>
+<button type="button" class="boton boton-mini boton-secundario" data-horas="168" aria-pressed="false">7 días</button>
+</div>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="graficasSalud"
+    class="salud-graficas"
+></div>
+
+</div>
+</section>
+
+
+<section class="panel salud-panel-alertas">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Alertas de los últimos 7 días
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<ul
+    id="alertasSalud"
+    class="salud-alertas"
+></ul>
 
 </div>
 </section>
