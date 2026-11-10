@@ -738,6 +738,50 @@ async function cargarModuloAuditoria(){
 
 
 /* ==========================================================
+   PROCESOS
+   Pool de procesos (José, 10-11-2026; docs/procesos.md de la API).
+   procesos.js solo se importa si existe modulo-procesos.
+   ========================================================== */
+
+let promesaModuloProcesos = null;
+
+let moduloProcesos = null;
+
+async function cargarModuloProcesos(){
+
+    if(!$("modulo-procesos")){
+        return;
+    }
+
+    if(promesaModuloProcesos === null){
+        promesaModuloProcesos = import(
+            "./procesos.js?v=20261110-procesos1"
+        );
+    }
+
+    try{
+        moduloProcesos = await promesaModuloProcesos;
+        moduloProcesos.configurarEventosProcesos();
+        await moduloProcesos.cargarProcesos();
+    }catch(error){
+        promesaModuloProcesos = null;
+        console.error(
+            "No se ha podido cargar el pool de procesos.",
+            error
+        );
+        mostrarEstado(
+            $("estadoProcesos"),
+            error.message
+            ||
+            "No se han podido cargar los procesos.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    NOVEDADES
    Ventana de novedades de la portada (docs/novedades.md de la
    API). novedades.js solo se importa si existe modulo-novedades.
@@ -1067,6 +1111,8 @@ export async function cargarDatosAdministracion(){
 
         await cargarModuloAuditoria();
 
+        await cargarModuloProcesos();
+
         mostrarEstado(
             $("estadoPanel"),
             "Datos administrativos actualizados.",
@@ -1217,6 +1263,16 @@ async function alCerrarSesion(){
         "function"
     ){
         moduloAuditoria.limpiarAuditoria();
+    }
+
+    if(
+        moduloProcesos
+        &&
+        typeof moduloProcesos.limpiarProcesos
+        ===
+        "function"
+    ){
+        moduloProcesos.limpiarProcesos();
     }
 
     history.replaceState(
