@@ -1,0 +1,346 @@
+/*
+ * MeteoArchidona
+ * Administración · Salud de estaciones (js/administracion/salud.js).
+ *
+ * Tarjetas por estación con su semáforo, gráficas de una sola medida
+ * con las líneas de ámbar y rojo, y la lista de alertas. Colores del
+ * estado: verde todo bien, naranja algo falla, rojo hay que mirarla,
+ * gris sin información; siempre con su texto al lado.
+ */
+
+
+#modulo-salud .admin-grid{
+    grid-template-columns:minmax(0,1fr)
+}
+
+#estadoSalud:empty{
+    display:none
+}
+
+#modulo-salud [data-nivel]{
+    --nivel-color:var(--muted-dark)
+}
+
+#modulo-salud [data-nivel="VERDE"]{ --nivel-color:var(--green) }
+#modulo-salud [data-nivel="AMBAR"]{ --nivel-color:var(--orange) }
+#modulo-salud [data-nivel="ROJO"]{ --nivel-color:var(--red) }
+
+.salud-hora{
+    color:var(--text-faint);
+    font-size:11px
+}
+
+.salud-luz{
+    flex:0 0 auto;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--nivel-color)
+}
+
+.salud-nota{
+    margin-top:14px
+}
+
+
+/* ==========================================================
+   TARJETAS
+   ========================================================== */
+
+.salud-tarjetas{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:12px
+}
+
+.salud-tarjeta{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:14px;
+    border:1px solid var(--border);
+    border-top:3px solid var(--nivel-color);
+    border-radius:var(--radius-sm);
+    background:var(--card-soft)
+}
+
+.salud-tarjeta.seleccionada{
+    border-color:var(--border-cyan);
+    border-top-color:var(--nivel-color);
+    box-shadow:0 0 0 1px var(--border-cyan)
+}
+
+.salud-tarjeta-cabecera{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px
+}
+
+.salud-tarjeta-nombre{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0
+}
+
+.salud-tarjeta-nombre strong{
+    color:var(--text);
+    font-size:15px
+}
+
+.salud-tarjeta-proveedor{
+    color:var(--text-faint);
+    font-size:10px;
+    letter-spacing:.06em;
+    text-transform:uppercase
+}
+
+.salud-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 9px;
+    border:1px solid var(--nivel-color);
+    border-radius:999px;
+    color:var(--text);
+    font-size:11px;
+    font-weight:700;
+    white-space:nowrap
+}
+
+.salud-tarjeta-ultimo{
+    margin:0;
+    color:var(--muted);
+    font-size:12px
+}
+
+.salud-indicadores{
+    display:grid;
+    gap:6px;
+    margin:0;
+    padding:0;
+    list-style:none
+}
+
+.salud-indicador{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px
+}
+
+.salud-indicador-nombre{
+    flex:1;
+    color:var(--text-soft)
+}
+
+.salud-indicador-texto{
+    color:var(--text);
+    font-variant-numeric:tabular-nums;
+    text-align:right
+}
+
+.salud-tarjeta-alertas{
+    margin:0;
+    padding:8px 10px;
+    border-radius:10px;
+    background:rgba(239,68,68,.12);
+    color:#ffb4b4;
+    font-size:12px;
+    list-style:none
+}
+
+.salud-ver{
+    align-self:flex-start;
+    margin-top:auto
+}
+
+
+/* ==========================================================
+   GRÁFICAS
+   ========================================================== */
+
+.salud-panel-graficas .acciones{
+    flex-wrap:wrap
+}
+
+.salud-periodo{
+    display:inline-flex;
+    gap:4px
+}
+
+.salud-graficas{
+    display:grid;
+    gap:18px
+}
+
+.salud-grafica{
+    margin:0
+}
+
+.salud-grafica-titulo{
+    margin-bottom:6px;
+    color:var(--text-soft);
+    font-size:13px
+}
+
+.salud-grafica-titulo span{
+    color:var(--text-faint)
+}
+
+.salud-grafica-marco{
+    position:relative
+}
+
+.salud-svg{
+    display:block;
+    overflow:visible
+}
+
+.salud-rejilla{
+    stroke:rgba(255,255,255,.07);
+    stroke-width:1
+}
+
+.salud-rejilla-tiempo{
+    stroke:rgba(255,255,255,.04)
+}
+
+.salud-eje{
+    fill:var(--text-faint);
+    font-size:10px;
+    font-variant-numeric:tabular-nums
+}
+
+.salud-umbral{
+    stroke:var(--nivel-color);
+    stroke-width:1;
+    stroke-dasharray:4 4;
+    opacity:.85
+}
+
+.salud-umbral-texto{
+    fill:var(--muted);
+    font-size:10px
+}
+
+.salud-linea{
+    fill:none;
+    stroke:var(--cyan);
+    stroke-width:2;
+    stroke-linejoin:round;
+    stroke-linecap:round
+}
+
+.salud-punto-suelto{
+    fill:var(--cyan)
+}
+
+.salud-guia{
+    stroke:rgba(255,255,255,.35);
+    stroke-width:1
+}
+
+.salud-marca{
+    fill:var(--cyan);
+    stroke:var(--card);
+    stroke-width:2
+}
+
+.salud-zona{
+    fill:transparent;
+    cursor:crosshair
+}
+
+.salud-globo{
+    position:absolute;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    padding:6px 9px;
+    border:1px solid var(--border-strong);
+    border-radius:8px;
+    background:var(--panel);
+    color:var(--text);
+    font-size:11px;
+    white-space:nowrap;
+    pointer-events:none;
+    transform:translate(10px,-50%)
+}
+
+.salud-globo[hidden]{
+    display:none
+}
+
+.salud-globo.a-la-izquierda{
+    transform:translate(calc(-100% - 10px),-50%)
+}
+
+.salud-globo span{
+    color:var(--muted)
+}
+
+.salud-grafica-vacia{
+    margin:0;
+    padding:16px 0;
+    color:var(--text-faint);
+    font-size:12px
+}
+
+
+/* ==========================================================
+   ALERTAS
+   ========================================================== */
+
+.salud-alertas{
+    display:grid;
+    gap:2px;
+    margin:0;
+    padding:0;
+    list-style:none
+}
+
+.salud-alerta{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    align-items:center;
+    gap:10px;
+    padding:8px 4px;
+    border-bottom:1px solid var(--border-subtle);
+    font-size:12px
+}
+
+.salud-alerta-mensaje{
+    color:var(--text-soft)
+}
+
+.salud-alerta[data-abierta="si"] .salud-alerta-mensaje{
+    color:var(--text);
+    font-weight:700
+}
+
+.salud-alerta-cuando{
+    color:var(--text-faint);
+    white-space:nowrap
+}
+
+.salud-alertas-vacia{
+    color:var(--text-faint);
+    font-size:12px
+}
+
+@media (max-width: 640px){
+    .salud-alerta{
+        grid-template-columns:auto minmax(0,1fr)
+    }
+
+    .salud-alerta-cuando{
+        grid-column:2;
+        white-space:normal
+    }
+}
+
+
+/* Fin de fichero: css/salud-admin.css */

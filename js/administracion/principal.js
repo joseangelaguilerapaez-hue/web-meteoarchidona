@@ -782,6 +782,51 @@ async function cargarModuloProcesos(){
 
 
 /* ==========================================================
+   SALUD DE ESTACIONES
+   Semáforo, alertas y gráficas (José, 10-11-2026;
+   docs/salud-estaciones.md de la API). salud.js solo se importa
+   si existe modulo-salud.
+   ========================================================== */
+
+let promesaModuloSalud = null;
+
+let moduloSalud = null;
+
+async function cargarModuloSalud(){
+
+    if(!$("modulo-salud")){
+        return;
+    }
+
+    if(promesaModuloSalud === null){
+        promesaModuloSalud = import(
+            "./salud.js?v=20261110-salud1"
+        );
+    }
+
+    try{
+        moduloSalud = await promesaModuloSalud;
+        moduloSalud.configurarEventosSalud();
+        await moduloSalud.cargarSalud();
+    }catch(error){
+        promesaModuloSalud = null;
+        console.error(
+            "No se ha podido cargar la salud de las estaciones.",
+            error
+        );
+        mostrarEstado(
+            $("estadoSalud"),
+            error.message
+            ||
+            "No se ha podido cargar la salud de las estaciones.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    NOVEDADES
    Ventana de novedades de la portada (docs/novedades.md de la
    API). novedades.js solo se importa si existe modulo-novedades.
@@ -1113,6 +1158,8 @@ export async function cargarDatosAdministracion(){
 
         await cargarModuloProcesos();
 
+        await cargarModuloSalud();
+
         mostrarEstado(
             $("estadoPanel"),
             "Datos administrativos actualizados.",
@@ -1273,6 +1320,16 @@ async function alCerrarSesion(){
         "function"
     ){
         moduloProcesos.limpiarProcesos();
+    }
+
+    if(
+        moduloSalud
+        &&
+        typeof moduloSalud.limpiarSalud
+        ===
+        "function"
+    ){
+        moduloSalud.limpiarSalud();
     }
 
     history.replaceState(
