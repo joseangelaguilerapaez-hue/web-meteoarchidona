@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- Salud de estaciones, **publicada** el 10 nov (PR #136, `c331877`): semáforo público rojo/ámbar/verde en las fichas de estación, franja roja de alerta bajo la cabecera para los usuarios administradores (se cierra y vuelve con una alerta nueva o a las 4 h) y Administración → Salud de estaciones con tarjetas, gráficas de radio, recepción y wifi (24 h / 7 días) y alertas de 7 días. Necesita la API de los PR #141 y #142 (migración 0051 aplicada). Vista con datos reales **por confirmar**.
 - Administración → Procesos (pool de procesos) y la barra de progreso reutilizable `js/componentes/barra-progreso.js`, **publicados** el 10 nov (PR #133, `077fbba`): de un vistazo, lanzar «Recuperar histórico», lista con filtros, ficha con incidencias y Cancelar. Necesita la API del PR #138 (migración 0050 aplicada). Primera ejecución real **por confirmar**.
 - Pestaña «Mapas» de Predicción (PR #130, publicada en el VPS el 10 nov, `8d52093`): visor animado de los mapas de modelos que dibuja la API (Europeo, Europeo IA, Americano y Alemán), con desplegables de modelo y pasada, tres mapas, reproducción y barra; componente `mapas-modelos` también para dashboards. Pendiente de que José lo revise en la web.
 - El Olivar, segunda entrega (PR #128, **publicada** el 9 nov, `53522b6`): componentes `olivar-grados-dia` (olivo o mosca, año frente al anterior, generaciones teóricas de la mosca) y `olivar-balance` (lluvia frente a ET0, año hidrológico y previsión), en la página, en los dashboards y en el resumen. Datos de la API (migración 0049).
@@ -190,3 +191,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-09 · El Olivar, segunda entrega (grados-día y balance hídrico) publicada en el VPS (`53522b6`).
 - 2026-11-10 · Pool de procesos en Administración y barra de progreso publicados en el VPS (`077fbba`; API `8721b35`, migración 0050 aplicada).
 - 2026-11-10 · Pestaña «Mapas» de Predicción con los mapas de cuatro modelos publicada en el VPS (`8d52093`); el Francés (ARPEGE) se quitó en la API por lo que descargaba.
+- 2026-11-10 · Salud de estaciones (semáforo de las fichas, franja de los administradores y apartado de Administración) publicada en el VPS (`c331877`; API `6a84c8a`, migración 0051 aplicada).
