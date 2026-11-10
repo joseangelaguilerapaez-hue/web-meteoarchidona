@@ -33,7 +33,7 @@
  */
 
 const ZONA = "Europe/Madrid";
-const HOJA = "/css/mapas-modelos.css?v=20261110-modelos1";
+const HOJA = "/css/mapas-modelos.css?v=20261110-t2m1";
 const MS_FOTOGRAMA = 650;
 const MS_PAUSA_FINAL = 1600;
 const REFRESCO_MS = 30 * 60 * 1000;
@@ -222,9 +222,21 @@ export function montarMapasModelos(raiz) {
 
     /* ---------- Pintado ---------- */
 
+    // Los mapas que tiene la pasada elegida: una pasada dibujada antes de
+    // añadir un mapa nuevo (p. ej. la temperatura a 2 m, 10-11-2026) no lo tiene.
+    function mapasDisponibles() {
+        const deLaPasada = estado.pasada?.mapas || [];
+        const todos = estado.modelo?.mapas || [];
+        return deLaPasada.length ? todos.filter((mapa) => deLaPasada.includes(mapa.codigo)) : todos;
+    }
+
     function pintarMapas() {
+        const disponibles = mapasDisponibles();
+        if (disponibles.length && !disponibles.some((mapa) => mapa.codigo === estado.mapa)) {
+            estado.mapa = disponibles[0].codigo;
+        }
         mapas.textContent = "";
-        for (const mapa of estado.modelo.mapas) {
+        for (const mapa of disponibles) {
             const opcion = boton("mm-opcion", mapa.nombre);
             opcion.setAttribute("aria-pressed", String(mapa.codigo === estado.mapa));
             opcion.addEventListener("click", () => {
@@ -343,6 +355,7 @@ export function montarMapasModelos(raiz) {
         const valida = pasos()[estado.indice]?.valido_utc;
         estado.pasada = estado.modelo.pasadas.find((pasada) => pasada.codigo === selectorPasada.value) || estado.pasada;
         mismaHora(valida);
+        pintarMapas();
         precargar();
         mostrar();
     });
