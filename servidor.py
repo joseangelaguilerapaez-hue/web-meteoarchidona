@@ -51,6 +51,7 @@ SECCIONES = (
     "sol",
     "embalses",
     "polen",
+    "calidad-aire",
     "sismologia",
     "olivar",
     "mi-cuenta",

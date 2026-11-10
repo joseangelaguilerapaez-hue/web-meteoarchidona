@@ -1,0 +1,195 @@
+/*
+ * MeteoArchidona
+ * Página Calidad del aire
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/calidad-aire.html
+ *
+ * Decisión de José del 10-11-2026: el mismo aspecto que Embalses y Polen
+ * (blanco, al revés que el resto del sitio), con la gama «Arena y cielo»:
+ * el cielo limpio arriba y la arena de la calima abajo. Una columna de
+ * bloques con bordes finos y radios de 14 px; la cabecera y el pie siguen
+ * siendo los oscuros de siempre.
+ *
+ * La paleta (--air-*) está en css/calidad-aire-componentes.css, que se
+ * carga antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="calidad-aire"] {
+    background:
+        radial-gradient(ellipse at top, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #f7fbfe 0%, #e6f3fb 45%, #fbf5ea 80%, #ecd9b4 100%);
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.aire {
+    width: min(1040px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--air-texto);
+}
+
+
+.aire-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+
+.aire-cabecera h1 {
+    margin: 0;
+    color: var(--air-azul-hondo);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+
+.aire-cabecera h1 span {
+    color: var(--air-ocre);
+}
+
+
+.aire-entradilla {
+    margin: 0;
+    max-width: 760px;
+    color: var(--air-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+.aire-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 18px;
+}
+
+
+@media (max-width: 860px) {
+    .aire-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+.aire-bloque {
+    min-width: 0;
+    padding: 22px 24px;
+    background: linear-gradient(170deg, var(--air-blanco) 0%, var(--air-nube) 70%, var(--air-cielo-claro) 100%);
+    border: 1px solid var(--air-borde);
+    border-radius: 14px;
+    box-shadow: var(--air-sombra);
+}
+
+
+.aire-bloque-arena {
+    background: linear-gradient(170deg, var(--air-blanco) 0%, var(--air-arena-clara) 65%, var(--air-arena) 140%);
+    border-color: var(--air-borde-arena);
+}
+
+
+/* El aviso de calima va suelto, con su propia tarjeta. */
+.aire > .air-componente.calima-aviso {
+    padding: 20px 24px;
+}
+
+
+.aire-bloque h2 {
+    margin: 0 0 12px;
+    color: var(--air-azul-hondo);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.aire-bloque-arena h2 {
+    color: var(--air-tierra);
+}
+
+
+.aire-nota {
+    margin: 0 0 14px;
+    color: var(--air-texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+.aire-bloque a {
+    color: var(--air-azul);
+    text-decoration: none;
+}
+
+
+.aire-bloque a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 560px) {
+    .aire-bloque {
+        padding: 18px 16px;
+    }
+}
+
+
+/* ==========================================================
+   TECHOS DEL ÍNDICE Y FUENTES
+   ========================================================== */
+
+.aire-tabla-desliza {
+    overflow-x: auto;
+}
+
+
+.aire-limites {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+
+.aire-limites th,
+.aire-limites td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--air-borde);
+    text-align: left;
+    white-space: nowrap;
+}
+
+
+.aire-limites th {
+    color: var(--air-texto-suave);
+    font-weight: 600;
+}
+
+
+.aire-limites small {
+    color: var(--air-texto-tenue);
+}
+
+
+.aire-fuentes {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--air-texto-suave);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* Fin de fichero: css/calidad-aire.css */
