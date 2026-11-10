@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-11-09.
+Última actualización: 2026-11-10.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- Administración → Procesos (pool de procesos) y la barra de progreso reutilizable `js/componentes/barra-progreso.js`, **publicados** el 10 nov (PR #133, `077fbba`): de un vistazo, lanzar «Recuperar histórico», lista con filtros, ficha con incidencias y Cancelar. Necesita la API del PR #138 (migración 0050 aplicada). Primera ejecución real **por confirmar**.
 - Pestaña «Mapas» de Predicción (PR #130, publicada en el VPS el 10 nov, `8d52093`): visor animado de los mapas de modelos que dibuja la API (Europeo, Europeo IA, Americano y Alemán), con desplegables de modelo y pasada, tres mapas, reproducción y barra; componente `mapas-modelos` también para dashboards. Pendiente de que José lo revise en la web.
 - El Olivar, segunda entrega (PR #128, **publicada** el 9 nov, `53522b6`): componentes `olivar-grados-dia` (olivo o mosca, año frente al anterior, generaciones teóricas de la mosca) y `olivar-balance` (lluvia frente a ET0, año hidrológico y previsión), en la página, en los dashboards y en el resumen. Datos de la API (migración 0049).
 - El Olivar · agrometeorología del olivar (PR #126, **publicada** el 9 nov, `8677b70`): página `/olivar` con la gama «Aceite y oro» sobre fondo blanco, en el menú, en el sitemap y en `.htaccess` (aprobado por José), alta en Nginx con `scripts/configurar_seccion_olivar.py`; componentes `olivar-aviso`, `olivar-resumen`, `olivar-frio` y `olivar-heladas`, también en los dashboards. Datos de la API (migración 0048, `docs/olivar.md` de la API). Comprobado: `/olivar` responde 200.
@@ -187,4 +188,5 @@ comprobado en meteoarchidona.com.
 - 2026-11-09 · Sismología publicada y revisada por José: mapa redondo con radio a elegir y Helicorder de EGOR.
 - 2026-11-09 · El Olivar (frío y heladas) publicado en el VPS (`8677b70`): página `/olivar` y cuatro componentes.
 - 2026-11-09 · El Olivar, segunda entrega (grados-día y balance hídrico) publicada en el VPS (`53522b6`).
+- 2026-11-10 · Pool de procesos en Administración y barra de progreso publicados en el VPS (`077fbba`; API `8721b35`, migración 0050 aplicada).
 - 2026-11-10 · Pestaña «Mapas» de Predicción con los mapas de cuatro modelos publicada en el VPS (`8d52093`); el Francés (ARPEGE) se quitó en la API por lo que descargaba.
