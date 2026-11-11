@@ -12,7 +12,7 @@ para la estación de El Silo y lo guarda en la base. La imagen de la Luna es de 
 y la API solo da su dirección; si la NASA no responde, el componente dibuja la fase. Horas siempre
 en hora de Madrid.
 
-## Componentes (fase 1, 11-11-2026)
+## Componentes (fases 1 y 2, 11-11-2026)
 
 | Componente | `data-componente` | Módulo | Función | Opciones |
 |---|---|---|---|---|
@@ -23,6 +23,9 @@ en hora de Madrid.
 | Crepúsculos y horas doradas | `luna-crepusculos` | `js/luna/crepusculos.js` | `montarCrepusculos` | `data-dias` (1; hasta 14) |
 | Planetas esta noche | `luna-planetas-noche` | `js/luna/planetas-noche.js` | `montarPlanetasNoche` | `data-todos="no"` |
 | El cielo ahora | `luna-planetas-ahora` | `js/luna/planetas-ahora.js` | `montarPlanetasAhora` | |
+| Pasos de satélites (fase 2) | `luna-pasos` | `js/luna/pasos.js` | `montarPasos` | `data-dias` (3; hasta 10), `data-tipo` (`ISS`, `TIANGONG`, `STARLINK`), `data-todos="si"` |
+| ¿Se puede observar? (fase 2) | `luna-observacion` | `js/luna/observacion.js` | `montarObservacion` | `data-noches` (4; de 1 a 4) |
+| Aviso del cielo (fase 2) | `luna-aviso` | `js/luna/aviso.js` | `montarAvisoCielo` | `data-horas` (18; hasta 48), `data-solo-aviso="si"` |
 
 Lo que tienen en común (como Sol y El Olivar):
 
@@ -37,6 +40,11 @@ Lo que tienen en común (como Sol y El Olivar):
 
 «Planetas esta noche» pide la noche en curso: antes de las 12:00, la que empezó ayer por la tarde.
 
+Fase 2: el aviso va arriba en la página con `data-solo-aviso="si"` (no ocupa sitio si no hay nada);
+en los pasos de la ISS, enlace al directo de la NASA («Space Station Views»). Colores de los niveles
+del índice: Excelente `#4cd38a`, Buena `#a3e26b`, Regular `#f2c94c`, Mala `#f59a4b` e Imposible `#e05b5b`.
+Toda la sección se versiona junta (`?v=20261111-luna2`); un test lo comprueba.
+
 ## Aspecto
 
 `css/luna.css`: fondo azul noche con unas pocas estrellas, bloques `luna-bloque` y textos en oro
@@ -50,6 +58,6 @@ oro lunar `#f2c94c`, cian estelar `#7fd3ff`, hora dorada `#f5a623` y hora azul `
 
 ## Pendiente
 
-- Fases 2 a 4 (satélites, índice de observación, eventos, mapa del cielo, auroras con
-  `data-archidona` en `sol-auroras`, cielo oscuro y directos).
+- Fases 3 y 4 (eventos, mapa del cielo, auroras con `data-archidona` en `sol-auroras`, cielo oscuro
+  y directos, con el de la Estación Espacial).
 - Dar de alta sus bloques en el catálogo de auditoría (`data-auditoria-visualizacion`).

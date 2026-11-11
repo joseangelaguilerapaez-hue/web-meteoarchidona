@@ -705,4 +705,221 @@
 }
 
 
+
+/* ==========================================================
+   FASE 2: NIVELES DEL ÍNDICE DE OBSERVACIÓN
+   ========================================================== */
+
+.lun-componente .nivel-EXCELENTE, .luna .nivel-EXCELENTE { --lun-nivel: #4cd38a; }
+.lun-componente .nivel-BUENA, .luna .nivel-BUENA { --lun-nivel: #a3e26b; }
+.lun-componente .nivel-REGULAR, .luna .nivel-REGULAR { --lun-nivel: #f2c94c; }
+.lun-componente .nivel-MALA, .luna .nivel-MALA { --lun-nivel: #f59a4b; }
+.lun-componente .nivel-IMPOSIBLE, .luna .nivel-IMPOSIBLE { --lun-nivel: #e05b5b; }
+.lun-componente .nivel-CREPUSCULO, .luna .nivel-CREPUSCULO { --lun-nivel: var(--lun-luz-nautico); }
+.lun-componente .nivel-NINGUNO, .luna .nivel-NINGUNO { --lun-nivel: var(--lun-texto-tenue); }
+
+.lun-leyenda-nivel { --lun-leyenda: var(--lun-nivel); }
+
+
+/* ==========================================================
+   ¿SE PUEDE OBSERVAR?
+   ========================================================== */
+
+.lun-noches {
+    display: grid;
+    gap: 12px;
+}
+
+.lun-noche {
+    display: grid;
+    gap: 8px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--lun-borde);
+    border-left: 4px solid var(--lun-nivel);
+    border-radius: 12px;
+}
+
+.lun-noche-cabeza {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.lun-noche-cabeza strong {
+    font-size: 16px;
+}
+
+.lun-nivel {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding: 3px 10px 3px 4px;
+    color: var(--lun-noche);
+    background: var(--lun-nivel);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.lun-nivel-indice {
+    min-width: 2.2em;
+    padding: 2px 6px;
+    color: var(--lun-texto);
+    background: var(--lun-noche);
+    border-radius: 999px;
+    text-align: center;
+}
+
+.lun-horas-noche {
+    display: flex;
+    gap: 2px;
+}
+
+.lun-hora-noche {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 0 2px;
+    background: var(--lun-nivel);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.lun-hora-numero {
+    color: var(--lun-noche);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.lun-hora-noche.nivel-CREPUSCULO .lun-hora-numero {
+    color: var(--lun-texto-suave);
+}
+
+@container (max-width: 380px) {
+    .lun-hora-numero {
+        display: none;
+    }
+}
+
+
+/* ==========================================================
+   PASOS DE SATÉLITES
+   ========================================================== */
+
+.lun-pasos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+}
+
+.lun-paso {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--lun-borde);
+    border-radius: 12px;
+}
+
+.lun-paso-iss { border-left: 4px solid var(--lun-oro); }
+.lun-paso-tiangong { border-left: 4px solid #ff7a6b; }
+.lun-paso-starlink { border-left: 4px solid var(--lun-cian); }
+
+.lun-paso-texto {
+    display: grid;
+    gap: 4px;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.lun-paso-texto p {
+    margin: 0;
+    color: var(--lun-texto-suave);
+}
+
+.lun-paso-cabeza {
+    display: grid;
+    gap: 2px;
+}
+
+.lun-paso-cabeza strong {
+    font-size: 15px;
+}
+
+.lun-paso-hora {
+    color: var(--lun-oro);
+    font-size: 13px;
+    text-transform: capitalize;
+}
+
+.lun-recorrido {
+    width: 96px;
+    height: 96px;
+}
+
+.lun-recorrido-cielo {
+    fill: var(--lun-luz-noche);
+    stroke: var(--lun-borde-fuerte);
+}
+
+.lun-recorrido-linea {
+    fill: none;
+    stroke: var(--lun-oro);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+}
+
+.lun-recorrido-inicio {
+    fill: var(--lun-oro);
+}
+
+.lun-enlace {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   AVISO DEL CIELO
+   ========================================================== */
+
+.luna-aviso[hidden] {
+    display: none;
+}
+
+.lun-avisos {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lun-aviso-cielo {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.lun-aviso-cielo strong {
+    color: var(--lun-oro);
+}
+
+.lun-aviso-cielo span {
+    color: var(--lun-texto-suave);
+}
+
+.lun-aviso-icono {
+    flex: none;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+
 /* Fin de fichero: css/luna-componentes.css */

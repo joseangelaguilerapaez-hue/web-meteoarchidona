@@ -13,7 +13,7 @@
 import {
     FUENTE_CALCULO,
     aviso, crear, dibujarFase, entero, hora, hoyMadrid, nombreMes, pedir, prepararRaiz, pie, textoError, vaciar
-} from "./comun.js?v=20261111-luna1";
+} from "./comun.js?v=20261111-luna2";
 
 
 const SEMANA = ["L", "M", "X", "J", "V", "S", "D"];

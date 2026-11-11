@@ -973,6 +973,9 @@ class TestComponentesLuna(unittest.TestCase):
         "luna-crepusculos": ("crepusculos.js", "montarCrepusculos"),
         "luna-planetas-noche": ("planetas-noche.js", "montarPlanetasNoche"),
         "luna-planetas-ahora": ("planetas-ahora.js", "montarPlanetasAhora"),
+        "luna-pasos": ("pasos.js", "montarPasos"),
+        "luna-observacion": ("observacion.js", "montarObservacion"),
+        "luna-aviso": ("aviso.js", "montarAvisoCielo"),
     }
 
     def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
@@ -1021,6 +1024,16 @@ class TestComponentesLuna(unittest.TestCase):
 
     def test_el_alta_en_nginx_existe(self):
         self.assertIn('modulo.SECCION = "luna"', leer(RAIZ / "scripts" / "configurar_seccion_luna.py"))
+
+    def test_una_sola_generacion_de_luna(self):
+        # Todas las piezas de la sección se versionan juntas (comun.js carga la hoja).
+        versiones = set()
+        for ruta in [RAIZ / "js" / "luna.js", *(RAIZ / "js" / "luna").glob("*.js")]:
+            versiones |= set(re.findall(r"\?v=([\w-]+)", leer(ruta)))
+        patron = r"(?:/js/luna/[\w-]+\.js|js/luna\.js|css/luna(?:-componentes)?\.css)\?v=([\w-]+)"
+        for ruta in (RAIZ / "pages" / "luna.html", RAIZ / "js" / "dashboards" / "pintor.js"):
+            versiones |= set(re.findall(patron, leer(ruta)))
+        self.assertEqual(len(versiones), 1, versiones)
 
 
 class TestNovedades(unittest.TestCase):

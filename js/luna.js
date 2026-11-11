@@ -6,7 +6,8 @@
  * Skyfield para la estación de El Silo, toda en componentes que se puedan
  * poner en los dashboards, con fondo propio azul noche y la gama «Azul
  * noche y oro lunar». Primera entrega: la Luna, los crepúsculos y los
- * planetas.
+ * planetas. Segunda: pasos de satélites, «¿Se puede observar esta noche?» y
+ * el aviso del cielo.
  *
  * Componentes (cada uno en su módulo, con su hoja
  * css/luna-componentes.css):
@@ -18,17 +19,23 @@
  *     data-componente="luna-crepusculos"     → js/luna/crepusculos.js
  *     data-componente="luna-planetas-noche"  → js/luna/planetas-noche.js
  *     data-componente="luna-planetas-ahora"  → js/luna/planetas-ahora.js
+ *     data-componente="luna-pasos"           → js/luna/pasos.js
+ *     data-componente="luna-observacion"     → js/luna/observacion.js
+ *     data-componente="luna-aviso"           → js/luna/aviso.js
  *
  * Detalle de datos y cálculo en docs/luna.md de api-meteoarchidona.
  */
 
-import {montarLunaAhora} from "./luna/luna-ahora.js?v=20261111-luna1";
-import {montarHorarioLuna} from "./luna/horario.js?v=20261111-luna1";
-import {montarCalendarioLuna} from "./luna/calendario.js?v=20261111-luna1";
-import {montarDistanciaLuna} from "./luna/distancia.js?v=20261111-luna1";
-import {montarCrepusculos} from "./luna/crepusculos.js?v=20261111-luna1";
-import {montarPlanetasNoche} from "./luna/planetas-noche.js?v=20261111-luna1";
-import {montarPlanetasAhora} from "./luna/planetas-ahora.js?v=20261111-luna1";
+import {montarLunaAhora} from "./luna/luna-ahora.js?v=20261111-luna2";
+import {montarHorarioLuna} from "./luna/horario.js?v=20261111-luna2";
+import {montarCalendarioLuna} from "./luna/calendario.js?v=20261111-luna2";
+import {montarDistanciaLuna} from "./luna/distancia.js?v=20261111-luna2";
+import {montarCrepusculos} from "./luna/crepusculos.js?v=20261111-luna2";
+import {montarPlanetasNoche} from "./luna/planetas-noche.js?v=20261111-luna2";
+import {montarPlanetasAhora} from "./luna/planetas-ahora.js?v=20261111-luna2";
+import {montarPasos} from "./luna/pasos.js?v=20261111-luna2";
+import {montarObservacion} from "./luna/observacion.js?v=20261111-luna2";
+import {montarAvisoCielo} from "./luna/aviso.js?v=20261111-luna2";
 
 
 export const COMPONENTES_LUNA = {
@@ -38,7 +45,10 @@ export const COMPONENTES_LUNA = {
     "luna-distancia": montarDistanciaLuna,
     "luna-crepusculos": montarCrepusculos,
     "luna-planetas-noche": montarPlanetasNoche,
-    "luna-planetas-ahora": montarPlanetasAhora
+    "luna-planetas-ahora": montarPlanetasAhora,
+    "luna-pasos": montarPasos,
+    "luna-observacion": montarObservacion,
+    "luna-aviso": montarAvisoCielo
 };
 
 
