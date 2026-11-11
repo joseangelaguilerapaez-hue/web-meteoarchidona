@@ -6,6 +6,8 @@
  *
  *     luna-ahora · luna-horario · luna-calendario · luna-distancia
  *     luna-crepusculos · luna-planetas-noche · luna-planetas-ahora
+ *     luna-pasos · luna-observacion · luna-aviso
+ *     luna-eventos · luna-eclipse · luna-lluvias · luna-campo
  *
  * Decisión de José del 11-11-2026: la sección Luna va en oscuro, con
  * fondo propio azul noche (no el gris del resto del sitio) y la gama
@@ -919,6 +921,385 @@
     flex: none;
     font-size: 18px;
     line-height: 1.2;
+}
+
+
+/* ==========================================================
+   PRÓXIMOS EVENTOS (luna-eventos)
+   ========================================================== */
+
+.lun-eventos {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lun-evento {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    background: var(--lun-tarjeta-clara);
+    border: 1px solid var(--lun-borde);
+    border-radius: 12px;
+}
+
+.lun-evento-icono {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--lun-noche);
+    color: var(--lun-cian);
+    font-size: 16px;
+}
+
+.lun-evento-eclipse-solar .lun-evento-icono,
+.lun-evento-eclipse-lunar .lun-evento-icono,
+.lun-evento-superluna .lun-evento-icono {
+    color: var(--lun-oro);
+}
+
+.lun-evento-texto {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.lun-evento-texto p {
+    margin: 0;
+    color: var(--lun-texto-suave);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.lun-evento-cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: baseline;
+}
+
+.lun-evento-cuando {
+    color: var(--lun-oro);
+    font-size: 13px;
+    text-transform: capitalize;
+}
+
+.lun-evento-tipo {
+    padding: 1px 8px;
+    border: 1px solid var(--lun-borde-fuerte);
+    border-radius: 999px;
+    color: var(--lun-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+}
+
+.lun-evento-titulo {
+    font-size: 15px;
+}
+
+.lun-evento-nota {
+    font-style: italic;
+}
+
+
+/* ==========================================================
+   PRÓXIMO ECLIPSE (luna-eclipse)
+   ========================================================== */
+
+.lun-eclipse {
+    display: grid;
+    gap: 16px;
+    align-items: start;
+}
+
+@container (min-width: 560px) {
+    .lun-eclipse {
+        grid-template-columns: 160px 1fr;
+    }
+}
+
+.lun-eclipse-dibujo {
+    width: 100%;
+    max-width: 160px;
+    justify-self: center;
+}
+
+.lun-eclipse-corona {
+    fill: none;
+    stroke: var(--lun-oro-claro);
+    stroke-opacity: 0.35;
+    stroke-width: 4;
+}
+
+.lun-eclipse-sol {
+    fill: var(--lun-sol);
+}
+
+.lun-eclipse-luna {
+    fill: var(--lun-noche);
+    stroke: var(--lun-borde-fuerte);
+    stroke-width: 0.6;
+}
+
+.lun-eclipse-penumbra {
+    fill: var(--lun-sombra-luna);
+}
+
+.lun-eclipse-luna-roja {
+    fill: var(--lun-luna);
+}
+
+.lun-eclipse-luna-roja.lun-eclipse-parcial {
+    fill: #c9a48a;
+}
+
+.lun-eclipse-luna-roja.lun-eclipse-total {
+    fill: #a8432a;
+}
+
+.lun-eclipse-texto {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+}
+
+.lun-eclipse-texto p {
+    margin: 0;
+    color: var(--lun-texto-suave);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.lun-eclipse-titulo {
+    color: var(--lun-oro);
+    font-size: 19px;
+}
+
+.lun-eclipse-fecha {
+    color: var(--lun-texto-suave);
+    text-transform: capitalize;
+}
+
+.lun-cuenta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lun-cuenta-parte {
+    display: grid;
+    min-width: 62px;
+    padding: 8px 10px;
+    text-align: center;
+    background: var(--lun-noche);
+    border: 1px solid var(--lun-borde-fuerte);
+    border-radius: 10px;
+}
+
+.lun-cuenta-parte strong {
+    color: var(--lun-oro);
+    font-size: 24px;
+    line-height: 1.1;
+}
+
+.lun-cuenta-parte span {
+    color: var(--lun-texto-tenue);
+    font-size: 11px;
+}
+
+.lun-cuenta-ahora {
+    color: var(--lun-oro);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.lun-eclipse-texto .lun-eclipse-seguridad {
+    padding: 8px 12px;
+    border-left: 3px solid var(--lun-luz-dorada);
+    background: rgba(245, 166, 35, 0.08);
+    color: var(--lun-texto);
+}
+
+
+/* ==========================================================
+   LLUVIAS DE ESTRELLAS (luna-lluvias)
+   ========================================================== */
+
+.lun-lluvias {
+    display: grid;
+    gap: 12px;
+}
+
+@container (min-width: 620px) {
+    .lun-lluvias {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@container (min-width: 960px) {
+    .lun-lluvias {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.lun-lluvia {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    padding: 14px;
+    background: var(--lun-tarjeta-clara);
+    border: 1px solid var(--lun-borde);
+    border-radius: 12px;
+}
+
+.lun-lluvia-siguiente {
+    border-color: var(--lun-oro);
+}
+
+.lun-lluvia p {
+    margin: 0;
+    color: var(--lun-texto-suave);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.lun-lluvia-cabeza {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.lun-lluvia-cabeza strong {
+    font-size: 16px;
+}
+
+.lun-lluvia-marca {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--lun-oro);
+    color: var(--lun-noche);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.lun-lluvia .lun-lluvia-noche {
+    color: var(--lun-oro-claro);
+}
+
+.lun-lluvia-cifras {
+    display: flex;
+    gap: 18px;
+}
+
+.lun-lluvia-cifra {
+    display: grid;
+}
+
+.lun-lluvia-cifra strong {
+    color: var(--lun-cian);
+    font-size: 22px;
+}
+
+.lun-lluvia-cifra span {
+    color: var(--lun-texto-tenue);
+    font-size: 11px;
+}
+
+.lun-lluvia .lun-lluvia-luna {
+    font-weight: 600;
+}
+
+.lun-lluvia .lun-luna-favorable {
+    color: #7ee0a1;
+}
+
+.lun-lluvia .lun-luna-regular {
+    color: var(--lun-oro);
+}
+
+.lun-lluvia .lun-luna-desfavorable {
+    color: #ff8a7a;
+}
+
+
+/* ==========================================================
+   CALENDARIO LUNAR DEL CAMPO (luna-campo)
+   ========================================================== */
+
+.lun-campo {
+    display: grid;
+    gap: 12px;
+}
+
+.lun-campo-aviso {
+    margin: 0;
+    padding: 8px 12px;
+    border-left: 3px solid var(--lun-cian);
+    background: rgba(127, 211, 255, 0.08);
+    color: var(--lun-texto-suave);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.lun-campo-hoy {
+    margin: 0;
+    color: var(--lun-oro);
+    font-weight: 600;
+}
+
+.lun-campo-dia.lun-campo-creciente {
+    background: linear-gradient(180deg, rgba(126, 224, 161, 0.12), transparent);
+}
+
+.lun-campo-dia.lun-campo-menguante {
+    background: linear-gradient(180deg, rgba(200, 160, 110, 0.14), transparent);
+}
+
+.lun-campo-labores {
+    display: grid;
+    gap: 12px;
+}
+
+@container (min-width: 620px) {
+    .lun-campo-labores {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.lun-campo-cuarto {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    padding: 12px 14px;
+    background: var(--lun-tarjeta-clara);
+    border: 1px solid var(--lun-borde);
+    border-radius: 12px;
+}
+
+.lun-campo-cuarto.lun-campo-actual {
+    border-color: var(--lun-oro);
+}
+
+.lun-campo-cuarto .lun-lluvia-marca {
+    justify-self: start;
+}
+
+.lun-campo-refranes {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--lun-oro-claro);
+    font-style: italic;
+    font-size: 14px;
 }
 
 

@@ -12,7 +12,7 @@ para la estación de El Silo y lo guarda en la base. La imagen de la Luna es de 
 y la API solo da su dirección; si la NASA no responde, el componente dibuja la fase. Horas siempre
 en hora de Madrid.
 
-## Componentes (fases 1 y 2, 11-11-2026)
+## Componentes (fases 1 a 3, 11-11-2026)
 
 | Componente | `data-componente` | Módulo | Función | Opciones |
 |---|---|---|---|---|
@@ -26,6 +26,10 @@ en hora de Madrid.
 | Pasos de satélites (fase 2) | `luna-pasos` | `js/luna/pasos.js` | `montarPasos` | `data-dias` (3; hasta 10), `data-tipo` (`ISS`, `TIANGONG`, `STARLINK`), `data-todos="si"` |
 | ¿Se puede observar? (fase 2) | `luna-observacion` | `js/luna/observacion.js` | `montarObservacion` | `data-noches` (4; de 1 a 4) |
 | Aviso del cielo (fase 2) | `luna-aviso` | `js/luna/aviso.js` | `montarAvisoCielo` | `data-horas` (18; hasta 48), `data-solo-aviso="si"` |
+| Próximos eventos (fase 3) | `luna-eventos` | `js/luna/eventos.js` | `montarEventos` | `data-dias` (90; hasta 730), `data-tipo` (`ECLIPSE_SOLAR`, `CONJUNCION`, `LLUVIA_ESTRELLAS`…), `data-limite` (12), `data-todos="si"` |
+| Próximo eclipse (fase 3) | `luna-eclipse` | `js/luna/eclipse.js` | `montarEclipse` | `data-tipo` (`solar`, `lunar`, `todos`) |
+| Lluvias de estrellas (fase 3) | `luna-lluvias` | `js/luna/lluvias.js` | `montarLluvias` | `data-anio`, `data-proximas="si"` |
+| Calendario lunar del campo (fase 3) | `luna-campo` | `js/luna/campo.js` | `montarCampo` | `data-selector="no"` |
 
 Lo que tienen en común (como Sol y El Olivar):
 
@@ -43,7 +47,13 @@ Lo que tienen en común (como Sol y El Olivar):
 Fase 2: el aviso va arriba en la página con `data-solo-aviso="si"` (no ocupa sitio si no hay nada);
 en los pasos de la ISS, enlace al directo de la NASA («Space Station Views»). Colores de los niveles
 del índice: Excelente `#4cd38a`, Buena `#a3e26b`, Regular `#f2c94c`, Mala `#f59a4b` e Imposible `#e05b5b`.
-Toda la sección se versiona junta (`?v=20261111-luna2`); un test lo comprueba.
+Fase 3: «Próximos eventos» enseña por defecto lo vistoso (eclipses, conjunciones, ocultaciones,
+oposiciones, elongaciones, lluvias, cometas, superlunas, equinoccios y solsticios) y solo lo que se
+ve desde aquí; con `data-todos="si"`, también fases, perigeos, apogeos y lo que no se ve. «Próximo
+eclipse» lleva una cuenta atrás que se mueve cada segundo (solo con la pestaña a la vista), el Sol
+tapado dibujado con la magnitud de El Silo y el aviso de las gafas homologadas. El calendario del
+campo lleva siempre a la vista el aviso de que es tradición y no ciencia (decisión de José).
+Toda la sección se versiona junta (`?v=20261111-luna3`); un test lo comprueba.
 
 ## Aspecto
 
@@ -58,6 +68,6 @@ oro lunar `#f2c94c`, cian estelar `#7fd3ff`, hora dorada `#f5a623` y hora azul `
 
 ## Pendiente
 
-- Fases 3 y 4 (eventos, mapa del cielo, auroras con `data-archidona` en `sol-auroras`, cielo oscuro
-  y directos, con el de la Estación Espacial).
+- Fase 4 (mapa del cielo, auroras con `data-archidona` en `sol-auroras`, cielo oscuro y directos,
+  con el de la Estación Espacial).
 - Dar de alta sus bloques en el catálogo de auditoría (`data-auditoria-visualizacion`).
