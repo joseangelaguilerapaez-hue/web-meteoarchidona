@@ -31,20 +31,20 @@
  * Detalle de datos y cálculo en docs/luna.md de api-meteoarchidona.
  */
 
-import {montarLunaAhora} from "./luna/luna-ahora.js?v=20261111-luna3";
-import {montarHorarioLuna} from "./luna/horario.js?v=20261111-luna3";
-import {montarCalendarioLuna} from "./luna/calendario.js?v=20261111-luna3";
-import {montarDistanciaLuna} from "./luna/distancia.js?v=20261111-luna3";
-import {montarCrepusculos} from "./luna/crepusculos.js?v=20261111-luna3";
-import {montarPlanetasNoche} from "./luna/planetas-noche.js?v=20261111-luna3";
-import {montarPlanetasAhora} from "./luna/planetas-ahora.js?v=20261111-luna3";
-import {montarPasos} from "./luna/pasos.js?v=20261111-luna3";
-import {montarObservacion} from "./luna/observacion.js?v=20261111-luna3";
-import {montarAvisoCielo} from "./luna/aviso.js?v=20261111-luna3";
-import {montarEventos} from "./luna/eventos.js?v=20261111-luna3";
-import {montarEclipse} from "./luna/eclipse.js?v=20261111-luna3";
-import {montarLluvias} from "./luna/lluvias.js?v=20261111-luna3";
-import {montarCampo} from "./luna/campo.js?v=20261111-luna3";
+import {montarLunaAhora} from "./luna/luna-ahora.js?v=20261111-luna4";
+import {montarHorarioLuna} from "./luna/horario.js?v=20261111-luna4";
+import {montarCalendarioLuna} from "./luna/calendario.js?v=20261111-luna4";
+import {montarDistanciaLuna} from "./luna/distancia.js?v=20261111-luna4";
+import {montarCrepusculos} from "./luna/crepusculos.js?v=20261111-luna4";
+import {montarPlanetasNoche} from "./luna/planetas-noche.js?v=20261111-luna4";
+import {montarPlanetasAhora} from "./luna/planetas-ahora.js?v=20261111-luna4";
+import {montarPasos} from "./luna/pasos.js?v=20261111-luna4";
+import {montarObservacion} from "./luna/observacion.js?v=20261111-luna4";
+import {montarAvisoCielo} from "./luna/aviso.js?v=20261111-luna4";
+import {montarEventos} from "./luna/eventos.js?v=20261111-luna4";
+import {montarEclipse} from "./luna/eclipse.js?v=20261111-luna4";
+import {montarLluvias} from "./luna/lluvias.js?v=20261111-luna4";
+import {montarCampo} from "./luna/campo.js?v=20261111-luna4";
 
 
 export const COMPONENTES_LUNA = {

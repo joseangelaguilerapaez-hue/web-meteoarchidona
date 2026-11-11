@@ -20,7 +20,7 @@ import {
     RUMBOS,
     aviso, cadaRato, crear, crearSvg, decimal, gradosAngulo, hora, hoyMadrid,
     pedir, prepararRaiz, pie, textoError, vaciar
-} from "./comun.js?v=20261111-luna3";
+} from "./comun.js?v=20261111-luna4";
 
 
 const CADA_MS = 30 * 60 * 1000;
