@@ -66,9 +66,9 @@ Fase 4 (decisiones de José del 11-11-2026):
   cielo ahora» (borde = horizonte). Deslizador de ±12 horas, fecha, botones «Mirando al N/E/S/O»
   (lo que tienes delante queda abajo, como un planisferio) y «Apuntar con el móvil» con la
   brújula (`deviceorientation`; en iPhone pide permiso). Tocar un punto dice qué es.
-- **Cielo oscuro**: lista de `/luna/lugares` (Torcal, Cuevas del Becerro, Sierra de las Nieves; la
-  Sierra de Loja espera a que José dé el punto exacto), con enlace a OpenStreetMap y al mapa de
-  brillo de lightpollutionmap.info.
+- **Cielo oscuro**: lista de `/luna/lugares` (El Torcal, Cuevas del Becerro y Sierra de las Nieves,
+  con coordenadas comprobadas; José quitó la Sierra de Loja), con enlace a OpenStreetMap y al mapa
+  de brillo de lightpollutionmap.info.
 - **Directos**: `/luna/directos` (NASA y Sen en la Estación Espacial, CFHT y Subaru en Mauna
   Kea, ALMA). El reproductor de YouTube sin cookies solo se carga al pulsar «Ver aquí»; siempre hay
   enlace a la página de la emisión. Nunca se graban.
@@ -91,5 +91,4 @@ oro lunar `#f2c94c`, cian estelar `#7fd3ff`, hora dorada `#f5a623` y hora azul `
 
 ## Pendiente
 
-- El punto exacto de la Sierra de Loja para «Cielo oscuro» (José).
 - Dar de alta sus bloques en el catálogo de auditoría (`data-auditoria-visualizacion`).

@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- Luna, fase 4 (PR #146, en el VPS el 11 nov, `11280c8`): mapa del cielo (lienzo con estrellas y constelaciones de d3-celestial, hora móvil, «Apuntar con el móvil»), cielo oscuro, directos y la línea «Desde Archidona» en el óvalo de auroras; toda la sección en `?v=20261111-luna5`. Con esto, las cuatro fases de Luna están en la web.
 - Luna, fase 3 (PR #143, en el VPS el 11 nov, `110e4da`): componentes `luna-eventos`, `luna-eclipse` (cuenta atrás; ahora la del 2-8-2027, 99,4 % desde El Silo), `luna-lluvias` y `luna-campo` en la página y en los dashboards; toda la sección en `?v=20261111-luna3`. Datos de la API (migración 0055 y arreglos PR #153 y #154: pandas, eclipses de Sol visibles con el Sol arriba y al menos un 5 %, cometas desde magnitud 9). Falta que José la dé por buena en meteoarchidona.com.
 - Luna, fase 2 (PR #142, **publicada** el 11 nov, `b23d881`): componentes `luna-pasos`, `luna-observacion` y `luna-aviso` en la página y en los dashboards; toda la sección en `?v=20261111-luna2`. Datos de la API (migración 0054). José la dio por buena el 11 nov.
 - Luna, fase 1 (PR #140, **publicada** el 11 nov, `7231b3b`): página `/luna` con la gama «Azul noche y oro lunar» sobre fondo azul noche propio, en el menú detrás de Sol, en el sitemap y en `.htaccess` (aprobado por José), alta en Nginx con `scripts/configurar_seccion_luna.py`; componentes `luna-ahora`, `luna-horario`, `luna-calendario`, `luna-distancia`, `luna-crepusculos`, `luna-planetas-noche` y `luna-planetas-ahora`, también en los dashboards. Datos de la API (migración 0053, `docs/luna.md` de la API). José la dio por buena el 11 nov («Está todo perfecto»).
@@ -198,3 +199,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-11 · Luna, fase 1, publicada en el VPS (`7231b3b`; API `f0e3cfd`, migración 0053 aplicada): página `/luna` y siete componentes.
 - 2026-11-11 · Luna, fase 2, publicada en el VPS (`b23d881`; API `095dc20`, migración 0054 aplicada): pasos de satélites, «¿Se puede observar?» y aviso.
 - 2026-11-11 · Luna, fase 3, en el VPS (`110e4da`; API `b98025b`, migración 0055 aplicada): próximos eventos, eclipse, lluvias de estrellas y calendario del campo; 173 eventos y un cometa (45P).
+- 2026-11-11 · Luna, fase 4 en el VPS (`11280c8`): mapa del cielo, cielo oscuro, directos y auroras desde Archidona; antes, arreglo de la lista «Después» del eclipse (PR #145).
