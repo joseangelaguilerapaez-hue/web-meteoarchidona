@@ -89,7 +89,15 @@ const COMPONENTES = {
     "olivar-frio": ["/js/olivar/frio.js?v=20261109-olivar2", "montarFrioOlivar"],
     "olivar-heladas": ["/js/olivar/heladas.js?v=20261109-olivar2", "montarHeladasOlivar"],
     "olivar-grados-dia": ["/js/olivar/grados-dia.js?v=20261109-olivar2", "montarGradosDiaOlivar"],
-    "olivar-balance": ["/js/olivar/balance.js?v=20261109-olivar2", "montarBalanceOlivar"]
+    "olivar-balance": ["/js/olivar/balance.js?v=20261109-olivar2", "montarBalanceOlivar"],
+    // Luna (astronomía)
+    "luna-ahora": ["/js/luna/luna-ahora.js?v=20261111-luna1", "montarLunaAhora"],
+    "luna-horario": ["/js/luna/horario.js?v=20261111-luna1", "montarHorarioLuna"],
+    "luna-calendario": ["/js/luna/calendario.js?v=20261111-luna1", "montarCalendarioLuna"],
+    "luna-distancia": ["/js/luna/distancia.js?v=20261111-luna1", "montarDistanciaLuna"],
+    "luna-crepusculos": ["/js/luna/crepusculos.js?v=20261111-luna1", "montarCrepusculos"],
+    "luna-planetas-noche": ["/js/luna/planetas-noche.js?v=20261111-luna1", "montarPlanetasNoche"],
+    "luna-planetas-ahora": ["/js/luna/planetas-ahora.js?v=20261111-luna1", "montarPlanetasAhora"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";
