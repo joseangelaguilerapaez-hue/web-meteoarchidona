@@ -185,7 +185,7 @@ RewriteRule ^ /estadisticas [R=301,L]
 # Reescritura interna de direcciones limpias
 # ------------------------------------------------------------
 
-RewriteRule ^(observaciones|prediccion|en-vivo|administracion|informacion|estadisticas|sol|luna|embalses|polen|calidad-aire|sismologia|olivar|mi-cuenta)/?$ pages/$1.html [L]
+RewriteRule ^(observaciones|prediccion|en-vivo|administracion|informacion|estadisticas|sol|luna|embalses|polen|calidad-aire|sismologia|olivar|mi-cuenta|novedades)/?$ pages/$1.html [L]
 
 
 # ============================================================

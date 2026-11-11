@@ -20,11 +20,20 @@
  * nuestras (/assets/...): la API no admite otras y aquí se comprueba
  * otra vez.
  *
+ * Avisos (José, 11-11-2026; docs/novedades.md de la API): van en el
+ * mismo subsistema, con tipo AVISO. Las novedades y los avisos manuales
+ * salen en la ventana; los avisos automáticos (como los pases muy
+ * brillantes de la Estación Espacial), en una franja discreta encima de
+ * la portada que se puede cerrar: cerrado un aviso, no vuelve a salir en
+ * ese navegador salvo que cambie. Si tienen enlace (siempre a nuestra
+ * web), llevan un botón para ir.
+ *
  * API: GET /novedades.
  */
 
-const HOJA = "/css/novedades.css?v=20261105-novedades1";
+const HOJA = "/css/novedades.css?v=20261111-avisos1";
 const CLAVE_VISTAS = "ma_novedades_vistas_v2";
+const CLAVE_CERRADOS = "ma_avisos_cerrados_v1";
 
 const formatoFecha = new Intl.DateTimeFormat("es-ES", {
     timeZone: "Europe/Madrid",
@@ -40,7 +49,7 @@ function crear(etiqueta, clase, texto) {
     return nodo;
 }
 
-function asegurarHoja() {
+export function asegurarHoja() {
     if (document.querySelector('link[href*="css/novedades.css"]')) return;
     const enlace = document.createElement("link");
     enlace.rel = "stylesheet";
@@ -79,10 +88,27 @@ function imagenNuestra(ruta) {
     return typeof ruta === "string" && ruta.startsWith("/assets/") && !ruta.includes("..") && !ruta.includes("//");
 }
 
+/* Solo direcciones de nuestra web (/luna#titulo-luna-pasos): la API ya lo exige. */
+function enlaceNuestro(ruta) {
+    return typeof ruta === "string" && ruta.startsWith("/") && !ruta.startsWith("//");
+}
+
+export function esAutomatico(novedad) {
+    return novedad.origen === "AUTOMATICO";
+}
+
+function etiquetaDe(novedades) {
+    const avisos = novedades.filter(n => n.tipo === "AVISO").length;
+    if (!avisos) return novedades.length > 1 ? "NOVEDADES" : "NOVEDAD";
+    if (avisos === novedades.length) return avisos > 1 ? "AVISOS" : "AVISO";
+    return "NOVEDADES Y AVISOS";
+}
+
 export function pintarNovedad(novedad) {
-    const articulo = crear("article", "novedad");
+    const articulo = crear("article", `novedad${novedad.tipo === "AVISO" ? " novedad-aviso" : ""}`);
 
     const cabeza = crear("header", "novedad-cabeza");
+    if (novedad.tipo === "AVISO") cabeza.appendChild(crear("span", "novedad-tipo", "Aviso"));
     cabeza.appendChild(crear("h3", "novedad-titulo", novedad.titulo));
     if (novedad.inicio) {
         cabeza.appendChild(crear("p", "novedad-fecha", formatoFecha.format(new Date(novedad.inicio))));
@@ -102,6 +128,12 @@ export function pintarNovedad(novedad) {
         }
         if (bloque.texto) pintarTexto(caja, bloque.texto);
         articulo.appendChild(caja);
+    }
+
+    if (novedad.enlace && enlaceNuestro(novedad.enlace)) {
+        const ir = crear("a", "novedad-enlace", "Ver más →");
+        ir.href = novedad.enlace;
+        articulo.appendChild(ir);
     }
 
     return articulo;
@@ -142,10 +174,10 @@ export function abrirVentana(novedades, { alCerrar } = {}) {
     const ventana = crear("div", "novedades-ventana");
     ventana.setAttribute("role", "dialog");
     ventana.setAttribute("aria-modal", "true");
-    ventana.setAttribute("aria-label", novedades.length > 1 ? "Novedades de MeteoArchidona" : novedades[0].titulo);
+    ventana.setAttribute("aria-label", novedades.length > 1 ? "Novedades y avisos de MeteoArchidona" : novedades[0].titulo);
 
     const barra = crear("div", "novedades-barra");
-    barra.appendChild(crear("span", "novedades-etiqueta", novedades.length > 1 ? "NOVEDADES" : "NOVEDAD"));
+    barra.appendChild(crear("span", "novedades-etiqueta", etiquetaDe(novedades)));
     const cerrarX = crear("button", "novedades-x", "×");
     cerrarX.type = "button";
     cerrarX.setAttribute("aria-label", "Cerrar");
@@ -209,6 +241,96 @@ export function abrirVentana(novedades, { alCerrar } = {}) {
     return cerrar;
 }
 
+/* ------------------------------------------------------------
+   Franja de avisos automáticos (José, 11-11-2026)
+   ------------------------------------------------------------ */
+
+function leerCerrados() {
+    try {
+        const datos = JSON.parse(localStorage.getItem(CLAVE_CERRADOS) || "{}");
+        return datos && typeof datos === "object" ? datos : {};
+    } catch {
+        return {};
+    }
+}
+
+function apuntarCerrado(aviso, vigentes) {
+    const cerrados = leerCerrados();
+    const vigentesIds = new Set(vigentes.map(a => String(a.id)));
+    // Lo de avisos que ya no están se olvida solo.
+    for (const id of Object.keys(cerrados)) if (!vigentesIds.has(id)) delete cerrados[id];
+    cerrados[aviso.id] = huella(aviso);
+    try {
+        localStorage.setItem(CLAVE_CERRADOS, JSON.stringify(cerrados));
+    } catch {
+        // Sin almacenamiento: volverá a salir en la próxima visita.
+    }
+}
+
+export function pintarFranja(avisos, { alCerrar } = {}) {
+    asegurarHoja();
+    const franja = crear("section", "avisos-franja");
+    franja.setAttribute("aria-label", "Avisos");
+
+    for (const aviso of avisos) {
+        const caja = crear("div", "aviso-franja");
+        caja.appendChild(crear("span", "aviso-franja-etiqueta", "AVISO"));
+
+        const cuerpo = crear("div", "aviso-franja-cuerpo");
+        cuerpo.appendChild(crear("strong", "aviso-franja-titulo", aviso.titulo));
+        const detalle = crear("div", "aviso-franja-detalle");
+        detalle.hidden = true;
+        for (const bloque of aviso.bloques || []) if (bloque.texto) pintarTexto(detalle, bloque.texto);
+        cuerpo.appendChild(detalle);
+
+        const acciones = crear("div", "aviso-franja-acciones");
+        if (detalle.childNodes.length) {
+            const mas = crear("button", "aviso-franja-boton", "Detalles");
+            mas.type = "button";
+            mas.setAttribute("aria-expanded", "false");
+            mas.addEventListener("click", () => {
+                detalle.hidden = !detalle.hidden;
+                mas.setAttribute("aria-expanded", String(!detalle.hidden));
+                mas.textContent = detalle.hidden ? "Detalles" : "Menos";
+            });
+            acciones.appendChild(mas);
+        }
+        if (aviso.enlace && enlaceNuestro(aviso.enlace)) {
+            const ir = crear("a", "aviso-franja-boton", "Ver");
+            ir.href = aviso.enlace;
+            acciones.appendChild(ir);
+        }
+        cuerpo.appendChild(acciones);
+        caja.appendChild(cuerpo);
+
+        const cerrar = crear("button", "aviso-franja-x", "×");
+        cerrar.type = "button";
+        cerrar.setAttribute("aria-label", `Cerrar el aviso «${aviso.titulo}»`);
+        cerrar.addEventListener("click", () => {
+            caja.remove();
+            if (alCerrar) alCerrar(aviso);
+            if (!franja.querySelector(".aviso-franja")) franja.remove();
+        });
+        caja.appendChild(cerrar);
+
+        franja.appendChild(caja);
+    }
+    return franja;
+}
+
+function mostrarFranja(automaticos) {
+    if (!automaticos.length) return;
+    const cerrados = leerCerrados();
+    const pendientes = automaticos.filter(a => cerrados[a.id] !== huella(a));
+    if (!pendientes.length) return;
+
+    const franja = pintarFranja(pendientes, { alCerrar: aviso => apuntarCerrado(aviso, automaticos) });
+    const principal = document.querySelector("main");
+    if (principal) principal.prepend(franja);
+    else document.body.prepend(franja);
+}
+
+
 export async function mostrarNovedades() {
     let datos;
     try {
@@ -219,7 +341,10 @@ export async function mostrarNovedades() {
         return;
     }
 
-    const novedades = (datos && datos.novedades) || [];
+    const todas = (datos && datos.novedades) || [];
+    mostrarFranja(todas.filter(esAutomatico));
+
+    const novedades = todas.filter(n => !esAutomatico(n));
     if (!novedades.length) return;
 
     const vistas = leerVistas();

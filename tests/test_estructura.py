@@ -302,7 +302,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261112-alertas2"),
-            ("administracion", r"administracion/principal\.js\?v=20261112-alertas2"),
+            ("administracion", r"administracion/principal\.js\?v=20261112-avisos2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -1089,6 +1089,23 @@ class TestNovedades(unittest.TestCase):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
         self.assertIn('"./novedades.js?v=', principal)
         self.assertNotIn("innerHTML", leer(RAIZ / "js" / "administracion" / "novedades.js"))
+
+    def test_avisos_franja_y_pagina(self):
+        # José, 11-11-2026: los automáticos en una franja que se cierra; lo demás, en la ventana.
+        codigo = leer(RAIZ / "js" / "novedades.js")
+        self.assertIn('origen === "AUTOMATICO"', codigo)
+        self.assertIn("avisos-franja", codigo)
+        self.assertIn("ma_avisos_cerrados", codigo)
+        # Los enlaces de los avisos, solo a nuestra web.
+        self.assertIn('ruta.startsWith("/") && !ruta.startsWith("//")', codigo)
+        pagina = sin_comentarios(RAIZ / "pages" / "novedades.html")
+        self.assertIn("data-novedades-pagina", pagina)
+        self.assertRegex(pagina, r'src="\.\./js/novedades-pagina\.js\?v=[\w-]+"')
+        self.assertIn("/novedades/archivo", leer(RAIZ / "js" / "novedades-pagina.js"))
+        self.assertNotIn("innerHTML", leer(RAIZ / "js" / "novedades-pagina.js"))
+        admin = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('id="tipoNovedad"', admin)
+        self.assertIn('id="enlaceNovedad"', admin)
 
 
 class TestComponenteEstadistica(unittest.TestCase):

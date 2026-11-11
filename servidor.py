@@ -56,6 +56,7 @@ SECCIONES = (
     "sismologia",
     "olivar",
     "mi-cuenta",
+    "novedades",
 )
 
 # La portada es Actualidad, servida en "/" sin redirigir.
