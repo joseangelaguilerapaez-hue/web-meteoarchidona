@@ -962,6 +962,67 @@ class TestComponentesOlivar(unittest.TestCase):
         self.assertIn('modulo.SECCION = "olivar"', leer(RAIZ / "scripts" / "configurar_seccion_olivar.py"))
 
 
+class TestComponentesLuna(unittest.TestCase):
+    """Componentes de la sección Luna para la página y los dashboards (11-11-2026)."""
+
+    COMPONENTES = {
+        "luna-ahora": ("luna-ahora.js", "montarLunaAhora"),
+        "luna-horario": ("horario.js", "montarHorarioLuna"),
+        "luna-calendario": ("calendario.js", "montarCalendarioLuna"),
+        "luna-distancia": ("distancia.js", "montarDistanciaLuna"),
+        "luna-crepusculos": ("crepusculos.js", "montarCrepusculos"),
+        "luna-planetas-noche": ("planetas-noche.js", "montarPlanetasNoche"),
+        "luna-planetas-ahora": ("planetas-ahora.js", "montarPlanetasAhora"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "luna.html")
+        principal = leer(RAIZ / "js" / "luna.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "luna" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/luna/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "luna" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertNotIn("innerHTML", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_azul_noche_y_oro_lunar(self):
+        comun = leer(RAIZ / "js" / "luna" / "comun.js")
+        ruta = re.search(r'"(/css/luna-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "luna.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "luna-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # «Azul noche y oro lunar» (José, 11-11-2026), en la hoja de los componentes.
+        for variable, color in (("--lun-noche", "#0b1530"), ("--lun-tarjeta", "#13224a"), ("--lun-oro", "#f2c94c"), ("--lun-cian", "#7fd3ff")):
+            self.assertIn(f"{variable}: {color}", hoja)
+        self.assertNotIn("--lun-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_carga_el_modulo_y_la_api(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "luna.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/luna\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn('<body data-seccion="luna">', pagina)
+
+    def test_esta_en_el_menu_detras_de_sol(self):
+        cabecera = leer(RAIZ / "componentes" / "cabecera.html")
+        self.assertIn('href="/luna"', cabecera)
+        self.assertLess(cabecera.index('href="/sol"'), cabecera.index('href="/luna"'))
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "luna"', leer(RAIZ / "scripts" / "configurar_seccion_luna.py"))
+
+
 class TestNovedades(unittest.TestCase):
     """Ventana de novedades en la portada y su Administración (5-11-2026)."""
 

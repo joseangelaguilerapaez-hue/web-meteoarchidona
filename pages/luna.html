@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="La Luna y el cielo desde Archidona: fase de la Luna, salida y puesta, distancia y superlunas, planetas visibles esta noche, crepúsculos y horas doradas y azules para fotógrafos."
+>
+
+<title>
+    Luna · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#0b1530">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/luna">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Luna · MeteoArchidona">
+<meta property="og:description" content="La Luna, los planetas y los crepúsculos vistos desde Archidona, calculados por MeteoArchidona.">
+<meta property="og:url" content="https://meteoarchidona.com/luna">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20260926-giro2"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261101-instalar1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/luna-componentes.css?v=20261111-luna1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/luna.css?v=20261111-luna1"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261111-aire1"
+    defer
+></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/luna.js?v=20261111-luna1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="luna">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="luna">
+
+
+<header class="luna-cabecera">
+
+    <div class="luna-etiqueta">
+        METEOARCHIDONA · LUNA Y CIELO
+    </div>
+
+    <h1>
+        La <span>Luna</span> y el cielo de Archidona
+    </h1>
+
+    <p class="luna-entradilla">
+        La hermana de la sección Sol: la Luna tal como está ahora, cuándo
+        sale y se pone, lo cerca que anda de la Tierra, qué planetas se ven
+        esta noche y la luz del día, con los crepúsculos y las horas
+        doradas y azules para quien sale a fotografiar. Todo calculado por
+        MeteoArchidona para nuestra estación de El Silo, a 742 metros.
+    </p>
+
+</header>
+
+
+<!-- ========================================================
+     LA LUNA AHORA
+     Componente js/luna/luna-ahora.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-ahora"
+>
+
+    <h2 id="titulo-luna-ahora">
+        La Luna ahora
+    </h2>
+
+    <p class="luna-nota">
+        La imagen es la de Dial-a-Moon de la NASA para esta hora: no es
+        una cámara en directo, pero es exacta para cada hora, con las
+        sombras y el bamboleo (libración) de ese momento. La giramos para
+        que quede como se ve desde Archidona.
+    </p>
+
+    <div data-componente="luna-ahora"></div>
+
+</section>
+
+
+<!-- ========================================================
+     SALIDA, PUESTA Y CALENDARIO
+     Componentes js/luna/horario.js y js/luna/calendario.js.
+     ======================================================== -->
+
+<div class="luna-rejilla">
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-horario"
+>
+
+    <h2 id="titulo-luna-horario">
+        Salida y puesta de la Luna
+    </h2>
+
+    <div
+        data-componente="luna-horario"
+        data-dias="7"
+    ></div>
+
+</section>
+
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-calendario"
+>
+
+    <h2 id="titulo-luna-calendario">
+        Calendario lunar
+    </h2>
+
+    <div data-componente="luna-calendario"></div>
+
+</section>
+
+</div>
+
+
+<!-- ========================================================
+     PLANETAS
+     Componentes js/luna/planetas-noche.js y js/luna/planetas-ahora.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-planetas"
+>
+
+    <h2 id="titulo-luna-planetas">
+        Planetas esta noche
+    </h2>
+
+    <div data-componente="luna-planetas-noche"></div>
+
+</section>
+
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-cielo"
+>
+
+    <h2 id="titulo-luna-cielo">
+        El cielo ahora mismo
+    </h2>
+
+    <p class="luna-nota">
+        El círculo es el cielo visto desde El Silo: el borde es el
+        horizonte y el centro, el punto justo encima de la cabeza. Norte
+        arriba y este a la izquierda, como si lo miraras tumbado boca
+        arriba con la cabeza hacia el norte.
+    </p>
+
+    <div data-componente="luna-planetas-ahora"></div>
+
+</section>
+
+
+<!-- ========================================================
+     CREPÚSCULOS Y HORAS DORADAS
+     Componente js/luna/crepusculos.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-crepusculos"
+>
+
+    <h2 id="titulo-luna-crepusculos">
+        Crepúsculos y horas doradas
+    </h2>
+
+    <div data-componente="luna-crepusculos"></div>
+
+</section>
+
+
+<!-- ========================================================
+     DISTANCIA Y SUPERLUNAS
+     Componente js/luna/distancia.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-distancia"
+>
+
+    <h2 id="titulo-luna-distancia">
+        Distancia y superlunas
+    </h2>
+
+    <div data-componente="luna-distancia"></div>
+
+</section>
+
+
+<!-- ========================================================
+     GLOSARIO
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-glosario"
+>
+
+    <h2 id="titulo-luna-glosario">
+        Qué significa cada cosa
+    </h2>
+
+    <dl class="luna-glosario">
+
+        <dt>Iluminación</dt>
+        <dd>Qué parte del disco de la Luna vemos iluminada por el Sol.</dd>
+
+        <dt>Edad</dt>
+        <dd>Días desde la última luna nueva. Un ciclo completo dura unos 29,5 días.</dd>
+
+        <dt>Perigeo y apogeo</dt>
+        <dd>
+            Los puntos de la órbita en que la Luna está más cerca y más
+            lejos de la Tierra: entre unos 356.000 y 407.000 km.
+        </dd>
+
+        <dt>Superluna</dt>
+        <dd>
+            Luna llena cerca del perigeo (aquí, a menos de 360.000 km).
+            Se ve algo más grande y brillante que una luna llena lejana.
+        </dd>
+
+        <dt>Altura y acimut</dt>
+        <dd>
+            La altura son los grados sobre el horizonte (90° es justo
+            encima). El acimut, la dirección: 0° norte, 90° este, 180° sur
+            y 270° oeste.
+        </dd>
+
+        <dt>Brillo (magnitud)</dt>
+        <dd>
+            Cuanto más bajo, más brilla: Venus llega a −4,5 y Júpiter a
+            −2,5. A simple vista, con cielo oscuro, se ve hasta la 6.
+        </dd>
+
+        <dt>Crepúsculo civil, náutico y astronómico</dt>
+        <dd>
+            La luz que queda con el Sol ya puesto, hasta 6°, 12° y 18° por
+            debajo del horizonte. Pasado el astronómico es noche cerrada.
+        </dd>
+
+        <dt>Hora dorada y hora azul</dt>
+        <dd>
+            La dorada, con el Sol bajo (entre 6° por encima y 4° por
+            debajo): luz cálida y sombras largas. La azul, justo después o
+            antes (entre −4° y −6°): el cielo se vuelve azul intenso.
+        </dd>
+
+    </dl>
+
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-fuentes"
+>
+
+    <h2 id="titulo-luna-fuentes">
+        Fuentes
+    </h2>
+
+    <ul class="luna-lista">
+        <li>
+            Cálculos de MeteoArchidona para la estación de El Silo (37,095 N;
+            4,377 O; 742 m) con
+            <a href="https://rhodesmill.org/skyfield/" target="_blank" rel="noopener noreferrer">Skyfield</a>
+            y la efeméride DE440s del Jet Propulsion Laboratory (NASA).
+        </li>
+        <li>
+            Imagen de la Luna:
+            <a href="https://svs.gsfc.nasa.gov/gallery/moonphase/" target="_blank" rel="noopener noreferrer">Dial-a-Moon</a>,
+            del Scientific Visualization Studio de la NASA (datos de la
+            sonda Lunar Reconnaissance Orbiter).
+        </li>
+    </ul>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/luna.html -->

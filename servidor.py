@@ -49,6 +49,7 @@ SECCIONES = (
     "informacion",
     "estadisticas",
     "sol",
+    "luna",
     "embalses",
     "polen",
     "calidad-aire",
