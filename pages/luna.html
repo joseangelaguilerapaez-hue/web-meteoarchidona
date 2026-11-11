@@ -68,12 +68,12 @@
 
 <link
     rel="stylesheet"
-    href="../css/luna-componentes.css?v=20261111-luna4"
+    href="../css/luna-componentes.css?v=20261111-luna5"
 >
 
 <link
     rel="stylesheet"
-    href="../css/luna.css?v=20261111-luna4"
+    href="../css/luna.css?v=20261111-luna5"
 >
 
 
@@ -95,7 +95,7 @@
 
 <script
     type="module"
-    src="../js/luna.js?v=20261111-luna4"
+    src="../js/luna.js?v=20261111-luna5"
 ></script>
 
 <script
@@ -204,6 +204,33 @@
     </p>
 
     <div data-componente="luna-observacion"></div>
+
+</section>
+
+
+<!-- ========================================================
+     MAPA DEL CIELO
+     Componente js/luna/mapa-cielo.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-mapa"
+>
+
+    <h2 id="titulo-luna-mapa">
+        Mapa del cielo
+    </h2>
+
+    <p class="luna-nota">
+        El cielo de Archidona en un círculo: el borde es el horizonte y el
+        centro, lo que tienes justo encima. Mueve la hora con el
+        deslizador, elige hacia dónde miras o pulsa «Apuntar con el móvil»
+        y el mapa girará con la brújula del teléfono. Toca cualquier punto
+        para saber qué es.
+    </p>
+
+    <div data-componente="luna-mapa-cielo"></div>
 
 </section>
 
@@ -401,6 +428,31 @@
 
 
 <!-- ========================================================
+     DIRECTOS
+     Componente js/luna/directos.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-directos"
+>
+
+    <h2 id="titulo-luna-directos">
+        Directos del cielo
+    </h2>
+
+    <p class="luna-nota">
+        Emisiones en directo de otros observatorios y de la Estación
+        Espacial. Solo las mostramos tal como las emiten: no las grabamos.
+        Cuando aquí es de día, en Hawái es de noche.
+    </p>
+
+    <div data-componente="luna-directos"></div>
+
+</section>
+
+
+<!-- ========================================================
      CREPÚSCULOS Y HORAS DORADAS
      Componente js/luna/crepusculos.js.
      ======================================================== -->
@@ -434,6 +486,58 @@
     </h2>
 
     <div data-componente="luna-distancia"></div>
+
+</section>
+
+
+<!-- ========================================================
+     CIELO OSCURO
+     Componente js/luna/cielo-oscuro.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-oscuro"
+>
+
+    <h2 id="titulo-luna-oscuro">
+        Cielo oscuro cerca de Archidona
+    </h2>
+
+    <p class="luna-nota">
+        Desde el pueblo, las farolas tapan las estrellas débiles y la Vía
+        Láctea. A poca distancia hay cielos mucho más oscuros.
+    </p>
+
+    <div data-componente="luna-cielo-oscuro"></div>
+
+</section>
+
+
+<!-- ========================================================
+     AURORAS
+     Componente js/sol/auroras.js (de la sección Sol) con data-archidona.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-auroras"
+>
+
+    <h2 id="titulo-luna-auroras">
+        Auroras desde Archidona
+    </h2>
+
+    <p class="luna-nota">
+        El óvalo de la NOAA muestra dónde se pueden ver auroras ahora. Desde
+        nuestra latitud solo se ven con tormentas geomagnéticas muy fuertes,
+        como en mayo de 2024: debajo dice qué posibilidad hay hoy.
+    </p>
+
+    <div
+        data-componente="sol-auroras"
+        data-archidona="si"
+    ></div>
 
 </section>
 
@@ -599,6 +703,12 @@
             Cometas: elementos orbitales del
             <a href="https://www.minorplanetcenter.net" target="_blank" rel="noopener noreferrer">Minor Planet Center</a>
             (Unión Astronómica Internacional).
+        </li>
+        <li>
+            Estrellas y constelaciones del mapa del cielo:
+            <a href="https://github.com/ofrohn/d3-celestial" target="_blank" rel="noopener noreferrer">d3-celestial</a>,
+            de Olaf Frohn (licencia BSD). Óvalo de auroras e índice Kp:
+            <a href="https://www.swpc.noaa.gov" target="_blank" rel="noopener noreferrer">NOAA SWPC</a>.
         </li>
         <li>
             Directo desde la Estación Espacial:

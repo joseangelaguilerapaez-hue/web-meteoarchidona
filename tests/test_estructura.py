@@ -17,6 +17,7 @@ Ejecutar desde la raíz del repositorio:
     python -m unittest discover -s tests -v
 """
 
+import json
 import re
 import sys
 import unittest
@@ -980,6 +981,9 @@ class TestComponentesLuna(unittest.TestCase):
         "luna-eclipse": ("eclipse.js", "montarEclipse"),
         "luna-lluvias": ("lluvias.js", "montarLluvias"),
         "luna-campo": ("campo.js", "montarCampo"),
+        "luna-mapa-cielo": ("mapa-cielo.js", "montarMapaCielo"),
+        "luna-cielo-oscuro": ("cielo-oscuro.js", "montarCieloOscuro"),
+        "luna-directos": ("directos.js", "montarDirectos"),
     }
 
     def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
@@ -1033,11 +1037,29 @@ class TestComponentesLuna(unittest.TestCase):
         # Todas las piezas de la sección se versionan juntas (comun.js carga la hoja).
         versiones = set()
         for ruta in [RAIZ / "js" / "luna.js", *(RAIZ / "js" / "luna").glob("*.js")]:
-            versiones |= set(re.findall(r"\?v=([\w-]+)", leer(ruta)))
+            # La página también monta sol-auroras, que se versiona con Sol.
+            versiones |= set(re.findall(r"(?<!sol/auroras\.js)\?v=([\w-]+)", leer(ruta)))
         patron = r"(?:/js/luna/[\w-]+\.js|js/luna\.js|css/luna(?:-componentes)?\.css)\?v=([\w-]+)"
         for ruta in (RAIZ / "pages" / "luna.html", RAIZ / "js" / "dashboards" / "pintor.js"):
             versiones |= set(re.findall(patron, leer(ruta)))
         self.assertEqual(len(versiones), 1, versiones)
+
+    def test_mapa_del_cielo_y_directos(self):
+        # Datos de d3-celestial con su licencia; directos solo incrustados o enlazados (José, 11-11-2026).
+        for nombre in ("estrellas", "nombres", "constelaciones", "lineas", "via-lactea"):
+            with self.subTest(fichero=nombre):
+                json.loads(leer(RAIZ / "datos" / "cielo" / f"{nombre}.json"))
+        self.assertIn("Olaf Frohn", leer(RAIZ / "datos" / "cielo" / "LICENCIA-d3-celestial.txt"))
+        mapa = leer(RAIZ / "js" / "luna" / "mapa-cielo.js")
+        self.assertIn("deviceorientation", mapa)
+        self.assertIn('type = "range"', mapa)
+        directos = leer(RAIZ / "js" / "luna" / "directos.js")
+        self.assertIn("iframe", directos)
+        self.assertNotIn("MediaRecorder", directos)
+        self.assertNotIn("captureStream", directos)
+        pagina = sin_comentarios(RAIZ / "pages" / "luna.html")
+        self.assertRegex(pagina, r'data-componente="sol-auroras"\s+data-archidona="si"')
+        self.assertIn('dataset.archidona === "si"', leer(RAIZ / "js" / "sol" / "auroras.js"))
 
     def test_el_campo_es_tradicion_y_el_eclipse_avisa_de_las_gafas(self):
         # José, 11-11-2026: el calendario del campo se presenta como tradición, no como ciencia.

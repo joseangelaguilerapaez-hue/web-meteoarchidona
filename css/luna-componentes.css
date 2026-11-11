@@ -8,6 +8,7 @@
  *     luna-crepusculos · luna-planetas-noche · luna-planetas-ahora
  *     luna-pasos · luna-observacion · luna-aviso
  *     luna-eventos · luna-eclipse · luna-lluvias · luna-campo
+ *     luna-mapa-cielo · luna-cielo-oscuro · luna-directos
  *
  * Decisión de José del 11-11-2026: la sección Luna va en oscuro, con
  * fondo propio azul noche (no el gris del resto del sitio) y la gama
@@ -1330,6 +1331,205 @@
     color: var(--lun-oro-claro);
     font-style: italic;
     font-size: 14px;
+}
+
+
+/* ==========================================================
+   MAPA DEL CIELO (luna-mapa-cielo)
+   ========================================================== */
+
+.lun-mapa-marco {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-width: 0;
+}
+
+.lun-mapa-lienzo {
+    display: block;
+    max-width: 100%;
+    touch-action: manipulation;
+    cursor: crosshair;
+}
+
+.lun-mapa-reloj {
+    margin: 0;
+    color: var(--lun-oro);
+    font-size: 15px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.lun-mapa-ficha {
+    margin: 0;
+    min-height: 2.8em;
+    padding: 8px 12px;
+    background: var(--lun-tarjeta-clara);
+    border: 1px solid var(--lun-borde);
+    border-radius: 10px;
+    color: var(--lun-texto-suave);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.lun-mapa-ficha.error {
+    color: #ff8a7a;
+}
+
+.lun-mapa-controles {
+    display: grid;
+    gap: 10px;
+}
+
+.lun-mapa-deslizador {
+    width: 100%;
+    accent-color: var(--lun-oro);
+}
+
+.lun-mapa-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.lun-mapa-etiqueta {
+    color: var(--lun-texto-tenue);
+    font-size: 13px;
+}
+
+.lun-mapa-fecha {
+    padding: 6px 8px;
+    background: var(--lun-noche);
+    border: 1px solid var(--lun-borde-fuerte);
+    border-radius: 8px;
+    color: var(--lun-texto);
+    color-scheme: dark;
+}
+
+.lun-componente .lun-boton.lun-activo {
+    background: var(--lun-oro);
+    border-color: var(--lun-oro);
+    color: var(--lun-noche);
+}
+
+
+/* ==========================================================
+   CIELO OSCURO (luna-cielo-oscuro) y DIRECTOS (luna-directos)
+   ========================================================== */
+
+.lun-lugares,
+.lun-directos {
+    display: grid;
+    gap: 12px;
+}
+
+@container (min-width: 620px) {
+    .lun-lugares,
+    .lun-directos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.lun-lugar,
+.lun-directo {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    padding: 14px;
+    background: var(--lun-tarjeta-clara);
+    border: 1px solid var(--lun-borde);
+    border-radius: 12px;
+    min-width: 0;
+}
+
+.lun-lugar p,
+.lun-directo p {
+    margin: 0;
+    color: var(--lun-texto-suave);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.lun-lugar-cabeza,
+.lun-directo-cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.lun-lugar-cabeza strong,
+.lun-directo-cabeza strong {
+    font-size: 16px;
+}
+
+.lun-lugar-distancia {
+    color: var(--lun-oro);
+}
+
+.lun-lugar .lun-lugar-distincion {
+    color: var(--lun-oro-claro);
+}
+
+.lun-lugar .lun-lugar-nota {
+    color: var(--lun-texto-tenue);
+    font-style: italic;
+}
+
+.lun-lugar-enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    align-items: center;
+}
+
+.lun-directo-proveedor {
+    color: var(--lun-texto-tenue);
+    font-size: 12px;
+}
+
+.lun-directo .lun-directo-hora {
+    color: var(--lun-cian);
+}
+
+.lun-directo-noche {
+    border-color: var(--lun-borde-fuerte);
+}
+
+.lun-directo-noche .lun-directo-hora {
+    color: var(--lun-oro);
+}
+
+.lun-directo-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 8px;
+    background: #000;
+}
+
+
+/* ==========================================================
+   AURORAS DESDE ARCHIDONA (sol-auroras con data-archidona en la página Luna)
+   ========================================================== */
+
+.luna .sol-aurora-archidona {
+    font-size: 14px;
+}
+
+.luna .sol-aurora-muy-baja {
+    color: var(--lun-cian);
+}
+
+.luna .sol-aurora-posible {
+    color: var(--lun-oro);
+}
+
+.luna .sol-aurora-alta {
+    color: #7ee0a1;
+    font-weight: 700;
 }
 
 

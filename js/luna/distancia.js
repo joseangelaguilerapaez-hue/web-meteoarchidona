@@ -15,7 +15,7 @@
 import {
     FUENTE_CALCULO,
     aviso, crear, crearSvg, diaHora, entero, hoyMadrid, km, pedir, prepararRaiz, pie, textoError, vaciar
-} from "./comun.js?v=20261111-luna4";
+} from "./comun.js?v=20261111-luna5";
 
 
 const ANCHO = 720;

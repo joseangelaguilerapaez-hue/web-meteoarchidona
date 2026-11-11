@@ -12,7 +12,7 @@ para la estación de El Silo y lo guarda en la base. La imagen de la Luna es de 
 y la API solo da su dirección; si la NASA no responde, el componente dibuja la fase. Horas siempre
 en hora de Madrid.
 
-## Componentes (fases 1 a 3, 11-11-2026)
+## Componentes (fases 1 a 4, 11-11-2026)
 
 | Componente | `data-componente` | Módulo | Función | Opciones |
 |---|---|---|---|---|
@@ -30,6 +30,9 @@ en hora de Madrid.
 | Próximo eclipse (fase 3) | `luna-eclipse` | `js/luna/eclipse.js` | `montarEclipse` | `data-tipo` (`solar`, `lunar`, `todos`) |
 | Lluvias de estrellas (fase 3) | `luna-lluvias` | `js/luna/lluvias.js` | `montarLluvias` | `data-anio`, `data-proximas="si"` |
 | Calendario lunar del campo (fase 3) | `luna-campo` | `js/luna/campo.js` | `montarCampo` | `data-selector="no"` |
+| Mapa del cielo (fase 4) | `luna-mapa-cielo` | `js/luna/mapa-cielo.js` | `montarMapaCielo` | `data-lineas`, `data-nombres`, `data-via-lactea`, `data-controles` (todas «si»; `"no"` para quitar) |
+| Cielo oscuro cerca de Archidona (fase 4) | `luna-cielo-oscuro` | `js/luna/cielo-oscuro.js` | `montarCieloOscuro` | |
+| Directos del cielo (fase 4) | `luna-directos` | `js/luna/directos.js` | `montarDirectos` | `data-solo` (`ISS_NASA`, `ISS_SEN`, `MAUNAKEA_OESTE`, `MAUNAKEA_ESTE`, `ALMA`) |
 
 Lo que tienen en común (como Sol y El Olivar):
 
@@ -53,7 +56,27 @@ ve desde aquí; con `data-todos="si"`, también fases, perigeos, apogeos y lo qu
 eclipse» lleva una cuenta atrás que se mueve cada segundo (solo con la pestaña a la vista), el Sol
 tapado dibujado con la magnitud de El Silo y el aviso de las gafas homologadas. El calendario del
 campo lleva siempre a la vista el aviso de que es tradición y no ciencia (decisión de José).
-Toda la sección se versiona junta (`?v=20261111-luna4`); un test lo comprueba.
+Fase 4 (decisiones de José del 11-11-2026):
+
+- **Mapa del cielo**: lienzo (canvas) sin librerías. Estrellas hasta magnitud 5 (1.627), líneas y
+  nombres en español de las constelaciones y Vía Láctea de **d3-celestial** (Olaf Frohn, licencia
+  BSD; copia de la licencia en `datos/cielo/`), generados una vez con
+  `scripts/generar_datos_cielo.py`. Altura y acimut en el navegador (tiempo sidéreo; sin
+  precesión, unos 0,4°); Luna, Sol y planetas de `/luna/ahora?momento=`. Proyección como «El
+  cielo ahora» (borde = horizonte). Deslizador de ±12 horas, fecha, botones «Mirando al N/E/S/O»
+  (lo que tienes delante queda abajo, como un planisferio) y «Apuntar con el móvil» con la
+  brújula (`deviceorientation`; en iPhone pide permiso). Tocar un punto dice qué es.
+- **Cielo oscuro**: lista de `/luna/lugares` (Torcal, Cuevas del Becerro, Sierra de las Nieves; la
+  Sierra de Loja espera a que José dé el punto exacto), con enlace a OpenStreetMap y al mapa de
+  brillo de lightpollutionmap.info.
+- **Directos**: `/luna/directos` (NASA y Sen en la Estación Espacial, CFHT y Subaru en Mauna
+  Kea, ALMA). El reproductor de YouTube sin cookies solo se carga al pulsar «Ver aquí»; siempre hay
+  enlace a la página de la emisión. Nunca se graban.
+- **Auroras**: `sol-auroras` con `data-archidona="si"` (js/sol/auroras.js, ahora en
+  `?v=20261111-auroras1`): línea con la posibilidad desde Archidona según el Kp de la NOAA, el
+  observado y el máximo previsto en 24 h. Hasta 6, nula; 7, muy baja; 8, posible en fotos; 9, alta.
+
+Toda la sección se versiona junta (`?v=20261111-luna5`; `sol-auroras` va con Sol); un test lo comprueba.
 
 ## Aspecto
 
@@ -68,6 +91,5 @@ oro lunar `#f2c94c`, cian estelar `#7fd3ff`, hora dorada `#f5a623` y hora azul `
 
 ## Pendiente
 
-- Fase 4 (mapa del cielo, auroras con `data-archidona` en `sol-auroras`, cielo oscuro y directos,
-  con el de la Estación Espacial).
+- El punto exacto de la Sierra de Loja para «Cielo oscuro» (José).
 - Dar de alta sus bloques en el catálogo de auditoría (`data-auditoria-visualizacion`).

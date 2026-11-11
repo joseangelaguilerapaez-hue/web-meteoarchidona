@@ -27,7 +27,7 @@ import {montarIndiceKp} from "./sol/indice-kp.js?v=20261104-componentes2";
 import {montarCoronografos} from "./sol/coronografos.js?v=20261104-componentes2";
 import {montarPrevisionNoaa} from "./sol/prevision-noaa.js?v=20261104-componentes2";
 import {montarFulguraciones} from "./sol/fulguraciones.js?v=20261104-componentes2";
-import {montarAuroras} from "./sol/auroras.js?v=20261104-componentes2";
+import {montarAuroras} from "./sol/auroras.js?v=20261111-auroras1";
 
 
 export const COMPONENTES_SOL = {

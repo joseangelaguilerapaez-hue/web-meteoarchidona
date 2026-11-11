@@ -53,7 +53,7 @@ const COMPONENTES = {
     "sol-prevision-noaa": ["/js/sol/prevision-noaa.js?v=20261104-componentes2", "montarPrevisionNoaa"],
     "sol-fulguraciones": ["/js/sol/fulguraciones.js?v=20261104-componentes2", "montarFulguraciones"],
     "sol-coronografos": ["/js/sol/coronografos.js?v=20261104-componentes2", "montarCoronografos"],
-    "sol-auroras": ["/js/sol/auroras.js?v=20261104-componentes2", "montarAuroras"],
+    "sol-auroras": ["/js/sol/auroras.js?v=20261111-auroras1", "montarAuroras"],
     // Embalses
     "embalses-resumen": ["/js/embalses/resumen.js?v=20261105-embalses1", "montarResumenEmbalses"],
     "embalses-cuencas": ["/js/embalses/cuencas.js?v=20261105-embalses1", "montarCuencasEmbalses"],
@@ -91,20 +91,23 @@ const COMPONENTES = {
     "olivar-grados-dia": ["/js/olivar/grados-dia.js?v=20261109-olivar2", "montarGradosDiaOlivar"],
     "olivar-balance": ["/js/olivar/balance.js?v=20261109-olivar2", "montarBalanceOlivar"],
     // Luna (astronomía)
-    "luna-ahora": ["/js/luna/luna-ahora.js?v=20261111-luna4", "montarLunaAhora"],
-    "luna-horario": ["/js/luna/horario.js?v=20261111-luna4", "montarHorarioLuna"],
-    "luna-calendario": ["/js/luna/calendario.js?v=20261111-luna4", "montarCalendarioLuna"],
-    "luna-distancia": ["/js/luna/distancia.js?v=20261111-luna4", "montarDistanciaLuna"],
-    "luna-crepusculos": ["/js/luna/crepusculos.js?v=20261111-luna4", "montarCrepusculos"],
-    "luna-planetas-noche": ["/js/luna/planetas-noche.js?v=20261111-luna4", "montarPlanetasNoche"],
-    "luna-planetas-ahora": ["/js/luna/planetas-ahora.js?v=20261111-luna4", "montarPlanetasAhora"],
-    "luna-pasos": ["/js/luna/pasos.js?v=20261111-luna4", "montarPasos"],
-    "luna-observacion": ["/js/luna/observacion.js?v=20261111-luna4", "montarObservacion"],
-    "luna-aviso": ["/js/luna/aviso.js?v=20261111-luna4", "montarAvisoCielo"],
-    "luna-eventos": ["/js/luna/eventos.js?v=20261111-luna4", "montarEventos"],
-    "luna-eclipse": ["/js/luna/eclipse.js?v=20261111-luna4", "montarEclipse"],
-    "luna-lluvias": ["/js/luna/lluvias.js?v=20261111-luna4", "montarLluvias"],
-    "luna-campo": ["/js/luna/campo.js?v=20261111-luna4", "montarCampo"]
+    "luna-ahora": ["/js/luna/luna-ahora.js?v=20261111-luna5", "montarLunaAhora"],
+    "luna-horario": ["/js/luna/horario.js?v=20261111-luna5", "montarHorarioLuna"],
+    "luna-calendario": ["/js/luna/calendario.js?v=20261111-luna5", "montarCalendarioLuna"],
+    "luna-distancia": ["/js/luna/distancia.js?v=20261111-luna5", "montarDistanciaLuna"],
+    "luna-crepusculos": ["/js/luna/crepusculos.js?v=20261111-luna5", "montarCrepusculos"],
+    "luna-planetas-noche": ["/js/luna/planetas-noche.js?v=20261111-luna5", "montarPlanetasNoche"],
+    "luna-planetas-ahora": ["/js/luna/planetas-ahora.js?v=20261111-luna5", "montarPlanetasAhora"],
+    "luna-pasos": ["/js/luna/pasos.js?v=20261111-luna5", "montarPasos"],
+    "luna-observacion": ["/js/luna/observacion.js?v=20261111-luna5", "montarObservacion"],
+    "luna-aviso": ["/js/luna/aviso.js?v=20261111-luna5", "montarAvisoCielo"],
+    "luna-eventos": ["/js/luna/eventos.js?v=20261111-luna5", "montarEventos"],
+    "luna-eclipse": ["/js/luna/eclipse.js?v=20261111-luna5", "montarEclipse"],
+    "luna-lluvias": ["/js/luna/lluvias.js?v=20261111-luna5", "montarLluvias"],
+    "luna-campo": ["/js/luna/campo.js?v=20261111-luna5", "montarCampo"],
+    "luna-mapa-cielo": ["/js/luna/mapa-cielo.js?v=20261111-luna5", "montarMapaCielo"],
+    "luna-cielo-oscuro": ["/js/luna/cielo-oscuro.js?v=20261111-luna5", "montarCieloOscuro"],
+    "luna-directos": ["/js/luna/directos.js?v=20261111-luna5", "montarDirectos"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";
