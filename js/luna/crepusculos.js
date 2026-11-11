@@ -17,7 +17,7 @@ import {
     FUENTE_CALCULO,
     aviso, cadaRato, crear, dato, diaCorto, duracion, hora, hoyMadrid, minutosDelDia,
     pedir, prepararRaiz, pie, textoError, vaciar
-} from "./comun.js?v=20261111-luna1";
+} from "./comun.js?v=20261111-luna2";
 
 
 const CADA_MS = 30 * 60 * 1000;

@@ -68,12 +68,12 @@
 
 <link
     rel="stylesheet"
-    href="../css/luna-componentes.css?v=20261111-luna1"
+    href="../css/luna-componentes.css?v=20261111-luna2"
 >
 
 <link
     rel="stylesheet"
-    href="../css/luna.css?v=20261111-luna1"
+    href="../css/luna.css?v=20261111-luna2"
 >
 
 
@@ -95,7 +95,7 @@
 
 <script
     type="module"
-    src="../js/luna.js?v=20261111-luna1"
+    src="../js/luna.js?v=20261111-luna2"
 ></script>
 
 <script
@@ -145,6 +145,17 @@
 
 
 <!-- ========================================================
+     AVISO
+     Componente js/luna/aviso.js: no ocupa sitio si no hay nada.
+     ======================================================== -->
+
+<div
+    data-componente="luna-aviso"
+    data-solo-aviso="si"
+></div>
+
+
+<!-- ========================================================
      LA LUNA AHORA
      Componente js/luna/luna-ahora.js.
      ======================================================== -->
@@ -166,6 +177,33 @@
     </p>
 
     <div data-componente="luna-ahora"></div>
+
+</section>
+
+
+<!-- ========================================================
+     ¿SE PUEDE OBSERVAR ESTA NOCHE?
+     Componente js/luna/observacion.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-observacion"
+>
+
+    <h2 id="titulo-luna-observacion">
+        ¿Se puede observar esta noche?
+    </h2>
+
+    <p class="luna-nota">
+        Un índice de 0 a 100 para cada hora de noche cerrada: resta por
+        las nubes (más las bajas que los cirros altos), por la Luna (más
+        cuanto más llena y más alta), por la humedad, por la turbulencia
+        del aire (seeing) y la transparencia, y por el viento. Pasa el dedo
+        o el ratón por cada hora para ver el detalle.
+    </p>
+
+    <div data-componente="luna-observacion"></div>
 
 </section>
 
@@ -246,6 +284,37 @@
     </p>
 
     <div data-componente="luna-planetas-ahora"></div>
+
+</section>
+
+
+<!-- ========================================================
+     PASOS DE SATÉLITES
+     Componente js/luna/pasos.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-pasos"
+>
+
+    <h2 id="titulo-luna-pasos">
+        Pasos de la Estación Espacial y otros satélites
+    </h2>
+
+    <p class="luna-nota">
+        Se ven como un punto de luz que cruza el cielo sin parpadear, a
+        veces más brillante que cualquier estrella, y que de pronto se
+        apaga al entrar en la sombra de la Tierra. Los «trenes» de
+        Starlink son filas de satélites recién lanzados que solo se ven
+        los primeros días. El dibujo muestra el recorrido con el norte
+        arriba y el este a la izquierda; el punto marca por dónde aparece.
+    </p>
+
+    <div
+        data-componente="luna-pasos"
+        data-dias="3"
+    ></div>
 
 </section>
 
@@ -334,6 +403,14 @@
             −2,5. A simple vista, con cielo oscuro, se ve hasta la 6.
         </dd>
 
+        <dt>Seeing y transparencia</dt>
+        <dd>
+            El seeing es lo turbulento que está el aire: con mal seeing
+            las estrellas titilan mucho y en el telescopio todo baila. La
+            transparencia, lo limpio que está: polvo, calima o humedad
+            apagan las estrellas débiles.
+        </dd>
+
         <dt>Crepúsculo civil, náutico y astronómico</dt>
         <dd>
             La luz que queda con el Sol ya puesto, hasta 6°, 12° y 18° por
@@ -377,6 +454,18 @@
             <a href="https://svs.gsfc.nasa.gov/gallery/moonphase/" target="_blank" rel="noopener noreferrer">Dial-a-Moon</a>,
             del Scientific Visualization Studio de la NASA (datos de la
             sonda Lunar Reconnaissance Orbiter).
+        </li>
+        <li>
+            Datos orbitales de los satélites:
+            <a href="https://celestrak.org" target="_blank" rel="noopener noreferrer">CelesTrak</a>.
+            Previsión de nubes, humedad y viento:
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>.
+            Seeing y transparencia:
+            <a href="http://www.7timer.info" target="_blank" rel="noopener noreferrer">7Timer!</a>.
+        </li>
+        <li>
+            Directo desde la Estación Espacial:
+            <a href="https://www.youtube.com/playlist?list=PL2aBZuCeDwlQMf6xMgQAUAY_nbHAgW5jz" target="_blank" rel="noopener noreferrer">NASA, «Space Station Views»</a>.
         </li>
     </ul>
 

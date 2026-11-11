@@ -16,7 +16,7 @@ import {
     FUENTE_CALCULO, RUMBOS,
     aviso, cadaRato, crear, dato, decimal, gradosAngulo, hora, nocheActual,
     pedir, prepararRaiz, pie, textoError, vaciar
-} from "./comun.js?v=20261111-luna1";
+} from "./comun.js?v=20261111-luna2";
 
 
 const CADA_MS = 60 * 60 * 1000;
