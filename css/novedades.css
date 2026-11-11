@@ -230,8 +230,12 @@
     text-decoration: underline;
 }
 
-/* Franja de avisos automáticos encima de la portada. */
+/* Franja de avisos automáticos encima de la portada. Decisión de José del
+   12-11-2026: una sola línea, el título desplazándose (marquesina) en
+   rojo, borde verde fluorescente y «Detalles» y «Ver» a la derecha. */
 .avisos-franja {
+    --aviso-verde: #39ff14;
+    --aviso-rojo: #ff3b3b;
     display: grid;
     gap: 8px;
     margin: 0 0 16px;
@@ -240,21 +244,21 @@
 
 .aviso-franja {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 10px;
-    align-items: start;
-    padding: 10px 12px;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 6px 6px 10px;
     color: var(--text);
-    background: linear-gradient(90deg, rgba(54, 213, 255, 0.10), rgba(13, 21, 32, 0.92));
-    border: 1px solid var(--border-cyan);
-    border-left: 3px solid var(--cyan);
+    background: rgba(8, 13, 20, 0.92);
+    border: 2px solid var(--aviso-verde);
     border-radius: 12px;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.45), inset 0 0 6px rgba(57, 255, 20, 0.12);
 }
 
 .aviso-franja-etiqueta {
     padding: 2px 7px;
-    color: var(--cyan);
-    border: 1px solid var(--border-cyan);
+    color: var(--aviso-verde);
+    border: 1px solid var(--aviso-verde);
     border-radius: 999px;
     font-family: "JetBrains Mono", monospace;
     font-size: 10px;
@@ -262,44 +266,72 @@
     letter-spacing: 0.12em;
 }
 
-.aviso-franja-cuerpo {
-    display: grid;
-    gap: 6px;
+/* La marquesina: el texto entra por la derecha y sale por la izquierda. */
+.aviso-franja-marquesina {
+    overflow: hidden;
+    white-space: nowrap;
     min-width: 0;
+    mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
 }
 
 .aviso-franja-titulo {
-    font-size: 14px;
-    line-height: 1.4;
+    display: inline-block;
+    padding-left: 100%;
+    color: var(--aviso-rojo);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+    animation: aviso-marquesina var(--duracion, 14s) linear infinite;
 }
 
-.aviso-franja-detalle .novedad-texto {
-    margin: 0 0 6px;
-    color: var(--text-soft);
-    font-size: 13px;
+.aviso-franja:hover .aviso-franja-titulo,
+.aviso-franja:focus-within .aviso-franja-titulo {
+    animation-play-state: paused;
+}
+
+@keyframes aviso-marquesina {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+/* Quien pide menos movimiento ve el título quieto (cortado con «…»). */
+@media (prefers-reduced-motion: reduce) {
+    .aviso-franja-titulo {
+        display: block;
+        padding-left: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        animation: none;
+    }
 }
 
 .aviso-franja-acciones {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
 }
 
 .aviso-franja-boton {
-    padding: 3px 12px;
-    color: var(--cyan);
+    padding: 4px 10px;
+    color: var(--aviso-verde);
     background: transparent;
-    border: 1px solid var(--border-cyan);
+    border: 1px solid var(--aviso-verde);
     border-radius: 8px;
     font: inherit;
     font-size: 12px;
     font-weight: 600;
+    white-space: nowrap;
     text-decoration: none;
     cursor: pointer;
 }
 
 .aviso-franja-boton:hover {
-    background: rgba(54, 213, 255, 0.12);
+    background: rgba(57, 255, 20, 0.12);
 }
 
 .aviso-franja-x {
@@ -319,13 +351,30 @@
     background: rgba(255, 255, 255, 0.06);
 }
 
+/* El texto completo, debajo de la línea, a todo lo ancho. */
+.aviso-franja-detalle {
+    grid-column: 1 / -1;
+    padding: 4px 4px 2px;
+}
+
+.aviso-franja-detalle .novedad-texto {
+    margin: 0 0 6px;
+    color: var(--text-soft);
+    font-size: 13px;
+}
+
 @media (max-width: 480px) {
     .aviso-franja {
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 6px;
     }
 
     .aviso-franja-etiqueta {
         display: none;
+    }
+
+    .aviso-franja-boton {
+        padding: 4px 8px;
     }
 }
 

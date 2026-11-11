@@ -8,8 +8,10 @@ generador de avisos de la Estación Espacial) está en `docs/novedades.md` de `a
 - **Ventana**: novedades y avisos **manuales**, como hasta ahora (una vez por navegador; si cambian,
   vuelven a salir). La etiqueta dice NOVEDAD, AVISO o NOVEDADES Y AVISOS según lo que haya.
 - **Franja** encima de la portada: avisos **automáticos** (origen `AUTOMATICO`), como los pases muy
-  brillantes de la Estación Espacial. Título, «Detalles» (despliega el texto), «Ver» (su enlace) y la
-  X. Cerrado un aviso, no vuelve a salir en ese navegador salvo que cambie (`localStorage`,
+  brillantes de la Estación Espacial. Desde el 12-11-2026 (José), **una sola línea**: el título pasa
+  desplazándose de derecha a izquierda (marquesina) en **rojo**, con el **borde verde fluorescente**, y
+  a la derecha «Detalles» (despliega el texto debajo), «Ver» (su enlace) y la X. Se para al pasar el
+  ratón o tocarlo, y queda quieta si el sistema pide menos animación. Cerrado un aviso, no vuelve a salir en ese navegador salvo que cambie (`localStorage`,
   `ma_avisos_cerrados_v1`).
 - Los enlaces, solo a nuestra web (empiezan por `/`); el texto, siempre como texto.
 

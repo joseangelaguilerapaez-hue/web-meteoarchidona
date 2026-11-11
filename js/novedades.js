@@ -28,10 +28,15 @@
  * ese navegador salvo que cambie. Si tienen enlace (siempre a nuestra
  * web), llevan un botón para ir.
  *
+ * Franja en una línea (José, 12-11-2026): el título pasa desplazándose
+ * de lado a lado (marquesina), en rojo, con el borde verde fluorescente;
+ * «Detalles» y «Ver» a la derecha, en la misma línea. Se para al pasar
+ * el ratón o el dedo, y no se mueve si el sistema pide menos animación.
+ *
  * API: GET /novedades.
  */
 
-const HOJA = "/css/novedades.css?v=20261111-avisos1";
+const HOJA = "/css/novedades.css?v=20261112-marquesina1";
 const CLAVE_VISTAS = "ma_novedades_vistas_v2";
 const CLAVE_CERRADOS = "ma_avisos_cerrados_v1";
 
@@ -276,12 +281,18 @@ export function pintarFranja(avisos, { alCerrar } = {}) {
         const caja = crear("div", "aviso-franja");
         caja.appendChild(crear("span", "aviso-franja-etiqueta", "AVISO"));
 
-        const cuerpo = crear("div", "aviso-franja-cuerpo");
-        cuerpo.appendChild(crear("strong", "aviso-franja-titulo", aviso.titulo));
+        // El título, en una línea que se desplaza (marquesina).
+        const marquesina = crear("div", "aviso-franja-marquesina");
+        marquesina.title = aviso.titulo;
+        const pista = crear("strong", "aviso-franja-titulo", aviso.titulo);
+        // Velocidad constante (unos 70 píxeles por segundo), sea cual sea el largo.
+        pista.style.setProperty("--duracion", `${Math.max(8, Math.round(aviso.titulo.length * 0.22))}s`);
+        marquesina.appendChild(pista);
+        caja.appendChild(marquesina);
+
         const detalle = crear("div", "aviso-franja-detalle");
         detalle.hidden = true;
         for (const bloque of aviso.bloques || []) if (bloque.texto) pintarTexto(detalle, bloque.texto);
-        cuerpo.appendChild(detalle);
 
         const acciones = crear("div", "aviso-franja-acciones");
         if (detalle.childNodes.length) {
@@ -300,8 +311,7 @@ export function pintarFranja(avisos, { alCerrar } = {}) {
             ir.href = aviso.enlace;
             acciones.appendChild(ir);
         }
-        cuerpo.appendChild(acciones);
-        caja.appendChild(cuerpo);
+        caja.appendChild(acciones);
 
         const cerrar = crear("button", "aviso-franja-x", "×");
         cerrar.type = "button";
@@ -312,6 +322,7 @@ export function pintarFranja(avisos, { alCerrar } = {}) {
             if (!franja.querySelector(".aviso-franja")) franja.remove();
         });
         caja.appendChild(cerrar);
+        caja.appendChild(detalle);
 
         franja.appendChild(caja);
     }
