@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261111-aire1";
+    "/componentes/cabecera.html?v=20261111-avisos1";
 
 
 /* ==========================================================

@@ -885,7 +885,7 @@ async function cargarModuloNovedades(){
 
     if(promesaModuloNovedades === null){
         promesaModuloNovedades = import(
-            "./novedades.js?v=20261105-novedades2"
+            "./novedades.js?v=20261111-avisos1"
         );
     }
 
