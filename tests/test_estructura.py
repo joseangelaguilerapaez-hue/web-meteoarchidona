@@ -301,8 +301,8 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261111-aire1"),
-            ("administracion", r"administracion/principal\.js\?v=20261110-salud1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261111-alertas1"),
+            ("administracion", r"administracion/principal\.js\?v=20261111-alertas1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -1196,6 +1196,40 @@ class TestSaludEstaciones(unittest.TestCase):
         self.assertIn('"/admin/salud"', codigo)
         self.assertIn("/series?horas=", codigo)
         self.assertNotIn("innerHTML", codigo)
+
+
+class TestAlertasMeteorologicas(unittest.TestCase):
+    """Semáforos de alertas en Actualidad y Administración → Avisos (11 nov)."""
+
+    def test_actualidad_monta_los_semaforos_fijos(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "actualidad.html")
+        self.assertIn('data-componente="alertas-semaforos"', pagina)
+        self.assertIn('data-fijo="si"', pagina)
+        principal = leer(RAIZ / "js" / "actualidad" / "principal.js")
+        self.assertIn("../alertas/semaforos.js?v=20261111-alertas1", principal)
+        self.assertTrue((RAIZ / "js" / "alertas" / "semaforos.js").is_file())
+        self.assertTrue((RAIZ / "css" / "alertas.css").is_file())
+
+    def test_el_componente_pide_los_semaforos_y_va_al_pintor(self):
+        codigo = leer(RAIZ / "js" / "alertas" / "semaforos.js")
+        self.assertIn("/alertas/semaforos", codigo)
+        self.assertIn("export async function montarSemaforosAlertas", codigo)
+        for nivel in ("SIN_AVISO", "AMARILLO", "NARANJA", "FUCSIA", "ROJO"):
+            self.assertIn(nivel, codigo)
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        self.assertIn('"alertas-semaforos": ["/js/alertas/semaforos.js?v=', pintor)
+
+    def test_administracion_tiene_el_apartado_avisos(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('data-modulo="alertas"', pagina)
+        self.assertIn('id="modulo-alertas"', pagina)
+        for identificador in ("tarjetasAlertas", "historialAlertas", "cargasAlertas", "estadoAlertas", "botonRecargarAlertas"):
+            self.assertIn(f'id="{identificador}"', pagina)
+        self.assertIn("css/alertas-admin.css?v=", pagina)
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn("./alertas.js?v=20261111-alertas1", principal)
+        codigo = leer(RAIZ / "js" / "administracion" / "alertas.js")
+        self.assertIn("/admin/alertas", codigo)
 
 
 if __name__ == "__main__":

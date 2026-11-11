@@ -119,6 +119,10 @@ import {
     montarAccesos
 } from "../componentes/accesos.js?v=20261104-componentes1";
 
+import {
+    montarSemaforosAlertas
+} from "../alertas/semaforos.js?v=20261111-alertas1";
+
 
 const COMPONENTES_ACTUALIDAD = {
     "condiciones-actuales": montarCondicionesActuales,
@@ -407,6 +411,16 @@ async function prepararGraficas() {
 async function arrancarActualidad() {
 
     /*
+     * Semáforos de alertas (José, 11-11-2026): fijos arriba, también en
+     * Actualidad como dashboard. Solo se ven si hay algún aviso.
+     */
+    for (const hueco of document.querySelectorAll('[data-componente="alertas-semaforos"]')) {
+        montarSemaforosAlertas(hueco).catch(error => {
+            console.error("Actualidad: no se pudieron montar los semáforos de alertas.", error);
+        });
+    }
+
+    /*
      * Actualidad como dashboard (José, 5-11-2026): de momento solo con
      * /actualidad?dashboard, para revisarla antes de sustituir esta.
      */
@@ -422,7 +436,7 @@ async function arrancarActualidad() {
         );
 
         try {
-            const modulo = await import("/js/dashboards/actualidad.js?v=20261111-aire1");
+            const modulo = await import("/js/dashboards/actualidad.js?v=20261111-alertas1");
             await modulo.arrancarActualidadDashboard(document.getElementById("actual"));
         } catch (error) {
             console.error("Actualidad: no se ha podido montar el dashboard.", error);
