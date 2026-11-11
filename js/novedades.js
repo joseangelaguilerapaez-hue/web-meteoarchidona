@@ -28,10 +28,18 @@
  * ese navegador salvo que cambie. Si tienen enlace (siempre a nuestra
  * web), llevan un botón para ir.
  *
+ * Franja en una línea (José, 12-11-2026): el título pasa desplazándose
+ * de lado a lado (marquesina), con el borde verde fluorescente; «Detalles»
+ * y «Ver» a la derecha, en la misma línea. Si hay varios avisos, pasan
+ * uno detrás de otro, cada uno con su color (el primero, rojo), y los
+ * bordes de los botones toman el color del que está pasando. Se para al
+ * pasar el ratón o el dedo, y no se mueve si el sistema pide menos
+ * animación (entonces cambia de aviso cada 7 segundos).
+ *
  * API: GET /novedades.
  */
 
-const HOJA = "/css/novedades.css?v=20261111-avisos1";
+const HOJA = "/css/novedades.css?v=20261112-marquesina1";
 const CLAVE_VISTAS = "ma_novedades_vistas_v2";
 const CLAVE_CERRADOS = "ma_avisos_cerrados_v1";
 
@@ -267,54 +275,130 @@ function apuntarCerrado(aviso, vigentes) {
     }
 }
 
+/* Colores llamativos que se leen bien sobre negro, en este orden (José,
+ * 12-11-2026): el primero, rojo; el verde no, que es el del borde. */
+export const COLORES_AVISO = ["#ff3b3b", "#ffd60a", "#00e5ff", "#ff3df2", "#ff9f1a", "#b388ff", "#ffffff"];
+
+/*
+ * Una sola franja para todos los avisos automáticos (José, 12-11-2026):
+ * pasan uno detrás de otro por la marquesina, cada uno con su color, y
+ * los bordes de «Detalles» y «Ver» toman el color del que está pasando.
+ * Los botones y la X actúan sobre ese aviso; con «Detalles» abierto, la
+ * rotación se para en él.
+ */
 export function pintarFranja(avisos, { alCerrar } = {}) {
     asegurarHoja();
     const franja = crear("section", "avisos-franja");
     franja.setAttribute("aria-label", "Avisos");
 
-    for (const aviso of avisos) {
-        const caja = crear("div", "aviso-franja");
-        caja.appendChild(crear("span", "aviso-franja-etiqueta", "AVISO"));
+    const lista = avisos.map((aviso, i) => ({ aviso, color: COLORES_AVISO[i % COLORES_AVISO.length] }));
+    let actual = 0;
 
-        const cuerpo = crear("div", "aviso-franja-cuerpo");
-        cuerpo.appendChild(crear("strong", "aviso-franja-titulo", aviso.titulo));
-        const detalle = crear("div", "aviso-franja-detalle");
-        detalle.hidden = true;
+    const caja = crear("div", "aviso-franja");
+    const etiqueta = crear("span", "aviso-franja-etiqueta", "AVISO");
+    caja.appendChild(etiqueta);
+
+    const marquesina = crear("div", "aviso-franja-marquesina");
+    marquesina.setAttribute("aria-live", "polite");
+    const pista = crear("strong", "aviso-franja-titulo");
+    marquesina.appendChild(pista);
+    caja.appendChild(marquesina);
+
+    const acciones = crear("div", "aviso-franja-acciones");
+    const mas = crear("button", "aviso-franja-boton", "Detalles");
+    mas.type = "button";
+    mas.setAttribute("aria-expanded", "false");
+    const ir = crear("a", "aviso-franja-boton", "Ver");
+    acciones.append(mas, ir);
+    caja.appendChild(acciones);
+
+    const cerrar = crear("button", "aviso-franja-x", "×");
+    cerrar.type = "button";
+    caja.appendChild(cerrar);
+
+    const detalle = crear("div", "aviso-franja-detalle");
+    detalle.hidden = true;
+    caja.appendChild(detalle);
+    franja.appendChild(caja);
+
+    const sinMovimiento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let reloj = null;
+
+    function mostrar(indice) {
+        if (!lista.length) {
+            franja.remove();
+            return;
+        }
+        actual = ((indice % lista.length) + lista.length) % lista.length;
+        const { aviso, color } = lista[actual];
+        caja.style.setProperty("--aviso-color", color);
+        etiqueta.textContent = lista.length > 1 ? `AVISO ${actual + 1}/${lista.length}` : "AVISO";
+        marquesina.title = aviso.titulo;
+        pista.textContent = aviso.titulo;
+        // Velocidad parecida para todos, sea cual sea el largo.
+        pista.style.setProperty("--duracion", `${Math.max(8, Math.round(aviso.titulo.length * 0.22))}s`);
+        // Vuelve a arrancar la animación desde la derecha.
+        pista.classList.remove("en-marcha");
+        void pista.offsetWidth;
+        pista.classList.add("en-marcha");
+
+        detalle.textContent = "";
         for (const bloque of aviso.bloques || []) if (bloque.texto) pintarTexto(detalle, bloque.texto);
-        cuerpo.appendChild(detalle);
-
-        const acciones = crear("div", "aviso-franja-acciones");
-        if (detalle.childNodes.length) {
-            const mas = crear("button", "aviso-franja-boton", "Detalles");
-            mas.type = "button";
-            mas.setAttribute("aria-expanded", "false");
-            mas.addEventListener("click", () => {
-                detalle.hidden = !detalle.hidden;
-                mas.setAttribute("aria-expanded", String(!detalle.hidden));
-                mas.textContent = detalle.hidden ? "Detalles" : "Menos";
-            });
-            acciones.appendChild(mas);
-        }
+        mas.hidden = !detalle.childNodes.length;
+        if (mas.hidden) cerrarDetalle();
         if (aviso.enlace && enlaceNuestro(aviso.enlace)) {
-            const ir = crear("a", "aviso-franja-boton", "Ver");
             ir.href = aviso.enlace;
-            acciones.appendChild(ir);
+            ir.hidden = false;
+        } else {
+            ir.removeAttribute("href");
+            ir.hidden = true;
         }
-        cuerpo.appendChild(acciones);
-        caja.appendChild(cuerpo);
-
-        const cerrar = crear("button", "aviso-franja-x", "×");
-        cerrar.type = "button";
         cerrar.setAttribute("aria-label", `Cerrar el aviso «${aviso.titulo}»`);
-        cerrar.addEventListener("click", () => {
-            caja.remove();
-            if (alCerrar) alCerrar(aviso);
-            if (!franja.querySelector(".aviso-franja")) franja.remove();
-        });
-        caja.appendChild(cerrar);
 
-        franja.appendChild(caja);
+        clearTimeout(reloj);
+        if (sinMovimiento && lista.length > 1) reloj = setTimeout(siguiente, 7000);
     }
+
+    function siguiente() {
+        if (!detalle.hidden) {                  // con «Detalles» abierto, se queda en este
+            reloj = setTimeout(siguiente, 7000);
+            return;
+        }
+        mostrar(actual + 1);
+    }
+
+    function cerrarDetalle() {
+        detalle.hidden = true;
+        mas.setAttribute("aria-expanded", "false");
+        mas.textContent = "Detalles";
+        caja.classList.remove("detalle-abierto");
+    }
+
+    // Cada aviso pasa una vez y deja sitio al siguiente (con uno solo, se repite).
+    // Con «Detalles» abierto, el mismo aviso vuelve a pasar.
+    pista.addEventListener("animationend", () => mostrar(lista.length > 1 && detalle.hidden ? actual + 1 : actual));
+
+    mas.addEventListener("click", () => {
+        if (detalle.hidden) {
+            detalle.hidden = false;
+            mas.setAttribute("aria-expanded", "true");
+            mas.textContent = "Menos";
+            caja.classList.add("detalle-abierto");
+        } else {
+            cerrarDetalle();
+            mostrar(actual + 1);
+        }
+    });
+
+    cerrar.addEventListener("click", () => {
+        const [{ aviso }] = lista.splice(actual, 1);
+        if (alCerrar) alCerrar(aviso);
+        cerrarDetalle();
+        // Los colores se quedan con su aviso; se sigue con el siguiente.
+        mostrar(actual);
+    });
+
+    mostrar(0);
     return franja;
 }
 
