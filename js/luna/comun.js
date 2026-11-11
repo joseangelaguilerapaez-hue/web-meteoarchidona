@@ -16,7 +16,7 @@
  * 11-11-2026), así se ve igual en la página que en un dashboard.
  */
 
-const HOJA = "/css/luna-componentes.css?v=20261111-luna2";
+const HOJA = "/css/luna-componentes.css?v=20261111-luna3";
 
 const ESPERA_MAXIMA_MS = 20000;
 

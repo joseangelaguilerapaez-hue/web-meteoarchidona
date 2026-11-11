@@ -16,7 +16,7 @@
 
 import {
     aviso, cadaRato, crear, entero, hora, pedir, prepararRaiz, pie, textoError, vaciar
-} from "./comun.js?v=20261111-luna2";
+} from "./comun.js?v=20261111-luna3";
 
 
 const CADA_MS = 30 * 60 * 1000;

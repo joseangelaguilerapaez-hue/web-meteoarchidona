@@ -68,12 +68,12 @@
 
 <link
     rel="stylesheet"
-    href="../css/luna-componentes.css?v=20261111-luna2"
+    href="../css/luna-componentes.css?v=20261111-luna3"
 >
 
 <link
     rel="stylesheet"
-    href="../css/luna.css?v=20261111-luna2"
+    href="../css/luna.css?v=20261111-luna3"
 >
 
 
@@ -95,7 +95,7 @@
 
 <script
     type="module"
-    src="../js/luna.js?v=20261111-luna2"
+    src="../js/luna.js?v=20261111-luna3"
 ></script>
 
 <script
@@ -204,6 +204,61 @@
     </p>
 
     <div data-componente="luna-observacion"></div>
+
+</section>
+
+
+<!-- ========================================================
+     PRÓXIMO ECLIPSE
+     Componente js/luna/eclipse.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-eclipse"
+>
+
+    <h2 id="titulo-luna-eclipse">
+        Próximo eclipse
+    </h2>
+
+    <p class="luna-nota">
+        El 2 de agosto de 2027 la sombra de la Luna cruza la provincia de
+        Málaga: desde El Silo el eclipse se queda muy cerca del total. La
+        cuenta atrás es hasta el máximo visto desde aquí.
+    </p>
+
+    <div data-componente="luna-eclipse"></div>
+
+</section>
+
+
+<!-- ========================================================
+     PRÓXIMOS EVENTOS
+     Componente js/luna/eventos.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-eventos"
+>
+
+    <h2 id="titulo-luna-eventos">
+        Próximos eventos del cielo
+    </h2>
+
+    <p class="luna-nota">
+        Eclipses, la Luna junto a planetas y estrellas brillantes,
+        ocultaciones, oposiciones, lluvias de estrellas, cometas y
+        superlunas de los próximos meses, con la hora de Madrid y si se
+        ven desde Archidona.
+    </p>
+
+    <div
+        data-componente="luna-eventos"
+        data-dias="180"
+        data-limite="12"
+    ></div>
 
 </section>
 
@@ -320,6 +375,32 @@
 
 
 <!-- ========================================================
+     LLUVIAS DE ESTRELLAS
+     Componente js/luna/lluvias.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-lluvias"
+>
+
+    <h2 id="titulo-luna-lluvias">
+        Lluvias de estrellas
+    </h2>
+
+    <p class="luna-nota">
+        Para verlas no hace falta nada: una tumbona, ropa de abrigo, lejos
+        de las farolas y dejar que la vista se acostumbre unos veinte
+        minutos. Las estrellas fugaces salen de todo el cielo, no hace
+        falta mirar al radiante.
+    </p>
+
+    <div data-componente="luna-lluvias"></div>
+
+</section>
+
+
+<!-- ========================================================
      CREPÚSCULOS Y HORAS DORADAS
      Componente js/luna/crepusculos.js.
      ======================================================== -->
@@ -353,6 +434,32 @@
     </h2>
 
     <div data-componente="luna-distancia"></div>
+
+</section>
+
+
+<!-- ========================================================
+     CALENDARIO LUNAR DEL CAMPO
+     Componente js/luna/campo.js.
+     ======================================================== -->
+
+<section
+    class="luna-bloque"
+    aria-labelledby="titulo-luna-campo"
+>
+
+    <h2 id="titulo-luna-campo">
+        Calendario lunar del campo
+    </h2>
+
+    <p class="luna-nota">
+        Lo que dice la tradición de nuestros campos sobre la Luna y las
+        labores: en creciente, lo que crece hacia arriba; en menguante, lo
+        que crece hacia abajo, la poda y la madera. Lo recogemos como
+        tradición, no como ciencia.
+    </p>
+
+    <div data-componente="luna-campo"></div>
 
 </section>
 
@@ -411,6 +518,29 @@
             apagan las estrellas débiles.
         </dd>
 
+        <dt>Conjunción, ocultación y oposición</dt>
+        <dd>
+            Conjunción: dos astros que se ven muy juntos en el cielo (solo
+            avisamos de las vistosas: la Luna a menos de 3° de un planeta o
+            una estrella brillante, dos planetas a menos de 1,5°). Ocultación:
+            la Luna pasa por delante y lo tapa. Oposición: un planeta
+            enfrente del Sol, toda la noche arriba y en su mejor brillo.
+        </dd>
+
+        <dt>Máxima elongación</dt>
+        <dd>
+            Cuando Mercurio o Venus se ven más separados del Sol: el mejor
+            momento para buscarlos al anochecer o al amanecer.
+        </dd>
+
+        <dt>Radiante y THZ</dt>
+        <dd>
+            El radiante es el punto del cielo del que parecen salir las
+            estrellas fugaces de una lluvia. La THZ (tasa horaria cenital)
+            es cuántas se verían en una hora con el radiante justo encima y
+            un cielo perfecto; aquí calculamos las esperables de verdad.
+        </dd>
+
         <dt>Crepúsculo civil, náutico y astronómico</dt>
         <dd>
             La luz que queda con el Sol ya puesto, hasta 6°, 12° y 18° por
@@ -462,6 +592,13 @@
             <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>.
             Seeing y transparencia:
             <a href="http://www.7timer.info" target="_blank" rel="noopener noreferrer">7Timer!</a>.
+        </li>
+        <li>
+            Lluvias de estrellas: calendario de la
+            <a href="https://www.imo.net" target="_blank" rel="noopener noreferrer">Organización Internacional de Meteoros (IMO)</a>.
+            Cometas: elementos orbitales del
+            <a href="https://www.minorplanetcenter.net" target="_blank" rel="noopener noreferrer">Minor Planet Center</a>
+            (Unión Astronómica Internacional).
         </li>
         <li>
             Directo desde la Estación Espacial:

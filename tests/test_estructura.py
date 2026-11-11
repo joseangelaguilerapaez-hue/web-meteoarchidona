@@ -976,6 +976,10 @@ class TestComponentesLuna(unittest.TestCase):
         "luna-pasos": ("pasos.js", "montarPasos"),
         "luna-observacion": ("observacion.js", "montarObservacion"),
         "luna-aviso": ("aviso.js", "montarAvisoCielo"),
+        "luna-eventos": ("eventos.js", "montarEventos"),
+        "luna-eclipse": ("eclipse.js", "montarEclipse"),
+        "luna-lluvias": ("lluvias.js", "montarLluvias"),
+        "luna-campo": ("campo.js", "montarCampo"),
     }
 
     def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
@@ -1034,6 +1038,13 @@ class TestComponentesLuna(unittest.TestCase):
         for ruta in (RAIZ / "pages" / "luna.html", RAIZ / "js" / "dashboards" / "pintor.js"):
             versiones |= set(re.findall(patron, leer(ruta)))
         self.assertEqual(len(versiones), 1, versiones)
+
+    def test_el_campo_es_tradicion_y_el_eclipse_avisa_de_las_gafas(self):
+        # José, 11-11-2026: el calendario del campo se presenta como tradición, no como ciencia.
+        campo = leer(RAIZ / "js" / "luna" / "campo.js")
+        self.assertIn("datos.aviso", campo)
+        self.assertIn("tradición", campo)
+        self.assertIn("gafas homologadas", leer(RAIZ / "js" / "luna" / "eclipse.js"))
 
 
 class TestNovedades(unittest.TestCase):
