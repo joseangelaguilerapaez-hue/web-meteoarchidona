@@ -11,7 +11,13 @@ generador de avisos de la Estación Espacial) está en `docs/novedades.md` de `a
   brillantes de la Estación Espacial. Desde el 12-11-2026 (José), **una sola línea**: el título pasa
   desplazándose de derecha a izquierda (marquesina) en **rojo**, con el **borde verde fluorescente**, y
   a la derecha «Detalles» (despliega el texto debajo), «Ver» (su enlace) y la X. Se para al pasar el
-  ratón o tocarlo, y queda quieta si el sistema pide menos animación. Cerrado un aviso, no vuelve a salir en ese navegador salvo que cambie (`localStorage`,
+  ratón o tocarlo, y queda quieta si el sistema pide menos animación.
+- **Varios avisos a la vez** (José, 12-11-2026): una sola franja; pasan **uno detrás de otro**, cada
+  uno con su color llamativo sobre negro (rojo, amarillo, cian, magenta, naranja, violeta y blanco,
+  en ese orden; el verde no, que es el del borde). Los **bordes y el texto de «Detalles» y «Ver»
+  toman el color del aviso que está pasando**, y los botones y la X actúan sobre ese aviso. Con
+  «Detalles» abierto, la franja se queda en ese aviso. En pantallas anchas la etiqueta dice
+  «AVISO 1/2». Cerrado un aviso, no vuelve a salir en ese navegador salvo que cambie (`localStorage`,
   `ma_avisos_cerrados_v1`).
 - Los enlaces, solo a nuestra web (empiezan por `/`); el texto, siempre como texto.
 

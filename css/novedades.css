@@ -231,8 +231,10 @@
 }
 
 /* Franja de avisos automáticos encima de la portada. Decisión de José del
-   12-11-2026: una sola línea, el título desplazándose (marquesina) en
-   rojo, borde verde fluorescente y «Detalles» y «Ver» a la derecha. */
+   12-11-2026: una sola línea, el título desplazándose (marquesina), borde
+   verde fluorescente y «Detalles» y «Ver» a la derecha. Varios avisos
+   pasan uno detrás de otro, cada uno con su color (--aviso-color, que
+   pone js/novedades.js), y los bordes de los botones toman ese color. */
 .avisos-franja {
     --aviso-verde: #39ff14;
     --aviso-rojo: #ff3b3b;
@@ -278,11 +280,16 @@
 .aviso-franja-titulo {
     display: inline-block;
     padding-left: 100%;
-    color: var(--aviso-rojo);
+    color: var(--aviso-color, var(--aviso-rojo));
     font-size: 15px;
     font-weight: 700;
     line-height: 1.6;
-    animation: aviso-marquesina var(--duracion, 14s) linear infinite;
+    transform: translateX(0);
+}
+
+/* Cada aviso pasa una vez; al acabar, js/novedades.js pone el siguiente. */
+.aviso-franja-titulo.en-marcha {
+    animation: aviso-marquesina var(--duracion, 14s) linear 1 forwards;
 }
 
 .aviso-franja:hover .aviso-franja-titulo,
@@ -302,7 +309,8 @@
 
 /* Quien pide menos movimiento ve el título quieto (cortado con «…»). */
 @media (prefers-reduced-motion: reduce) {
-    .aviso-franja-titulo {
+    .aviso-franja-titulo,
+    .aviso-franja-titulo.en-marcha {
         display: block;
         padding-left: 0;
         overflow: hidden;
@@ -318,9 +326,10 @@
 
 .aviso-franja-boton {
     padding: 4px 10px;
-    color: var(--aviso-verde);
+    color: var(--aviso-color, var(--aviso-rojo));
     background: transparent;
-    border: 1px solid var(--aviso-verde);
+    border: 1px solid var(--aviso-color, var(--aviso-rojo));
+    transition: color 0.3s ease, border-color 0.3s ease;
     border-radius: 8px;
     font: inherit;
     font-size: 12px;
@@ -331,7 +340,11 @@
 }
 
 .aviso-franja-boton:hover {
-    background: rgba(57, 255, 20, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.aviso-franja-boton[hidden] {
+    display: none;
 }
 
 .aviso-franja-x {
