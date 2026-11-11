@@ -123,7 +123,7 @@
 
 <script
     type="module"
-    src="../js/actualidad/principal.js?v=20261111-aire1"
+    src="../js/actualidad/principal.js?v=20261111-alertas1"
 ></script>
 
 <!-- Novedades: ventana con las vigentes al entrar (docs/novedades.md de la API). -->
@@ -161,6 +161,13 @@
 
 
 <div id="cabecera"></div>
+<!-- Semáforos de alertas (docs/alertas-meteorologicas.md de la API): fijos
+     bajo la cabecera, solo si hay algún aviso; js/alertas/semaforos.js. -->
+<div
+    data-componente="alertas-semaforos"
+    data-fijo="si"
+    hidden
+></div>
 
 
 <div
