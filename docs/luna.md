@@ -53,7 +53,7 @@ ve desde aquí; con `data-todos="si"`, también fases, perigeos, apogeos y lo qu
 eclipse» lleva una cuenta atrás que se mueve cada segundo (solo con la pestaña a la vista), el Sol
 tapado dibujado con la magnitud de El Silo y el aviso de las gafas homologadas. El calendario del
 campo lleva siempre a la vista el aviso de que es tradición y no ciencia (decisión de José).
-Toda la sección se versiona junta (`?v=20261111-luna3`); un test lo comprueba.
+Toda la sección se versiona junta (`?v=20261111-luna4`); un test lo comprueba.
 
 ## Aspecto
 

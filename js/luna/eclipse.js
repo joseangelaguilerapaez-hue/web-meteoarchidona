@@ -14,7 +14,7 @@
 import {
     FUENTE_CALCULO,
     aviso, cadaRato, crear, crearSvg, dato, decimal, diaHora, hora, pedir, prepararRaiz, pie, textoError, vaciar
-} from "./comun.js?v=20261111-luna3";
+} from "./comun.js?v=20261111-luna4";
 
 
 const CADA_MS = 60 * 60 * 1000;
@@ -104,11 +104,11 @@ function pintar(raiz, respuesta) {
 
     if (respuesta.siguientes.length) {
         raiz.appendChild(crear("p", "lun-subtitulo", "Después"));
-        const despues = crear("ul", "lun-proximas");
+        const despues = crear("ul", "lun-eclipse-siguientes");
         for (const e of respuesta.siguientes) {
             const li = crear("li");
-            li.appendChild(crear("span", null, e.titulo));
-            li.appendChild(crear("strong", "lun-cifra", diaHora(e.momento)));
+            li.appendChild(crear("strong", null, e.titulo));
+            li.appendChild(crear("span", "lun-cifra", diaHora(e.momento)));
             despues.appendChild(li);
         }
         raiz.appendChild(despues);

@@ -1119,6 +1119,36 @@
     font-weight: 700;
 }
 
+/* «Después»: una línea por eclipse, legible en el móvil. */
+.lun-eclipse-siguientes {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lun-eclipse-siguientes li {
+    display: grid;
+    gap: 2px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--lun-borde);
+    border-radius: 10px;
+}
+
+.lun-eclipse-siguientes strong {
+    color: var(--lun-texto);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.lun-eclipse-siguientes span {
+    color: var(--lun-texto-suave);
+    font-size: 13px;
+    text-transform: capitalize;
+}
+
 .lun-eclipse-texto .lun-eclipse-seguridad {
     padding: 8px 12px;
     border-left: 3px solid var(--lun-luz-dorada);
