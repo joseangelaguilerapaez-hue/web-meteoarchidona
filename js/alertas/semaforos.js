@@ -10,13 +10,14 @@
  *   fucsia es propio de MeteoArchidona, entre el naranja y el rojo.
  * - Dibujado, sin fondo, con brillo y luz interna en las encendidas.
  * - Solo aparece si algún semáforo no está en verde; entonces salen los 6.
- *   Se enciende en cuanto AEMET publica el aviso, aunque empiece mañana.
+ *   Se enciende en cuanto AEMET publica la alerta, aunque empiece mañana.
  * - Con data-fijo="si" (Actualidad) va fijo arriba de lado a lado, bajo
  *   la cabecera, siempre del mismo tamaño, y el contenido se ve por los
  *   huecos. Sin él, se pinta en su sitio (dashboards).
- * - Al tocar un semáforo sale una ficha con los avisos de ese fenómeno
+ * - Al tocar un semáforo sale una ficha con las alertas de ese fenómeno
  *   (puede haber varios). Si lo ha ajustado MeteoArchidona, solo nuestro
- *   nivel, la nota y hasta cuándo dura; en verde, «Sin aviso».
+ *   nivel, la nota y hasta cuándo dura; en verde, «Sin alerta». (Los «avisos» de la web
+ *   —eclipses, tormentas próximas…— son otra cosa.)
  *
  *     <div data-componente="alertas-semaforos" data-fijo="si"></div>
  *
@@ -289,7 +290,7 @@ function abrirFicha(raiz, semaforo) {
         }
         cuerpo.appendChild(crear("p", "alertas-ficha-fuente", "Fuente: AEMET (zona Antequera)"));
     } else {
-        cuerpo.appendChild(crear("p", "alertas-ficha-nota", "Sin aviso."));
+        cuerpo.appendChild(crear("p", "alertas-ficha-nota", "Sin alerta."));
     }
 
     dialogo.appendChild(cuerpo);

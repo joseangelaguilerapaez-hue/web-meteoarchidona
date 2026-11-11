@@ -1,6 +1,7 @@
 /*
  * MeteoArchidona
- * Administración · Avisos (alertas meteorológicas).
+ * Administración · Alertas (alertas meteorológicas). No confundir con los
+ * avisos de la web (eclipses, tormentas próximas…), que son otra cosa.
  *
  * Decisiones de José del 11-11-2026 (docs/alertas-meteorologicas.md de
  * la API):
@@ -9,8 +10,8 @@
  *   Nieve) con lo que dice AEMET, vuestro nivel y lo que sale en la web.
  * - Corregir: se elige el color (verde, amarillo, naranja, fucsia o
  *   rojo), un motivo opcional (solo para Administración) y, si AEMET no
- *   tiene aviso de ese fenómeno, hasta cuándo dura (24 horas de entrada).
- *   Si AEMET lo tiene, dura hasta el fin del aviso de AEMET.
+ *   tiene alerta de ese fenómeno, hasta cuándo dura (24 horas de entrada).
+ *   Si AEMET lo tiene, dura hasta el fin de la alerta de AEMET.
  * - Regla B: la corrección manda salvo que AEMET suba después por encima
  *   del nivel que tenía al corregir y del vuestro; lo aplica la API.
  * - Historial de correcciones y últimas descargas de AEMET.
@@ -119,7 +120,7 @@ function tarjeta(semaforo) {
     } else {
         const linea = crear("div", "adm-alertas-aviso");
         linea.appendChild(pastilla("SIN_AVISO"));
-        linea.appendChild(crear("span", null, "Sin aviso"));
+        linea.appendChild(crear("span", null, "Sin alerta"));
         aemet.appendChild(linea);
     }
     caja.appendChild(aemet);
@@ -155,7 +156,7 @@ function tarjeta(semaforo) {
             `Corregido por ${correccion.autor} · ${hora(correccion.inicio)} · AEMET tenía `
             + `${(NOMBRE_NIVEL[correccion.nivel_aemet_al_corregir] || "").toLowerCase()}`));
         info.appendChild(crear("div", null,
-            `Hasta ${hora(correccion.fin)}${correccion.fin_manual ? "" : " (fin del aviso de AEMET)"}`));
+            `Hasta ${hora(correccion.fin)}${correccion.fin_manual ? "" : " (fin de la alerta de AEMET)"}`));
         if (correccion.motivo) {
             info.appendChild(crear("div", "adm-alertas-motivo", `Motivo: ${correccion.motivo}`));
         }
@@ -189,7 +190,7 @@ function abrirFormulario(caja, semaforo, nivel) {
         etiqueta.appendChild(campoFin);
         formulario.appendChild(etiqueta);
     } else {
-        formulario.appendChild(crear("div", "adm-alertas-hora", "Hasta el fin del aviso de AEMET (se alarga si AEMET lo alarga)."));
+        formulario.appendChild(crear("div", "adm-alertas-hora", "Hasta el fin de la alerta de AEMET (se alarga si AEMET la alarga)."));
     }
 
     const etiquetaMotivo = crear("label", "adm-alertas-campo", "Motivo (opcional, solo Administración)");
@@ -343,9 +344,9 @@ export function configurarEventosAlertas() {
     $("botonRecargarAlertas")?.addEventListener("click", async () => {
         try {
             await cargarAlertas();
-            mostrarEstado($("estadoAlertas"), "Avisos actualizados.", "ok");
+            mostrarEstado($("estadoAlertas"), "Alertas actualizadas.", "ok");
         } catch (error) {
-            mostrarEstado($("estadoAlertas"), error.message || "No se han podido cargar los avisos.", "error");
+            mostrarEstado($("estadoAlertas"), error.message || "No se han podido cargar las alertas.", "error");
         }
     });
 }

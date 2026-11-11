@@ -301,8 +301,8 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261111-alertas1"),
-            ("administracion", r"administracion/principal\.js\?v=20261111-alertas1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261112-alertas2"),
+            ("administracion", r"administracion/principal\.js\?v=20261112-alertas2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -1206,7 +1206,7 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertIn('data-componente="alertas-semaforos"', pagina)
         self.assertIn('data-fijo="si"', pagina)
         principal = leer(RAIZ / "js" / "actualidad" / "principal.js")
-        self.assertIn("../alertas/semaforos.js?v=20261111-alertas1", principal)
+        self.assertIn("../alertas/semaforos.js?v=20261112-alertas2", principal)
         self.assertTrue((RAIZ / "js" / "alertas" / "semaforos.js").is_file())
         self.assertTrue((RAIZ / "css" / "alertas.css").is_file())
 
@@ -1227,7 +1227,7 @@ class TestAlertasMeteorologicas(unittest.TestCase):
             self.assertIn(f'id="{identificador}"', pagina)
         self.assertIn("css/alertas-admin.css?v=", pagina)
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./alertas.js?v=20261111-alertas1", principal)
+        self.assertIn("./alertas.js?v=20261112-alertas2", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "alertas.js")
         self.assertIn("/admin/alertas", codigo)
 
