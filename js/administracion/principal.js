@@ -843,7 +843,7 @@ async function cargarModuloAlertas(){
 
     if(promesaModuloAlertas === null){
         promesaModuloAlertas = import(
-            "./alertas.js?v=20261112-alertas2"
+            "./alertas.js?v=20261112-alertas3"
         );
     }
 
