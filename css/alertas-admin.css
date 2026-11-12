@@ -105,6 +105,11 @@
     font-style: italic;
 }
 
+.adm-alertas-texto {
+    margin-top: 4px;
+    color: var(--text, #e8eef5);
+}
+
 .adm-alertas-formulario {
     display: grid;
     gap: 8px;

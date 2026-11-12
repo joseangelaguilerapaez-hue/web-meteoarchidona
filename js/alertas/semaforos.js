@@ -27,7 +27,7 @@
  * API: GET /alertas/semaforos. Se refresca cada 5 minutos.
  */
 
-const HOJA = "/css/alertas.css?v=20261111-alertas1";
+const HOJA = "/css/alertas.css?v=20261112-alertas3";
 
 const MINUTOS_REFRESCO = 5;
 
@@ -268,9 +268,16 @@ function abrirFicha(raiz, semaforo) {
     const cuerpo = crear("div", "alertas-ficha-cuerpo");
 
     if (semaforo.corregido) {
-        cuerpo.appendChild(crear("p", "alertas-ficha-nota", semaforo.nota || "Nivel ajustado por MeteoArchidona"));
+        // Alerta propia o corrección de MeteoArchidona (José, 12-11-2026).
+        cuerpo.appendChild(crear("p", "alertas-ficha-nota", semaforo.nota || "Alerta de MeteoArchidona"));
+        if (semaforo.texto) cuerpo.appendChild(crear("p", "alertas-ficha-texto", semaforo.texto));
         const hasta = hora(semaforo.hasta);
-        if (hasta) cuerpo.appendChild(crear("p", "alertas-ficha-horas", `Hasta ${hasta}`));
+        const empieza = semaforo.desde && new Date(semaforo.desde) > new Date() ? hora(semaforo.desde) : null;
+        if (empieza && hasta) {
+            cuerpo.appendChild(crear("p", "alertas-ficha-horas", `Desde ${empieza} hasta ${hasta}`));
+        } else if (hasta) {
+            cuerpo.appendChild(crear("p", "alertas-ficha-horas", `Hasta ${hasta}`));
+        }
     } else if (semaforo.avisos && semaforo.avisos.length) {
         for (const aviso of semaforo.avisos) {
             const bloque = crear("article", `alertas-aviso alertas-borde-${aviso.nivel}`);

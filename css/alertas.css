@@ -107,6 +107,10 @@
     font-weight: 600;
 }
 
+.alertas-ficha-texto {
+    white-space: pre-line;
+}
+
 .alertas-ficha-horas {
     color: var(--text-soft, #b7c3d0);
     font-size: 0.92rem;
