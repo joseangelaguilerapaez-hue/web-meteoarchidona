@@ -12,11 +12,11 @@
 
 <meta
     name="description"
-    content="Embalses de Andalucía y de toda España: agua embalsada cada semana por cuenca, comunidad y provincia, comparada con el año anterior y con las medias de 5 y 10 años."
+    content="Agua y sequía: embalses de Andalucía y de toda España cada semana, y la sequía de la comarca de Archidona (humedad del suelo, lluvia del año e índices SPI y SPEI)."
 >
 
 <title>
-    Embalses · MeteoArchidona
+    Agua y sequía · MeteoArchidona
 </title>
 
 <link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
@@ -32,8 +32,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MeteoArchidona">
 <meta property="og:locale" content="es_ES">
-<meta property="og:title" content="Embalses · MeteoArchidona">
-<meta property="og:description" content="Cómo están los embalses de Andalucía y de toda España, semana a semana.">
+<meta property="og:title" content="Agua y sequía · MeteoArchidona">
+<meta property="og:description" content="Cómo andamos de agua: embalses semana a semana y la sequía de la comarca de Archidona.">
 <meta property="og:url" content="https://meteoarchidona.com/embalses">
 <meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
 <meta property="og:image:width" content="1200">
@@ -73,7 +73,11 @@
 
 <link
     rel="stylesheet"
-    href="../css/embalses.css?v=20261105-embalses1"
+    href="../css/sequia-componentes.css?v=20261114-sequia1"
+>
+<link
+    rel="stylesheet"
+    href="../css/embalses.css?v=20261114-sequia1"
 >
 
 
@@ -83,7 +87,7 @@
 ></script>
 
 <script
-    src="../js/cabecera.js?v=20261113-astronomia"
+    src="../js/cabecera.js?v=20261114-agua"
     defer
 ></script>
 <script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
@@ -96,7 +100,7 @@
 
 <script
     type="module"
-    src="../js/embalses.js?v=20261105-embalses1"
+    src="../js/embalses.js?v=20261114-sequia1"
 ></script>
 
 <script
@@ -125,22 +129,48 @@
 
 
 <header class="embalses-cabecera">
-
     <div class="emb-etiqueta">
-        METEOARCHIDONA · EMBALSES
+        METEOARCHIDONA · AGUA Y SEQUÍA
     </div>
-
     <h1>
-        Embalses de <span class="embalses-titulo-ambito">Andalucía</span>
+        Agua y sequía
     </h1>
+    <p class="embalses-entradilla">
+        Cómo andamos de agua: los embalses semana a semana, la sequía de
+        toda España con el detalle de nuestra comarca y, muy pronto, el
+        caudal de los ríos.
+    </p>
+</header>
 
+<!--
+    PESTAÑAS (José, 14-11-2026; docs/agua-sequia.md de la API)
+    Cada botón lleva data-pestana y su panel. La pestaña abierta queda en
+    la dirección (/embalses#sequia). Embalses es la de por defecto.
+-->
+<nav
+    class="agua-pestanas"
+    role="tablist"
+    aria-label="Apartados de Agua y sequía"
+>
+    <button type="button" class="agua-pestana" role="tab" id="pestana-embalses" data-pestana="embalses" aria-controls="panel-embalses" aria-selected="true">Embalses</button>
+    <button type="button" class="agua-pestana" role="tab" id="pestana-sequia" data-pestana="sequia" aria-controls="panel-sequia" aria-selected="false" tabindex="-1">Sequía</button>
+    <button type="button" class="agua-pestana" role="tab" id="pestana-rios" data-pestana="rios" aria-controls="panel-rios" aria-selected="false" tabindex="-1">Ríos</button>
+</nav>
+
+<!-- ========================================================
+     PESTAÑA EMBALSES
+     ======================================================== -->
+<div class="agua-panel" id="panel-embalses" role="tabpanel" aria-labelledby="pestana-embalses">
+<div class="embalses-cabecera">
+    <h2 class="agua-titulo">
+        Embalses de <span class="embalses-titulo-ambito">Andalucía</span>
+    </h2>
     <p class="embalses-entradilla">
         El agua que guardan los embalses semana a semana, comparada con
         la del año pasado y con lo normal de los últimos 5 y 10 años.
         Elige Andalucía, toda España o cualquier comunidad, cuenca o
         provincia.
     </p>
-
     <div class="embalses-selector">
         <label for="embalses-ambito">Ver</label>
         <select id="embalses-ambito">
@@ -148,8 +178,7 @@
             <option value="ESPANA|">Toda España</option>
         </select>
     </div>
-
-</header>
+</div>
 
 
 <!-- ========================================================
@@ -381,6 +410,124 @@
 </section>
 
 
+</div>
+
+<!-- ========================================================
+     PESTAÑA SEQUÍA (José, 14-11-2026)
+     Detalle de la comarca: los pueblos de Climatología. Componentes
+     js/sequia/*.js; los mapas de España y la situación oficial del
+     Ministerio llegan en la fase 2.
+     ======================================================== -->
+<div class="agua-panel" id="panel-sequia" role="tabpanel" aria-labelledby="pestana-sequia" hidden>
+<div class="embalses-cabecera">
+    <h2 class="agua-titulo">
+        Sequía en la comarca
+    </h2>
+    <p class="embalses-entradilla">
+        Si el campo está seco o empapado comparado con lo normal, cuánto
+        ha llovido este año hidrológico y los índices de sequía de cada
+        pueblo: Archidona, Antequera, Cuevas Bajas, Cuevas de San Marcos y
+        las cuatro Villanuevas. Muy pronto, también los mapas de toda
+        España y la situación oficial del Ministerio.
+    </p>
+</div>
+
+<section class="embalses-bloque" aria-label="Humedad del suelo">
+    <div data-componente="sequia-suelo" data-titulo="si"></div>
+</section>
+
+<section class="embalses-bloque" aria-label="Lluvia del año hidrológico">
+    <div data-componente="sequia-lluvia-anio"></div>
+</section>
+
+<section class="embalses-bloque" aria-label="Índices de sequía SPI y SPEI">
+    <div data-componente="sequia-indices"></div>
+</section>
+
+<section class="embalses-bloque" aria-labelledby="titulo-glosario-sequia">
+    <h2 id="titulo-glosario-sequia">
+        Qué significa cada cosa
+    </h2>
+    <dl class="embalses-glosario">
+        <dt>Humedad del suelo</dt>
+        <dd>
+            Agua que hay en la tierra, en porcentaje del volumen, en cuatro
+            capas: la superficial (0-7 cm), la de las raíces de los
+            cultivos (7-28 cm) y dos más hondas. Se compara con lo normal
+            de ese mismo día del año entre 1991 y 2020.
+        </dd>
+        <dt>Seco, normal, húmedo</dt>
+        <dd>
+            «Muy seco» quiere decir que solo 1 de cada 10 años, por estas
+            fechas, el suelo estaba más seco; «Seco», 3 de cada 10. Igual
+            hacia el lado húmedo.
+        </dd>
+        <dt>SPI</dt>
+        <dd>
+            Índice de precipitación estandarizado: compara la lluvia de
+            los últimos 1, 3, 6 o 12 meses con la de esos mismos meses
+            entre 1991 y 2020. Por debajo de −1, seco; por debajo de −2,
+            extremadamente seco.
+        </dd>
+        <dt>SPEI</dt>
+        <dd>
+            Lo mismo, pero con la lluvia menos lo que se evapora: con
+            calor, la misma lluvia da para menos, y el SPEI lo nota.
+        </dd>
+        <dt>Escalas</dt>
+        <dd>
+            A 1 y 3 meses, lo que nota el campo; a 6 meses, los ríos y los
+            embalses; a 12 meses, los acuíferos y la sequía larga.
+        </dd>
+        <dt>Año hidrológico</dt>
+        <dd>
+            Va del 1 de octubre al 30 de septiembre.
+        </dd>
+    </dl>
+</section>
+
+<section class="embalses-bloque" aria-labelledby="titulo-fuentes-sequia">
+    <h2 id="titulo-fuentes-sequia">
+        Fuentes
+    </h2>
+    <ul class="embalses-fuentes">
+        <li>
+            Humedad del suelo: ERA5-Land, del
+            <a href="https://climate.copernicus.eu/" target="_blank" rel="noopener noreferrer">Servicio de Cambio Climático de Copernicus</a>
+            (C3S), vía Open-Meteo. Llega con unos 5 días de retraso: los
+            últimos días son la previsión del modelo europeo (ECMWF) y
+            pueden cambiar.
+        </li>
+        <li>
+            Lluvia y evaporación de cada pueblo: la sección
+            <a href="/climatologia">Climatología</a> (ERA5-Land corregido
+            por MeteoArchidona); en Archidona, también nuestras estaciones
+            de El Silo y Los Llanos.
+        </li>
+        <li>
+            SPI, SPEI, normales y gráficas: calculados por MeteoArchidona,
+            con referencia 1991-2020. No son datos oficiales.
+        </li>
+    </ul>
+</section>
+</div>
+
+<!-- ========================================================
+     PESTAÑA RÍOS (llega en la fase 3)
+     ======================================================== -->
+<div class="agua-panel" id="panel-rios" role="tabpanel" aria-labelledby="pestana-rios" hidden>
+<section class="embalses-bloque" aria-labelledby="titulo-rios">
+    <h2 id="titulo-rios">
+        Ríos
+    </h2>
+    <p class="embalses-nota">
+        Estamos preparando el caudal del Genil, el Guadalhorce, el
+        Guadalquivir, el Guadalete y el Guadiana: lo que miden en tiempo
+        real las confederaciones y la Junta, y la previsión de Copernicus
+        para saber si van crecidos o bajos para la época.
+    </p>
+</section>
+</div>
 </main>
 
 

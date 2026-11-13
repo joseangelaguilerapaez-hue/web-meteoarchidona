@@ -36,6 +36,28 @@ Estados: crítico < 25 %, bajo < 50 %, bueno < 75 %, lleno ≥ 75 %. Las gráfic
 redibujadas al ancho del hueco. Los datos cambian una vez por semana: caché de 10 minutos y sin
 refresco automático.
 
+## Agua y sequía: pestañas (14-11-2026)
+
+Decisión de José del 13 y 14-11-2026 (`docs/agua-sequia.md` de la API): la sección se llama ahora
+**«Agua y sequía»** (menú, título y cabecera) y sigue en `/embalses`. Va en pestañas, como
+Predicción: **Embalses** (por defecto, lo de siempre), **Sequía** y **Ríos** (por llegar). La pestaña
+abierta queda en la dirección: `/embalses#sequia`, `/embalses#rios`; los parámetros de Embalses
+(`?ambito=…`, `?embalse=…`) se conservan.
+
+### Pestaña Sequía (`js/sequia/`, `css/sequia-componentes.css`)
+
+Misma paleta de agua (carga también `css/embalses-componentes.css`); las clases secas se salen del
+azul hacia ocres y rojizos. Los componentes se cargan la primera vez que se abre la pestaña.
+
+| Componente | Qué es | Opciones |
+| --- | --- | --- |
+| `sequia-suelo` | Humedad del suelo de un pueblo en cuatro capas frente a lo normal 1991-2020; los últimos días, del modelo (trazo discontinuo) | `data-punto`, `data-selector="no"`, `data-dias` (90), `data-capa` (2) |
+| `sequia-lluvia-anio` | Lluvia acumulada desde el 1 de octubre frente a la normal; en Archidona, también El Silo y Los Llanos | `data-punto`, `data-selector="no"` |
+| `sequia-indices` | SPI y SPEI a 1, 3, 6 y 12 meses, con barras de la escala elegida | `data-punto`, `data-selector="no"`, `data-meses` (36), `data-escala` (6), `data-indice` (`spei`/`spi`) |
+
+Pueblos: los de Climatología (`/climatologia/puntos`). Datos: `/agua/sequia/...` de la API. Están
+también en el pintor de dashboards.
+
 ## Pendiente
 
 - Mapa de embalses, cuando el catálogo de la API tenga coordenadas.
