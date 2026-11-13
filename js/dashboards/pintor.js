@@ -90,6 +90,10 @@ const COMPONENTES = {
     "olivar-heladas": ["/js/olivar/heladas.js?v=20261109-olivar2", "montarHeladasOlivar"],
     "olivar-grados-dia": ["/js/olivar/grados-dia.js?v=20261109-olivar2", "montarGradosDiaOlivar"],
     "olivar-balance": ["/js/olivar/balance.js?v=20261109-olivar2", "montarBalanceOlivar"],
+    // Climatología
+    "clima-climograma": ["/js/climatologia/climograma.js?v=20261113-clima1", "montarClimograma"],
+    "clima-normales": ["/js/climatologia/normales.js?v=20261113-clima1", "montarNormalesClima"],
+    "clima-metodo": ["/js/climatologia/metodo.js?v=20261113-clima1", "montarMetodoClima"],
     // Alertas meteorológicas
     "alertas-semaforos": ["/js/alertas/semaforos.js?v=20261112-alertas3", "montarSemaforosAlertas"],
     // Luna (astronomía)

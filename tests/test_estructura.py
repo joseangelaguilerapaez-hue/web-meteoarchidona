@@ -46,7 +46,9 @@ PORTADA = "actualidad"
 PRIVADAS = {"administracion", "mi-cuenta"}
 
 # Se llega desde el botón con el nombre del usuario, no desde el menú.
-FUERA_DEL_MENU = {"mi-cuenta"}
+# Climatología (José, 13-11-2026): dada de alta pero fuera del menú hasta
+# que esté cargada la serie histórica; luego irá delante de Embalses.
+FUERA_DEL_MENU = {"mi-cuenta", "climatologia"}
 
 # Observaciones no lleva pie: su mapa ocupa la pantalla entera.
 SIN_PIE = {"observaciones"}
@@ -301,7 +303,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261112-alertas3"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261113-clima1"),
             ("administracion", r"administracion/principal\.js\?v=20261112-alertas3"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -961,6 +963,60 @@ class TestComponentesOlivar(unittest.TestCase):
 
     def test_el_alta_en_nginx_existe(self):
         self.assertIn('modulo.SECCION = "olivar"', leer(RAIZ / "scripts" / "configurar_seccion_olivar.py"))
+
+
+class TestComponentesClimatologia(unittest.TestCase):
+    """Componentes de Climatología para la página y los dashboards (13-11-2026)."""
+
+    COMPONENTES = {
+        "clima-climograma": ("climograma.js", "montarClimograma"),
+        "clima-normales": ("normales.js", "montarNormalesClima"),
+        "clima-metodo": ("metodo.js", "montarMetodoClima"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "climatologia.html")
+        principal = leer(RAIZ / "js" / "climatologia.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "climatologia" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/climatologia/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "climatologia" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_papel_de_archivo(self):
+        comun = leer(RAIZ / "js" / "climatologia" / "comun.js")
+        ruta = re.search(r'"(/css/climatologia-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "climatologia.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "climatologia-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # «Papel de archivo» (José, 13-11-2026), en la hoja de los componentes.
+        for variable in ("--cli-hueso", "--cli-tinta", "--cli-teja", "--cli-pizarra", "--cli-raya-9"):
+            self.assertIn(variable, hoja)
+        self.assertNotIn("--cli-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_carga_el_modulo_la_api_y_cita_a_copernicus(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "climatologia.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/climatologia\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn('<body data-seccion="climatologia">', pagina)
+        self.assertIn("Copernicus", pagina)
+        self.assertIn("no son datos ni récords oficiales", pagina)
+        self.assertIn("Copernicus", leer(RAIZ / "js" / "climatologia" / "comun.js"))
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "climatologia"', leer(RAIZ / "scripts" / "configurar_seccion_climatologia.py"))
 
 
 class TestComponentesLuna(unittest.TestCase):
