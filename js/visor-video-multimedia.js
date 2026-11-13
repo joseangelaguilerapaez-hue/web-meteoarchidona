@@ -52,7 +52,7 @@
         const script = document.createElement("script");
 
         script.src =
-            "../js/visor-video.js?v=20261102-horizontal1";
+            "../js/visor-video.js?v=20261113-iphone1";
 
         document.head.appendChild(script);
 
@@ -776,7 +776,11 @@
 
         return (
             document.fullscreenElement === raiz ||
-            document.webkitFullscreenElement === raiz
+            document.webkitFullscreenElement === raiz ||
+            (
+                Boolean(raiz) &&
+                window.PantallaSimulada?.activo() === raiz
+            )
         );
 
     }
@@ -803,9 +807,32 @@
             return;
         }
 
+        /*
+         * iPhone (sin Fullscreen API sobre elementos) o iframe sin
+         * permiso: pantalla completa simulada.
+         */
+        const simulada = window.PantallaSimulada;
+
+        if (
+            simulada &&
+            (
+                simulada.activo() ||
+                !simulada.nativaDisponible(raiz)
+            )
+        ) {
+
+            simulada.alternar(raiz);
+
+            return;
+
+        }
+
         try {
 
-            if (estaEnFullscreen()) {
+            if (
+                document.fullscreenElement ||
+                document.webkitFullscreenElement
+            ) {
 
                 if (document.exitFullscreen) {
 
@@ -1124,6 +1151,11 @@
 
         document.addEventListener(
             "webkitfullscreenchange",
+            actualizarModo
+        );
+
+        document.addEventListener(
+            "pantallasimuladachange",
             actualizarModo
         );
 

@@ -443,7 +443,7 @@ class TestDirectoConInstrumentos(unittest.TestCase):
 
     def test_el_visor_carga_la_hoja_nueva(self):
         self.assertIn(
-            "visor-video.css?v=20261101-termometro1",
+            "visor-video.css?v=20261113-iphone1",
             leer(RAIZ / "visores" / "video.html"),
         )
 
@@ -478,11 +478,11 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         # Vídeo muy pequeño: botones pequeños para no tapar el logotipo.
         self.assertIn('"pequenos"', codigo)
         self.assertIn(
-            "visor-video.js?v=20261102-horizontal1",
+            "visor-video.js?v=20261113-iphone1",
             leer(RAIZ / "js" / "visor-video-multimedia.js"),
         )
         self.assertIn(
-            "visor-video-multimedia.js?v=20261102-horizontal1",
+            "visor-video-multimedia.js?v=20261113-iphone1",
             leer(RAIZ / "visores" / "video.html"),
         )
         self.assertRegex(
@@ -1304,6 +1304,37 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         codigo = leer(RAIZ / "js" / "administracion" / "alertas.js")
         self.assertIn("/admin/alertas", codigo)
 
+
+
+class TestPantallaCompletaIphone(unittest.TestCase):
+    """El iPhone no tiene Fullscreen API sobre elementos: pantalla simulada."""
+
+    def test_el_visor_carga_la_pantalla_simulada(self):
+        html = leer(RAIZ / "visores" / "video.html")
+        self.assertIn("pantalla-simulada.js?v=20261113-iphone1", html)
+        self.assertLess(
+            html.index("pantalla-simulada.js"),
+            html.index("../js/visor-video-multimedia.js?"),
+        )
+
+    def test_los_visores_usan_la_pantalla_simulada(self):
+        for nombre in ("visor-video.js", "visor-video-multimedia.js"):
+            codigo = leer(RAIZ / "js" / nombre)
+            self.assertIn("PantallaSimulada", codigo, nombre)
+            self.assertIn("pantallasimuladachange", codigo, nombre)
+
+    def test_todas_las_paginas_cargan_el_anfitrion(self):
+        for pagina in sorted((RAIZ / "pages").glob("*.html")):
+            self.assertIn(
+                "pantalla-simulada-anfitrion.js",
+                leer(pagina),
+                pagina.name,
+            )
+
+    def test_la_hoja_cubre_la_pantalla_simulada(self):
+        hoja = leer(RAIZ / "css" / "visor-video.css")
+        self.assertIn(".visor-video.pantalla-simulada", hoja)
+        self.assertIn(":is(:fullscreen, .pantalla-simulada)", hoja)
 
 if __name__ == "__main__":
     unittest.main()
