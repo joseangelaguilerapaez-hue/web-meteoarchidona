@@ -78,6 +78,7 @@ comprobado en meteoarchidona.com.
 - Botón «Reenviar activación» en Administración → Usuarios para las cuentas sin confirmar (web PR #116 y API PR #116, decisión de José del 8 nov porque a una cuenta el correo de activación le llegó a spam y lo borró). **Publicado el 8 nov** (web `f4bfbb8`, API `3d63995`, sin migración). La purga de 7 días de la API respeta las cuentas con un enlace de activación vigente.
 - Ficha de mantenimiento del usuario en Administración → Usuarios (web PR #118 y API PR #117, decisión de José del 8 nov; `docs/usuarios.md` de la API, 2.8): al pulsar una cuenta se ve todo (cuenta, suscripciones, sesiones, registro de seguridad, «Mi web», dashboards) y se cambian estado y suscripciones, con cambio de PIN, cierre de sesiones, reenvío de activación y borrado. **Publicada el 8 nov** (web `42eeccc`, API `3fb4259`, sin migración).
 - Alertas meteorológicas (web PR #149 y #150; API PR #159 y #160, migración 0056; `docs/alertas-meteorologicas.md` de la API). **Publicadas el 11-12 nov**: brazo de semáforos fijo bajo la cabecera de Actualidad (6 fenómenos, 5 luces con el fucsia propio), solo si hay alguna alerta de AEMET de la zona Antequera, con ficha al tocar cada semáforo; componente `alertas-semaforos` en el pintor de dashboards; Administración → Alertas para corregirlas (regla B). Terminología de José: «alertas» son estas; «avisos», los de la web. **Por confirmar** con José: cómo se ve en la portada con una alerta real, la pantalla de Administración (no probada con sesión real) y si los semáforos tapan la franja de avisos cuando coinciden.
+- Episodio de lluvia en la ficha de estación (PR #159; API PR #170): línea «Episodio» con el acumulado y desde cuándo, solo mientras el episodio está abierto (se cierra tras 24 h con 0,2 mm o menos).
 
 ## En construcción / abierto
 
@@ -204,3 +205,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-11 · Luna, fase 4 en el VPS (`11280c8`): mapa del cielo, cielo oscuro, directos y auroras desde Archidona; antes, arreglo de la lista «Después» del eclipse (PR #145).
 - 2026-11-12 · Novedades y avisos en el VPS (`96b563f`): franja, página `/novedades` y Administración; primer aviso automático de la Estación Espacial.
 - 2026-11-12 · Alertas meteorológicas en el VPS (`c2985bb`; API `07efdfb`, migración 0056 aplicada, primera carga con 1 alerta en la zona): semáforos en Actualidad y Administración → Alertas.
+- 2026-11-13 · Episodio de lluvia en el VPS (`fd807e8`; API `0b5e30f`, sin migración): la API devolvió en El Silo un episodio abierto de 36,4 mm desde el 11 nov.
