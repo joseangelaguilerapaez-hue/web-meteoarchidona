@@ -71,6 +71,294 @@
     }
 
 
+
+    /*
+     * El visor y la página son del mismo sitio, así que el propio
+     * visor puede estirar su iframe (window.frameElement) sin
+     * depender de que la página tenga cargado
+     * js/pantalla-simulada-anfitrion.js (una página antigua en la
+     * caché del iPhone no lo tendría). Si no se puede, se pide por
+     * postMessage.
+     */
+    const CLASE_IFRAME = "iframe-pantalla-simulada";
+
+    const Z_MAXIMO = "2147483000";
+
+    let marcoEstirado = null;
+
+
+    function marcoPropio() {
+
+        try {
+
+            const marco = window.frameElement;
+
+            if (
+                marco
+                &&
+                marco.ownerDocument
+                &&
+                marco.ownerDocument.defaultView
+            ) {
+                return marco;
+            }
+
+        } catch (error) {
+
+            console.debug(
+                "Sin acceso al iframe contenedor.",
+                error
+            );
+
+        }
+
+        return null;
+
+    }
+
+
+    function insertarEstilosMarco(doc) {
+
+        if (
+            doc.getElementById(
+                "estilos-pantalla-simulada"
+            )
+        ) {
+            return;
+        }
+
+        const estilos =
+            doc.createElement("style");
+
+        estilos.id =
+            "estilos-pantalla-simulada";
+
+        estilos.textContent = `
+            html.${CLASE_DOCUMENTO},
+            html.${CLASE_DOCUMENTO} body {
+                overflow: hidden !important;
+                overscroll-behavior: none;
+            }
+
+            iframe.${CLASE_IFRAME} {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: auto !important;
+                bottom: auto !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                max-width: none !important;
+                max-height: none !important;
+                margin: 0 !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                transform: none !important;
+                z-index: ${Z_MAXIMO} !important;
+                background: #000;
+            }
+        `;
+
+        doc.head.appendChild(estilos);
+
+    }
+
+
+    function cambiosAntepasado(estilo) {
+
+        const cambios = {};
+
+        const anular = [
+            "transform",
+            "filter",
+            "backdropFilter",
+            "webkitBackdropFilter",
+            "perspective",
+            "contain"
+        ];
+
+        for (const propiedad of anular) {
+
+            if (
+                estilo[propiedad]
+                &&
+                estilo[propiedad] !== "none"
+            ) {
+                cambios[propiedad] = "none";
+            }
+
+        }
+
+        if (
+            estilo.willChange
+            &&
+            /transform|filter|perspective/.test(
+                estilo.willChange
+            )
+        ) {
+            cambios.willChange = "auto";
+        }
+
+        if (
+            estilo.containerType
+            &&
+            estilo.containerType !== "normal"
+        ) {
+            cambios.containerType = "normal";
+        }
+
+        if (estilo.position !== "static") {
+            cambios.zIndex = Z_MAXIMO;
+        }
+
+        return cambios;
+
+    }
+
+
+    function estirarMarco() {
+
+        const marco = marcoPropio();
+
+        if (!marco) {
+            return false;
+        }
+
+        try {
+
+            const doc = marco.ownerDocument;
+
+            const vista = doc.defaultView;
+
+            insertarEstilosMarco(doc);
+
+            const scroll = vista.scrollY;
+
+            const ajustes = [];
+
+            let nodo = marco.parentElement;
+
+            while (
+                nodo
+                &&
+                nodo !== doc.documentElement
+            ) {
+
+                const cambios =
+                    cambiosAntepasado(
+                        vista.getComputedStyle(nodo)
+                    );
+
+                const claves =
+                    Object.keys(cambios);
+
+                if (claves.length) {
+
+                    const previos = {};
+
+                    for (const clave of claves) {
+
+                        previos[clave] =
+                            nodo.style[clave];
+
+                        nodo.style[clave] =
+                            cambios[clave];
+
+                    }
+
+                    ajustes.push({
+                        nodo,
+                        previos
+                    });
+
+                }
+
+                nodo = nodo.parentElement;
+
+            }
+
+            marco.classList.add(CLASE_IFRAME);
+
+            doc.documentElement.classList.add(
+                CLASE_DOCUMENTO
+            );
+
+            marcoEstirado = {
+                marco,
+                doc,
+                vista,
+                ajustes,
+                scroll
+            };
+
+            return true;
+
+        } catch (error) {
+
+            console.debug(
+                "No se pudo estirar el iframe desde el visor.",
+                error
+            );
+
+            return false;
+
+        }
+
+    }
+
+
+    function soltarMarco() {
+
+        if (!marcoEstirado) {
+            return false;
+        }
+
+        const {
+            marco,
+            doc,
+            vista,
+            ajustes,
+            scroll
+        } = marcoEstirado;
+
+        marcoEstirado = null;
+
+        try {
+
+            marco.classList.remove(CLASE_IFRAME);
+
+            doc.documentElement.classList.remove(
+                CLASE_DOCUMENTO
+            );
+
+            for (const { nodo, previos } of ajustes) {
+
+                for (const clave of Object.keys(previos)) {
+
+                    nodo.style[clave] =
+                        previos[clave];
+
+                }
+
+            }
+
+            vista.scrollTo(0, scroll);
+
+        } catch (error) {
+
+            console.debug(
+                "No se pudo devolver el iframe a su sitio.",
+                error
+            );
+
+        }
+
+        return true;
+
+    }
+
+
     function avisarAnfitrion(activa) {
 
         if (window.parent === window) {
@@ -132,7 +420,15 @@
             CLASE_DOCUMENTO
         );
 
-        avisarAnfitrion(true);
+        if (estirarMarco()) {
+
+            confirmado = true;
+
+        } else {
+
+            avisarAnfitrion(true);
+
+        }
 
         notificar();
 
@@ -153,7 +449,11 @@
             CLASE_DOCUMENTO
         );
 
-        avisarAnfitrion(false);
+        if (!soltarMarco()) {
+
+            avisarAnfitrion(false);
+
+        }
 
         notificar();
 

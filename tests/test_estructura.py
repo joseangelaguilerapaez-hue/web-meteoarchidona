@@ -1311,7 +1311,7 @@ class TestPantallaCompletaIphone(unittest.TestCase):
 
     def test_el_visor_carga_la_pantalla_simulada(self):
         html = leer(RAIZ / "visores" / "video.html")
-        self.assertIn("pantalla-simulada.js?v=20261113-iphone2", html)
+        self.assertIn("pantalla-simulada.js?v=20261113-iphone3", html)
         self.assertLess(
             html.index("pantalla-simulada.js"),
             html.index("../js/visor-video-multimedia.js?"),
