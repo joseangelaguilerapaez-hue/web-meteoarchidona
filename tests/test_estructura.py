@@ -478,11 +478,11 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         # Vídeo muy pequeño: botones pequeños para no tapar el logotipo.
         self.assertIn('"pequenos"', codigo)
         self.assertIn(
-            "visor-video.js?v=20261113-iphone1",
+            "visor-video.js?v=20261113-iphone2",
             leer(RAIZ / "js" / "visor-video-multimedia.js"),
         )
         self.assertIn(
-            "visor-video-multimedia.js?v=20261113-iphone1",
+            "visor-video-multimedia.js?v=20261113-iphone2",
             leer(RAIZ / "visores" / "video.html"),
         )
         self.assertRegex(
@@ -1311,7 +1311,7 @@ class TestPantallaCompletaIphone(unittest.TestCase):
 
     def test_el_visor_carga_la_pantalla_simulada(self):
         html = leer(RAIZ / "visores" / "video.html")
-        self.assertIn("pantalla-simulada.js?v=20261113-iphone1", html)
+        self.assertIn("pantalla-simulada.js?v=20261113-iphone2", html)
         self.assertLess(
             html.index("pantalla-simulada.js"),
             html.index("../js/visor-video-multimedia.js?"),

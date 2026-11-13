@@ -52,7 +52,7 @@
         const script = document.createElement("script");
 
         script.src =
-            "../js/visor-video.js?v=20261113-iphone1";
+            "../js/visor-video.js?v=20261113-iphone2";
 
         document.head.appendChild(script);
 
@@ -846,36 +846,53 @@
 
                 }
 
-            } else if (
-                raiz.requestFullscreen
-            ) {
+                return;
 
-                await raiz.requestFullscreen();
+            }
 
-                await bloquearHorizontal();
+            if (raiz.requestFullscreen) {
 
-            } else if (
-                raiz.webkitRequestFullscreen
-                ) {
+                await Promise.race([
+                    raiz.requestFullscreen(),
+                    new Promise((resolver) => setTimeout(resolver, 800))
+                ]);
+
+            } else if (raiz.webkitRequestFullscreen) {
 
                 raiz.webkitRequestFullscreen();
-
-                await bloquearHorizontal();
-
-            } else {
-
-                throw new Error(
-                    "Pantalla completa no disponible."
-                );
 
             }
 
         } catch (error) {
 
-            console.error(
-                "No se pudo cambiar la pantalla completa.",
+            console.debug(
+                "No se pudo entrar en pantalla completa.",
                 error
             );
+
+        }
+
+        if (!estaEnFullscreen()) {
+
+            await new Promise((resolver) => setTimeout(resolver, 400));
+
+        }
+
+        if (estaEnFullscreen()) {
+
+            await bloquearHorizontal();
+
+            return;
+
+        }
+
+        /*
+         * La API nativa dice existir pero no ha hecho nada:
+         * pantalla completa simulada.
+         */
+        if (simulada) {
+
+            simulada.entrar(raiz);
 
         }
 

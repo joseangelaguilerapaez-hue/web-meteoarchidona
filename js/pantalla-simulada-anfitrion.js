@@ -362,7 +362,27 @@
             if (evento.data.activa) {
 
                 if (iframe) {
+
                     activar(iframe);
+
+                    try {
+
+                        evento.source.postMessage(
+                            {
+                                tipo: MENSAJE + ":ok"
+                            },
+                            window.location.origin
+                        );
+
+                    } catch (error) {
+
+                        console.debug(
+                            "No se pudo confirmar al visor.",
+                            error
+                        );
+
+                    }
+
                 }
 
                 return;
