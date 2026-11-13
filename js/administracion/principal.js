@@ -827,6 +827,49 @@ async function cargarModuloSalud(){
 
 
 /* ==========================================================
+   AVISOS (ALERTAS METEOROLÓGICAS)
+   Semáforos de la portada y correcciones (José, 11-11-2026;
+   docs/alertas-meteorologicas.md de la API). alertas.js solo se
+   importa si existe modulo-alertas.
+   ========================================================== */
+
+let promesaModuloAlertas = null;
+
+async function cargarModuloAlertas(){
+
+    if(!$("modulo-alertas")){
+        return;
+    }
+
+    if(promesaModuloAlertas === null){
+        promesaModuloAlertas = import(
+            "./alertas.js?v=20261112-alertas3"
+        );
+    }
+
+    try{
+        const modulo = await promesaModuloAlertas;
+        modulo.configurarEventosAlertas();
+        await modulo.cargarAlertas();
+    }catch(error){
+        promesaModuloAlertas = null;
+        console.error(
+            "No se han podido cargar los avisos.",
+            error
+        );
+        mostrarEstado(
+            $("estadoAlertas"),
+            error.message
+            ||
+            "No se han podido cargar los avisos.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    NOVEDADES
    Ventana de novedades de la portada (docs/novedades.md de la
    API). novedades.js solo se importa si existe modulo-novedades.
@@ -842,7 +885,7 @@ async function cargarModuloNovedades(){
 
     if(promesaModuloNovedades === null){
         promesaModuloNovedades = import(
-            "./novedades.js?v=20261105-novedades2"
+            "./novedades.js?v=20261111-avisos1"
         );
     }
 
@@ -1159,6 +1202,8 @@ export async function cargarDatosAdministracion(){
         await cargarModuloProcesos();
 
         await cargarModuloSalud();
+
+        await cargarModuloAlertas();
 
         mostrarEstado(
             $("estadoPanel"),

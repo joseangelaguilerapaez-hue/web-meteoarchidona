@@ -1,0 +1,164 @@
+/*
+ * MeteoArchidona · Semáforos de alertas (js/alertas/semaforos.js)
+ *
+ * Sin fondo: el brazo va encima de la página y el contenido se ve por los
+ * huecos. Fijo bajo la cabecera con data-fijo="si" (Actualidad).
+ */
+
+.alertas-semaforos {
+    position: relative;
+    width: 100%;
+}
+
+.alertas-semaforos[hidden] {
+    display: none;
+}
+
+.alertas-semaforos.alertas-fijo {
+    position: fixed;
+    top: var(--alertas-arriba, 0px);
+    left: 0;
+    right: 0;
+    z-index: 90;
+    pointer-events: none;
+}
+
+.alertas-brazo {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.alertas-semaforo {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.alertas-semaforo:focus {
+    outline: none;
+}
+
+.alertas-semaforo:focus-visible rect:nth-of-type(4) {
+    stroke: var(--cyan, #4fd1e8);
+    stroke-width: 2;
+}
+
+.alertas-cartel {
+    fill: #FFFFFF;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    pointer-events: none;
+}
+
+/* Ficha emergente */
+
+.alertas-ficha {
+    pointer-events: auto;
+    width: min(440px, calc(100vw - 32px));
+    max-height: min(80vh, 640px);
+    padding: 0;
+    border: 1px solid var(--border-strong, #2c3a4a);
+    border-radius: var(--radius-lg, 14px);
+    background: var(--panel, #10161f);
+    color: var(--text, #e8eef5);
+    box-shadow: var(--shadow-deep, 0 20px 50px rgba(0, 0, 0, 0.5));
+    overflow: auto;
+}
+
+.alertas-ficha::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.alertas-ficha-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border, #1f2a36);
+}
+
+.alertas-ficha-titulo {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.alertas-ficha-cerrar {
+    margin-left: auto;
+    border: 0;
+    background: transparent;
+    color: var(--text-soft, #b7c3d0);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.alertas-ficha-cuerpo {
+    padding: 14px 16px 16px;
+}
+
+.alertas-ficha-cuerpo p {
+    margin: 0.4em 0;
+    line-height: 1.5;
+}
+
+.alertas-ficha-nota {
+    font-weight: 600;
+}
+
+.alertas-ficha-texto {
+    white-space: pre-line;
+}
+
+.alertas-ficha-horas {
+    color: var(--text-soft, #b7c3d0);
+    font-size: 0.92rem;
+}
+
+.alertas-ficha-fuente {
+    margin-top: 12px !important;
+    color: var(--text-faint, #7d8a98);
+    font-size: 0.8rem;
+}
+
+.alertas-aviso {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--border, #1f2a36);
+    border-radius: 0 var(--radius-sm, 6px) var(--radius-sm, 6px) 0;
+    background: var(--card-soft, rgba(255, 255, 255, 0.03));
+}
+
+.alertas-aviso-titulo {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.alertas-aviso-instrucciones {
+    color: var(--text-soft, #b7c3d0);
+    font-size: 0.9rem;
+}
+
+.alertas-pastilla {
+    flex: none;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #111;
+}
+
+.alertas-nivel-SIN_AVISO { background: #22C24A; }
+.alertas-nivel-AMARILLO { background: #FFD21F; }
+.alertas-nivel-NARANJA { background: #FF8A1A; }
+.alertas-nivel-FUCSIA { background: #F0259F; color: #fff; }
+.alertas-nivel-ROJO { background: #F2262B; color: #fff; }
+
+.alertas-borde-AMARILLO { border-left-color: #FFD21F; }
+.alertas-borde-NARANJA { border-left-color: #FF8A1A; }
+.alertas-borde-FUCSIA { border-left-color: #F0259F; }
+.alertas-borde-ROJO { border-left-color: #F2262B; }
+
+/* Fin de fichero: css/alertas.css */

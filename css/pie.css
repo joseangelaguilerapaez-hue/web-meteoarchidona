@@ -20,7 +20,7 @@
 
 .pie-sitio-cuerpo {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr) minmax(0, 1.25fr);
     gap: 32px;
     width: min(1180px, calc(100% - 40px));
     margin: 0 auto;
@@ -80,6 +80,19 @@
     margin: 0;
     padding: 0;
     list-style: none;
+}
+
+
+/*
+ * Secciones en columnas de cinco, leídas de arriba abajo en el mismo
+ * orden que el menú. Con quince salen tres columnas; si se añade otra,
+ * la cuarta columna aparece sola. Antes era una sola columna de quince
+ * filas, con todo el pie vacío a los lados (13-11-2026, Mario).
+ */
+#pie-secciones {
+    grid-template-rows: repeat(5, auto);
+    grid-auto-flow: column;
+    column-gap: 28px;
 }
 
 
@@ -263,6 +276,11 @@
 
     .pie-sitio-lista {
         gap: 0;
+    }
+
+    #pie-secciones {
+        grid-template-rows: repeat(8, auto);
+        column-gap: 16px;
     }
 
     .pie-sitio-lista a,

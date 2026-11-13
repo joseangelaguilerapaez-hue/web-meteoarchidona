@@ -17,6 +17,7 @@ Ejecutar desde la raíz del repositorio:
     python -m unittest discover -s tests -v
 """
 
+import json
 import re
 import sys
 import unittest
@@ -45,7 +46,9 @@ PORTADA = "actualidad"
 PRIVADAS = {"administracion", "mi-cuenta"}
 
 # Se llega desde el botón con el nombre del usuario, no desde el menú.
-FUERA_DEL_MENU = {"mi-cuenta"}
+# Climatología (José, 13-11-2026): dada de alta pero fuera del menú hasta
+# que esté cargada la serie histórica; luego irá delante de Embalses.
+FUERA_DEL_MENU = {"mi-cuenta", "climatologia"}
 
 # Observaciones no lleva pie: su mapa ocupa la pantalla entera.
 SIN_PIE = {"observaciones"}
@@ -300,8 +303,8 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261109-olivar2"),
-            ("administracion", r"administracion/principal\.js\?v=20261110-salud1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261113-episodio1"),
+            ("administracion", r"administracion/principal\.js\?v=20261112-alertas3"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -440,7 +443,7 @@ class TestDirectoConInstrumentos(unittest.TestCase):
 
     def test_el_visor_carga_la_hoja_nueva(self):
         self.assertIn(
-            "visor-video.css?v=20261101-termometro1",
+            "visor-video.css?v=20261113-iphone1",
             leer(RAIZ / "visores" / "video.html"),
         )
 
@@ -475,11 +478,11 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         # Vídeo muy pequeño: botones pequeños para no tapar el logotipo.
         self.assertIn('"pequenos"', codigo)
         self.assertIn(
-            "visor-video.js?v=20261102-horizontal1",
+            "visor-video.js?v=20261113-iphone2",
             leer(RAIZ / "js" / "visor-video-multimedia.js"),
         )
         self.assertIn(
-            "visor-video-multimedia.js?v=20261102-horizontal1",
+            "visor-video-multimedia.js?v=20261113-iphone2",
             leer(RAIZ / "visores" / "video.html"),
         )
         self.assertRegex(
@@ -842,6 +845,69 @@ class TestComponentesPolen(unittest.TestCase):
         self.assertIn('modulo.SECCION = "polen"', leer(RAIZ / "scripts" / "configurar_seccion_polen.py"))
 
 
+class TestComponentesCalidadAire(unittest.TestCase):
+    """Componentes de calidad del aire y calima para la página y los dashboards (10-11-2026)."""
+
+    COMPONENTES = {
+        "calima-aviso": ("aviso-calima.js", "montarAvisoCalima"),
+        "aire-indice": ("indice.js", "montarAireIndice"),
+        "aire-dias": ("dias.js", "montarAireDias"),
+        "aire-horas": ("horas.js", "montarAireHoras"),
+        "aire-particulas": ("particulas.js", "montarAireParticulas"),
+        "calima-episodios": ("episodios.js", "montarEpisodiosCalima"),
+        "aire-divulgacion": ("divulgacion.js", "montarAireDivulgacion"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "calidad-aire.html")
+        principal = leer(RAIZ / "js" / "calidad-aire.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "calidad-aire" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/calidad-aire/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "calidad-aire" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_misma_version_en_la_pagina_y_en_los_dashboards(self):
+        version = re.compile(r"calidad-aire/[\w-]+\.js\?v=([\w-]+)")
+        pagina = set(version.findall(leer(RAIZ / "js" / "calidad-aire.js")))
+        dashboards = set(version.findall(leer(RAIZ / "js" / "dashboards" / "pintor.js")))
+        self.assertEqual(len(pagina), 1)
+        self.assertEqual(pagina, dashboards)
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_arena_y_cielo(self):
+        comun = leer(RAIZ / "js" / "calidad-aire" / "comun.js")
+        ruta = re.search(r'"(/css/calidad-aire-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "calidad-aire.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "calidad-aire-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # Ocres y arena para la calima, celestes para el aire limpio (José, 10-11-2026).
+        for variable in ("--air-duna", "--air-ocre", "--air-celeste", "--air-azul"):
+            self.assertIn(variable, hoja)
+        self.assertNotIn("--air-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_carga_el_modulo_y_la_api_y_esta_en_el_menu(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "calidad-aire.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/calidad-aire\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn('<body data-seccion="calidad-aire">', pagina)
+        self.assertIn('href="/calidad-aire"', leer(RAIZ / "componentes" / "cabecera.html"))
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "calidad-aire"', leer(RAIZ / "scripts" / "configurar_seccion_calidad_aire.py"))
+
+
 class TestComponentesOlivar(unittest.TestCase):
     """Componentes de El Olivar para la página y los dashboards (9-11-2026)."""
 
@@ -899,6 +965,166 @@ class TestComponentesOlivar(unittest.TestCase):
         self.assertIn('modulo.SECCION = "olivar"', leer(RAIZ / "scripts" / "configurar_seccion_olivar.py"))
 
 
+class TestComponentesClimatologia(unittest.TestCase):
+    """Componentes de Climatología para la página y los dashboards (13-11-2026)."""
+
+    COMPONENTES = {
+        "clima-climograma": ("climograma.js", "montarClimograma"),
+        "clima-normales": ("normales.js", "montarNormalesClima"),
+        "clima-metodo": ("metodo.js", "montarMetodoClima"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "climatologia.html")
+        principal = leer(RAIZ / "js" / "climatologia.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "climatologia" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/climatologia/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "climatologia" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_papel_de_archivo(self):
+        comun = leer(RAIZ / "js" / "climatologia" / "comun.js")
+        ruta = re.search(r'"(/css/climatologia-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "climatologia.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "climatologia-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # «Papel de archivo» (José, 13-11-2026), en la hoja de los componentes.
+        for variable in ("--cli-hueso", "--cli-tinta", "--cli-teja", "--cli-pizarra", "--cli-raya-9"):
+            self.assertIn(variable, hoja)
+        self.assertNotIn("--cli-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_carga_el_modulo_la_api_y_cita_a_copernicus(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "climatologia.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/climatologia\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn('<body data-seccion="climatologia">', pagina)
+        self.assertIn("Copernicus", pagina)
+        self.assertIn("no son datos ni récords oficiales", pagina)
+        self.assertIn("Copernicus", leer(RAIZ / "js" / "climatologia" / "comun.js"))
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "climatologia"', leer(RAIZ / "scripts" / "configurar_seccion_climatologia.py"))
+
+
+class TestComponentesLuna(unittest.TestCase):
+    """Componentes de la sección Luna para la página y los dashboards (11-11-2026)."""
+
+    COMPONENTES = {
+        "luna-ahora": ("luna-ahora.js", "montarLunaAhora"),
+        "luna-horario": ("horario.js", "montarHorarioLuna"),
+        "luna-calendario": ("calendario.js", "montarCalendarioLuna"),
+        "luna-distancia": ("distancia.js", "montarDistanciaLuna"),
+        "luna-crepusculos": ("crepusculos.js", "montarCrepusculos"),
+        "luna-planetas-noche": ("planetas-noche.js", "montarPlanetasNoche"),
+        "luna-planetas-ahora": ("planetas-ahora.js", "montarPlanetasAhora"),
+        "luna-pasos": ("pasos.js", "montarPasos"),
+        "luna-observacion": ("observacion.js", "montarObservacion"),
+        "luna-aviso": ("aviso.js", "montarAvisoCielo"),
+        "luna-eventos": ("eventos.js", "montarEventos"),
+        "luna-eclipse": ("eclipse.js", "montarEclipse"),
+        "luna-lluvias": ("lluvias.js", "montarLluvias"),
+        "luna-campo": ("campo.js", "montarCampo"),
+        "luna-mapa-cielo": ("mapa-cielo.js", "montarMapaCielo"),
+        "luna-cielo-oscuro": ("cielo-oscuro.js", "montarCieloOscuro"),
+        "luna-directos": ("directos.js", "montarDirectos"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "luna.html")
+        principal = leer(RAIZ / "js" / "luna.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "luna" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/luna/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "luna" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertNotIn("innerHTML", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_azul_noche_y_oro_lunar(self):
+        comun = leer(RAIZ / "js" / "luna" / "comun.js")
+        ruta = re.search(r'"(/css/luna-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "luna.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "luna-componentes.css")
+        self.assertIn("container-type: inline-size", hoja)
+        # «Azul noche y oro lunar» (José, 11-11-2026), en la hoja de los componentes.
+        for variable, color in (("--lun-noche", "#0b1530"), ("--lun-tarjeta", "#13224a"), ("--lun-oro", "#f2c94c"), ("--lun-cian", "#7fd3ff")):
+            self.assertIn(f"{variable}: {color}", hoja)
+        self.assertNotIn("--lun-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_carga_el_modulo_y_la_api(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "luna.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/luna\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn('<body data-seccion="luna">', pagina)
+
+    def test_esta_en_el_menu_detras_de_sol(self):
+        cabecera = leer(RAIZ / "componentes" / "cabecera.html")
+        self.assertIn('href="/luna"', cabecera)
+        self.assertLess(cabecera.index('href="/sol"'), cabecera.index('href="/luna"'))
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "luna"', leer(RAIZ / "scripts" / "configurar_seccion_luna.py"))
+
+    def test_una_sola_generacion_de_luna(self):
+        # Todas las piezas de la sección se versionan juntas (comun.js carga la hoja).
+        versiones = set()
+        for ruta in [RAIZ / "js" / "luna.js", *(RAIZ / "js" / "luna").glob("*.js")]:
+            # La página también monta sol-auroras, que se versiona con Sol.
+            versiones |= set(re.findall(r"(?<!sol/auroras\.js)\?v=([\w-]+)", leer(ruta)))
+        patron = r"(?:/js/luna/[\w-]+\.js|js/luna\.js|css/luna(?:-componentes)?\.css)\?v=([\w-]+)"
+        for ruta in (RAIZ / "pages" / "luna.html", RAIZ / "js" / "dashboards" / "pintor.js"):
+            versiones |= set(re.findall(patron, leer(ruta)))
+        self.assertEqual(len(versiones), 1, versiones)
+
+    def test_mapa_del_cielo_y_directos(self):
+        # Datos de d3-celestial con su licencia; directos solo incrustados o enlazados (José, 11-11-2026).
+        for nombre in ("estrellas", "nombres", "constelaciones", "lineas", "via-lactea"):
+            with self.subTest(fichero=nombre):
+                json.loads(leer(RAIZ / "datos" / "cielo" / f"{nombre}.json"))
+        self.assertIn("Olaf Frohn", leer(RAIZ / "datos" / "cielo" / "LICENCIA-d3-celestial.txt"))
+        mapa = leer(RAIZ / "js" / "luna" / "mapa-cielo.js")
+        self.assertIn("deviceorientation", mapa)
+        self.assertIn('type = "range"', mapa)
+        directos = leer(RAIZ / "js" / "luna" / "directos.js")
+        self.assertIn("iframe", directos)
+        self.assertNotIn("MediaRecorder", directos)
+        self.assertNotIn("captureStream", directos)
+        pagina = sin_comentarios(RAIZ / "pages" / "luna.html")
+        self.assertRegex(pagina, r'data-componente="sol-auroras"\s+data-archidona="si"')
+        self.assertIn('dataset.archidona === "si"', leer(RAIZ / "js" / "sol" / "auroras.js"))
+
+    def test_el_campo_es_tradicion_y_el_eclipse_avisa_de_las_gafas(self):
+        # José, 11-11-2026: el calendario del campo se presenta como tradición, no como ciencia.
+        campo = leer(RAIZ / "js" / "luna" / "campo.js")
+        self.assertIn("datos.aviso", campo)
+        self.assertIn("tradición", campo)
+        self.assertIn("gafas homologadas", leer(RAIZ / "js" / "luna" / "eclipse.js"))
+
+
 class TestNovedades(unittest.TestCase):
     """Ventana de novedades en la portada y su Administración (5-11-2026)."""
 
@@ -919,6 +1145,23 @@ class TestNovedades(unittest.TestCase):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
         self.assertIn('"./novedades.js?v=', principal)
         self.assertNotIn("innerHTML", leer(RAIZ / "js" / "administracion" / "novedades.js"))
+
+    def test_avisos_franja_y_pagina(self):
+        # José, 11-11-2026: los automáticos en una franja que se cierra; lo demás, en la ventana.
+        codigo = leer(RAIZ / "js" / "novedades.js")
+        self.assertIn('origen === "AUTOMATICO"', codigo)
+        self.assertIn("avisos-franja", codigo)
+        self.assertIn("ma_avisos_cerrados", codigo)
+        # Los enlaces de los avisos, solo a nuestra web.
+        self.assertIn('ruta.startsWith("/") && !ruta.startsWith("//")', codigo)
+        pagina = sin_comentarios(RAIZ / "pages" / "novedades.html")
+        self.assertIn("data-novedades-pagina", pagina)
+        self.assertRegex(pagina, r'src="\.\./js/novedades-pagina\.js\?v=[\w-]+"')
+        self.assertIn("/novedades/archivo", leer(RAIZ / "js" / "novedades-pagina.js"))
+        self.assertNotIn("innerHTML", leer(RAIZ / "js" / "novedades-pagina.js"))
+        admin = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('id="tipoNovedad"', admin)
+        self.assertIn('id="enlaceNovedad"', admin)
 
 
 class TestComponenteEstadistica(unittest.TestCase):
@@ -1027,6 +1270,71 @@ class TestSaludEstaciones(unittest.TestCase):
         self.assertIn("/series?horas=", codigo)
         self.assertNotIn("innerHTML", codigo)
 
+
+class TestAlertasMeteorologicas(unittest.TestCase):
+    """Semáforos de alertas en Actualidad y Administración → Avisos (11 nov)."""
+
+    def test_actualidad_monta_los_semaforos_fijos(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "actualidad.html")
+        self.assertIn('data-componente="alertas-semaforos"', pagina)
+        self.assertIn('data-fijo="si"', pagina)
+        principal = leer(RAIZ / "js" / "actualidad" / "principal.js")
+        self.assertIn("../alertas/semaforos.js?v=20261112-alertas3", principal)
+        self.assertTrue((RAIZ / "js" / "alertas" / "semaforos.js").is_file())
+        self.assertTrue((RAIZ / "css" / "alertas.css").is_file())
+
+    def test_el_componente_pide_los_semaforos_y_va_al_pintor(self):
+        codigo = leer(RAIZ / "js" / "alertas" / "semaforos.js")
+        self.assertIn("/alertas/semaforos", codigo)
+        self.assertIn("export async function montarSemaforosAlertas", codigo)
+        for nivel in ("SIN_AVISO", "AMARILLO", "NARANJA", "FUCSIA", "ROJO"):
+            self.assertIn(nivel, codigo)
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        self.assertIn('"alertas-semaforos": ["/js/alertas/semaforos.js?v=', pintor)
+
+    def test_administracion_tiene_el_apartado_avisos(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('data-modulo="alertas"', pagina)
+        self.assertIn('id="modulo-alertas"', pagina)
+        for identificador in ("tarjetasAlertas", "historialAlertas", "cargasAlertas", "estadoAlertas", "botonRecargarAlertas"):
+            self.assertIn(f'id="{identificador}"', pagina)
+        self.assertIn("css/alertas-admin.css?v=", pagina)
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn("./alertas.js?v=20261112-alertas3", principal)
+        codigo = leer(RAIZ / "js" / "administracion" / "alertas.js")
+        self.assertIn("/admin/alertas", codigo)
+
+
+
+class TestPantallaCompletaIphone(unittest.TestCase):
+    """El iPhone no tiene Fullscreen API sobre elementos: pantalla simulada."""
+
+    def test_el_visor_carga_la_pantalla_simulada(self):
+        html = leer(RAIZ / "visores" / "video.html")
+        self.assertIn("pantalla-simulada.js?v=20261113-iphone3", html)
+        self.assertLess(
+            html.index("pantalla-simulada.js"),
+            html.index("../js/visor-video-multimedia.js?"),
+        )
+
+    def test_los_visores_usan_la_pantalla_simulada(self):
+        for nombre in ("visor-video.js", "visor-video-multimedia.js"):
+            codigo = leer(RAIZ / "js" / nombre)
+            self.assertIn("PantallaSimulada", codigo, nombre)
+            self.assertIn("pantallasimuladachange", codigo, nombre)
+
+    def test_todas_las_paginas_cargan_el_anfitrion(self):
+        for pagina in sorted((RAIZ / "pages").glob("*.html")):
+            self.assertIn(
+                "pantalla-simulada-anfitrion.js",
+                leer(pagina),
+                pagina.name,
+            )
+
+    def test_la_hoja_cubre_la_pantalla_simulada(self):
+        hoja = leer(RAIZ / "css" / "visor-video.css")
+        self.assertIn(".visor-video.pantalla-simulada", hoja)
+        self.assertIn(":is(:fullscreen, .pantalla-simulada)", hoja)
 
 if __name__ == "__main__":
     unittest.main()

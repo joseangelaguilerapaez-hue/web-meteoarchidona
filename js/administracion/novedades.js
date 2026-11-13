@@ -5,7 +5,10 @@
  * Diseño: docs/novedades.md de api-meteoarchidona (José, 5-11-2026).
  *
  * GET    /admin/novedades
- * POST   /admin/novedades          {titulo, inicio, caducidad, activa, bloques: [{imagen, texto}]}
+ * POST   /admin/novedades          {titulo, tipo, enlace, inicio, caducidad, activa, bloques: [{imagen, texto}]}
+ *
+ * Avisos (José, 11-11-2026): tipo NOVEDAD o AVISO y un enlace opcional a
+ * nuestra web. Los automáticos (origen AUTOMATICO) se marcan en la lista.
  * PUT    /admin/novedades/{id}     (guardar reemplaza los bloques)
  * DELETE /admin/novedades/{id}
  *
@@ -30,7 +33,7 @@ import {
 
 import {
     abrirVentana
-} from "../novedades.js?v=20261105-novedades1";
+} from "../novedades.js?v=20261111-avisos1";
 
 
 const RUTA = "/admin/novedades";
@@ -127,7 +130,11 @@ function ficha(novedad){
     const tarjeta = crear("article", "novedades-admin-ficha");
 
     const cabecera = crear("div", "novedades-admin-cabecera");
+    const tipo = novedad.tipo === "AVISO"
+        ? (novedad.origen === "AUTOMATICO" ? "Aviso automático" : "Aviso")
+        : "Novedad";
     cabecera.append(
+        crear("span", `novedades-admin-tipo tipo-${(novedad.tipo || "NOVEDAD").toLowerCase()}`, tipo),
         crear("h3", "novedades-admin-titulo", novedad.titulo),
         crear(
             "span",
@@ -145,6 +152,8 @@ function ficha(novedad){
             `Desde ${fechaLocal(novedad.inicio)} · caduca ${fechaLocal(novedad.caducidad)} · `
             + `${novedad.bloques.length} bloque${novedad.bloques.length === 1 ? "" : "s"}`
             + (imagenes ? `, ${imagenes} con imagen` : "")
+            + (novedad.enlace ? ` · enlace ${novedad.enlace}` : "")
+            + (novedad.clave ? ` · ${novedad.clave}` : "")
         )
     );
 
@@ -310,6 +319,8 @@ function leerFormulario(){
     const caducidad = deCampo($("caducidadNovedad").value);
     return {
         titulo: $("tituloNovedad").value.trim(),
+        tipo: $("tipoNovedad").value,
+        enlace: $("enlaceNovedad").value.trim() || null,
         inicio: inicio ? inicio.toISOString() : null,
         caducidad: caducidad ? caducidad.toISOString() : null,
         activa: $("activaNovedad").checked,
@@ -323,8 +334,12 @@ function abrirEditor(novedad = null){
     const editor = $("editorNovedad");
     editor.hidden = false;
 
-    $("tituloEditorNovedad").textContent = novedad ? "Editar novedad" : "Nueva novedad";
+    $("tituloEditorNovedad").textContent = novedad
+        ? (novedad.tipo === "AVISO" ? "Editar aviso" : "Editar novedad")
+        : "Nueva novedad o aviso";
     $("tituloNovedad").value = novedad ? novedad.titulo : "";
+    $("tipoNovedad").value = novedad && novedad.tipo ? novedad.tipo : "NOVEDAD";
+    $("enlaceNovedad").value = novedad && novedad.enlace ? novedad.enlace : "";
 
     const ahora = new Date();
     $("inicioNovedad").value = aCampo(novedad ? new Date(novedad.inicio) : ahora);
@@ -417,6 +432,8 @@ function vistaPrevia(){
     abrirVentana([{
         id: 0,
         titulo: datos.titulo || "(sin título)",
+        tipo: datos.tipo,
+        enlace: datos.enlace,
         inicio: datos.inicio,
         bloques
     }]);

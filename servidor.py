@@ -49,11 +49,15 @@ SECCIONES = (
     "informacion",
     "estadisticas",
     "sol",
+    "luna",
     "embalses",
     "polen",
+    "calidad-aire",
     "sismologia",
     "olivar",
+    "climatologia",
     "mi-cuenta",
+    "novedades",
 )
 
 # La portada es Actualidad, servida en "/" sin redirigir.

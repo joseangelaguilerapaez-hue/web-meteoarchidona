@@ -20,24 +20,26 @@
 
 <link rel="stylesheet" href="../css/fuentes.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/paleta.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
-<link rel="stylesheet" href="../css/pie.css?v=20261101-instalar1">
+<link rel="stylesheet" href="../css/cabecera.css?v=20261113-menu5">
+<link rel="stylesheet" href="../css/pie.css?v=20261113-menu5">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/administracion.css?v=20261108-ficha1">
-<link rel="stylesheet" href="../css/novedades.css?v=20261105-novedades1">
-<link rel="stylesheet" href="../css/novedades-admin.css?v=20261105-novedades1">
+<link rel="stylesheet" href="../css/novedades.css?v=20261111-avisos1">
+<link rel="stylesheet" href="../css/novedades-admin.css?v=20261111-avisos1">
 <link rel="stylesheet" href="../css/auditoria-admin.css?v=20261106-visitas1">
 <link rel="stylesheet" href="../css/procesos-admin.css?v=20261110-procesos2">
 <link rel="stylesheet" href="../css/barra-progreso.css?v=20261110-procesos1">
 <link rel="stylesheet" href="../css/salud-admin.css?v=20261110-salud1">
+<link rel="stylesheet" href="../css/alertas-admin.css?v=20261112-alertas3">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
-<script src="../js/cabecera.js?v=20261110-salud1" defer></script>
+<script src="../js/cabecera.js?v=20261113-astronomia" defer></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261110-salud1"
+    src="../js/administracion/principal.js?v=20261112-alertas3"
 ></script>
 
 <script
@@ -393,7 +395,7 @@
     class="modulo-boton"
     data-modulo="novedades"
 >
-    Novedades
+    Novedades y avisos
 </a>
 
 <a
@@ -410,6 +412,14 @@
     data-modulo="salud"
 >
     Salud de estaciones
+</a>
+
+<a
+    href="#alertas"
+    class="modulo-boton"
+    data-modulo="alertas"
+>
+    Alertas
 </a>
 
 <a
@@ -4135,6 +4145,104 @@
 
 
 <!-- =========================================================
+     ALERTAS METEOROLÓGICAS (no confundir con los avisos de la web)
+     Semáforos de la portada: avisos de AEMET y correcciones de los
+     administradores con la regla B (js/administracion/alertas.js).
+     Decisiones de José del 11-11-2026: docs/alertas-meteorologicas.md
+     de api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-alertas"
+    class="modulo"
+>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Alertas · zona Antequera
+</h2>
+
+<div class="acciones">
+
+<span id="horaAlertas" class="adm-alertas-hora"></span>
+
+<button
+    id="botonRecargarAlertas"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="estadoAlertas"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<p class="modulo-intro">
+    Vuestra corrección manda, suba, baje o quite la alerta de AEMET, salvo
+    que AEMET suba después por encima de lo que tenía al corregir y de
+    vuestro nivel: entonces vuelve a mandar AEMET. Dura hasta el fin de la
+    alerta de AEMET; si AEMET no tiene alerta, hasta la hora que pongáis.
+    Si AEMET no tiene alerta de un fenómeno, al elegir un color dais de alta
+    una alerta de MeteoArchidona. El texto para el público sale en la ficha
+    del semáforo; el motivo solo se ve aquí.
+</p>
+
+<div
+    id="tarjetasAlertas"
+    class="adm-alertas-tarjetas"
+></div>
+
+</div>
+</section>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+<h2 class="panel-titulo">
+    Historial de correcciones
+</h2>
+</div>
+
+<div class="panel-cuerpo">
+<ul
+    id="historialAlertas"
+    class="adm-alertas-lista"
+></ul>
+</div>
+</section>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+<h2 class="panel-titulo">
+    Últimas descargas de AEMET
+</h2>
+</div>
+
+<div class="panel-cuerpo">
+<ul
+    id="cargasAlertas"
+    class="adm-alertas-lista"
+></ul>
+</div>
+</section>
+
+</section>
+
+
+<!-- =========================================================
      SALUD DE ESTACIONES
      Semáforo, indicadores, alertas y gráficas de radio, wifi y
      recepción (js/administracion/salud.js). Decisiones de José del
@@ -4464,7 +4572,7 @@
 <div class="panel-cabecera">
 
 <h2 class="panel-titulo">
-    Novedades
+    Novedades y avisos
 </h2>
 
 <div class="acciones">
@@ -4495,6 +4603,11 @@
     vigente: cada vez que alguien entra en la web. Si hay varias
     vigentes, salen todas, de la más reciente a la más antigua. Las
     imágenes son nuestras, con su ruta /assets/…
+    Los avisos automáticos (los crea el servidor, como los pases muy
+    brillantes de la Estación Espacial) salen en una franja encima de la
+    portada; si se editan aquí, el servidor los vuelve a escribir en su
+    siguiente cálculo, pero si se desactivan, se quedan desactivados.
+    Todo sale también en la página «Novedades y avisos».
 </p>
 
 <div
@@ -4541,6 +4654,26 @@
         maxlength="120"
         autocomplete="off"
     >
+</div>
+
+<div class="campo">
+    <label for="tipoNovedad">Tipo</label>
+    <select id="tipoNovedad">
+        <option value="NOVEDAD">Novedad</option>
+        <option value="AVISO">Aviso</option>
+    </select>
+</div>
+
+<div class="campo">
+    <label for="enlaceNovedad">Enlace (opcional)</label>
+    <input
+        id="enlaceNovedad"
+        type="text"
+        maxlength="200"
+        autocomplete="off"
+        placeholder="/luna#titulo-luna-pasos"
+    >
+    <div class="campo-ayuda">Solo direcciones de nuestra web, que empiezan por /.</div>
 </div>
 
 <div class="campo">

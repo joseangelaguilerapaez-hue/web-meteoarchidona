@@ -1347,6 +1347,80 @@
 }
 
 
+/* Episodio de lluvia: una línea a todo lo ancho bajo las cuatro
+   casillas, solo mientras el episodio está abierto. */
+
+.lluvia-episodio {
+    grid-column:
+        1 / -1;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+
+    gap:
+        4px
+        7px;
+
+    padding:
+        5px
+        8px;
+
+    border:
+        1px solid
+        rgba(54, 213, 255, 0.22);
+
+    border-radius: 6px;
+
+    background:
+        rgba(54, 213, 255, 0.08);
+}
+
+
+.lluvia-episodio[hidden] {
+    display: none;
+}
+
+
+.lluvia-episodio-icono {
+    font-size: 13px;
+}
+
+
+.lluvia-episodio-label {
+    color:
+        var(--muted);
+
+    font-size: 8px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.lluvia-episodio-valor {
+    color:
+        var(--cyan);
+
+    font-family:
+        "JetBrains Mono",
+        monospace;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.lluvia-episodio-desde {
+    color:
+        var(--muted);
+
+    font-size: 9px;
+}
+
+
 /* ==========================================================
    PATROCINIO
    ========================================================== */

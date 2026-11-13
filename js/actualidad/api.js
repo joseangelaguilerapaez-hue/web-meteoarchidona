@@ -33,18 +33,18 @@ import {
     estacionTieneFicha,
     obtenerCodigosConFicha,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261025-viento1";
+} from "./estaciones.js?v=20261113-episodio1";
 
 
 import {
     inicializarLluviaVisualEstacion
-} from "./efectos-lluvia.js?v=20260914-modular2";
+} from "./efectos-lluvia.js?v=20261113-episodio1";
 
 
 import {
     mostrarDatosEstacion,
     mostrarErrorEstacion
-} from "./meteorologia.js?v=20261025-viento1";
+} from "./meteorologia.js?v=20261113-episodio1";
 
 
 function obtenerApiBase() {
