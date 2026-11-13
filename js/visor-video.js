@@ -1879,6 +1879,8 @@ function documentoEnFullscreen() {
         ||
         document.webkitFullscreenElement
         ||
+        window.PantallaSimulada?.activo()
+        ||
         null
     );
 
@@ -1967,10 +1969,39 @@ async function alternarFullscreen() {
     }
 
 
+    /*
+     * iPhone (sin Fullscreen API sobre elementos) o iframe sin
+     * permiso: pantalla completa simulada (js/pantalla-simulada.js).
+     */
+    const simulada =
+        window.PantallaSimulada;
+
+
+    if (
+        simulada
+        &&
+        (
+            simulada.activo()
+            ||
+            !simulada.nativaDisponible(raiz)
+        )
+    ) {
+
+        simulada.alternar(
+            raiz
+        );
+
+        return;
+
+    }
+
+
     try {
 
         if (
-            documentoEnFullscreen()
+            document.fullscreenElement
+            ||
+            document.webkitFullscreenElement
         ) {
 
             if (
@@ -3620,6 +3651,12 @@ function registrarEventosGlobales() {
 
     document.addEventListener(
         "webkitfullscreenchange",
+        cambioEstadoFullscreen
+    );
+
+
+    document.addEventListener(
+        "pantallasimuladachange",
         cambioEstadoFullscreen
     );
 
