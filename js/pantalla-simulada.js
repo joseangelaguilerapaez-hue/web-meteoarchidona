@@ -42,6 +42,8 @@
 
     let elemento = null;
 
+    let confirmado = false;
+
 
     function nativaDisponible(raiz) {
 
@@ -122,6 +124,8 @@
 
         elemento = raiz;
 
+        confirmado = false;
+
         raiz.classList.add(CLASE);
 
         document.documentElement.classList.add(
@@ -178,6 +182,13 @@
     }
 
 
+    function anfitrionConfirmado() {
+
+        return confirmado;
+
+    }
+
+
     document.addEventListener(
         "keydown",
         (evento) => {
@@ -208,13 +219,23 @@
                 evento.origin !== window.location.origin
                 ||
                 !evento.data
-                ||
-                evento.data.tipo !== MENSAJE + ":salir"
             ) {
                 return;
             }
 
-            salir();
+            if (evento.data.tipo === MENSAJE + ":ok") {
+
+                confirmado = true;
+
+                return;
+
+            }
+
+            if (evento.data.tipo === MENSAJE + ":salir") {
+
+                salir();
+
+            }
 
         }
     );
@@ -232,6 +253,7 @@
         salir,
         alternar,
         activo,
+        anfitrionConfirmado,
         EVENTO
     };
 

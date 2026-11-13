@@ -1980,15 +1980,28 @@ async function alternarFullscreen() {
     if (
         simulada
         &&
-        (
-            simulada.activo()
-            ||
-            !simulada.nativaDisponible(raiz)
-        )
+        simulada.activo()
     ) {
 
-        simulada.alternar(
+        simulada.salir();
+
+        return;
+
+    }
+
+
+    if (
+        simulada
+        &&
+        !simulada.nativaDisponible(raiz)
+    ) {
+
+        simulada.entrar(
             raiz
+        );
+
+        diagnosticarPantalla(
+            "API nativa: no"
         );
 
         return;
@@ -1996,13 +2009,13 @@ async function alternarFullscreen() {
     }
 
 
-    try {
+    if (
+        document.fullscreenElement
+        ||
+        document.webkitFullscreenElement
+    ) {
 
-        if (
-            document.fullscreenElement
-            ||
-            document.webkitFullscreenElement
-        ) {
+        try {
 
             if (
                 document.exitFullscreen
@@ -2019,19 +2032,41 @@ async function alternarFullscreen() {
 
             }
 
+        } catch (error) {
 
-            return;
+            console.debug(
+                "No se pudo salir de pantalla completa.",
+                error
+            );
 
         }
 
+
+        return;
+
+    }
+
+
+    /*
+     * Algunos iPhone dicen tener la API nativa y luego no hacen
+     * nada (o la promesa no se resuelve nunca). Se intenta, y si
+     * en un momento no hay pantalla completa, se pasa a la
+     * simulada.
+     */
+    let fallo =
+        "";
+
+
+    try {
 
         if (
             raiz.requestFullscreen
         ) {
 
-            await raiz.requestFullscreen();
-
-            await bloquearHorizontal();
+            await Promise.race([
+                raiz.requestFullscreen(),
+                esperarMs(800)
+            ]);
 
 
         } else if (
@@ -2040,19 +2075,192 @@ async function alternarFullscreen() {
 
             raiz.webkitRequestFullscreen();
 
-            await bloquearHorizontal();
-
         }
-
 
     } catch (error) {
 
+        fallo =
+            error?.name
+            ||
+            "error";
+
         console.debug(
-            "No se pudo cambiar el modo de pantalla completa.",
+            "No se pudo entrar en pantalla completa.",
             error
         );
 
     }
+
+
+    if (
+        !document.fullscreenElement
+        &&
+        !document.webkitFullscreenElement
+    ) {
+
+        await esperarMs(400);
+
+    }
+
+
+    if (
+        document.fullscreenElement
+        ||
+        document.webkitFullscreenElement
+    ) {
+
+        await bloquearHorizontal();
+
+        diagnosticarPantalla(
+            "API nativa: sí, funcionó"
+        );
+
+        return;
+
+    }
+
+
+    if (simulada) {
+
+        simulada.entrar(
+            raiz
+        );
+
+        diagnosticarPantalla(
+            "API nativa: falló"
+            +
+            (
+                fallo
+                    ? ` (${fallo})`
+                    : ""
+            )
+        );
+
+    }
+
+}
+
+
+function esperarMs(
+    ms
+) {
+
+    return new Promise(
+        (resolver) => {
+
+            window.setTimeout(
+                resolver,
+                ms
+            );
+
+        }
+    );
+
+}
+
+
+/*
+ * DIAGNÓSTICO TEMPORAL (13-11-2026): solo en iPhone/iPad, un
+ * letrero de 6 s que dice qué camino ha tomado el botón de
+ * pantalla completa, para depurarlo sin consola. Quitar cuando
+ * José confirme que funciona.
+ */
+function diagnosticarPantalla(
+    texto
+) {
+
+    if (
+        !/iPhone|iPad|iPod/i.test(
+            navigator.userAgent
+        )
+    ) {
+        return;
+    }
+
+
+    window.setTimeout(
+        () => {
+
+            const {
+                raiz
+            } =
+                obtenerDom();
+
+
+            if (!raiz) {
+                return;
+            }
+
+
+            const simulada =
+                window.PantallaSimulada;
+
+
+            let detalle =
+                texto;
+
+
+            if (
+                simulada?.activo()
+            ) {
+
+                detalle +=
+                    " · simulada"
+                    +
+                    (
+                        window.parent === window
+                            ? " · sin iframe"
+                            : (
+                                " · página: "
+                                +
+                                (
+                                    simulada.anfitrionConfirmado()
+                                        ? "respondió"
+                                        : "NO respondió"
+                                )
+                            )
+                    );
+
+            }
+
+
+            detalle +=
+                ` · ${window.innerWidth}×${window.innerHeight}`;
+
+
+            const letrero =
+                document.createElement("div");
+
+            letrero.textContent =
+                detalle;
+
+            letrero.style.cssText = [
+                "position:absolute",
+                "top:8px",
+                "left:50%",
+                "transform:translateX(-50%)",
+                "z-index:2147483647",
+                "max-width:92%",
+                "padding:6px 10px",
+                "border-radius:6px",
+                "background:rgba(0,0,0,.85)",
+                "color:#ff4d4d",
+                "font:600 12px/1.3 Arial,sans-serif",
+                "text-align:center",
+                "pointer-events:none"
+            ].join(";");
+
+            raiz.appendChild(letrero);
+
+
+            window.setTimeout(
+                () => letrero.remove(),
+                6000
+            );
+
+        },
+        700
+    );
 
 }
 
