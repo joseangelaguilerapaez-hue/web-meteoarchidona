@@ -25,11 +25,11 @@ const COMPONENTES = {
     // Comunes
     "contador-visitas": ["/js/componentes/contador-visitas.js?v=20261106-contador5", "montarContadorVisitas"],
     // Actualidad
-    "condiciones-actuales": ["/js/componentes/condiciones-actuales.js?v=20261104-componentes1", "montarCondicionesActuales"],
+    "condiciones-actuales": ["/js/componentes/condiciones-actuales.js?v=20261113-episodio1", "montarCondicionesActuales"],
     "sol-luna": ["/js/componentes/tarjeta-sol-luna.js?v=20261104-componentes1", "montarSolLuna"],
     "prediccion-breve": ["/js/componentes/prediccion-breve.js?v=20261104-componentes1", "montarPrediccionBreve"],
     "accesos": ["/js/componentes/accesos.js?v=20261104-componentes1", "montarAccesos"],
-    "ficha-estacion": ["/js/componentes/ficha-estacion.js?v=20261104-componentes1", "montarFichaEstacion"],
+    "ficha-estacion": ["/js/componentes/ficha-estacion.js?v=20261113-episodio1", "montarFichaEstacion"],
     "timelapses": ["/js/componentes/timelapses.js?v=20261104-componentes1", "montarComponenteTimelapses"],
     "estadistica": ["/js/componentes/estadistica.js?v=20261105-componente1", "montarComponenteEstadistica"],
     // En vivo y Estadísticas

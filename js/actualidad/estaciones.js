@@ -43,12 +43,12 @@ import {
 import {
     inicializarLluviaVisualEstacion,
     actualizarSistemaLluvia
-} from "./efectos-lluvia.js?v=20260914-modular2";
+} from "./efectos-lluvia.js?v=20261113-episodio1";
 
 
 import {
     configurarControlesLluvia
-} from "./simulacion.js?v=20260914-modular2";
+} from "./simulacion.js?v=20261113-episodio1";
 
 
 import {

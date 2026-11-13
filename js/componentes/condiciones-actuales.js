@@ -18,7 +18,7 @@
  */
 
 import {asegurarHoja, asegurarScript, prepararTarjeta} from "./comun.js?v=20261104-componentes1";
-import {actualizarResumen} from "../actualidad/resumen.js?v=20261025-icono2";
+import {actualizarResumen} from "../actualidad/resumen.js?v=20261113-episodio1";
 
 
 const REFRESCO_MS = 60 * 1000;
