@@ -55,6 +55,7 @@ SECCIONES = (
     "calidad-aire",
     "sismologia",
     "olivar",
+    "climatologia",
     "mi-cuenta",
     "novedades",
 )

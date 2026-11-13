@@ -1,0 +1,130 @@
+/*
+ * MeteoArchidona
+ * Página Climatología
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/climatologia.html
+ *
+ * Decisión de José del 13-11-2026: fondo propio claro, como Embalses y
+ * Polen, con la gama «Papel de archivo» (hueso, tinta marrón, azul
+ * pizarra y rojo teja). Una columna de bloques con bordes finos y radios
+ * de 14 px; la cabecera y el pie siguen siendo los oscuros de siempre.
+ *
+ * La paleta (--cli-*) está en css/climatologia-componentes.css, que se
+ * carga antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="climatologia"] {
+    background:
+        radial-gradient(ellipse at top, #fbf7ef 0%, rgba(251, 247, 239, 0) 60%),
+        linear-gradient(180deg, #f8f2e6 0%, #f4ede0 55%, #ebdfc9 100%);
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.climatologia {
+    width: min(1040px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--cli-tinta);
+}
+
+.climatologia-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+.climatologia-cabecera h1 {
+    margin: 0;
+    color: var(--cli-tinta);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(26px, 4.4vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.climatologia-subtitulo {
+    margin: 0;
+    color: var(--cli-teja);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(16px, 2.4vw, 20px);
+    font-style: italic;
+}
+
+.climatologia-entradilla {
+    margin: 0;
+    max-width: 760px;
+    color: var(--cli-tinta-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.climatologia-selector {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--cli-tinta-suave);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.climatologia-aviso {
+    margin: 0;
+    padding: 10px 14px;
+    color: var(--cli-tinta-suave);
+    background: var(--cli-papel);
+    border: 1px dashed var(--cli-borde);
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.climatologia-bloque {
+    display: grid;
+    gap: 12px;
+    padding: 20px 22px;
+    background: linear-gradient(170deg, var(--cli-papel) 0%, var(--cli-hueso) 100%);
+    border: 1px solid var(--cli-borde);
+    border-radius: 14px;
+    box-shadow: var(--cli-sombra);
+}
+
+.climatologia-bloque h2 {
+    margin: 0;
+    color: var(--cli-tinta);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 20px;
+}
+
+.climatologia-nota {
+    margin: 0;
+    color: var(--cli-tinta-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.climatologia-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+@media (max-width: 860px) {
+    .climatologia-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+/* Fin de fichero: css/climatologia.css */

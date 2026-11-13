@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Climatología: el clima de la comarca de Archidona desde 1940. Normales, climograma y reconstrucción histórica del clima de cada pueblo con el reanálisis ERA5 de Copernicus, corregido con AEMET y con nuestras estaciones."
+>
+
+<title>
+    Climatología · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/climatologia">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Climatología · MeteoArchidona">
+<meta property="og:description" content="El clima de la comarca desde 1940: normales, climograma y reconstrucción histórica de cada pueblo.">
+<meta property="og:url" content="https://meteoarchidona.com/climatologia">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20261113-menu5"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261113-menu5"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/climatologia-componentes.css?v=20261113-clima1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/climatologia.css?v=20261113-clima1"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261113-astronomia"
+    defer
+></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/climatologia.js?v=20261113-clima1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="climatologia">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="climatologia">
+
+
+<header class="climatologia-cabecera">
+
+    <div class="cli-etiqueta">
+        METEOARCHIDONA · CLIMATOLOGÍA
+    </div>
+
+    <h1>
+        Climatología
+    </h1>
+
+    <p class="climatologia-subtitulo">
+        El clima de la comarca desde 1940
+    </p>
+
+    <p class="climatologia-entradilla">
+        Cómo es el clima de cada pueblo de la comarca Nororiental de
+        Málaga y de Antequera, día a día desde 1940: lo normal de cada mes,
+        cuánto se aparta cada año y cómo ha cambiado. Es una reconstrucción
+        histórica hecha con el reanálisis ERA5 del programa Copernicus de la
+        Unión Europea, corregida con la rejilla de datos de AEMET y con
+        nuestras estaciones. En Archidona, con El Silo.
+    </p>
+
+    <label class="climatologia-selector">
+        Pueblo
+        <select data-selector-pueblo></select>
+    </label>
+
+    <p class="climatologia-aviso">
+        Reconstrucción histórica a partir de un reanálisis, corregida con
+        estaciones: no son datos ni récords oficiales. Generado con
+        información del Servicio de Cambio Climático de Copernicus (C3S).
+    </p>
+
+</header>
+
+
+<!-- ========================================================
+     CLIMOGRAMA Y NORMALES
+     Componentes js/climatologia/climograma.js y normales.js.
+     ======================================================== -->
+
+<section
+    class="climatologia-bloque"
+    aria-labelledby="titulo-climatologia-normales"
+>
+
+    <h2 id="titulo-climatologia-normales">
+        Lo normal en cada mes
+    </h2>
+
+    <p class="climatologia-nota">
+        Las normales climáticas son las medias de un periodo de 30 años; el
+        de referencia oficial ahora es 1991-2020. Sirven para saber si un
+        mes está siendo más cálido, más frío, más seco o más lluvioso de lo
+        habitual en cada pueblo.
+    </p>
+
+    <div class="climatologia-rejilla">
+
+        <div
+            data-componente="clima-climograma"
+            data-selector="no"
+            data-titulo="no"
+        ></div>
+
+        <div
+            data-componente="clima-normales"
+            data-selector="no"
+            data-titulo="no"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     CÓMO SE HACE
+     Componente js/climatologia/metodo.js.
+     ======================================================== -->
+
+<section
+    class="climatologia-bloque"
+    aria-labelledby="titulo-climatologia-metodo"
+>
+
+    <h2 id="titulo-climatologia-metodo">
+        Cómo se hace
+    </h2>
+
+    <div
+        data-componente="clima-metodo"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/climatologia.html -->
