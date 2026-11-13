@@ -43,7 +43,7 @@ import {
     actualizarSistemaLluvia,
     generarGotasCristalActivas,
     inicializarLluviaVisual
-} from "./efectos-lluvia.js?v=20260914-modular2";
+} from "./efectos-lluvia.js?v=20261113-episodio1";
 
 
 /* ==========================================================
@@ -54,7 +54,7 @@ import {
 import {
     actualizarIndicadorSimulacion,
     configurarControlesLluvia
-} from "./simulacion.js?v=20260914-modular2";
+} from "./simulacion.js?v=20261113-episodio1";
 
 
 /* ==========================================================
@@ -76,7 +76,7 @@ import {
     cargarPlantillaFichaEstacion,
     capturarPlantillaFichaEstacion,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261025-viento1";
+} from "./estaciones.js?v=20261113-episodio1";
 
 
 /* ==========================================================
@@ -88,7 +88,7 @@ import {
     cargarCatalogoEstaciones,
     cargarCondiciones,
     refrescarCatalogo
-} from "./api.js?v=20261025-viento1";
+} from "./api.js?v=20261113-episodio1";
 
 
 /* ==========================================================
@@ -105,7 +105,7 @@ import {
 
 import {
     montarCondicionesActuales
-} from "../componentes/condiciones-actuales.js?v=20261104-componentes1";
+} from "../componentes/condiciones-actuales.js?v=20261113-episodio1";
 
 import {
     montarSolLuna
@@ -436,7 +436,7 @@ async function arrancarActualidad() {
         );
 
         try {
-            const modulo = await import("/js/dashboards/actualidad.js?v=20261113-clima1");
+            const modulo = await import("/js/dashboards/actualidad.js?v=20261113-episodio1");
             await modulo.arrancarActualidadDashboard(document.getElementById("actual"));
         } catch (error) {
             console.error("Actualidad: no se ha podido montar el dashboard.", error);

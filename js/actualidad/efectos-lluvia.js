@@ -32,7 +32,7 @@ import {
 
 import {
     obtenerNivelEfectivo
-} from "./lluvia.js?v=20260914-modular2";
+} from "./lluvia.js?v=20261113-episodio1";
 
 
 import {
