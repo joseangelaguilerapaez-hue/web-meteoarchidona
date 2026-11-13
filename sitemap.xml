@@ -37,8 +37,43 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://meteoarchidona.com/luna</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://meteoarchidona.com/climatologia</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://meteoarchidona.com/novedades</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://meteoarchidona.com/embalses</loc>
     <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://meteoarchidona.com/polen</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://meteoarchidona.com/calidad-aire</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://meteoarchidona.com/sismologia</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://meteoarchidona.com/olivar</loc>
+    <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>

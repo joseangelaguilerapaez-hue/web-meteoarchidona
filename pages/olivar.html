@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="El Olivar: agrometeorología del olivar en Archidona con nuestras estaciones de El Silo y Los Llanos. Horas de frío para la floración, heladas y mínimas previstas con aviso de helada."
+>
+
+<title>
+    El Olivar · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/olivar">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="El Olivar · MeteoArchidona">
+<meta property="og:description" content="Frío, heladas y mínimas previstas para el olivar de Archidona, calculados con nuestras estaciones.">
+<meta property="og:url" content="https://meteoarchidona.com/olivar">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20261113-menu5"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261113-menu5"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/olivar-componentes.css?v=20261109-olivar2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/olivar.css?v=20261109-olivar2"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261113-astronomia"
+    defer
+></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/olivar.js?v=20261109-olivar2"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="olivar">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="olivar">
+
+
+<header class="olivar-cabecera">
+
+    <div class="oli-etiqueta">
+        METEOARCHIDONA · AGROMETEOROLOGÍA DEL OLIVAR
+    </div>
+
+    <h1>
+        El <span>Olivar</span>
+    </h1>
+
+    <p class="olivar-entradilla">
+        Información del tiempo pensada para el olivar de Archidona,
+        calculada con nuestras dos estaciones: el frío que va acumulando el
+        olivo para florecer, las heladas y las mínimas de los próximos días
+        con aviso de helada, los grados-día del olivo y de la mosca, y la
+        lluvia frente a la evapotranspiración. Todo por estación, porque
+        El Silo y Los Llanos están a la misma altura pero no tienen el
+        mismo clima: en Los Llanos hace bastante más frío.
+    </p>
+
+</header>
+
+
+<!-- ========================================================
+     AVISO
+     Componente js/olivar/aviso.js.
+     ======================================================== -->
+
+<div data-componente="olivar-aviso"></div>
+
+
+<!-- ========================================================
+     EL OLIVAR HOY
+     Componente js/olivar/resumen.js.
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-hoy"
+>
+
+    <h2 id="titulo-olivar-hoy">
+        El olivar hoy
+    </h2>
+
+    <div
+        data-componente="olivar-resumen"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     FRÍO ACUMULADO
+     Componente js/olivar/frio.js.
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-frio"
+>
+
+    <h2 id="titulo-olivar-frio">
+        Frío acumulado
+    </h2>
+
+    <p class="olivar-nota">
+        El olivo necesita pasar frío en invierno para florecer bien en
+        primavera. La curva suma, día a día desde el 1 de octubre, el frío
+        de esta temporada y lo compara con las anteriores. Las horas por
+        debajo de 7,2 °C son la medida clásica; las unidades de frío
+        cuentan más las horas cerca de 7 °C y restan las horas de calor,
+        que deshacen parte del frío.
+    </p>
+
+    <div data-componente="olivar-frio"></div>
+
+</section>
+
+
+<!-- ========================================================
+     HELADAS
+     Componente js/olivar/heladas.js.
+     ======================================================== -->
+
+<section
+    class="olivar-bloque olivar-bloque-escarcha"
+    aria-labelledby="titulo-olivar-heladas"
+>
+
+    <h2 id="titulo-olivar-heladas">
+        Heladas
+    </h2>
+
+    <p class="olivar-nota">
+        Las mínimas de los próximos días salen del modelo y se corrigen
+        con lo que suele fallar en cada estación, comparando cada día lo
+        previsto con lo medido. Por debajo de unos −5 °C el olivo ya puede
+        perder ramas del año.
+    </p>
+
+    <div data-componente="olivar-heladas"></div>
+
+</section>
+
+
+<!-- ========================================================
+     GRADOS-DÍA
+     Componente js/olivar/grados-dia.js.
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-grados-dia"
+>
+
+    <h2 id="titulo-olivar-grados-dia">
+        Grados-día
+    </h2>
+
+    <p class="olivar-nota">
+        El calor que va sumando el año desde el 1 de enero: marca el ritmo
+        del olivo (brotación, floración, cuajado) y el de la mosca del
+        olivo, que completa una generación de huevo a adulto con unos 379
+        grados-día. La mosca deja de desarrollarse por encima de 35 °C, así
+        que el calor fuerte del verano no le suma.
+    </p>
+
+    <div data-componente="olivar-grados-dia"></div>
+
+</section>
+
+
+<!-- ========================================================
+     BALANCE HÍDRICO
+     Componente js/olivar/balance.js.
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-balance"
+>
+
+    <h2 id="titulo-olivar-balance">
+        Balance hídrico
+    </h2>
+
+    <p class="olivar-nota">
+        La lluvia frente a la evapotranspiración de referencia (ET0): el
+        agua que se iría de un césped bien regado con el sol, el viento y la
+        sequedad del aire de cada día, calculada con los sensores de cada
+        estación. El olivar gasta una parte de esa ET0 que depende de la
+        plantación y de la época: el coeficiente de cultivo lo da el
+        técnico. Es una orientación para el riego, no una dosis.
+    </p>
+
+    <div data-componente="olivar-balance"></div>
+
+</section>
+
+
+<!-- ========================================================
+     GLOSARIO
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-glosario"
+>
+
+    <h2 id="titulo-olivar-glosario">
+        Qué significa cada cosa
+    </h2>
+
+    <dl class="olivar-glosario">
+
+        <dt>Horas de frío</dt>
+        <dd>
+            Horas con la temperatura por debajo de 7,2 °C. Se cuentan con
+            cada medición de la estación (una cada cinco minutos), no con la
+            mínima del día.
+        </dd>
+
+        <dt>Unidades de frío</dt>
+        <dd>
+            El modelo de De Melo-Abreu y otros (2004), hecho con olivos de
+            España y Portugal. Una hora a 7,3 °C vale una unidad; por debajo
+            vale menos, y bajo cero nada. Por encima de 7,3 °C va bajando y
+            a partir de 20,7 °C resta. Como referencia, la Picual necesita
+            unas 469 unidades; cada variedad tiene su cifra.
+        </dd>
+
+        <dt>Helada</dt>
+        <dd>
+            Día con la mínima por debajo de 0 °C. En la previsión, débil de
+            0 a −3 °C, moderada de −3 a −5 °C y fuerte por debajo de −5 °C.
+            La temporada de heladas va de julio a junio.
+        </dd>
+
+        <dt>Grados-día</dt>
+        <dd>
+            Los grados por encima de una temperatura base, sumados hora a
+            hora y divididos entre 24. Para el olivo la base es 10 °C; para
+            la mosca, 9 °C, y lo que pase de 35 °C no cuenta.
+        </dd>
+
+        <dt>ET0</dt>
+        <dd>
+            Evapotranspiración de referencia en milímetros, por el método
+            FAO-56 de Penman-Monteith con la temperatura, la humedad, el
+            viento y la radiación de la estación. El viento se lleva a 2 m
+            de altura (el anemómetro de El Silo está a 15 m y el de Los
+            Llanos a 5 m). Si un día falta algún dato, sale por Hargreaves,
+            solo con las temperaturas.
+        </dd>
+
+        <dt>Balance</dt>
+        <dd>
+            Lluvia menos ET0. Negativo: el suelo va perdiendo agua. Se suma
+            por año hidrológico, desde el 1 de octubre.
+        </dd>
+
+        <dt>Mínima corregida</dt>
+        <dd>
+            La mínima del modelo ajustada con lo que se ha quedado de media
+            por encima o por debajo de lo medido en esa estación el último
+            mes.
+        </dd>
+
+        <dt>Día incompleto</dt>
+        <dd>
+            Si la estación pierde la conexión un rato, ese día cuenta solo
+            lo que se midió. Se avisa cuando falta más del 10 % del día.
+        </dd>
+
+    </dl>
+
+</section>
+
+
+<!-- ========================================================
+     PRÓXIMAMENTE
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-proximamente"
+>
+
+    <h2 id="titulo-olivar-proximamente">
+        Próximamente
+    </h2>
+
+    <ul class="olivar-lista">
+        <li>Riesgo de repilo y de mosca del olivo según el tiempo de cada estación.</li>
+        <li>Avisos de helada por correo para quien se suscriba.</li>
+    </ul>
+
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="olivar-bloque"
+    aria-labelledby="titulo-olivar-fuentes"
+>
+
+    <h2 id="titulo-olivar-fuentes">
+        Fuentes
+    </h2>
+
+    <ul class="olivar-lista">
+        <li>
+            Datos medidos: estaciones Davis Vantage Pro2 de MeteoArchidona en
+            El Silo (742 m) y Los Llanos (743 m). Cálculos de MeteoArchidona.
+        </li>
+        <li>
+            Previsión de mínimas, ET0 y lluvia:
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>,
+            corregida para cada estación. Se actualiza a las 07:17 y a las 19:17.
+        </li>
+        <li>
+            Evapotranspiración: Allen, R. G. y otros (1998), «Crop
+            evapotranspiration» (FAO Irrigation and Drainage Paper 56).
+            Grados-día de la mosca: Crovetti y otros (1987).
+        </li>
+        <li>
+            Unidades de frío: De Melo-Abreu, J. P. y otros (2004), «Modelling
+            olive flowering date using chilling for dormancy release and
+            thermal time», Agricultural and Forest Meteorology 125.
+        </li>
+        <li>
+            Situación fitosanitaria oficial del olivar en Andalucía:
+            <a href="https://www.juntadeandalucia.es/agriculturapescaaguaydesarrollorural/raif/" target="_blank" rel="noopener noreferrer">Red de Alerta e Información Fitosanitaria (RAIF)</a>
+            de la Junta de Andalucía.
+        </li>
+        <li>
+            Es información orientativa: no sustituye el consejo de un técnico agrícola.
+        </li>
+    </ul>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/olivar.html -->

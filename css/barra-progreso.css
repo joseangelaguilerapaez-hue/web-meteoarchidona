@@ -1,0 +1,107 @@
+/*
+ * MeteoArchidona · Componente «Barra de progreso»
+ * (js/componentes/barra-progreso.js). Reutilizable para cualquier proceso.
+ *
+ * El color sigue al estado: cian en curso, gris pendiente, verde correcto,
+ * ámbar con incidencias, gris claro cancelado y rojo en error.
+ */
+
+.barra-progreso{
+    --barra-color:var(--cyan, #36d5ff);
+    display:grid;
+    gap:6px;
+    min-width:0
+}
+
+.barra-progreso[data-estado="PENDIENTE"]{ --barra-color:var(--muted-dark, #7890a7) }
+.barra-progreso[data-estado="CORRECTO"]{ --barra-color:var(--green, #22c55e) }
+.barra-progreso[data-estado="CON_INCIDENCIAS"]{ --barra-color:var(--amber, #f2bf58) }
+.barra-progreso[data-estado="CANCELADO"]{ --barra-color:var(--muted, #aabdd0) }
+.barra-progreso[data-estado="ERROR"]{ --barra-color:var(--red, #ef4444) }
+
+.barra-progreso-cabecera{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:10px;
+    font-size:12px
+}
+
+.barra-progreso-estado{
+    color:var(--barra-color);
+    font-weight:700
+}
+
+.barra-progreso-cifra{
+    color:var(--text-soft, #c9d6e5);
+    font-family:"JetBrains Mono",monospace;
+    font-size:11px;
+    font-variant-numeric:tabular-nums
+}
+
+.barra-progreso-pista{
+    position:relative;
+    height:8px;
+    overflow:hidden;
+    border-radius:999px;
+    background:rgba(255,255,255,.07)
+}
+
+.barra-progreso-relleno{
+    width:0;
+    height:100%;
+    border-radius:inherit;
+    background:var(--barra-color);
+    transition:width .6s ease
+}
+
+/* Sin total todavía: una franja que va y viene. */
+.barra-progreso.indeterminada .barra-progreso-relleno{
+    position:absolute;
+    width:30%;
+    animation:barra-progreso-vaiven 1.4s ease-in-out infinite
+}
+
+@keyframes barra-progreso-vaiven{
+    0%{ left:-30% }
+    100%{ left:100% }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .barra-progreso-relleno{ transition:none }
+    .barra-progreso.indeterminada .barra-progreso-relleno{
+        left:35%;
+        animation:none;
+        opacity:.6
+    }
+}
+
+.barra-progreso-texto{
+    margin:0;
+    overflow:hidden;
+    color:var(--text-soft, #c9d6e5);
+    font-size:12px;
+    line-height:1.4;
+    text-overflow:ellipsis
+}
+
+.barra-progreso-texto[hidden]{
+    display:none
+}
+
+/* Compacta: para una línea del pool (sin cabecera ni texto). */
+.barra-progreso-compacta{
+    gap:3px
+}
+
+.barra-progreso-compacta .barra-progreso-cabecera,
+.barra-progreso-compacta .barra-progreso-texto{
+    display:none
+}
+
+.barra-progreso-compacta .barra-progreso-pista{
+    height:5px
+}
+
+
+/* Fin de fichero: css/barra-progreso.css */

@@ -12,6 +12,7 @@
  * - seleccionar el icono correspondiente;
  * - obtener el nivel efectivo entre lluvia real y simulación visual;
  * - representar los datos de precipitación de una estación;
+ * - representar el episodio de lluvia abierto (episodio_lluvia de la API);
  * - representar el estado de error de precipitación.
  *
  * Este módulo no crea efectos gráficos de lluvia.
@@ -259,6 +260,203 @@ export function mostrarLluvia(
         `lluvia-resumen-icono-anio-${codigo}`,
         icono
     );
+
+    mostrarEpisodioLluvia(
+        codigo,
+        datos.episodio_lluvia
+    );
+}
+
+
+/*
+ * Episodio de lluvia (José, 13-11-2026): la lluvia de horas o días
+ * seguidos, que se cierra tras 24 horas con 0,2 mm o menos. La API lo
+ * calcula y solo lo manda mientras está abierto; si llega null, la
+ * línea se oculta.
+ */
+
+const DIAS_SEMANA = [
+    "domingo",
+    "lunes",
+    "martes",
+    "miércoles",
+    "jueves",
+    "viernes",
+    "sábado"
+];
+
+
+function partesInstante(
+    iso
+) {
+    // Fecha y hora tal como las manda la API (hora local de la estación).
+    const coincidencia =
+        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(
+            String(
+                iso || ""
+            )
+        );
+
+    if (
+        !coincidencia
+    ) {
+        return null;
+    }
+
+    const [, anio, mes, dia, hora, minuto] =
+        coincidencia;
+
+    return {
+        fecha: `${anio}-${mes}-${dia}`,
+        diaSemana: DIAS_SEMANA[
+            new Date(
+                Date.UTC(
+                    Number(anio),
+                    Number(mes) - 1,
+                    Number(dia)
+                )
+            ).getUTCDay()
+        ],
+        dia: Number(dia),
+        hora: `${hora}:${minuto}`
+    };
+}
+
+
+function fechaMadrid(
+    desplazamientoDias = 0
+) {
+    const instante =
+        new Date(
+            Date.now()
+            + desplazamientoDias * 86400000
+        );
+
+    return new Intl.DateTimeFormat(
+        "en-CA",
+        {
+            timeZone: "Europe/Madrid",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }
+    ).format(
+        instante
+    );
+}
+
+
+function textoDesde(
+    iso
+) {
+    const partes =
+        partesInstante(
+            iso
+        );
+
+    if (
+        !partes
+    ) {
+        return "";
+    }
+
+    if (
+        partes.fecha === fechaMadrid()
+    ) {
+        return `desde las ${partes.hora}`;
+    }
+
+    if (
+        partes.fecha === fechaMadrid(-1)
+    ) {
+        return `desde ayer, ${partes.hora}`;
+    }
+
+    return `desde el ${partes.diaSemana} ${partes.dia}, ${partes.hora}`;
+}
+
+
+function mostrarEpisodioLluvia(
+    codigo,
+    episodio
+) {
+    const elemento =
+        document.getElementById(
+            `lluvia-episodio-${codigo}`
+        );
+
+    if (
+        !elemento
+    ) {
+        return;
+    }
+
+    if (
+        !episodio
+        ||
+        typeof episodio.lluvia_mm !== "number"
+    ) {
+        elemento.hidden = true;
+        elemento.removeAttribute("title");
+        return;
+    }
+
+    const valor =
+        elemento.querySelector(
+            ".lluvia-episodio-valor"
+        );
+
+    const desde =
+        elemento.querySelector(
+            ".lluvia-episodio-desde"
+        );
+
+    if (
+        valor
+        &&
+        desde
+    ) {
+        valor.textContent =
+            `${formatearNumero(episodio.lluvia_mm)} mm`;
+
+        desde.textContent =
+            textoDesde(
+                episodio.inicio
+            );
+    }
+
+    const ultima =
+        partesInstante(
+            episodio.ultima_lluvia
+        );
+
+    const detalles = [
+        "Episodio de lluvia: la que cae seguida durante horas o días.",
+        "Se cierra tras 24 horas con 0,2 mm o menos."
+    ];
+
+    if (
+        ultima
+    ) {
+        detalles.push(
+            `Última lluvia: ${ultima.diaSemana} ${ultima.dia}, ${ultima.hora}.`
+        );
+    }
+
+    if (
+        typeof episodio.intensidad_maxima_mm_h === "number"
+    ) {
+        detalles.push(
+            `Intensidad máxima: ${formatearNumero(episodio.intensidad_maxima_mm_h)} mm/h.`
+        );
+    }
+
+    elemento.title =
+        detalles.join(
+            " "
+        );
+
+    elemento.hidden = false;
 }
 
 
@@ -318,6 +516,11 @@ export function mostrarErrorLluvia(
     asignarTexto(
         `lluvia-resumen-icono-anio-${codigo}`,
         "☁️"
+    );
+
+    mostrarEpisodioLluvia(
+        codigo,
+        null
     );
 }
 

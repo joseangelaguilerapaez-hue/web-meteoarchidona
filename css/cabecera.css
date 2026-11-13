@@ -197,7 +197,7 @@ button {
 
     grid-template-columns:
         repeat(
-            4,
+            5,
             minmax(
                 0,
                 1fr
@@ -209,9 +209,15 @@ button {
 
     gap: 8px;
 
+    /*
+     * 800 y no 720 desde que son cinco por fila: con 720,
+     * «NOVEDADES Y AVISOS» no cabía en una línea. Si la pantalla no da
+     * para tanto, el 100 % manda y la fila crece entera (ver el bloque
+     * de escritorio al final del fichero).
+     */
     width:
         min(
-            720px,
+            800px,
             100%
         );
 
@@ -599,7 +605,7 @@ button {
 
         grid-template-columns:
             repeat(
-                4,
+                5,
                 minmax(
                     0,
                     1fr
@@ -1129,5 +1135,49 @@ button {
 
 }
 
+
+
+/* ==========================================================
+   MENÚ DE ESCRITORIO: CINCO POR FILA, LA ÚLTIMA CENTRADA
+   ========================================================== */
+
+/*
+ * Con quince secciones, la rejilla de cuatro dejaba cuatro filas y un
+ * hueco en la última (13-11-2026, Mario). Con cinco son tres filas
+ * justas.
+ *
+ * Y para que la sección que venga después no vuelva a dejar el hueco, en
+ * escritorio el menú pasa a flex: cinco por fila y, si la última no se
+ * llena, sus botones van centrados. Una rejilla no sabe centrar una fila
+ * a medias.
+ *
+ * Solo en escritorio y con altura normal. Por debajo de 1051 px manda el
+ * menú desplegable del móvil, y con poca altura la regla de abajo del
+ * todo pone su rejilla de dos; las dos dependen de display: grid y aquí
+ * no se pisan.
+ */
+@media (min-width: 1051px) and (min-height: 561px) {
+
+    .navegacion {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+
+        /*
+         * Si un botón necesita dos líneas («NOVEDADES Y AVISOS» en
+         * pantallas justas), crece toda su fila y no solo él.
+         */
+        align-items: stretch;
+    }
+
+    .navegacion a {
+        flex:
+            0 0
+            calc((100% - 4 * 8px) / 5);
+    }
+
+}
 
 /* Fin de fichero: css/cabecera.css */

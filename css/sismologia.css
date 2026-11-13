@@ -1,0 +1,269 @@
+/*
+ * MeteoArchidona
+ * Página Sismología
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/sismologia.html
+ *
+ * Decisión de José del 8-11-2026: el mismo aspecto que Embalses y Polen
+ * (blanco, al revés que el resto del sitio), con la gama «Basalto y
+ * magma». Una columna de bloques con bordes finos y radios de 14 px; la
+ * cabecera y el pie siguen siendo los oscuros de siempre.
+ *
+ * La paleta (--sis-*) está en css/sismologia-componentes.css, que se
+ * carga antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="sismologia"] {
+    background:
+        radial-gradient(ellipse at top, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #fbfcfd 0%, #eef1f4 55%, #e3e7eb 100%);
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.sismologia {
+    width: min(1040px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--sis-texto);
+}
+
+.sismologia-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+.sismologia-cabecera .sis-etiqueta {
+    color: var(--sis-magma);
+}
+
+.sismologia-cabecera h1 {
+    margin: 0;
+    color: var(--sis-pizarra);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.sismologia-cabecera h1 span {
+    color: var(--sis-magma);
+}
+
+.sismologia-entradilla {
+    margin: 0;
+    max-width: 760px;
+    color: var(--sis-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.sismologia-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 18px;
+}
+
+@media (max-width: 860px) {
+    .sismologia-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.sismologia-bloque {
+    min-width: 0;
+    padding: 22px 24px;
+    background: linear-gradient(170deg, var(--sis-blanco) 0%, var(--sis-niebla) 70%, var(--sis-ceniza) 100%);
+    border: 1px solid var(--sis-borde);
+    border-radius: 14px;
+    box-shadow: var(--sis-sombra);
+}
+
+.sismologia-bloque-basalto {
+    background: linear-gradient(170deg, var(--sis-blanco) 0%, #f5f6f8 60%, var(--sis-roca) 100%);
+    border-color: var(--sis-borde-fuerte);
+}
+
+.sismologia-bloque h2 {
+    margin: 0 0 12px;
+    color: var(--sis-pizarra);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.sismologia-subtitulo {
+    color: var(--sis-texto-suave);
+    font-weight: 500;
+}
+
+.sismologia-bloque h3 {
+    margin: 18px 0 8px;
+    color: var(--sis-magma);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.sismologia-nota,
+.sismologia-texto {
+    margin: 0 0 14px;
+    color: var(--sis-texto-suave);
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.sismologia-bloque a {
+    color: var(--sis-magma);
+    text-decoration: none;
+}
+
+.sismologia-bloque a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 560px) {
+    .sismologia-bloque {
+        padding: 18px 16px;
+    }
+}
+
+/* El aviso va suelto, sin bloque alrededor. */
+.sismologia > .sis-componente[hidden] {
+    display: none;
+}
+
+
+/* ==========================================================
+   DIVULGACIÓN, ESCALA Y FUENTES
+   ========================================================== */
+
+.sismologia-escala {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.sismologia-escala th,
+.sismologia-escala td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--sis-borde);
+    text-align: left;
+    vertical-align: top;
+}
+
+.sismologia-escala th {
+    color: var(--sis-texto-suave);
+    font-weight: 600;
+}
+
+.sismologia-escala td:first-child {
+    color: var(--sis-pizarra);
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sismologia-tabla-desliza {
+    overflow-x: auto;
+}
+
+.sismologia-historicos {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sismologia-historicos li {
+    padding: 10px 14px;
+    background: var(--sis-blanco);
+    border: 1px solid var(--sis-borde);
+    border-left: 4px solid var(--sis-magma);
+    border-radius: 10px;
+    color: var(--sis-texto-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.sismologia-historicos strong {
+    color: var(--sis-pizarra);
+}
+
+.sismologia-fuentes {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--sis-texto-suave);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* ==========================================================
+   SELECTOR DE RADIO
+   ========================================================== */
+
+.sismologia-selector {
+    display: grid;
+    gap: 8px;
+    margin: 6px 0 0;
+    padding: 0;
+    border: 0;
+}
+
+.sismologia-selector legend {
+    margin-bottom: 8px;
+    padding: 0;
+    color: var(--sis-texto-suave);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.sismologia-radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.sismologia-radio-opcion {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background: var(--sis-blanco);
+    border: 1px solid var(--sis-borde-fuerte);
+    border-radius: 999px;
+    color: var(--sis-pizarra);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.sismologia-radio-opcion input {
+    accent-color: var(--sis-magma);
+    margin: 0;
+}
+
+.sismologia-radio-opcion:has(input:checked) {
+    background: var(--sis-pizarra);
+    border-color: var(--sis-pizarra);
+    color: #ffffff;
+}
+
+.sismologia-radio-opcion:has(input:focus-visible) {
+    outline: 2px solid var(--sis-magma);
+    outline-offset: 2px;
+}
+
+
+/* Fin de fichero: css/sismologia.css */

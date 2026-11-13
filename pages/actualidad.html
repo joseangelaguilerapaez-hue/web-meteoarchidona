@@ -55,14 +55,14 @@
 
 <link
     rel="stylesheet"
-    href="../css/cabecera.css?v=20260926-giro2"
+    href="../css/cabecera.css?v=20261113-menu5"
 >
 <link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
 
 
 <link
     rel="stylesheet"
-    href="../css/pie.css?v=20261101-instalar1"
+    href="../css/pie.css?v=20261113-menu5"
 >
 
 
@@ -82,7 +82,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/ficha-estacion.css?v=20261104-viento1"
+    href="../css/ficha-estacion.css?v=20261113-episodio1"
 >
 
 
@@ -103,9 +103,10 @@
 
 
 <script
-    src="../js/cabecera.js?v=20261106-contador2"
+    src="../js/cabecera.js?v=20261113-astronomia"
     defer
 ></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
 <script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
 
 
@@ -123,13 +124,13 @@
 
 <script
     type="module"
-    src="../js/actualidad/principal.js?v=20261105-embalses1"
+    src="../js/actualidad/principal.js?v=20261113-episodio1"
 ></script>
 
-<!-- Novedades: ventana con las vigentes al entrar (docs/novedades.md de la API). -->
+<!-- Novedades y avisos: ventana con las vigentes al entrar y franja de avisos automáticos (docs/novedades.md de la API). -->
 <script
     type="module"
-    src="../js/novedades.js?v=20261105-novedades1"
+    src="../js/novedades.js?v=20261112-marquesina1"
 ></script>
 
 
@@ -161,6 +162,13 @@
 
 
 <div id="cabecera"></div>
+<!-- Semáforos de alertas (docs/alertas-meteorologicas.md de la API): fijos
+     bajo la cabecera, solo si hay algún aviso; js/alertas/semaforos.js. -->
+<div
+    data-componente="alertas-semaforos"
+    data-fijo="si"
+    hidden
+></div>
 
 
 <div

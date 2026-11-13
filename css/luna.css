@@ -1,0 +1,193 @@
+/*
+ * MeteoArchidona
+ * Página Luna
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/luna.html
+ *
+ * Decisión de José del 11-11-2026: la sección Luna va en oscuro, pero con
+ * fondo propio azul noche (no el gris del resto del sitio) y la gama
+ * «Azul noche y oro lunar». Una columna de bloques con bordes finos y
+ * radios de 14 px; la cabecera y el pie siguen siendo los de siempre.
+ *
+ * La paleta (--lun-*) está en css/luna-componentes.css, que se carga
+ * antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="luna"] {
+    background:
+        radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.55) 50%, transparent 51%),
+        radial-gradient(1px 1px at 72% 9%, rgba(255, 255, 255, 0.45) 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 88% 32%, rgba(248, 227, 160, 0.6) 50%, transparent 51%),
+        radial-gradient(1px 1px at 34% 41%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+        radial-gradient(1px 1px at 55% 64%, rgba(127, 211, 255, 0.4) 50%, transparent 51%),
+        radial-gradient(ellipse at top, #1b2e5e 0%, rgba(11, 21, 48, 0) 60%),
+        linear-gradient(180deg, #0b1530 0%, #08102a 55%, #050a1c 100%);
+    background-attachment: fixed;
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.luna {
+    width: min(1040px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--lun-texto);
+}
+
+
+.luna-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+
+.luna-etiqueta {
+    color: var(--lun-oro);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+
+.luna-cabecera h1 {
+    margin: 0;
+    color: var(--lun-texto);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+
+.luna-cabecera h1 span {
+    color: var(--lun-oro);
+}
+
+
+.luna-entradilla {
+    margin: 0;
+    max-width: 760px;
+    color: var(--lun-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+.luna-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+
+@media (max-width: 860px) {
+    .luna-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+.luna-bloque {
+    min-width: 0;
+    padding: 22px 24px;
+    background: linear-gradient(170deg, var(--lun-tarjeta-clara) 0%, var(--lun-tarjeta) 55%, var(--lun-noche) 100%);
+    border: 1px solid var(--lun-borde);
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+
+.luna-bloque h2 {
+    margin: 0 0 12px;
+    color: var(--lun-oro);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.luna-nota {
+    margin: 0 0 14px;
+    color: var(--lun-texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+.luna-bloque a {
+    color: var(--lun-cian);
+    text-decoration: none;
+}
+
+
+.luna-bloque a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 560px) {
+    .luna-bloque {
+        padding: 18px 16px;
+    }
+}
+
+
+/* ==========================================================
+   GLOSARIO Y FUENTES
+   ========================================================== */
+
+.luna-glosario {
+    display: grid;
+    gap: 6px 18px;
+    grid-template-columns: max-content minmax(0, 1fr);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+
+.luna-glosario dt {
+    color: var(--lun-oro);
+    font-weight: 700;
+}
+
+
+.luna-glosario dd {
+    margin: 0;
+    color: var(--lun-texto-suave);
+}
+
+
+@media (max-width: 560px) {
+    .luna-glosario {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .luna-glosario dd {
+        margin-bottom: 8px;
+    }
+}
+
+
+.luna-lista {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--lun-texto-suave);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* Fin de fichero: css/luna.css */

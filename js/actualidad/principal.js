@@ -43,7 +43,7 @@ import {
     actualizarSistemaLluvia,
     generarGotasCristalActivas,
     inicializarLluviaVisual
-} from "./efectos-lluvia.js?v=20260914-modular2";
+} from "./efectos-lluvia.js?v=20261113-episodio1";
 
 
 /* ==========================================================
@@ -54,7 +54,7 @@ import {
 import {
     actualizarIndicadorSimulacion,
     configurarControlesLluvia
-} from "./simulacion.js?v=20260914-modular2";
+} from "./simulacion.js?v=20261113-episodio1";
 
 
 /* ==========================================================
@@ -76,7 +76,7 @@ import {
     cargarPlantillaFichaEstacion,
     capturarPlantillaFichaEstacion,
     sincronizarFichasEstaciones
-} from "./estaciones.js?v=20261025-viento1";
+} from "./estaciones.js?v=20261113-episodio1";
 
 
 /* ==========================================================
@@ -88,7 +88,7 @@ import {
     cargarCatalogoEstaciones,
     cargarCondiciones,
     refrescarCatalogo
-} from "./api.js?v=20261025-viento1";
+} from "./api.js?v=20261113-episodio1";
 
 
 /* ==========================================================
@@ -105,7 +105,7 @@ import {
 
 import {
     montarCondicionesActuales
-} from "../componentes/condiciones-actuales.js?v=20261104-componentes1";
+} from "../componentes/condiciones-actuales.js?v=20261113-episodio1";
 
 import {
     montarSolLuna
@@ -118,6 +118,10 @@ import {
 import {
     montarAccesos
 } from "../componentes/accesos.js?v=20261104-componentes1";
+
+import {
+    montarSemaforosAlertas
+} from "../alertas/semaforos.js?v=20261112-alertas3";
 
 
 const COMPONENTES_ACTUALIDAD = {
@@ -407,6 +411,16 @@ async function prepararGraficas() {
 async function arrancarActualidad() {
 
     /*
+     * Semáforos de alertas (José, 11-11-2026): fijos arriba, también en
+     * Actualidad como dashboard. Solo se ven si hay algún aviso.
+     */
+    for (const hueco of document.querySelectorAll('[data-componente="alertas-semaforos"]')) {
+        montarSemaforosAlertas(hueco).catch(error => {
+            console.error("Actualidad: no se pudieron montar los semáforos de alertas.", error);
+        });
+    }
+
+    /*
      * Actualidad como dashboard (José, 5-11-2026): de momento solo con
      * /actualidad?dashboard, para revisarla antes de sustituir esta.
      */
@@ -422,7 +436,7 @@ async function arrancarActualidad() {
         );
 
         try {
-            const modulo = await import("/js/dashboards/actualidad.js?v=20261105-embalses1");
+            const modulo = await import("/js/dashboards/actualidad.js?v=20261113-episodio1");
             await modulo.arrancarActualidadDashboard(document.getElementById("actual"));
         } catch (error) {
             console.error("Actualidad: no se ha podido montar el dashboard.", error);

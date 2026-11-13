@@ -560,7 +560,7 @@ async function obtenerModuloPatrullas(){
 
     if(promesaModuloPatrullas === null){
         promesaModuloPatrullas = import(
-            "./patrullas.js?v=20261026-cache1"
+            "./patrullas.js?v=20261108-preset1"
         );
     }
 
@@ -676,7 +676,7 @@ async function obtenerModuloUsuarios(){
 
     if(promesaModuloUsuarios === null){
         promesaModuloUsuarios = import(
-            "./usuarios.js?v=20261104-suscripciones1"
+            "./usuarios.js?v=20261108-ficha1"
         );
     }
 
@@ -738,6 +738,138 @@ async function cargarModuloAuditoria(){
 
 
 /* ==========================================================
+   PROCESOS
+   Pool de procesos (José, 10-11-2026; docs/procesos.md de la API).
+   procesos.js solo se importa si existe modulo-procesos.
+   ========================================================== */
+
+let promesaModuloProcesos = null;
+
+let moduloProcesos = null;
+
+async function cargarModuloProcesos(){
+
+    if(!$("modulo-procesos")){
+        return;
+    }
+
+    if(promesaModuloProcesos === null){
+        promesaModuloProcesos = import(
+            "./procesos.js?v=20261110-procesos2"
+        );
+    }
+
+    try{
+        moduloProcesos = await promesaModuloProcesos;
+        moduloProcesos.configurarEventosProcesos();
+        await moduloProcesos.cargarProcesos();
+    }catch(error){
+        promesaModuloProcesos = null;
+        console.error(
+            "No se ha podido cargar el pool de procesos.",
+            error
+        );
+        mostrarEstado(
+            $("estadoProcesos"),
+            error.message
+            ||
+            "No se han podido cargar los procesos.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
+   SALUD DE ESTACIONES
+   Semáforo, alertas y gráficas (José, 10-11-2026;
+   docs/salud-estaciones.md de la API). salud.js solo se importa
+   si existe modulo-salud.
+   ========================================================== */
+
+let promesaModuloSalud = null;
+
+let moduloSalud = null;
+
+async function cargarModuloSalud(){
+
+    if(!$("modulo-salud")){
+        return;
+    }
+
+    if(promesaModuloSalud === null){
+        promesaModuloSalud = import(
+            "./salud.js?v=20261110-salud1"
+        );
+    }
+
+    try{
+        moduloSalud = await promesaModuloSalud;
+        moduloSalud.configurarEventosSalud();
+        await moduloSalud.cargarSalud();
+    }catch(error){
+        promesaModuloSalud = null;
+        console.error(
+            "No se ha podido cargar la salud de las estaciones.",
+            error
+        );
+        mostrarEstado(
+            $("estadoSalud"),
+            error.message
+            ||
+            "No se ha podido cargar la salud de las estaciones.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
+   AVISOS (ALERTAS METEOROLÓGICAS)
+   Semáforos de la portada y correcciones (José, 11-11-2026;
+   docs/alertas-meteorologicas.md de la API). alertas.js solo se
+   importa si existe modulo-alertas.
+   ========================================================== */
+
+let promesaModuloAlertas = null;
+
+async function cargarModuloAlertas(){
+
+    if(!$("modulo-alertas")){
+        return;
+    }
+
+    if(promesaModuloAlertas === null){
+        promesaModuloAlertas = import(
+            "./alertas.js?v=20261112-alertas3"
+        );
+    }
+
+    try{
+        const modulo = await promesaModuloAlertas;
+        modulo.configurarEventosAlertas();
+        await modulo.cargarAlertas();
+    }catch(error){
+        promesaModuloAlertas = null;
+        console.error(
+            "No se han podido cargar los avisos.",
+            error
+        );
+        mostrarEstado(
+            $("estadoAlertas"),
+            error.message
+            ||
+            "No se han podido cargar los avisos.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    NOVEDADES
    Ventana de novedades de la portada (docs/novedades.md de la
    API). novedades.js solo se importa si existe modulo-novedades.
@@ -753,7 +885,7 @@ async function cargarModuloNovedades(){
 
     if(promesaModuloNovedades === null){
         promesaModuloNovedades = import(
-            "./novedades.js?v=20261105-novedades2"
+            "./novedades.js?v=20261111-avisos1"
         );
     }
 
@@ -1067,6 +1199,12 @@ export async function cargarDatosAdministracion(){
 
         await cargarModuloAuditoria();
 
+        await cargarModuloProcesos();
+
+        await cargarModuloSalud();
+
+        await cargarModuloAlertas();
+
         mostrarEstado(
             $("estadoPanel"),
             "Datos administrativos actualizados.",
@@ -1217,6 +1355,26 @@ async function alCerrarSesion(){
         "function"
     ){
         moduloAuditoria.limpiarAuditoria();
+    }
+
+    if(
+        moduloProcesos
+        &&
+        typeof moduloProcesos.limpiarProcesos
+        ===
+        "function"
+    ){
+        moduloProcesos.limpiarProcesos();
+    }
+
+    if(
+        moduloSalud
+        &&
+        typeof moduloSalud.limpiarSalud
+        ===
+        "function"
+    ){
+        moduloSalud.limpiarSalud();
     }
 
     history.replaceState(

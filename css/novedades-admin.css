@@ -109,4 +109,21 @@
     display: none;
 }
 
+.novedades-admin-tipo {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--border-amber);
+}
+
+.novedades-admin-tipo.tipo-aviso {
+    color: var(--cyan);
+    border-color: var(--border-cyan);
+}
+
 /* Fin de fichero: css/novedades-admin.css */

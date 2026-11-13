@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Polen y alergias en Archidona: nivel de hoy y de los próximos días de olivo y gramíneas, y lo medido cada semana en Granada de ciprés, olivo, gramíneas, parietaria y otros pólenes."
+>
+
+<title>
+    Polen · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/polen">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Polen · MeteoArchidona">
+<meta property="og:description" content="Cuánto polen hay hoy en Archidona y cómo va la temporada de alergias.">
+<meta property="og:url" content="https://meteoarchidona.com/polen">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20261113-menu5"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261113-menu5"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/polen-componentes.css?v=20261106-polen1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/polen.css?v=20261106-polen1"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261113-astronomia"
+    defer
+></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/polen.js?v=20261106-polen1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="polen">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="polen">
+
+
+<header class="polen-cabecera">
+
+    <div class="pol-etiqueta">
+        METEOARCHIDONA · POLEN
+    </div>
+
+    <h1>
+        Polen en <span>Archidona</span>
+    </h1>
+
+    <p class="polen-entradilla">
+        Cuánto polen hay en el aire para quien tiene alergia: el nivel de
+        hoy y de los próximos días en Archidona, lo que se ha medido esta
+        semana en Granada y cuándo suele aparecer cada polen a lo largo
+        del año.
+    </p>
+
+</header>
+
+
+<div class="polen-rejilla">
+
+    <!-- ====================================================
+         HOY EN ARCHIDONA
+         Componente js/polen/hoy.js.
+         ==================================================== -->
+
+    <section
+        class="polen-bloque"
+        aria-labelledby="titulo-polen-hoy"
+    >
+
+        <h2 id="titulo-polen-hoy">
+            Hoy en Archidona
+        </h2>
+
+        <div
+            data-componente="polen-hoy"
+            data-titulo="no"
+        ></div>
+
+    </section>
+
+
+    <!-- ====================================================
+         PRÓXIMOS DÍAS
+         Componente js/polen/prevision.js.
+         ==================================================== -->
+
+    <section
+        class="polen-bloque"
+        aria-labelledby="titulo-polen-prevision"
+    >
+
+        <h2 id="titulo-polen-prevision">
+            Próximos días
+        </h2>
+
+        <div
+            data-componente="polen-prevision"
+            data-titulo="no"
+        ></div>
+
+    </section>
+
+</div>
+
+
+<!-- ========================================================
+     LO MEDIDO ESTA SEMANA
+     Componente js/polen/semana.js.
+     ======================================================== -->
+
+<section
+    class="polen-bloque polen-bloque-tierra"
+    aria-labelledby="titulo-polen-semana"
+>
+
+    <h2 id="titulo-polen-semana">
+        Lo medido en Granada
+    </h2>
+
+    <p class="polen-nota">
+        El captador de la Universidad de Granada, a unos 70 km, mide
+        trece tipos de polen; el modelo de arriba solo calcula tres. Es la
+        referencia medida más cercana, con un campo y un clima de interior
+        parecidos a los nuestros. Publica en temporada, más o menos de
+        febrero a septiembre.
+    </p>
+
+    <div
+        data-componente="polen-semana"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     SEMANA A SEMANA
+     Componente js/polen/serie.js.
+     ======================================================== -->
+
+<section
+    class="polen-bloque"
+    aria-labelledby="titulo-polen-serie"
+>
+
+    <h2 id="titulo-polen-serie">
+        Semana a semana
+    </h2>
+
+    <p class="polen-nota">
+        Cada barra es la media de una semana medida en Granada, con el
+        color de su nivel. La línea discontinua es lo normal para esa
+        semana en otros años y la franja llega hasta el máximo de esos
+        años.
+    </p>
+
+    <div data-componente="polen-serie"></div>
+
+</section>
+
+
+<!-- ========================================================
+     CALENDARIO POLÍNICO
+     Componente js/polen/calendario.js.
+     ======================================================== -->
+
+<section
+    class="polen-bloque polen-bloque-tierra"
+    aria-labelledby="titulo-polen-calendario"
+>
+
+    <h2 id="titulo-polen-calendario">
+        Calendario polínico
+    </h2>
+
+    <p class="polen-nota">
+        Cuándo suele haber cada polen en el aire, según lo medido en
+        Granada en otros años. La casilla recuadrada es la semana en la
+        que estamos.
+    </p>
+
+    <div
+        data-componente="polen-calendario"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     NIVELES
+     La tabla la rellena js/polen.js con /polen/tipos.
+     ======================================================== -->
+
+<section
+    class="polen-bloque"
+    aria-labelledby="titulo-polen-niveles"
+>
+
+    <h2 id="titulo-polen-niveles">
+        Qué significa cada nivel
+    </h2>
+
+    <p class="polen-nota">
+        Granos de polen por metro cúbico de aire, en media del día (en la
+        previsión) o de la semana (en lo medido). Cada polen tiene sus
+        propios umbrales, los de la Universidad de Granada: unas pocas
+        decenas de granos de gramíneas ya dan síntomas, mientras que el
+        ciprés o el olivo necesitan bastantes más.
+    </p>
+
+    <div class="polen-tabla-desliza">
+        <table class="polen-umbrales">
+            <thead>
+                <tr>
+                    <th>Polen</th>
+                    <th>Bajo</th>
+                    <th>Medio</th>
+                    <th>Alto</th>
+                    <th>Extremo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="5">Cargando los umbrales…</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     GLOSARIO Y CONSEJOS
+     ======================================================== -->
+
+<section
+    class="polen-bloque polen-bloque-tierra"
+    aria-labelledby="titulo-polen-glosario"
+>
+
+    <h2 id="titulo-polen-glosario">
+        Qué significa cada cosa
+    </h2>
+
+    <dl class="polen-glosario">
+
+        <dt>Previsión</dt>
+        <dd>
+            Sale del modelo europeo CAMS (Copernicus), con casillas de unos
+            11 km. Calcula olivo, gramíneas y artemisa, y solo en su
+            temporada: el olivo de enero a junio y las gramíneas de febrero
+            a agosto.
+        </dd>
+
+        <dt>Medido</dt>
+        <dd>
+            Lo cuenta al microscopio la Universidad de Granada a partir de
+            un captador que aspira aire sin parar. Se publica una vez por
+            semana.
+        </dd>
+
+        <dt>Media y máximo</dt>
+        <dd>
+            El nivel se calcula con la media del día o de la semana. En las
+            horas centrales de un día de mucho olivo el máximo puede ser
+            varias veces la media.
+        </dd>
+
+        <dt>Lo normal</dt>
+        <dd>
+            La media de esa misma semana en los años anteriores que tiene
+            la Universidad de Granada.
+        </dd>
+
+        <dt>Ciprés y parietaria</dt>
+        <dd>
+            Son los pólenes del invierno y del principio de la primavera
+            (el ciprés, de enero a marzo). El modelo no los calcula: solo
+            salen en lo medido.
+        </dd>
+
+    </dl>
+
+    <h2>
+        En los días altos
+    </h2>
+
+    <ul class="polen-consejos">
+        <li>Ventilar la casa a primera hora o al anochecer, y con las ventanas cerradas en las horas centrales.</li>
+        <li>En el coche, ventanillas subidas y el filtro del aire en buen estado.</li>
+        <li>Gafas de sol en la calle y ducha y ropa limpia al volver del campo.</li>
+        <li>Los días de viento y secos suelen ser peores; tras la lluvia el aire se limpia.</li>
+        <li>La medicación, la que indique cada médico o alergólogo.</li>
+    </ul>
+
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="polen-bloque"
+    aria-labelledby="titulo-polen-fuentes"
+>
+
+    <h2 id="titulo-polen-fuentes">
+        Fuentes
+    </h2>
+
+    <ul class="polen-fuentes">
+        <li>
+            Previsión: modelo europeo de calidad del aire del
+            <a href="https://atmosphere.copernicus.eu/" target="_blank" rel="noopener noreferrer">Servicio de Vigilancia Atmosférica de Copernicus (CAMS)</a>,
+            servido por
+            <a href="https://open-meteo.com/en/docs/air-quality-api" target="_blank" rel="noopener noreferrer">Open-Meteo</a>.
+            Se actualiza dos veces al día.
+        </li>
+        <li>
+            Recuentos medidos, umbrales y años anteriores:
+            <a href="https://polen.redugr.es/" target="_blank" rel="noopener noreferrer">Unidad de Calidad Biológica del Aire de la Universidad de Granada (UCBA-UGR)</a>.
+            Gráficas y calendario, de MeteoArchidona.
+        </li>
+        <li>
+            Es información orientativa: ante síntomas, lo que diga el médico.
+        </li>
+    </ul>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/polen.html -->

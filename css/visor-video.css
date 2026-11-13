@@ -1331,7 +1331,7 @@ video {
    ========================================================== */
 
 
-.visor-video.compacto:not(:fullscreen)
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-meteo {
     gap: 3px;
 
@@ -1348,7 +1348,7 @@ video {
 }
 
 
-.visor-video.compacto:not(:fullscreen)
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-meteo-dato
 +
 .visor-video-meteo-dato::before {
@@ -1356,7 +1356,7 @@ video {
 }
 
 
-.visor-video.compacto:not(:fullscreen)
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-estado {
     gap: 3px;
 
@@ -1371,7 +1371,7 @@ video {
 }
 
 
-.visor-video.compacto:not(:fullscreen)
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-estado::before {
     width: 4px;
     height: 4px;
@@ -1389,7 +1389,7 @@ video {
 }
 
 
-.visor-video.compacto:not(:fullscreen)
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-marca img {
     height: 16px;
 
@@ -1397,7 +1397,7 @@ video {
 }
 
 
-.visor-video.compacto:not(:fullscreen)
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-controles {
     gap: 2px;
 
@@ -1417,7 +1417,7 @@ video {
 }
 
 
-.visor-video.compacto:not(:fullscreen)
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-control {
     width: 18px;
     height: 18px;
@@ -1435,7 +1435,7 @@ video {
  */
 
 
-.visor-video.compacto.modo-mp4:not(:fullscreen)
+.visor-video.compacto.modo-mp4:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-controles {
     gap: 5px;
 
@@ -1449,7 +1449,7 @@ video {
 }
 
 
-.visor-video.compacto.modo-mp4:not(:fullscreen)
+.visor-video.compacto.modo-mp4:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-control {
     width: 27px;
     height: 27px;
@@ -1458,7 +1458,7 @@ video {
 }
 
 
-.visor-video.compacto.modo-mp4:not(:fullscreen)
+.visor-video.compacto.modo-mp4:not(:fullscreen):not(.pantalla-simulada)
 .visor-video-progreso-tiempos {
     font-size: 8px;
 }
@@ -1469,7 +1469,35 @@ video {
    ========================================================== */
 
 
-.visor-video:fullscreen {
+/*
+ * Pantalla completa simulada (iPhone, sin Fullscreen API):
+ * el visor ocupa toda su ventana; la página contenedora estira
+ * el iframe a toda la pantalla (js/pantalla-simulada-anfitrion.js).
+ * El resto de reglas de pantalla completa la incluyen con
+ * :is(:fullscreen, .pantalla-simulada).
+ */
+html.con-pantalla-simulada,
+html.con-pantalla-simulada body {
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+
+.visor-video.pantalla-simulada {
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+
+    z-index: 2147483000;
+
+    background: #000;
+}
+
+
+.visor-video:is(:fullscreen, .pantalla-simulada) {
     width: 100vw;
     height: 100vh;
 
@@ -1485,7 +1513,7 @@ video {
 }
 
 
-.visor-video:fullscreen
+.visor-video:is(:fullscreen, .pantalla-simulada)
 video,
 .visor-video:-webkit-full-screen
 video {
@@ -1496,7 +1524,7 @@ video {
 }
 
 
-.visor-video:fullscreen
+.visor-video:is(:fullscreen, .pantalla-simulada)
 .visor-video-meteo,
 .visor-video:-webkit-full-screen
 .visor-video-meteo {
@@ -1509,7 +1537,7 @@ video {
 }
 
 
-.visor-video:fullscreen
+.visor-video:is(:fullscreen, .pantalla-simulada)
 .visor-video-estado,
 .visor-video:-webkit-full-screen
 .visor-video-estado {
@@ -1522,7 +1550,7 @@ video {
 }
 
 
-.visor-video:fullscreen
+.visor-video:is(:fullscreen, .pantalla-simulada)
 .visor-video-marca img,
 .visor-video:-webkit-full-screen
 .visor-video-marca img {
@@ -1542,7 +1570,7 @@ video {
    ========================================================== */
 
 
-.visor-video.compacto:fullscreen
+.visor-video.compacto:is(:fullscreen, .pantalla-simulada)
 .visor-video-meteo,
 .visor-video.compacto:-webkit-full-screen
 .visor-video-meteo {
@@ -1564,7 +1592,7 @@ video {
 }
 
 
-.visor-video.compacto:fullscreen
+.visor-video.compacto:is(:fullscreen, .pantalla-simulada)
 .visor-video-meteo-dato
 +
 .visor-video-meteo-dato::before,
@@ -1576,7 +1604,7 @@ video {
 }
 
 
-.visor-video.compacto:fullscreen
+.visor-video.compacto:is(:fullscreen, .pantalla-simulada)
 .visor-video-estado,
 .visor-video.compacto:-webkit-full-screen
 .visor-video-estado {
@@ -1598,7 +1626,7 @@ video {
 }
 
 
-.visor-video.compacto:fullscreen
+.visor-video.compacto:is(:fullscreen, .pantalla-simulada)
 .visor-video-estado::before,
 .visor-video.compacto:-webkit-full-screen
 .visor-video-estado::before {
@@ -1627,7 +1655,7 @@ video {
 }
 
 
-.visor-video.compacto:fullscreen
+.visor-video.compacto:is(:fullscreen, .pantalla-simulada)
 .visor-video-marca img,
 .visor-video.compacto:-webkit-full-screen
 .visor-video-marca img {
@@ -1642,7 +1670,7 @@ video {
 }
 
 
-.visor-video.compacto:fullscreen
+.visor-video.compacto:is(:fullscreen, .pantalla-simulada)
 .visor-video-controles,
 .visor-video.compacto:-webkit-full-screen
 .visor-video-controles {
@@ -1664,7 +1692,7 @@ video {
 }
 
 
-.visor-video.compacto:fullscreen
+.visor-video.compacto:is(:fullscreen, .pantalla-simulada)
 .visor-video-control,
 .visor-video.compacto:-webkit-full-screen
 .visor-video-control {
@@ -1682,7 +1710,7 @@ video {
    ========================================================== */
 
 
-.visor-video.modo-mp4:fullscreen
+.visor-video.modo-mp4:is(:fullscreen, .pantalla-simulada)
 .visor-video-controles,
 .visor-video.modo-mp4:-webkit-full-screen
 .visor-video-controles {
@@ -1707,7 +1735,7 @@ video {
 }
 
 
-.visor-video.modo-mp4:fullscreen
+.visor-video.modo-mp4:is(:fullscreen, .pantalla-simulada)
 .visor-video-control,
 .visor-video.modo-mp4:-webkit-full-screen
 .visor-video-control {
@@ -1718,7 +1746,7 @@ video {
 }
 
 
-.visor-video.modo-mp4:fullscreen
+.visor-video.modo-mp4:is(:fullscreen, .pantalla-simulada)
 .visor-video-progreso-tiempos,
 .visor-video.modo-mp4:-webkit-full-screen
 .visor-video-progreso-tiempos {
@@ -1731,7 +1759,7 @@ video {
    ========================================================== */
 
 
-.visor-video.portada-activa:fullscreen::before,
+.visor-video.portada-activa:is(:fullscreen, .pantalla-simulada)::before,
 .visor-video.portada-activa:-webkit-full-screen::before {
     background-size:
         auto min(58%, 360px),

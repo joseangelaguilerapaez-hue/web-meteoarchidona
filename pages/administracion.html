@@ -20,21 +20,26 @@
 
 <link rel="stylesheet" href="../css/fuentes.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/paleta.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/cabecera.css?v=20260926-giro2">
-<link rel="stylesheet" href="../css/pie.css?v=20261101-instalar1">
+<link rel="stylesheet" href="../css/cabecera.css?v=20261113-menu5">
+<link rel="stylesheet" href="../css/pie.css?v=20261113-menu5">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
-<link rel="stylesheet" href="../css/administracion.css?v=20261104-suscripciones1">
-<link rel="stylesheet" href="../css/novedades.css?v=20261105-novedades1">
-<link rel="stylesheet" href="../css/novedades-admin.css?v=20261105-novedades1">
+<link rel="stylesheet" href="../css/administracion.css?v=20261108-ficha1">
+<link rel="stylesheet" href="../css/novedades.css?v=20261111-avisos1">
+<link rel="stylesheet" href="../css/novedades-admin.css?v=20261111-avisos1">
 <link rel="stylesheet" href="../css/auditoria-admin.css?v=20261106-visitas1">
+<link rel="stylesheet" href="../css/procesos-admin.css?v=20261110-procesos2">
+<link rel="stylesheet" href="../css/barra-progreso.css?v=20261110-procesos1">
+<link rel="stylesheet" href="../css/salud-admin.css?v=20261110-salud1">
+<link rel="stylesheet" href="../css/alertas-admin.css?v=20261112-alertas3">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
-<script src="../js/cabecera.js?v=20261106-contador2" defer></script>
+<script src="../js/cabecera.js?v=20261113-astronomia" defer></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261106-auditoria1"
+    src="../js/administracion/principal.js?v=20261112-alertas3"
 ></script>
 
 <script
@@ -390,7 +395,31 @@
     class="modulo-boton"
     data-modulo="novedades"
 >
-    Novedades
+    Novedades y avisos
+</a>
+
+<a
+    href="#procesos"
+    class="modulo-boton"
+    data-modulo="procesos"
+>
+    Procesos
+</a>
+
+<a
+    href="#salud"
+    class="modulo-boton"
+    data-modulo="salud"
+>
+    Salud de estaciones
+</a>
+
+<a
+    href="#alertas"
+    class="modulo-boton"
+    data-modulo="alertas"
+>
+    Alertas
 </a>
 
 <a
@@ -2764,6 +2793,76 @@
 
 <div class="admin-grid">
 
+<section class="panel" id="panelEnviarPreset">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Enviar la cámara a un preset
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Mueve la cámara PTZ a un preset ahora mismo y míralo en el directo.
+    Si hay una patrulla activa, la cámara va al preset y después la
+    patrulla sigue sola.
+</p>
+
+<div class="filtros">
+
+<div class="campo">
+<label for="campoEnvioCamara">Cámara</label>
+<select id="campoEnvioCamara"></select>
+</div>
+
+<div class="campo">
+<label for="campoEnvioPreset">Preset</label>
+<select id="campoEnvioPreset">
+    <option value="">Elige antes la cámara</option>
+</select>
+</div>
+
+</div>
+
+<div class="acciones">
+
+<button
+    id="botonEnviarPreset"
+    type="button"
+    class="boton boton-principal"
+>
+    Enviar al preset
+</button>
+
+<button
+    id="botonLeerPresets"
+    type="button"
+    class="boton boton-secundario"
+    title="Lee los presets de la cámara y los guarda (por si se han cambiado en la app de Reolink)"
+>
+    Leer presets de la cámara
+</button>
+
+</div>
+
+<div
+    id="estadoEnvioPreset"
+    class="estado"
+    aria-live="polite"
+></div>
+
+<div
+    id="visorEnvioPreset"
+    class="visor-envio-preset"
+></div>
+
+</div>
+</section>
+
+
 <section class="panel">
 
 <div class="panel-cabecera">
@@ -2802,9 +2901,8 @@
 </p>
 
 <p class="modulo-intro">
-    MeteoCam aplicará lo que se guarde aquí cuando tenga
-    su ejecutor de patrullas. Mientras tanto se guarda
-    la configuración, pero la cámara no se mueve.
+    MeteoCam, en el mini PC de la estación, recoge lo que se
+    guarde aquí en unos segundos y mueve la cámara.
 </p>
 
 <div class="filtros">
@@ -2944,13 +3042,18 @@
     Código
 </label>
 
-<input
+<select
     id="campoPatrullaCodigo"
+    required
+></select>
+
+<input
+    id="campoPatrullaCodigoOtro"
     type="text"
     maxlength="100"
-    required
     autocomplete="off"
-    placeholder="GENERAL"
+    placeholder="Código nuevo, p. ej. INCENDIOS"
+    hidden
 >
 
 <div class="campo-ayuda">
@@ -3845,9 +3948,9 @@
 <div class="panel-cuerpo">
 
 <p class="modulo-intro">
-    Cuentas de los usuarios registrados. Un administrador entra en
-    Administración con su cuenta, sin el PIN. Solo una cuenta activa
-    puede ser administradora.
+    Cuentas de los usuarios registrados. Pulsa una para abrir su ficha.
+    Un administrador entra en Administración con su cuenta, sin el PIN.
+    Solo una cuenta activa puede ser administradora.
 </p>
 
 <div class="campo usuarios-buscador">
@@ -4042,6 +4145,416 @@
 
 
 <!-- =========================================================
+     ALERTAS METEOROLÓGICAS (no confundir con los avisos de la web)
+     Semáforos de la portada: avisos de AEMET y correcciones de los
+     administradores con la regla B (js/administracion/alertas.js).
+     Decisiones de José del 11-11-2026: docs/alertas-meteorologicas.md
+     de api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-alertas"
+    class="modulo"
+>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Alertas · zona Antequera
+</h2>
+
+<div class="acciones">
+
+<span id="horaAlertas" class="adm-alertas-hora"></span>
+
+<button
+    id="botonRecargarAlertas"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="estadoAlertas"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<p class="modulo-intro">
+    Vuestra corrección manda, suba, baje o quite la alerta de AEMET, salvo
+    que AEMET suba después por encima de lo que tenía al corregir y de
+    vuestro nivel: entonces vuelve a mandar AEMET. Dura hasta el fin de la
+    alerta de AEMET; si AEMET no tiene alerta, hasta la hora que pongáis.
+    Si AEMET no tiene alerta de un fenómeno, al elegir un color dais de alta
+    una alerta de MeteoArchidona. El texto para el público sale en la ficha
+    del semáforo; el motivo solo se ve aquí.
+</p>
+
+<div
+    id="tarjetasAlertas"
+    class="adm-alertas-tarjetas"
+></div>
+
+</div>
+</section>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+<h2 class="panel-titulo">
+    Historial de correcciones
+</h2>
+</div>
+
+<div class="panel-cuerpo">
+<ul
+    id="historialAlertas"
+    class="adm-alertas-lista"
+></ul>
+</div>
+</section>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+<h2 class="panel-titulo">
+    Últimas descargas de AEMET
+</h2>
+</div>
+
+<div class="panel-cuerpo">
+<ul
+    id="cargasAlertas"
+    class="adm-alertas-lista"
+></ul>
+</div>
+</section>
+
+</section>
+
+
+<!-- =========================================================
+     SALUD DE ESTACIONES
+     Semáforo, indicadores, alertas y gráficas de radio, wifi y
+     recepción (js/administracion/salud.js). Decisiones de José del
+     10-11-2026: docs/salud-estaciones.md de api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-salud"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel salud-panel-estaciones">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Estado de las estaciones
+</h2>
+
+<div class="acciones">
+
+<span id="horaSalud" class="salud-hora"></span>
+
+<button
+    id="botonRecargarSalud"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="estadoSalud"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="tarjetasSalud"
+    class="salud-tarjetas"
+></div>
+
+<p class="modulo-intro salud-nota">
+    Rojo si lleva más de 15 min sin datos, radio del ISS por debajo de
+    −85 dBm, recepción de la última hora por debajo del 80 %, wifi por
+    debajo de −80 dBm o batería del transmisor baja. Ámbar: más de
+    5 min, −80 dBm, 95 % y −70 dBm. Se evalúa cada 5 minutos y se avisa
+    por correo al ponerse en rojo y al volver a la normalidad.
+</p>
+
+</div>
+</section>
+
+
+<section class="panel salud-panel-graficas">
+
+<div class="panel-cabecera">
+
+<h2
+    id="tituloGraficasSalud"
+    class="panel-titulo"
+>
+    Gráficas
+</h2>
+
+<div class="acciones">
+
+<select
+    id="estacionGraficasSalud"
+    aria-label="Estación de las gráficas"
+></select>
+
+<div
+    class="salud-periodo"
+    role="group"
+    aria-label="Periodo"
+>
+<button type="button" class="boton boton-mini" data-horas="24" aria-pressed="true">24 h</button>
+<button type="button" class="boton boton-mini boton-secundario" data-horas="168" aria-pressed="false">7 días</button>
+</div>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="graficasSalud"
+    class="salud-graficas"
+></div>
+
+</div>
+</section>
+
+
+<section class="panel salud-panel-alertas">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Alertas de los últimos 7 días
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<ul
+    id="alertasSalud"
+    class="salud-alertas"
+></ul>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
+     PROCESOS
+     Pool de procesos (js/administracion/procesos.js) con la barra de
+     progreso reutilizable (js/componentes/barra-progreso.js).
+     Decisiones de José del 10-11-2026: docs/procesos.md de
+     api-meteoarchidona. La web encarga y el worker del VPS ejecuta.
+     ========================================================= -->
+
+<section
+    id="modulo-procesos"
+    class="modulo"
+>
+
+<div class="admin-grid">
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    De un vistazo
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonRecargarProcesos"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="resumenProcesos"
+    class="procesos-resumen-vistazo"
+></div>
+
+</div>
+</section>
+
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Lanzar un proceso
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<div class="procesos-lanzador">
+
+<div class="procesos-campo">
+<label for="tipoNuevoProceso">
+    Proceso
+</label>
+<select id="tipoNuevoProceso"></select>
+</div>
+
+<div
+    id="parametrosNuevoProceso"
+    class="procesos-parametros"
+></div>
+
+<button
+    id="botonLanzarProceso"
+    type="button"
+    class="boton boton-principal"
+>
+    Lanzar
+</button>
+
+</div>
+
+<p
+    id="descripcionNuevoProceso"
+    class="modulo-intro procesos-descripcion"
+></p>
+
+<div
+    id="estadoLanzarProceso"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<p class="modulo-intro procesos-nota">
+    Lo ejecuta el worker del servidor en segundo plano, uno a la vez: se
+    puede cerrar la página y volver luego. Si ya hay uno en marcha, hay
+    que esperar a que termine o cancelarlo.
+</p>
+
+</div>
+</section>
+
+
+<section class="panel procesos-panel-lista">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Procesos
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<div class="procesos-filtros">
+
+<label>
+    Estado
+    <select id="filtroEstadoProcesos"></select>
+</label>
+
+<label>
+    Tipo
+    <select id="filtroTipoProcesos"></select>
+</label>
+
+<label>
+    Desde
+    <input id="desdeProcesos" type="date">
+</label>
+
+<label>
+    Hasta
+    <input id="hastaProcesos" type="date">
+</label>
+
+<button
+    id="botonLimpiarFiltrosProcesos"
+    type="button"
+    class="boton boton-mini boton-secundario"
+>
+    Quitar filtros
+</button>
+
+</div>
+
+<div
+    id="estadoProcesos"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<ul
+    id="listaProcesos"
+    class="procesos-lista"
+></ul>
+
+<div id="finProcesos" class="procesos-fin"></div>
+
+<button
+    id="botonMasProcesos"
+    type="button"
+    class="boton boton-secundario procesos-mas"
+    hidden
+>
+    Cargar más
+</button>
+
+<p class="modulo-intro procesos-nota">
+    Se guardan 6 meses (Configuración → Otros). Las horas, en hora de
+    Madrid.
+</p>
+
+</div>
+</section>
+
+</div>
+</section>
+
+
+<!-- =========================================================
      NOVEDADES
      Ventana de novedades de la portada (js/administracion/novedades.js).
      Diseño: docs/novedades.md de api-meteoarchidona (José, 5-11-2026).
@@ -4059,7 +4572,7 @@
 <div class="panel-cabecera">
 
 <h2 class="panel-titulo">
-    Novedades
+    Novedades y avisos
 </h2>
 
 <div class="acciones">
@@ -4090,6 +4603,11 @@
     vigente: cada vez que alguien entra en la web. Si hay varias
     vigentes, salen todas, de la más reciente a la más antigua. Las
     imágenes son nuestras, con su ruta /assets/…
+    Los avisos automáticos (los crea el servidor, como los pases muy
+    brillantes de la Estación Espacial) salen en una franja encima de la
+    portada; si se editan aquí, el servidor los vuelve a escribir en su
+    siguiente cálculo, pero si se desactivan, se quedan desactivados.
+    Todo sale también en la página «Novedades y avisos».
 </p>
 
 <div
@@ -4136,6 +4654,26 @@
         maxlength="120"
         autocomplete="off"
     >
+</div>
+
+<div class="campo">
+    <label for="tipoNovedad">Tipo</label>
+    <select id="tipoNovedad">
+        <option value="NOVEDAD">Novedad</option>
+        <option value="AVISO">Aviso</option>
+    </select>
+</div>
+
+<div class="campo">
+    <label for="enlaceNovedad">Enlace (opcional)</label>
+    <input
+        id="enlaceNovedad"
+        type="text"
+        maxlength="200"
+        autocomplete="off"
+        placeholder="/luna#titulo-luna-pasos"
+    >
+    <div class="campo-ayuda">Solo direcciones de nuestra web, que empiezan por /.</div>
 </div>
 
 <div class="campo">

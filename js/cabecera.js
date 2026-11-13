@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261106-contador1";
+    "/componentes/cabecera.html?v=20261113-astronomia";
 
 
 /* ==========================================================
@@ -283,6 +283,10 @@ const RUTA_DISTINTIVO_CSS = "/css/distintivo.css?v=20261103-distintivo1";
 const RUTA_DISTINTIVO_JS = "/js/distintivo.js?v=20261103-distintivo1";
 const RUTA_CONTADOR_JS = "/js/componentes/contador-visitas.js?v=20261106-contador5";
 
+const RUTA_SALUD_CSS = "/css/salud-publica.css?v=20261110-salud1";
+
+const RUTA_SALUD_JS = "/js/salud-publica.js?v=20261110-salud1";
+
 
 /*
  * Monta componentes/pie.html en el <div id="pie"> de la página, si lo
@@ -452,6 +456,32 @@ function cargarContador() {
 }
 
 
+/*
+ * Salud de las estaciones (José, 10-11-2026, js/salud-publica.js): el
+ * semáforo de las fichas, para todos, y la franja roja de alerta para los
+ * administradores. Se carga igual que la cuenta, para todas las páginas.
+ */
+function cargarSalud() {
+
+    const hoja = document.createElement("link");
+
+    hoja.rel = "stylesheet";
+
+    hoja.href = RUTA_SALUD_CSS;
+
+    document.head.appendChild(hoja);
+
+    const guion = document.createElement("script");
+
+    guion.src = RUTA_SALUD_JS;
+
+    guion.defer = true;
+
+    document.head.appendChild(guion);
+
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -517,6 +547,7 @@ async function montarCabecera() {
 
     cargarDistintivo();
     cargarContador();
+    cargarSalud();
 
     /*
      * La cabecera llega después que el JS de la página, así que lo

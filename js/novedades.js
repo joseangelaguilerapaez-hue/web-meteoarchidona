@@ -8,21 +8,40 @@
  * debajo. Se cierra con «Entendido», con la X, con Escape o tocando
  * fuera.
  *
- * Sale cada vez que se entra en la web: una vez por visita. Si en la
- * misma visita se vuelve a la portada desde otra sección, no se repite
- * (sessionStorage, que se borra al cerrar la pestaña o el navegador).
- * Una novedad nueva o cambiada sí vuelve a salir.
+ * Cambio de José del 8-11-2026: cada novedad sale una sola vez por
+ * navegador. Al cerrar la ventana se apunta en localStorage (que no se
+ * borra al cerrar el navegador) qué novedades se han visto; al volver
+ * solo salen las nuevas o las que hayan cambiado. Vale igual para
+ * visitantes y registrados, sin tocar la base de datos: en otro
+ * navegador o dispositivo volverán a salir una vez.
  *
  * El texto va como texto: saltos de línea respetados y direcciones
  * convertidas en enlaces; nada de HTML. Las imágenes son siempre
  * nuestras (/assets/...): la API no admite otras y aquí se comprueba
  * otra vez.
  *
+ * Avisos (José, 11-11-2026; docs/novedades.md de la API): van en el
+ * mismo subsistema, con tipo AVISO. Las novedades y los avisos manuales
+ * salen en la ventana; los avisos automáticos (como los pases muy
+ * brillantes de la Estación Espacial), en una franja discreta encima de
+ * la portada que se puede cerrar: cerrado un aviso, no vuelve a salir en
+ * ese navegador salvo que cambie. Si tienen enlace (siempre a nuestra
+ * web), llevan un botón para ir.
+ *
+ * Franja en una línea (José, 12-11-2026): el título pasa desplazándose
+ * de lado a lado (marquesina), con el borde verde fluorescente; «Detalles»
+ * y «Ver» a la derecha, en la misma línea. Si hay varios avisos, pasan
+ * uno detrás de otro, cada uno con su color (el primero, rojo), y los
+ * bordes de los botones toman el color del que está pasando. Se para al
+ * pasar el ratón o el dedo, y no se mueve si el sistema pide menos
+ * animación (entonces cambia de aviso cada 7 segundos).
+ *
  * API: GET /novedades.
  */
 
-const HOJA = "/css/novedades.css?v=20261105-novedades1";
-const CLAVE_VISITA = "ma_novedades_vistas";
+const HOJA = "/css/novedades.css?v=20261112-marquesina1";
+const CLAVE_VISTAS = "ma_novedades_vistas_v2";
+const CLAVE_CERRADOS = "ma_avisos_cerrados_v1";
 
 const formatoFecha = new Intl.DateTimeFormat("es-ES", {
     timeZone: "Europe/Madrid",
@@ -38,7 +57,7 @@ function crear(etiqueta, clase, texto) {
     return nodo;
 }
 
-function asegurarHoja() {
+export function asegurarHoja() {
     if (document.querySelector('link[href*="css/novedades.css"]')) return;
     const enlace = document.createElement("link");
     enlace.rel = "stylesheet";
@@ -77,10 +96,27 @@ function imagenNuestra(ruta) {
     return typeof ruta === "string" && ruta.startsWith("/assets/") && !ruta.includes("..") && !ruta.includes("//");
 }
 
+/* Solo direcciones de nuestra web (/luna#titulo-luna-pasos): la API ya lo exige. */
+function enlaceNuestro(ruta) {
+    return typeof ruta === "string" && ruta.startsWith("/") && !ruta.startsWith("//");
+}
+
+export function esAutomatico(novedad) {
+    return novedad.origen === "AUTOMATICO";
+}
+
+function etiquetaDe(novedades) {
+    const avisos = novedades.filter(n => n.tipo === "AVISO").length;
+    if (!avisos) return novedades.length > 1 ? "NOVEDADES" : "NOVEDAD";
+    if (avisos === novedades.length) return avisos > 1 ? "AVISOS" : "AVISO";
+    return "NOVEDADES Y AVISOS";
+}
+
 export function pintarNovedad(novedad) {
-    const articulo = crear("article", "novedad");
+    const articulo = crear("article", `novedad${novedad.tipo === "AVISO" ? " novedad-aviso" : ""}`);
 
     const cabeza = crear("header", "novedad-cabeza");
+    if (novedad.tipo === "AVISO") cabeza.appendChild(crear("span", "novedad-tipo", "Aviso"));
     cabeza.appendChild(crear("h3", "novedad-titulo", novedad.titulo));
     if (novedad.inicio) {
         cabeza.appendChild(crear("p", "novedad-fecha", formatoFecha.format(new Date(novedad.inicio))));
@@ -102,25 +138,38 @@ export function pintarNovedad(novedad) {
         articulo.appendChild(caja);
     }
 
+    if (novedad.enlace && enlaceNuestro(novedad.enlace)) {
+        const ir = crear("a", "novedad-enlace", "Ver más →");
+        ir.href = novedad.enlace;
+        articulo.appendChild(ir);
+    }
+
     return articulo;
 }
 
-/* Huella de lo que hay vigente: si cambia algo, se vuelve a enseñar. */
-function huella(novedades) {
-    return novedades.map(n => `${n.id}:${n.titulo.length}:${(n.bloques || []).length}`).join("|");
+/* Huella de cada novedad: si cambia algo, se vuelve a enseñar. */
+function huella(novedad) {
+    const bloques = novedad.bloques || [];
+    const textos = bloques.reduce((total, b) => total + (b.texto || "").length, 0);
+    return `${novedad.titulo.length}:${bloques.length}:${textos}`;
 }
 
-function yaVistas(marca) {
+/* Lo visto en este navegador: { id: huella }. */
+function leerVistas() {
     try {
-        return sessionStorage.getItem(CLAVE_VISITA) === marca;
+        const datos = JSON.parse(localStorage.getItem(CLAVE_VISTAS) || "{}");
+        return datos && typeof datos === "object" ? datos : {};
     } catch {
-        return false;
+        return {};
     }
 }
 
-function marcarVistas(marca) {
+function marcarVistas(novedades) {
+    // Solo se guardan las vigentes: las caducadas se van solas de la lista.
+    const vistas = {};
+    for (const novedad of novedades) vistas[novedad.id] = huella(novedad);
     try {
-        sessionStorage.setItem(CLAVE_VISITA, marca);
+        localStorage.setItem(CLAVE_VISTAS, JSON.stringify(vistas));
     } catch {
         // Sin almacenamiento (modo privado estricto): saldrá otra vez, sin más.
     }
@@ -133,10 +182,10 @@ export function abrirVentana(novedades, { alCerrar } = {}) {
     const ventana = crear("div", "novedades-ventana");
     ventana.setAttribute("role", "dialog");
     ventana.setAttribute("aria-modal", "true");
-    ventana.setAttribute("aria-label", novedades.length > 1 ? "Novedades de MeteoArchidona" : novedades[0].titulo);
+    ventana.setAttribute("aria-label", novedades.length > 1 ? "Novedades y avisos de MeteoArchidona" : novedades[0].titulo);
 
     const barra = crear("div", "novedades-barra");
-    barra.appendChild(crear("span", "novedades-etiqueta", novedades.length > 1 ? "NOVEDADES" : "NOVEDAD"));
+    barra.appendChild(crear("span", "novedades-etiqueta", etiquetaDe(novedades)));
     const cerrarX = crear("button", "novedades-x", "×");
     cerrarX.type = "button";
     cerrarX.setAttribute("aria-label", "Cerrar");
@@ -200,6 +249,172 @@ export function abrirVentana(novedades, { alCerrar } = {}) {
     return cerrar;
 }
 
+/* ------------------------------------------------------------
+   Franja de avisos automáticos (José, 11-11-2026)
+   ------------------------------------------------------------ */
+
+function leerCerrados() {
+    try {
+        const datos = JSON.parse(localStorage.getItem(CLAVE_CERRADOS) || "{}");
+        return datos && typeof datos === "object" ? datos : {};
+    } catch {
+        return {};
+    }
+}
+
+function apuntarCerrado(aviso, vigentes) {
+    const cerrados = leerCerrados();
+    const vigentesIds = new Set(vigentes.map(a => String(a.id)));
+    // Lo de avisos que ya no están se olvida solo.
+    for (const id of Object.keys(cerrados)) if (!vigentesIds.has(id)) delete cerrados[id];
+    cerrados[aviso.id] = huella(aviso);
+    try {
+        localStorage.setItem(CLAVE_CERRADOS, JSON.stringify(cerrados));
+    } catch {
+        // Sin almacenamiento: volverá a salir en la próxima visita.
+    }
+}
+
+/* Colores llamativos que se leen bien sobre negro, en este orden (José,
+ * 12-11-2026): el primero, rojo; el verde no, que es el del borde. */
+export const COLORES_AVISO = ["#ff3b3b", "#ffd60a", "#00e5ff", "#ff3df2", "#ff9f1a", "#b388ff", "#ffffff"];
+
+/*
+ * Una sola franja para todos los avisos automáticos (José, 12-11-2026):
+ * pasan uno detrás de otro por la marquesina, cada uno con su color, y
+ * los bordes de «Detalles» y «Ver» toman el color del que está pasando.
+ * Los botones y la X actúan sobre ese aviso; con «Detalles» abierto, la
+ * rotación se para en él.
+ */
+export function pintarFranja(avisos, { alCerrar } = {}) {
+    asegurarHoja();
+    const franja = crear("section", "avisos-franja");
+    franja.setAttribute("aria-label", "Avisos");
+
+    const lista = avisos.map((aviso, i) => ({ aviso, color: COLORES_AVISO[i % COLORES_AVISO.length] }));
+    let actual = 0;
+
+    const caja = crear("div", "aviso-franja");
+    const etiqueta = crear("span", "aviso-franja-etiqueta", "AVISO");
+    caja.appendChild(etiqueta);
+
+    const marquesina = crear("div", "aviso-franja-marquesina");
+    marquesina.setAttribute("aria-live", "polite");
+    const pista = crear("strong", "aviso-franja-titulo");
+    marquesina.appendChild(pista);
+    caja.appendChild(marquesina);
+
+    const acciones = crear("div", "aviso-franja-acciones");
+    const mas = crear("button", "aviso-franja-boton", "Detalles");
+    mas.type = "button";
+    mas.setAttribute("aria-expanded", "false");
+    const ir = crear("a", "aviso-franja-boton", "Ver");
+    acciones.append(mas, ir);
+    caja.appendChild(acciones);
+
+    const cerrar = crear("button", "aviso-franja-x", "×");
+    cerrar.type = "button";
+    caja.appendChild(cerrar);
+
+    const detalle = crear("div", "aviso-franja-detalle");
+    detalle.hidden = true;
+    caja.appendChild(detalle);
+    franja.appendChild(caja);
+
+    const sinMovimiento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let reloj = null;
+
+    function mostrar(indice) {
+        if (!lista.length) {
+            franja.remove();
+            return;
+        }
+        actual = ((indice % lista.length) + lista.length) % lista.length;
+        const { aviso, color } = lista[actual];
+        caja.style.setProperty("--aviso-color", color);
+        etiqueta.textContent = lista.length > 1 ? `AVISO ${actual + 1}/${lista.length}` : "AVISO";
+        marquesina.title = aviso.titulo;
+        pista.textContent = aviso.titulo;
+        // Velocidad parecida para todos, sea cual sea el largo.
+        pista.style.setProperty("--duracion", `${Math.max(8, Math.round(aviso.titulo.length * 0.22))}s`);
+        // Vuelve a arrancar la animación desde la derecha.
+        pista.classList.remove("en-marcha");
+        void pista.offsetWidth;
+        pista.classList.add("en-marcha");
+
+        detalle.textContent = "";
+        for (const bloque of aviso.bloques || []) if (bloque.texto) pintarTexto(detalle, bloque.texto);
+        mas.hidden = !detalle.childNodes.length;
+        if (mas.hidden) cerrarDetalle();
+        if (aviso.enlace && enlaceNuestro(aviso.enlace)) {
+            ir.href = aviso.enlace;
+            ir.hidden = false;
+        } else {
+            ir.removeAttribute("href");
+            ir.hidden = true;
+        }
+        cerrar.setAttribute("aria-label", `Cerrar el aviso «${aviso.titulo}»`);
+
+        clearTimeout(reloj);
+        if (sinMovimiento && lista.length > 1) reloj = setTimeout(siguiente, 7000);
+    }
+
+    function siguiente() {
+        if (!detalle.hidden) {                  // con «Detalles» abierto, se queda en este
+            reloj = setTimeout(siguiente, 7000);
+            return;
+        }
+        mostrar(actual + 1);
+    }
+
+    function cerrarDetalle() {
+        detalle.hidden = true;
+        mas.setAttribute("aria-expanded", "false");
+        mas.textContent = "Detalles";
+        caja.classList.remove("detalle-abierto");
+    }
+
+    // Cada aviso pasa una vez y deja sitio al siguiente (con uno solo, se repite).
+    // Con «Detalles» abierto, el mismo aviso vuelve a pasar.
+    pista.addEventListener("animationend", () => mostrar(lista.length > 1 && detalle.hidden ? actual + 1 : actual));
+
+    mas.addEventListener("click", () => {
+        if (detalle.hidden) {
+            detalle.hidden = false;
+            mas.setAttribute("aria-expanded", "true");
+            mas.textContent = "Menos";
+            caja.classList.add("detalle-abierto");
+        } else {
+            cerrarDetalle();
+            mostrar(actual + 1);
+        }
+    });
+
+    cerrar.addEventListener("click", () => {
+        const [{ aviso }] = lista.splice(actual, 1);
+        if (alCerrar) alCerrar(aviso);
+        cerrarDetalle();
+        // Los colores se quedan con su aviso; se sigue con el siguiente.
+        mostrar(actual);
+    });
+
+    mostrar(0);
+    return franja;
+}
+
+function mostrarFranja(automaticos) {
+    if (!automaticos.length) return;
+    const cerrados = leerCerrados();
+    const pendientes = automaticos.filter(a => cerrados[a.id] !== huella(a));
+    if (!pendientes.length) return;
+
+    const franja = pintarFranja(pendientes, { alCerrar: aviso => apuntarCerrado(aviso, automaticos) });
+    const principal = document.querySelector("main");
+    if (principal) principal.prepend(franja);
+    else document.body.prepend(franja);
+}
+
+
 export async function mostrarNovedades() {
     let datos;
     try {
@@ -210,13 +425,17 @@ export async function mostrarNovedades() {
         return;
     }
 
-    const novedades = (datos && datos.novedades) || [];
+    const todas = (datos && datos.novedades) || [];
+    mostrarFranja(todas.filter(esAutomatico));
+
+    const novedades = todas.filter(n => !esAutomatico(n));
     if (!novedades.length) return;
 
-    const marca = huella(novedades);
-    if (yaVistas(marca)) return;
+    const vistas = leerVistas();
+    const pendientes = novedades.filter(n => vistas[n.id] !== huella(n));
+    if (!pendientes.length) return;
 
-    abrirVentana(novedades, { alCerrar: () => marcarVistas(marca) });
+    abrirVentana(pendientes, { alCerrar: () => marcarVistas(novedades) });
 }
 
 

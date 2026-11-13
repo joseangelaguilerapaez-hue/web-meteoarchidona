@@ -1655,6 +1655,148 @@ a.modulo-boton{
     color:var(--amber-light)
 }
 
+/* Ficha de mantenimiento del usuario (8-11-2026) */
+
+.usuarios-ficha-abrible{
+    cursor:pointer;
+    transition:border-color .15s
+}
+
+.usuarios-ficha-abrible:hover,
+.usuarios-ficha-abrible:focus-visible{
+    border-color:var(--border-cyan);
+    outline:none
+}
+
+.usuarios-ficha .usuarios-reenviar + .usuarios-reenviar{
+    margin-left:8px
+}
+
+.ficha-usuario{
+    width:min(760px, calc(100vw - 24px));
+    max-height:calc(100vh - 24px);
+    padding:0;
+    border:1px solid var(--border-strong);
+    border-radius:14px;
+    background:var(--surface);
+    color:var(--text);
+    overflow:auto
+}
+
+.ficha-usuario::backdrop{
+    background:rgba(3, 9, 20, .75)
+}
+
+.ficha-usuario-cabecera{
+    position:sticky;
+    top:0;
+    z-index:1;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 17px;
+    border-bottom:1px solid var(--border);
+    background:var(--surface)
+}
+
+.ficha-usuario > .estado{
+    margin:10px 17px 0
+}
+
+.ficha-usuario-cuerpo{
+    display:grid;
+    gap:14px;
+    padding:14px 17px 18px
+}
+
+.ficha-usuario-bloque{
+    padding:13px 15px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--card-soft)
+}
+
+.ficha-usuario-titulo{
+    margin:0 0 10px;
+    font-size:.82rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--amber-light)
+}
+
+.ficha-usuario-acciones{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px
+}
+
+.ficha-usuario-lista{
+    display:grid;
+    gap:6px
+}
+
+.ficha-usuario-registro{
+    max-height:320px;
+    overflow:auto
+}
+
+.ficha-usuario-fila{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding:8px 10px;
+    border:1px solid var(--border-subtle);
+    border-radius:8px
+}
+
+.ficha-usuario-fila-texto{
+    display:grid;
+    gap:2px;
+    min-width:0
+}
+
+.ficha-usuario-detalle{
+    font-size:.84rem;
+    color:var(--muted);
+    overflow-wrap:anywhere
+}
+
+.ficha-usuario-vacio{
+    margin:0;
+    font-size:.88rem;
+    color:var(--text-faint)
+}
+
+.ficha-usuario-nueva{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px
+}
+
+.ficha-usuario-nueva select{
+    flex:1 1 180px;
+    min-width:0
+}
+
+.ficha-usuario-nueva select[hidden]{
+    display:none
+}
+
+.visor-envio-preset{
+    margin-top:12px;
+    aspect-ratio:16 / 9;
+    width:100%;
+    max-width:960px
+}
+
+.usuarios-reenviar{
+    margin-top:10px
+}
+
 .usuarios-correo{
     margin:6px 0 0;
     color:var(--muted);

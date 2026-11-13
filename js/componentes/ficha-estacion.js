@@ -47,27 +47,27 @@ import {
     crearEstadoInicialEstacion,
     crearFichaEstacion,
     obtenerMetadatosEstacion
-} from "../actualidad/estaciones.js?v=20261025-viento1";
+} from "../actualidad/estaciones.js?v=20261113-episodio1";
 
 import {
     cargarCatalogoEstaciones,
     cargarEstacion
-} from "../actualidad/api.js?v=20261025-viento1";
+} from "../actualidad/api.js?v=20261113-episodio1";
 
 import {
     actualizarSistemaLluvia,
     generarGotasCristalActivas,
     inicializarLluviaVisualEstacion
-} from "../actualidad/efectos-lluvia.js?v=20260914-modular2";
+} from "../actualidad/efectos-lluvia.js?v=20261113-episodio1";
 
-import {configurarControlesLluvia} from "../actualidad/simulacion.js?v=20260914-modular2";
+import {configurarControlesLluvia} from "../actualidad/simulacion.js?v=20261113-episodio1";
 
 import {configurarPatrocinios} from "../actualidad/patrocinios.js?v=20260914-modular2";
 
 import {establecerModoFicha, montarVisorFicha} from "../ficha-estacion.js?v=20261101-nieve";
 
 
-const HOJA = "/css/ficha-estacion.css?v=20261104-viento1";
+const HOJA = "/css/ficha-estacion.css?v=20261113-episodio1";
 
 const SCRIPT_API = "/js/api.js?v=20261003-vps1";
 

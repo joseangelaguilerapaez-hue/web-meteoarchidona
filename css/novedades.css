@@ -200,4 +200,268 @@
 }
 
 
+/* ==========================================================
+   AVISOS (José, 11-11-2026)
+   ========================================================== */
+
+.novedad-tipo {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 2px 9px;
+    color: var(--bg);
+    background: var(--cyan);
+    border-radius: 999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.novedad-enlace {
+    display: inline-block;
+    margin-top: 2px;
+    color: var(--cyan);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.novedad-enlace:hover {
+    text-decoration: underline;
+}
+
+/* Franja de avisos automáticos encima de la portada. Decisión de José del
+   12-11-2026: una sola línea, el título desplazándose (marquesina), borde
+   verde fluorescente y «Detalles» y «Ver» a la derecha. Varios avisos
+   pasan uno detrás de otro, cada uno con su color (--aviso-color, que
+   pone js/novedades.js), y los bordes de los botones toman ese color. */
+.avisos-franja {
+    --aviso-verde: #39ff14;
+    --aviso-rojo: #ff3b3b;
+    display: grid;
+    gap: 8px;
+    margin: 0 0 16px;
+    font-family: "Sora", sans-serif;
+}
+
+.aviso-franja {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 6px 6px 10px;
+    color: var(--text);
+    background: rgba(8, 13, 20, 0.92);
+    border: 2px solid var(--aviso-verde);
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.45), inset 0 0 6px rgba(57, 255, 20, 0.12);
+}
+
+.aviso-franja-etiqueta {
+    padding: 2px 7px;
+    color: var(--aviso-verde);
+    border: 1px solid var(--aviso-verde);
+    border-radius: 999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+/* La marquesina: el texto entra por la derecha y sale por la izquierda. */
+.aviso-franja-marquesina {
+    overflow: hidden;
+    white-space: nowrap;
+    min-width: 0;
+    mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+}
+
+.aviso-franja-titulo {
+    display: inline-block;
+    padding-left: 100%;
+    color: var(--aviso-color, var(--aviso-rojo));
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+    transform: translateX(0);
+}
+
+/* Cada aviso pasa una vez; al acabar, js/novedades.js pone el siguiente. */
+.aviso-franja-titulo.en-marcha {
+    animation: aviso-marquesina var(--duracion, 14s) linear 1 forwards;
+}
+
+.aviso-franja:hover .aviso-franja-titulo,
+.aviso-franja:focus-within .aviso-franja-titulo {
+    animation-play-state: paused;
+}
+
+@keyframes aviso-marquesina {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+/* Quien pide menos movimiento ve el título quieto (cortado con «…»). */
+@media (prefers-reduced-motion: reduce) {
+    .aviso-franja-titulo,
+    .aviso-franja-titulo.en-marcha {
+        display: block;
+        padding-left: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        animation: none;
+    }
+}
+
+.aviso-franja-acciones {
+    display: flex;
+    gap: 6px;
+}
+
+.aviso-franja-boton {
+    padding: 4px 10px;
+    color: var(--aviso-color, var(--aviso-rojo));
+    background: transparent;
+    border: 1px solid var(--aviso-color, var(--aviso-rojo));
+    transition: color 0.3s ease, border-color 0.3s ease;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.aviso-franja-boton:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.aviso-franja-boton[hidden] {
+    display: none;
+}
+
+.aviso-franja-x {
+    width: 28px;
+    height: 28px;
+    color: var(--text-faint);
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.aviso-franja-x:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* El texto completo, debajo de la línea, a todo lo ancho. */
+.aviso-franja-detalle {
+    grid-column: 1 / -1;
+    padding: 4px 4px 2px;
+}
+
+.aviso-franja-detalle .novedad-texto {
+    margin: 0 0 6px;
+    color: var(--text-soft);
+    font-size: 13px;
+}
+
+@media (max-width: 480px) {
+    .aviso-franja {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 6px;
+    }
+
+    .aviso-franja-etiqueta {
+        display: none;
+    }
+
+    .aviso-franja-boton {
+        padding: 4px 8px;
+    }
+}
+
+
+/* ==========================================================
+   PÁGINA «NOVEDADES Y AVISOS» (pages/novedades.html)
+   ========================================================== */
+
+.novedades-pagina {
+    width: min(820px, 100%);
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    color: var(--text);
+    font-family: "Sora", sans-serif;
+}
+
+.novedades-pagina-etiqueta {
+    color: var(--accent);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+}
+
+.novedades-pagina-cabecera h1 {
+    margin: 6px 0 8px;
+    font-size: clamp(26px, 5vw, 36px);
+}
+
+.novedades-pagina-entradilla {
+    margin: 0 0 22px;
+    color: var(--text-soft);
+    line-height: 1.6;
+}
+
+.novedades-pagina-seccion + .novedades-pagina-seccion {
+    margin-top: 30px;
+}
+
+.novedades-pagina-subtitulo {
+    margin: 0 0 12px;
+    color: var(--text-faint);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.novedades-pagina-lista {
+    display: grid;
+    gap: 14px;
+}
+
+.novedades-pagina-tarjeta {
+    padding: 18px 20px 6px;
+    background: linear-gradient(160deg, var(--card) 0%, var(--surface) 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+}
+
+.novedades-pagina-tarjeta.pasada {
+    opacity: 0.78;
+    border-color: var(--border);
+}
+
+.novedades-pagina-tarjeta .novedad-aviso {
+    border-left: 0;
+}
+
+.novedades-pagina-vacio {
+    margin: 0;
+    color: var(--text-faint);
+}
+
+
 /* Fin de fichero: css/novedades.css */

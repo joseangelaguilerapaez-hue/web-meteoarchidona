@@ -1,0 +1,424 @@
+/*
+ * MeteoArchidona
+ * Componentes de Climatología
+ *
+ * Estilos de los componentes reutilizables de js/climatologia/:
+ *
+ *     clima-climograma · clima-normales · clima-metodo
+ *
+ * Decisión de José del 13-11-2026: Climatología va con fondo propio
+ * claro, como Embalses y Polen, con la gama «Papel de archivo»: hueso y
+ * papel con tinta marrón, aire de documento antiguo, y la escala de las
+ * rayas del calentamiento del azul pizarra al rojo teja. Las líneas y la
+ * forma de las tarjetas son las de siempre (bordes finos, radios de
+ * 14 px, etiquetas en JetBrains Mono).
+ *
+ * La paleta está aquí, acotada a .cli-componente (y a la página,
+ * .climatologia), y no en css/paleta.css: así un componente se ve igual
+ * en su página que dentro de un dashboard oscuro.
+ *
+ * Cada componente carga esta hoja solo si la página no la tiene
+ * (js/climatologia/comun.js) y se adapta al ancho de su hueco: cada raíz
+ * es un contenedor (container-type) y las reglas de tamaño van con
+ * @container.
+ */
+
+
+/* ==========================================================
+   PALETA «PAPEL DE ARCHIVO»
+   ========================================================== */
+
+.climatologia,
+.cli-componente {
+    --cli-hueso: #f4ede0;
+    --cli-papel: #fbf7ef;
+    --cli-tinta: #3b2a1e;
+    --cli-tinta-suave: #6e5a47;
+    --cli-tinta-tenue: #9a8670;
+    --cli-borde: #d8cbb5;
+    --cli-borde-suave: #e8dfcf;
+
+    --cli-teja: #b5452b;
+    --cli-pizarra: #3e5c76;
+    --cli-lluvia: #4f7a94;
+
+    --cli-sombra: 0 10px 28px rgba(80, 55, 30, 0.10);
+
+    /* Rayas del calentamiento: del frío al cálido, 9 pasos. */
+    --cli-raya-1: #1f3b57;
+    --cli-raya-2: #3e5c76;
+    --cli-raya-3: #7d97ad;
+    --cli-raya-4: #bcc8d2;
+    --cli-raya-5: #f2ebdd;
+    --cli-raya-6: #e3b9a0;
+    --cli-raya-7: #cf8362;
+    --cli-raya-8: #b5452b;
+    --cli-raya-9: #7e2416;
+}
+
+
+/* ==========================================================
+   RAÍZ COMÚN
+   ========================================================== */
+
+.cli-componente {
+    container-type: inline-size;
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+    padding: 18px 20px;
+    color: var(--cli-tinta);
+    background: linear-gradient(170deg, var(--cli-papel) 0%, var(--cli-hueso) 100%);
+    border: 1px solid var(--cli-borde);
+    border-radius: 14px;
+    box-shadow: var(--cli-sombra);
+    font-family: "Sora", sans-serif;
+}
+
+/* En la página el bloque ya es la tarjeta: el componente va sin marco propio. */
+.climatologia-bloque > .cli-componente {
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+.cli-titulo {
+    margin: 0;
+    color: var(--cli-tinta);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.cli-etiqueta {
+    color: var(--cli-teja);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.cli-subtitulo {
+    margin: 0;
+    color: var(--cli-tinta-suave);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cli-aviso,
+.cli-nota {
+    margin: 0;
+    color: var(--cli-tinta-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.cli-nota {
+    font-size: 13px;
+}
+
+.cli-aviso.error {
+    color: #a8361f;
+}
+
+.cli-pie {
+    margin: 0;
+    padding-top: 10px;
+    color: var(--cli-tinta-tenue);
+    border-top: 1px dashed var(--cli-borde);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.cli-componente a {
+    color: var(--cli-pizarra);
+    text-decoration: none;
+}
+
+.cli-componente a:hover {
+    text-decoration: underline;
+}
+
+
+/* Selector de pueblo */
+.cli-controles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+}
+
+.cli-controles label {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    color: var(--cli-tinta-suave);
+    font-size: 13px;
+}
+
+.cli-controles select,
+.climatologia-selector select {
+    padding: 6px 10px;
+    color: var(--cli-tinta);
+    background: var(--cli-papel);
+    border: 1px solid var(--cli-borde);
+    border-radius: 9px;
+    font: inherit;
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   CLIMOGRAMA
+   ========================================================== */
+
+.cli-grafica {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.cli-grafica .rejilla {
+    stroke: var(--cli-borde-suave);
+    stroke-width: 1;
+}
+
+.cli-grafica .eje {
+    stroke: var(--cli-tinta-tenue);
+    stroke-width: 1;
+}
+
+.cli-grafica .texto-eje {
+    fill: var(--cli-tinta-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+}
+
+.cli-grafica .texto-lluvia {
+    fill: var(--cli-lluvia);
+}
+
+.cli-barra-lluvia {
+    fill: var(--cli-lluvia);
+    fill-opacity: 0.55;
+}
+
+.cli-linea-maxima { stroke: var(--cli-teja); color: var(--cli-teja); }
+.cli-linea-media { stroke: var(--cli-tinta); color: var(--cli-tinta); }
+.cli-linea-minima { stroke: var(--cli-pizarra); color: var(--cli-pizarra); }
+
+.cli-grafica polyline {
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.cli-grafica circle.punto {
+    fill: var(--cli-papel);
+    stroke-width: 2;
+}
+
+.cli-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    color: var(--cli-tinta-suave);
+    font-size: 12px;
+}
+
+.cli-leyenda-elemento {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.cli-leyenda-elemento i {
+    display: inline-block;
+    width: 16px;
+    height: 3px;
+    background: currentColor;
+    border-radius: 2px;
+}
+
+.cli-leyenda-elemento.cli-barra-lluvia {
+    color: var(--cli-tinta-suave);
+}
+
+.cli-leyenda-elemento.cli-barra-lluvia i {
+    height: 10px;
+    background: var(--cli-lluvia);
+    opacity: 0.55;
+}
+
+.cli-cifras {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.cli-cifra {
+    display: grid;
+    gap: 2px;
+    padding: 10px 12px;
+    background: var(--cli-papel);
+    border: 1px solid var(--cli-borde-suave);
+    border-radius: 10px;
+}
+
+.cli-cifra-etiqueta {
+    color: var(--cli-tinta-tenue);
+    font-size: 11px;
+}
+
+.cli-cifra strong {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+}
+
+@container (max-width: 520px) {
+    .cli-cifras {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* ==========================================================
+   NORMALES
+   ========================================================== */
+
+.cli-tabla-desliza {
+    overflow-x: auto;
+}
+
+.cli-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.cli-tabla th,
+.cli-tabla td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--cli-borde-suave);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.cli-tabla thead th {
+    color: var(--cli-tinta-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.cli-tabla tbody th {
+    color: var(--cli-tinta);
+    font-weight: 600;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+.cli-tabla td {
+    font-family: "JetBrains Mono", monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+.cli-tabla .cli-calido { color: var(--cli-teja); }
+.cli-tabla .cli-frio { color: var(--cli-pizarra); }
+.cli-tabla .cli-agua { color: var(--cli-lluvia); }
+
+.cli-tabla .cli-fila-anio th,
+.cli-tabla .cli-fila-anio td {
+    border-top: 2px solid var(--cli-borde);
+    border-bottom: 0;
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   CÓMO SE HACE
+   ========================================================== */
+
+.cli-pasos {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding-left: 22px;
+}
+
+.cli-pasos li::marker {
+    color: var(--cli-teja);
+    font-family: Georgia, serif;
+    font-weight: 700;
+}
+
+.cli-pasos strong {
+    color: var(--cli-tinta);
+}
+
+.cli-pasos p {
+    margin: 2px 0 0;
+    color: var(--cli-tinta-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.cli-puntos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+@container (max-width: 560px) {
+    .cli-puntos {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.cli-punto {
+    display: grid;
+    gap: 4px;
+    padding: 10px 12px;
+    background: var(--cli-papel);
+    border: 1px solid var(--cli-borde-suave);
+    border-left: 4px solid var(--cli-fiabilidad, var(--cli-tinta-tenue));
+    border-radius: 10px;
+}
+
+.cli-punto p {
+    margin: 0;
+    color: var(--cli-tinta-suave);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.cli-punto-cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.cli-fiabilidad {
+    color: var(--cli-fiabilidad, var(--cli-tinta-tenue));
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.cli-punto.fiabilidad-ALTA { --cli-fiabilidad: #4f7a3a; }
+.cli-punto.fiabilidad-MEDIA { --cli-fiabilidad: #b8862b; }
+.cli-punto.fiabilidad-BAJA { --cli-fiabilidad: var(--cli-teja); }
+
+
+/* Fin de fichero: css/climatologia-componentes.css */

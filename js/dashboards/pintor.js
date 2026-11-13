@@ -25,11 +25,11 @@ const COMPONENTES = {
     // Comunes
     "contador-visitas": ["/js/componentes/contador-visitas.js?v=20261106-contador5", "montarContadorVisitas"],
     // Actualidad
-    "condiciones-actuales": ["/js/componentes/condiciones-actuales.js?v=20261104-componentes1", "montarCondicionesActuales"],
+    "condiciones-actuales": ["/js/componentes/condiciones-actuales.js?v=20261113-episodio1", "montarCondicionesActuales"],
     "sol-luna": ["/js/componentes/tarjeta-sol-luna.js?v=20261104-componentes1", "montarSolLuna"],
     "prediccion-breve": ["/js/componentes/prediccion-breve.js?v=20261104-componentes1", "montarPrediccionBreve"],
     "accesos": ["/js/componentes/accesos.js?v=20261104-componentes1", "montarAccesos"],
-    "ficha-estacion": ["/js/componentes/ficha-estacion.js?v=20261104-componentes1", "montarFichaEstacion"],
+    "ficha-estacion": ["/js/componentes/ficha-estacion.js?v=20261113-episodio1", "montarFichaEstacion"],
     "timelapses": ["/js/componentes/timelapses.js?v=20261104-componentes1", "montarComponenteTimelapses"],
     "estadistica": ["/js/componentes/estadistica.js?v=20261105-componente1", "montarComponenteEstadistica"],
     // En vivo y Estadísticas
@@ -44,6 +44,7 @@ const COMPONENTES = {
     "prediccion-dias": ["/js/prediccion/dias.js?v=20261104-componentes1", "montarDias"],
     "prediccion-aemet": ["/js/prediccion-aemet.js?v=20261104-componentes1", "montarPrediccionAemet"],
     "modelos-numericos": ["/js/modelos-numericos.js?v=20261103-compartir2", "montarModelosNumericos"],
+    "mapas-modelos": ["/js/mapas-modelos.js?v=20261110-t2m1", "montarMapasModelos"],
     // Sol
     "sol-tiempo-espacial": ["/js/sol/tiempo-espacial.js?v=20261104-componentes2", "montarTiempoEspacial"],
     "sol-alertas": ["/js/sol/alertas-solares.js?v=20261104-componentes2", "montarAlertasSolares"],
@@ -52,14 +53,67 @@ const COMPONENTES = {
     "sol-prevision-noaa": ["/js/sol/prevision-noaa.js?v=20261104-componentes2", "montarPrevisionNoaa"],
     "sol-fulguraciones": ["/js/sol/fulguraciones.js?v=20261104-componentes2", "montarFulguraciones"],
     "sol-coronografos": ["/js/sol/coronografos.js?v=20261104-componentes2", "montarCoronografos"],
-    "sol-auroras": ["/js/sol/auroras.js?v=20261104-componentes2", "montarAuroras"],
+    "sol-auroras": ["/js/sol/auroras.js?v=20261111-auroras1", "montarAuroras"],
     // Embalses
     "embalses-resumen": ["/js/embalses/resumen.js?v=20261105-embalses1", "montarResumenEmbalses"],
     "embalses-cuencas": ["/js/embalses/cuencas.js?v=20261105-embalses1", "montarCuencasEmbalses"],
     "embalses-anio-hidrologico": ["/js/embalses/anio-hidrologico.js?v=20261105-embalses1", "montarAnioHidrologico"],
     "embalses-lista": ["/js/embalses/lista.js?v=20261105-embalses1", "montarListaEmbalses"],
     "embalses-ficha": ["/js/embalses/ficha.js?v=20261105-embalses1", "montarFichaEmbalse"],
-    "embalses-comarca": ["/js/embalses/comarca.js?v=20261105-embalses1", "montarComarcaEmbalses"]
+    "embalses-comarca": ["/js/embalses/comarca.js?v=20261105-embalses1", "montarComarcaEmbalses"],
+    // Polen
+    "polen-hoy": ["/js/polen/hoy.js?v=20261106-polen1", "montarPolenHoy"],
+    "polen-prevision": ["/js/polen/prevision.js?v=20261106-polen1", "montarPolenPrevision"],
+    "polen-semana": ["/js/polen/semana.js?v=20261106-polen1", "montarPolenSemana"],
+    "polen-serie": ["/js/polen/serie.js?v=20261106-polen1", "montarPolenSerie"],
+    "polen-calendario": ["/js/polen/calendario.js?v=20261106-polen1", "montarPolenCalendario"],
+    // Calidad del aire y calima
+    "calima-aviso": ["/js/calidad-aire/aviso-calima.js?v=20261111-aire1", "montarAvisoCalima"],
+    "aire-indice": ["/js/calidad-aire/indice.js?v=20261111-aire1", "montarAireIndice"],
+    "aire-dias": ["/js/calidad-aire/dias.js?v=20261111-aire1", "montarAireDias"],
+    "aire-horas": ["/js/calidad-aire/horas.js?v=20261111-aire1", "montarAireHoras"],
+    "aire-particulas": ["/js/calidad-aire/particulas.js?v=20261111-aire1", "montarAireParticulas"],
+    "calima-episodios": ["/js/calidad-aire/episodios.js?v=20261111-aire1", "montarEpisodiosCalima"],
+    "aire-divulgacion": ["/js/calidad-aire/divulgacion.js?v=20261111-aire1", "montarAireDivulgacion"],
+    // Sismología
+    "sismologia-aviso": ["/js/sismologia/aviso.js?v=20261109-heli1", "montarAvisoTerremoto"],
+    "sismologia-ultimo": ["/js/sismologia/ultimo.js?v=20261109-heli1", "montarUltimoTerremoto"],
+    "sismologia-resumen": ["/js/sismologia/resumen.js?v=20261109-heli1", "montarResumenSismico"],
+    "sismologia-mapa": ["/js/sismologia/mapa.js?v=20261109-heli1", "montarMapaTerremotos"],
+    "sismologia-lista": ["/js/sismologia/lista.js?v=20261109-heli1", "montarListaTerremotos"],
+    "sismologia-estadisticas": ["/js/sismologia/estadisticas.js?v=20261109-heli1", "montarEstadisticasSismicas"],
+    "sismologia-helicorder": ["/js/sismologia/helicorder.js?v=20261109-heli1", "montarHelicorder"],
+    // El Olivar
+    "olivar-aviso": ["/js/olivar/aviso.js?v=20261109-olivar2", "montarAvisoOlivar"],
+    "olivar-resumen": ["/js/olivar/resumen.js?v=20261109-olivar2", "montarResumenOlivar"],
+    "olivar-frio": ["/js/olivar/frio.js?v=20261109-olivar2", "montarFrioOlivar"],
+    "olivar-heladas": ["/js/olivar/heladas.js?v=20261109-olivar2", "montarHeladasOlivar"],
+    "olivar-grados-dia": ["/js/olivar/grados-dia.js?v=20261109-olivar2", "montarGradosDiaOlivar"],
+    "olivar-balance": ["/js/olivar/balance.js?v=20261109-olivar2", "montarBalanceOlivar"],
+    // Climatología
+    "clima-climograma": ["/js/climatologia/climograma.js?v=20261113-clima1", "montarClimograma"],
+    "clima-normales": ["/js/climatologia/normales.js?v=20261113-clima1", "montarNormalesClima"],
+    "clima-metodo": ["/js/climatologia/metodo.js?v=20261113-clima1", "montarMetodoClima"],
+    // Alertas meteorológicas
+    "alertas-semaforos": ["/js/alertas/semaforos.js?v=20261112-alertas3", "montarSemaforosAlertas"],
+    // Luna (astronomía)
+    "luna-ahora": ["/js/luna/luna-ahora.js?v=20261111-luna5", "montarLunaAhora"],
+    "luna-horario": ["/js/luna/horario.js?v=20261111-luna5", "montarHorarioLuna"],
+    "luna-calendario": ["/js/luna/calendario.js?v=20261111-luna5", "montarCalendarioLuna"],
+    "luna-distancia": ["/js/luna/distancia.js?v=20261111-luna5", "montarDistanciaLuna"],
+    "luna-crepusculos": ["/js/luna/crepusculos.js?v=20261111-luna5", "montarCrepusculos"],
+    "luna-planetas-noche": ["/js/luna/planetas-noche.js?v=20261111-luna5", "montarPlanetasNoche"],
+    "luna-planetas-ahora": ["/js/luna/planetas-ahora.js?v=20261111-luna5", "montarPlanetasAhora"],
+    "luna-pasos": ["/js/luna/pasos.js?v=20261111-luna5", "montarPasos"],
+    "luna-observacion": ["/js/luna/observacion.js?v=20261111-luna5", "montarObservacion"],
+    "luna-aviso": ["/js/luna/aviso.js?v=20261111-luna5", "montarAvisoCielo"],
+    "luna-eventos": ["/js/luna/eventos.js?v=20261111-luna5", "montarEventos"],
+    "luna-eclipse": ["/js/luna/eclipse.js?v=20261111-luna5", "montarEclipse"],
+    "luna-lluvias": ["/js/luna/lluvias.js?v=20261111-luna5", "montarLluvias"],
+    "luna-campo": ["/js/luna/campo.js?v=20261111-luna5", "montarCampo"],
+    "luna-mapa-cielo": ["/js/luna/mapa-cielo.js?v=20261111-luna5", "montarMapaCielo"],
+    "luna-cielo-oscuro": ["/js/luna/cielo-oscuro.js?v=20261111-luna5", "montarCieloOscuro"],
+    "luna-directos": ["/js/luna/directos.js?v=20261111-luna5", "montarDirectos"]
 };
 
 const HOJA = "/css/dashboards.css?v=20261105-dashboards1";
