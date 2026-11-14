@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- Agua y sequía, fase 2 (PR #166, **en el VPS** el 14 nov, `be9f26d`; API PR #179 a #182, `1601cd5`, migración 0061 aplicada). Pestaña Sequía con «Sequía en España»: `sequia-mapa` (SPEI, SPI, humedad del suelo, vegetación y combinado del Observatorio Europeo, con escala y fecha) y `sequia-oficial` (recuentos, los dos mapas oficiales del Ministerio con la cita y tablas por cuenca con escenario estimado o revisado), también en el pintor de dashboards; apartado Administración → Sequía para corregir el escenario. Comprobado por José en meteoarchidona.com: el Guadalquivir cuadra con el informe del Ministerio (22 de 25 UTS en sequía prolongada). `docs/embalses.md`.
 - Agua y sequía, fase 1 (PR #164, **en el VPS** el 14 nov, `07a7476`; API PR #173 y #174, `ab54533`, migración 0060 aplicada). Decisiones de José: la sección Embalses se llama «Agua y sequía» (menú y título) y sigue en `/embalses`, en pestañas Embalses, Sequía y Ríos (`/embalses#sequia`); pestaña Sequía con `sequia-suelo`, `sequia-lluvia-anio` y `sequia-indices` (`js/sequia/`, `css/sequia-componentes.css`), también en el pintor de dashboards. Ríos, solo el aviso de que llega. Sin datos hasta que avance la «Carga de Sequía» (unas 3 noches). `docs/embalses.md`.
 - Novedades y avisos (PR #148, en el VPS el 12 nov, `96b563f`; `docs/novedades-y-avisos.md`): franja de avisos automáticos en la portada, ventana con novedades y avisos manuales, página `/novedades` en el menú (dada de alta en Nginx con `scripts/configurar_seccion_novedades.py`) y Administración → Novedades y avisos con tipo y enlace.
 - Luna, fase 4 (PR #146, en el VPS el 11 nov, `11280c8`): mapa del cielo (lienzo con estrellas y constelaciones de d3-celestial, hora móvil, «Apuntar con el móvil»), cielo oscuro, directos y la línea «Desde Archidona» en el óvalo de auroras; toda la sección en `?v=20261111-luna5`. Con esto, las cuatro fases de Luna están en la web.
@@ -101,6 +102,7 @@ comprobado en meteoarchidona.com.
 
 ## Pendiente
 
+- Agua y sequía: recuadro de Canarias vacío en los mapas del EDO, leyenda de la vegetación («peor»/«mejor» en vez de «seco»/«húmedo») y colores del indicador combinado **por confirmar**; fases 3 a 6 (Ríos, Anuario, alertas por correo y novedad).
 - Sismología: histórico desde 1370 (aplazado; descarga manual en CSV desde el ordenador) y, como ideas, sismógrafo propio en tiempo real (Raspberry Shake) o pedir al IGN acceso en tiempo real.
 - Mejoras propuestas tras el repaso del 27 oct: `docs/mejoras.md` (código muerto, documentos desfasados, seguridad de la consola SQL por comprobar, pestañas en segundo plano, imágenes, accesibilidad…). **Por decidir con José** qué se hace y en qué orden.
 - Ventajas de registrarse: `docs/ventajas-registro.md` reúne qué gana el usuario registrado (estadísticas e informes propios, catálogo en sus dashboards, dashboards propios) y por qué importa a MeteoArchidona. Se irá ampliando; su texto se llevará a la web cuando cada ventaja funcione. Falta decidir dónde se muestra.
@@ -212,3 +214,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-12 · Alertas meteorológicas en el VPS (`c2985bb`; API `07efdfb`, migración 0056 aplicada, primera carga con 1 alerta en la zona): semáforos en Actualidad y Administración → Alertas.
 - 2026-11-13 · Episodio de lluvia en el VPS (`fd807e8`; API `0b5e30f`, sin migración): la API devolvió en El Silo un episodio abierto de 36,4 mm desde el 11 nov.
 - 2026-11-14 · Agua y sequía, fase 1 en el VPS (`07a7476`; API `ab54533`, migración 0060 aplicada): pestañas y pestaña Sequía de la comarca.
+- 2026-11-14 · Agua y sequía, fase 2 en el VPS (`be9f26d`; API `1601cd5`, migración 0061 aplicada): mapas de sequía de España y situación oficial del Ministerio, comprobados en la web.
