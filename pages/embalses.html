@@ -77,6 +77,10 @@
 >
 <link
     rel="stylesheet"
+    href="../css/rios-componentes.css?v=20261114-rios1"
+>
+<link
+    rel="stylesheet"
     href="../css/embalses.css?v=20261114-sequia2"
 >
 
@@ -100,7 +104,7 @@
 
 <script
     type="module"
-    src="../js/embalses.js?v=20261114-sequia2"
+    src="../js/embalses.js?v=20261114-rios1"
 ></script>
 
 <script
@@ -137,8 +141,8 @@
     </h1>
     <p class="embalses-entradilla">
         Cómo andamos de agua: los embalses semana a semana, la sequía de
-        toda España con el detalle de nuestra comarca y, muy pronto, el
-        caudal de los ríos.
+        toda España con el detalle de nuestra comarca y el caudal de los
+        ríos.
     </p>
 </header>
 
@@ -562,16 +566,54 @@
      PESTAÑA RÍOS (llega en la fase 3)
      ======================================================== -->
 <div class="agua-panel" id="panel-rios" role="tabpanel" aria-labelledby="pestana-rios" hidden>
-<section class="embalses-bloque" aria-labelledby="titulo-rios">
-    <h2 id="titulo-rios">
+<div class="embalses-cabecera">
+    <h2 class="agua-titulo" id="titulo-rios">
         Ríos
     </h2>
-    <p class="embalses-nota">
-        Estamos preparando el caudal del Genil, el Guadalhorce, el
-        Guadalquivir, el Guadalete y el Guadiana: lo que miden en tiempo
-        real las confederaciones y la Junta, y la previsión de Copernicus
-        para saber si van crecidos o bajos para la época.
+    <p class="embalses-entradilla">
+        El caudal del Genil, el Guadalhorce, el Guadalquivir, el Guadalete
+        y el Guadiana: lo que miden ahora las estaciones de aforo, si van
+        bajos o crecidos para la época y cómo pueden ir este mes.
     </p>
+</div>
+
+<section class="embalses-bloque" aria-label="Ríos: caudal y estado">
+    <div data-componente="rios-resumen"></div>
+</section>
+
+<section class="embalses-bloque" aria-label="Caudal de una estación">
+    <div data-componente="rios-caudal"></div>
+</section>
+
+<section class="embalses-bloque" aria-label="Previsión del caudal">
+    <div data-componente="rios-prevision"></div>
+</section>
+
+<section class="embalses-bloque" aria-labelledby="titulo-fuentes-rios">
+    <h2 id="titulo-fuentes-rios">
+        De dónde salen los datos
+    </h2>
+    <ul class="embalses-nota">
+        <li>
+            Caudal medido: <a href="https://www.chguadalquivir.es/saih/" target="_blank" rel="noopener noreferrer">SAIH
+            Guadalquivir</a> (Confederación Hidrográfica del Guadalquivir) y
+            <a href="https://www.redhidrosurmedioambiente.es/saih/" target="_blank" rel="noopener noreferrer">Red
+            Hidrosur</a> (Junta de Andalucía). Son datos en tiempo real sin
+            contrastar: los validados llegan años después en el Anuario de
+            Aforos. Guardamos una lectura cada hora.
+        </li>
+        <li>
+            Previsión y lo normal para la época:
+            <a href="https://global-flood.emergency.copernicus.eu/" target="_blank" rel="noopener noreferrer">GloFAS</a>
+            (servicio de emergencias de Copernicus), vía Open-Meteo. Es un
+            modelo: en ríos pequeños o regulados por embalses puede
+            diferir mucho del caudal real.
+        </li>
+        <li>
+            El Guadiana (Mérida y Badajoz) no publica su caudal en abierto:
+            de él solo damos el modelo.
+        </li>
+    </ul>
 </section>
 </div>
 </main>
