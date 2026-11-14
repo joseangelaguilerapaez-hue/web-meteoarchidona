@@ -62,9 +62,11 @@ const COMPONENTES = {
     "embalses-ficha": ["/js/embalses/ficha.js?v=20261105-embalses1", "montarFichaEmbalse"],
     "embalses-comarca": ["/js/embalses/comarca.js?v=20261105-embalses1", "montarComarcaEmbalses"],
     // Agua y sequía · Sequía (14-11-2026)
-    "sequia-suelo": ["/js/sequia/suelo.js?v=20261114-sequia1", "montarSueloSequia"],
-    "sequia-lluvia-anio": ["/js/sequia/lluvia-anio.js?v=20261114-sequia1", "montarLluviaAnioSequia"],
-    "sequia-indices": ["/js/sequia/indices.js?v=20261114-sequia1", "montarIndicesSequia"],
+    "sequia-suelo": ["/js/sequia/suelo.js?v=20261114-sequia2", "montarSueloSequia"],
+    "sequia-lluvia-anio": ["/js/sequia/lluvia-anio.js?v=20261114-sequia2", "montarLluviaAnioSequia"],
+    "sequia-indices": ["/js/sequia/indices.js?v=20261114-sequia2", "montarIndicesSequia"],
+    "sequia-mapa": ["/js/sequia/mapa.js?v=20261114-sequia2", "montarMapaSequia"],
+    "sequia-oficial": ["/js/sequia/oficial.js?v=20261114-sequia2", "montarOficialSequia"],
     // Polen
     "polen-hoy": ["/js/polen/hoy.js?v=20261106-polen1", "montarPolenHoy"],
     "polen-prevision": ["/js/polen/prevision.js?v=20261106-polen1", "montarPolenPrevision"],

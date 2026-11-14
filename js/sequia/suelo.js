@@ -18,7 +18,7 @@
 import {
     aviso, cabecera, crear, escala, fecha, leerPunto, leyenda, marcaClase, NOMBRES_CLASE_SUELO,
     pedir, pie, prepararRaiz, svg, texto, textoError, trazo, volumen
-} from "./comun.js?v=20261114-sequia1";
+} from "./comun.js?v=20261114-sequia2";
 
 
 // Se ajustan al ancho del hueco al dibujar (en el móvil, letra legible).

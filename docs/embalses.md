@@ -54,8 +54,10 @@ azul hacia ocres y rojizos. Los componentes se cargan la primera vez que se abre
 | `sequia-suelo` | Humedad del suelo de un pueblo en cuatro capas frente a lo normal 1991-2020; los últimos días, del modelo (trazo discontinuo) | `data-punto`, `data-selector="no"`, `data-dias` (90), `data-capa` (2) |
 | `sequia-lluvia-anio` | Lluvia acumulada desde el 1 de octubre frente a la normal; en Archidona, también El Silo y Los Llanos | `data-punto`, `data-selector="no"` |
 | `sequia-indices` | SPI y SPEI a 1, 3, 6 y 12 meses, con barras de la escala elegida | `data-punto`, `data-selector="no"`, `data-meses` (36), `data-escala` (6), `data-indice` (`spei`/`spi`) |
+| `sequia-mapa` | Mapa de España del Observatorio Europeo de la Sequía: SPEI, SPI, humedad del suelo, vegetación o indicador combinado, con fecha a elegir (fase 2) | `data-producto` (`SPEI`), `data-escala` (3), `data-selector="no"` |
+| `sequia-oficial` | Situación oficial del Ministerio: recuento de escenarios, los dos mapas oficiales y las tablas por demarcación con el escenario estimado o revisado (fase 2) | `data-demarcacion`, `data-mapas="no"`, `data-tablas="no"` |
 
-Pueblos: los de Climatología (`/climatologia/puntos`). Datos: `/agua/sequia/...` de la API. Están
+Pueblos (los tres primeros): los de Climatología (`/climatologia/puntos`). La corrección del escenario oficial está en Administración → Sequía. Datos: `/agua/sequia/...` de la API. Están
 también en el pintor de dashboards.
 
 ## Pendiente

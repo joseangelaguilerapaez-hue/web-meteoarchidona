@@ -870,6 +870,49 @@ async function cargarModuloAlertas(){
 
 
 /* ==========================================================
+   SEQUÍA
+   Escenario oficial de las unidades del Ministerio (José,
+   14-11-2026; docs/agua-sequia.md de la API). sequia.js solo se
+   importa si existe modulo-sequia.
+   ========================================================== */
+
+let promesaModuloSequia = null;
+
+async function cargarModuloSequia(){
+
+    if(!$("modulo-sequia")){
+        return;
+    }
+
+    if(promesaModuloSequia === null){
+        promesaModuloSequia = import(
+            "./sequia.js?v=20261114-sequia2"
+        );
+    }
+
+    try{
+        const modulo = await promesaModuloSequia;
+        modulo.configurarEventosSequia();
+        await modulo.cargarSequia();
+    }catch(error){
+        promesaModuloSequia = null;
+        console.error(
+            "No se ha podido cargar la sequía.",
+            error
+        );
+        mostrarEstado(
+            $("estadoSequia"),
+            error.message
+            ||
+            "No se ha podido cargar la sequía.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    NOVEDADES
    Ventana de novedades de la portada (docs/novedades.md de la
    API). novedades.js solo se importa si existe modulo-novedades.
@@ -1204,6 +1247,8 @@ export async function cargarDatosAdministracion(){
         await cargarModuloSalud();
 
         await cargarModuloAlertas();
+
+        await cargarModuloSequia();
 
         mostrarEstado(
             $("estadoPanel"),

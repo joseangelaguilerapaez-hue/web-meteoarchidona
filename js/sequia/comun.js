@@ -19,7 +19,7 @@ import { pedir, crear, vaciar, aviso, prepararRaiz as prepararRaizEmbalses } fro
 
 export { pedir, crear, vaciar, aviso };
 
-const HOJA_SEQUIA = "/css/sequia-componentes.css?v=20261114-sequia1";
+const HOJA_SEQUIA = "/css/sequia-componentes.css?v=20261114-sequia2";
 
 /* Raíz de un componente de Sequía: la de los embalses (paleta de agua)
  * más la hoja propia de Sequía. */
