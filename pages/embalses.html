@@ -73,11 +73,11 @@
 
 <link
     rel="stylesheet"
-    href="../css/sequia-componentes.css?v=20261114-sequia1"
+    href="../css/sequia-componentes.css?v=20261114-sequia2"
 >
 <link
     rel="stylesheet"
-    href="../css/embalses.css?v=20261114-sequia1"
+    href="../css/embalses.css?v=20261114-sequia2"
 >
 
 
@@ -100,7 +100,7 @@
 
 <script
     type="module"
-    src="../js/embalses.js?v=20261114-sequia1"
+    src="../js/embalses.js?v=20261114-sequia2"
 ></script>
 
 <script
@@ -415,8 +415,8 @@
 <!-- ========================================================
      PESTAÑA SEQUÍA (José, 14-11-2026)
      Detalle de la comarca: los pueblos de Climatología. Componentes
-     js/sequia/*.js; los mapas de España y la situación oficial del
-     Ministerio llegan en la fase 2.
+     js/sequia/*.js. Fase 2 (14-11-2026): mapas de España del EDO y
+     situación oficial del Ministerio.
      ======================================================== -->
 <div class="agua-panel" id="panel-sequia" role="tabpanel" aria-labelledby="pestana-sequia" hidden>
 <div class="embalses-cabecera">
@@ -427,8 +427,8 @@
         Si el campo está seco o empapado comparado con lo normal, cuánto
         ha llovido este año hidrológico y los índices de sequía de cada
         pueblo: Archidona, Antequera, Cuevas Bajas, Cuevas de San Marcos y
-        las cuatro Villanuevas. Muy pronto, también los mapas de toda
-        España y la situación oficial del Ministerio.
+        las cuatro Villanuevas. Más abajo, los mapas de toda España y la
+        situación oficial del Ministerio.
     </p>
 </div>
 
@@ -442,6 +442,24 @@
 
 <section class="embalses-bloque" aria-label="Índices de sequía SPI y SPEI">
     <div data-componente="sequia-indices"></div>
+</section>
+
+<div class="embalses-cabecera">
+    <h2 class="agua-titulo">
+        Sequía en España
+    </h2>
+    <p class="embalses-entradilla">
+        Cómo va la sequía en toda España según el Observatorio Europeo de
+        la Sequía, y lo que dice cada mes el Ministerio de cada cuenca.
+    </p>
+</div>
+
+<section class="embalses-bloque" aria-label="Mapa de sequía de España">
+    <div data-componente="sequia-mapa"></div>
+</section>
+
+<section class="embalses-bloque" aria-label="Situación oficial de sequía y escasez">
+    <div data-componente="sequia-oficial"></div>
 </section>
 
 <section class="embalses-bloque" aria-labelledby="titulo-glosario-sequia">
@@ -479,6 +497,21 @@
             A 1 y 3 meses, lo que nota el campo; a 6 meses, los ríos y los
             embalses; a 12 meses, los acuíferos y la sequía larga.
         </dd>
+        <dt>Indicador combinado</dt>
+        <dd>
+            Del Observatorio Europeo: vigilancia si falta lluvia, aviso si
+            además el suelo está seco, alerta si ya lo nota la vegetación,
+            y recuperación cuando empieza a pasar.
+        </dd>
+        <dt>Sequía prolongada y escasez</dt>
+        <dd>
+            Lo del Ministerio. La sequía prolongada es la falta de lluvia
+            natural, de la que nadie tiene la culpa; la escasez es que no
+            hay agua bastante para lo que se gasta. Cada cuenca está
+            dividida en unidades con un indicador de 0 a 1: cuanto más bajo,
+            peor. Los escenarios de escasez son normalidad, prealerta,
+            alerta y emergencia.
+        </dd>
         <dt>Año hidrológico</dt>
         <dd>
             Va del 1 de octubre al 30 de septiembre.
@@ -503,6 +536,19 @@
             <a href="/climatologia">Climatología</a> (ERA5-Land corregido
             por MeteoArchidona); en Archidona, también nuestras estaciones
             de El Silo y Los Llanos.
+        </li>
+        <li>
+            Mapas de España: Observatorio Europeo de la Sequía (EDO) del
+            <a href="https://drought.emergency.copernicus.eu/" target="_blank" rel="noopener noreferrer">servicio de emergencias de Copernicus</a>
+            (JRC), CC BY 4.0; recortados y dibujados por MeteoArchidona. El
+            SPEI es el mundial de ERA5.
+        </li>
+        <li>
+            Situación oficial: informes mensuales del
+            <a href="https://www.miteco.gob.es/es/agua/temas/observatorio-nacional-de-la-sequia/informes-mapas-seguimiento.html" target="_blank" rel="noopener noreferrer">Observatorio Nacional de la Sequía</a>
+            (Ministerio para la Transición Ecológica). El escenario de cada
+            unidad lo estima MeteoArchidona con el indicador y lo revisamos a
+            mano: manda lo que publica el Ministerio.
         </li>
         <li>
             SPI, SPEI, normales y gráficas: calculados por MeteoArchidona,

@@ -303,8 +303,8 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261114-sequia1"),
-            ("administracion", r"administracion/principal\.js\?v=20261112-alertas3"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261114-sequia2"),
+            ("administracion", r"administracion/principal\.js\?v=20261114-sequia2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -1303,6 +1303,16 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertIn("./alertas.js?v=20261112-alertas3", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "alertas.js")
         self.assertIn("/admin/alertas", codigo)
+
+    def test_administracion_tiene_el_apartado_sequia(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "administracion.html")
+        self.assertIn('data-modulo="sequia"', pagina)
+        for identificador in ("modulo-sequia", "tablaSequia", "estadoSequia", "mesSequia", "botonRecargarSequia"):
+            self.assertIn(f'id="{identificador}"', pagina)
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn("./sequia.js?v=20261114-sequia2", principal)
+        codigo = leer(RAIZ / "js" / "administracion" / "sequia.js")
+        self.assertIn("/admin/agua/sequia/situacion", codigo)
 
 
 

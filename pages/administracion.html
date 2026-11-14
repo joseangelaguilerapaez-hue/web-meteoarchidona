@@ -39,7 +39,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261112-alertas3"
+    src="../js/administracion/principal.js?v=20261114-sequia2"
 ></script>
 
 <script
@@ -420,6 +420,14 @@
     data-modulo="alertas"
 >
     Alertas
+</a>
+
+<a
+    href="#sequia"
+    class="modulo-boton"
+    data-modulo="sequia"
+>
+    Sequía
 </a>
 
 <a
@@ -4236,6 +4244,72 @@
     id="cargasAlertas"
     class="adm-alertas-lista"
 ></ul>
+</div>
+</section>
+
+</section>
+
+
+<!-- =========================================================
+     SEQUÍA (Agua y sequía, fase 2)
+     Escenario oficial de cada unidad del Ministerio: el estimado por la
+     API y la corrección de los administradores
+     (js/administracion/sequia.js). Decisiones de José del 14-11-2026:
+     docs/agua-sequia.md de api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-sequia"
+    class="modulo"
+>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Sequía · situación oficial
+</h2>
+
+<div class="acciones">
+
+<span id="mesSequia" class="adm-alertas-hora"></span>
+
+<button
+    id="botonRecargarSequia"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="estadoSequia"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<p class="modulo-intro">
+    El informe del Ministerio solo trae el indicador de cada unidad; el
+    escenario lo estima la web con los umbrales comunes de los planes
+    (sequía prolongada por debajo de 0,30; escasez: prealerta por debajo de
+    0,50, alerta de 0,30 y emergencia de 0,15). Si el mapa oficial dice otra
+    cosa, elegid el escenario publicado y guardad; «Estimado» vuelve al de la
+    web. Las cargas siguientes no pisan vuestra corrección. El motivo solo se
+    ve aquí.
+</p>
+
+<div
+    id="tablaSequia"
+    class="tabla-contenedor"
+></div>
+
 </div>
 </section>
 

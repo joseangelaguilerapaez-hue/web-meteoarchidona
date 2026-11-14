@@ -35,6 +35,8 @@
  *     data-componente="sequia-suelo"         → js/sequia/suelo.js
  *     data-componente="sequia-lluvia-anio"   → js/sequia/lluvia-anio.js
  *     data-componente="sequia-indices"       → js/sequia/indices.js
+ *     data-componente="sequia-mapa"          → js/sequia/mapa.js
+ *     data-componente="sequia-oficial"       → js/sequia/oficial.js
  */
 
 import {montarResumenEmbalses} from "./embalses/resumen.js?v=20261105-embalses1";
@@ -57,9 +59,11 @@ export const COMPONENTES_EMBALSES = {
 
 
 const COMPONENTES_SEQUIA = {
-    "sequia-suelo": ["./sequia/suelo.js?v=20261114-sequia1", "montarSueloSequia"],
-    "sequia-lluvia-anio": ["./sequia/lluvia-anio.js?v=20261114-sequia1", "montarLluviaAnioSequia"],
-    "sequia-indices": ["./sequia/indices.js?v=20261114-sequia1", "montarIndicesSequia"]
+    "sequia-suelo": ["./sequia/suelo.js?v=20261114-sequia2", "montarSueloSequia"],
+    "sequia-lluvia-anio": ["./sequia/lluvia-anio.js?v=20261114-sequia2", "montarLluviaAnioSequia"],
+    "sequia-indices": ["./sequia/indices.js?v=20261114-sequia2", "montarIndicesSequia"],
+    "sequia-mapa": ["./sequia/mapa.js?v=20261114-sequia2", "montarMapaSequia"],
+    "sequia-oficial": ["./sequia/oficial.js?v=20261114-sequia2", "montarOficialSequia"]
 };
 
 const PESTANA_POR_DEFECTO = "embalses";

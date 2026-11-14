@@ -2,7 +2,7 @@
  * MeteoArchidona
  * Componentes de la pestaña Sequía (Agua y sequía)
  *
- *     sequia-suelo · sequia-lluvia-anio · sequia-indices
+ *     sequia-suelo · sequia-lluvia-anio · sequia-indices · sequia-mapa · sequia-oficial
  *
  * Van con la paleta de agua de los embalses (css/embalses-componentes.css,
  * variables --emb-*), que estos componentes cargan también. Aquí solo lo
@@ -13,7 +13,9 @@
 
 .seq-suelo,
 .seq-lluvia,
-.seq-indices {
+.seq-indices,
+.seq-mapa,
+.seq-oficial {
     --seq-extremo-seco: #a63a1e;
     --seq-muy-seco: #d4572b;
     --seq-seco: #e3a21a;
@@ -242,6 +244,152 @@
 .seq-nota {
     color: var(--emb-texto-tenue);
     font-size: 12px;
+}
+
+/* Mapas de España (sequia-mapa) y situación oficial (sequia-oficial). */
+.seq-productos,
+.seq-escalas-mapa {
+    flex-wrap: wrap;
+}
+
+.seq-mapa-marco {
+    margin: 0;
+    padding: 8px;
+    background: var(--emb-blanco);
+    border: 1px solid var(--emb-borde);
+    border-radius: 12px;
+}
+
+.seq-mapa-marco img {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.seq-mapa-marco figcaption {
+    margin-top: 6px;
+    color: var(--emb-texto-suave);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.emb-leyenda .seq-color {
+    width: 14px;
+    height: 14px;
+    background: var(--seq-color);
+    border: 1px solid var(--emb-borde-fuerte);
+    border-radius: 3px;
+}
+
+.seq-oficial-resumenes,
+.seq-oficial-mapas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+
+.seq-oficial-resumen {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--emb-borde);
+    border-radius: 12px;
+}
+
+.seq-oficial-cuentas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.esc-NORMALIDAD { --seq-clase: #3fa4dc; }
+.esc-PREALERTA { --seq-clase: #e3c21a; }
+.esc-ALERTA { --seq-clase: #e07a1a; }
+.esc-EMERGENCIA,
+.esc-SEQUIA_PROLONGADA { --seq-clase: #c0392b; }
+
+.seq-demarcacion {
+    border: 1px solid var(--emb-borde);
+    border-radius: 12px;
+    padding: 4px 12px;
+}
+
+.seq-demarcacion summary {
+    padding: 8px 0;
+    color: var(--emb-azul-oscuro);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.seq-tabla-oficial caption {
+    padding: 6px 0;
+    color: var(--emb-texto-suave);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.seq-tabla-oficial {
+    table-layout: fixed;
+}
+
+.seq-tabla-oficial td,
+.seq-tabla-oficial th {
+    white-space: normal;
+}
+
+.seq-tabla-oficial thead th:nth-child(2),
+.seq-tabla-oficial td:nth-child(2) {
+    width: 64px;
+}
+
+.seq-tabla-oficial thead th:nth-child(3),
+.seq-tabla-oficial td:nth-child(3) {
+    width: 170px;
+}
+
+@media (max-width: 520px) {
+    .seq-tabla-oficial {
+        font-size: 12px;
+    }
+
+    .seq-tabla-oficial th,
+    .seq-tabla-oficial td {
+        padding: 6px 4px;
+    }
+
+    .seq-tabla-oficial thead th:nth-child(2),
+    .seq-tabla-oficial td:nth-child(2) {
+        width: 44px;
+    }
+
+    .seq-tabla-oficial thead th:nth-child(3),
+    .seq-tabla-oficial td:nth-child(3) {
+        width: 118px;
+    }
+
+    .seq-tabla-oficial .seq-clase {
+        font-size: 11px;
+        padding: 2px 7px;
+    }
+}
+
+.seq-codigo {
+    color: var(--emb-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+}
+
+.seq-unidad,
+.seq-marca {
+    display: block;
+}
+
+.seq-cifra {
+    font-variant-numeric: tabular-nums;
 }
 
 
