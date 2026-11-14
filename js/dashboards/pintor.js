@@ -67,6 +67,9 @@ const COMPONENTES = {
     "sequia-indices": ["/js/sequia/indices.js?v=20261114-sequia2", "montarIndicesSequia"],
     "sequia-mapa": ["/js/sequia/mapa.js?v=20261114-sequia2", "montarMapaSequia"],
     "sequia-oficial": ["/js/sequia/oficial.js?v=20261114-sequia2", "montarOficialSequia"],
+    "rios-resumen": ["/js/rios/resumen.js?v=20261114-rios1", "montarResumenRios"],
+    "rios-caudal": ["/js/rios/caudal.js?v=20261114-rios1", "montarCaudalRios"],
+    "rios-prevision": ["/js/rios/prevision.js?v=20261114-rios1", "montarPrevisionRios"],
     // Polen
     "polen-hoy": ["/js/polen/hoy.js?v=20261106-polen1", "montarPolenHoy"],
     "polen-prevision": ["/js/polen/prevision.js?v=20261106-polen1", "montarPolenPrevision"],
