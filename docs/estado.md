@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- Agua y sequía, fase 1 (PR #164, **en el VPS** el 14 nov, `07a7476`; API PR #173 y #174, `ab54533`, migración 0060 aplicada). Decisiones de José: la sección Embalses se llama «Agua y sequía» (menú y título) y sigue en `/embalses`, en pestañas Embalses, Sequía y Ríos (`/embalses#sequia`); pestaña Sequía con `sequia-suelo`, `sequia-lluvia-anio` y `sequia-indices` (`js/sequia/`, `css/sequia-componentes.css`), también en el pintor de dashboards. Ríos, solo el aviso de que llega. Sin datos hasta que avance la «Carga de Sequía» (unas 3 noches). `docs/embalses.md`.
 - Novedades y avisos (PR #148, en el VPS el 12 nov, `96b563f`; `docs/novedades-y-avisos.md`): franja de avisos automáticos en la portada, ventana con novedades y avisos manuales, página `/novedades` en el menú (dada de alta en Nginx con `scripts/configurar_seccion_novedades.py`) y Administración → Novedades y avisos con tipo y enlace.
 - Luna, fase 4 (PR #146, en el VPS el 11 nov, `11280c8`): mapa del cielo (lienzo con estrellas y constelaciones de d3-celestial, hora móvil, «Apuntar con el móvil»), cielo oscuro, directos y la línea «Desde Archidona» en el óvalo de auroras; toda la sección en `?v=20261111-luna5`. Con esto, las cuatro fases de Luna están en la web.
 - Luna, fase 3 (PR #143, en el VPS el 11 nov, `110e4da`): componentes `luna-eventos`, `luna-eclipse` (cuenta atrás; ahora la del 2-8-2027, 99,4 % desde El Silo), `luna-lluvias` y `luna-campo` en la página y en los dashboards; toda la sección en `?v=20261111-luna3`. Datos de la API (migración 0055 y arreglos PR #153 y #154: pandas, eclipses de Sol visibles con el Sol arriba y al menos un 5 %, cometas desde magnitud 9). Falta que José la dé por buena en meteoarchidona.com.
@@ -210,3 +211,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-12 · Novedades y avisos en el VPS (`96b563f`): franja, página `/novedades` y Administración; primer aviso automático de la Estación Espacial.
 - 2026-11-12 · Alertas meteorológicas en el VPS (`c2985bb`; API `07efdfb`, migración 0056 aplicada, primera carga con 1 alerta en la zona): semáforos en Actualidad y Administración → Alertas.
 - 2026-11-13 · Episodio de lluvia en el VPS (`fd807e8`; API `0b5e30f`, sin migración): la API devolvió en El Silo un episodio abierto de 36,4 mm desde el 11 nov.
+- 2026-11-14 · Agua y sequía, fase 1 en el VPS (`07a7476`; API `ab54533`, migración 0060 aplicada): pestañas y pestaña Sequía de la comarca.
