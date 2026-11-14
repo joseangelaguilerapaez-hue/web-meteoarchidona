@@ -240,4 +240,66 @@ body[data-seccion="embalses"] {
 }
 
 
+/* ==========================================================
+   AGUA Y SEQUÍA: PESTAÑAS (José, 14-11-2026)
+   Como las de Predicción, con la paleta de agua.
+   ========================================================== */
+
+.agua-pestanas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-bottom: 1px solid var(--emb-borde-fuerte);
+}
+
+.agua-pestana {
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    background: transparent;
+    color: var(--emb-texto-suave);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: -1px;
+}
+
+.agua-pestana.activa,
+.agua-pestana[aria-selected="true"] {
+    border-color: var(--emb-borde-fuerte);
+    background: var(--emb-blanco);
+    color: var(--emb-azul-oscuro);
+}
+
+.agua-pestana:focus-visible {
+    outline: 2px solid var(--emb-azul);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) {
+    .agua-pestana:hover {
+        color: var(--emb-profundo);
+    }
+}
+
+.agua-panel {
+    display: grid;
+    gap: 18px;
+}
+
+.agua-panel[hidden] {
+    display: none;
+}
+
+.agua-titulo {
+    margin: 0;
+    color: var(--emb-profundo);
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
 /* Fin de fichero: css/embalses.css */

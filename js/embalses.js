@@ -25,6 +25,16 @@
  *     /embalses?embalse=GUADALQUIVIR-IZNAJAR       (con la ficha abierta)
  *
  * Detalle en docs/embalses.md.
+ *
+ * Agua y sequía (José, 14-11-2026; docs/agua-sequia.md de la API): la
+ * página se llama ahora «Agua y sequía» y va en pestañas, como
+ * Predicción: Embalses (por defecto), Sequía y Ríos. La pestaña abierta
+ * queda en la dirección (/embalses#sequia). Los componentes de Sequía
+ * (js/sequia/*.js) se cargan la primera vez que se abre su pestaña:
+ *
+ *     data-componente="sequia-suelo"         → js/sequia/suelo.js
+ *     data-componente="sequia-lluvia-anio"   → js/sequia/lluvia-anio.js
+ *     data-componente="sequia-indices"       → js/sequia/indices.js
  */
 
 import {montarResumenEmbalses} from "./embalses/resumen.js?v=20261105-embalses1";
@@ -46,6 +56,17 @@ export const COMPONENTES_EMBALSES = {
 };
 
 
+const COMPONENTES_SEQUIA = {
+    "sequia-suelo": ["./sequia/suelo.js?v=20261114-sequia1", "montarSueloSequia"],
+    "sequia-lluvia-anio": ["./sequia/lluvia-anio.js?v=20261114-sequia1", "montarLluviaAnioSequia"],
+    "sequia-indices": ["./sequia/indices.js?v=20261114-sequia1", "montarIndicesSequia"]
+};
+
+const PESTANA_POR_DEFECTO = "embalses";
+
+const pestanas = [...document.querySelectorAll(".agua-pestana[data-pestana]")];
+const montadosSequia = new WeakSet();
+
 const selector = document.querySelector(".embalses-selector select");
 const titulo = document.querySelector(".embalses-titulo-ambito");
 const bloqueFicha = document.querySelector(".embalses-bloque-ficha");
@@ -64,6 +85,60 @@ function montar(hueco) {
     } catch (error) {
         console.error(`Embalses: no se pudo montar ${hueco.dataset.componente}`, error);
     }
+}
+
+async function montarSequia(hueco) {
+    const definicion = COMPONENTES_SEQUIA[hueco.dataset.componente];
+    if (!definicion || montadosSequia.has(hueco)) return;
+    montadosSequia.add(hueco);
+    try {
+        const modulo = await import(definicion[0]);
+        await modulo[definicion[1]](hueco);
+    } catch (error) {
+        console.error(`Sequía: falló ${hueco.dataset.componente}`, error);
+    }
+}
+
+function abrirPestana(nombre, { foco = false, guardar = true } = {}) {
+    if (!pestanas.length) return;
+    const elegida = pestanas.find(p => p.dataset.pestana === nombre)
+        || pestanas.find(p => p.dataset.pestana === PESTANA_POR_DEFECTO);
+    for (const pestana of pestanas) {
+        const activa = pestana === elegida;
+        const panel = document.getElementById(pestana.getAttribute("aria-controls"));
+        pestana.setAttribute("aria-selected", String(activa));
+        pestana.tabIndex = activa ? 0 : -1;
+        pestana.classList.toggle("activa", activa);
+        if (panel) panel.hidden = !activa;
+        if (activa && panel) {
+            for (const hueco of panel.querySelectorAll("[data-componente]")) montarSequia(hueco);
+        }
+    }
+    if (foco) elegida.focus();
+    if (guardar) {
+        const hash = elegida.dataset.pestana === PESTANA_POR_DEFECTO ? "" : `#${elegida.dataset.pestana}`;
+        history.replaceState(null, "", `${location.pathname}${location.search}${hash}`);
+    }
+}
+
+function iniciarPestanas() {
+    for (const pestana of pestanas) {
+        pestana.addEventListener("click", () => abrirPestana(pestana.dataset.pestana));
+        pestana.addEventListener("keydown", evento => {
+            const indice = pestanas.indexOf(pestana);
+            let destino = null;
+            if (evento.key === "ArrowRight") destino = pestanas[(indice + 1) % pestanas.length];
+            if (evento.key === "ArrowLeft") destino = pestanas[(indice - 1 + pestanas.length) % pestanas.length];
+            if (evento.key === "Home") destino = pestanas[0];
+            if (evento.key === "End") destino = pestanas[pestanas.length - 1];
+            if (destino) {
+                evento.preventDefault();
+                abrirPestana(destino.dataset.pestana, { foco: true });
+            }
+        });
+    }
+    window.addEventListener("hashchange", () => abrirPestana(location.hash.slice(1) || PESTANA_POR_DEFECTO, { guardar: false }));
+    abrirPestana(location.hash.slice(1) || PESTANA_POR_DEFECTO, { guardar: false });
 }
 
 function valorSelector({ ambito, codigo }) {
@@ -89,8 +164,8 @@ function guardarDireccion(ambito, embalse) {
         if (ambito.codigo) parametros.set("codigo", ambito.codigo);
     }
     const consulta = parametros.toString();
-    const direccion = `${window.location.pathname}${consulta ? `?${consulta}` : ""}`;
-    if (direccion !== `${window.location.pathname}${window.location.search}`) {
+    const direccion = `${window.location.pathname}${consulta ? `?${consulta}` : ""}${window.location.hash}`;
+    if (direccion !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
         history.pushState(null, "", direccion);
     }
 }
@@ -185,6 +260,7 @@ function ponerTitulo() {
 }
 
 function iniciar() {
+    iniciarPestanas();
     const direccion = leerDireccion();
 
     // Lo fijo (la comarca) se monta una vez.
@@ -193,7 +269,7 @@ function iniciar() {
     }
 
     ponerAmbito(direccion);
-    abrirFicha(direccion.embalse, Boolean(direccion.embalse));
+    abrirFicha(direccion.embalse, Boolean(direccion.embalse) && !location.hash);
 
     llenarSelector();
 

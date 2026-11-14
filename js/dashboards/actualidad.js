@@ -17,7 +17,7 @@
  * propios refrescos periódicos y así no se quedan funcionando detrás.
  */
 
-import {pintarDashboard} from "./pintor.js?v=20261113-episodio1";
+import {pintarDashboard} from "./pintor.js?v=20261114-sequia1";
 
 
 const CORTE_MOVIL = "(max-width: 850px)";

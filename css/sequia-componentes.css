@@ -1,0 +1,248 @@
+/*
+ * MeteoArchidona
+ * Componentes de la pestaña Sequía (Agua y sequía)
+ *
+ *     sequia-suelo · sequia-lluvia-anio · sequia-indices
+ *
+ * Van con la paleta de agua de los embalses (css/embalses-componentes.css,
+ * variables --emb-*), que estos componentes cargan también. Aquí solo lo
+ * propio de Sequía: las clases de seco a húmedo, que se salen del azul por
+ * el lado seco (ocres y rojizos) igual que los estados del embalse (José,
+ * 5 y 14-11-2026).
+ */
+
+.seq-suelo,
+.seq-lluvia,
+.seq-indices {
+    --seq-extremo-seco: #a63a1e;
+    --seq-muy-seco: #d4572b;
+    --seq-seco: #e3a21a;
+    --seq-normal: #8aa9bf;
+    --seq-humedo: #3fa4dc;
+    --seq-muy-humedo: #1a74b8;
+    --seq-extremo-humedo: #0a3460;
+}
+
+.seq-cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px 16px;
+}
+
+.seq-selector {
+    color: var(--emb-texto-suave);
+    font-size: 13px;
+}
+
+.seq-selector select {
+    margin-left: 6px;
+    padding: 6px 10px;
+    color: var(--emb-texto);
+    background: var(--emb-blanco);
+    border: 1px solid var(--emb-borde-fuerte);
+    border-radius: 9px;
+    font: inherit;
+}
+
+.seq-cuerpo {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+}
+
+.seq-resumen {
+    margin: 0;
+    color: var(--emb-azul-oscuro);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* Clases: etiqueta de color. */
+.seq-clase {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--seq-clase, var(--emb-texto-tenue));
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+    max-width: 100%;
+}
+
+.clase-EXTREMADAMENTE_SECO { --seq-clase: var(--seq-extremo-seco); }
+.clase-MUY_SECO { --seq-clase: var(--seq-muy-seco); }
+.clase-SECO,
+.clase-MODERADAMENTE_SECO { --seq-clase: var(--seq-seco); }
+.clase-NORMAL { --seq-clase: var(--seq-normal); }
+.clase-HUMEDO,
+.clase-MODERADAMENTE_HUMEDO { --seq-clase: var(--seq-humedo); }
+.clase-MUY_HUMEDO { --seq-clase: var(--seq-muy-humedo); }
+.clase-EXTREMADAMENTE_HUMEDO { --seq-clase: var(--seq-extremo-humedo); }
+
+/* Tarjetas de capa y de escala (botones). */
+.seq-capas,
+.seq-escalas {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+@container (max-width: 520px) {
+    .seq-capas,
+    .seq-escalas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.seq-capa,
+.seq-escala {
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+    padding: 10px 12px;
+    color: var(--emb-texto);
+    background: var(--emb-blanco);
+    border: 1px solid var(--emb-borde);
+    border-radius: 12px;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.seq-capa.activa,
+.seq-escala.activa {
+    border-color: var(--emb-azul);
+    box-shadow: 0 0 0 2px var(--emb-celeste);
+}
+
+.seq-capa:focus-visible,
+.seq-escala:focus-visible,
+.seq-interruptor button:focus-visible {
+    outline: 2px solid var(--emb-azul);
+    outline-offset: 2px;
+}
+
+.seq-capa-nombre {
+    color: var(--emb-azul);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.seq-capa-valor {
+    color: var(--emb-profundo);
+    font-size: 20px;
+}
+
+.seq-capa-detalle {
+    color: var(--emb-texto-tenue);
+    font-size: 11px;
+}
+
+.seq-cifras {
+    display: grid;
+    gap: 2px;
+    color: var(--emb-profundo);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* SPI / SPEI */
+.seq-interruptor {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.seq-interruptor button {
+    padding: 6px 12px;
+    color: var(--emb-texto-suave);
+    background: var(--emb-blanco);
+    border: 1px solid var(--emb-borde);
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.seq-interruptor button.activa {
+    color: var(--emb-blanco);
+    background: var(--emb-azul);
+    border-color: var(--emb-azul);
+}
+
+/* Gráficas (se suman a .emb-grafica). */
+.emb-grafica .seq-linea-modelo {
+    fill: none;
+    stroke: var(--emb-agua);
+    stroke-width: 3;
+    stroke-dasharray: 1 5;
+    stroke-linecap: round;
+}
+
+.emb-grafica .seq-linea-estacion {
+    fill: none;
+    stroke: #7a5cc4;
+    stroke-width: 2;
+}
+
+.emb-grafica .seq-cero {
+    stroke: var(--emb-texto-tenue);
+    stroke-width: 1.2;
+}
+
+.emb-grafica .seq-barra {
+    fill: var(--seq-clase, var(--seq-normal));
+}
+
+.emb-grafica .seq-barra.provisional {
+    opacity: 0.55;
+}
+
+.emb-leyenda .seq-modelo { border-top: 3px dotted var(--emb-agua); }
+.emb-leyenda .seq-estacion { border-top: 2px solid #7a5cc4; }
+
+/* Tabla de la lluvia del año. */
+.seq-tabla-caja {
+    overflow-x: auto;
+}
+
+.seq-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.seq-tabla th,
+.seq-tabla td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--emb-borde);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.seq-tabla thead th {
+    color: var(--emb-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.seq-tabla tbody th {
+    color: var(--emb-azul-oscuro);
+}
+
+.seq-nota {
+    color: var(--emb-texto-tenue);
+    font-size: 12px;
+}
+
+
+/* Fin de fichero: css/sequia-componentes.css */
