@@ -1,0 +1,331 @@
+/*
+ * MeteoArchidona
+ * Componentes de la predicción estacional (js/estacional/*.js)
+ *
+ * Pestaña «Estacional» de Predicción y cualquier dashboard que los ponga.
+ * Tema oscuro de la web (css/paleta.css), como Modelos numéricos. Cada
+ * componente carga esta hoja él solo (asegurarHoja en comun.js).
+ *
+ * Colores de los escenarios (José, 14-11-2026: barra más frío / normal /
+ * más cálido y más seco / normal / más lluvioso):
+ *   temperatura: azul (más frío), gris (normal), naranja (más cálido);
+ *   lluvia: ocre (más seco), gris (normal), turquesa (más lluvioso).
+ * El escenario más probable va resaltado; los otros, apagados.
+ */
+
+.est-componente {
+    --est-frio: #3b9eff;
+    --est-normal: #7890a7;
+    --est-calido: #f97316;
+    --est-seco: #d48800;
+    --est-lluvioso: #00c9a7;
+
+    container-type: inline-size;
+    min-width: 0;
+    margin-bottom: 18px;
+    padding: 20px 22px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17, 30, 46, 0.98),
+            rgba(9, 22, 34, 0.98)
+        );
+    box-shadow: var(--shadow);
+    color: var(--text);
+}
+
+.est-componente[hidden] {
+    display: none;
+}
+
+.est-pestana {
+    display: block;
+}
+
+
+/* ---- Cabecera ---- */
+
+.est-cabeza {
+    margin-bottom: 10px;
+}
+
+.est-etiqueta {
+    color: var(--amber);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.est-titulo {
+    margin: 4px 0 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.est-subtitulo {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+
+/* ---- Temperatura y lluvia ---- */
+
+.est-dos {
+    display: grid;
+    gap: 16px;
+}
+
+@container (min-width: 620px) {
+    .est-dos {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.est-variable {
+    min-width: 0;
+}
+
+.est-variable-nombre {
+    color: var(--text-faint);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.est-frase {
+    margin: 6px 0 10px;
+    color: var(--text-soft);
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.est-escenario {
+    margin: 4px 0 8px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.est-detalle {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.45;
+}
+
+
+/* ---- Barra ---- */
+
+.est-barra-bloque {
+    min-width: 0;
+}
+
+.est-barra-origen {
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.est-barra {
+    display: flex;
+    height: 16px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--card-soft);
+}
+
+.est-tramo {
+    flex: 1 1 0;
+    min-width: 3px;
+    opacity: 0.38;
+    transition: flex-grow 0.4s ease;
+}
+
+.est-tramo + .est-tramo {
+    border-left: 2px solid var(--bg);
+}
+
+.est-tramo.destacado {
+    opacity: 1;
+}
+
+.est-temperatura .est-tramo-inferior { background: var(--est-frio); }
+.est-temperatura .est-tramo-normal { background: var(--est-normal); }
+.est-temperatura .est-tramo-superior { background: var(--est-calido); }
+
+.est-lluvia .est-tramo-inferior { background: var(--est-seco); }
+.est-lluvia .est-tramo-normal { background: var(--est-normal); }
+.est-lluvia .est-tramo-superior { background: var(--est-lluvioso); }
+
+.est-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    margin-top: 7px;
+    font-size: 12.5px;
+}
+
+.est-leyenda-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--muted);
+}
+
+.est-leyenda-item.destacado {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.est-leyenda-etiqueta {
+    color: var(--text-faint);
+    font-weight: 400;
+}
+
+.est-leyenda-item.destacado .est-leyenda-etiqueta {
+    color: var(--text-soft);
+}
+
+.est-punto {
+    display: inline-block;
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+
+/* ---- Mes a mes ---- */
+
+.est-rejilla-meses {
+    display: grid;
+    gap: 14px;
+}
+
+@container (min-width: 760px) {
+    .est-rejilla-meses {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.est-mes {
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.est-mes-nombre {
+    margin: 0;
+    font-size: 15px;
+}
+
+
+/* ---- Modelos ---- */
+
+.est-tabla-modelos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.est-tabla-modelos th {
+    padding: 6px 8px;
+    color: var(--text-faint);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.est-tabla-modelos td {
+    padding: 7px 8px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.est-modelo-celda {
+    white-space: nowrap;
+}
+
+.est-modelo-celda .est-punto {
+    margin-right: 6px;
+    vertical-align: -1px;
+}
+
+
+/* ---- Texto y Cómo se hace ---- */
+
+.est-parrafo {
+    margin: 0 0 12px;
+    color: var(--text-soft);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.est-nota-ia {
+    margin: 0;
+    color: var(--text-faint);
+    font-size: 12px;
+    font-style: italic;
+}
+
+.est-pasos {
+    margin: 0;
+}
+
+.est-pasos dt {
+    margin-top: 12px;
+    color: var(--amber);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.est-pasos dd {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+
+/* ---- Avisos y pie ---- */
+
+.est-aviso {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.est-aviso.error {
+    color: var(--orange);
+}
+
+.est-pie {
+    margin: 16px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-faint);
+    font-size: 11.5px;
+    line-height: 1.45;
+}
+
+
+@media (max-width: 600px) {
+    .est-componente {
+        padding: 16px 14px;
+    }
+
+    .est-titulo {
+        font-size: 18px;
+    }
+}
+
+
+/* Fin de fichero: css/estacional.css */

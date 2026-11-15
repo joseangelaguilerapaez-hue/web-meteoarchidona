@@ -45,6 +45,12 @@ const COMPONENTES = {
     "prediccion-aemet": ["/js/prediccion-aemet.js?v=20261104-componentes1", "montarPrediccionAemet"],
     "modelos-numericos": ["/js/modelos-numericos.js?v=20261103-compartir2", "montarModelosNumericos"],
     "mapas-modelos": ["/js/mapas-modelos.js?v=20261110-t2m1", "montarMapasModelos"],
+    "prediccion-estacional": ["/js/estacional/pestana.js?v=20261115-estacional1", "montarPrediccionEstacional"],
+    "estacional-trimestre": ["/js/estacional/trimestre.js?v=20261115-estacional1", "montarEstacionalTrimestre"],
+    "estacional-meses": ["/js/estacional/meses.js?v=20261115-estacional1", "montarEstacionalMeses"],
+    "estacional-modelos": ["/js/estacional/modelos.js?v=20261115-estacional1", "montarEstacionalModelos"],
+    "estacional-texto": ["/js/estacional/texto.js?v=20261115-estacional1", "montarEstacionalTexto"],
+    "estacional-nota": ["/js/estacional/nota.js?v=20261115-estacional1", "montarEstacionalNota"],
     // Sol
     "sol-tiempo-espacial": ["/js/sol/tiempo-espacial.js?v=20261104-componentes2", "montarTiempoEspacial"],
     "sol-alertas": ["/js/sol/alertas-solares.js?v=20261104-componentes2", "montarAlertasSolares"],

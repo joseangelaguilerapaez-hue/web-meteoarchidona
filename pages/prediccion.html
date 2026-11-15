@@ -12,7 +12,7 @@
 
 <meta
     name="description"
-    content="Predicción meteorológica de Archidona: AEMET (próximas horas, siete días y avisos) y modelos numéricos por conjuntos a quince días."
+    content="Predicción meteorológica de Archidona: AEMET (próximas horas, siete días y avisos), modelos numéricos por conjuntos a quince días y predicción estacional de Copernicus para los próximos meses."
 >
 
 <title>
@@ -34,7 +34,7 @@
 <meta property="og:site_name" content="MeteoArchidona">
 <meta property="og:locale" content="es_ES">
 <meta property="og:title" content="Predicción · MeteoArchidona">
-<meta property="og:description" content="Predicción meteorológica de Archidona: AEMET (próximas horas, siete días y avisos) y modelos numéricos por conjuntos a quince días.">
+<meta property="og:description" content="Predicción meteorológica de Archidona: AEMET (próximas horas, siete días y avisos), modelos numéricos por conjuntos a quince días y predicción estacional de Copernicus para los próximos meses.">
 <meta property="og:url" content="https://meteoarchidona.com/prediccion">
 <meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
 <meta property="og:image:width" content="1200">
@@ -88,6 +88,11 @@
     href="../css/mapas-modelos.css?v=20261110-t2m1"
 >
 
+<link
+    rel="stylesheet"
+    href="../css/estacional.css?v=20261115-estacional1"
+>
+
 
 <script
     src="../js/cabecera.js?v=20261114-agua"
@@ -114,7 +119,7 @@
 
 <script
     type="module"
-    src="../js/prediccion.js?v=20261110-t2m1"
+    src="../js/prediccion.js?v=20261115-estacional1"
 ></script>
 
 <script
@@ -171,6 +176,8 @@
     - Mapas: js/mapas-modelos.js (mapas animados de los modelos que
       dibuja la API, con desplegable de modelo; docs/mapas-modelos.md de
       la API; 9 y 10-11-2026).
+    - Estacional: js/estacional/pestana.js (predicción estacional de
+      Copernicus, los próximos tres meses; 15-11-2026).
 
     Para añadir otra (otra agencia, mapas isobáricos…): un botón con
     data-pestana, su panel y su componente en js/prediccion.js.
@@ -213,6 +220,17 @@
         aria-selected="false"
         tabindex="-1"
     >Mapas</button>
+
+    <button
+        type="button"
+        class="pred-pestana"
+        role="tab"
+        id="pestana-estacional"
+        data-pestana="estacional"
+        aria-controls="panel-estacional"
+        aria-selected="false"
+        tabindex="-1"
+    >Estacional</button>
 
 </nav>
 
@@ -306,6 +324,23 @@
     hidden
 >
     <div data-componente="mapas-modelos"></div>
+</div>
+
+
+<!--
+    Estacional (José, 14-11-2026): predicción estacional de Copernicus C3S
+    para Archidona, los tres meses siguientes y el trimestre, con
+    escenarios y no porcentajes (js/estacional/*.js; docs/prediccion-
+    estacional.md de la API). Cada pieza es un componente suelto.
+-->
+<div
+    class="pred-panel"
+    role="tabpanel"
+    id="panel-estacional"
+    aria-labelledby="pestana-estacional"
+    hidden
+>
+    <div data-componente="prediccion-estacional"></div>
 </div>
 
 
