@@ -122,6 +122,18 @@
     font-size: 0.8rem;
 }
 
+.alertas-ficha-enlace {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--accent, #f2a33a);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.alertas-ficha-enlace:hover {
+    text-decoration: underline;
+}
+
 .alertas-aviso {
     padding: 10px 12px;
     margin-bottom: 10px;

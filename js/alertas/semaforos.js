@@ -27,7 +27,7 @@
  * API: GET /alertas/semaforos. Se refresca cada 5 minutos.
  */
 
-const HOJA = "/css/alertas.css?v=20261112-alertas3";
+const HOJA = "/css/alertas.css?v=20261115-semaforo-incendios";
 
 const MINUTOS_REFRESCO = 5;
 
@@ -201,7 +201,11 @@ function dibujarSemaforo(svg, id, cx, semaforo, alPulsar) {
 function dibujar(raiz, datos, alPulsar) {
     const id = raiz.dataset.alertasId;
     const escala = window.matchMedia(CORTE_MOVIL).matches ? 1 : 1.15;
-    const ancho = Math.max(380, Math.round((raiz.clientWidth || window.innerWidth) / escala));
+    // Con siete semáforos (Incendios, 15-11-2026) no caben en un móvil a 57
+    // de paso: el dibujo se hace más ancho y el navegador lo encoge.
+    let ancho = Math.max(380, Math.round((raiz.clientWidth || window.innerWidth) / escala));
+    const total = (datos.semaforos || []).length;
+    ancho = Math.max(ancho, 62 + 57 * Math.max(0, total - 1) + 34);
 
     const svg = el("svg", {
         class: "alertas-brazo",
@@ -295,9 +299,18 @@ function abrirFicha(raiz, semaforo) {
             if (aviso.instrucciones) bloque.appendChild(crear("p", "alertas-aviso-instrucciones", aviso.instrucciones));
             cuerpo.appendChild(bloque);
         }
-        cuerpo.appendChild(crear("p", "alertas-ficha-fuente", "Fuente: AEMET (zona Antequera)"));
+        cuerpo.appendChild(crear("p", "alertas-ficha-fuente", semaforo.fenomeno === "INCENDIO"
+            ? "Fuente: AEMET (peligro meteorológico de incendios; el peor de los pueblos de la comarca)"
+            : "Fuente: AEMET (zona Antequera)"));
     } else {
         cuerpo.appendChild(crear("p", "alertas-ficha-nota", "Sin alerta."));
+    }
+
+    // Incendios lleva a su sección (15-11-2026).
+    if (semaforo.enlace) {
+        const enlace = crear("a", "alertas-ficha-enlace", "Ver la sección Incendios");
+        enlace.href = semaforo.enlace;
+        cuerpo.appendChild(enlace);
     }
 
     dialogo.appendChild(cuerpo);
@@ -308,6 +321,34 @@ function abrirFicha(raiz, semaforo) {
 /* ----------------------------------------------------------------------
    Montaje
    ---------------------------------------------------------------------- */
+
+/*
+ * El semáforo de Incendios no sale mientras la sección Incendios esté
+ * oculta por los lanzamientos (salvo a los administradores), y entonces
+ * el brazo solo sale si hay alguna otra alerta.
+ */
+async function quitarOcultos(datos) {
+    let lanzamientos;
+    try {
+        const modulo = await import("/js/lanzamientos.js?v=20261115-lanzamientos2");
+        lanzamientos = await modulo.cargarLanzamientos();
+    } catch {
+        return datos;
+    }
+
+    const incendios = (lanzamientos.lanzamientos || []).find(l => l.clave === "incendios");
+    if (!incendios || incendios.estado !== "OCULTO" || lanzamientos.administrador) {
+        return datos;
+    }
+
+    const semaforos = (datos.semaforos || []).filter(s => s.fenomeno !== "INCENDIO");
+    return {
+        ...datos,
+        semaforos,
+        hay_alertas: semaforos.some(s => s.nivel !== "SIN_AVISO"),
+    };
+}
+
 
 function colocarBajoCabecera(raiz) {
     const cabecera = document.getElementById("cabecera");
@@ -336,7 +377,7 @@ export async function montarSemaforosAlertas(raiz) {
 
     async function actualizar() {
         try {
-            ultimos = await pedirSemaforos();
+            ultimos = await quitarOcultos(await pedirSemaforos());
         } catch (error) {
             console.warn("Alertas: no se han podido leer los semáforos.", error);
             return;
