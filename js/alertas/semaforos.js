@@ -27,7 +27,16 @@
  * API: GET /alertas/semaforos. Se refresca cada 5 minutos.
  */
 
-const HOJA = "/css/alertas.css?v=20261115-semaforo-incendios";
+const HOJA = "/css/alertas.css?v=20261115-semaforo-aire";
+
+// Fuente que se cita en la ficha (los de AEMET-Meteoalerta, la de por defecto).
+const FUENTES = {
+    INCENDIO: "Fuente: AEMET (peligro meteorológico de incendios; el peor de los pueblos de la comarca)",
+    AIRE: "Fuente: CAMS de Copernicus (previsión para Archidona: índice nacional de calidad del aire y calima)",
+};
+
+// Nombre de la sección a la que lleva el enlace de la ficha.
+const SECCIONES = {INCENDIO: "Incendios", AIRE: "Calidad del aire"};
 
 const MINUTOS_REFRESCO = 5;
 
@@ -201,7 +210,7 @@ function dibujarSemaforo(svg, id, cx, semaforo, alPulsar) {
 function dibujar(raiz, datos, alPulsar) {
     const id = raiz.dataset.alertasId;
     const escala = window.matchMedia(CORTE_MOVIL).matches ? 1 : 1.15;
-    // Con siete semáforos (Incendios, 15-11-2026) no caben en un móvil a 57
+    // Con siete u ocho semáforos (Incendios y Aire, 15-11-2026) no caben en un móvil a 57
     // de paso: el dibujo se hace más ancho y el navegador lo encoge.
     let ancho = Math.max(380, Math.round((raiz.clientWidth || window.innerWidth) / escala));
     const total = (datos.semaforos || []).length;
@@ -299,16 +308,15 @@ function abrirFicha(raiz, semaforo) {
             if (aviso.instrucciones) bloque.appendChild(crear("p", "alertas-aviso-instrucciones", aviso.instrucciones));
             cuerpo.appendChild(bloque);
         }
-        cuerpo.appendChild(crear("p", "alertas-ficha-fuente", semaforo.fenomeno === "INCENDIO"
-            ? "Fuente: AEMET (peligro meteorológico de incendios; el peor de los pueblos de la comarca)"
-            : "Fuente: AEMET (zona Antequera)"));
+        cuerpo.appendChild(crear("p", "alertas-ficha-fuente",
+            FUENTES[semaforo.fenomeno] || "Fuente: AEMET (zona Antequera)"));
     } else {
         cuerpo.appendChild(crear("p", "alertas-ficha-nota", "Sin alerta."));
     }
 
-    // Incendios lleva a su sección (15-11-2026).
+    // Incendios y Aire llevan a su sección (15-11-2026).
     if (semaforo.enlace) {
-        const enlace = crear("a", "alertas-ficha-enlace", "Ver la sección Incendios");
+        const enlace = crear("a", "alertas-ficha-enlace", `Ver la sección ${SECCIONES[semaforo.fenomeno] || semaforo.nombre}`);
         enlace.href = semaforo.enlace;
         cuerpo.appendChild(enlace);
     }
@@ -323,10 +331,12 @@ function abrirFicha(raiz, semaforo) {
    ---------------------------------------------------------------------- */
 
 /*
- * El semáforo de Incendios no sale mientras la sección Incendios esté
+ * Los semáforos de Incendios y de Aire no salen mientras su sección esté
  * oculta por los lanzamientos (salvo a los administradores), y entonces
  * el brazo solo sale si hay alguna otra alerta.
  */
+const LANZAMIENTO_DEL_SEMAFORO = {INCENDIO: "incendios", AIRE: "calidad-aire"};
+
 async function quitarOcultos(datos) {
     let lanzamientos;
     try {
@@ -336,12 +346,17 @@ async function quitarOcultos(datos) {
         return datos;
     }
 
-    const incendios = (lanzamientos.lanzamientos || []).find(l => l.clave === "incendios");
-    if (!incendios || incendios.estado !== "OCULTO" || lanzamientos.administrador) {
+    if (lanzamientos.administrador) {
         return datos;
     }
 
-    const semaforos = (datos.semaforos || []).filter(s => s.fenomeno !== "INCENDIO");
+    const ocultos = new Set((lanzamientos.lanzamientos || [])
+        .filter(l => l.estado === "OCULTO")
+        .map(l => l.clave));
+    const semaforos = (datos.semaforos || []).filter(s => !ocultos.has(LANZAMIENTO_DEL_SEMAFORO[s.fenomeno]));
+    if (semaforos.length === (datos.semaforos || []).length) {
+        return datos;
+    }
     return {
         ...datos,
         semaforos,
