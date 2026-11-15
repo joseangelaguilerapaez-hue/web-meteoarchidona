@@ -289,7 +289,7 @@ const RUTA_SALUD_JS = "/js/salud-publica.js?v=20261110-salud1";
 
 const RUTA_LANZAMIENTOS_CSS = "/css/lanzamientos.css?v=20261115-lanzamientos1";
 
-const RUTA_LANZAMIENTOS_JS = "/js/lanzamientos.js?v=20261115-lanzamientos1";
+const RUTA_LANZAMIENTOS_JS = "/js/lanzamientos.js?v=20261115-lanzamientos2";
 
 
 /*

@@ -59,7 +59,7 @@ function guardarCache(datos) {
 export function cargarLanzamientos() {
 
     if (!promesa) {
-        promesa = fetch(urlApi("/lanzamientos"), { credentials: "same-origin" })
+        promesa = fetch(urlApi("/lanzamientos"), { credentials: "same-origin", cache: "no-store" })
             .then((respuesta) => {
                 if (!respuesta.ok) {
                     throw new Error(`Lanzamientos: ${respuesta.status}`);
