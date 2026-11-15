@@ -965,6 +965,66 @@ class TestComponentesOlivar(unittest.TestCase):
         self.assertIn('modulo.SECCION = "olivar"', leer(RAIZ / "scripts" / "configurar_seccion_olivar.py"))
 
 
+class TestPrediccionEstacional(unittest.TestCase):
+    """Pestaña «Estacional» de Predicción y sus componentes (José, 14 y 15-11-2026)."""
+
+    COMPONENTES = {
+        "prediccion-estacional": ("pestana.js", "montarPrediccionEstacional"),
+        "estacional-trimestre": ("trimestre.js", "montarEstacionalTrimestre"),
+        "estacional-meses": ("meses.js", "montarEstacionalMeses"),
+        "estacional-modelos": ("modelos.js", "montarEstacionalModelos"),
+        "estacional-texto": ("texto.js", "montarEstacionalTexto"),
+        "estacional-nota": ("nota.js", "montarEstacionalNota"),
+    }
+
+    def test_pestana_y_componente(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "prediccion.html")
+        self.assertIn('data-pestana="estacional"', pagina)
+        self.assertIn('aria-controls="panel-estacional"', pagina)
+        self.assertIn('data-componente="prediccion-estacional"', pagina)
+        self.assertIn('"prediccion-estacional": montarPrediccionEstacional', leer(RAIZ / "js" / "prediccion.js"))
+
+    def test_cada_componente_exporta_su_funcion_y_esta_en_los_dashboards(self):
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "estacional" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'"{atributo}": ["/js/estacional/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_misma_version_en_prediccion_y_dashboards(self):
+        version = re.compile(r"estacional/pestana\.js\?v=([\w-]+)")
+        prediccion = version.findall(leer(RAIZ / "js" / "prediccion.js"))
+        dashboards = version.findall(leer(RAIZ / "js" / "dashboards" / "pintor.js"))
+        self.assertTrue(prediccion and dashboards)
+        self.assertEqual(set(prediccion), set(dashboards))
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "estacional" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_coincide_con_la_pagina(self):
+        comun = leer(RAIZ / "js" / "estacional" / "comun.js")
+        ruta = re.search(r'"(/css/estacional\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "prediccion.html").replace("../", ""))
+        self.assertIn("container-type: inline-size", leer(RAIZ / "css" / "estacional.css"))
+
+    def test_cita_a_copernicus_y_sin_porcentajes(self):
+        comun = leer(RAIZ / "js" / "estacional" / "comun.js")
+        self.assertIn("Servicio de Cambio Climático de Copernicus", comun)
+        self.assertIn("Acierta más con la temperatura que con la lluvia", comun)
+        # Escenarios, no porcentajes (José, 14-11-2026): ningún componente pinta un «%».
+        for fichero in {f for f, _ in self.COMPONENTES.values()} | {"comun.js"}:
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "estacional" / fichero)
+                self.assertNotRegex(codigo, r"probabilidad\s*\*\s*100|`[^`]*%[^`]*`|\"[^\"]*\d\s*%")
+
+
 class TestComponentesClimatologia(unittest.TestCase):
     """Componentes de Climatología para la página y los dashboards (13-11-2026)."""
 
