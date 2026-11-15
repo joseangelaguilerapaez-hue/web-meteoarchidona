@@ -211,9 +211,10 @@ function abrirFormulario(caja, semaforo, nivel) {
         etiqueta.appendChild(campoFin);
         formulario.appendChild(etiqueta);
     } else {
-        formulario.appendChild(crear("div", "adm-alertas-hora", semaforo.fenomeno === "INCENDIO"
-            ? "Hasta el fin del último día con peligro alto o más según AEMET."
-            : "Hasta el fin de la alerta de AEMET (se alarga si AEMET la alarga)."));
+        formulario.appendChild(crear("div", "adm-alertas-hora", {
+            INCENDIO: "Hasta el fin del último día con peligro alto o más según AEMET.",
+            AIRE: "Hasta el fin del último día con aviso por el aire o la calima según CAMS.",
+        }[semaforo.fenomeno] || "Hasta el fin de la alerta de AEMET (se alarga si AEMET la alarga)."));
     }
 
     const etiquetaTexto = crear("label", "adm-alertas-campo", "Texto para el público (opcional, sale en la ficha)");
