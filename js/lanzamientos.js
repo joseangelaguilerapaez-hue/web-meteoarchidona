@@ -140,6 +140,8 @@ function escaparAtributo(valor) {
 function hojaDeOcultos(datos) {
 
     const reglas = [];
+    // Aparte: si un navegador no entiende :has, solo pierde esta regla y no todas.
+    const reglasPie = [];
 
     for (const lanzamiento of datos.lanzamientos) {
 
@@ -150,7 +152,7 @@ function hojaDeOcultos(datos) {
         if (lanzamiento.seccion) {
             const seccion = escaparAtributo(lanzamiento.seccion);
             reglas.push(`.navegacion a[data-seccion="${seccion}"]`);
-            reglas.push(`#pie-secciones li:has(> a[data-seccion="${seccion}"])`);
+            reglasPie.push(`#pie-secciones li:has(> a[data-seccion="${seccion}"])`);
         }
 
         if (lanzamiento.pagina && lanzamiento.pestana) {
@@ -172,7 +174,10 @@ function hojaDeOcultos(datos) {
         document.head.appendChild(hoja);
     }
 
-    hoja.textContent = reglas.length ? `${reglas.join(",\n")} { display: none !important; }` : "";
+    hoja.textContent = [
+        reglas.length ? `${reglas.join(",\n")} { display: none !important; }` : "",
+        reglasPie.length ? `${reglasPie.join(",\n")} { display: none !important; }` : "",
+    ].join("\n");
 }
 
 
