@@ -52,10 +52,11 @@ class TestMenu(unittest.TestCase):
 
         secciones = re.findall(r'^\s+data-seccion="([^"]+)"', CABECERA_HTML, re.MULTILINE)
 
-        # 16 desde Incendios (José, 15-11-2026): en escritorio, tres filas de
-        # cinco y la última centrada; en el pie, columnas de cinco; en el
-        # móvil, dos columnas de ocho.
-        self.assertEqual(len(secciones), 16, secciones)
+        # 16 desde Incendios y 17 con Climatología (José, 15-11-2026): en
+        # escritorio, filas de cinco y la última centrada; en el pie, columnas
+        # de cinco; en el móvil, dos columnas. Hasta el 30-12-2026 se ven menos:
+        # los lanzamientos escalonados esconden lo que no ha salido.
+        self.assertEqual(len(secciones), 17, secciones)
 
 
 class TestPie(unittest.TestCase):

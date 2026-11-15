@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/administracion.css?v=20261108-ficha1">
 <link rel="stylesheet" href="../css/novedades.css?v=20261111-avisos1">
-<link rel="stylesheet" href="../css/novedades-admin.css?v=20261111-avisos1">
+<link rel="stylesheet" href="../css/novedades-admin.css?v=20261115-lanzamientos1">
 <link rel="stylesheet" href="../css/auditoria-admin.css?v=20261106-visitas1">
 <link rel="stylesheet" href="../css/procesos-admin.css?v=20261110-procesos2">
 <link rel="stylesheet" href="../css/barra-progreso.css?v=20261110-procesos1">
@@ -33,13 +33,13 @@
 <link rel="stylesheet" href="../css/alertas-admin.css?v=20261112-alertas3">
 <link rel="stylesheet" href="../css/visor-estadisticas.css?v=20261027-visor1">
 
-<script src="../js/cabecera.js?v=20261115-incendios" defer></script>
+<script src="../js/cabecera.js?v=20261115-lanzamientos1" defer></script>
 <script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261114-sequia2"
+    src="../js/administracion/principal.js?v=20261115-lanzamientos1"
 ></script>
 
 <script
@@ -4845,6 +4845,56 @@
     class="estado-editor"
     role="status"
     aria-live="polite"
+></div>
+
+</div>
+</section>
+
+<!-- Lanzamientos escalonados (js/administracion/lanzamientos.js;
+     docs/lanzamientos.md de la API; José, 15-11-2026). -->
+<section
+    id="panelLanzamientos"
+    class="panel"
+>
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Lanzamientos
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonRecargarLanzamientos"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<p class="modulo-intro">
+    Secciones y pestañas que se sueltan en su fecha, cada una con su
+    novedad. Hasta entonces el público no las ve (vosotros sí, marcadas
+    como ocultas); el primer día salen con la marca de obras. Si cambias
+    una fecha, su novedad se corre lo mismo.
+</p>
+
+<div
+    id="estadoLanzamientos"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<div
+    id="listaLanzamientos"
+    class="lanzamientos-admin-lista"
 ></div>
 
 </div>

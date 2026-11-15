@@ -18,7 +18,13 @@
  * componente que falla no tira el resto: deja un aviso en su recuadro.
  * Un recuadro vacío (el «+» del editor) no se pinta, pero guarda su sitio
  * en una fila de dos.
+ *
+ * Lanzamientos escalonados (José, 15-11-2026; js/lanzamientos.js): los
+ * componentes de una sección que todavía no ha salido no se pintan (salvo
+ * para los administradores); una fila que se queda sin nada no ocupa sitio.
  */
+
+import {componenteOculto} from "../lanzamientos.js?v=20261115-lanzamientos1";
 
 /* data-componente → [módulo, función de montaje] */
 const COMPONENTES = {
@@ -198,6 +204,18 @@ async function montarRecuadro(recuadro, datos) {
 }
 
 
+async function quitarOcultos(datos) {
+    if (!datos || !datos.etiqueta) {
+        return datos;
+    }
+    try {
+        return (await componenteOculto(datos.etiqueta)) ? null : datos;
+    } catch (error) {
+        return datos;
+    }
+}
+
+
 export async function pintarDashboard(contenedor, dashboard) {
 
     asegurarHoja();
@@ -213,7 +231,9 @@ export async function pintarDashboard(contenedor, dashboard) {
     const pendientes = [];
 
     for (const fila of dashboard.filas || []) {
-        const recuadros = fila.columnas === 2 ? [fila.primera, fila.segunda] : [fila.primera];
+        const recuadros = await Promise.all(
+            (fila.columnas === 2 ? [fila.primera, fila.segunda] : [fila.primera]).map(quitarOcultos)
+        );
 
         // Una fila sin ningún componente no ocupa sitio.
         if (!recuadros.some(datos => datos && datos.etiqueta)) {

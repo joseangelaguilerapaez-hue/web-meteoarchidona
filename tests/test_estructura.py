@@ -48,7 +48,8 @@ PRIVADAS = {"administracion", "mi-cuenta"}
 # Se llega desde el botón con el nombre del usuario, no desde el menú.
 # Climatología (José, 13-11-2026): dada de alta pero fuera del menú hasta
 # que esté cargada la serie histórica; luego irá delante de Embalses.
-FUERA_DEL_MENU = {"mi-cuenta", "climatologia"}
+# Climatología entra en el menú delante de Agua y sequía (José, 15-11-2026); sale el 6-12 con los lanzamientos.
+FUERA_DEL_MENU = {"mi-cuenta"}
 
 # Observaciones no lleva pie: su mapa ocupa la pantalla entera.
 SIN_PIE = {"observaciones"}
@@ -303,8 +304,8 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261114-rios1"),
-            ("administracion", r"administracion/principal\.js\?v=20261114-sequia2"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261115-lanzamientos1"),
+            ("administracion", r"administracion/principal\.js\?v=20261115-lanzamientos1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 

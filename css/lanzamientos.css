@@ -1,0 +1,129 @@
+/*
+ * MeteoArchidona
+ * Lanzamientos escalonados (js/lanzamientos.js; José, 15-11-2026): marca
+ * de obras del primer día, «Próximamente» de lo oculto y marcas de los
+ * administradores.
+ *
+ * Colores propios y no de la paleta: tienen que leerse igual sobre las
+ * páginas oscuras y sobre las de fondo blanco (Agua y sequía, Polen…).
+ */
+
+
+/* ---- Marcas en el menú y en las pestañas ---- */
+
+.lanzamiento-marca {
+    display: inline-block;
+    margin-left: 0.35em;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.lanzamiento-obras {
+    font-size: 0.95em;
+}
+
+.lanzamiento-admin {
+    padding: 2px 5px;
+
+    border: 1px dashed rgba(255, 255, 255, 0.45);
+    border-radius: 4px;
+
+    color: #cbd5e1;
+    font-size: 0.62em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+
+/* ---- Franjas arriba de la página o de la pestaña ---- */
+
+.lanzamiento-franja {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0 0 16px;
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    font-size: 0.92rem;
+    line-height: 1.4;
+}
+
+.lanzamiento-franja-icono {
+    flex: none;
+    font-size: 1.25rem;
+}
+
+.lanzamiento-franja-obras {
+    border: 2px solid transparent;
+    border-image: repeating-linear-gradient(-45deg, #facc15 0 10px, #111827 10px 20px) 2;
+
+    background: #fef9c3;
+    color: #422006;
+}
+
+.lanzamiento-franja-admin {
+    border: 1px dashed #64748b;
+
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+
+/* ---- Lo oculto ---- */
+
+body.lanzamiento-oculto main {
+    display: none !important;
+}
+
+.lanzamiento-panel-oculto {
+    display: none !important;
+}
+
+.lanzamiento-proximamente {
+    max-width: 560px;
+    margin: 12vh auto;
+    padding: 32px 24px;
+
+    border: 2px solid transparent;
+    border-image: repeating-linear-gradient(-45deg, #facc15 0 14px, #111827 14px 28px) 2;
+
+    background: #0f172a;
+    color: #f8fafc;
+    text-align: center;
+}
+
+.lanzamiento-proximamente-icono {
+    margin: 0;
+    font-size: 3rem;
+}
+
+.lanzamiento-proximamente-titulo {
+    margin: 8px 0 12px;
+    font-size: 1.8rem;
+}
+
+.lanzamiento-proximamente-texto {
+    margin: 0 0 22px;
+    color: #cbd5e1;
+}
+
+.lanzamiento-proximamente-boton {
+    display: inline-block;
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    background: #facc15;
+    color: #111827;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.lanzamiento-proximamente-boton:hover,
+.lanzamiento-proximamente-boton:focus-visible {
+    background: #fde047;
+}
