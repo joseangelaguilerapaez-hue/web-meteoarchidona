@@ -33,3 +33,21 @@ menú, detrás de Actualidad. Dirección limpia en `.htaccess`, `servidor.py`, `
 El editor añade **Tipo** (novedad o aviso) y **Enlace** (opcional). La lista marca «Aviso
 automático» y enseña la clave; si se edita uno automático, el servidor lo vuelve a escribir en su
 siguiente cálculo, pero si se desactiva, se queda desactivado.
+
+## Lanzamientos escalonados (José, 15-11-2026)
+
+Las secciones y pestañas publicadas sin anunciar se sueltan una a una, cada 3 días a las 08:00, en el
+orden del menú, cada una con su novedad (calendario y API en `docs/lanzamientos.md` de
+api-meteoarchidona).
+
+- `js/lanzamientos.js`, cargado por `js/cabecera.js` en todas las páginas, lee `GET /lanzamientos`.
+- **Oculto**: fuera del menú y del pie; la página enseña «Próximamente»; la pestaña no sale; sus
+  componentes no salen en ninguna página ni dashboard (hoja de estilo `#lanzamientos-ocultos`, y el
+  pintor de dashboards se los salta).
+- **En obras** (24 horas): 🚧 junto al nombre en el menú o en la pestaña y franja arriba.
+- **Administradores** (sesión con usuario administrador): lo ven todo, con la marca «oculta» y una
+  franja con la fecha de salida.
+- Si la API no responde se usa lo último que se supo en ese navegador.
+- Administración → Novedades y avisos → panel **Lanzamientos**: calendario, cambiar fecha (la novedad
+  se corre lo mismo) y «Lanzar ya» (`js/administracion/lanzamientos.js`).
+- Climatología entra en el menú delante de Agua y sequía; sale con su lanzamiento el 6-12-2026.

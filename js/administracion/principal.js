@@ -936,6 +936,7 @@ async function cargarModuloNovedades(){
         const modulo = await promesaModuloNovedades;
         modulo.configurarEventosNovedades();
         await modulo.cargarNovedades();
+        cargarPanelLanzamientos();
     }catch(error){
         promesaModuloNovedades = null;
         console.error(
@@ -947,6 +948,32 @@ async function cargarModuloNovedades(){
             error.message
             ||
             "No se han podido cargar las novedades.",
+            "error"
+        );
+    }
+
+}
+
+
+/*
+ * Lanzamientos escalonados (docs/lanzamientos.md de la API; José,
+ * 15-11-2026): panel dentro de Novedades y avisos.
+ */
+async function cargarPanelLanzamientos(){
+
+    if(!$("panelLanzamientos")){
+        return;
+    }
+
+    try{
+        const modulo = await import("./lanzamientos.js?v=20261115-lanzamientos1");
+        modulo.configurarEventosLanzamientos();
+        await modulo.cargarLanzamientos();
+    }catch(error){
+        console.error("No se han podido cargar los lanzamientos.", error);
+        mostrarEstado(
+            $("estadoLanzamientos"),
+            error.message || "No se han podido cargar los lanzamientos.",
             "error"
         );
     }

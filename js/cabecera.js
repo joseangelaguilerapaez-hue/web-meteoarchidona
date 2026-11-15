@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261115-incendios";
+    "/componentes/cabecera.html?v=20261115-lanzamientos1";
 
 
 /* ==========================================================
@@ -287,6 +287,10 @@ const RUTA_SALUD_CSS = "/css/salud-publica.css?v=20261110-salud1";
 
 const RUTA_SALUD_JS = "/js/salud-publica.js?v=20261110-salud1";
 
+const RUTA_LANZAMIENTOS_CSS = "/css/lanzamientos.css?v=20261115-lanzamientos1";
+
+const RUTA_LANZAMIENTOS_JS = "/js/lanzamientos.js?v=20261115-lanzamientos1";
+
 
 /*
  * Monta componentes/pie.html en el <div id="pie"> de la página, si lo
@@ -365,6 +369,9 @@ async function montarPie() {
         enlace.href = original.getAttribute("href");
 
         enlace.textContent = original.textContent.trim();
+
+        // Para que js/lanzamientos.js esconda también aquí lo que no ha salido.
+        enlace.dataset.seccion = original.dataset.seccion;
 
         if (original.getAttribute("aria-current") === "page") {
 
@@ -482,6 +489,28 @@ function cargarSalud() {
 }
 
 
+/*
+ * Lanzamientos escalonados (José, 15-11-2026; js/lanzamientos.js): esconde
+ * lo que todavía no ha salido y pone la marca de obras el primer día.
+ */
+function cargarLanzamientos() {
+
+    const hoja = document.createElement("link");
+
+    hoja.rel = "stylesheet";
+
+    hoja.href = RUTA_LANZAMIENTOS_CSS;
+
+    document.head.appendChild(hoja);
+
+    import(RUTA_LANZAMIENTOS_JS)
+        .then((modulo) => modulo.aplicarLanzamientos())
+        .catch((error) => {
+            console.error("No se han podido aplicar los lanzamientos:", error);
+        });
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -533,6 +562,8 @@ async function montarCabecera() {
 
 
     marcarSeccionActual();
+
+    cargarLanzamientos();
 
     configurarLogotipoSeccion();
 

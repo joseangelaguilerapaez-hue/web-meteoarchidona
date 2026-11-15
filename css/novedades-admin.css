@@ -127,3 +127,80 @@
 }
 
 /* Fin de fichero: css/novedades-admin.css */
+
+
+/* ---- Lanzamientos escalonados (js/administracion/lanzamientos.js; José, 15-11-2026) ---- */
+
+.lanzamientos-admin-lista {
+    display: grid;
+    gap: 10px;
+}
+
+.lanzamiento-admin-fila {
+    padding: 10px 12px;
+
+    border: 1px solid var(--border, #1a2d42);
+    border-radius: 10px;
+
+    background: var(--card-soft, #0d1a27);
+}
+
+.lanzamiento-admin-fila[data-estado="PUBLICADO"] {
+    opacity: 0.6;
+}
+
+.lanzamiento-admin-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.lanzamiento-admin-orden {
+    min-width: 1.6em;
+    color: var(--muted, #aabdd0);
+    font-variant-numeric: tabular-nums;
+}
+
+.lanzamiento-admin-tipo {
+    color: var(--muted, #aabdd0);
+    font-size: 0.85em;
+}
+
+.lanzamiento-admin-estado {
+    margin-left: auto;
+    padding: 2px 8px;
+
+    border-radius: 999px;
+
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.lanzamiento-admin-estado.estado-oculto {
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+.lanzamiento-admin-estado.estado-en_obras {
+    background: #facc15;
+    color: #111827;
+}
+
+.lanzamiento-admin-estado.estado-publicado {
+    background: rgba(34, 197, 94, 0.18);
+    color: #86efac;
+}
+
+.lanzamiento-admin-detalle {
+    margin: 6px 0 0;
+    color: var(--text-soft, #c9d6e5);
+    font-size: 0.9em;
+}
+
+.lanzamiento-admin-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
