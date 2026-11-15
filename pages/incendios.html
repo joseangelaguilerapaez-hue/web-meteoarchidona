@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Incendios: riesgo de incendio forestal en España y en la comarca de Archidona. Nivel de peligro de AEMET y de EFFIS (Copernicus) para hoy y los próximos días, mapa de España, época de peligro en Andalucía y cómo ha ido cada verano."
+>
+
+<title>
+    Incendios · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#141010">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/incendios">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Incendios · MeteoArchidona">
+<meta property="og:description" content="Riesgo de incendio forestal en España y en la comarca: AEMET y EFFIS, hoy y los próximos días.">
+<meta property="og:url" content="https://meteoarchidona.com/incendios">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20261113-menu5"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261113-menu5"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/incendios-componentes.css?v=20261115-incendios1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/incendios.css?v=20261115-incendios1"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261115-incendios"
+    defer
+></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20260913-lluvia3"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/incendios.js?v=20261115-incendios1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="incendios">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="incendios">
+
+
+<header class="incendios-cabecera">
+
+    <div class="inc-etiqueta">
+        METEOARCHIDONA · INCENDIOS
+    </div>
+
+    <h1>
+        Incendios
+    </h1>
+
+    <p class="incendios-subtitulo">
+        Riesgo de incendio forestal en España y en la comarca
+    </p>
+
+    <p class="incendios-entradilla">
+        El nivel de peligro de incendio de hoy y de los próximos días en
+        cada pueblo de la comarca y en toda España, la época de peligro
+        vigente en Andalucía y cómo ha ido cada verano. Son los niveles
+        oficiales de AEMET, que es el que manda, y de EFFIS, el sistema
+        europeo del programa Copernicus.
+    </p>
+
+    <p class="incendios-aviso">
+        Información solo orientativa. MeteoArchidona no calcula un índice
+        propio: enseña los de AEMET y EFFIS. Ante cualquier humo o fuego,
+        llama al 112.
+    </p>
+
+</header>
+
+
+<!-- ========================================================
+     HOY
+     Componentes js/incendios/resumen.js y epoca.js.
+     ======================================================== -->
+
+<section
+    class="incendios-bloque"
+    aria-labelledby="titulo-incendios-hoy"
+>
+
+    <h2 id="titulo-incendios-hoy">
+        Hoy
+    </h2>
+
+    <div class="incendios-rejilla">
+
+        <div data-componente="incendios-resumen"></div>
+
+        <div data-componente="incendios-epoca"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     LA COMARCA
+     Componentes js/incendios/comarca.js y pueblo.js.
+     ======================================================== -->
+
+<section
+    class="incendios-bloque"
+    aria-labelledby="titulo-incendios-comarca"
+>
+
+    <h2 id="titulo-incendios-comarca">
+        La comarca, los próximos días
+    </h2>
+
+    <div
+        data-componente="incendios-comarca"
+        data-titulo="no"
+    ></div>
+
+    <div data-componente="incendios-pueblo"></div>
+
+</section>
+
+
+<!-- ========================================================
+     ESPAÑA
+     Componente js/incendios/mapa.js.
+     ======================================================== -->
+
+<section
+    class="incendios-bloque"
+    aria-labelledby="titulo-incendios-espana"
+>
+
+    <h2 id="titulo-incendios-espana">
+        España
+    </h2>
+
+    <div
+        data-componente="incendios-mapa"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     LA TEMPORADA
+     Componente js/incendios/temporada.js.
+     ======================================================== -->
+
+<section
+    class="incendios-bloque"
+    aria-labelledby="titulo-incendios-temporada"
+>
+
+    <h2 id="titulo-incendios-temporada">
+        Cómo va el verano
+    </h2>
+
+    <p class="incendios-nota">
+        Cada raya es un día del 1 de junio al 15 de octubre, la época de
+        peligro alto en Andalucía, con el color de su nivel.
+    </p>
+
+    <div
+        data-componente="incendios-temporada"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     QUÉ SIGNIFICA
+     Componente js/incendios/divulgacion.js.
+     ======================================================== -->
+
+<section
+    class="incendios-bloque"
+    aria-labelledby="titulo-incendios-divulgacion"
+>
+
+    <h2 id="titulo-incendios-divulgacion">
+        Qué significa
+    </h2>
+
+    <div
+        data-componente="incendios-divulgacion"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/incendios.html -->

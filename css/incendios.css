@@ -1,0 +1,137 @@
+/*
+ * MeteoArchidona
+ * Página Incendios
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/incendios.html
+ *
+ * Decisión de José del 15-11-2026: la sección Incendios va en oscuro con
+ * fondo propio carbón (no el gris del resto del sitio) y la gama «Brasa
+ * sobre oscuro». Una columna de bloques con bordes finos y radios de
+ * 14 px; la cabecera y el pie siguen siendo los de siempre.
+ *
+ * La paleta (--inc-*) está en css/incendios-componentes.css, que se carga
+ * antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="incendios"] {
+    background:
+        radial-gradient(ellipse at 50% 120%, rgba(195, 38, 31, 0.28) 0%, rgba(195, 38, 31, 0) 55%),
+        radial-gradient(ellipse at top, #2a1a15 0%, rgba(20, 16, 16, 0) 60%),
+        linear-gradient(180deg, #171110 0%, #141010 55%, #0d0a0a 100%);
+    background-attachment: fixed;
+    background-color: #141010;
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.incendios {
+    width: min(1040px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--inc-texto);
+}
+
+.incendios-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+.incendios-cabecera h1 {
+    margin: 0;
+    color: var(--inc-texto);
+    font-size: clamp(26px, 4.4vw, 38px);
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.incendios-subtitulo {
+    margin: 0;
+    color: var(--inc-naranja);
+    font-size: clamp(16px, 2.4vw, 20px);
+    font-weight: 600;
+}
+
+.incendios-entradilla {
+    margin: 0;
+    max-width: 760px;
+    color: var(--inc-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.incendios-aviso {
+    margin: 0;
+    padding: 10px 14px;
+    color: var(--inc-texto-suave);
+    background: rgba(20, 16, 16, 0.6);
+    border: 1px dashed var(--inc-borde-fuerte);
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.incendios-bloque {
+    display: grid;
+    gap: 14px;
+    padding: 20px 22px;
+    background:
+        radial-gradient(ellipse at top right, rgba(232, 105, 43, 0.08) 0%, rgba(232, 105, 43, 0) 55%),
+        linear-gradient(170deg, var(--inc-tarjeta-clara) 0%, var(--inc-tarjeta) 100%);
+    border: 1px solid var(--inc-borde);
+    border-radius: 14px;
+    box-shadow: var(--inc-sombra);
+}
+
+.incendios-bloque h2 {
+    margin: 0;
+    color: var(--inc-texto);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.incendios-nota {
+    margin: 0;
+    color: var(--inc-texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Dentro de la rejilla de «Hoy», cada componente lleva su tarjeta. */
+.incendios-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.incendios-bloque > .incendios-rejilla > .inc-componente {
+    background: var(--inc-carbon);
+    box-shadow: none;
+}
+
+.incendios-bloque > .inc-componente + .inc-componente {
+    padding-top: 16px;
+    border-top: 1px solid var(--inc-borde);
+    border-radius: 0;
+}
+
+@media (max-width: 860px) {
+    .incendios-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+/* Fin de fichero: css/incendios.css */
