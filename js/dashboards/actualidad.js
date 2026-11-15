@@ -17,7 +17,7 @@
  * propios refrescos periódicos y así no se quedan funcionando detrás.
  */
 
-import {pintarDashboard} from "./pintor.js?v=20261115-lanzamientos1";
+import {pintarDashboard} from "./pintor.js?v=20261115-semaforo-incendios";
 
 
 const CORTE_MOVIL = "(max-width: 850px)";
