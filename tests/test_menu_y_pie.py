@@ -52,7 +52,10 @@ class TestMenu(unittest.TestCase):
 
         secciones = re.findall(r'^\s+data-seccion="([^"]+)"', CABECERA_HTML, re.MULTILINE)
 
-        self.assertEqual(len(secciones), 15, secciones)
+        # 16 desde Incendios (José, 15-11-2026): en escritorio, tres filas de
+        # cinco y la última centrada; en el pie, columnas de cinco; en el
+        # móvil, dos columnas de ocho.
+        self.assertEqual(len(secciones), 16, secciones)
 
 
 class TestPie(unittest.TestCase):

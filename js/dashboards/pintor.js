@@ -109,6 +109,14 @@ const COMPONENTES = {
     "clima-climograma": ["/js/climatologia/climograma.js?v=20261113-clima1", "montarClimograma"],
     "clima-normales": ["/js/climatologia/normales.js?v=20261113-clima1", "montarNormalesClima"],
     "clima-metodo": ["/js/climatologia/metodo.js?v=20261113-clima1", "montarMetodoClima"],
+    // Incendios
+    "incendios-resumen": ["/js/incendios/resumen.js?v=20261115-incendios1", "montarResumenIncendios"],
+    "incendios-epoca": ["/js/incendios/epoca.js?v=20261115-incendios1", "montarEpocaIncendios"],
+    "incendios-comarca": ["/js/incendios/comarca.js?v=20261115-incendios1", "montarComarcaIncendios"],
+    "incendios-pueblo": ["/js/incendios/pueblo.js?v=20261115-incendios1", "montarPuebloIncendios"],
+    "incendios-mapa": ["/js/incendios/mapa.js?v=20261115-incendios1", "montarMapaIncendios"],
+    "incendios-temporada": ["/js/incendios/temporada.js?v=20261115-incendios1", "montarTemporadaIncendios"],
+    "incendios-divulgacion": ["/js/incendios/divulgacion.js?v=20261115-incendios1", "montarDivulgacionIncendios"],
     // Alertas meteorológicas
     "alertas-semaforos": ["/js/alertas/semaforos.js?v=20261112-alertas3", "montarSemaforosAlertas"],
     // Luna (astronomía)

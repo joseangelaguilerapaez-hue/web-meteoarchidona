@@ -1079,6 +1079,64 @@ class TestComponentesClimatologia(unittest.TestCase):
         self.assertIn('modulo.SECCION = "climatologia"', leer(RAIZ / "scripts" / "configurar_seccion_climatologia.py"))
 
 
+class TestComponentesIncendios(unittest.TestCase):
+    """Componentes de Incendios para la página y los dashboards (15-11-2026)."""
+
+    COMPONENTES = {
+        "incendios-resumen": ("resumen.js", "montarResumenIncendios"),
+        "incendios-epoca": ("epoca.js", "montarEpocaIncendios"),
+        "incendios-comarca": ("comarca.js", "montarComarcaIncendios"),
+        "incendios-pueblo": ("pueblo.js", "montarPuebloIncendios"),
+        "incendios-mapa": ("mapa.js", "montarMapaIncendios"),
+        "incendios-temporada": ("temporada.js", "montarTemporadaIncendios"),
+        "incendios-divulgacion": ("divulgacion.js", "montarDivulgacionIncendios"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "incendios.html")
+        principal = leer(RAIZ / "js" / "incendios.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "incendios" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/incendios/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "incendios" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_brasa(self):
+        comun = leer(RAIZ / "js" / "incendios" / "comun.js")
+        ruta = re.search(r'"(/css/incendios-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "incendios.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "incendios-componentes.css")
+        for variable in ("--inc-carbon", "--inc-ambar", "--inc-naranja", "--inc-brasa"):
+            self.assertIn(variable, hoja)
+        self.assertIn("container-type: inline-size", hoja)
+        self.assertNotIn("--inc-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_cita_las_fuentes_y_no_inventa_un_indice(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "incendios.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/incendios\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn('<body data-seccion="incendios">', pagina)
+        self.assertIn("112", pagina)
+        comun = leer(RAIZ / "js" / "incendios" / "comun.js")
+        self.assertIn("Fuente: AEMET", comun)
+        self.assertIn("Copernicus", comun)
+        self.assertIn("no calcula un índice propio", comun)
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "incendios"', leer(RAIZ / "scripts" / "configurar_seccion_incendios.py"))
+
 class TestComponentesLuna(unittest.TestCase):
     """Componentes de la sección Luna para la página y los dashboards (11-11-2026)."""
 
