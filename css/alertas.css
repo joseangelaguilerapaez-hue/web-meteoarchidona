@@ -1,8 +1,9 @@
 /*
  * MeteoArchidona · Semáforos de alertas (js/alertas/semaforos.js)
  *
- * Sin fondo: el brazo va encima de la página y el contenido se ve por los
- * huecos. Fijo bajo la cabecera con data-fijo="si" (Actualidad).
+ * Sin fondo. En Actualidad va en su sección, entre la cabecera y el
+ * cuerpo, siempre a la vista; al bajar con el scroll, si hay alerta, queda
+ * una tira fina bajo la cabecera (José, 16-11-2026).
  */
 
 .alertas-semaforos {
@@ -12,15 +13,6 @@
 
 .alertas-semaforos[hidden] {
     display: none;
-}
-
-.alertas-semaforos.alertas-fijo {
-    position: fixed;
-    top: var(--alertas-arriba, 0px);
-    left: 0;
-    right: 0;
-    z-index: 90;
-    pointer-events: none;
 }
 
 .alertas-brazo {
@@ -50,6 +42,63 @@
     font-weight: 600;
     font-family: inherit;
     pointer-events: none;
+}
+
+/* Tira fina bajo la cabecera al bajar con el scroll (16-11-2026) */
+
+.alertas-tira {
+    position: fixed;
+    top: var(--alertas-arriba, 0px);
+    left: 50%;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: calc(100vw - 24px);
+    padding: 5px 14px;
+    border: 0;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    font-family: "Sora", sans-serif;
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #111;
+    cursor: pointer;
+    opacity: 0;
+    transform: translate(-50%, -110%);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.alertas-tira[hidden] {
+    display: none;
+}
+
+.alertas-tira.alertas-tira-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.alertas-tira-texto {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.alertas-tira-icono {
+    flex: none;
+    font-size: 1rem;
+}
+
+.alertas-tira:focus-visible {
+    outline: 2px solid var(--cyan, #4fd1e8);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .alertas-tira {
+        transition: none;
+    }
 }
 
 /* Ficha emergente */

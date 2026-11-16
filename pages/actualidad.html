@@ -73,10 +73,12 @@
 
 
 <link rel="stylesheet" href="../css/componentes-actualidad.css?v=20261104-componentes1">
+<link rel="stylesheet" href="../css/alertas.css?v=20261116-portada1">
+<link rel="stylesheet" href="../css/novedades.css?v=20261116-portada1">
 
 <link
     rel="stylesheet"
-    href="../css/actualidad.css?v=20261104-componentes1"
+    href="../css/actualidad.css?v=20261116-portada1"
 >
 
 
@@ -130,7 +132,7 @@
 <!-- Novedades y avisos: ventana con las vigentes al entrar y franja de avisos automáticos (docs/novedades.md de la API). -->
 <script
     type="module"
-    src="../js/novedades.js?v=20261112-marquesina1"
+    src="../js/novedades.js?v=20261116-portada1"
 ></script>
 
 
@@ -162,13 +164,24 @@
 
 
 <div id="cabecera"></div>
-<!-- Semáforos de alertas (docs/alertas-meteorologicas.md de la API): fijos
-     bajo la cabecera, solo si hay algún aviso; js/alertas/semaforos.js. -->
-<div
-    data-componente="alertas-semaforos"
-    data-fijo="si"
-    hidden
-></div>
+<!-- Alertas y avisos (José, 16-11-2026): sección propia entre la cabecera
+     y el cuerpo. El semáforo sale siempre, aunque esté todo en verde, y al
+     bajar deja una tira fina arriba si hay alerta (js/alertas/semaforos.js);
+     debajo, la franja de avisos cuando los hay (js/novedades.js). -->
+<section
+    class="portada-alertas"
+    id="portada-alertas"
+    aria-label="Alertas y avisos"
+>
+    <div
+        data-componente="alertas-semaforos"
+        data-portada="si"
+    ></div>
+    <div
+        class="portada-avisos"
+        id="portada-avisos"
+    ></div>
+</section>
 
 
 <div

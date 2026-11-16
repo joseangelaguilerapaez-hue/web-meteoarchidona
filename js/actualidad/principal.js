@@ -121,7 +121,7 @@ import {
 
 import {
     montarSemaforosAlertas
-} from "../alertas/semaforos.js?v=20261115-semaforo-aire";
+} from "../alertas/semaforos.js?v=20261116-portada1";
 
 
 const COMPONENTES_ACTUALIDAD = {
@@ -411,8 +411,8 @@ async function prepararGraficas() {
 async function arrancarActualidad() {
 
     /*
-     * Semáforos de alertas (José, 11-11-2026): fijos arriba, también en
-     * Actualidad como dashboard. Solo se ven si hay algún aviso.
+     * Semáforos de alertas: en su sección entre la cabecera y el cuerpo,
+     * siempre a la vista (José, 16-11-2026).
      */
     for (const hueco of document.querySelectorAll('[data-componente="alertas-semaforos"]')) {
         montarSemaforosAlertas(hueco).catch(error => {

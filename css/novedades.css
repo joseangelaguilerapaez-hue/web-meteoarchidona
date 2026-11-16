@@ -244,6 +244,21 @@
     font-family: "Sora", sans-serif;
 }
 
+/* Entrada suave en la portada (José, 16-11-2026): se despliega hacia abajo. */
+.avisos-franja-entra {
+    animation: avisos-franja-despliega 0.45s ease-out both;
+    overflow: hidden;
+}
+
+@keyframes avisos-franja-despliega {
+    from { max-height: 0; opacity: 0; }
+    to { max-height: 240px; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .avisos-franja-entra { animation: none; }
+}
+
 .aviso-franja {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto auto;
