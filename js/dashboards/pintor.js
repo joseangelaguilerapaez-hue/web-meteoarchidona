@@ -124,7 +124,7 @@ const COMPONENTES = {
     "incendios-temporada": ["/js/incendios/temporada.js?v=20261115-incendios1", "montarTemporadaIncendios"],
     "incendios-divulgacion": ["/js/incendios/divulgacion.js?v=20261115-incendios1", "montarDivulgacionIncendios"],
     // Alertas meteorológicas
-    "alertas-semaforos": ["/js/alertas/semaforos.js?v=20261116-portada3", "montarSemaforosAlertas"],
+    "alertas-semaforos": ["/js/alertas/semaforos.js?v=20261116-polen1", "montarSemaforosAlertas"],
     // Luna (astronomía)
     "luna-ahora": ["/js/luna/luna-ahora.js?v=20261111-luna5", "montarLunaAhora"],
     "luna-horario": ["/js/luna/horario.js?v=20261111-luna5", "montarHorarioLuna"],

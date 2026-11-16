@@ -214,6 +214,7 @@ function abrirFormulario(caja, semaforo, nivel) {
         formulario.appendChild(crear("div", "adm-alertas-hora", {
             INCENDIO: "Hasta el fin del último día con peligro alto o más según AEMET.",
             AIRE: "Hasta el fin del último día con aviso por el aire o la calima según CAMS.",
+            POLEN: "Hasta el fin del último día con aviso por polen en la previsión de Archidona.",
         }[semaforo.fenomeno] || "Hasta el fin de la alerta de AEMET (se alarga si AEMET la alarga)."));
     }
 

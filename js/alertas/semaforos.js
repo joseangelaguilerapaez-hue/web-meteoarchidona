@@ -1,9 +1,12 @@
 /*
  * MeteoArchidona · Componente «Semáforos de alertas»
  *
- * Brazo de semáforo curvado con seis semáforos de cinco luces, uno por
- * fenómeno (Lluvia, Tormenta, Viento, Calor, Frío y Nieve), con su
- * cartelito encima. Decisiones de José del 11-11-2026
+ * Brazo de semáforo curvado con un semáforo por fenómeno: los seis de
+ * AEMET (Lluvia, Tormenta, Viento, Calor, Frío y Nieve) y los ambientales
+ * (Incendios, Aire y Polen), cada uno con su cartelito encima. En el
+ * móvil van en dos brazos del mismo poste, arriba los de AEMET y abajo los
+ * ambientales; en PC, en una fila. Cada semáforo lleva solo las luces de
+ * su escala: incendios 3, aire 4 y los demás 5 (José, 16-11-2026). Decisiones de José del 11-11-2026
  * (docs/alertas-meteorologicas.md de la API):
  *
  * - Luces de arriba abajo: rojo, fucsia, naranja, amarillo y verde. El
@@ -32,16 +35,17 @@
  * API: GET /alertas/semaforos. Se refresca cada 5 minutos.
  */
 
-const HOJA = "/css/alertas.css?v=20261116-portada3";
+const HOJA = "/css/alertas.css?v=20261116-polen1";
 
 // Fuente que se cita en la ficha (los de AEMET-Meteoalerta, la de por defecto).
 const FUENTES = {
     INCENDIO: "Fuente: AEMET (peligro meteorológico de incendios; el peor de los pueblos de la comarca)",
     AIRE: "Fuente: CAMS de Copernicus (previsión para Archidona: índice nacional de calidad del aire y calima)",
+    POLEN: "Fuente: CAMS de Copernicus y Open-Meteo (previsión para Archidona) y Universidad de Granada (recuentos medidos en Granada)",
 };
 
 // Nombre de la sección a la que lleva el enlace de la ficha.
-const SECCIONES = {INCENDIO: "Incendios", AIRE: "Calidad del aire"};
+const SECCIONES = {INCENDIO: "Incendios", AIRE: "Calidad del aire", POLEN: "Polen"};
 
 const MINUTOS_REFRESCO = 5;
 
@@ -53,8 +57,6 @@ const APAGADOS = {
 };
 
 const NS = "http://www.w3.org/2000/svg";
-
-const ALTO = 190;
 
 /* Escala del dibujo: en PC algo más grande que en el móvil. */
 const CORTE_MOVIL = "(max-width: 850px)";
@@ -171,25 +173,50 @@ function definiciones(svg, id) {
 }
 
 
-function dibujarSemaforo(svg, id, cx, semaforo, alPulsar) {
+/* Luces de un semáforo, de arriba abajo: solo las de su escala
+   (incendios 3, aire 4, los demás 5; José, 16-11-2026). */
+function lucesDe(semaforo) {
+    const admitidos = semaforo.niveles && semaforo.niveles.length ? semaforo.niveles : NIVELES;
+    return NIVELES.filter(nivel => admitidos.includes(nivel)).reverse();
+}
+
+/* Alto de la carcasa para tantas luces (125 con cinco). */
+function altoCarcasa(luces) {
+    return 24 * luces + 5;
+}
+
+/* Cartel con el nombre: si no cabe, se ajusta al ancho del cartel. */
+function cartel(grupo, cx, ancho, nombre) {
+    el("rect", {x: cx - ancho / 2, y: 28, width: ancho, height: 17, rx: 3, fill: "#1D4F91", stroke: "#FFFFFF", "stroke-width": 1.2}, grupo);
+    const texto = el("text", {x: cx, y: 40.5, "text-anchor": "middle", class: "alertas-cartel"}, grupo);
+    texto.textContent = nombre;
+    const hueco = ancho - 6;
+    if (nombre.length * 6.1 > hueco) {
+        texto.setAttribute("textLength", hueco);
+        texto.setAttribute("lengthAdjust", "spacingAndGlyphs");
+    }
+}
+
+
+function dibujarSemaforo(svg, id, cx, semaforo, alPulsar, arriba = 0, anchoCartel = 54) {
     const grupo = el("g", {
         class: "alertas-semaforo",
         tabindex: 0,
         role: "button",
+        transform: `translate(0 ${arriba})`,
         "aria-label": `${semaforo.nombre}: ${LUCES[semaforo.nivel]?.nombre || "sin datos"}. Ver detalle`,
     }, svg);
 
-    el("rect", {x: cx - 1.5, y: 18, width: 3, height: 10, fill: "#2A2D32"}, grupo);
-    el("rect", {x: cx - 27, y: 28, width: 54, height: 17, rx: 3, fill: "#1D4F91", stroke: "#FFFFFF", "stroke-width": 1.2}, grupo);
-    const cartel = el("text", {x: cx, y: 40.5, "text-anchor": "middle", class: "alertas-cartel"}, grupo);
-    cartel.textContent = semaforo.nombre;
-    el("rect", {x: cx - 1.5, y: 45, width: 3, height: 5, fill: "#2A2D32"}, grupo);
-    el("rect", {x: cx - 16, y: 50, width: 32, height: 125, rx: 5, fill: `url(#${id}-carcasa)`, stroke: "#0B0C0E", "stroke-width": 0.8}, grupo);
-    el("rect", {x: cx - 14.5, y: 51.5, width: 3, height: 122, rx: 1.5, fill: "#FFFFFF", "fill-opacity": 0.06}, grupo);
+    const luces = lucesDe(semaforo);
+    const alto = altoCarcasa(luces.length);
 
-    // De arriba abajo: rojo, fucsia, naranja, amarillo, verde.
-    for (let posicion = 0; posicion < NIVELES.length; posicion++) {
-        const nivel = NIVELES[NIVELES.length - 1 - posicion];
+    el("rect", {x: cx - 1.5, y: 18, width: 3, height: 10, fill: "#2A2D32"}, grupo);
+    cartel(grupo, cx, anchoCartel, semaforo.nombre);
+    el("rect", {x: cx - 1.5, y: 45, width: 3, height: 5, fill: "#2A2D32"}, grupo);
+    el("rect", {x: cx - 16, y: 50, width: 32, height: alto, rx: 5, fill: `url(#${id}-carcasa)`, stroke: "#0B0C0E", "stroke-width": 0.8}, grupo);
+    el("rect", {x: cx - 14.5, y: 51.5, width: 3, height: alto - 3, rx: 1.5, fill: "#FFFFFF", "fill-opacity": 0.06}, grupo);
+
+    luces.forEach((nivel, posicion) => {
         const cy = 63 + 24 * posicion;
         const encendida = nivel === semaforo.nivel;
 
@@ -207,7 +234,7 @@ function dibujarSemaforo(svg, id, cx, semaforo, alPulsar) {
                 + `L${cx + 10} ${cy - 5} Q${cx} ${cy - 11} ${cx - 10} ${cy - 5} Z`,
             fill: "#0B0C0E",
         }, grupo);
-    }
+    });
 
     grupo.addEventListener("click", () => alPulsar(semaforo));
     grupo.addEventListener("keydown", evento => {
@@ -219,36 +246,75 @@ function dibujarSemaforo(svg, id, cx, semaforo, alPulsar) {
 }
 
 
+/* Los seis de AEMET van en el brazo de arriba; los ambientales (incendios,
+   aire, polen y los que vengan), en el de abajo (José, 16-11-2026). */
+const DE_AEMET = new Set(["LLUVIA", "TORMENTA", "VIENTO", "CALOR", "FRIO", "NIEVE"]);
+
+const INICIO = 62;      // primer semáforo, a la derecha del poste
+const MARGEN = 34;      // hueco a la derecha del último
+const PASO_MINIMO = 57;
+const HUECO_FILAS = 14; // entre el pie de un brazo y el siguiente
+
+function filas(semaforos) {
+    // En el móvil, dos brazos si hay ambientales; en PC, una sola fila.
+    const arriba = semaforos.filter(s => !s.fenomeno || DE_AEMET.has(s.fenomeno));
+    const abajo = semaforos.filter(s => s.fenomeno && !DE_AEMET.has(s.fenomeno));
+    if (!window.matchMedia(CORTE_MOVIL).matches || !abajo.length || !arriba.length) {
+        return [semaforos];
+    }
+    return [arriba, abajo];
+}
+
+
 function dibujar(raiz, datos, alPulsar) {
     const id = raiz.dataset.alertasId;
     const escala = window.matchMedia(CORTE_MOVIL).matches ? 1 : 1.15;
-    // Con siete u ocho semáforos (Incendios y Aire, 15-11-2026) no caben en un móvil a 57
-    // de paso: el dibujo se hace más ancho y el navegador lo encoge.
+    const grupos = filas(datos.semaforos || []);
+
+    // Ancho del dibujo: el de la pantalla, o más si una fila no cabe (el
+    // navegador lo encoge).
     let ancho = Math.max(380, Math.round((raiz.clientWidth || window.innerWidth) / escala));
-    const total = (datos.semaforos || []).length;
-    ancho = Math.max(ancho, 62 + 57 * Math.max(0, total - 1) + 34);
+    for (const fila of grupos) {
+        ancho = Math.max(ancho, INICIO + PASO_MINIMO * Math.max(0, fila.length - 1) + MARGEN);
+    }
+
+    // Altura de cada brazo según el semáforo con más luces.
+    const altos = grupos.map(fila => 50 + altoCarcasa(Math.max(...fila.map(s => lucesDe(s).length), 1)));
+    const arribas = [];
+    let total = 0;
+    altos.forEach(alto => {
+        arribas.push(total);
+        total += alto + HUECO_FILAS;
+    });
+    const ALTO_TOTAL = total;
 
     const svg = el("svg", {
         class: "alertas-brazo",
-        viewBox: `0 0 ${ancho} ${ALTO}`,
+        viewBox: `0 0 ${ancho} ${ALTO_TOTAL}`,
         role: "group",
         "aria-label": "Semáforos de alertas meteorológicas",
     });
     definiciones(svg, id);
 
-    // Poste a la izquierda y brazo curvado de lado a lado.
-    el("path", {d: `M12 ${ALTO} L12 44 Q12 16 40 16 L${ancho - 8} 16`, fill: "none", stroke: "#1E2024", "stroke-width": 7, "stroke-linecap": "round"}, svg);
-    el("path", {d: `M11 ${ALTO} L11 44 Q11 15 40 15 L${ancho - 8} 15`, fill: "none", stroke: "#5E636B", "stroke-width": 2.5, "stroke-linecap": "round"}, svg);
-    el("rect", {x: 5, y: ALTO - 14, width: 14, height: 14, rx: 2, fill: `url(#${id}-poste)`}, svg);
+    // Poste a la izquierda y un brazo curvado por fila.
+    el("path", {d: `M12 ${ALTO_TOTAL} L12 44 Q12 16 40 16 L${ancho - 8} 16`, fill: "none", stroke: "#1E2024", "stroke-width": 7, "stroke-linecap": "round"}, svg);
+    el("path", {d: `M11 ${ALTO_TOTAL} L11 44 Q11 15 40 15 L${ancho - 8} 15`, fill: "none", stroke: "#5E636B", "stroke-width": 2.5, "stroke-linecap": "round"}, svg);
+    for (const arriba of arribas.slice(1)) {
+        const y = arriba + 16;
+        el("path", {d: `M12 ${y + 28} Q12 ${y} 40 ${y} L${ancho - 8} ${y}`, fill: "none", stroke: "#1E2024", "stroke-width": 7, "stroke-linecap": "round"}, svg);
+        el("path", {d: `M11 ${y + 27} Q11 ${y - 1} 40 ${y - 1} L${ancho - 8} ${y - 1}`, fill: "none", stroke: "#5E636B", "stroke-width": 2.5, "stroke-linecap": "round"}, svg);
+    }
+    el("rect", {x: 5, y: ALTO_TOTAL - 14, width: 14, height: 14, rx: 2, fill: `url(#${id}-poste)`}, svg);
 
-    const semaforos = datos.semaforos || [];
-    const inicio = 62;
-    const paso = semaforos.length > 1
-        ? Math.max(57, (ancho - inicio - 34) / (semaforos.length - 1))
-        : 0;
-
-    semaforos.forEach((semaforo, indice) => {
-        dibujarSemaforo(svg, id, inicio + paso * indice, semaforo, alPulsar);
+    grupos.forEach((fila, numero) => {
+        const paso = fila.length > 1
+            ? Math.max(PASO_MINIMO, (ancho - INICIO - MARGEN) / (fila.length - 1))
+            : 0;
+        // Cartel más ancho cuando hay sitio, sin pisar al de al lado.
+        const anchoCartel = Math.min(72, Math.max(54, (paso || 72) - 4));
+        fila.forEach((semaforo, indice) => {
+            dibujarSemaforo(svg, id, INICIO + paso * indice, semaforo, alPulsar, arribas[numero], anchoCartel);
+        });
     });
 
     raiz.querySelector(".alertas-brazo")?.remove();
@@ -343,10 +409,10 @@ function abrirFicha(raiz, semaforo) {
    ---------------------------------------------------------------------- */
 
 /*
- * Los semáforos de Incendios y de Aire no salen mientras su sección esté
+ * Los semáforos de Incendios, Aire y Polen no salen mientras su sección esté
  * oculta por los lanzamientos (salvo a los administradores).
  */
-const LANZAMIENTO_DEL_SEMAFORO = {INCENDIO: "incendios", AIRE: "calidad-aire"};
+const LANZAMIENTO_DEL_SEMAFORO = {INCENDIO: "incendios", AIRE: "calidad-aire", POLEN: "polen"};
 
 async function quitarOcultos(datos) {
     let lanzamientos;
