@@ -16,9 +16,9 @@
  *   página no dé un salto.
  * - En Actualidad (data-portada="si") va en su sección, entre la cabecera y
  *   el cuerpo, y se va con el scroll como el resto (antes iba fijo arriba y
- *   tapaba datos). Al perderse de vista, si hay alguna alerta, queda bajo la
- *   cabecera una tira fina («⚠ Alerta naranja · Viento») que al tocarla
- *   sube al semáforo. Con todo en verde no sale tira (José, 16-11-2026).
+ *   tapaba datos). Al perderse de vista queda bajo la cabecera una tira
+ *   fina que resume las alertas y los avisos que se han quedado arriba y al
+ *   tocarla sube a ellos; sin alertas ni avisos no sale (José, 16-11-2026).
  * - Al tocar un semáforo sale una ficha con las alertas de ese fenómeno
  *   (puede haber varios). Si lo ha ajustado MeteoArchidona, solo nuestro
  *   nivel, la nota y hasta cuándo dura; en verde, «Sin alerta». (Los «avisos» de la web
@@ -32,7 +32,7 @@
  * API: GET /alertas/semaforos. Se refresca cada 5 minutos.
  */
 
-const HOJA = "/css/alertas.css?v=20261116-portada1";
+const HOJA = "/css/alertas.css?v=20261116-portada3";
 
 // Fuente que se cita en la ficha (los de AEMET-Meteoalerta, la de por defecto).
 const FUENTES = {
@@ -404,36 +404,99 @@ function textoTira(datos) {
 
 
 /*
- * Tira fina bajo la cabecera (José, 16-11-2026): sale cuando el semáforo se
- * pierde de vista por arriba y hay alguna alerta; al tocarla sube a él.
+ * Avisos que siguen arriba, en la franja de la portada: los publica
+ * js/novedades.js en #portada-avisos (data-total y data-primero) y avisa
+ * con el evento «portada:avisos» cada vez que cambian.
+ */
+function leerAvisos() {
+    const hueco = document.getElementById("portada-avisos");
+    const total = Number(hueco?.dataset.total || 0);
+    const franja = hueco?.querySelector(".avisos-franja");
+    return {total: franja ? total : 0, primero: hueco?.dataset.primero || "", franja};
+}
+
+
+/*
+ * Tira fina bajo la cabecera (José, 16-11-2026): sale al bajar con el
+ * scroll y resume lo que se ha quedado arriba en la sección de alertas y
+ * avisos. Al tocarla sube a ella.
+ *
+ * - Alerta y avisos: «Alerta amarilla · Aire · 1 aviso», del color de la alerta.
+ * - Solo alerta: «Alerta amarilla · Aire».
+ * - Solo avisos: «1 aviso · Paso brillante…» («2 avisos» si hay más), con el
+ *   estilo de la franja de avisos.
+ * - Nada: no sale.
+ *
+ * La alerta cuenta cuando el semáforo se ha perdido de vista (y solo si se
+ * ve: el público no lo ve mientras esté oculto por los lanzamientos); los
+ * avisos, cuando su franja se ha perdido de vista. Los cerrados con la X no
+ * cuentan.
  */
 function crearTira(raiz) {
     const tira = crear("button", "alertas-tira");
     tira.type = "button";
     tira.hidden = true;
-    const icono = crear("span", "alertas-tira-icono", "⚠");
+    const icono = crear("span", "alertas-tira-icono");
     icono.setAttribute("aria-hidden", "true");
     const texto = crear("span", "alertas-tira-texto");
     tira.append(icono, texto);
-    raiz.appendChild(tira);
+    // En el body, no dentro del semáforo: los avisos se resumen aunque el
+    // semáforo esté oculto por los lanzamientos.
+    document.body.appendChild(tira);
 
     let datos = null;
-    let fuera = false;
 
-    function pintar() {
-        const resumen = datos ? textoTira(datos) : null;
-        const ver = Boolean(resumen) && fuera;
-        if (resumen) {
-            texto.textContent = resumen.texto;
-            tira.setAttribute("aria-label", `${resumen.texto}. Ir a los semáforos de alertas`);
-            for (const nivel of NIVELES) tira.classList.toggle(`alertas-nivel-${nivel}`, nivel === resumen.nivel);
+    function resumen() {
+        const arriba = colocarBajoCabecera() + 8;
+
+        let alerta = null;
+        const brazo = raiz.querySelector(".alertas-brazo");
+        if (datos && brazo && raiz.offsetParent !== null && brazo.getBoundingClientRect().bottom < arriba) {
+            alerta = textoTira(datos);
         }
-        if (ver) {
+
+        const avisos = leerAvisos();
+        const avisosFuera = avisos.total > 0 && avisos.franja.getBoundingClientRect().bottom < arriba;
+        const cuantos = avisos.total === 1 ? "1 aviso" : `${avisos.total} avisos`;
+
+        if (alerta) {
+            return {
+                clase: `alertas-nivel-${alerta.nivel}`,
+                icono: "⚠",
+                texto: avisosFuera ? `${alerta.texto} · ${cuantos}` : alerta.texto,
+            };
+        }
+        if (avisosFuera) {
+            return {
+                clase: "alertas-tira-avisos",
+                icono: "📢",
+                texto: avisos.total === 1 && avisos.primero ? `${cuantos} · ${avisos.primero}` : cuantos,
+            };
+        }
+        return null;
+    }
+
+    const CLASES = [...NIVELES.map(n => `alertas-nivel-${n}`), "alertas-tira-avisos"];
+
+    let pendiente = false;
+    function comprobar() {
+        pendiente = false;
+        const r = resumen();
+        if (r) {
+            texto.textContent = r.texto;
+            icono.textContent = r.icono;
+            tira.setAttribute("aria-label", `${r.texto}. Ir a las alertas y avisos`);
+            for (const clase of CLASES) tira.classList.toggle(clase, clase === r.clase);
             tira.hidden = false;
             requestAnimationFrame(() => tira.classList.add("alertas-tira-visible"));
         } else {
             tira.classList.remove("alertas-tira-visible");
         }
+    }
+    function alMover() {
+        if (pendiente) return;
+        pendiente = true;
+        requestAnimationFrame(comprobar);
     }
 
     tira.addEventListener("transitionend", () => {
@@ -446,24 +509,9 @@ function crearTira(raiz) {
         seccion.scrollIntoView({behavior: quieto ? "auto" : "smooth", block: "start"});
     });
 
-    let pendiente = false;
-    function comprobar() {
-        pendiente = false;
-        const brazo = raiz.querySelector(".alertas-brazo");
-        if (!brazo || raiz.offsetParent === null) {
-            fuera = false;
-        } else {
-            fuera = brazo.getBoundingClientRect().bottom < colocarBajoCabecera() + 8;
-        }
-        pintar();
-    }
-    function alMover() {
-        if (pendiente) return;
-        pendiente = true;
-        requestAnimationFrame(comprobar);
-    }
     window.addEventListener("scroll", alMover, {passive: true});
     window.addEventListener("resize", alMover);
+    document.addEventListener("portada:avisos", alMover);
 
     return {
         actualizar(nuevos) {

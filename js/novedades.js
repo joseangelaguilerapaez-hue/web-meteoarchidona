@@ -412,11 +412,28 @@ function mostrarFranja(automaticos) {
     const pendientes = automaticos.filter(a => cerrados[a.id] !== huella(a));
     if (!pendientes.length) return;
 
-    const franja = pintarFranja(pendientes, { alCerrar: aviso => apuntarCerrado(aviso, automaticos) });
+    // Lo que queda a la vista, para la tira que sale al bajar (José,
+    // 16-11-2026): cuántos avisos y el título del primero.
+    const vigentes = [...pendientes];
+    const hueco = document.getElementById("portada-avisos");
+    function publicar() {
+        if (!hueco) return;
+        hueco.dataset.total = String(vigentes.length);
+        hueco.dataset.primero = vigentes.length ? vigentes[0].titulo : "";
+        document.dispatchEvent(new CustomEvent("portada:avisos"));
+    }
+
+    const franja = pintarFranja(pendientes, {
+        alCerrar: aviso => {
+            apuntarCerrado(aviso, automaticos);
+            const i = vigentes.indexOf(aviso);
+            if (i >= 0) vigentes.splice(i, 1);
+            publicar();
+        },
+    });
 
     // En la portada va justo debajo del semáforo, en la sección de alertas y
     // avisos (José, 16-11-2026), y entra desplegándose para no dar un salto.
-    const hueco = document.getElementById("portada-avisos");
     if (hueco) {
         franja.classList.add("avisos-franja-entra");
         // Acabada la entrada se quita, para que «Detalles» pueda crecer.
@@ -424,6 +441,7 @@ function mostrarFranja(automaticos) {
             if (evento.target === franja) franja.classList.remove("avisos-franja-entra");
         });
         hueco.appendChild(franja);
+        publicar();
         return;
     }
     const principal = document.querySelector("main");
