@@ -17,7 +17,7 @@
  * propios refrescos periódicos y así no se quedan funcionando detrás.
  */
 
-import {pintarDashboard} from "./pintor.js?v=20261115-semaforo-aire";
+import {pintarDashboard} from "./pintor.js?v=20261116-portada2";
 
 
 const CORTE_MOVIL = "(max-width: 850px)";
