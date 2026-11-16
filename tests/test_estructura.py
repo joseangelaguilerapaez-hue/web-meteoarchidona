@@ -304,7 +304,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261115-semaforo-aire"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261116-portada2"),
             ("administracion", r"administracion/principal\.js\?v=20261115-semaforo-aire"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -1405,11 +1405,14 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertLess(pagina.index('id="cabecera"'), pagina.index('id="portada-alertas"'))
         self.assertLess(pagina.index('id="portada-alertas"'), pagina.index("<main"))
         principal = leer(RAIZ / "js" / "actualidad" / "principal.js")
-        self.assertIn("../alertas/semaforos.js?v=20261116-portada1", principal)
+        self.assertIn("../alertas/semaforos.js?v=20261116-portada2", principal)
         codigo = leer(RAIZ / "js" / "alertas" / "semaforos.js")
         self.assertIn("alertas-tira", codigo)
         self.assertNotIn("alertas-fijo", codigo)
         self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
+        # Si cambia principal.js, la página tiene que pedir la versión nueva
+        # (16-11-2026: el móvil se quedó con la vieja y no salía la tira).
+        self.assertIn("js/actualidad/principal.js?v=20261116-portada2", pagina)
         self.assertTrue((RAIZ / "js" / "alertas" / "semaforos.js").is_file())
         self.assertTrue((RAIZ / "css" / "alertas.css").is_file())
 

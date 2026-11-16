@@ -386,6 +386,9 @@ function colocarBajoCabecera() {
 }
 
 
+/* «Alerta amarilla», «alerta roja»… (concuerda con «alerta»). */
+const COLOR_ALERTA = {AMARILLO: "amarilla", NARANJA: "naranja", FUCSIA: "fucsia", ROJO: "roja"};
+
 /* Texto de la tira: el peor nivel y los fenómenos que lo tienen. */
 function textoTira(datos) {
     const conAlerta = (datos.semaforos || []).filter(s => s.nivel && s.nivel !== "SIN_AVISO");
@@ -395,7 +398,7 @@ function textoTira(datos) {
     const resto = conAlerta.length - delPeor.length;
     return {
         nivel: peor,
-        texto: `Alerta ${LUCES[peor].nombre.toLowerCase()} · ${delPeor.join(", ")}${resto ? ` · +${resto}` : ""}`,
+        texto: `Alerta ${COLOR_ALERTA[peor]} · ${delPeor.join(", ")}${resto ? ` · +${resto}` : ""}`,
     };
 }
 
