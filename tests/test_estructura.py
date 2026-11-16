@@ -304,8 +304,8 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261116-portada3"),
-            ("administracion", r"administracion/principal\.js\?v=20261115-semaforo-aire"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261116-polen1"),
+            ("administracion", r"administracion/principal\.js\?v=20261116-polen1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -1405,14 +1405,14 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertLess(pagina.index('id="cabecera"'), pagina.index('id="portada-alertas"'))
         self.assertLess(pagina.index('id="portada-alertas"'), pagina.index("<main"))
         principal = leer(RAIZ / "js" / "actualidad" / "principal.js")
-        self.assertIn("../alertas/semaforos.js?v=20261116-portada3", principal)
+        self.assertIn("../alertas/semaforos.js?v=20261116-polen1", principal)
         codigo = leer(RAIZ / "js" / "alertas" / "semaforos.js")
         self.assertIn("alertas-tira", codigo)
         self.assertNotIn("alertas-fijo", codigo)
         self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
         # Si cambia principal.js, la página tiene que pedir la versión nueva
         # (16-11-2026: el móvil se quedó con la vieja y no salía la tira).
-        self.assertIn("js/actualidad/principal.js?v=20261116-portada3", pagina)
+        self.assertIn("js/actualidad/principal.js?v=20261116-polen1", pagina)
         # La tira resume también los avisos de la franja (16-11-2026).
         self.assertIn("portada:avisos", codigo)
         self.assertIn("portada:avisos", leer(RAIZ / "js" / "novedades.js"))
@@ -1436,7 +1436,7 @@ class TestAlertasMeteorologicas(unittest.TestCase):
             self.assertIn(f'id="{identificador}"', pagina)
         self.assertIn("css/alertas-admin.css?v=", pagina)
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./alertas.js?v=20261115-semaforo-aire", principal)
+        self.assertIn("./alertas.js?v=20261116-polen1", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "alertas.js")
         self.assertIn("/admin/alertas", codigo)
 

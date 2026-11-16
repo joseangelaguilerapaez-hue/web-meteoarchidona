@@ -843,7 +843,7 @@ async function cargarModuloAlertas(){
 
     if(promesaModuloAlertas === null){
         promesaModuloAlertas = import(
-            "./alertas.js?v=20261115-semaforo-aire"
+            "./alertas.js?v=20261116-polen1"
         );
     }
 
