@@ -36,10 +36,14 @@
  * pasar el ratón o el dedo, y no se mueve si el sistema pide menos
  * animación (entonces cambia de aviso cada 7 segundos).
  *
+ * En la portada (José, 16-11-2026) la franja va justo debajo del semáforo
+ * de alertas, en su misma sección (#portada-avisos), y entra
+ * desplegándose suavemente.
+ *
  * API: GET /novedades.
  */
 
-const HOJA = "/css/novedades.css?v=20261112-marquesina1";
+const HOJA = "/css/novedades.css?v=20261116-portada1";
 const CLAVE_VISTAS = "ma_novedades_vistas_v2";
 const CLAVE_CERRADOS = "ma_avisos_cerrados_v1";
 
@@ -409,6 +413,19 @@ function mostrarFranja(automaticos) {
     if (!pendientes.length) return;
 
     const franja = pintarFranja(pendientes, { alCerrar: aviso => apuntarCerrado(aviso, automaticos) });
+
+    // En la portada va justo debajo del semáforo, en la sección de alertas y
+    // avisos (José, 16-11-2026), y entra desplegándose para no dar un salto.
+    const hueco = document.getElementById("portada-avisos");
+    if (hueco) {
+        franja.classList.add("avisos-franja-entra");
+        // Acabada la entrada se quita, para que «Detalles» pueda crecer.
+        franja.addEventListener("animationend", evento => {
+            if (evento.target === franja) franja.classList.remove("avisos-franja-entra");
+        });
+        hueco.appendChild(franja);
+        return;
+    }
     const principal = document.querySelector("main");
     if (principal) principal.prepend(franja);
     else document.body.prepend(franja);

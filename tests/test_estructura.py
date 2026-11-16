@@ -1393,12 +1393,23 @@ class TestSaludEstaciones(unittest.TestCase):
 class TestAlertasMeteorologicas(unittest.TestCase):
     """Semáforos de alertas en Actualidad y Administración → Avisos (11 nov)."""
 
-    def test_actualidad_monta_los_semaforos_fijos(self):
+    def test_actualidad_monta_los_semaforos_en_su_seccion(self):
+        # José, 16-11-2026: sección propia entre la cabecera y el cuerpo, con
+        # la franja de avisos debajo, y el semáforo siempre a la vista.
         pagina = sin_comentarios(RAIZ / "pages" / "actualidad.html")
+        self.assertIn('id="portada-alertas"', pagina)
         self.assertIn('data-componente="alertas-semaforos"', pagina)
-        self.assertIn('data-fijo="si"', pagina)
+        self.assertIn('data-portada="si"', pagina)
+        self.assertNotIn('data-fijo="si"', pagina)
+        self.assertIn('id="portada-avisos"', pagina)
+        self.assertLess(pagina.index('id="cabecera"'), pagina.index('id="portada-alertas"'))
+        self.assertLess(pagina.index('id="portada-alertas"'), pagina.index("<main"))
         principal = leer(RAIZ / "js" / "actualidad" / "principal.js")
-        self.assertIn("../alertas/semaforos.js?v=20261115-semaforo-aire", principal)
+        self.assertIn("../alertas/semaforos.js?v=20261116-portada1", principal)
+        codigo = leer(RAIZ / "js" / "alertas" / "semaforos.js")
+        self.assertIn("alertas-tira", codigo)
+        self.assertNotIn("alertas-fijo", codigo)
+        self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
         self.assertTrue((RAIZ / "js" / "alertas" / "semaforos.js").is_file())
         self.assertTrue((RAIZ / "css" / "alertas.css").is_file())
 

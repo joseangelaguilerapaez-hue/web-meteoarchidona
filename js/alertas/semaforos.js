@@ -9,17 +9,22 @@
  * - Luces de arriba abajo: rojo, fucsia, naranja, amarillo y verde. El
  *   fucsia es propio de MeteoArchidona, entre el naranja y el rojo.
  * - Dibujado, sin fondo, con brillo y luz interna en las encendidas.
- * - Solo aparece si algún semáforo no está en verde; entonces salen los 6.
- *   Se enciende en cuanto AEMET publica la alerta, aunque empiece mañana.
- * - Con data-fijo="si" (Actualidad) va fijo arriba de lado a lado, bajo
- *   la cabecera, siempre del mismo tamaño, y el contenido se ve por los
- *   huecos. Sin él, se pinta en su sitio (dashboards).
+ * - Se enciende en cuanto AEMET publica la alerta, aunque empiece mañana.
+ * - Sale siempre, aunque esté todo en verde, para que la gente se acostumbre
+ *   a mirarlo (José, 16-11-2026; antes solo salía con alguna alerta).
+ *   Mientras llegan los datos se dibuja con las luces apagadas, para que la
+ *   página no dé un salto.
+ * - En Actualidad (data-portada="si") va en su sección, entre la cabecera y
+ *   el cuerpo, y se va con el scroll como el resto (antes iba fijo arriba y
+ *   tapaba datos). Al perderse de vista, si hay alguna alerta, queda bajo la
+ *   cabecera una tira fina («⚠ Alerta naranja · Viento») que al tocarla
+ *   sube al semáforo. Con todo en verde no sale tira (José, 16-11-2026).
  * - Al tocar un semáforo sale una ficha con las alertas de ese fenómeno
  *   (puede haber varios). Si lo ha ajustado MeteoArchidona, solo nuestro
  *   nivel, la nota y hasta cuándo dura; en verde, «Sin alerta». (Los «avisos» de la web
  *   —eclipses, tormentas próximas…— son otra cosa.)
  *
- *     <div data-componente="alertas-semaforos" data-fijo="si"></div>
+ *     <div data-componente="alertas-semaforos" data-portada="si"></div>
  *
  *     import {montarSemaforosAlertas} from "/js/alertas/semaforos.js?v=…";
  *     montarSemaforosAlertas(hueco);
@@ -27,7 +32,7 @@
  * API: GET /alertas/semaforos. Se refresca cada 5 minutos.
  */
 
-const HOJA = "/css/alertas.css?v=20261115-semaforo-aire";
+const HOJA = "/css/alertas.css?v=20261116-portada1";
 
 // Fuente que se cita en la ficha (los de AEMET-Meteoalerta, la de por defecto).
 const FUENTES = {
@@ -39,6 +44,13 @@ const FUENTES = {
 const SECCIONES = {INCENDIO: "Incendios", AIRE: "Calidad del aire"};
 
 const MINUTOS_REFRESCO = 5;
+
+/* Mientras llegan los datos: los seis de AEMET con las luces apagadas. */
+const APAGADOS = {
+    hay_alertas: false,
+    semaforos: ["Lluvia", "Tormenta", "Viento", "Calor", "Frío", "Nieve"]
+        .map(nombre => ({fenomeno: null, nombre, nivel: null})),
+};
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -332,8 +344,7 @@ function abrirFicha(raiz, semaforo) {
 
 /*
  * Los semáforos de Incendios y de Aire no salen mientras su sección esté
- * oculta por los lanzamientos (salvo a los administradores), y entonces
- * el brazo solo sale si hay alguna otra alerta.
+ * oculta por los lanzamientos (salvo a los administradores).
  */
 const LANZAMIENTO_DEL_SEMAFORO = {INCENDIO: "incendios", AIRE: "calidad-aire"};
 
@@ -365,10 +376,98 @@ async function quitarOcultos(datos) {
 }
 
 
-function colocarBajoCabecera(raiz) {
+/* Hasta dónde llega la cabecera en pantalla (en PC va fija; en el móvil se
+   va con el scroll), para la tira y para subir al semáforo sin taparlo. */
+function colocarBajoCabecera() {
     const cabecera = document.getElementById("cabecera");
-    const alto = cabecera ? Math.round(cabecera.getBoundingClientRect().height) : 0;
-    raiz.style.setProperty("--alertas-arriba", `${Math.max(0, alto)}px`);
+    const alto = cabecera ? Math.round(cabecera.getBoundingClientRect().bottom) : 0;
+    document.documentElement.style.setProperty("--alertas-arriba", `${Math.max(0, alto)}px`);
+    return Math.max(0, alto);
+}
+
+
+/* Texto de la tira: el peor nivel y los fenómenos que lo tienen. */
+function textoTira(datos) {
+    const conAlerta = (datos.semaforos || []).filter(s => s.nivel && s.nivel !== "SIN_AVISO");
+    if (!conAlerta.length) return null;
+    const peor = conAlerta.reduce((a, b) => NIVELES.indexOf(b.nivel) > NIVELES.indexOf(a.nivel) ? b : a).nivel;
+    const delPeor = conAlerta.filter(s => s.nivel === peor).map(s => s.nombre);
+    const resto = conAlerta.length - delPeor.length;
+    return {
+        nivel: peor,
+        texto: `Alerta ${LUCES[peor].nombre.toLowerCase()} · ${delPeor.join(", ")}${resto ? ` · +${resto}` : ""}`,
+    };
+}
+
+
+/*
+ * Tira fina bajo la cabecera (José, 16-11-2026): sale cuando el semáforo se
+ * pierde de vista por arriba y hay alguna alerta; al tocarla sube a él.
+ */
+function crearTira(raiz) {
+    const tira = crear("button", "alertas-tira");
+    tira.type = "button";
+    tira.hidden = true;
+    const icono = crear("span", "alertas-tira-icono", "⚠");
+    icono.setAttribute("aria-hidden", "true");
+    const texto = crear("span", "alertas-tira-texto");
+    tira.append(icono, texto);
+    raiz.appendChild(tira);
+
+    let datos = null;
+    let fuera = false;
+
+    function pintar() {
+        const resumen = datos ? textoTira(datos) : null;
+        const ver = Boolean(resumen) && fuera;
+        if (resumen) {
+            texto.textContent = resumen.texto;
+            tira.setAttribute("aria-label", `${resumen.texto}. Ir a los semáforos de alertas`);
+            for (const nivel of NIVELES) tira.classList.toggle(`alertas-nivel-${nivel}`, nivel === resumen.nivel);
+        }
+        if (ver) {
+            tira.hidden = false;
+            requestAnimationFrame(() => tira.classList.add("alertas-tira-visible"));
+        } else {
+            tira.classList.remove("alertas-tira-visible");
+        }
+    }
+
+    tira.addEventListener("transitionend", () => {
+        if (!tira.classList.contains("alertas-tira-visible")) tira.hidden = true;
+    });
+
+    tira.addEventListener("click", () => {
+        const seccion = raiz.closest(".portada-alertas") || raiz;
+        const quieto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        seccion.scrollIntoView({behavior: quieto ? "auto" : "smooth", block: "start"});
+    });
+
+    let pendiente = false;
+    function comprobar() {
+        pendiente = false;
+        const brazo = raiz.querySelector(".alertas-brazo");
+        if (!brazo || raiz.offsetParent === null) {
+            fuera = false;
+        } else {
+            fuera = brazo.getBoundingClientRect().bottom < colocarBajoCabecera() + 8;
+        }
+        pintar();
+    }
+    function alMover() {
+        if (pendiente) return;
+        pendiente = true;
+        requestAnimationFrame(comprobar);
+    }
+    window.addEventListener("scroll", alMover, {passive: true});
+    window.addEventListener("resize", alMover);
+
+    return {
+        actualizar(nuevos) {
+            datos = nuevos;
+            comprobar();
+        },
+    };
 }
 
 
@@ -377,43 +476,41 @@ export async function montarSemaforosAlertas(raiz) {
     contador += 1;
     raiz.dataset.alertasId = `alertas-${contador}`;
     raiz.classList.add("alertas-semaforos");
-    raiz.hidden = true;
-
-    const fijo = raiz.dataset.fijo === "si";
-    if (fijo) {
-        raiz.classList.add("alertas-fijo");
-        colocarBajoCabecera(raiz);
-        window.addEventListener("resize", () => colocarBajoCabecera(raiz));
-        document.addEventListener("cabecera:montada", () => colocarBajoCabecera(raiz));
-    }
+    raiz.hidden = false;
 
     let ultimos = null;
-    const alPulsar = semaforo => abrirFicha(raiz, semaforo);
+    const alPulsar = semaforo => {
+        if (semaforo.fenomeno) abrirFicha(raiz, semaforo);
+    };
+
+    // Luces apagadas hasta que lleguen los datos.
+    dibujar(raiz, APAGADOS, alPulsar);
+
+    const tira = raiz.dataset.portada === "si" ? crearTira(raiz) : null;
+    if (tira) {
+        colocarBajoCabecera();
+        document.addEventListener("cabecera:montada", () => colocarBajoCabecera());
+    }
 
     async function actualizar() {
         try {
             ultimos = await quitarOcultos(await pedirSemaforos());
         } catch (error) {
             console.warn("Alertas: no se han podido leer los semáforos.", error);
-            return;
-        }
-
-        if (!ultimos.hay_alertas) {
-            raiz.hidden = true;
+            // Sin ningún dato todavía no se deja el semáforo apagado a la vista.
+            if (!ultimos) raiz.hidden = true;
             return;
         }
 
         raiz.hidden = false;
-        if (fijo) colocarBajoCabecera(raiz);
         dibujar(raiz, ultimos, alPulsar);
+        if (tira) tira.actualizar(ultimos);
     }
 
     let espera = null;
     window.addEventListener("resize", () => {
         clearTimeout(espera);
-        espera = setTimeout(() => {
-            if (ultimos && ultimos.hay_alertas) dibujar(raiz, ultimos, alPulsar);
-        }, 200);
+        espera = setTimeout(() => dibujar(raiz, ultimos || APAGADOS, alPulsar), 200);
     });
 
     await actualizar();

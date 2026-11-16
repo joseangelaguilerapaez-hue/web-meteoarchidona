@@ -2052,4 +2052,31 @@ button {
 }
 
 
+/*
+ * Alertas y avisos (José, 16-11-2026): sección propia entre la cabecera y
+ * el cuerpo, con el mismo ancho que el contenido. Va en el flujo de la
+ * página: no tapa nada y se va hacia arriba con el scroll.
+ */
+
+.portada-alertas {
+    width: min(1800px, 100%);
+    margin: 0 auto;
+    padding: 12px clamp(18px, 2vw, 34px) 0;
+    box-sizing: border-box;
+    scroll-margin-top: var(--alertas-arriba, 0px);
+}
+
+.portada-avisos .avisos-franja {
+    margin: 10px 0 0;
+}
+
+@media (max-width: 620px) {
+
+    .portada-alertas {
+        padding: 8px 12px 0;
+    }
+
+}
+
+
 /* Fin de fichero: css/actualidad.css */
