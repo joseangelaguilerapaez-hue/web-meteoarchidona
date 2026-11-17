@@ -309,3 +309,124 @@
     flex-wrap: wrap;
     gap: 6px;
 }
+
+
+/* ---------- Campos y botones del editor fuera de Administración ----------
+   El editor usa las clases de Administración (boton, campo…). En «Mi web»
+   no está administracion.css, así que aquí van las mismas, solo dentro
+   del editor. */
+
+.dash-editor .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--card-soft);
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.dash-editor .boton:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.dash-editor .boton-principal {
+    border: 0;
+    background: linear-gradient(135deg, #0c7b67, var(--teal));
+    color: #041e19;
+}
+
+.dash-editor .boton-secundario {
+    color: var(--cyan);
+}
+
+.dash-editor .boton-peligro {
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #ff9ba8;
+}
+
+.dash-editor .boton-mini {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 10px;
+}
+
+.dash-editor .formulario-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.dash-editor .campo-ancho {
+    grid-column: 1 / -1;
+}
+
+.dash-editor .campo label {
+    display: block;
+    margin-bottom: 6px;
+    color: #b8cadc;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.dash-editor .campo-ayuda {
+    margin-top: 5px;
+    color: var(--muted-dark);
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.dash-editor input:not([type="checkbox"]),
+.dash-editor select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    background: #0a1724;
+    color: var(--text);
+    font: inherit;
+    outline: none;
+}
+
+.dash-editor select.dash-editor-columnas {
+    width: auto;
+}
+
+.dash-editor select[multiple] {
+    padding: 6px;
+}
+
+.dash-editor select option {
+    background: #0a1724;
+    color: var(--text);
+}
+
+.dash-editor input:focus,
+.dash-editor select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(59, 158, 255, 0.08);
+}
+
+.dash-editor .check-linea {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 36px;
+    color: var(--text-soft);
+}
+
+@media (max-width: 700px) {
+    .dash-editor .formulario-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

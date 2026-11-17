@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Tus pestañas de MeteoArchidona: la web a tu manera, con los dashboards que elijas."
+>
+
+<meta name="robots" content="noindex, nofollow">
+
+<title>
+    Mi web · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+
+<link rel="stylesheet" href="../css/fuentes.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/paleta.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/cabecera.css?v=20261113-menu5">
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+<link rel="stylesheet" href="../css/pie.css?v=20261113-menu5">
+<link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/mi-web.css?v=20261117-miweb1">
+
+<script src="../js/cabecera.js?v=20261117-miweb1" defer></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+<script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
+<script src="../js/api.js?v=20261003-vps1" defer></script>
+<script type="module" src="../js/mi-web/pagina.js?v=20261117-miweb1"></script>
+<script src="../js/pwa.js?v=20261101-pwa1" defer></script>
+<script src="../js/instalar.js?v=20261102-manual1" defer></script>
+
+</head>
+
+
+<body data-seccion="mi-web">
+
+<div class="pagina">
+
+<div id="cabecera"></div>
+
+
+<!-- =========================================================
+     MI WEB
+     Una pestaña propia del registrado (/mi-web?pestana=1, 2 o 3): su
+     descripción de título, el selector de dashboards de su formato con
+     «Fijar», y crear, copiar, editar y borrar los suyos con el editor
+     común. Diseño: docs/dashboards.md de api-meteoarchidona (José, 5 y
+     17-11-2026). Lo pinta js/mi-web/pagina.js.
+     ========================================================= -->
+
+<main class="mi-web">
+
+<header class="mi-web-cabecera">
+
+    <div
+        id="etiquetaMiWeb"
+        class="mi-web-etiqueta"
+    >
+        METEOARCHIDONA · MI WEB
+    </div>
+
+    <h1 id="tituloMiWeb">
+        Mi web
+    </h1>
+
+</header>
+
+<div
+    id="estadoMiWeb"
+    class="mi-web-estado"
+    role="status"
+    aria-live="polite"
+>
+    Cargando…
+</div>
+
+<section
+    id="miWebSinSesion"
+    class="mi-web-bloque"
+    hidden
+>
+    <p>
+        Las pestañas de «Mi web» son de cada registrado: inicia sesión para
+        ver las tuyas.
+    </p>
+    <div class="mi-web-acciones">
+        <button type="button" class="mi-web-boton mi-web-boton-principal" data-cuenta-accion="entrar">
+            Iniciar sesión
+        </button>
+        <button type="button" class="mi-web-boton" data-cuenta-accion="registrar">
+            Registrarse
+        </button>
+    </div>
+</section>
+
+<div
+    id="miWebContenido"
+    hidden
+></div>
+
+</main>
+
+</div>
+
+
+<div id="pie"></div>
+
+</body>
+
+</html>

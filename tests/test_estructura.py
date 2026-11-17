@@ -43,13 +43,13 @@ HOJAS_DEL_SITIO = sorted((RAIZ / "css").glob("*.css")) + [RAIZ / "visores" / "ra
 PORTADA = "actualidad"
 
 # Páginas que no deben aparecer en buscadores ni en el sitemap.
-PRIVADAS = {"administracion", "mi-cuenta"}
+PRIVADAS = {"administracion", "mi-cuenta", "mi-web"}
 
 # Se llega desde el botón con el nombre del usuario, no desde el menú.
 # Climatología (José, 13-11-2026): dada de alta pero fuera del menú hasta
 # que esté cargada la serie histórica; luego irá delante de Embalses.
 # Climatología entra en el menú delante de Agua y sequía (José, 15-11-2026); sale el 6-12 con los lanzamientos.
-FUERA_DEL_MENU = {"mi-cuenta"}
+FUERA_DEL_MENU = {"mi-cuenta", "mi-web"}
 
 # Observaciones no lleva pie: su mapa ocupa la pantalla entera.
 SIN_PIE = {"observaciones"}
@@ -305,7 +305,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261117-camara1"),
-            ("administracion", r"administracion/principal\.js\?v=20261117-editor1"),
+            ("administracion", r"administracion/principal\.js\?v=20261117-editor2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -400,7 +400,7 @@ class TestMiCuenta(unittest.TestCase):
             self.assertIn(f'id="{identificador}"', pagina)
         self.assertIn('data-cuenta-accion="baja"', pagina)
         self.assertIn('data-cuenta-accion="pin-olvidado"', pagina)
-        self.assertIn("mi-cuenta.js?v=20261104-mi-cuenta1", pagina)
+        self.assertIn("mi-cuenta.js?v=20261117-miweb1", pagina)
         self.assertIn('name="robots" content="noindex, nofollow"', pagina)
 
     def test_modulo(self):
@@ -1515,9 +1515,9 @@ class TestEditorDashboards(unittest.TestCase):
         self.assertIn('data-modulo="dashboards"', pagina)
         self.assertIn('id="modulo-dashboards"', pagina)
         self.assertIn('id="contenedorEditorDashboard"', pagina)
-        self.assertIn("css/dashboards-editor.css?v=20261117-editor1", pagina)
+        self.assertIn("css/dashboards-editor.css?v=20261117-editor2", pagina)
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./dashboards.js?v=20261117-editor1", principal)
+        self.assertIn("./dashboards.js?v=20261117-editor2", principal)
 
     def test_el_editor_usa_la_api_publica_y_el_pintor(self):
         editor = leer(RAIZ / "js" / "dashboards" / "editor.js")
@@ -1528,8 +1528,44 @@ class TestEditorDashboards(unittest.TestCase):
         # El texto de la API nunca como HTML.
         self.assertNotIn("innerHTML", editor)
         modulo = leer(RAIZ / "js" / "administracion" / "dashboards.js")
-        self.assertIn("../dashboards/editor.js?v=20261117-editor1", modulo)
+        self.assertIn("../dashboards/editor.js?v=20261117-editor2", modulo)
         self.assertNotIn("innerHTML", modulo)
+
+
+class TestMiWeb(unittest.TestCase):
+    """Pestañas «Mi web» (José, 17-11-2026; docs/dashboards.md de la API)."""
+
+    def test_pagina(self):
+        pagina = leer(RAIZ / "pages" / "mi-web.html")
+        for identificador in ("tituloMiWeb", "estadoMiWeb", "miWebSinSesion", "miWebContenido"):
+            self.assertIn(f'id="{identificador}"', pagina)
+        self.assertIn("js/mi-web/pagina.js?v=20261117-miweb1", pagina)
+        self.assertIn("css/mi-web.css?v=20261117-miweb1", pagina)
+
+    def test_menu_desde_la_cabecera(self):
+        self.assertIn("/js/mi-web/menu.js?v=20261117-miweb1", leer(RAIZ / "js" / "cabecera.js"))
+        menu = leer(RAIZ / "js" / "mi-web" / "menu.js")
+        self.assertIn("meteoarchidona:cuenta", menu)
+        self.assertIn('"/usuarios/mi-web"', menu)
+
+    def test_mi_cuenta_tiene_su_apartado(self):
+        pagina = leer(RAIZ / "pages" / "mi-cuenta.html")
+        self.assertIn('data-pestana="miweb"', pagina)
+        self.assertIn('id="gestionMiWeb"', pagina)
+        self.assertIn("./mi-web/gestion.js?v=20261117-miweb1", leer(RAIZ / "js" / "mi-cuenta.js"))
+
+    def test_la_pagina_usa_el_editor_y_el_pintor(self):
+        codigo = leer(RAIZ / "js" / "mi-web" / "pagina.js")
+        self.assertIn("../dashboards/editor.js?v=20261117-editor2", codigo)
+        self.assertIn("../dashboards/pintor.js?v=20261117-camara1", codigo)
+        self.assertIn("(max-width: 850px)", codigo)
+
+    def test_sin_html_desde_la_api(self):
+        for fichero in ("comun.js", "menu.js", "gestion.js", "pagina.js"):
+            self.assertNotIn("innerHTML", leer(RAIZ / "js" / "mi-web" / fichero), fichero)
+
+    def test_script_de_nginx(self):
+        self.assertIn('modulo.SECCION = "mi-web"', leer(RAIZ / "scripts" / "configurar_seccion_mi_web.py"))
 
 
 if __name__ == "__main__":
