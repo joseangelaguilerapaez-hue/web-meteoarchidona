@@ -39,7 +39,7 @@ const COMPONENTES = {
     "timelapses": ["/js/componentes/timelapses.js?v=20261104-componentes1", "montarComponenteTimelapses"],
     "estadistica": ["/js/componentes/estadistica.js?v=20261105-componente1", "montarComponenteEstadistica"],
     // En vivo y Estadísticas
-    "camaras-en-vivo": ["/js/componentes/camaras-en-vivo.js?v=20261104-componentes1", "montarCamarasEnVivo"],
+    "camaras-en-vivo": ["/js/componentes/camaras-en-vivo.js?v=20261117-camara1", "montarCamarasEnVivo"],
     "catalogo-estadisticas": ["/js/componentes/catalogo-estadisticas.js?v=20261104-componentes1", "montarCatalogoEstadisticas"],
     // Predicción
     "prediccion-avisos": ["/js/prediccion/avisos.js?v=20261104-componentes1", "montarAvisos"],

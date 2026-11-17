@@ -304,7 +304,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261117-componente1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261117-camara1"),
             ("administracion", r"administracion/principal\.js\?v=20261116-polen1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -1412,7 +1412,7 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
         # Si cambia principal.js, la página tiene que pedir la versión nueva
         # (16-11-2026: el móvil se quedó con la vieja y no salía la tira).
-        self.assertIn("js/actualidad/principal.js?v=20261117-componente1", pagina)
+        self.assertIn("js/actualidad/principal.js?v=20261117-camara1", pagina)
         # La tira resume también los avisos de la franja (16-11-2026).
         self.assertIn("portada:avisos", codigo)
         self.assertIn("portada:avisos", leer(RAIZ / "js" / "novedades.js"))
@@ -1484,6 +1484,28 @@ class TestPantallaCompletaIphone(unittest.TestCase):
         hoja = leer(RAIZ / "css" / "visor-video.css")
         self.assertIn(".visor-video.pantalla-simulada", hoja)
         self.assertIn(":is(:fullscreen, .pantalla-simulada)", hoja)
+
+
+class TestCamarasEnVivoUnaCamara(unittest.TestCase):
+    """«Cámaras en vivo» con data-camara (José, 17-11-2026; docs/dashboards.md de la API)."""
+
+    def test_lee_la_camara_y_las_propias_llevan_su_id(self):
+        codigo = leer(RAIZ / "js" / "componentes" / "camaras-en-vivo.js")
+        self.assertIn("raiz.dataset.camara", codigo)
+        self.assertIn("idCamara:\n                    1,", codigo)
+        self.assertIn("idCamara:\n                    2,", codigo)
+        self.assertIn('classList.add("camaras-en-vivo--una")', codigo)
+
+    def test_la_hoja_quita_el_selector_con_una_camara(self):
+        hoja = leer(RAIZ / "css" / "componentes-en-vivo.css")
+        self.assertIn(".camaras-en-vivo--una .selector-panel", hoja)
+
+    def test_versiones_nuevas_hasta_las_paginas(self):
+        self.assertIn("camaras-en-vivo.js?v=20261117-camara1", leer(RAIZ / "js" / "dashboards" / "pintor.js"))
+        self.assertIn("camaras-en-vivo.js?v=20261117-camara1", leer(RAIZ / "js" / "en-vivo.js"))
+        self.assertIn("pintor.js?v=20261117-camara1", leer(RAIZ / "js" / "dashboards" / "actualidad.js"))
+        self.assertIn("en-vivo.js?v=20261117-camara1", leer(RAIZ / "pages" / "en-vivo.html"))
+
 
 if __name__ == "__main__":
     unittest.main()
