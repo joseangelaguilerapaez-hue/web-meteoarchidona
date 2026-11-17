@@ -8,7 +8,7 @@
  * visores/youtube.html.
  */
 
-import {montarCamarasEnVivo} from "./componentes/camaras-en-vivo.js?v=20261104-componentes1";
+import {montarCamarasEnVivo} from "./componentes/camaras-en-vivo.js?v=20261117-camara1";
 
 
 for (const hueco of document.querySelectorAll('[data-componente="camaras-en-vivo"]')) {

@@ -19,6 +19,11 @@
  *     Los Llanos).
  *   - data-direccion="no": no apunta la zona elegida en la dirección (en
  *     un dashboard sobra).
+ *   - data-camara: número de una cámara propia (el id de la API: en Los
+ *     Llanos, 1 la panorámica y 2 la específica). Enseña solo esa cámara,
+ *     sin selector de zona ni cabecera (José, 17-11-2026: para ponerla
+ *     suelta en un dashboard). Si no está en el catálogo de abajo, el
+ *     componente entero, como sin ella.
  *
  * Usa id fijos: uno por página. Carga css/componentes-en-vivo.css si falta.
  */
@@ -166,6 +171,10 @@ const zonas={
                 visorVista:
                     "panoramica",
 
+                // El id de la cámara en la API (como en js/ficha-estacion.js).
+                idCamara:
+                    1,
+
                 interactivo:
                     true,
 
@@ -201,6 +210,9 @@ const zonas={
 
                 visorVista:
                     "ptz",
+
+                idCamara:
+                    2,
 
                 interactivo:
                     true,
@@ -496,13 +508,14 @@ const zonas={
 
 export function montarCamarasEnVivo(raiz) {
 
-    asegurarHoja("/css/componentes-en-vivo.css?v=20261104-componentes1");
+    asegurarHoja("/css/componentes-en-vivo.css?v=20261117-camara1");
 
     raiz.classList.add("camaras-en-vivo");
     raiz.innerHTML = MARCADO;
 
     const zonaPedida = raiz.dataset.zona;
     const conDireccion = raiz.dataset.direccion !== "no";
+    const camaraPedida = Number(raiz.dataset.camara) || null;
 
     /* =========================================================
        ELEMENTOS
@@ -1136,6 +1149,51 @@ export function montarCamarasEnVivo(raiz) {
 
 
     /* =========================================================
+       UNA SOLA CÁMARA (data-camara)
+       ========================================================= */
+
+    function buscarCamara(id){
+
+        for(const zona of Object.values(zonas)){
+
+            const camara=
+                zona.camaras.find(
+                    c=>c.idCamara===id
+                );
+
+            if(camara){
+                return {zona, camara};
+            }
+
+        }
+
+        return null;
+
+    }
+
+
+    function renderizarCamara(encontrada){
+
+        // La hoja quita el selector de zona y la cabecera de la zona.
+        raiz.classList.add("camaras-en-vivo--una");
+
+        rejillaCamaras.innerHTML=
+            construirTarjeta(
+                encontrada.camara,
+                0
+            );
+
+        notaProveedor.innerHTML=
+            encontrada.zona.nota;
+
+        prepararImagenes();
+
+        iniciarRefrescoImagenes();
+
+    }
+
+
+    /* =========================================================
        SELECTOR
        ========================================================= */
 
@@ -1235,6 +1293,30 @@ export function montarCamarasEnVivo(raiz) {
     /* =========================================================
        INICIO
        ========================================================= */
+
+    if(camaraPedida){
+
+        const encontrada=
+            buscarCamara(
+                camaraPedida
+            );
+
+        if(encontrada){
+
+            renderizarCamara(
+                encontrada
+            );
+
+            return;
+
+        }
+
+        console.warn(
+            `Cámaras en vivo: la cámara ${camaraPedida} no está en el catálogo; se enseñan todas.`
+        );
+
+    }
+
 
     cargarSelector();
 

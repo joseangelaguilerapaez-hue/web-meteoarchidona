@@ -572,3 +572,15 @@
 
 
 /* Fin de fichero: css/componentes-en-vivo.css */
+
+
+/* Una sola cámara (data-camara): sin selector ni cabecera de zona y la
+   tarjeta a todo el ancho del hueco. */
+.camaras-en-vivo--una .selector-panel,
+.camaras-en-vivo--una .cabecera-zona{
+    display:none;
+}
+
+.camaras-en-vivo--una .rejilla-camaras{
+    grid-template-columns:minmax(0,1fr);
+}
