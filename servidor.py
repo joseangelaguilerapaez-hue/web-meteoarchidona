@@ -58,6 +58,7 @@ SECCIONES = (
     "climatologia",
     "incendios",
     "mi-cuenta",
+    "mi-web",
     "novedades",
 )
 

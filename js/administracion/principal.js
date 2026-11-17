@@ -929,7 +929,7 @@ async function cargarModuloDashboards(){
 
     if(promesaModuloDashboards === null){
         promesaModuloDashboards = import(
-            "./dashboards.js?v=20261117-editor1"
+            "./dashboards.js?v=20261117-editor2"
         );
     }
 

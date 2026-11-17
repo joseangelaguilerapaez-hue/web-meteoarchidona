@@ -38,13 +38,14 @@
 <link rel="stylesheet" href="../css/pie.css?v=20261113-menu5">
 <link rel="stylesheet" href="../css/lluvia.css?v=20260913-lluvia2">
 <link rel="stylesheet" href="../css/mi-cuenta.css?v=20261104-mi-cuenta1">
+<link rel="stylesheet" href="../css/mi-web.css?v=20261117-miweb1">
 
-<script src="../js/cabecera.js?v=20261115-lanzamientos2" defer></script>
+<script src="../js/cabecera.js?v=20261117-miweb1" defer></script>
 <script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
 <script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
 <script src="../js/lluvia.js?v=20260913-lluvia3" defer></script>
 <script src="../js/api.js?v=20261003-vps1" defer></script>
-<script type="module" src="../js/mi-cuenta.js?v=20261104-mi-cuenta1"></script>
+<script type="module" src="../js/mi-cuenta.js?v=20261117-miweb1"></script>
 <script src="../js/pwa.js?v=20261101-pwa1" defer></script>
 <script src="../js/instalar.js?v=20261102-manual1" defer></script>
 
@@ -61,7 +62,8 @@
 <!-- =========================================================
      MI CUENTA
      Diseño: docs/usuarios.md de api-meteoarchidona, 8.5 y 8.6.
-     Tres pestañas: Mis datos, Suscripciones y Preferencias de la web.
+     Cuatro pestañas: Mis datos, Suscripciones, Preferencias de la web y
+     Mi web (las pestañas propias del menú; docs/dashboards.md de la API).
      ========================================================= -->
 
 <main class="mi-cuenta">
@@ -129,6 +131,9 @@
     </button>
     <button type="button" role="tab" class="mi-cuenta-pestana" data-pestana="preferencias" aria-selected="false">
         Preferencias
+    </button>
+    <button type="button" role="tab" class="mi-cuenta-pestana" data-pestana="miweb" aria-selected="false">
+        Mi web
     </button>
 </nav>
 
@@ -278,6 +283,28 @@
         id="listaPreferencias"
         class="mi-cuenta-lista"
     ></div>
+
+</section>
+
+<!-- ---------------- MI WEB ---------------- -->
+
+<section
+    id="pestana-miweb"
+    class="mi-cuenta-bloque"
+    role="tabpanel"
+    hidden
+>
+
+    <h2>Mi web</h2>
+
+    <p class="mi-cuenta-nota">
+        Hasta tres pestañas tuyas en el menú de la web. Cada una lleva un
+        nombre corto para el menú y una descripción que sale de título, y
+        dentro eliges o creas su dashboard: uno para el móvil y otro para
+        el PC.
+    </p>
+
+    <div id="gestionMiWeb"></div>
 
 </section>
 

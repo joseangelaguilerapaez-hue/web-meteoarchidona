@@ -1,0 +1,197 @@
+/*
+ * MeteoArchidona
+ * «Mi web»: la página de cada pestaña (pages/mi-web.html,
+ * js/mi-web/pagina.js), su apartado en Mi cuenta (js/mi-web/gestion.js)
+ * y la marca de las pestañas en el menú (js/mi-web/menu.js).
+ * Colores de css/paleta.css.
+ */
+
+
+/* ---------- Menú: las pestañas del registrado ---------- */
+
+.navegacion a.nav-mi-web {
+    color: var(--amber-light);
+}
+
+.navegacion a.nav-mi-web::before {
+    content: "★ ";
+    color: var(--amber);
+}
+
+
+/* ---------- Página de la pestaña ---------- */
+
+.mi-web {
+    width: min(1280px, calc(100% - 32px));
+    margin: 30px auto 56px;
+    display: grid;
+    gap: 14px;
+}
+
+.mi-web [hidden] {
+    display: none !important;
+}
+
+.mi-web-etiqueta {
+    color: var(--amber);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+}
+
+.mi-web-cabecera h1 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 0;
+    color: var(--text);
+    font-size: clamp(22px, 3.6vw, 30px);
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.mi-web-estado {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.mi-web-estado:empty {
+    display: none;
+}
+
+.mi-web-estado[data-tipo="error"] {
+    color: var(--red);
+}
+
+.mi-web-estado[data-tipo="ok"] {
+    color: var(--mint);
+}
+
+.mi-web-estado a {
+    color: var(--cyan);
+}
+
+.mi-web-bloque {
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.mi-web-barra,
+.mi-web-renombrar {
+    display: grid;
+    gap: 8px;
+}
+
+.mi-web-campo {
+    color: #b8cadc;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.mi-web-barra select,
+.mi-web-renombrar input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    background: #0a1724;
+    color: var(--text);
+    font: inherit;
+}
+
+.mi-web-barra select option,
+.mi-web-barra select optgroup {
+    background: #0a1724;
+    color: var(--text);
+}
+
+.mi-web-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mi-web-boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-soft);
+    font: inherit;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.mi-web-boton:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.mi-web-boton-principal {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.mi-web-boton-peligro {
+    border-color: rgba(239, 68, 68, 0.45);
+    color: #ff9ba8;
+}
+
+.mi-web-lapiz {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 16px;
+}
+
+.mi-web-subtitulo {
+    margin: 0 0 12px;
+    font-size: 18px;
+    color: var(--text);
+}
+
+.mi-web-vacia p {
+    margin: 0;
+    color: var(--muted);
+}
+
+
+/* ---------- Mi cuenta → Mi web ---------- */
+
+.mi-web-gestion-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.mi-web-gestion-numero {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.mi-web-gestion-fijados {
+    margin: 4px 0 10px;
+    color: var(--text-soft);
+    font-size: 13px;
+}
+
+.mi-web-gestion-ficha .mi-cuenta-boton {
+    text-decoration: none;
+}
+
+.mi-web-gestion-formulario {
+    margin-top: 12px;
+}

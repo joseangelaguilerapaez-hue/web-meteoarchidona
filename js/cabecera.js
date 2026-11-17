@@ -291,6 +291,8 @@ const RUTA_LANZAMIENTOS_CSS = "/css/lanzamientos.css?v=20261115-lanzamientos1";
 
 const RUTA_LANZAMIENTOS_JS = "/js/lanzamientos.js?v=20261115-lanzamientos2";
 
+const RUTA_MI_WEB_JS = "/js/mi-web/menu.js?v=20261117-miweb1";
+
 
 /*
  * Monta componentes/pie.html en el <div id="pie"> de la página, si lo
@@ -511,6 +513,20 @@ function cargarLanzamientos() {
 }
 
 
+/*
+ * «Mi web» (José, 17-11-2026; js/mi-web/menu.js): las pestañas propias del
+ * registrado en el menú. Sin sesión no pinta nada.
+ */
+function cargarMiWeb() {
+
+    import(RUTA_MI_WEB_JS)
+        .then((modulo) => modulo.montarMenuMiWeb())
+        .catch((error) => {
+            console.error("No se ha podido cargar Mi web:", error);
+        });
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -575,6 +591,8 @@ async function montarCabecera() {
     recogerControlesDePagina();
 
     cargarCuenta();
+
+    cargarMiWeb();
 
     cargarDistintivo();
     cargarContador();

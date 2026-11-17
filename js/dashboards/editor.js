@@ -34,7 +34,7 @@ import {pintarDashboard} from "./pintor.js?v=20261117-camara1";
 import {componenteOculto} from "../lanzamientos.js?v=20261115-lanzamientos1";
 
 
-const HOJA = "/css/dashboards-editor.css?v=20261117-editor1";
+const HOJA = "/css/dashboards-editor.css?v=20261117-editor2";
 
 const MAXIMO_FILAS = 50;
 

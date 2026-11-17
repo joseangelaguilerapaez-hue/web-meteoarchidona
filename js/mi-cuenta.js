@@ -23,7 +23,7 @@
 
 const ZONA = "Europe/Madrid";
 
-const PESTANAS = ["datos", "suscripciones", "preferencias"];
+const PESTANAS = ["datos", "suscripciones", "preferencias", "miweb"];
 
 const CLAVE_PESTANA = "meteoarchidona_mi_cuenta_pestana";
 
@@ -634,6 +634,14 @@ async function cargarTodo(){
     $("miCuentaContenido").hidden = false;
     pintarDatos();
     activarPestana(leerPestana());
+
+    // Mi web (José, 17-11-2026): su propio módulo, que también usan el
+    // menú y la página de cada pestaña.
+    import("./mi-web/gestion.js?v=20261117-miweb1")
+        .then(modulo => modulo.montarGestionMiWeb($("gestionMiWeb")))
+        .catch(error => {
+            console.error("No se ha podido cargar Mi web.", error);
+        });
 
     // Cada apartado por su lado: si uno falla, los demás se ven.
     const [resCatalogo, resSuscripciones, resPreferencias] = await Promise.allSettled([
