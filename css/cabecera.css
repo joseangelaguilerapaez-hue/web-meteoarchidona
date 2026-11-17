@@ -1181,7 +1181,7 @@ button {
 }
 
 /* ==========================================================
-   BOTÓN «DETENER LLUVIA»
+   BOTÓN «PARAR LLUVIA»
    ========================================================== */
 
 /*
@@ -1203,6 +1203,24 @@ button {
 .cuenta-zona:has(.boton-lluvia) {
     flex-wrap: wrap;
     row-gap: 6px;
+}
+
+/*
+ * En el móvil la fila va bajo el logotipo y tiene sitio para los tres
+ * si se estrechan un poco (José, 17-11-2026): menos margen interior y
+ * menos separación, solo mientras está el botón de la lluvia.
+ */
+@media (max-width: 1050px) {
+
+    .cuenta-zona:has(.boton-lluvia) {
+        gap: 6px;
+    }
+
+    .cuenta-zona:has(.boton-lluvia) .cuenta-boton {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
 }
 
 /*

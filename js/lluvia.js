@@ -30,9 +30,9 @@
  * evento "meteoarchidona:lluvia-real" (js/actualidad/principal.js).
  *
  * Mientras llueve de verdad aparece en la cabecera, junto a los
- * botones de la cuenta, el botón «Detener lluvia». Al pulsarlo se
+ * botones de la cuenta, el botón «Parar lluvia». Al pulsarlo se
  * quita toda la lluvia (también la de las fichas de Actualidad) y pasa
- * a «Activar lluvia». La decisión se recuerda en sessionStorage hasta
+ * a «Poner lluvia» (textos cortos para que quepa en la fila del móvil). La decisión se recuerda en sessionStorage hasta
  * cerrar la pestaña, en todas las páginas. Sin lluvia real el botón no
  * se ve y la lluvia de prueba del logotipo funciona como siempre.
  *
@@ -123,7 +123,7 @@ function cuandoHayaCabecera(accion) {
 
 
 /* ==========================================================
-   LLUVIA REAL Y BOTÓN «DETENER LLUVIA»
+   LLUVIA REAL Y BOTÓN «PARAR LLUVIA»
    ========================================================== */
 
 
@@ -282,7 +282,7 @@ function pintarBoton() {
 
     const detenida = leerDetenida();
 
-    boton.textContent = detenida ? "Activar lluvia" : "Detener lluvia";
+    boton.textContent = detenida ? "Poner lluvia" : "Parar lluvia";
     boton.setAttribute("aria-pressed", detenida ? "true" : "false");
     boton.title = detenida
         ? "Volver a mostrar la lluvia en la web"

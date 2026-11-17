@@ -1583,8 +1583,8 @@ class TestLluviaEnTodasLasPaginas(unittest.TestCase):
         self.assertIn("sessionStorage", codigo)
         self.assertIn("/condiciones-actuales/", codigo)
         self.assertIn('"meteoarchidona:lluvia-real"', codigo)
-        self.assertIn("Detener lluvia", codigo)
-        self.assertIn("Activar lluvia", codigo)
+        self.assertIn("Parar lluvia", codigo)
+        self.assertIn("Poner lluvia", codigo)
 
     def test_actualidad_avisa_del_nivel_real(self):
         self.assertIn('"meteoarchidona:lluvia-real"', leer(RAIZ / "js" / "actualidad" / "principal.js"))
