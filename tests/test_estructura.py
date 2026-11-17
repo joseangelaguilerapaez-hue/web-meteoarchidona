@@ -1138,6 +1138,63 @@ class TestComponentesIncendios(unittest.TestCase):
     def test_el_alta_en_nginx_existe(self):
         self.assertIn('modulo.SECCION = "incendios"', leer(RAIZ / "scripts" / "configurar_seccion_incendios.py"))
 
+class TestComponentesCostas(unittest.TestCase):
+    """Componentes de Costas para la página y los dashboards (18-11-2026)."""
+
+    COMPONENTES = {
+        "costas-resumen": ("resumen.js", "montarResumenCostas"),
+        "costas-mapa": ("mapa.js", "montarMapaCostas"),
+        "costas-playa": ("playa.js", "montarPlayaCostas"),
+        "costas-mareas": ("mareas.js", "montarMareasCostas"),
+        "costas-boya": ("boya.js", "montarBoyaCostas"),
+    }
+
+    def test_cada_componente_exporta_su_funcion_y_la_pagina_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "costas.html")
+        principal = leer(RAIZ / "js" / "costas.js")
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        for atributo, (fichero, funcion) in self.COMPONENTES.items():
+            with self.subTest(componente=atributo):
+                codigo = leer(RAIZ / "js" / "costas" / fichero)
+                self.assertRegex(codigo, rf"export (async )?function {funcion}\(raiz\)")
+                self.assertIn(f'data-componente="{atributo}"', pagina)
+                self.assertIn(f'"{atributo}": {funcion}', principal)
+                self.assertIn(f'"{atributo}": ["/js/costas/{fichero}?v=', pintor)
+                self.assertIn(f'"{funcion}"]', pintor)
+
+    def test_sin_id_para_poder_repetirlos(self):
+        for _, (fichero, _) in self.COMPONENTES.items():
+            with self.subTest(fichero=fichero):
+                codigo = leer(RAIZ / "js" / "costas" / fichero)
+                self.assertNotIn("getElementById", codigo)
+                self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_se_carga_sola_y_lleva_su_gama_mar_y_arena(self):
+        comun = leer(RAIZ / "js" / "costas" / "comun.js")
+        ruta = re.search(r'"(/css/costas-componentes\.css\?v=[\w-]+)"', comun)
+        self.assertIsNotNone(ruta)
+        self.assertIn(ruta.group(1).lstrip("/"), leer(RAIZ / "pages" / "costas.html").replace("../", ""))
+        hoja = leer(RAIZ / "css" / "costas-componentes.css")
+        for variable in ("--cos-turquesa", "--cos-azul", "--cos-profundo", "--cos-arena"):
+            self.assertIn(variable, hoja)
+        self.assertIn("container-type: inline-size", hoja)
+        self.assertNotIn("--cos-", leer(RAIZ / "css" / "paleta.css"))
+
+    def test_la_pagina_cita_las_fuentes(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "costas.html")
+        self.assertRegex(pagina, r'type="module"\s+src="\.\./js/costas\.js\?v=[\w-]+"')
+        self.assertIn("js/api.js", pagina)
+        self.assertIn('<body data-seccion="costas">', pagina)
+        self.assertIn("Puertos del Estado", pagina)
+        self.assertIn("112", pagina)
+        comun = leer(RAIZ / "js" / "costas" / "comun.js")
+        self.assertIn("Puertos del Estado", comun)
+        self.assertIn("Copernicus Marine", comun)
+
+    def test_el_alta_en_nginx_existe(self):
+        self.assertIn('modulo.SECCION = "costas"', leer(RAIZ / "scripts" / "configurar_seccion_costas.py"))
+
+
 class TestComponentesLuna(unittest.TestCase):
     """Componentes de la sección Luna para la página y los dashboards (11-11-2026)."""
 

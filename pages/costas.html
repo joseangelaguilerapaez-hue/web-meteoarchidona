@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Estado de la mar en las costas de Andalucía: oleaje, temperatura del agua y mareas de Huelva, Cádiz, Málaga, Granada y Almería, con las boyas de Puertos del Estado y la previsión de cada playa."
+>
+
+<title>
+    Costas · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/costas">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Costas · MeteoArchidona">
+<meta property="og:description" content="Oleaje, temperatura del agua y mareas de toda la costa andaluza, playa a playa.">
+<meta property="og:url" content="https://meteoarchidona.com/costas">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20261117-lluvia1"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261113-menu5"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/costas-componentes.css?v=20261118-costas1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/costas.css?v=20261118-costas1"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261118-costas1"
+    defer
+></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20261117-lluvia1"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/costas.js?v=20261118-costas1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="costas">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="costas">
+
+
+<header class="costas-cabecera">
+
+    <div class="cos-etiqueta-pagina">
+        METEOARCHIDONA · COSTAS
+    </div>
+
+    <h1>
+        Estado de la mar en <span>Andalucía</span>
+    </h1>
+
+    <p class="costas-entradilla">
+        Oleaje, temperatura del agua y mareas de toda la costa andaluza, de
+        Ayamonte a Garrucha: lo que miden ahora las boyas y los mareógrafos
+        de Puertos del Estado y la previsión de cada playa para hoy, mañana
+        y pasado. Busca tu playa por su nombre antes de ir.
+    </p>
+
+</header>
+
+
+<!-- ========================================================
+     LAS CINCO PROVINCIAS
+     Componente js/costas/resumen.js.
+     ======================================================== -->
+
+<section
+    class="costas-bloque"
+    aria-labelledby="titulo-costas-resumen"
+>
+
+    <h2 id="titulo-costas-resumen">
+        La mar ahora
+    </h2>
+
+    <div
+        data-componente="costas-resumen"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     MAPA
+     Componente js/costas/mapa.js.
+     ======================================================== -->
+
+<section
+    class="costas-bloque"
+    aria-labelledby="titulo-costas-mapa"
+>
+
+    <h2 id="titulo-costas-mapa">
+        Boyas, mareógrafos y playas
+    </h2>
+
+    <p class="costas-nota">
+        Los rombos son boyas y los cuadrados, mareógrafos: lo medido. Los
+        círculos son playas, con la ola que prevé el modelo para ahora.
+        Toca cualquiera para ver sus datos; desde una playa se llega a su
+        ficha.
+    </p>
+
+    <div
+        data-componente="costas-mapa"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     TU PLAYA
+     Componente js/costas/playa.js.
+     ======================================================== -->
+
+<section
+    id="playa"
+    class="costas-bloque costas-bloque-arena"
+    aria-labelledby="titulo-costas-playa"
+>
+
+    <h2 id="titulo-costas-playa">
+        Tu playa
+    </h2>
+
+    <div
+        data-componente="costas-playa"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<div class="costas-rejilla">
+
+    <!-- ====================================================
+         MAREAS
+         Componente js/costas/mareas.js.
+         ==================================================== -->
+
+    <section
+        class="costas-bloque"
+        aria-labelledby="titulo-costas-mareas"
+    >
+
+        <h2 id="titulo-costas-mareas">
+            Mareas de hoy
+        </h2>
+
+        <div
+            data-componente="costas-mareas"
+            data-titulo="no"
+        ></div>
+
+    </section>
+
+
+    <!-- ====================================================
+         BOYA
+         Componente js/costas/boya.js.
+         ==================================================== -->
+
+    <section
+        class="costas-bloque"
+        aria-labelledby="titulo-costas-boya"
+    >
+
+        <h2 id="titulo-costas-boya">
+            Lo que mide una boya
+        </h2>
+
+        <div
+            data-componente="costas-boya"
+            data-titulo="no"
+        ></div>
+
+    </section>
+
+</div>
+
+
+<!-- ========================================================
+     ESTADO DE LA MAR
+     ======================================================== -->
+
+<section
+    class="costas-bloque costas-bloque-arena"
+    aria-labelledby="titulo-costas-escala"
+>
+
+    <h2 id="titulo-costas-escala">
+        Cómo se llama cada estado de la mar
+    </h2>
+
+    <p class="costas-nota">
+        Por la altura significativa de la ola, con la escala Douglas que
+        usa AEMET en sus predicciones costeras. Son los colores del mapa y
+        de las fichas.
+    </p>
+
+    <div class="costas-tabla-desliza">
+        <table class="costas-escala">
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Altura de la ola</th>
+                    <th>Cómo se ve</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Calma o rizada</td><td>Hasta 0,1 m</td><td>Espejo o pequeñas arrugas</td></tr>
+                <tr><td>Marejadilla</td><td>0,1 a 0,5 m</td><td>Olas pequeñas, alguna cresta que rompe</td></tr>
+                <tr><td>Marejada</td><td>0,5 a 1,25 m</td><td>Borreguillos por todas partes</td></tr>
+                <tr><td>Fuerte marejada</td><td>1,25 a 2,5 m</td><td>Olas grandes con espuma; baño poco recomendable</td></tr>
+                <tr><td>Mar gruesa</td><td>2,5 a 4 m</td><td>Temporal en la costa</td></tr>
+                <tr><td>Mar muy gruesa o más</td><td>Más de 4 m</td><td>Gran temporal</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     GLOSARIO
+     ======================================================== -->
+
+<section
+    class="costas-bloque"
+    aria-labelledby="titulo-costas-glosario"
+>
+
+    <h2 id="titulo-costas-glosario">
+        Qué significa cada cosa
+    </h2>
+
+    <dl class="costas-glosario">
+
+        <dt>Ola (altura significativa)</dt>
+        <dd>
+            La media del tercio de olas más altas. Es la que un observador
+            diría a ojo; de vez en cuando llega alguna bastante mayor: la
+            ola máxima que dan las boyas.
+        </dd>
+
+        <dt>Periodo</dt>
+        <dd>
+            Segundos entre ola y ola. Con periodos largos (más de 9 o 10
+            segundos) es mar de fondo que viene de lejos: rompe con más
+            fuerza aunque la ola no parezca grande.
+        </dd>
+
+        <dt>Mar del…</dt>
+        <dd>
+            De dónde viene el oleaje (o el viento). La flecha apunta hacia
+            donde va.
+        </dd>
+
+        <dt>Medido y previsto</dt>
+        <dd>
+            Las boyas y los mareógrafos miden de verdad, mar adentro o en
+            los puertos. La previsión de cada playa es del modelo de Puertos
+            del Estado para el punto de mar más cercano.
+        </dd>
+
+        <dt>Temperatura del agua</dt>
+        <dd>
+            La de las boyas es medida, a menos de un metro de profundidad.
+            La de las playas es la prevista por el modelo de Copernicus
+            Marine: en la orilla puede variar un par de grados.
+        </dd>
+
+        <dt>Mareas</dt>
+        <dd>
+            En el Atlántico (Huelva y Cádiz) la marea sube y baja varios
+            metros entre pleamar y bajamar. En el Mediterráneo apenas unos
+            centímetros: allí mueven más el nivel el viento y la presión.
+        </dd>
+
+    </dl>
+
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="costas-bloque costas-bloque-arena"
+    aria-labelledby="titulo-costas-fuentes"
+>
+
+    <h2 id="titulo-costas-fuentes">
+        Fuentes
+    </h2>
+
+    <ul class="costas-fuentes">
+        <li>
+            Boyas, mareógrafos, playas, previsión de oleaje, viento y mareas:
+            <a href="https://portus.puertos.es/" target="_blank" rel="noopener noreferrer">Puertos del Estado (Portus)</a>.
+            Las boyas se leen cada hora, los mareógrafos cada 10 minutos y
+            la previsión dos veces al día.
+        </li>
+        <li>
+            Temperatura del agua prevista:
+            <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener noreferrer">Open-Meteo</a>,
+            con datos de Copernicus Marine.
+        </li>
+        <li>
+            Mapa: &copy; colaboradores de
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>.
+            Gráficas y mapa, de MeteoArchidona.
+        </li>
+        <li>
+            Es información orientativa: antes de bañarse, la bandera de la
+            playa y lo que digan los socorristas. Emergencias en el mar: 112.
+        </li>
+    </ul>
+
+</section>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/costas.html -->

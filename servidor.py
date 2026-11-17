@@ -57,6 +57,7 @@ SECCIONES = (
     "olivar",
     "climatologia",
     "incendios",
+    "costas",
     "mi-cuenta",
     "mi-web",
     "novedades",

@@ -1,0 +1,931 @@
+/*
+ * MeteoArchidona
+ * Componentes de Costas
+ *
+ * Estilos de los componentes reutilizables de js/costas/:
+ *
+ *     costas-resumen · costas-mapa · costas-playa · costas-mareas ·
+ *     costas-boya
+ *
+ * Decisión de José del 18-11-2026: gama «Mar y arena» sobre fondo
+ * blanco, como las demás secciones claras (Embalses, Polen, Sismología):
+ * turquesas y azul profundo para el agua y arena de acento. Las líneas y
+ * la forma de las tarjetas son las de siempre (bordes finos, radios de
+ * 14 px, etiquetas en JetBrains Mono).
+ *
+ * La paleta está aquí, acotada a .cos-componente (y a la página,
+ * .costas), y no en css/paleta.css: así un componente se ve igual en su
+ * página que dentro de un dashboard oscuro.
+ *
+ * Cada componente carga esta hoja solo si la página no la tiene
+ * (js/costas/comun.js) y se adapta al ancho de su hueco: cada raíz es un
+ * contenedor (container-type) y las reglas de tamaño van con @container.
+ */
+
+
+/* ==========================================================
+   PALETA «MAR Y ARENA»
+   ========================================================== */
+
+.costas,
+.cos-componente {
+    --cos-blanco: #ffffff;
+    --cos-espuma: #f5fbfb;
+    --cos-orilla: #e6f4f3;
+    --cos-turquesa-claro: #8ad9d2;
+    --cos-turquesa: #2fb3ae;
+    --cos-azul: #1b80b5;
+    --cos-profundo: #14365c;
+    --cos-noche: #0d2440;
+    --cos-arena-clara: #f6eedc;
+    --cos-arena: #e9d8b4;
+    --cos-arena-oscura: #c9a26a;
+    --cos-coral: #d9694a;
+
+    --cos-texto: #14324a;
+    --cos-texto-suave: #456779;
+    --cos-texto-tenue: #7e95a2;
+    --cos-borde: #d4e7e8;
+    --cos-borde-fuerte: #a7cfd2;
+
+    --cos-sombra: 0 10px 28px rgba(20, 54, 92, 0.10);
+}
+
+
+/* ==========================================================
+   RAÍZ COMÚN
+   ========================================================== */
+
+.cos-componente {
+    container-type: inline-size;
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+    padding: 18px 20px;
+    color: var(--cos-texto);
+    background:
+        radial-gradient(ellipse at top right, rgba(47, 179, 174, 0.10) 0%, rgba(47, 179, 174, 0) 55%),
+        linear-gradient(170deg, var(--cos-blanco) 0%, var(--cos-espuma) 60%, var(--cos-arena-clara) 100%);
+    border: 1px solid var(--cos-borde);
+    border-radius: 14px;
+    box-shadow: var(--cos-sombra);
+    font-family: "Sora", sans-serif;
+}
+
+/* En la página Costas el bloque ya es la tarjeta: el componente va sin marco propio. */
+.costas-bloque > .cos-componente {
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+.cos-cabeza {
+    display: grid;
+    gap: 4px;
+}
+
+.cos-titulo {
+    margin: 0;
+    color: var(--cos-profundo);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.cos-etiqueta {
+    color: var(--cos-arena-oscura);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.cos-aviso {
+    margin: 0;
+    color: var(--cos-texto-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.cos-aviso.error {
+    color: var(--cos-coral);
+}
+
+.cos-nota {
+    margin: 0;
+    color: var(--cos-texto-tenue);
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+.cos-pie {
+    margin: 0;
+    color: var(--cos-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    line-height: 1.5;
+}
+
+.cos-cifra {
+    display: grid;
+    gap: 1px;
+}
+
+.cos-cifra b {
+    color: var(--cos-profundo);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.cos-cifra small {
+    color: var(--cos-texto-tenue);
+    font-size: 11.5px;
+}
+
+.cos-estado {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.cos-estado.estado-ACTIVA { background: rgba(47, 179, 174, 0.16); color: #17736f; }
+.cos-estado.estado-RETRASADA { background: rgba(201, 162, 106, 0.22); color: #85602a; }
+.cos-estado.estado-SIN_DATOS { background: rgba(126, 149, 162, 0.18); color: var(--cos-texto-suave); }
+
+.cos-flecha {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.cos-flecha-icono {
+    display: inline-block;
+    color: var(--cos-azul);
+    font-weight: 700;
+}
+
+.cos-flecha-texto {
+    color: var(--cos-texto-suave);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px;
+}
+
+.cos-desplegable {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+    max-width: 480px;
+    color: var(--cos-texto-suave);
+    font-size: 13px;
+}
+
+.cos-desplegable select {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    padding: 7px 10px;
+    color: var(--cos-texto);
+    background: var(--cos-blanco);
+    border: 1px solid var(--cos-borde-fuerte);
+    border-radius: 9px;
+    font: inherit;
+}
+
+
+/* ==========================================================
+   RESUMEN POR PROVINCIAS
+   ========================================================== */
+
+.cos-provincias {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cos-provincia {
+    --cos-ola: var(--cos-turquesa);
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    padding: 12px 12px 12px 14px;
+    background: var(--cos-blanco);
+    border: 1px solid var(--cos-borde);
+    border-left: 5px solid var(--cos-ola);
+    border-radius: 12px;
+}
+
+.cos-provincia-nombre {
+    color: var(--cos-arena-oscura);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.cos-provincia-estado {
+    color: var(--cos-profundo);
+    font-size: 15px;
+}
+
+.cos-provincia-cifras {
+    display: grid;
+    gap: 6px;
+}
+
+@container (max-width: 760px) {
+    .cos-provincias { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@container (max-width: 460px) {
+    .cos-provincias { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cos-cifra b { font-size: 16px; }
+}
+
+
+/* ==========================================================
+   MAPA
+   ========================================================== */
+
+.cos-mapa {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--cos-orilla);
+    border: 1px solid var(--cos-borde);
+    border-radius: 12px;
+    z-index: 0;
+}
+
+.cos-icono {
+    position: relative;
+}
+
+.cos-icono-forma {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--cos-profundo);
+    box-shadow: 0 1px 4px rgba(20, 54, 92, 0.35);
+}
+
+.cos-icono-boya .cos-icono-forma { transform: rotate(45deg); border-radius: 2px; }
+.cos-icono-mareografo .cos-icono-forma { border-radius: 3px; }
+.cos-icono.apagada .cos-icono-forma { border-color: #8a8478; opacity: 0.85; }
+
+.cos-icono-texto {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    padding: 1px 5px;
+    color: var(--cos-blanco);
+    background: var(--cos-profundo);
+    border-radius: 5px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    white-space: nowrap;
+}
+
+.cos-mapa-ficha {
+    display: grid;
+    gap: 3px;
+    min-width: 190px;
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+.cos-mapa-ficha strong {
+    color: var(--cos-profundo);
+    font-size: 13.5px;
+}
+
+.cos-mapa-ficha-tipo,
+.cos-mapa-ficha small {
+    color: var(--cos-texto-tenue);
+}
+
+.cos-mapa-ficha-enlace {
+    margin-top: 4px;
+    color: var(--cos-azul);
+    font-weight: 600;
+}
+
+.cos-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    align-items: center;
+    color: var(--cos-texto-suave);
+    font-size: 12px;
+}
+
+.cos-leyenda-tramo {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.cos-leyenda-tramo i {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(20, 54, 92, 0.25);
+}
+
+.cos-leyenda-formas {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+}
+
+.cos-leyenda-forma::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    vertical-align: -1px;
+    background: var(--cos-turquesa);
+    border: 2px solid var(--cos-profundo);
+}
+
+.cos-leyenda-forma.boya::before { transform: rotate(45deg); border-radius: 2px; }
+.cos-leyenda-forma.mareografo::before { background: var(--cos-arena-oscura); border-radius: 2px; }
+.cos-leyenda-forma.playa::before { border: 1.5px solid #ffffff; border-radius: 50%; box-shadow: 0 0 0 1px var(--cos-borde-fuerte); }
+.cos-leyenda-forma.apagada::before { background: #b9b2a6; border-color: #8a8478; }
+
+.cos-leyenda-total {
+    margin-left: auto;
+    color: var(--cos-texto-tenue);
+}
+
+.cos-mapa .leaflet-pane,
+.cos-mapa .leaflet-tile,
+.cos-mapa .leaflet-marker-icon,
+.cos-mapa .leaflet-tile-container,
+.cos-mapa .leaflet-pane > svg,
+.cos-mapa .leaflet-pane > canvas,
+.cos-mapa .leaflet-zoom-box,
+.cos-mapa .leaflet-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.cos-mapa.leaflet-container { overflow: hidden; outline: 0; -webkit-tap-highlight-color: transparent; }
+.cos-mapa .leaflet-map-pane { z-index: 400; }
+.cos-mapa .leaflet-tile-pane { z-index: 200; }
+.cos-mapa .leaflet-overlay-pane { z-index: 400; }
+.cos-mapa .leaflet-marker-pane { z-index: 600; }
+.cos-mapa .leaflet-tooltip-pane { z-index: 650; }
+.cos-mapa .leaflet-popup-pane { z-index: 700; }
+.cos-mapa .leaflet-map-pane svg { z-index: 200; }
+
+.cos-mapa .leaflet-overlay-pane svg,
+.cos-mapa .leaflet-tile-pane img {
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.cos-mapa.leaflet-touch-zoom { touch-action: pan-x pan-y; }
+.cos-mapa.leaflet-touch-drag { touch-action: pinch-zoom; }
+.cos-mapa.leaflet-touch-drag.leaflet-touch-zoom { touch-action: none; }
+.cos-mapa .leaflet-tile { visibility: hidden; user-select: none; }
+.cos-mapa .leaflet-tile-loaded { visibility: inherit; }
+.cos-mapa .leaflet-zoom-animated { transform-origin: 0 0; }
+.cos-mapa.leaflet-zoom-anim .leaflet-zoom-animated { transition: transform 0.25s cubic-bezier(0, 0, 0.25, 1); }
+.cos-mapa .leaflet-interactive { cursor: pointer; }
+
+/* Leaflet deja el SVG de las capas sin eventos y se los devuelve solo a
+ * lo que se puede tocar (los terremotos): sin esta regla, tocar un
+ * terremoto no abría su ficha. */
+.cos-mapa .leaflet-pane > svg path { pointer-events: none; }
+.cos-mapa .leaflet-pane > svg path.leaflet-interactive { pointer-events: visiblePainted; pointer-events: auto; }
+
+.cos-mapa .leaflet-control { position: relative; z-index: 800; float: left; clear: both; pointer-events: auto; }
+.cos-mapa .leaflet-top,
+.cos-mapa .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; }
+.cos-mapa .leaflet-top { top: 0; }
+.cos-mapa .leaflet-bottom { bottom: 0; }
+.cos-mapa .leaflet-left { left: 0; }
+.cos-mapa .leaflet-right { right: 0; }
+.cos-mapa .leaflet-right .leaflet-control { float: right; }
+.cos-mapa .leaflet-top .leaflet-control { margin-top: 10px; }
+.cos-mapa .leaflet-left .leaflet-control { margin-left: 10px; }
+
+.cos-mapa .leaflet-bar {
+    overflow: hidden;
+    border: 1px solid var(--cos-borde-fuerte);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(20, 54, 92, 0.18);
+}
+
+.cos-mapa .leaflet-bar a {
+    display: block;
+    width: 32px;
+    height: 32px;
+    background: var(--cos-blanco);
+    color: var(--cos-profundo);
+    font-size: 20px;
+    line-height: 32px;
+    text-align: center;
+    text-decoration: none;
+    border-bottom: 1px solid var(--cos-borde);
+}
+
+.cos-mapa .leaflet-bar a:last-child { border-bottom: 0; }
+
+.cos-mapa .leaflet-control-attribution {
+    margin: 0;
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--cos-texto-suave);
+    font-size: 9.5px;
+}
+
+.cos-mapa .leaflet-control-attribution a { color: var(--cos-azul); }
+
+.cos-mapa .leaflet-popup { position: absolute; margin-bottom: 20px; text-align: center; }
+.cos-mapa .leaflet-popup-content-wrapper {
+    padding: 1px;
+    border-radius: 12px;
+    background: var(--cos-blanco);
+    color: var(--cos-texto);
+    text-align: left;
+    box-shadow: 0 6px 22px rgba(20, 54, 92, 0.28);
+}
+.cos-mapa .leaflet-popup-content { margin: 12px 26px 12px 14px; min-height: 1px; }
+.cos-mapa .leaflet-popup-tip-container {
+    position: absolute;
+    left: 50%;
+    width: 40px;
+    height: 20px;
+    margin-top: -1px;
+    margin-left: -20px;
+    overflow: hidden;
+    pointer-events: none;
+}
+.cos-mapa .leaflet-popup-tip {
+    width: 17px;
+    height: 17px;
+    margin: -10px auto 0;
+    padding: 1px;
+    background: var(--cos-blanco);
+    transform: rotate(45deg);
+    box-shadow: 0 3px 14px rgba(20, 54, 92, 0.25);
+}
+.cos-mapa a.leaflet-popup-close-button {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    color: var(--cos-texto-tenue);
+    font-size: 18px;
+    text-decoration: none;
+}
+.cos-mapa .leaflet-tooltip {
+    position: absolute;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: var(--cos-profundo);
+    color: #ffffff;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+
+/* ==========================================================
+   PLAYA: BUSCADOR Y FICHA
+   ========================================================== */
+
+.cos-buscador {
+    position: relative;
+    display: grid;
+    gap: 6px;
+}
+
+.cos-buscador-etiqueta {
+    display: grid;
+    gap: 6px;
+    color: var(--cos-texto-suave);
+    font-size: 13px;
+}
+
+.cos-buscador-entrada {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    color: var(--cos-texto);
+    background: var(--cos-blanco);
+    border: 1px solid var(--cos-borde-fuerte);
+    border-radius: 11px;
+    font: inherit;
+    font-size: 15px;
+}
+
+.cos-buscador-entrada:focus {
+    outline: 2px solid var(--cos-turquesa);
+    outline-offset: 1px;
+}
+
+.cos-buscador-lista {
+    display: grid;
+    gap: 4px;
+    max-height: 280px;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.cos-buscador-lista:empty {
+    display: none;
+}
+
+.cos-buscador-opcion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    align-items: baseline;
+    width: 100%;
+    padding: 9px 12px;
+    color: var(--cos-texto);
+    text-align: left;
+    background: var(--cos-blanco);
+    border: 1px solid var(--cos-borde);
+    border-radius: 9px;
+    font: inherit;
+    cursor: pointer;
+}
+
+.cos-buscador-opcion:hover,
+.cos-buscador-opcion:focus-visible {
+    border-color: var(--cos-turquesa);
+    background: var(--cos-orilla);
+}
+
+.cos-buscador-opcion span,
+.cos-buscador-vacio {
+    color: var(--cos-texto-tenue);
+    font-size: 12.5px;
+}
+
+.cos-ficha {
+    display: grid;
+    gap: 14px;
+}
+
+.cos-ficha-cabeza {
+    display: grid;
+    gap: 2px;
+}
+
+.cos-ficha-nombre {
+    margin: 0;
+    color: var(--cos-profundo);
+    font-size: 20px;
+}
+
+.cos-ficha-lugar {
+    color: var(--cos-texto-suave);
+    font-size: 13px;
+}
+
+.cos-dias {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.cos-dia {
+    --cos-ola: var(--cos-turquesa);
+    display: grid;
+    gap: 4px;
+    justify-items: start;
+    padding: 12px;
+    color: var(--cos-texto);
+    text-align: left;
+    background: var(--cos-blanco);
+    border: 1px solid var(--cos-borde);
+    border-top: 5px solid var(--cos-ola);
+    border-radius: 12px;
+    font: inherit;
+    cursor: pointer;
+}
+
+.cos-dia.elegido {
+    background: var(--cos-orilla);
+    border-color: var(--cos-turquesa);
+    border-top-color: var(--cos-ola);
+    box-shadow: 0 0 0 2px rgba(47, 179, 174, 0.25);
+}
+
+.cos-dia-nombre {
+    color: var(--cos-arena-oscura);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.cos-dia-ola {
+    color: var(--cos-profundo);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px;
+}
+
+.cos-dia-estado {
+    color: var(--cos-texto-suave);
+    font-size: 13px;
+}
+
+.cos-dia-detalle {
+    display: grid;
+    gap: 1px;
+    color: var(--cos-texto-tenue);
+    font-size: 12px;
+}
+
+.cos-dia-alerta,
+.cos-alerta-mini {
+    display: inline-block;
+    padding: 1px 7px;
+    color: #ffffff;
+    background: var(--cos-coral);
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 600;
+}
+
+.cos-alerta-mini {
+    margin-left: 4px;
+}
+
+.cos-ficha-detalle {
+    display: grid;
+    gap: 12px;
+}
+
+.cos-ficha-dia {
+    margin: 0;
+    color: var(--cos-profundo);
+    font-size: 14px;
+}
+
+.cos-tabla-desliza {
+    overflow-x: auto;
+    border: 1px solid var(--cos-borde);
+    border-radius: 12px;
+    background: var(--cos-blanco);
+}
+
+.cos-horas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.cos-horas th,
+.cos-horas td {
+    padding: 7px 10px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--cos-borde);
+}
+
+.cos-horas th {
+    color: var(--cos-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--cos-espuma);
+}
+
+.cos-horas tr:last-child td {
+    border-bottom: 0;
+}
+
+.cos-hora {
+    color: var(--cos-profundo);
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 600;
+}
+
+.cos-ola-pastilla {
+    --cos-ola: var(--cos-turquesa);
+    display: inline-block;
+    min-width: 52px;
+    padding: 2px 8px;
+    color: var(--cos-profundo);
+    background: color-mix(in srgb, var(--cos-ola) 35%, #ffffff);
+    border-left: 4px solid var(--cos-ola);
+    border-radius: 6px;
+    font-family: "JetBrains Mono", monospace;
+}
+
+.cos-viento-cifra {
+    margin-right: 6px;
+}
+
+.cos-ficha-columnas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.cos-ficha-mareas,
+.cos-ficha-estacion {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding: 12px 14px;
+    background: var(--cos-blanco);
+    border: 1px solid var(--cos-borde);
+    border-radius: 12px;
+}
+
+.cos-ficha-mareas h4,
+.cos-ficha-estacion h4 {
+    margin: 0;
+    color: var(--cos-arena-oscura);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.cos-ficha-estacion-cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: center;
+    color: var(--cos-profundo);
+}
+
+.cos-ficha-cifras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    color: var(--cos-texto);
+    font-size: 13px;
+}
+
+@container (max-width: 560px) {
+    .cos-ficha-columnas { grid-template-columns: minmax(0, 1fr); }
+}
+
+@container (max-width: 420px) {
+    .cos-dias { gap: 6px; }
+    .cos-dia { padding: 9px; }
+    .cos-dia-ola { font-size: 18px; }
+    .cos-dia-detalle { display: none; }
+}
+
+
+/* ==========================================================
+   MAREAS
+   ========================================================== */
+
+.cos-mareas,
+.cos-boya {
+    display: grid;
+    gap: 10px;
+}
+
+.cos-mareas-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cos-marea {
+    display: grid;
+    gap: 1px;
+    min-width: 86px;
+    padding: 8px 10px;
+    background: var(--cos-espuma);
+    border: 1px solid var(--cos-borde);
+    border-radius: 10px;
+}
+
+.cos-marea.pleamar { border-top: 3px solid var(--cos-azul); }
+.cos-marea.bajamar { border-top: 3px solid var(--cos-arena-oscura); }
+
+.cos-marea-tipo {
+    color: var(--cos-texto-tenue);
+    font-size: 11.5px;
+}
+
+.cos-marea strong {
+    color: var(--cos-profundo);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+}
+
+.cos-marea-altura {
+    color: var(--cos-texto-suave);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+}
+
+.cos-mareas-grafica,
+.cos-boya-grafica {
+    width: 100%;
+    height: auto;
+    background: var(--cos-blanco);
+    border: 1px solid var(--cos-borde);
+    border-radius: 12px;
+}
+
+.cos-rejilla {
+    stroke: var(--cos-borde);
+    stroke-width: 1;
+}
+
+.cos-eje {
+    fill: var(--cos-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+}
+
+.cos-mareas-agua {
+    fill: rgba(47, 179, 174, 0.18);
+}
+
+.cos-mareas-linea {
+    fill: none;
+    stroke: var(--cos-azul);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+}
+
+.cos-mareas-punto.pleamar { fill: var(--cos-azul); stroke: #ffffff; stroke-width: 2; }
+.cos-mareas-punto.bajamar { fill: var(--cos-arena-oscura); stroke: #ffffff; stroke-width: 2; }
+
+.cos-mareas-hora {
+    fill: var(--cos-profundo);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.cos-ahora {
+    stroke: var(--cos-coral);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 3;
+}
+
+.cos-ahora-texto {
+    fill: var(--cos-coral);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+}
+
+
+/* ==========================================================
+   BOYA O MAREÓGRAFO
+   ========================================================== */
+
+.cos-boya-cifras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+}
+
+.cos-boya-agua {
+    fill: rgba(27, 128, 181, 0.14);
+}
+
+.cos-boya-linea {
+    fill: none;
+    stroke: var(--cos-azul);
+    stroke-width: 2.2;
+    stroke-linejoin: round;
+}
+
+.cos-boya-maxima {
+    fill: var(--cos-profundo);
+    opacity: 0.55;
+}
+
+
+/* Fin de fichero: css/costas-componentes.css */

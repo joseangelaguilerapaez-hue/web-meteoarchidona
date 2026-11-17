@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261115-lanzamientos1";
+    "/componentes/cabecera.html?v=20261118-costas1";
 
 
 /* ==========================================================

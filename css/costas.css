@@ -1,0 +1,196 @@
+/*
+ * MeteoArchidona
+ * Página Costas
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/costas.html
+ *
+ * Decisión de José del 18-11-2026: gama «Mar y arena» sobre blanco (al
+ * revés que el resto del sitio, como Embalses y Polen): turquesas y azul
+ * profundo con arena de acento. Una columna de bloques con bordes finos y
+ * radios de 14 px; la cabecera y el pie siguen siendo los oscuros de
+ * siempre.
+ *
+ * La paleta (--cos-*) está en css/costas-componentes.css, que se carga
+ * antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="costas"] {
+    background:
+        radial-gradient(ellipse at top, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #f7fcfc 0%, #e4f3f2 45%, #efe4cc 100%);
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.costas {
+    width: min(1080px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--cos-texto);
+}
+
+.costas-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+.costas-cabecera h1 {
+    margin: 0;
+    color: var(--cos-profundo);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.costas-cabecera h1 span {
+    color: var(--cos-turquesa);
+}
+
+.cos-etiqueta-pagina {
+    color: var(--cos-arena-oscura);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+}
+
+.costas-entradilla {
+    margin: 0;
+    max-width: 780px;
+    color: var(--cos-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.costas-bloque {
+    display: grid;
+    gap: 12px;
+    padding: 20px 22px;
+    background: linear-gradient(170deg, #ffffff 0%, var(--cos-espuma) 100%);
+    border: 1px solid var(--cos-borde);
+    border-radius: 14px;
+    box-shadow: var(--cos-sombra);
+    scroll-margin-top: 80px;
+}
+
+.costas-bloque-arena {
+    background: linear-gradient(170deg, #ffffff 0%, var(--cos-arena-clara) 100%);
+}
+
+.costas-bloque h2 {
+    margin: 0;
+    color: var(--cos-profundo);
+    font-size: 18px;
+}
+
+.costas-nota {
+    margin: 0;
+    color: var(--cos-texto-suave);
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+.costas-rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+@media (max-width: 860px) {
+    .costas-rejilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+/* ==========================================================
+   GLOSARIO, ESCALA Y FUENTES
+   ========================================================== */
+
+.costas-glosario {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 8px 16px;
+    margin: 0;
+}
+
+.costas-glosario dt {
+    color: var(--cos-profundo);
+    font-weight: 700;
+}
+
+.costas-glosario dd {
+    margin: 0;
+    color: var(--cos-texto-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+@media (max-width: 620px) {
+    .costas-glosario {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .costas-glosario dd {
+        margin-bottom: 6px;
+    }
+}
+
+.costas-tabla-desliza {
+    overflow-x: auto;
+}
+
+.costas-escala {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.costas-escala th,
+.costas-escala td {
+    padding: 7px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--cos-borde);
+}
+
+.costas-escala th {
+    color: var(--cos-texto-tenue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.costas-escala td:first-child {
+    color: var(--cos-profundo);
+    font-weight: 600;
+}
+
+.costas-fuentes {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding-left: 18px;
+    color: var(--cos-texto-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.costas-fuentes a {
+    color: var(--cos-azul);
+}
+
+
+/* Fin de fichero: css/costas.css */
