@@ -43,7 +43,7 @@
  * API: GET /novedades.
  */
 
-const HOJA = "/css/novedades.css?v=20261116-portada1";
+const HOJA = "/css/novedades.css?v=20261117-componente1";
 const CLAVE_VISTAS = "ma_novedades_vistas_v2";
 const CLAVE_CERRADOS = "ma_avisos_cerrados_v1";
 
@@ -447,6 +447,59 @@ function mostrarFranja(automaticos) {
     const principal = document.querySelector("main");
     if (principal) principal.prepend(franja);
     else document.body.prepend(franja);
+}
+
+
+/*
+ * Componente «Franja de avisos» para los dashboards (José, 17-11-2026):
+ * la misma franja de la portada, en su recuadro, con los avisos
+ * automáticos vigentes. Respeta los cerrados con la X (son los mismos que
+ * en la portada). Sin avisos deja una línea discreta, para que el recuadro
+ * no quede vacío. Se refresca cada 10 minutos.
+ *
+ *     <div data-componente="avisos-franja"></div>
+ */
+export async function montarFranjaAvisos(raiz) {
+    asegurarHoja();
+    raiz.classList.add("avisos-componente");
+
+    async function pintar() {
+        let todas = [];
+        try {
+            const respuesta = await fetch(`${window.API_BASE || "/api"}/novedades`, {cache: "no-store"});
+            if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+            const datos = await respuesta.json();
+            todas = (datos && datos.novedades) || [];
+        } catch (error) {
+            console.warn("Avisos: no se han podido leer.", error);
+            return;
+        }
+
+        const automaticos = todas.filter(esAutomatico);
+        const cerrados = leerCerrados();
+        const pendientes = automaticos.filter(a => cerrados[a.id] !== huella(a));
+
+        raiz.replaceChildren();
+        if (!pendientes.length) {
+            raiz.appendChild(crear("p", "avisos-componente-vacio", "Sin avisos ahora mismo."));
+            return;
+        }
+
+        const vigentes = [...pendientes];
+        raiz.appendChild(pintarFranja(pendientes, {
+            alCerrar: aviso => {
+                apuntarCerrado(aviso, automaticos);
+                const i = vigentes.indexOf(aviso);
+                if (i >= 0) vigentes.splice(i, 1);
+                if (!vigentes.length) {
+                    raiz.replaceChildren(crear("p", "avisos-componente-vacio", "Sin avisos ahora mismo."));
+                }
+            },
+        }));
+    }
+
+    await pintar();
+    setInterval(pintar, 10 * 60 * 1000);
 }
 
 

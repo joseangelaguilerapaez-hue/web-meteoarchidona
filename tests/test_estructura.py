@@ -304,7 +304,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261116-polen1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261117-componente1"),
             ("administracion", r"administracion/principal\.js\?v=20261116-polen1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -1412,10 +1412,13 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
         # Si cambia principal.js, la página tiene que pedir la versión nueva
         # (16-11-2026: el móvil se quedó con la vieja y no salía la tira).
-        self.assertIn("js/actualidad/principal.js?v=20261116-polen1", pagina)
+        self.assertIn("js/actualidad/principal.js?v=20261117-componente1", pagina)
         # La tira resume también los avisos de la franja (16-11-2026).
         self.assertIn("portada:avisos", codigo)
         self.assertIn("portada:avisos", leer(RAIZ / "js" / "novedades.js"))
+        # La franja de avisos también es componente de los dashboards (17-11-2026).
+        self.assertIn("export async function montarFranjaAvisos", leer(RAIZ / "js" / "novedades.js"))
+        self.assertIn('"avisos-franja"', leer(RAIZ / "js" / "dashboards" / "pintor.js"))
         self.assertTrue((RAIZ / "js" / "alertas" / "semaforos.js").is_file())
         self.assertTrue((RAIZ / "css" / "alertas.css").is_file())
 
