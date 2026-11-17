@@ -1180,4 +1180,42 @@ button {
 
 }
 
+/* ==========================================================
+   BOTÓN «DETENER LLUVIA»
+   ========================================================== */
+
+/*
+ * Lo pone js/lluvia.js en la fila de la cuenta solo mientras llueve
+ * de verdad. Hereda el aspecto de .cuenta-boton (css/cuenta.css) con
+ * borde celeste de agua; detenida, queda apagado hasta que se reactive.
+ */
+.boton-lluvia {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.boton-lluvia[aria-pressed="true"] {
+    border-color: var(--border-strong);
+    color: var(--text-soft);
+}
+
+/* Con tres botones en la fila, que bajen de línea antes que salirse. */
+.cuenta-zona:has(.boton-lluvia) {
+    flex-wrap: wrap;
+    row-gap: 6px;
+}
+
+/*
+ * Lluvia detenida: fuera todas las capas, la de toda la página y las
+ * de las fichas de Actualidad. js/lluvia.js pone la clase en <html>
+ * solo mientras llueve de verdad y el usuario la ha detenido.
+ */
+html.lluvia-detenida .capa-lluvia,
+html.lluvia-detenida .capa-gotas-cristal,
+html.lluvia-detenida .capa-lluvia-ficha,
+html.lluvia-detenida .capa-gotas-cristal-ficha {
+    display: none !important;
+}
+
+
 /* Fin de fichero: css/cabecera.css */

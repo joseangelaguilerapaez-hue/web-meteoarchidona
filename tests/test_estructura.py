@@ -304,7 +304,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261117-camara1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261117-lluvia1"),
             ("administracion", r"administracion/principal\.js\?v=20261117-editor2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -1412,7 +1412,7 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
         # Si cambia principal.js, la página tiene que pedir la versión nueva
         # (16-11-2026: el móvil se quedó con la vieja y no salía la tira).
-        self.assertIn("js/actualidad/principal.js?v=20261117-camara1", pagina)
+        self.assertIn("js/actualidad/principal.js?v=20261117-lluvia1", pagina)
         # La tira resume también los avisos de la franja (16-11-2026).
         self.assertIn("portada:avisos", codigo)
         self.assertIn("portada:avisos", leer(RAIZ / "js" / "novedades.js"))
@@ -1566,6 +1566,33 @@ class TestMiWeb(unittest.TestCase):
 
     def test_script_de_nginx(self):
         self.assertIn('modulo.SECCION = "mi-web"', leer(RAIZ / "scripts" / "configurar_seccion_mi_web.py"))
+
+
+class TestLluviaEnTodasLasPaginas(unittest.TestCase):
+    """Lluvia real en todas las secciones y botón «Detener lluvia» (José, 17-11-2026)."""
+
+    def test_las_paginas_cargan_la_version_nueva(self):
+        for pagina in (RAIZ / "pages").glob("*.html"):
+            texto = leer(pagina)
+            self.assertIn("js/lluvia.js?v=20261117-lluvia1", texto, pagina.name)
+            self.assertIn("css/cabecera.css?v=20261117-lluvia1", texto, pagina.name)
+
+    def test_boton_y_lluvia_real(self):
+        codigo = leer(RAIZ / "js" / "lluvia.js")
+        self.assertIn('"meteoarchidona:lluvia-detenida"', codigo)
+        self.assertIn("sessionStorage", codigo)
+        self.assertIn("/condiciones-actuales/", codigo)
+        self.assertIn('"meteoarchidona:lluvia-real"', codigo)
+        self.assertIn("Detener lluvia", codigo)
+        self.assertIn("Activar lluvia", codigo)
+
+    def test_actualidad_avisa_del_nivel_real(self):
+        self.assertIn('"meteoarchidona:lluvia-real"', leer(RAIZ / "js" / "actualidad" / "principal.js"))
+
+    def test_la_lluvia_detenida_oculta_todas_las_capas(self):
+        css = leer(RAIZ / "css" / "cabecera.css")
+        for capa in (".capa-lluvia", ".capa-gotas-cristal", ".capa-lluvia-ficha", ".capa-gotas-cristal-ficha"):
+            self.assertIn(f"html.lluvia-detenida {capa}", css)
 
 
 if __name__ == "__main__":

@@ -92,6 +92,65 @@ import {
 
 
 /* ==========================================================
+   LLUVIA REAL PARA LA CABECERA
+   ========================================================== */
+
+/*
+ * El botón «Detener lluvia» de la cabecera (js/lluvia.js) solo sale
+ * cuando llueve de verdad. En Actualidad no consulta la API por su
+ * cuenta: tras cada carga de condiciones se le avisa con el nivel real
+ * más alto de las estaciones (0 sin lluvia, 1 a 4 según la tasa). La
+ * lluvia de prueba del logotipo no cuenta (José, 17-11-2026).
+ */
+function avisarLluviaReal() {
+
+    const niveles =
+        Object.values(
+            estadoActualidad
+                .lluviaReal
+        ).map(
+            nivel =>
+                Number(
+                    nivel
+                )
+                ||
+                0
+        );
+
+    document.dispatchEvent(
+        new CustomEvent(
+            "meteoarchidona:lluvia-real",
+            {
+                detail: {
+                    nivel:
+                        Math.max(
+                            0,
+                            ...niveles
+                        )
+                }
+            }
+        )
+    );
+
+}
+
+
+async function cargarCondicionesYAvisar() {
+
+    try {
+
+        return await cargarCondiciones();
+
+    } finally {
+
+        avisarLluviaReal();
+
+    }
+
+}
+
+
+/* ==========================================================
    TARJETA DE CONDICIONES ACTUALES
    ========================================================== */
 
@@ -545,7 +604,7 @@ async function arrancarActualidad() {
            CONDICIONES
            ================================================== */
 
-        await cargarCondiciones();
+        await cargarCondicionesYAvisar();
 
 
         /* ==================================================
@@ -560,7 +619,7 @@ async function arrancarActualidad() {
            ================================================== */
 
         window.setInterval(
-            cargarCondiciones,
+            cargarCondicionesYAvisar,
             INTERVALO_CONDICIONES_MS
         );
 
