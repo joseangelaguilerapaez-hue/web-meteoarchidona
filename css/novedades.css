@@ -244,6 +244,18 @@
     font-family: "Sora", sans-serif;
 }
 
+/* Componente para dashboards (17-11-2026) */
+.avisos-componente .avisos-franja {
+    margin: 0;
+}
+
+.avisos-componente-vacio {
+    margin: 0;
+    padding: 10px 14px;
+    color: var(--texto-suave, #8fa3b8);
+    font-size: 0.9rem;
+}
+
 /* Entrada suave en la portada (José, 16-11-2026): se despliega hacia abajo. */
 .avisos-franja-entra {
     animation: avisos-franja-despliega 0.45s ease-out both;

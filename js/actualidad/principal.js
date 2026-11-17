@@ -436,7 +436,7 @@ async function arrancarActualidad() {
         );
 
         try {
-            const modulo = await import("/js/dashboards/actualidad.js?v=20261116-polen1");
+            const modulo = await import("/js/dashboards/actualidad.js?v=20261117-componente1");
             await modulo.arrancarActualidadDashboard(document.getElementById("actual"));
         } catch (error) {
             console.error("Actualidad: no se ha podido montar el dashboard.", error);

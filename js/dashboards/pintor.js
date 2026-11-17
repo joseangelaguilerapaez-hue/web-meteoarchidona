@@ -125,6 +125,8 @@ const COMPONENTES = {
     "incendios-divulgacion": ["/js/incendios/divulgacion.js?v=20261115-incendios1", "montarDivulgacionIncendios"],
     // Alertas meteorológicas
     "alertas-semaforos": ["/js/alertas/semaforos.js?v=20261116-polen1", "montarSemaforosAlertas"],
+    // Avisos de la web (17-11-2026)
+    "avisos-franja": ["/js/novedades.js?v=20261117-componente1", "montarFranjaAvisos"],
     // Luna (astronomía)
     "luna-ahora": ["/js/luna/luna-ahora.js?v=20261111-luna5", "montarLunaAhora"],
     "luna-horario": ["/js/luna/horario.js?v=20261111-luna5", "montarHorarioLuna"],
