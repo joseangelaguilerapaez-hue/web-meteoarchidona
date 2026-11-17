@@ -19,6 +19,23 @@
  *   entera: las mismas gotas, niveles y gestos que Actualidad, cayendo
  *   recta. Los estilos están en css/lluvia.css.
  *
+ * LLUVIA REAL EN TODAS LAS PÁGINAS (José, 17-11-2026)
+ *
+ * Cuando llueve de verdad, la lluvia sale en todas las secciones, no
+ * solo en Actualidad. Fuera de Actualidad este fichero consulta cada
+ * minuto las condiciones de las estaciones (/estaciones y
+ * /condiciones-actuales/{codigo}) y basta con que llueva en una para
+ * que llueva en la página, con el nivel de la que más llueva. En
+ * Actualidad no consulta nada: su motor avisa del nivel real con el
+ * evento "meteoarchidona:lluvia-real" (js/actualidad/principal.js).
+ *
+ * Mientras llueve de verdad aparece en la cabecera, junto a los
+ * botones de la cuenta, el botón «Parar lluvia». Al pulsarlo se
+ * quita toda la lluvia (también la de las fichas de Actualidad) y pasa
+ * a «Poner lluvia» (textos cortos para que quepa en la fila del móvil). La decisión se recuerda en sessionStorage hasta
+ * cerrar la pestaña, en todas las páginas. Sin lluvia real el botón no
+ * se ve y la lluvia de prueba del logotipo funciona como siempre.
+ *
  * El nivel se guarda en sessionStorage para que la lluvia siga al
  * cambiar de página. Se borra solo al cerrar la pestaña, y no es un
  * dato personal: es una preferencia que pide el propio usuario al tocar
@@ -101,6 +118,321 @@ function cuandoHayaCabecera(accion) {
         document.addEventListener("cabecera:montada", accion, { once: true });
 
     }
+
+}
+
+
+/* ==========================================================
+   LLUVIA REAL Y BOTÓN «PARAR LLUVIA»
+   ========================================================== */
+
+
+const CLAVE_DETENIDA = "meteoarchidona:lluvia-detenida";
+
+const ES_ACTUALIDAD = document.body?.dataset.seccion === "actualidad";
+
+const INTERVALO_CONDICIONES_MS = 60_000;
+
+const INTERVALO_CATALOGO_MS = 10 * 60_000;
+
+// Nivel real más alto de las estaciones: 0 sin lluvia, 1 a 4.
+let nivelReal = 0;
+
+// Lo que haya que repintar cuando cambie la lluvia real o el botón
+// (en las páginas sin motor propio, la capa de lluvia).
+let alCambiarLluvia = () => {};
+
+
+function leerDetenida() {
+
+    try {
+
+        return window.sessionStorage.getItem(CLAVE_DETENIDA) === "1";
+
+    } catch (error) {
+
+        return detenidaEnMemoria;
+
+    }
+
+}
+
+let detenidaEnMemoria = false;
+
+
+function guardarDetenida(valor) {
+
+    detenidaEnMemoria = valor;
+
+    try {
+
+        if (valor) {
+
+            window.sessionStorage.setItem(CLAVE_DETENIDA, "1");
+
+        } else {
+
+            window.sessionStorage.removeItem(CLAVE_DETENIDA);
+
+        }
+
+    } catch (error) {
+
+        // Sin almacenamiento: vale para esta página.
+
+    }
+
+}
+
+
+/*
+ * La lluvia está quitada si el usuario la ha detenido y además llueve
+ * de verdad. Sin lluvia real no se quita nada, para que la de prueba
+ * del logotipo siga funcionando y nadie se quede sin botón para
+ * volver a ponerla.
+ */
+function lluviaQuitada() {
+
+    return nivelReal > 0 && leerDetenida();
+
+}
+
+
+/*
+ * Tasa de lluvia (mm/h) a nivel: los mismos tramos que
+ * nivelLluviaDesdeTasa() de js/actualidad/lluvia.js.
+ */
+function nivelDesdeTasa(tasa) {
+
+    const valor = Number(tasa);
+
+    if (tasa === null || tasa === undefined || Number.isNaN(valor) || valor <= 0) {
+
+        return 0;
+
+    }
+
+    if (valor < 0.5) {
+
+        return 1;
+
+    }
+
+    if (valor < 2) {
+
+        return 2;
+
+    }
+
+    if (valor < 10) {
+
+        return 3;
+
+    }
+
+    return 4;
+
+}
+
+
+function pintarBoton() {
+
+    const zona = document.getElementById("cuenta-zona");
+
+    let boton = document.getElementById("boton-lluvia");
+
+    if (nivelReal <= 0) {
+
+        boton?.remove();
+
+        return;
+
+    }
+
+    if (!zona) {
+
+        return;
+
+    }
+
+    if (!boton) {
+
+        boton = document.createElement("button");
+        boton.type = "button";
+        boton.id = "boton-lluvia";
+        boton.className = "cuenta-boton boton-lluvia";
+
+        boton.addEventListener("click", () => {
+
+            guardarDetenida(!leerDetenida());
+
+            actualizarLluviaReal();
+
+        });
+
+    }
+
+    // Primero de la fila, al lado de los botones de la cuenta. Hay que
+    // volver a ponerlo cada vez que js/cuenta.js repinta la fila.
+    if (zona.firstElementChild !== boton) {
+
+        zona.prepend(boton);
+
+    }
+
+    const detenida = leerDetenida();
+
+    boton.textContent = detenida ? "Poner lluvia" : "Parar lluvia";
+    boton.setAttribute("aria-pressed", detenida ? "true" : "false");
+    boton.title = detenida
+        ? "Volver a mostrar la lluvia en la web"
+        : "Quitar la lluvia de la web hasta que cierres la pestaña";
+
+}
+
+
+function actualizarLluviaReal() {
+
+    document.documentElement.classList.toggle("lluvia-detenida", lluviaQuitada());
+
+    pintarBoton();
+
+    alCambiarLluvia();
+
+}
+
+
+function fijarNivelReal(valor) {
+
+    nivelReal = Number.isInteger(valor) && valor > 0 && valor <= 4 ? valor : 0;
+
+    actualizarLluviaReal();
+
+}
+
+
+// js/cuenta.js repinta la fila de la cuenta al arrancar, al entrar y al
+// salir, y borra lo que hubiera: se vuelve a poner el botón.
+document.addEventListener("meteoarchidona:cuenta", pintarBoton);
+
+document.addEventListener("cabecera:montada", pintarBoton);
+
+
+// Otra pestaña no comparte sessionStorage; esto solo cubre el caso de
+// cambiarlo desde la consola o desde otro marco de la misma pestaña.
+window.addEventListener("storage", (evento) => {
+
+    if (evento.key === CLAVE_DETENIDA) {
+
+        actualizarLluviaReal();
+
+    }
+
+});
+
+
+/* ---------- Origen del nivel real ---------- */
+
+
+let codigosEstaciones = [];
+
+let ultimoCatalogo = 0;
+
+
+function baseApi() {
+
+    return String(window.API_BASE || "/api").replace(/\/+$/, "");
+
+}
+
+
+async function pedirJson(ruta) {
+
+    const respuesta = await fetch(`${baseApi()}${ruta}`, { cache: "no-store" });
+
+    if (!respuesta.ok) {
+
+        throw new Error(`HTTP ${respuesta.status}`);
+
+    }
+
+    return respuesta.json();
+
+}
+
+
+async function consultarLluviaReal() {
+
+    if (document.hidden) {
+
+        return;
+
+    }
+
+    try {
+
+        if (codigosEstaciones.length === 0 || Date.now() - ultimoCatalogo > INTERVALO_CATALOGO_MS) {
+
+            const catalogo = await pedirJson("/estaciones");
+
+            if (Array.isArray(catalogo?.estaciones)) {
+
+                codigosEstaciones = [...new Set(
+                    catalogo.estaciones
+                        .map((estacion) => String(estacion?.codigo || "").trim())
+                        .filter(Boolean)
+                )];
+
+                ultimoCatalogo = Date.now();
+
+            }
+
+        }
+
+        const resultados = await Promise.allSettled(
+            codigosEstaciones.map((codigo) =>
+                pedirJson(`/condiciones-actuales/${encodeURIComponent(codigo)}`)
+            )
+        );
+
+        const niveles = resultados
+            .filter((resultado) => resultado.status === "fulfilled")
+            .map((resultado) => nivelDesdeTasa(resultado.value?.tasa_lluvia_mm_h));
+
+        fijarNivelReal(Math.max(0, ...niveles));
+
+    } catch (error) {
+
+        // Sin datos se deja lo que hubiera: la web no se queja por esto.
+
+    }
+
+}
+
+
+if (ES_ACTUALIDAD) {
+
+    document.addEventListener("meteoarchidona:lluvia-real", (evento) => {
+
+        fijarNivelReal(Number(evento.detail?.nivel) || 0);
+
+    });
+
+} else {
+
+    consultarLluviaReal();
+
+    window.setInterval(consultarLluviaReal, INTERVALO_CONDICIONES_MS);
+
+    document.addEventListener("visibilitychange", () => {
+
+        if (!document.hidden) {
+
+            consultarLluviaReal();
+
+        }
+
+    });
 
 }
 
@@ -241,7 +573,19 @@ function ajustarRecorrido() {
 }
 
 
-function crearGotaCristal() {
+/*
+ * Nivel que se pinta: el de la prueba del logotipo o el de la lluvia
+ * real, el mayor de los dos.
+ */
+function nivelEfectivo() {
+
+    // En Actualidad la lluvia real la pinta su propio motor.
+    return ES_ACTUALIDAD ? nivel : Math.max(nivel, nivelReal);
+
+}
+
+
+function crearGotaCristal(nivel) {
 
     if (capaCristal.querySelectorAll(".gota-cristal").length >= MAXIMO_CRISTAL[nivel]) {
 
@@ -282,21 +626,24 @@ function crearGotaCristal() {
 
 function turnoCristal() {
 
+    const efectivo = nivelEfectivo();
+
     if (
-        nivel <= 0
+        efectivo <= 0
+        || lluviaQuitada()
         || window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        || Math.random() > PROBABILIDAD_CRISTAL[nivel]
+        || Math.random() > PROBABILIDAD_CRISTAL[efectivo]
     ) {
 
         return;
 
     }
 
-    const cantidad = nivel >= 4 && Math.random() > 0.48 ? 2 : 1;
+    const cantidad = efectivo >= 4 && Math.random() > 0.48 ? 2 : 1;
 
     for (let i = 0; i < cantidad; i += 1) {
 
-        crearGotaCristal();
+        crearGotaCristal(efectivo);
 
     }
 
@@ -307,9 +654,33 @@ function aplicarNivel() {
 
     guardarNivel(nivel);
 
+    pintarCapas();
+
+
+    const indicador = document.getElementById("simulacion-GLOBAL");
+
+    if (indicador) {
+
+        indicador.textContent = nivel > 0 ? `Prueba ${NOMBRES_NIVEL[nivel]}` : "";
+
+        indicador.classList.toggle("visible", nivel > 0);
+
+    }
+
+}
+
+
+/*
+ * Pinta las capas con el nivel efectivo (prueba o real). Se llama al
+ * cambiar la prueba y cada vez que cambia la lluvia real o el botón.
+ */
+function pintarCapas() {
+
+    const efectivo = nivelEfectivo();
+
     if (!capaLluvia) {
 
-        if (nivel === 0) {
+        if (efectivo === 0) {
 
             return;
 
@@ -321,39 +692,28 @@ function aplicarNivel() {
 
     capaLluvia.classList.remove("activa", "nivel-1", "nivel-2", "nivel-3", "nivel-4");
 
-    capaCristal.classList.toggle("activa", nivel > 0);
+    capaCristal.classList.toggle("activa", efectivo > 0);
 
-    if (nivel > 0) {
+    if (efectivo > 0) {
 
-        capaLluvia.classList.add("activa", `nivel-${nivel}`);
+        capaLluvia.classList.add("activa", `nivel-${efectivo}`);
 
     }
 
 
     // El temporizador de las gotas del cristal solo corre mientras
     // llueve: sin lluvia no hay nada que gastar.
-    if (nivel > 0 && temporizadorCristal === null) {
+    if (efectivo > 0 && temporizadorCristal === null) {
 
         temporizadorCristal = window.setInterval(turnoCristal, INTERVALO_CRISTAL_MS);
 
-    } else if (nivel === 0 && temporizadorCristal !== null) {
+    } else if (efectivo === 0 && temporizadorCristal !== null) {
 
         window.clearInterval(temporizadorCristal);
 
         temporizadorCristal = null;
 
         capaCristal.replaceChildren();
-
-    }
-
-
-    const indicador = document.getElementById("simulacion-GLOBAL");
-
-    if (indicador) {
-
-        indicador.textContent = nivel > 0 ? `Prueba ${NOMBRES_NIVEL[nivel]}` : "";
-
-        indicador.classList.toggle("visible", nivel > 0);
 
     }
 
@@ -537,6 +897,16 @@ function conectarMando() {
 
 
 cuandoHayaCabecera(conectarMando);
+
+
+// La lluvia real también se pinta con estas capas fuera de Actualidad.
+if (!ES_ACTUALIDAD) {
+
+    alCambiarLluvia = pintarCapas;
+
+    pintarCapas();
+
+}
 
 })();
 
