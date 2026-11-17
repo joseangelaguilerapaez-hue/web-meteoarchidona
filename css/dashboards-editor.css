@@ -1,0 +1,311 @@
+/*
+ * MeteoArchidona
+ * Editor de dashboards (js/dashboards/editor.js)
+ *
+ * Filas en tarjetas con sus botones (subir, bajar, quitar), recuadros con
+ * el «+», el panel para elegir componente y sus parámetros, y la vista
+ * previa. Todo con botones, sin arrastrar, para que vaya en el móvil.
+ * Colores de css/paleta.css; los campos y botones, los de Administración.
+ */
+
+
+.dash-editor {
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+}
+
+.dash-editor-rejilla {
+    display: grid;
+    gap: 12px;
+}
+
+.dash-editor-fila {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 10px);
+}
+
+.dash-editor-fila-barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.dash-editor-fila-numero {
+    font-weight: 700;
+    color: var(--text-soft);
+}
+
+.dash-editor-columnas {
+    width: auto;
+}
+
+.dash-editor-fila-acciones {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.dash-editor-recuadros {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+}
+
+.dash-editor-recuadros-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dash-editor-recuadro {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    min-width: 0;
+    min-height: 74px;
+    padding: 10px 12px;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm, 10px);
+}
+
+.dash-editor-recuadro-vacio {
+    place-content: center;
+    border-style: dashed;
+    background: transparent;
+}
+
+.dash-editor-recuadro-abierto {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px var(--border-cyan);
+}
+
+.dash-editor-recuadro-nombre {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.dash-editor-recuadro-seccion {
+    font-size: 0.8rem;
+    color: var(--cyan);
+}
+
+.dash-editor-recuadro-resumen {
+    font-size: 0.85rem;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.dash-editor-recuadro-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.dash-editor-panel {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border-cyan);
+    border-radius: var(--radius-sm, 10px);
+}
+
+.dash-editor-panel-titulo {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text);
+}
+
+.dash-editor-panel-acciones,
+.dash-editor-anadir,
+.dash-editor-pie {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dash-editor-buscador {
+    width: 100%;
+}
+
+.dash-editor-secciones {
+    display: grid;
+    gap: 6px;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.dash-editor-seccion > summary {
+    cursor: pointer;
+    padding: 6px 4px;
+    font-weight: 700;
+    color: var(--text-soft);
+}
+
+.dash-editor-opciones {
+    display: grid;
+    gap: 6px;
+    padding: 4px 0 8px;
+}
+
+.dash-editor-opcion {
+    display: grid;
+    gap: 2px;
+    width: 100%;
+    padding: 8px 10px;
+    text-align: left;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.dash-editor-opcion:hover,
+.dash-editor-opcion:focus-visible {
+    border-color: var(--cyan);
+}
+
+.dash-editor-opcion-nombre {
+    font-weight: 700;
+}
+
+.dash-editor-opcion-descripcion {
+    font-size: 0.82rem;
+    color: var(--muted);
+}
+
+.dash-editor-casillas {
+    display: grid;
+    gap: 4px;
+}
+
+.dash-editor-vacio {
+    margin: 0;
+    color: var(--muted);
+}
+
+.dash-editor-error,
+.dash-editor-mensaje[data-tipo="error"] {
+    color: var(--red);
+}
+
+.dash-editor-mensaje[data-tipo="ok"] {
+    color: var(--green);
+}
+
+.dash-editor-mensaje[data-tipo="info"] {
+    color: var(--muted);
+}
+
+.dash-editor-mensaje:empty {
+    display: none;
+}
+
+.dash-editor-previa {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    background: var(--bg);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm, 10px);
+}
+
+/* El atributo hidden manda sobre el display de arriba. */
+.dash-editor-previa[hidden] {
+    display: none;
+}
+
+/* La vista previa de móvil, con el ancho de un móvil. */
+.dash-editor-previa[data-formato="MOVIL"] .dash-editor-lienzo {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 700px) {
+    .dash-editor-recuadros-2 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-editor-fila-acciones {
+        margin-left: 0;
+    }
+}
+
+
+/* ---------- Administración → Dashboards (js/administracion/dashboards.js) ---------- */
+
+.dash-admin-lista {
+    display: grid;
+    gap: 18px;
+}
+
+.dash-admin-grupo {
+    display: grid;
+    gap: 8px;
+}
+
+.dash-admin-grupo-titulo {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-soft);
+}
+
+.dash-admin-fila {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    padding: 10px 12px;
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 10px);
+}
+
+.dash-admin-texto {
+    flex: 1 1 260px;
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.dash-admin-titulo {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.dash-admin-marca {
+    margin-left: 8px;
+    padding: 1px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--amber);
+    border: 1px solid var(--border-amber);
+    border-radius: 999px;
+}
+
+.dash-admin-descripcion {
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.dash-admin-fecha,
+.dash-admin-vacio {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-faint);
+}
+
+.dash-admin-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}

@@ -305,7 +305,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261117-camara1"),
-            ("administracion", r"administracion/principal\.js\?v=20261116-polen1"),
+            ("administracion", r"administracion/principal\.js\?v=20261117-editor1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -1505,6 +1505,31 @@ class TestCamarasEnVivoUnaCamara(unittest.TestCase):
         self.assertIn("camaras-en-vivo.js?v=20261117-camara1", leer(RAIZ / "js" / "en-vivo.js"))
         self.assertIn("pintor.js?v=20261117-camara1", leer(RAIZ / "js" / "dashboards" / "actualidad.js"))
         self.assertIn("en-vivo.js?v=20261117-camara1", leer(RAIZ / "pages" / "en-vivo.html"))
+
+
+class TestEditorDashboards(unittest.TestCase):
+    """Editor de dashboards y Administración → Dashboards (José, 17-11-2026)."""
+
+    def test_administracion_tiene_su_apartado(self):
+        pagina = leer(RAIZ / "pages" / "administracion.html")
+        self.assertIn('data-modulo="dashboards"', pagina)
+        self.assertIn('id="modulo-dashboards"', pagina)
+        self.assertIn('id="contenedorEditorDashboard"', pagina)
+        self.assertIn("css/dashboards-editor.css?v=20261117-editor1", pagina)
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn("./dashboards.js?v=20261117-editor1", principal)
+
+    def test_el_editor_usa_la_api_publica_y_el_pintor(self):
+        editor = leer(RAIZ / "js" / "dashboards" / "editor.js")
+        self.assertIn("/dashboards/componentes", editor)
+        self.assertIn("/dashboards/valores/", editor)
+        self.assertIn('from "./pintor.js?v=20261117-camara1"', editor)
+        self.assertIn("componenteOculto", editor)
+        # El texto de la API nunca como HTML.
+        self.assertNotIn("innerHTML", editor)
+        modulo = leer(RAIZ / "js" / "administracion" / "dashboards.js")
+        self.assertIn("../dashboards/editor.js?v=20261117-editor1", modulo)
+        self.assertNotIn("innerHTML", modulo)
 
 
 if __name__ == "__main__":

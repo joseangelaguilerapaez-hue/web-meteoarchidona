@@ -913,6 +913,49 @@ async function cargarModuloSequia(){
 
 
 /* ==========================================================
+   DASHBOARDS
+   Los de MeteoArchidona con el editor común (José, 17-11-2026;
+   docs/dashboards.md de la API). dashboards.js solo se importa si
+   existe modulo-dashboards.
+   ========================================================== */
+
+let promesaModuloDashboards = null;
+
+async function cargarModuloDashboards(){
+
+    if(!$("modulo-dashboards")){
+        return;
+    }
+
+    if(promesaModuloDashboards === null){
+        promesaModuloDashboards = import(
+            "./dashboards.js?v=20261117-editor1"
+        );
+    }
+
+    try{
+        const modulo = await promesaModuloDashboards;
+        modulo.configurarEventosDashboards();
+        await modulo.cargarDashboards();
+    }catch(error){
+        promesaModuloDashboards = null;
+        console.error(
+            "No se han podido cargar los dashboards.",
+            error
+        );
+        mostrarEstado(
+            $("estadoDashboards"),
+            error.message
+            ||
+            "No se han podido cargar los dashboards.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    NOVEDADES
    Ventana de novedades de la portada (docs/novedades.md de la
    API). novedades.js solo se importa si existe modulo-novedades.
@@ -1266,6 +1309,8 @@ export async function cargarDatosAdministracion(){
         await cargarModuloUsuarios();
 
         await cargarModuloNovedades();
+
+        await cargarModuloDashboards();
 
         await cargarModuloAuditoria();
 

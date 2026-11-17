@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="../css/administracion.css?v=20261108-ficha1">
 <link rel="stylesheet" href="../css/novedades.css?v=20261117-componente1">
 <link rel="stylesheet" href="../css/novedades-admin.css?v=20261115-lanzamientos1">
+<link rel="stylesheet" href="../css/dashboards-editor.css?v=20261117-editor1">
 <link rel="stylesheet" href="../css/auditoria-admin.css?v=20261106-visitas1">
 <link rel="stylesheet" href="../css/procesos-admin.css?v=20261110-procesos2">
 <link rel="stylesheet" href="../css/barra-progreso.css?v=20261110-procesos1">
@@ -39,7 +40,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261116-polen1"
+    src="../js/administracion/principal.js?v=20261117-editor1"
 ></script>
 
 <script
@@ -396,6 +397,14 @@
     data-modulo="novedades"
 >
     Novedades y avisos
+</a>
+
+<a
+    href="#dashboards"
+    class="modulo-boton"
+    data-modulo="dashboards"
+>
+    Dashboards
 </a>
 
 <a
@@ -4244,6 +4253,112 @@
     id="cargasAlertas"
     class="adm-alertas-lista"
 ></ul>
+</div>
+</section>
+
+</section>
+
+
+<!-- =========================================================
+     DASHBOARDS
+     Los de MeteoArchidona: lista por formato y editor común de la
+     rejilla (js/administracion/dashboards.js y js/dashboards/editor.js).
+     Decisiones de José del 4, 5 y 17-11-2026: docs/dashboards.md de
+     api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-dashboards"
+    class="modulo"
+>
+
+<section
+    id="listaDashboardsPanel"
+    class="panel"
+>
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Dashboards de MeteoArchidona
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonNuevoDashboardPc"
+    type="button"
+    class="boton boton-principal"
+>
+    Nuevo de PC
+</button>
+
+<button
+    id="botonNuevoDashboardMovil"
+    type="button"
+    class="boton boton-principal"
+>
+    Nuevo de móvil
+</button>
+
+<button
+    id="botonRecargarDashboards"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="estadoDashboards"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<p class="modulo-intro">
+    Los dashboards del catálogo común: cualquier registrado los puede fijar
+    en sus pestañas «Mi web», pero no cambiarlos. Cada uno es de PC (filas
+    de una o dos columnas) o de móvil (una columna). «Copiar» parte de uno
+    para hacer otro. El predeterminado solo lo usa la versión de prueba de
+    Actualidad (/actualidad?dashboard); Actualidad sigue siendo una sección
+    fija.
+</p>
+
+<div
+    id="listaDashboards"
+    class="dash-admin-lista"
+></div>
+
+</div>
+</section>
+
+<section
+    id="editorDashboard"
+    class="panel"
+    hidden
+>
+
+<div class="panel-cabecera">
+
+<h2
+    id="tituloEditorDashboard"
+    class="panel-titulo"
+>
+    Nuevo dashboard
+</h2>
+
+</div>
+
+<div class="panel-cuerpo">
+
+<div id="contenedorEditorDashboard"></div>
+
 </div>
 </section>
 
