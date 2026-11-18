@@ -30,14 +30,19 @@
  * Sin id: se puede poner más de una vez en la misma página.
  *
  * data-incrustado="si": va dentro de otro componente que ya pone la
- * tarjeta y el título (el «Vistazo general», vista Gráfico): sin marco
- * propio y sin el título «Comparación visual».
+ * tarjeta, el título y el botón de pantalla completa (el «Vistazo
+ * general», vista Gráfico): sin marco, título ni botón propios.
+ *
+ * Maximizado (suelto o dentro del Vistazo) y más ancho que alto: los
+ * termómetros y las probetas en una sola fila y las humedades en otra
+ * (de dos en dos solo si el hueco es estrecho).
  */
 
 import {asegurarHoja} from "./comun.js?v=20261104-componentes1";
+import {prepararPantallaCompleta} from "./pantalla-completa.js?v=20261118-pantalla1";
 
 
-const HOJA = "/css/comparacion-visual.css?v=20261118-comparacion2";
+const HOJA = "/css/comparacion-visual.css?v=20261118-pantalla1";
 
 const CONDICIONES_CADA_MS = 60 * 1000;
 const ESTACIONES_CADA_MS = 5 * 60 * 1000;
@@ -48,8 +53,6 @@ const TEMPERATURA_MAXIMA = 50;
 const LLUVIA_MAXIMA = 150;
 const EXPONENTE_LLUVIA = 0.6;
 const MARCAS_LLUVIA = [0, 5, 10, 20, 30, 50, 75, 100, 125, 150];
-
-const SVG = "http://www.w3.org/2000/svg";
 
 
 /* ------------------------------------------------------------
@@ -289,69 +292,6 @@ function barraHumedad(nombre, humedad) {
 
 
 /* ------------------------------------------------------------
-   Maximizar
-   ------------------------------------------------------------ */
-
-function elementoPantallaCompleta() {
-    return document.fullscreenElement || document.webkitFullscreenElement || null;
-}
-
-function prepararMaximizar(raiz, boton) {
-
-    const ponerEstado = () => {
-        const dentro = elementoPantallaCompleta() === raiz || raiz.classList.contains("cv-maximizado");
-        raiz.classList.toggle("cv-ampliado", dentro);
-        boton.setAttribute("aria-pressed", dentro ? "true" : "false");
-        boton.setAttribute("aria-label", dentro ? "Salir de pantalla completa" : "Pantalla completa");
-        boton.title = dentro ? "Salir de pantalla completa (Esc)" : "Pantalla completa";
-        boton.textContent = dentro ? "✕" : "⛶";
-    };
-
-    // Plan B: ampliado a toda la ventana (iPhone y navegadores sin la API).
-    const ampliarEnVentana = activar => {
-        raiz.classList.toggle("cv-maximizado", activar);
-        document.documentElement.classList.toggle("cv-sin-scroll", activar);
-        ponerEstado();
-    };
-
-    boton.addEventListener("click", async () => {
-        if (raiz.classList.contains("cv-maximizado")) {
-            ampliarEnVentana(false);
-            return;
-        }
-        if (elementoPantallaCompleta()) {
-            try {
-                await (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-            } catch (error) {
-                console.warn("Comparación visual: no se pudo salir de pantalla completa", error);
-            }
-            return;
-        }
-        const pedirPantalla = raiz.requestFullscreen || raiz.webkitRequestFullscreen;
-        if (pedirPantalla && (document.fullscreenEnabled || document.webkitFullscreenEnabled)) {
-            try {
-                await pedirPantalla.call(raiz);
-                return;
-            } catch (error) {
-                console.warn("Comparación visual: pantalla completa denegada; se amplía en la ventana", error);
-            }
-        }
-        ampliarEnVentana(true);
-    });
-
-    document.addEventListener("fullscreenchange", ponerEstado);
-    document.addEventListener("webkitfullscreenchange", ponerEstado);
-    document.addEventListener("keydown", evento => {
-        if (evento.key === "Escape" && raiz.classList.contains("cv-maximizado")) {
-            ampliarEnVentana(false);
-        }
-    });
-
-    ponerEstado();
-}
-
-
-/* ------------------------------------------------------------
    Montaje y datos
    ------------------------------------------------------------ */
 
@@ -374,9 +314,13 @@ export function montarComparacionVisual(raiz) {
     textos.append(
         crear("p", "cv-subtitulo", "Temperatura, lluvia de hoy y humedad de cada estación")
     );
-    const boton = crear("button", "cv-boton-maximizar");
-    boton.type = "button";
-    cabecera.append(textos, boton);
+    cabecera.append(textos);
+    let boton = null;
+    if (!incrustado) {
+        boton = crear("button", "cv-boton-maximizar");
+        boton.type = "button";
+        cabecera.append(boton);
+    }
 
     const filaAlta = crear("div", "cv-fila cv-fila-alta");
     const termometros = crear("div", "cv-grupo cv-grupo-termometros");
@@ -389,7 +333,9 @@ export function montarComparacionVisual(raiz) {
 
     raiz.append(cabecera, filaAlta, filaHumedad, estado);
 
-    prepararMaximizar(raiz, boton);
+    if (boton) {
+        prepararPantallaCompleta(raiz, boton, {ampliado: "cv-ampliado", maximizado: "cv-maximizado"});
+    }
 
     let estaciones = [];
     let ultimaLista = 0;

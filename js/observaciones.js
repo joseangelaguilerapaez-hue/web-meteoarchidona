@@ -8,7 +8,7 @@
  *     data-componente="vistazo-general" → js/componentes/vistazo-general.js
  */
 
-import {montarVistazoGeneral} from "./componentes/vistazo-general.js?v=20261118-vistazo1";
+import {montarVistazoGeneral} from "./componentes/vistazo-general.js?v=20261118-pantalla1";
 
 
 const COMPONENTES_SEGUIMIENTO = {

@@ -184,7 +184,7 @@ import {
 
 import {
     montarVistazoGeneral
-} from "../componentes/vistazo-general.js?v=20261118-vistazo1";
+} from "../componentes/vistazo-general.js?v=20261118-pantalla1";
 
 
 const COMPONENTES_ACTUALIDAD = {

@@ -32,8 +32,8 @@ const COMPONENTES = {
     "contador-visitas": ["/js/componentes/contador-visitas.js?v=20261106-contador5", "montarContadorVisitas"],
     // Actualidad
     "condiciones-actuales": ["/js/componentes/condiciones-actuales.js?v=20261113-episodio1", "montarCondicionesActuales"],
-    "comparacion-visual": ["/js/componentes/comparacion-visual.js?v=20261118-comparacion2", "montarComparacionVisual"],
-    "vistazo-general": ["/js/componentes/vistazo-general.js?v=20261118-vistazo1", "montarVistazoGeneral"],
+    "comparacion-visual": ["/js/componentes/comparacion-visual.js?v=20261118-pantalla1", "montarComparacionVisual"],
+    "vistazo-general": ["/js/componentes/vistazo-general.js?v=20261118-pantalla1", "montarVistazoGeneral"],
     "sol-luna": ["/js/componentes/tarjeta-sol-luna.js?v=20261104-componentes1", "montarSolLuna"],
     "prediccion-breve": ["/js/componentes/prediccion-breve.js?v=20261104-componentes1", "montarPrediccionBreve"],
     "accesos": ["/js/componentes/accesos.js?v=20261104-componentes1", "montarAccesos"],
