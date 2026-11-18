@@ -1210,4 +1210,78 @@ if (
 }
 
 
+/* ==========================================================
+   ALTO AUTOMÁTICO DEL IFRAME
+   ==========================================================
+
+   La tabla se incrusta en Actualidad y en Seguimiento dentro de un
+   iframe del mismo dominio. En vez de un alto fijo (que dejaba hueco
+   con la leyenda plegada), el iframe se ajusta a lo que ocupa el
+   panel: crece al desplegar la leyenda y encoge al plegarla.
+   ========================================================== */
+
+
+(function ajustarAltoIframe() {
+
+    let iframe = null;
+
+    try {
+        iframe = window.frameElement;
+    } catch (error) {
+        iframe = null;
+    }
+
+    if (!iframe) {
+        return;
+    }
+
+    const panel =
+        document.querySelector(
+            ".tabla-estaciones-panel"
+        );
+
+    if (!panel) {
+        return;
+    }
+
+    let altoAnterior = 0;
+
+    const ajustar = () => {
+
+        const alto =
+            Math.ceil(
+                panel.getBoundingClientRect().height
+            );
+
+        if (
+            alto > 0
+            &&
+            alto !== altoAnterior
+        ) {
+            altoAnterior = alto;
+            iframe.style.height = alto + "px";
+        }
+
+    };
+
+    if ("ResizeObserver" in window) {
+        new ResizeObserver(ajustar).observe(panel);
+    }
+
+    const leyenda =
+        document.querySelector(
+            ".leyenda-cromatica"
+        );
+
+    if (leyenda) {
+        leyenda.addEventListener("toggle", ajustar);
+    }
+
+    window.addEventListener("load", ajustar);
+    window.addEventListener("resize", ajustar);
+    ajustar();
+
+})();
+
+
 // Fin de fichero: js/tabla-estaciones.js
