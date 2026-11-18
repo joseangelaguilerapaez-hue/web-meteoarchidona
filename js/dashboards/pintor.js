@@ -123,6 +123,11 @@ const COMPONENTES = {
     "incendios-mapa": ["/js/incendios/mapa.js?v=20261115-incendios1", "montarMapaIncendios"],
     "incendios-temporada": ["/js/incendios/temporada.js?v=20261115-incendios1", "montarTemporadaIncendios"],
     "incendios-divulgacion": ["/js/incendios/divulgacion.js?v=20261115-incendios1", "montarDivulgacionIncendios"],
+    "costas-resumen": ["/js/costas/resumen.js?v=20261118-costas1", "montarResumenCostas"],
+    "costas-mapa": ["/js/costas/mapa.js?v=20261118-costas1", "montarMapaCostas"],
+    "costas-playa": ["/js/costas/playa.js?v=20261118-costas1", "montarPlayaCostas"],
+    "costas-mareas": ["/js/costas/mareas.js?v=20261118-costas1", "montarMareasCostas"],
+    "costas-boya": ["/js/costas/boya.js?v=20261118-costas1", "montarBoyaCostas"],
     // Alertas meteorológicas
     "alertas-semaforos": ["/js/alertas/semaforos.js?v=20261116-polen1", "montarSemaforosAlertas"],
     // Avisos de la web (17-11-2026)
