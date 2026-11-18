@@ -52,7 +52,7 @@
         const script = document.createElement("script");
 
         script.src =
-            "../js/visor-video.js?v=20261113-iphone2";
+            "../js/visor-video.js?v=20261118-giro1";
 
         document.head.appendChild(script);
 

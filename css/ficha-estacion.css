@@ -549,6 +549,14 @@
 .estacion-camara-selector {
     display: grid;
 
+    /*
+     * Columna explícita a todo el ancho. Sin ella la rejilla deduce el
+     * ancho del contenido, y Safari del iPhone, después de girar el
+     * móvil, se quedaba con el de una sola letra: el selector mostraba
+     * «V» en vez de «Vista panorámica» (Mario, 18-11-2026).
+     */
+    grid-template-columns: minmax(0, 1fr);
+
     gap: 4px;
 }
 

@@ -3804,6 +3804,195 @@ function actualizarTrasCambioTamano() {
 
     posicionarSuperposiciones();
 
+    remedirTrasGiro();
+
+}
+
+
+/*
+ * DESPUÉS DE GIRAR EL MÓVIL
+ * ------------------------------------------------------
+ * Safari del iPhone avisa del giro (resize, orientationchange) antes de
+ * tener las medidas nuevas del iframe, y además no siempre recoloca el
+ * <video> cuando cambia el tamaño de su caja. Al volver a vertical, la
+ * ficha quedaba con el vídeo corrido arriba o abajo y el botón de
+ * pantalla completa fuera de la vista (Mario, 18-11-2026; en Chromium
+ * no pasa).
+ *
+ * Se vuelve a medir unas cuantas veces mientras el giro se asienta y, al
+ * final, en iPhone/iPad se saca el vídeo de la composición un instante
+ * para que WebKit lo coloque otra vez con las medidas buenas.
+ */
+const ESPERAS_TRAS_GIRO_MS = [
+    150,
+    400,
+    900
+];
+
+
+let temporizadoresGiro = [];
+
+
+function esWebKitMovil() {
+
+    const agente =
+        navigator.userAgent;
+
+    return (
+        /iPhone|iPad|iPod/.test(agente)
+        ||
+        (
+            /Macintosh/.test(agente)
+            &&
+            navigator.maxTouchPoints > 1
+        )
+    );
+
+}
+
+
+function recolocarVideoWebKit() {
+
+    const {
+        video
+    } =
+        obtenerDom();
+
+
+    if (
+        !video
+        ||
+        !esWebKitMovil()
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * display: none y vuelta, en el mismo fotograma: no se ve parpadeo
+     * y la reproducción sigue, pero WebKit tiene que volver a calcular
+     * la caja del vídeo.
+     */
+    const antes =
+        video.style.display;
+
+    video.style.display =
+        "none";
+
+    void video.offsetHeight;
+
+    video.style.display =
+        antes;
+
+}
+
+
+function remedirTrasGiro() {
+
+    temporizadoresGiro.forEach(
+        (temporizador) => window.clearTimeout(temporizador)
+    );
+
+
+    temporizadoresGiro =
+        ESPERAS_TRAS_GIRO_MS.map(
+            (espera, posicion) =>
+                window.setTimeout(
+                    () => {
+
+                        if (
+                            posicion
+                            ===
+                            ESPERAS_TRAS_GIRO_MS.length - 1
+                        ) {
+
+                            recolocarVideoWebKit();
+
+                        }
+
+                        aplicarZoomVideo();
+
+                        posicionarSuperposiciones();
+
+                    },
+                    espera
+                )
+        );
+
+}
+
+
+/*
+ * Lo que de verdad importa es la caja del visor, no la ventana: si la
+ * ficha cambia de tamaño sin que la ventana lo haga (o Safari no avisa),
+ * ResizeObserver se entera igual, y ya con las medidas buenas.
+ */
+function vigilarTamanoVisor() {
+
+    const {
+        raiz
+    } =
+        obtenerDom();
+
+
+    if (
+        !raiz
+        ||
+        typeof ResizeObserver !== "function"
+    ) {
+
+        return;
+
+    }
+
+
+    let ultimo =
+        "";
+
+
+    new ResizeObserver(
+        (entradas) => {
+
+            const caja =
+                entradas[0]?.contentRect;
+
+
+            if (!caja) {
+                return;
+            }
+
+
+            const medida =
+                `${Math.round(caja.width)}x${Math.round(caja.height)}`;
+
+
+            // La primera medida es la de arranque: no hay giro que arreglar.
+            if (
+                !ultimo
+                ||
+                medida === ultimo
+            ) {
+
+                ultimo =
+                    medida;
+
+                return;
+
+            }
+
+
+            ultimo =
+                medida;
+
+            actualizarTrasCambioTamano();
+
+        }
+    ).observe(
+        raiz
+    );
+
 }
 
 
@@ -3838,6 +4027,9 @@ function cambioEstadoFullscreen() {
 
 
 function registrarEventosGlobales() {
+
+    vigilarTamanoVisor();
+
 
     window.addEventListener(
         "resize",
