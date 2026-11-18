@@ -1,0 +1,281 @@
+/*
+ * MeteoArchidona · Componente «Comparación visual»
+ *
+ * js/componentes/comparacion-visual.js (José, 18-11-2026): fila alta con
+ * los termómetros y las probetas de todas las estaciones seguidos y fila
+ * más baja con las barras de humedad. Los dibujos son SVG con viewBox:
+ * crecen solos al maximizar.
+ *
+ * En un hueco estrecho (móvil) la fila alta se parte en dos (termómetros
+ * arriba, probetas debajo) y las humedades van de dos en dos.
+ */
+
+
+.cv-componente {
+    container-type: inline-size;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    box-sizing: border-box;
+
+    padding: 0 0 12px;
+
+    overflow: hidden;
+
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+
+    border: 1px solid #29435e;
+    border-radius: 12px;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(54, 213, 255, 0.10) 0,
+            rgba(54, 213, 255, 0) 60%
+        ),
+        linear-gradient(
+            180deg,
+            #0c2032 0,
+            #071019 100%
+        );
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+
+.cv-componente *,
+.cv-componente *::before,
+.cv-componente *::after {
+    box-sizing: border-box;
+}
+
+
+/* ----------------------------------------------------------
+   Cabecera y botón de maximizar
+   ---------------------------------------------------------- */
+
+.cv-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    min-height: 42px;
+
+    padding: 8px 10px 8px 13px;
+
+    border-bottom: 1px solid #29435e;
+}
+
+.cv-titulo {
+    margin: 0;
+
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.cv-subtitulo {
+    margin: 2px 0 0;
+
+    color: #9fb6c9;
+    font-size: 12px;
+}
+
+.cv-boton-maximizar {
+    flex: 0 0 auto;
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    color: #e8f2f8;
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    border: 1px solid #29435e;
+    border-radius: 8px;
+
+    background: rgba(54, 213, 255, 0.08);
+}
+
+.cv-boton-maximizar:hover,
+.cv-boton-maximizar:focus-visible {
+    border-color: #36d5ff;
+    background: rgba(54, 213, 255, 0.18);
+    outline: none;
+}
+
+
+/* ----------------------------------------------------------
+   Filas de instrumentos
+   ---------------------------------------------------------- */
+
+.cv-fila {
+    padding: 0 10px;
+}
+
+.cv-fila-alta {
+    display: flex;
+    gap: 14px;
+
+    height: clamp(280px, 34vw, 440px);
+}
+
+.cv-grupo {
+    display: grid;
+    grid-template-columns: repeat(var(--cv-estaciones, 4), minmax(0, 1fr));
+
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+}
+
+.cv-grupo-probetas {
+    padding-left: 14px;
+
+    border-left: 1px solid rgba(41, 67, 94, 0.8);
+}
+
+.cv-fila-humedad {
+    display: grid;
+    grid-template-columns: repeat(var(--cv-estaciones, 4), minmax(0, 1fr));
+    gap: 6px 14px;
+
+    height: clamp(70px, 8vw, 110px);
+}
+
+.cv-instrumento {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.cv-estado {
+    margin: 0;
+    padding: 10px 13px 0;
+
+    color: #9fb6c9;
+    font-size: 13px;
+}
+
+
+/* ----------------------------------------------------------
+   Hueco estrecho (móvil)
+   ---------------------------------------------------------- */
+
+@container (max-width: 640px) {
+
+    .cv-fila-alta {
+        flex-direction: column;
+        gap: 10px;
+
+        height: auto;
+    }
+
+    .cv-grupo {
+        flex: 0 0 auto;
+
+        height: 260px;
+    }
+
+    .cv-grupo-probetas {
+        padding: 10px 0 0;
+
+        border-left: none;
+        border-top: 1px solid rgba(41, 67, 94, 0.8);
+    }
+
+    .cv-fila-humedad {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: 72px;
+
+        height: auto;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   Maximizado: pantalla completa o toda la ventana
+   ---------------------------------------------------------- */
+
+.cv-componente.cv-maximizado {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+
+    margin: 0;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+}
+
+.cv-componente.cv-ampliado {
+    gap: 14px;
+
+    padding-bottom: 16px;
+
+    border: none;
+    border-radius: 0;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(54, 213, 255, 0.10) 0,
+            rgba(54, 213, 255, 0) 60%
+        ),
+        linear-gradient(
+            180deg,
+            #0c2032 0,
+            #071019 100%
+        );
+}
+
+.cv-componente.cv-ampliado:fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
+
+.cv-componente.cv-ampliado .cv-fila-alta {
+    flex: 3 1 0;
+
+    height: auto;
+    min-height: 0;
+}
+
+.cv-componente.cv-ampliado .cv-fila-humedad {
+    flex: 1 1 0;
+
+    height: auto;
+    min-height: 0;
+}
+
+@container (max-width: 640px) {
+
+    .cv-componente.cv-ampliado .cv-grupo {
+        flex: 1 1 0;
+
+        height: auto;
+    }
+
+    .cv-componente.cv-ampliado .cv-fila-humedad {
+        grid-auto-rows: minmax(0, 1fr);
+    }
+}
+
+html.cv-sin-scroll,
+html.cv-sin-scroll body {
+    overflow: hidden;
+}
+
+
+/* Fin de fichero: css/comparacion-visual.css */

@@ -383,6 +383,26 @@ body {
 
 
 /* ==========================================================
+   COMPARACIÓN VISUAL (José, 18-11-2026)
+   ==========================================================
+
+   El hueco del componente (css/comparacion-visual.css pone su tarjeta),
+   alineado con el Vistazo general.
+*/
+.comparacion-visual-hueco {
+    width:
+        calc(
+            100% - 28px
+        );
+
+    margin:
+        0
+        14px
+        14px;
+}
+
+
+/* ==========================================================
    RESPONSIVE
    ========================================================== */
 
@@ -427,6 +447,19 @@ body {
 
     .tabla-estaciones-iframe {
         height: 300px;
+    }
+
+
+    .comparacion-visual-hueco {
+        width:
+            calc(
+                100% - 20px
+            );
+
+        margin:
+            0
+            10px
+            10px;
     }
 
 }

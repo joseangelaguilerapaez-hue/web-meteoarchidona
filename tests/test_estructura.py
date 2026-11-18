@@ -1652,5 +1652,48 @@ class TestLluviaEnTodasLasPaginas(unittest.TestCase):
             self.assertIn(f"html.lluvia-detenida {capa}", css)
 
 
+class TestComparacionVisual(unittest.TestCase):
+    """Comparación visual: los instrumentos del directo por estación (18-11-2026)."""
+
+    MODULO = RAIZ / "js" / "componentes" / "comparacion-visual.js"
+
+    def test_exporta_su_funcion_y_el_pintor_lo_conoce(self):
+        codigo = leer(self.MODULO)
+        self.assertIn("export function montarComparacionVisual(raiz)", codigo)
+        self.assertRegex(
+            leer(RAIZ / "js" / "dashboards" / "pintor.js"),
+            r'"comparacion-visual": \["/js/componentes/comparacion-visual\.js\?v=[\w-]+", "montarComparacionVisual"\]',
+        )
+
+    def test_estaciones_dinamicas_y_lluvia_de_hoy(self):
+        codigo = leer(self.MODULO)
+        self.assertIn('"/estaciones"', codigo)
+        self.assertIn("/condiciones-actuales/", codigo)
+        for campo in ("temperatura_c", "lluvia_dia_mm", "humedad_pct"):
+            self.assertIn(campo, codigo)
+
+    def test_maximizar_con_plan_b(self):
+        codigo = leer(self.MODULO)
+        self.assertIn("requestFullscreen", codigo)
+        self.assertIn("cv-maximizado", codigo)
+        self.assertIn(".cv-componente.cv-maximizado", leer(RAIZ / "css" / "comparacion-visual.css"))
+
+    def test_sin_id_para_poder_repetirlo(self):
+        codigo = leer(self.MODULO)
+        self.assertNotIn("getElementById", codigo)
+        self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_existe(self):
+        ruta = re.search(r'"/(css/comparacion-visual\.css)\?v=[\w-]+"', leer(self.MODULO))
+        self.assertIsNotNone(ruta)
+        self.assertTrue((RAIZ / ruta.group(1)).is_file())
+
+    def test_seguimiento_lo_monta(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "observaciones.html")
+        self.assertIn('data-componente="comparacion-visual"', pagina)
+        self.assertIn("js/observaciones.js?v=", pagina)
+        self.assertIn('"comparacion-visual": montarComparacionVisual', leer(RAIZ / "js" / "observaciones.js"))
+
+
 if __name__ == "__main__":
     unittest.main()
