@@ -54,6 +54,41 @@
 }
 
 
+.vg-controles {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+}
+
+.vg-boton-maximizar {
+    flex: 0 0 auto;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    color: #e8f2f8;
+    font-size: 19px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    border: 1px solid #29435e;
+    border-radius: 8px;
+
+    background: rgba(54, 213, 255, 0.08);
+}
+
+.vg-boton-maximizar:hover,
+.vg-boton-maximizar:focus-visible {
+    border-color: #36d5ff;
+    background: rgba(54, 213, 255, 0.18);
+    outline: none;
+}
+
+
 /* Selector «Tabla | Gráfico» */
 
 .vg-selector {
@@ -130,6 +165,58 @@
 
         padding: 6px 10px;
     }
+}
+
+
+/* ----------------------------------------------------------
+   Maximizado (José, 18-11-2026): la vista elegida llena la pantalla
+   ---------------------------------------------------------- */
+
+/* Plan B (iPhone): a toda la ventana. */
+.vg-componente.vg-maximizado {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+
+    margin: 0;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+}
+
+.vg-componente.vg-ampliado {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.vg-componente.vg-ampliado:fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
+
+.vg-ampliado .vg-cabecera {
+    min-height: 0;
+
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.vg-ampliado .vg-panel {
+    flex: 1 1 0;
+
+    min-height: 0;
+}
+
+.vg-ampliado .vg-panel[hidden] {
+    display: none;
+}
+
+/* El iframe pone su alto en línea (js/tabla-estaciones.js); maximizado
+   manda el hueco y la tabla se agranda con zoom. */
+.vg-ampliado .vg-tabla {
+    height: 100% !important;
 }
 
 

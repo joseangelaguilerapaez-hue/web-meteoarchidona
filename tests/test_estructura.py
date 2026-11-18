@@ -304,7 +304,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261118-vistazo1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261118-pantalla1"),
             ("administracion", r"administracion/principal\.js\?v=20261117-editor2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -1469,7 +1469,7 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
         # Si cambia principal.js, la página tiene que pedir la versión nueva
         # (16-11-2026: el móvil se quedó con la vieja y no salía la tira).
-        self.assertIn("js/actualidad/principal.js?v=20261118-vistazo1", pagina)
+        self.assertIn("js/actualidad/principal.js?v=20261118-pantalla1", pagina)
         # La tira resume también los avisos de la franja (16-11-2026).
         self.assertIn("portada:avisos", codigo)
         self.assertIn("portada:avisos", leer(RAIZ / "js" / "novedades.js"))
@@ -1674,9 +1674,20 @@ class TestComparacionVisual(unittest.TestCase):
 
     def test_maximizar_con_plan_b(self):
         codigo = leer(self.MODULO)
-        self.assertIn("requestFullscreen", codigo)
+        comun = leer(RAIZ / "js" / "componentes" / "pantalla-completa.js")
+        self.assertIn("requestFullscreen", comun)
+        self.assertIn('lock?.("landscape")', comun)
+        self.assertIn("prepararPantallaCompleta", codigo)
         self.assertIn("cv-maximizado", codigo)
-        self.assertIn(".cv-componente.cv-maximizado", leer(RAIZ / "css" / "comparacion-visual.css"))
+        css = leer(RAIZ / "css" / "comparacion-visual.css")
+        self.assertIn(".cv-componente.cv-maximizado", css)
+        # Maximizado y en horizontal: una fila de instrumentos y otra de humedades.
+        self.assertIn(".vg-ampliado .cv-componente", css)
+        self.assertIn("@media (orientation: portrait)", css)
+
+    def test_incrustado_sin_boton_propio(self):
+        codigo = leer(self.MODULO)
+        self.assertIn("if (!incrustado) {\n        boton = crear(\"button\", \"cv-boton-maximizar\");", codigo)
 
     def test_sin_id_para_poder_repetirlo(self):
         codigo = leer(self.MODULO)
@@ -1718,6 +1729,15 @@ class TestVistazoGeneral(unittest.TestCase):
         codigo = leer(self.MODULO)
         self.assertNotIn("getElementById", codigo)
         self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_pantalla_completa_para_las_dos_vistas(self):
+        codigo = leer(self.MODULO)
+        self.assertIn('crear("button", "vg-boton-maximizar")', codigo)
+        self.assertIn("prepararPantallaCompleta(raiz, boton", codigo)
+        self.assertIn("raizDoc.style.zoom", codigo)
+        css = leer(RAIZ / "css" / "vistazo-general.css")
+        self.assertIn(".vg-componente.vg-maximizado", css)
+        self.assertIn("height: 100% !important;", css)
 
     def test_la_hoja_existe(self):
         ruta = re.search(r'"/(css/vistazo-general\.css)\?v=[\w-]+"', leer(self.MODULO))
