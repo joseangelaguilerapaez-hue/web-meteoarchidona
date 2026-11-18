@@ -25,6 +25,7 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- Sección Costas (PR #193, `aa50194`, **en el VPS** el 18 nov; API PR #214): página `/costas` con la gama «Mar y arena» y cinco componentes (`costas-resumen`, `costas-mapa`, `costas-playa`, `costas-mareas`, `costas-boya`), menú detrás de El Olivar, `/costas` en `.htaccess`, `sitemap.xml` (con el visto bueno de José) y Nginx. Oculta hasta su lanzamiento (16-12-2026). Vista por José en la web **por confirmar**.
 - Franja de avisos como componente de los dashboards (`avisos-franja`; web PR #186, `938ea6a`; API #204, catálogo; **publicado** el 17 nov): la franja de la portada en su recuadro, respeta los cerrados con la X, «Sin avisos ahora mismo.» si no hay, refresco cada 10 minutos.
 - Semáforo de alertas en su sección de Actualidad (José, 16-11-2026; web PR #181, #182, #183 y #184; **publicado** el 16 nov, `9abe101`): sección entre la cabecera y el cuerpo, semáforo siempre a la vista (también en verde), franja de avisos debajo, tira fina bajo la cabecera al bajar que resume alertas y avisos, dos brazos en el móvil (AEMET arriba; Incendios, Aire y Polen abajo) y una fila en PC, cada semáforo con solo las luces de su escala. Noveno semáforo, Polen (API #202, migración 0069 aplicada). José comprobó la tira en el móvil.
 - Incendios (PR #172, en `main` y en el VPS desde el 15 nov, `188de81`; API `ef8407d`, migración 0064 aplicada; `docs/incendios.md` de la API). Página `/incendios` con fondo propio y gama «Brasa sobre oscuro», en el menú tras «Agua y sequía» (16 secciones), dada de alta en Nginx. Siete componentes montables y en el pintor de dashboards: `incendios-resumen`, `incendios-epoca`, `incendios-comarca`, `incendios-pueblo`, `incendios-mapa`, `incendios-temporada` e `incendios-divulgacion`. Veranos desde 2024 (EFFIS no tiene archivo antes). Pendiente de que José la revise en la web.
@@ -234,3 +235,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-16 · Dos brazos en el móvil, luces de cada escala y noveno semáforo, Polen, en el VPS (`9abe101`; API `4e24ad5`, migración 0069 aplicada).
 - 2026-11-17 · Franja de avisos como componente de los dashboards en el VPS (`938ea6a`; API `9a8fc7f`).
 - 2026-11-17 · Lluvia real en todas las secciones y botón «Parar lluvia» en la cabecera en el VPS (`b4d0da4`, PR #191).
+- 2026-11-18 · Sección Costas en el VPS (`aa50194`; API `2d03a3c`, migración 0070 aplicada), oculta hasta el 16-12-2026.
