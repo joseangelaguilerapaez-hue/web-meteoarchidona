@@ -182,12 +182,17 @@ import {
     montarSemaforosAlertas
 } from "../alertas/semaforos.js?v=20261116-polen1";
 
+import {
+    montarVistazoGeneral
+} from "../componentes/vistazo-general.js?v=20261118-vistazo1";
+
 
 const COMPONENTES_ACTUALIDAD = {
     "condiciones-actuales": montarCondicionesActuales,
     "sol-luna": montarSolLuna,
     "prediccion-breve": montarPrediccionBreve,
-    "accesos": montarAccesos
+    "accesos": montarAccesos,
+    "vistazo-general": montarVistazoGeneral
 };
 
 

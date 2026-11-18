@@ -115,7 +115,7 @@ href="../css/lluvia.css?v=20260913-pruebas1"
 
 <link
 rel="stylesheet"
-href="../css/observaciones.css?v=20261006-vistazo2"
+href="../css/observaciones.css?v=20261118-vistazo1"
 >
 
 
@@ -125,6 +125,11 @@ defer
 ></script>
 <script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
 <script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+type="module"
+src="../js/observaciones.js?v=20261118-vistazo1"
+></script>
 
 <script
 src="../js/lluvia.js?v=20261117-lluvia1"
@@ -207,35 +212,21 @@ Abrir Seguimiento meteorológico
 
 
 <!-- ======================================================
-     VISTAZO GENERAL
-     ====================================================== -->
+     VISTAZO GENERAL (José, 18-11-2026)
+     ======================================================
+
+     Componente montable: selector «Tabla | Gráfico» y debajo la tabla
+     de estaciones o la Comparación visual (data-vista: TABLA, GRAFICO o
+     AMBAS). js/componentes/vistazo-general.js, montado por
+     js/observaciones.js.
+-->
 
 
-<section
-class="vistazo-general"
-aria-labelledby="vistazo-general-titulo"
->
-
-
-<h2
-class="vistazo-general-titulo"
-id="vistazo-general-titulo"
->
-Vistazo general
-</h2>
-
-
-<iframe
-class="tabla-estaciones-iframe"
-data-auditoria-visualizacion="TABLA_ESTACIONES"
-src="../componentes/tabla-estaciones.html?v=20261118-alto1"
-title="Vistazo general de las estaciones meteorológicas de MeteoArchidona"
-loading="eager"
->
-</iframe>
-
-
-</section>
+<div
+class="vistazo-general-hueco"
+data-componente="vistazo-general"
+data-vista="AMBAS"
+></div>
 
 
 </main>

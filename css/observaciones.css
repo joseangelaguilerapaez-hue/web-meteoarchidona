@@ -383,6 +383,25 @@ body {
 
 
 /* ==========================================================
+   VISTAZO GENERAL COMO COMPONENTE (José, 18-11-2026)
+   ==========================================================
+
+   El hueco del componente (css/vistazo-general.css pone su tarjeta).
+*/
+.vistazo-general-hueco {
+    width:
+        calc(
+            100% - 28px
+        );
+
+    margin:
+        0
+        14px
+        14px;
+}
+
+
+/* ==========================================================
    RESPONSIVE
    ========================================================== */
 
@@ -427,6 +446,19 @@ body {
 
     .tabla-estaciones-iframe {
         height: 300px;
+    }
+
+
+    .vistazo-general-hueco {
+        width:
+            calc(
+                100% - 20px
+            );
+
+        margin:
+            0
+            10px
+            10px;
     }
 
 }
