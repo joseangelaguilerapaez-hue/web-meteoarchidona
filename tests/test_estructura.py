@@ -304,7 +304,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261117-lluvia1"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261118-vistazo1"),
             ("administracion", r"administracion/principal\.js\?v=20261117-editor2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
@@ -1469,7 +1469,7 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
         # Si cambia principal.js, la página tiene que pedir la versión nueva
         # (16-11-2026: el móvil se quedó con la vieja y no salía la tira).
-        self.assertIn("js/actualidad/principal.js?v=20261117-lluvia1", pagina)
+        self.assertIn("js/actualidad/principal.js?v=20261118-vistazo1", pagina)
         # La tira resume también los avisos de la franja (16-11-2026).
         self.assertIn("portada:avisos", codigo)
         self.assertIn("portada:avisos", leer(RAIZ / "js" / "novedades.js"))
@@ -1688,12 +1688,53 @@ class TestComparacionVisual(unittest.TestCase):
         self.assertIsNotNone(ruta)
         self.assertTrue((RAIZ / ruta.group(1)).is_file())
 
-    def test_seguimiento_lo_monta(self):
-        pagina = sin_comentarios(RAIZ / "pages" / "observaciones.html")
-        self.assertIn('data-componente="comparacion-visual"', pagina)
-        self.assertIn("js/observaciones.js?v=", pagina)
-        self.assertIn('"comparacion-visual": montarComparacionVisual', leer(RAIZ / "js" / "observaciones.js"))
+    def test_se_puede_incrustar_sin_titulo_propio(self):
+        codigo = leer(self.MODULO)
+        self.assertIn("raiz.dataset.incrustado", codigo)
+        self.assertIn(".cv-componente.cv-incrustado", leer(RAIZ / "css" / "comparacion-visual.css"))
 
+
+class TestVistazoGeneral(unittest.TestCase):
+    """Vistazo general: tabla o Comparación visual con selector (18-11-2026)."""
+
+    MODULO = RAIZ / "js" / "componentes" / "vistazo-general.js"
+
+    def test_exporta_su_funcion_y_el_pintor_lo_conoce(self):
+        self.assertIn("export function montarVistazoGeneral(raiz)", leer(self.MODULO))
+        self.assertRegex(
+            leer(RAIZ / "js" / "dashboards" / "pintor.js"),
+            r'"vistazo-general": \["/js/componentes/vistazo-general\.js\?v=[\w-]+", "montarVistazoGeneral"\]',
+        )
+
+    def test_vistas_y_arranque_en_grafico(self):
+        codigo = leer(self.MODULO)
+        self.assertIn('const VISTAS = ["TABLA", "GRAFICO"];', codigo)
+        self.assertIn('"AMBAS"', codigo)
+        self.assertIn('ensenar(modo === "TABLA" ? "TABLA" : "GRAFICO")', codigo)
+        self.assertIn("/componentes/tabla-estaciones.html?v=", codigo)
+        self.assertIn('dataset.incrustado = "si"', codigo)
+
+    def test_sin_id_para_poder_repetirlo(self):
+        codigo = leer(self.MODULO)
+        self.assertNotIn("getElementById", codigo)
+        self.assertIsNone(re.search(r"\.id\s*=(?!=)", codigo), "asigna un id")
+
+    def test_la_hoja_existe(self):
+        ruta = re.search(r'"/(css/vistazo-general\.css)\?v=[\w-]+"', leer(self.MODULO))
+        self.assertIsNotNone(ruta)
+        self.assertTrue((RAIZ / ruta.group(1)).is_file())
+
+    def test_actualidad_y_seguimiento_lo_montan_con_ambas(self):
+        for pagina, principal, clave in (
+            ("actualidad", RAIZ / "js" / "actualidad" / "principal.js", '"vistazo-general": montarVistazoGeneral'),
+            ("observaciones", RAIZ / "js" / "observaciones.js", '"vistazo-general": montarVistazoGeneral'),
+        ):
+            with self.subTest(pagina=pagina):
+                html = sin_comentarios(RAIZ / "pages" / f"{pagina}.html")
+                self.assertRegex(html, r'data-componente="vistazo-general"\s+data-vista="AMBAS"')
+                self.assertNotIn("tabla-estaciones.html", html)
+                self.assertIn(clave, leer(principal))
+        self.assertNotIn('data-componente="comparacion-visual"', sin_comentarios(RAIZ / "pages" / "observaciones.html"))
 
 if __name__ == "__main__":
     unittest.main()

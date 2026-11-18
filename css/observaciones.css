@@ -383,13 +383,12 @@ body {
 
 
 /* ==========================================================
-   COMPARACIÓN VISUAL (José, 18-11-2026)
+   VISTAZO GENERAL COMO COMPONENTE (José, 18-11-2026)
    ==========================================================
 
-   El hueco del componente (css/comparacion-visual.css pone su tarjeta),
-   alineado con el Vistazo general.
+   El hueco del componente (css/vistazo-general.css pone su tarjeta).
 */
-.comparacion-visual-hueco {
+.vistazo-general-hueco {
     width:
         calc(
             100% - 28px
@@ -450,7 +449,7 @@ body {
     }
 
 
-    .comparacion-visual-hueco {
+    .vistazo-general-hueco {
         width:
             calc(
                 100% - 20px

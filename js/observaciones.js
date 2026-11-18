@@ -1,18 +1,18 @@
 /*
  * MeteoArchidona · Página Seguimiento (observaciones)
  *
- * Monta los componentes de la página en sus huecos. De momento solo la
- * «Comparación visual» (José, 18-11-2026), debajo del Vistazo general;
- * el visor de seguimiento y la tabla siguen en sus iframes.
+ * Monta los componentes de la página en sus huecos. De momento solo el
+ * «Vistazo general» (José, 18-11-2026): tabla de estaciones o Comparación
+ * visual con un selector; el visor de seguimiento sigue en su iframe.
  *
- *     data-componente="comparacion-visual" → js/componentes/comparacion-visual.js
+ *     data-componente="vistazo-general" → js/componentes/vistazo-general.js
  */
 
-import {montarComparacionVisual} from "./componentes/comparacion-visual.js?v=20261118-comparacion1";
+import {montarVistazoGeneral} from "./componentes/vistazo-general.js?v=20261118-vistazo1";
 
 
 const COMPONENTES_SEGUIMIENTO = {
-    "comparacion-visual": montarComparacionVisual
+    "vistazo-general": montarVistazoGeneral
 };
 
 

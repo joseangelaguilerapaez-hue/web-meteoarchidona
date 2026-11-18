@@ -1,0 +1,136 @@
+/*
+ * MeteoArchidona · Componente «Vistazo general»
+ *
+ * js/componentes/vistazo-general.js (José, 18-11-2026): tarjeta con el
+ * título, el selector «Tabla | Gráfico» y debajo la vista elegida. El
+ * aspecto es el que tenía el Vistazo general en Actualidad.
+ */
+
+
+.vg-componente {
+    container-type: inline-size;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    min-width: 0;
+
+    overflow: hidden;
+
+    border: 1px solid #29435e;
+    border-radius: 12px;
+
+    background: #071019;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+
+    font-family: Arial, sans-serif;
+}
+
+
+.vg-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    min-height: 42px;
+
+    padding: 6px 10px 6px 13px;
+
+    border-bottom: 1px solid #29435e;
+
+    background: #252b33;
+}
+
+.vg-titulo {
+    margin: 0;
+
+    color: #f6f8fb;
+    font-size: clamp(14px, 2.7vw, 18px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.025em;
+}
+
+
+/* Selector «Tabla | Gráfico» */
+
+.vg-selector {
+    display: inline-flex;
+    flex: 0 0 auto;
+
+    padding: 2px;
+
+    border: 1px solid #29435e;
+    border-radius: 999px;
+
+    background: #071019;
+}
+
+.vg-opcion {
+    min-width: 72px;
+
+    padding: 6px 12px;
+
+    color: #9fb6c9;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    border: none;
+    border-radius: 999px;
+
+    background: transparent;
+}
+
+.vg-opcion[aria-checked="true"] {
+    color: #071019;
+
+    background: #36d5ff;
+}
+
+.vg-opcion:focus-visible {
+    outline: 2px solid #36d5ff;
+    outline-offset: 2px;
+}
+
+
+/* Vistas */
+
+.vg-panel[hidden] {
+    display: none;
+}
+
+.vg-tabla {
+    display: block;
+
+    width: 100%;
+    height: 330px;
+
+    border: 0;
+
+    background: #071019;
+}
+
+.vg-panel-grafico {
+    padding-top: 2px;
+}
+
+@container (max-width: 640px) {
+
+    .vg-tabla {
+        height: 300px;
+    }
+
+    .vg-opcion {
+        min-width: 0;
+
+        padding: 6px 10px;
+    }
+}
+
+
+/* Fin de fichero: css/vistazo-general.css */

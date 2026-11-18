@@ -28,12 +28,16 @@
  *     montarComparacionVisual(hueco);
  *
  * Sin id: se puede poner más de una vez en la misma página.
+ *
+ * data-incrustado="si": va dentro de otro componente que ya pone la
+ * tarjeta y el título (el «Vistazo general», vista Gráfico): sin marco
+ * propio y sin el título «Comparación visual».
  */
 
 import {asegurarHoja} from "./comun.js?v=20261104-componentes1";
 
 
-const HOJA = "/css/comparacion-visual.css?v=20261118-comparacion1";
+const HOJA = "/css/comparacion-visual.css?v=20261118-comparacion2";
 
 const CONDICIONES_CADA_MS = 60 * 1000;
 const ESTACIONES_CADA_MS = 5 * 60 * 1000;
@@ -355,14 +359,19 @@ export function montarComparacionVisual(raiz) {
 
     asegurarHoja(HOJA);
 
+    const incrustado = String(raiz.dataset.incrustado || "").toLowerCase() === "si";
+
     raiz.classList.add("cv-componente");
+    raiz.classList.toggle("cv-incrustado", incrustado);
     raiz.textContent = "";
     raiz.setAttribute("aria-label", "Comparación visual de las estaciones");
 
     const cabecera = crear("div", "cv-cabecera");
     const textos = crear("div", "cv-textos");
+    if (!incrustado) {
+        textos.append(crear("h2", "cv-titulo", "Comparación visual"));
+    }
     textos.append(
-        crear("h2", "cv-titulo", "Comparación visual"),
         crear("p", "cv-subtitulo", "Temperatura, lluvia de hoy y humedad de cada estación")
     );
     const boton = crear("button", "cv-boton-maximizar");

@@ -53,6 +53,29 @@
 }
 
 
+/* Dentro de otro componente (Vistazo general): sin marco propio. */
+.cv-componente.cv-incrustado:not(.cv-ampliado) {
+    border: none;
+    border-radius: 0;
+
+    background: transparent;
+    box-shadow: none;
+}
+
+.cv-componente.cv-incrustado .cv-cabecera {
+    min-height: 0;
+
+    padding-top: 6px;
+    padding-bottom: 6px;
+
+    border-bottom: none;
+}
+
+.cv-componente.cv-incrustado .cv-subtitulo {
+    margin: 0;
+}
+
+
 /* ----------------------------------------------------------
    Cabecera y botón de maximizar
    ---------------------------------------------------------- */
@@ -184,7 +207,7 @@
     .cv-grupo {
         flex: 0 0 auto;
 
-        height: 260px;
+        height: 300px;
     }
 
     .cv-grupo-probetas {

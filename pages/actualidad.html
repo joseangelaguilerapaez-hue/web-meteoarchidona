@@ -78,7 +78,7 @@
 
 <link
     rel="stylesheet"
-    href="../css/actualidad.css?v=20261118-tabla1"
+    href="../css/actualidad.css?v=20261118-vistazo1"
 >
 
 
@@ -126,7 +126,7 @@
 
 <script
     type="module"
-    src="../js/actualidad/principal.js?v=20261117-lluvia1"
+    src="../js/actualidad/principal.js?v=20261118-vistazo1"
 ></script>
 
 <!-- Novedades y avisos: ventana con las vigentes al entrar y franja de avisos automáticos (docs/novedades.md de la API). -->
@@ -232,31 +232,17 @@
 
 
 <!--
-    Vistazo general: la misma tabla resumen de estaciones que en
-    Seguimiento. En el PC va en la parte derecha, encima de las fichas;
-    en el móvil, debajo de «Condiciones actuales» y antes de las fichas.
+    Vistazo general (José, 18-11-2026): componente montable con selector
+    «Tabla | Gráfico» (js/componentes/vistazo-general.js); con AMBAS
+    arranca en Gráfico. En el PC va en la parte derecha, encima de las
+    fichas; en el móvil, debajo de «Condiciones actuales» y antes de las
+    fichas.
 -->
-<section
+<div
     class="actualidad-tabla-estaciones"
-    aria-labelledby="actualidad-tabla-estaciones-titulo"
->
-
-<h2
-    class="actualidad-tabla-estaciones-titulo"
-    id="actualidad-tabla-estaciones-titulo"
->
-    Vistazo general
-</h2>
-
-<iframe
-    class="actualidad-tabla-estaciones-iframe"
-    data-auditoria-visualizacion="TABLA_ESTACIONES"
-    src="../componentes/tabla-estaciones.html?v=20261118-alto1"
-    title="Vistazo general de las estaciones meteorológicas de MeteoArchidona"
-    loading="eager"
-></iframe>
-
-</section>
+    data-componente="vistazo-general"
+    data-vista="AMBAS"
+></div>
 
 
 <!--

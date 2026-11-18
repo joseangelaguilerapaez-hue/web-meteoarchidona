@@ -115,7 +115,7 @@ href="../css/lluvia.css?v=20260913-pruebas1"
 
 <link
 rel="stylesheet"
-href="../css/observaciones.css?v=20261118-comparacion1"
+href="../css/observaciones.css?v=20261118-vistazo1"
 >
 
 
@@ -128,7 +128,7 @@ defer
 
 <script
 type="module"
-src="../js/observaciones.js?v=20261118-comparacion1"
+src="../js/observaciones.js?v=20261118-vistazo1"
 ></script>
 
 <script
@@ -212,50 +212,20 @@ Abrir Seguimiento meteorológico
 
 
 <!-- ======================================================
-     VISTAZO GENERAL
-     ====================================================== -->
-
-
-<section
-class="vistazo-general"
-aria-labelledby="vistazo-general-titulo"
->
-
-
-<h2
-class="vistazo-general-titulo"
-id="vistazo-general-titulo"
->
-Vistazo general
-</h2>
-
-
-<iframe
-class="tabla-estaciones-iframe"
-data-auditoria-visualizacion="TABLA_ESTACIONES"
-src="../componentes/tabla-estaciones.html?v=20261118-alto1"
-title="Vistazo general de las estaciones meteorológicas de MeteoArchidona"
-loading="eager"
->
-</iframe>
-
-
-</section>
-
-
-<!-- ======================================================
-     COMPARACIÓN VISUAL (José, 18-11-2026)
+     VISTAZO GENERAL (José, 18-11-2026)
      ======================================================
 
-     Los instrumentos del directo (termómetro, probeta y barra de
-     humedad), uno de cada por estación. Componente montable:
-     js/componentes/comparacion-visual.js, montado por js/observaciones.js.
+     Componente montable: selector «Tabla | Gráfico» y debajo la tabla
+     de estaciones o la Comparación visual (data-vista: TABLA, GRAFICO o
+     AMBAS). js/componentes/vistazo-general.js, montado por
+     js/observaciones.js.
 -->
 
 
 <div
-class="comparacion-visual-hueco"
-data-componente="comparacion-visual"
+class="vistazo-general-hueco"
+data-componente="vistazo-general"
+data-vista="AMBAS"
 ></div>
 
 
