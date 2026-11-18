@@ -1429,6 +1429,28 @@ video {
 
 
 /*
+ * En la ficha el botón se ve de 18 px, pero un dedo necesita 44: con
+ * menos, el toque caía en el vídeo y pausaba la emisión en vez de abrir
+ * la pantalla completa (Mario, iPhone, 18-11-2026). La zona que
+ * responde se amplía con un ::after transparente; el dibujo no cambia.
+ */
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
+.visor-video-control {
+    position: relative;
+}
+
+
+.visor-video.compacto:not(:fullscreen):not(.pantalla-simulada)
+.visor-video-control::after {
+    content: "";
+
+    position: absolute;
+
+    inset: -13px;
+}
+
+
+/*
  * El modo MP4 mantiene controles
  * utilizables incluso dentro de
  * una ficha compacta.
