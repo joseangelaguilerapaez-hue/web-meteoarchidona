@@ -305,7 +305,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261118-pantalla1"),
-            ("administracion", r"administracion/principal\.js\?v=20261117-editor2"),
+            ("administracion", r"administracion/principal\.js\?v=20261120-procesos3"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
