@@ -108,9 +108,9 @@ transferencia no necesita garantías adicionales.
 
 No cedemos datos a terceros salvo obligación legal.
 
-Contenido de terceros: las emisiones de YouTube de la sección En vivo no se cargan hasta que
-pulsas "Reproducir". A partir de ese momento las sirve YouTube (Google) con su propia
-política de privacidad. Las predicciones proceden de AEMET y no implican ningún dato tuyo.
+Contenido de terceros: las emisiones de YouTube de la sección En vivo se cargan al abrir esa
+sección y arrancan solas, en silencio. Las sirve YouTube (Google) desde su dominio sin cookies
+(youtube-nocookie.com), con su propia política de privacidad. Las predicciones proceden de AEMET y no implican ningún dato tuyo.
 
 ### ¿Qué derechos tienes?
 
@@ -146,7 +146,7 @@ Nombre| Para qué| Tipo| Duración
 **(Por confirmar al construir el módulo web: si se guardan como cookies o en el
 almacenamiento local del navegador; la política debe decir lo que se use realmente.)**
 
-No usamos cookies de terceros. YouTube puede guardar las suyas cuando reproduces una de sus
+No usamos cookies de terceros. YouTube puede guardar las suyas cuando se reproduce una de sus
 emisiones.
 
 Puedes borrar estos datos en cualquier momento desde la configuración de tu navegador.
