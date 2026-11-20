@@ -44,7 +44,7 @@ const CLAVE_PESTANA = "meteoarchidona_configuracion_pestana";
 
 // Pestaña propia, fuera del catálogo de parámetros.
 const ZONAS_RAYOS = "ZONAS_RAYOS";
-const MODULO_ZONAS_RAYOS = "./zonas-rayos.js?v=20261120-zonas2";
+const MODULO_ZONAS_RAYOS = "./zonas-rayos.js?v=20261120-zonas3";
 
 let moduloZonasRayos = null;
 
