@@ -951,3 +951,21 @@ min-height:260px
 
 
 /* Fin de fichero: visores/radar.css */
+
+/* Rayos del Meteosat: escala de colores por antigüedad (19-11-2026). */
+.leyenda-rayo{
+ display:inline-block;
+ width:.6em;
+ height:.6em;
+ margin-left:.3em;
+ border-radius:50%;
+ border:1px solid #1a1a1a;
+ vertical-align:middle;
+}
+
+.leyenda-rayo-texto{
+ margin-left:.35em;
+ opacity:.8;
+ font-size:.85em;
+}
+

@@ -585,7 +585,8 @@ function actualizarLeyendaSeguimiento(){
    {
     texto:"Rayos",
     clase:
-     "leyenda-seguimiento-linea"
+     "leyenda-seguimiento-linea",
+    escalaRayos:true
    }
   );
  }
@@ -627,6 +628,51 @@ function actualizarLeyendaSeguimiento(){
 
    nodo.textContent=
     parte.texto;
+
+   /*
+    * Rayos del Meteosat: escala de colores por antigüedad
+    * (José, 19-11-2026; docs/rayos.md de la API).
+    */
+   if(
+    parte.escalaRayos
+   ){
+    RAYOS_COLORES.forEach(
+     ([minutos,color])=>{
+      const muestra=
+       document.createElement(
+        "span"
+       );
+
+      muestra.className=
+       "leyenda-rayo";
+
+      muestra.style.background=
+       color;
+
+      muestra.title=
+       `Menos de ${minutos} minutos`;
+
+      nodo.appendChild(
+       muestra
+      );
+     }
+    );
+
+    const minutos=
+     document.createElement(
+      "span"
+     );
+
+    minutos.className=
+     "leyenda-rayo-texto";
+
+    minutos.textContent=
+     "5·15·30·60 min";
+
+    nodo.appendChild(
+     minutos
+    );
+   }
 
    leyendaSeguimiento.appendChild(
     nodo
@@ -2985,10 +3031,227 @@ function actualizarSelectorRayos(){
  actualizarLeyendaSeguimiento();
 }
 
+/*
+ * Rayos del Meteosat (José, 19-11-2026; docs/rayos.md de la API).
+ *
+ * Sustituyen a las manchas de EUMETView: cada rayo es un punto, con
+ * color según su antigüedad respecto al paso que se está viendo
+ * (blanco menos de 5 minutos, amarillo 15, naranja 30, rojo 60). En
+ * cada paso se ve la hora anterior. Los rayos de toda la línea de
+ * tiempo se piden de una vez a /rayos/destellos y se guardan en
+ * memoria; se vuelven a pedir cuando cambia el ámbito, cuando llega un
+ * paso nuevo o, como mucho, cada minuto.
+ */
+const RAYOS_MINUTOS=60;
+
+const RAYOS_COLORES=[
+ [5,"#ffffff"],
+ [15,"#ffe14d"],
+ [30,"#ff9a1f"],
+ [60,"#e8352b"]
+];
+
+const RAYOS_LIMITES={
+ regional:{oeste:-8.5,sur:35.0,este:0.5,norte:40.5},
+ nacional:{oeste:-10.5,sur:34.5,este:5.0,norte:44.5}
+};
+
+const RAYOS_REFRESCO_MS=60000;
+
+const RAYOS_HORAS_MAXIMAS=11.5;
+
+const RAYOS_ATRIBUCION=
+ "Rayos: © EUMETSAT (Meteosat, Lightning Imager)";
+
+let cacheRayos=null;
+
+let peticionRayos=null;
+
+let rendererRayos=null;
+
+let atribucionRayosActiva=false;
+
+function colorRayo(
+ minutos
+){
+ for(
+  const [limite,color] of RAYOS_COLORES
+ ){
+  if(
+   minutos<limite
+  ){
+   return color;
+  }
+ }
+
+ return RAYOS_COLORES[
+  RAYOS_COLORES.length-1
+ ][1];
+}
+
+function ponerAtribucionRayos(
+ activa
+){
+ if(
+  !mapa||
+  !mapa.attributionControl||
+  activa===atribucionRayosActiva
+ ){
+  return;
+ }
+
+ if(activa){
+  mapa.attributionControl.addAttribution(
+   RAYOS_ATRIBUCION
+  );
+ }else{
+  mapa.attributionControl.removeAttribution(
+   RAYOS_ATRIBUCION
+  );
+ }
+
+ atribucionRayosActiva=activa;
+}
+
 function ocultarRayos(){
  quitarCapa(
   capaRayosActual
  );
+
+ ponerAtribucionRayos(
+  false
+ );
+}
+
+function ventanaRayos(){
+ if(
+  !timelineSeguimiento.length
+ ){
+  return null;
+ }
+
+ const instantes=
+  timelineSeguimiento
+   .map(
+    paso=>Date.parse(
+     paso.instante
+    )
+   )
+   .filter(
+    valor=>!Number.isNaN(valor)
+   );
+
+ if(!instantes.length){
+  return null;
+ }
+
+ const hasta=
+  Math.max(...instantes);
+
+ const desde=
+  Math.max(
+   Math.min(...instantes)-
+    RAYOS_MINUTOS*60000,
+   hasta-
+    RAYOS_HORAS_MAXIMAS*3600000
+  );
+
+ return {desde,hasta};
+}
+
+async function obtenerDestellos(){
+ const ventana=
+  ventanaRayos();
+
+ if(!ventana){
+  return [];
+ }
+
+ const ambito=
+  ambitoActivo;
+
+ if(
+  cacheRayos&&
+  cacheRayos.ambito===ambito&&
+  cacheRayos.desde<=ventana.desde&&
+  cacheRayos.hasta>=ventana.hasta&&
+  Date.now()-cacheRayos.cargado<RAYOS_REFRESCO_MS
+ ){
+  return cacheRayos.destellos;
+ }
+
+ const clave=
+  `${ambito}|${ventana.desde}|${ventana.hasta}`;
+
+ if(
+  peticionRayos&&
+  peticionRayos.clave===clave
+ ){
+  return peticionRayos.promesa;
+ }
+
+ const limites=
+  RAYOS_LIMITES[ambito]||
+  RAYOS_LIMITES.nacional;
+
+ const parametros=
+  new URLSearchParams(
+   {
+    desde:new Date(ventana.desde).toISOString(),
+    hasta:new Date(ventana.hasta).toISOString(),
+    oeste:limites.oeste,
+    sur:limites.sur,
+    este:limites.este,
+    norte:limites.norte
+   }
+  );
+
+ const promesa=
+  (async()=>{
+   const respuesta=
+    await fetch(
+     `${API_BASE}/rayos/destellos?${parametros}`,
+     {cache:"no-store"}
+    );
+
+   if(!respuesta.ok){
+    throw new Error(
+     `Rayos: HTTP ${respuesta.status}`
+    );
+   }
+
+   const datos=
+    await respuesta.json();
+
+   cacheRayos={
+    ambito,
+    desde:ventana.desde,
+    hasta:ventana.hasta,
+    cargado:Date.now(),
+    destellos:
+     Array.isArray(datos.destellos)
+      ?datos.destellos
+      :[]
+   };
+
+   return cacheRayos.destellos;
+  })();
+
+ peticionRayos={
+  clave,
+  promesa
+ };
+
+ try{
+  return await promesa;
+ }finally{
+  if(
+   peticionRayos&&
+   peticionRayos.clave===clave
+  ){
+   peticionRayos=null;
+  }
+ }
 }
 
 async function mostrarRayos(
@@ -3003,10 +3266,14 @@ async function mostrarRayos(
   return false;
  }
 
- const clave=
-  paso?.capas?.rayos||null;
+ const instante=
+  Date.parse(
+   paso?.instante
+  );
 
- if(!clave){
+ if(
+  Number.isNaN(instante)
+ ){
   ocultarRayos();
 
   claveRayosActual=
@@ -3015,9 +3282,45 @@ async function mostrarRayos(
   return false;
  }
 
+ let destellos;
+
+ try{
+  destellos=
+   await obtenerDestellos();
+ }catch(error){
+  console.error(
+   "No se han podido cargar los rayos:",
+   error
+  );
+
+  return false;
+ }
+
  if(
-  clave===
-  claveRayosActual&&
+  secuencia!==
+  secuenciaVisualizacion
+ ){
+  return false;
+ }
+
+ const fin=
+  instante/1000;
+
+ const inicio=
+  fin-RAYOS_MINUTOS*60;
+
+ const visibles=
+  destellos.filter(
+   ([segundos])=>
+    segundos>inicio&&
+    segundos<=fin
+  );
+
+ const clave=
+  `${ambitoActivo}|${paso.instante}|${visibles.length}|${cacheRayos?.cargado||0}`;
+
+ if(
+  clave===claveRayosActual&&
   capaRayosActual
  ){
   if(
@@ -3031,38 +3334,70 @@ async function mostrarRayos(
     );
   }
 
+  ponerAtribucionRayos(
+   true
+  );
+
   return true;
  }
 
- const nuevaCapa=
-  await crearOverlayRecurso(
-   clave,
-   {
-    pane:"rayosPane",
-    opacity:1,
-    secuencia
-   }
-  );
-
- if(
-  !nuevaCapa||
-  secuencia!==
-  secuenciaVisualizacion
- ){
-  return false;
+ if(!rendererRayos){
+  rendererRayos=
+   L.canvas(
+    {
+     pane:"rayosPane",
+     padding:0.2
+    }
+   );
  }
+
+ /*
+  * Del más antiguo al más reciente: los recientes quedan encima.
+  */
+ const nuevaCapa=
+  L.layerGroup(
+   visibles.map(
+    ([segundos,latitud,longitud])=>
+     L.circleMarker(
+      [latitud,longitud],
+      {
+       renderer:rendererRayos,
+       pane:"rayosPane",
+       radius:3.2,
+       color:"#1a1a1a",
+       weight:0.7,
+       fillColor:colorRayo(
+        (fin-segundos)/60
+       ),
+       fillOpacity:0.95,
+       interactive:false
+      }
+     )
+   )
+  );
 
  const anterior=
   capaRayosActual;
 
  capaRayosActual=
-  nuevaCapa;
+  nuevaCapa.addTo(
+   mapa
+  );
 
  claveRayosActual=
   clave;
 
- quitarCapa(
-  anterior
+ if(
+  anterior&&
+  anterior!==capaRayosActual
+ ){
+  quitarCapa(
+   anterior
+  );
+ }
+
+ ponerAtribucionRayos(
+  true
  );
 
  return true;
@@ -3441,14 +3776,10 @@ function clavesActivasPaso(
   );
  }
 
- if(
-  rayosActivo&&
-  paso?.capas?.rayos
- ){
-  claves.push(
-   paso.capas.rayos
-  );
- }
+ /*
+  * Los rayos ya no son imagen (puntos del Meteosat desde el
+  * 19-11-2026): no se precargan aquí.
+  */
 
  return[
   ...new Set(
