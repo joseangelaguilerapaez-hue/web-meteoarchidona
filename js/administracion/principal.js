@@ -973,7 +973,7 @@ async function cargarModuloDashboards(){
 
     if(promesaModuloDashboards === null){
         promesaModuloDashboards = import(
-            "./dashboards.js?v=20261120-destacada1"
+            "./dashboards.js?v=20261121-nombre1"
         );
     }
 

@@ -30,7 +30,7 @@
  * El texto de la API nunca se mete como HTML.
  */
 
-import {pintarDashboard} from "./pintor.js?v=20261120-destacada1";
+import {pintarDashboard} from "./pintor.js?v=20261121-nombre1";
 import {componenteOculto} from "../lanzamientos.js?v=20261115-lanzamientos1";
 
 

@@ -28,6 +28,11 @@
  *
  * Al cambiar de emisión se quita el visor anterior (deja de gastar datos).
  * Botón de pantalla completa en la cabecera. Sin id: se puede repetir.
+ *
+ * Cabecera: «Emisión destacada · <nombre>», con el nombre corto nuestro
+ * (José, 21-11-2026): «Torremolinos», «Los Llanos · Panorámica»,
+ * «Sierra Nevada · Veleta», «Timelapse · Amanecer Jibalto». Igual sin
+ * maximizar y en pantalla completa; si no cabe, puntos suspensivos.
  */
 
 import {asegurarHoja, asegurarScript} from "./comun.js?v=20261104-componentes1";
@@ -35,7 +40,7 @@ import {ZONAS_CAMARAS} from "./catalogo-camaras.js?v=20261120-destacada1";
 import {prepararPantallaCompleta} from "./pantalla-completa.js?v=20261118-pantalla1";
 
 
-const HOJA = "/css/emision-destacada.css?v=20261120-destacada1";
+const HOJA = "/css/emision-destacada.css?v=20261121-nombre1";
 const SCRIPT_API = "/js/api.js?v=20261003-vps1";
 
 const CONSULTA_MS = 60 * 1000;
@@ -88,7 +93,13 @@ function catalogoDirectos() {
             for (const zona of Object.values(ZONAS_CAMARAS)) {
                 for (const camara of zona.camaras || []) {
                     if (camara.clave) {
-                        directos.set(camara.clave, camara);
+                        const corto = camara.nombreCorto || camara.nombre;
+                        directos.set(camara.clave, {
+                            ...camara,
+                            nombreDestacado: camara.clave.startsWith("sierra-nevada")
+                                ? `Sierra Nevada · ${corto}`
+                                : corto,
+                        });
                     }
                 }
             }
@@ -100,6 +111,7 @@ function catalogoDirectos() {
                         directos.set(`camara-${camara.id}`, {
                             clave: `camara-${camara.id}`,
                             nombre: camara.nombre || "YouTube",
+                            nombreDestacado: camara.nombre || "",
                             medio: "youtube",
                             url: camara.url,
                         });
@@ -260,7 +272,9 @@ export async function montarEmisionDestacada(raiz) {
     raiz.setAttribute("aria-label", "Emisión destacada ahora");
 
     const cabecera = crear("div", "ed-cabecera");
-    const titulo = crear("h2", "ed-titulo", "Emisión destacada ahora");
+    const titulo = crear("h2", "ed-titulo", "Emisión destacada");
+    const nombre = crear("span", "ed-nombre");
+    titulo.append(nombre);
     const ampliar = crear("button", "ed-boton", "⛶");
     ampliar.type = "button";
     cabecera.append(titulo, ampliar);
@@ -318,10 +332,14 @@ export async function montarEmisionDestacada(raiz) {
 
         let firma;
         let montar;
+        let textoNombre = "";
 
         if (emision?.tipo === "TIMELAPSE" && emision.timelapse?.videos?.length) {
             const videos = emision.timelapse.videos;
             firma = `T:${videos.map(video => video.url).join("|")}`;
+            // «Amanecer Jibalto · 20 de noviembre de 2026» → «Amanecer Jibalto».
+            const producto = String(videos[0].titulo || "").split(" · ")[0].trim();
+            textoNombre = producto ? `Timelapse · ${producto}` : "Timelapse";
             montar = () => {
                 capas.directo.hidden = true;
                 capas.timelapse.hidden = false;
@@ -333,6 +351,7 @@ export async function montarEmisionDestacada(raiz) {
             const camara = directos.get(clave) || directos.get(CLAVE_RESERVA);
             if (!camara) return;
             firma = `D:${camara.clave}`;
+            textoNombre = camara.nombreDestacado || camara.nombre || "";
             montar = () => {
                 capas.timelapse.hidden = true;
                 capas.directo.hidden = false;
@@ -345,6 +364,8 @@ export async function montarEmisionDestacada(raiz) {
         desmontar?.();
         marcarCaida(false);
         firmaActual = firma;
+        nombre.textContent = textoNombre ? ` · ${textoNombre}` : "";
+        titulo.title = `Emisión destacada${nombre.textContent}`;
         desmontar = montar();
         cargando.hidden = true;
         raiz.dataset.emision = firma.startsWith("T:") ? "timelapse" : "directo";

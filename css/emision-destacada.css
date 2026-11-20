@@ -44,7 +44,15 @@
 
 
 .ed-titulo {
+    flex: 1 1 auto;
+    min-width: 0;
+
     margin: 0;
+
+    /* Una sola línea: si no cabe el nombre, puntos suspensivos. */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
     color: #f6f8fb;
     font-size: clamp(14px, 2.7vw, 18px);

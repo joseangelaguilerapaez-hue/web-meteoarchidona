@@ -28,7 +28,7 @@ import {
     peticionJson
 } from "./api.js?v=20261026-cache1";
 
-import {abrirEditor} from "../dashboards/editor.js?v=20261120-destacada1";
+import {abrirEditor} from "../dashboards/editor.js?v=20261121-nombre1";
 
 
 const RUTA = "/admin/dashboards";
