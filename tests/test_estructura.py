@@ -54,6 +54,10 @@ FUERA_DEL_MENU = {"mi-cuenta", "mi-web"}
 # Observaciones no lleva pie: su mapa ocupa la pantalla entera.
 SIN_PIE = {"observaciones"}
 
+# La Sala de cámaras (José, 20-11-2026) ocupa la pantalla entera sin la
+# cabecera ni el pie de la web, y sin lluvia animada encima de los vídeos.
+SIN_CABECERA = {"sala-camaras"}
+
 # Actualidad tiene su propio motor y hoja de lluvia.
 CON_LLUVIA_PROPIA = {"actualidad"}
 
@@ -145,19 +149,23 @@ class TestPaginas(unittest.TestCase):
         for pagina in PAGINAS:
             texto = sin_comentarios(pagina)
             with self.subTest(pagina=nombre(pagina)):
-                posiciones = {hoja: texto.find(f"css/{hoja}.css") for hoja in ("fuentes", "paleta", "cabecera")}
+                hojas = ("fuentes", "paleta") if nombre(pagina) in SIN_CABECERA else ("fuentes", "paleta", "cabecera")
+                posiciones = {hoja: texto.find(f"css/{hoja}.css") for hoja in hojas}
                 faltan = [hoja for hoja, posicion in posiciones.items() if posicion == -1]
                 self.assertEqual(faltan, [], f"a {nombre(pagina)} le falta enlazar: {faltan}")
                 orden = sorted(posiciones, key=posiciones.get)
-                self.assertEqual(orden, ["fuentes", "paleta", "cabecera"],
+                self.assertEqual(orden, list(hojas),
                                  "fuentes.css, paleta.css y cabecera.css tienen que ir en ese orden")
 
     def test_cabecera_y_seccion_marcada(self):
         for pagina in PAGINAS:
             texto = sin_comentarios(pagina)
             with self.subTest(pagina=nombre(pagina)):
-                self.assertTrue('id="cabecera"' in texto, 'falta <div id="cabecera">')
-                self.assertTrue("js/cabecera.js" in texto, "falta js/cabecera.js")
+                if nombre(pagina) in SIN_CABECERA:
+                    self.assertFalse('id="cabecera"' in texto, f"{nombre(pagina)} no debe llevar cabecera")
+                else:
+                    self.assertTrue('id="cabecera"' in texto, 'falta <div id="cabecera">')
+                    self.assertTrue("js/cabecera.js" in texto, "falta js/cabecera.js")
                 self.assertTrue(f'<body data-seccion="{nombre(pagina)}"' in texto,
                                 f'falta <body data-seccion="{nombre(pagina)}">')
 
@@ -165,7 +173,7 @@ class TestPaginas(unittest.TestCase):
         for pagina in PAGINAS:
             texto = sin_comentarios(pagina)
             with self.subTest(pagina=nombre(pagina)):
-                if nombre(pagina) in SIN_PIE:
+                if nombre(pagina) in SIN_PIE | SIN_CABECERA:
                     self.assertFalse('id="pie"' in texto, f"{nombre(pagina)} no debe llevar pie")
                 else:
                     self.assertTrue('id="pie"' in texto, 'falta <div id="pie">')
@@ -175,6 +183,9 @@ class TestPaginas(unittest.TestCase):
         for pagina in PAGINAS:
             texto = sin_comentarios(pagina)
             with self.subTest(pagina=nombre(pagina)):
+                if nombre(pagina) in SIN_CABECERA:
+                    self.assertFalse("js/lluvia.js" in texto, f"{nombre(pagina)} no lleva lluvia")
+                    continue
                 self.assertTrue("js/lluvia.js" in texto, "falta js/lluvia.js")
                 if nombre(pagina) in CON_LLUVIA_PROPIA:
                     self.assertLess(texto.find("js/actualidad.js"), texto.find("js/lluvia.js"),
@@ -466,7 +477,7 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         self.assertIn("'fullscreenchange'", codigo)
         self.assertIn("'webkitfullscreenchange'", codigo)
         self.assertIn(
-            "youtube.js?v=20261120-arranque3",
+            "youtube.js?v=20261120-sala1",
             leer(RAIZ / "visores" / "youtube.html"),
         )
 
@@ -1564,9 +1575,11 @@ class TestCamarasEnVivoUnaCamara(unittest.TestCase):
 
     def test_lee_la_camara_y_las_propias_llevan_su_id(self):
         codigo = leer(RAIZ / "js" / "componentes" / "camaras-en-vivo.js")
+        # La lista de cámaras está en el catálogo compartido con la Sala de cámaras (20-11-2026).
+        catalogo = leer(RAIZ / "js" / "componentes" / "catalogo-camaras.js")
         self.assertIn("raiz.dataset.camara", codigo)
-        self.assertIn("idCamara:\n                    1,", codigo)
-        self.assertIn("idCamara:\n                    2,", codigo)
+        self.assertIn("idCamara:\n                    1,", catalogo)
+        self.assertIn("idCamara:\n                    2,", catalogo)
         self.assertIn('classList.add("camaras-en-vivo--una")', codigo)
 
     def test_la_hoja_quita_el_selector_con_una_camara(self):
@@ -1646,6 +1659,8 @@ class TestLluviaEnTodasLasPaginas(unittest.TestCase):
 
     def test_las_paginas_cargan_la_version_nueva(self):
         for pagina in (RAIZ / "pages").glob("*.html"):
+            if nombre(pagina) in SIN_CABECERA:
+                continue
             texto = leer(pagina)
             self.assertIn("js/lluvia.js?v=20261117-lluvia1", texto, pagina.name)
             self.assertIn("css/cabecera.css?v=20261117-lluvia1", texto, pagina.name)
@@ -1771,6 +1786,50 @@ class TestVistazoGeneral(unittest.TestCase):
                 self.assertNotIn("tabla-estaciones.html", html)
                 self.assertIn(clave, leer(principal))
         self.assertNotIn('data-componente="comparacion-visual"', sin_comentarios(RAIZ / "pages" / "observaciones.html"))
+
+
+class TestSalaCamaras(unittest.TestCase):
+    """Sala de cámaras (José, 20-11-2026): todos los directos a la vez."""
+
+    def test_misma_lista_que_en_vivo(self):
+        catalogo = leer(RAIZ / "js" / "componentes" / "catalogo-camaras.js")
+        self.assertIn("export const ZONAS_CAMARAS", catalogo)
+        self.assertEqual(catalogo.count("nombreCorto:"), 9)
+        self.assertIn(
+            'import {ZONAS_CAMARAS as zonas} from "./catalogo-camaras.js?v=20261120-sala1";',
+            leer(RAIZ / "js" / "componentes" / "camaras-en-vivo.js"),
+        )
+        sala = leer(RAIZ / "js" / "sala-camaras.js")
+        self.assertIn('from "./componentes/catalogo-camaras.js?v=20261120-sala1"', sala)
+        self.assertIn('"/api/camaras/youtube"', sala)
+
+    def test_pagina_sin_cabecera_y_con_salida(self):
+        pagina = sin_comentarios(RAIZ / "pages" / "sala-camaras.html")
+        self.assertIn('<h1 class="sala-titulo">Sala de cámaras</h1>', pagina)
+        self.assertIn('href="/en-vivo"', pagina)
+        self.assertRegex(pagina, r'type="module" src="\.\./js/sala-camaras\.js\?v=[\w-]+"')
+        self.assertIn('"Escape"', leer(RAIZ / "js" / "sala-camaras.js"))
+
+    def test_rejilla_columnas_y_recorte(self):
+        css = sin_comentarios(RAIZ / "css" / "sala-camaras.css")
+        self.assertIn("--columnas: 6;", css)
+        self.assertRegex(css, r"@media \(orientation: portrait\) and \(max-width: 900px\)\s*\{\s*\.sala \{\s*--columnas: 3;")
+        self.assertIn("width: max(100cqw, calc(100cqh * 16 / 9));", css)
+
+    def test_pantalla_completa_al_tocar_y_sin_emision(self):
+        codigo = leer(RAIZ / "js" / "sala-camaras.js")
+        self.assertIn("celda.requestFullscreen()", codigo)
+        self.assertIn("ampliada-ventana", codigo)
+        self.assertIn("const REINTENTO_MS = 5 * 60 * 1000;", codigo)
+        visor = leer(RAIZ / "visores" / "youtube.js")
+        self.assertIn("origen: 'meteoarchidona-visor-youtube'", visor)
+        self.assertIn("avisarContenedor('sin-emision')", visor)
+
+    def test_nginx_y_lanzamientos(self):
+        self.assertIn('modulo.SECCION = "sala-camaras"',
+                      leer(RAIZ / "scripts" / "configurar_seccion_sala_camaras.py"))
+        self.assertIn('const SECCION = "sala-camaras";', leer(RAIZ / "js" / "sala-camaras.js"))
+
 
 if __name__ == "__main__":
     unittest.main()

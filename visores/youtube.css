@@ -172,6 +172,24 @@ body {
     transition: opacity .5s ease;
 }
 
+/*
+ * Visor muy pequeño (Sala de cámaras, 20-11-2026): el recuadro recorta
+ * los bordes del visor, así que el aviso va en dos líneas en el centro.
+ */
+@media (max-width: 320px) {
+    .visor-youtube-conectando {
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+        font-size: .6rem;
+        text-align: center;
+    }
+
+    .visor-youtube-conectando-texto {
+        max-width: 52vw;
+    }
+}
+
 .visor-youtube-conectando-fuera {
     opacity: 0;
 }

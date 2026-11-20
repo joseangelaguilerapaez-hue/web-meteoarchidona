@@ -45,6 +45,7 @@ SECCIONES = (
     "observaciones",
     "prediccion",
     "en-vivo",
+    "sala-camaras",
     "administracion",
     "informacion",
     "estadisticas",
