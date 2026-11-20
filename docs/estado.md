@@ -1,6 +1,6 @@
 # Estado del proyecto — web-meteoarchidona
 
-Última actualización: 2026-11-18.
+Última actualización: 2026-11-20.
 Origen: reconstruido a partir del historial de Git, ramas y pull requests. Lo marcado
 **(por confirmar)** necesita que José lo ratifique o corrija.
 
@@ -25,6 +25,8 @@ comprobado en meteoarchidona.com.
 
 ## Hecho (en `main`)
 
+- Rayos del Meteosat como puntos en el visor de seguimiento (PR #202, `7fc4455`, en el VPS el 20-11-2026; API PR #226): sustituyen a las manchas de EUMETView, color por antigüedad (blanco < 5 min, amarillo < 15, naranja < 30, rojo < 60), la hora anterior a cada paso, escala en la leyenda y cita a EUMETSAT. Comprobado por José con una línea de tormenta en el golfo de Vizcaya. La API dejó de capturar las manchas el mismo día (API PR #227).
+- Administración → Procesos: la ficha de un proceso en marcha se pone al día sola (PR #203, `3074766`, en el VPS el 20-11-2026).
 - Tabla de estaciones («Vistazo general») también en Actualidad (José, 18-11-2026; PR #196 y #197, **en el VPS** el 18 nov, `d55b376`): en el PC a la derecha encima de las fichas y en el móvil debajo de «Condiciones actuales»; el iframe del componente ajusta su alto al contenido (sin hueco con la leyenda plegada), también en Seguimiento. Comprobado por José en el móvil y en modo PC.
 - Sección Costas (PR #193, `aa50194`, **en el VPS** el 18 nov; API PR #214): página `/costas` con la gama «Mar y arena» y cinco componentes (`costas-resumen`, `costas-mapa`, `costas-playa`, `costas-mareas`, `costas-boya`), menú detrás de El Olivar, `/costas` en `.htaccess`, `sitemap.xml` (con el visto bueno de José) y Nginx. Oculta hasta su lanzamiento (16-12-2026). Vista por José en la web **por confirmar**.
 - Franja de avisos como componente de los dashboards (`avisos-franja`; web PR #186, `938ea6a`; API #204, catálogo; **publicado** el 17 nov): la franja de la portada en su recuadro, respeta los cerrados con la X, «Sin avisos ahora mismo.» si no hay, refresco cada 10 minutos.
@@ -240,3 +242,4 @@ comprobado en meteoarchidona.com.
 - 2026-11-18 · Sección Costas en el VPS (`aa50194`; API `2d03a3c`, migración 0070 aplicada), oculta hasta el 16-12-2026.
 - 2026-11-18 · Tabla de estaciones en Actualidad y alto automático del iframe (también en Seguimiento) en el VPS (`d55b376`, PR #196 y #197); comprobado por José.
 - 2026-11-18 · Vistazo general con selector Tabla | Gráfico (Comparación visual) y pantalla completa en el VPS (`2327143`, PR #199 y #200; API `dc8b130`, PR #216); comprobado por José.
+- 2026-11-20 · Rayos del Meteosat como puntos en el visor (`7fc4455`, PR #202) y ficha de Procesos que se refresca sola (`3074766`, PR #203), los dos en el VPS.
