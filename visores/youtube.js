@@ -347,13 +347,21 @@
      * retrasa su aparición. TOPE_MS garantiza que nunca se quede
      * en negro si el aviso no llega.
      *
+     * Ajuste del 20 nov 2026 (José, medido en su móvil): con 3 s
+     * los controles aún asomaban un segundo. Ahora se espera lo
+     * que llegue más tarde: MINIMO_MS desde que se abre el visor
+     * (7 s fijos, lo que pidió José) o ESPERA_CONTROLES_MS desde
+     * que YouTube avisa de que reproduce (para conexiones lentas).
+     *
      * El aviso llega por postMessage (enablejsapi=1), sin cargar
      * el script de la API de YouTube.
      */
 
     const ORIGEN_YOUTUBE = 'https://www.youtube-nocookie.com';
-    const ESPERA_CONTROLES_MS = 3000;
-    const TOPE_MS = 10000;
+    const MINIMO_MS = 7000;
+    const ESPERA_CONTROLES_MS = 4500;
+    const TOPE_MS = 12000;
+    const inicio = Date.now();
     const REPRODUCIENDO = 1;
 
     const reproductor = document.createElement(
@@ -455,7 +463,11 @@
         }
 
         if (estado === REPRODUCIENDO && !espera) {
-            espera = setTimeout(mostrar, ESPERA_CONTROLES_MS);
+            const hastaMinimo = MINIMO_MS - (Date.now() - inicio);
+            espera = setTimeout(
+                mostrar,
+                Math.max(ESPERA_CONTROLES_MS, hastaMinimo)
+            );
         }
     }
 

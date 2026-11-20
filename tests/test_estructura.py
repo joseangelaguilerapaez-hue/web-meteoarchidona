@@ -466,7 +466,7 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         self.assertIn("'fullscreenchange'", codigo)
         self.assertIn("'webkitfullscreenchange'", codigo)
         self.assertIn(
-            "youtube.js?v=20261120-arranque2",
+            "youtube.js?v=20261120-arranque3",
             leer(RAIZ / "visores" / "youtube.html"),
         )
 
@@ -479,6 +479,7 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         # con tope para no quedarse nunca en negro.
         self.assertIn("Conectando con el directo", codigo)
         self.assertIn("const TOPE_MS", codigo)
+        self.assertIn("const MINIMO_MS = 7000;", codigo)
         self.assertIn("evento.origin !== ORIGEN_YOUTUBE", codigo)
         self.assertIn(".visor-youtube-oculto", leer(RAIZ / "visores" / "youtube.css"))
         self.assertNotIn("boton.addEventListener('click'", codigo)
