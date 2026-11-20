@@ -605,7 +605,7 @@ button {
 .panel-superior-dinamico
 > .columna-resumen {
     grid-column: 1;
-    grid-row: 1 / span 2;
+    grid-row: 1 / span 3;
 }
 
 
@@ -616,17 +616,31 @@ button {
 }
 
 
+/* Emisión destacada ahora (José, 20-11-2026): debajo del Vistazo general. */
 .panel-superior-dinamico
-> .rejilla-estaciones {
+> .actualidad-emision-destacada {
     grid-column: 2;
     grid-row: 2;
 }
 
 
+.panel-superior-dinamico
+> .rejilla-estaciones {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+
 /* Hueco del Vistazo general: la tarjeta la pone el componente
    (css/vistazo-general.css; José, 18-11-2026). */
-.actualidad-tabla-estaciones {
+.actualidad-tabla-estaciones,
+.actualidad-emision-destacada {
     min-width: 0;
+}
+
+/* Que no se estire con la fila: su alto lo pone el vídeo (16:9). */
+.actualidad-emision-destacada {
+    align-self: start;
 }
 
 
@@ -636,6 +650,8 @@ button {
     > .columna-resumen,
     .panel-superior-dinamico
     > .actualidad-tabla-estaciones,
+    .panel-superior-dinamico
+    > .actualidad-emision-destacada,
     .panel-superior-dinamico
     > .rejilla-estaciones {
         grid-column: auto;

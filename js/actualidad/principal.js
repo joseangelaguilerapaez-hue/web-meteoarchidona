@@ -186,13 +186,18 @@ import {
     montarVistazoGeneral
 } from "../componentes/vistazo-general.js?v=20261118-pantalla1";
 
+import {
+    montarEmisionDestacada
+} from "../componentes/emision-destacada.js?v=20261120-destacada1";
+
 
 const COMPONENTES_ACTUALIDAD = {
     "condiciones-actuales": montarCondicionesActuales,
     "sol-luna": montarSolLuna,
     "prediccion-breve": montarPrediccionBreve,
     "accesos": montarAccesos,
-    "vistazo-general": montarVistazoGeneral
+    "vistazo-general": montarVistazoGeneral,
+    "emision-destacada": montarEmisionDestacada
 };
 
 
@@ -500,7 +505,7 @@ async function arrancarActualidad() {
         );
 
         try {
-            const modulo = await import("/js/dashboards/actualidad.js?v=20261117-camara1");
+            const modulo = await import("/js/dashboards/actualidad.js?v=20261120-destacada1");
             await modulo.arrancarActualidadDashboard(document.getElementById("actual"));
         } catch (error) {
             console.error("Actualidad: no se ha podido montar el dashboard.", error);

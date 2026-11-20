@@ -29,7 +29,7 @@
  */
 
 import {asegurarHoja} from "./comun.js?v=20261104-componentes1";
-import {ZONAS_CAMARAS as zonas} from "./catalogo-camaras.js?v=20261120-sala1";
+import {ZONAS_CAMARAS as zonas} from "./catalogo-camaras.js?v=20261120-destacada1";
 
 
 const MARCADO = `

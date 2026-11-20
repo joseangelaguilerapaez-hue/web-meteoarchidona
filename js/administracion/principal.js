@@ -913,6 +913,50 @@ async function cargarModuloSequia(){
 
 
 /* ==========================================================
+   EMISIÓN DESTACADA
+   Qué sale en el componente «Emisión destacada ahora» (José,
+   20-11-2026; docs/emision-destacada.md de la API).
+   emision-destacada.js solo se importa si existe
+   modulo-emision-destacada.
+   ========================================================== */
+
+let promesaModuloEmisionDestacada = null;
+
+async function cargarModuloEmisionDestacada(){
+
+    if(!$("modulo-emision-destacada")){
+        return;
+    }
+
+    if(promesaModuloEmisionDestacada === null){
+        promesaModuloEmisionDestacada = import(
+            "./emision-destacada.js?v=20261120-destacada1"
+        );
+    }
+
+    try{
+        const modulo = await promesaModuloEmisionDestacada;
+        modulo.configurarEventosEmisionDestacada();
+        await modulo.cargarEmisionDestacada();
+    }catch(error){
+        promesaModuloEmisionDestacada = null;
+        console.error(
+            "No se ha podido cargar la emisión destacada.",
+            error
+        );
+        mostrarEstado(
+            $("estadoEmisionDestacada"),
+            error.message
+            ||
+            "No se ha podido cargar la emisión destacada.",
+            "error"
+        );
+    }
+
+}
+
+
+/* ==========================================================
    DASHBOARDS
    Los de MeteoArchidona con el editor común (José, 17-11-2026;
    docs/dashboards.md de la API). dashboards.js solo se importa si
@@ -929,7 +973,7 @@ async function cargarModuloDashboards(){
 
     if(promesaModuloDashboards === null){
         promesaModuloDashboards = import(
-            "./dashboards.js?v=20261117-editor2"
+            "./dashboards.js?v=20261120-destacada1"
         );
     }
 
@@ -1321,6 +1365,8 @@ export async function cargarDatosAdministracion(){
         await cargarModuloAlertas();
 
         await cargarModuloSequia();
+
+        await cargarModuloEmisionDestacada();
 
         mostrarEstado(
             $("estadoPanel"),

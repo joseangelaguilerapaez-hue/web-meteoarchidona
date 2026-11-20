@@ -41,7 +41,7 @@
 <script src="../js/api.js?v=20261003-vps1" defer></script>
 <script
     type="module"
-    src="../js/administracion/principal.js?v=20261120-zonas4"
+    src="../js/administracion/principal.js?v=20261120-destacada1"
 ></script>
 
 <script
@@ -438,6 +438,14 @@
     data-modulo="sequia"
 >
     Sequía
+</a>
+
+<a
+    href="#emision-destacada"
+    class="modulo-boton"
+    data-modulo="emision-destacada"
+>
+    Emisión destacada
 </a>
 
 <a
@@ -4425,6 +4433,202 @@
     id="tablaSequia"
     class="tabla-contenedor"
 ></div>
+
+</div>
+</section>
+
+</section>
+
+
+<!-- =========================================================
+     EMISIÓN DESTACADA
+     Qué sale en el componente «Emisión destacada ahora» de Actualidad
+     y de los dashboards (js/administracion/emision-destacada.js).
+     Decisiones de José del 20-11-2026: docs/emision-destacada.md de
+     api-meteoarchidona.
+     ========================================================= -->
+
+<section
+    id="modulo-emision-destacada"
+    class="modulo"
+>
+
+<section class="panel">
+
+<div class="panel-cabecera">
+
+<h2 class="panel-titulo">
+    Emisión destacada ahora
+</h2>
+
+<div class="acciones">
+
+<button
+    id="botonQuitarManual"
+    type="button"
+    class="boton boton-secundario"
+    hidden
+>
+    Quitar la manual
+</button>
+
+<button
+    id="botonRecargarEd"
+    type="button"
+    class="boton boton-secundario"
+>
+    Actualizar
+</button>
+
+</div>
+</div>
+
+<div class="panel-cuerpo">
+
+<div
+    id="estadoEmisionDestacada"
+    class="estado"
+    role="status"
+    aria-live="polite"
+></div>
+
+<p class="modulo-intro">
+    Manda la <strong>manual</strong> (solo una activa: al activar otra se
+    apaga la anterior). Si no hay, la <strong>franja</strong> en curso, en
+    hora de Madrid; si se pisan dos, la que empezó más tarde. Si no hay
+    ninguna, la de <strong>por defecto</strong>. Un timelapse sin vídeo
+    (purgado) deja paso a la de por defecto. La web lo mira cada minuto.
+</p>
+
+<p id="actualEmisionDestacada" class="modulo-intro"></p>
+
+<div
+    id="listaEmisionDestacada"
+    class="tabla-contenedor"
+></div>
+
+<form id="formularioEmisionDestacada">
+
+<h3 id="tituloFormularioEd" class="panel-titulo">
+    Nueva emisión
+</h3>
+
+<div class="formulario-grid">
+
+<div class="campo">
+<label for="edUso">Uso</label>
+<select id="edUso"></select>
+</div>
+
+<div class="campo">
+<label for="edTipo">Qué se emite</label>
+<select id="edTipo">
+    <option value="DIRECTO">Directo</option>
+    <option value="TIMELAPSE">Timelapse</option>
+</select>
+</div>
+
+<div id="grupoEdDirecto" class="campo campo-ancho">
+<label for="edDirecto">Directo</label>
+<select id="edDirecto"></select>
+<div class="campo-ayuda">Los mismos de En vivo: cámaras propias, Sierra Nevada y YouTube.</div>
+</div>
+
+<div id="grupoEdTimelapse" class="campo campo-ancho" hidden>
+
+<div class="formulario-grid">
+
+<div class="campo">
+<label for="edCamara">Cámara</label>
+<select id="edCamara"></select>
+</div>
+
+<div class="campo">
+<label for="edProducto">Producto</label>
+<select id="edProducto"></select>
+</div>
+
+<div class="campo">
+<label for="edModo">Cuáles</label>
+<select id="edModo">
+    <option value="ULTIMO">El último</option>
+    <option value="DIA">Un día concreto</option>
+    <option value="TODOS">Todos, uno detrás de otro</option>
+</select>
+</div>
+
+<div id="grupoEdDia" class="campo" hidden>
+<label for="edDia">Día</label>
+<select id="edDia"></select>
+</div>
+
+<div id="grupoEdOrden" class="campo" hidden>
+<label for="edOrden">Orden</label>
+<select id="edOrden">
+    <option value="DESC">Descendente (del más reciente al más antiguo)</option>
+    <option value="ASC">Ascendente (del más antiguo al más reciente)</option>
+</select>
+</div>
+
+</div>
+
+</div>
+
+<div id="grupoEdFranja" class="campo campo-ancho" hidden>
+
+<div class="formulario-grid">
+
+<div class="campo">
+<label for="edInicio">Desde (hora de Madrid)</label>
+<input id="edInicio" type="time">
+</div>
+
+<div class="campo">
+<label for="edFin">Hasta</label>
+<input id="edFin" type="time">
+<div class="campo-ayuda">Si es antes que «Desde», acaba al día siguiente.</div>
+</div>
+
+<div class="campo">
+<label for="edRepetir">
+<input id="edRepetir" type="checkbox">
+    Repetir cada día
+</label>
+</div>
+
+<div id="grupoEdFecha" class="campo">
+<label for="edFecha">Día</label>
+<input id="edFecha" type="date">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="acciones">
+
+<button
+    id="botonGuardarEd"
+    type="submit"
+    class="boton"
+>
+    Guardar
+</button>
+
+<button
+    id="botonCancelarEd"
+    type="button"
+    class="boton boton-secundario"
+    hidden
+>
+    Cancelar
+</button>
+
+</div>
+
+</form>
 
 </div>
 </section>

@@ -315,8 +315,8 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
     def test_las_paginas_cargan_los_principal_con_version_nueva(self):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
-            ("actualidad", r"actualidad/principal\.js\?v=20261118-pantalla1"),
-            ("administracion", r"administracion/principal\.js\?v=20261120-zonas4"),
+            ("actualidad", r"actualidad/principal\.js\?v=20261120-destacada1"),
+            ("administracion", r"administracion/principal\.js\?v=20261120-destacada1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -1496,7 +1496,7 @@ class TestAlertasMeteorologicas(unittest.TestCase):
         self.assertIn('getElementById("portada-avisos")', leer(RAIZ / "js" / "novedades.js"))
         # Si cambia principal.js, la página tiene que pedir la versión nueva
         # (16-11-2026: el móvil se quedó con la vieja y no salía la tira).
-        self.assertIn("js/actualidad/principal.js?v=20261118-pantalla1", pagina)
+        self.assertIn("js/actualidad/principal.js?v=20261120-destacada1", pagina)
         # La tira resume también los avisos de la franja (16-11-2026).
         self.assertIn("portada:avisos", codigo)
         self.assertIn("portada:avisos", leer(RAIZ / "js" / "novedades.js"))
@@ -1587,10 +1587,10 @@ class TestCamarasEnVivoUnaCamara(unittest.TestCase):
         self.assertIn(".camaras-en-vivo--una .selector-panel", hoja)
 
     def test_versiones_nuevas_hasta_las_paginas(self):
-        self.assertIn("camaras-en-vivo.js?v=20261117-camara1", leer(RAIZ / "js" / "dashboards" / "pintor.js"))
-        self.assertIn("camaras-en-vivo.js?v=20261117-camara1", leer(RAIZ / "js" / "en-vivo.js"))
-        self.assertIn("pintor.js?v=20261117-camara1", leer(RAIZ / "js" / "dashboards" / "actualidad.js"))
-        self.assertIn("en-vivo.js?v=20261117-camara1", leer(RAIZ / "pages" / "en-vivo.html"))
+        self.assertIn("camaras-en-vivo.js?v=20261120-destacada1", leer(RAIZ / "js" / "dashboards" / "pintor.js"))
+        self.assertIn("camaras-en-vivo.js?v=20261120-destacada1", leer(RAIZ / "js" / "en-vivo.js"))
+        self.assertIn("pintor.js?v=20261120-destacada1", leer(RAIZ / "js" / "dashboards" / "actualidad.js"))
+        self.assertIn("en-vivo.js?v=20261120-destacada1", leer(RAIZ / "pages" / "en-vivo.html"))
 
 
 class TestEditorDashboards(unittest.TestCase):
@@ -1603,18 +1603,18 @@ class TestEditorDashboards(unittest.TestCase):
         self.assertIn('id="contenedorEditorDashboard"', pagina)
         self.assertIn("css/dashboards-editor.css?v=20261117-editor2", pagina)
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./dashboards.js?v=20261117-editor2", principal)
+        self.assertIn("./dashboards.js?v=20261120-destacada1", principal)
 
     def test_el_editor_usa_la_api_publica_y_el_pintor(self):
         editor = leer(RAIZ / "js" / "dashboards" / "editor.js")
         self.assertIn("/dashboards/componentes", editor)
         self.assertIn("/dashboards/valores/", editor)
-        self.assertIn('from "./pintor.js?v=20261117-camara1"', editor)
+        self.assertIn('from "./pintor.js?v=20261120-destacada1"', editor)
         self.assertIn("componenteOculto", editor)
         # El texto de la API nunca como HTML.
         self.assertNotIn("innerHTML", editor)
         modulo = leer(RAIZ / "js" / "administracion" / "dashboards.js")
-        self.assertIn("../dashboards/editor.js?v=20261117-editor2", modulo)
+        self.assertIn("../dashboards/editor.js?v=20261120-destacada1", modulo)
         self.assertNotIn("innerHTML", modulo)
 
 
@@ -1625,7 +1625,7 @@ class TestMiWeb(unittest.TestCase):
         pagina = leer(RAIZ / "pages" / "mi-web.html")
         for identificador in ("tituloMiWeb", "estadoMiWeb", "miWebSinSesion", "miWebContenido"):
             self.assertIn(f'id="{identificador}"', pagina)
-        self.assertIn("js/mi-web/pagina.js?v=20261117-miweb1", pagina)
+        self.assertIn("js/mi-web/pagina.js?v=20261120-destacada1", pagina)
         self.assertIn("css/mi-web.css?v=20261117-miweb1", pagina)
 
     def test_menu_desde_la_cabecera(self):
@@ -1642,8 +1642,8 @@ class TestMiWeb(unittest.TestCase):
 
     def test_la_pagina_usa_el_editor_y_el_pintor(self):
         codigo = leer(RAIZ / "js" / "mi-web" / "pagina.js")
-        self.assertIn("../dashboards/editor.js?v=20261117-editor2", codigo)
-        self.assertIn("../dashboards/pintor.js?v=20261117-camara1", codigo)
+        self.assertIn("../dashboards/editor.js?v=20261120-destacada1", codigo)
+        self.assertIn("../dashboards/pintor.js?v=20261120-destacada1", codigo)
         self.assertIn("(max-width: 850px)", codigo)
 
     def test_sin_html_desde_la_api(self):
@@ -1796,11 +1796,11 @@ class TestSalaCamaras(unittest.TestCase):
         self.assertIn("export const ZONAS_CAMARAS", catalogo)
         self.assertEqual(catalogo.count("nombreCorto:"), 9)
         self.assertIn(
-            'import {ZONAS_CAMARAS as zonas} from "./catalogo-camaras.js?v=20261120-sala1";',
+            'import {ZONAS_CAMARAS as zonas} from "./catalogo-camaras.js?v=20261120-destacada1";',
             leer(RAIZ / "js" / "componentes" / "camaras-en-vivo.js"),
         )
         sala = leer(RAIZ / "js" / "sala-camaras.js")
-        self.assertIn('from "./componentes/catalogo-camaras.js?v=20261120-sala1"', sala)
+        self.assertIn('from "./componentes/catalogo-camaras.js?v=20261120-destacada1"', sala)
         self.assertIn('"/api/camaras/youtube"', sala)
 
     def test_pagina_sin_cabecera_y_con_salida(self):
@@ -1830,6 +1830,45 @@ class TestSalaCamaras(unittest.TestCase):
                       leer(RAIZ / "scripts" / "configurar_seccion_sala_camaras.py"))
         self.assertIn('const SECCION = "sala-camaras";', leer(RAIZ / "js" / "sala-camaras.js"))
 
+
+
+class TestEmisionDestacada(unittest.TestCase):
+    """Emisión destacada ahora (José, 20-11-2026; docs/emision-destacada.md de la API)."""
+
+    def test_claves_del_catalogo_de_camaras(self):
+        catalogo = leer(RAIZ / "js" / "componentes" / "catalogo-camaras.js")
+        claves = re.findall(r'clave:\s*"([a-z0-9-]+)"', catalogo)
+        self.assertEqual(len(claves), len(set(claves)))
+        self.assertIn("camara-1", claves)
+        self.assertIn("sierra-nevada-veleta", claves)
+        self.assertEqual(len(claves), catalogo.count("nombreCorto:"))
+
+    def test_actualidad_la_monta_debajo_del_vistazo(self):
+        pagina = leer(RAIZ / "pages" / "actualidad.html")
+        vistazo = pagina.index('data-componente="vistazo-general"')
+        emision = pagina.index('data-componente="emision-destacada"')
+        self.assertLess(vistazo, emision)
+        principal = leer(RAIZ / "js" / "actualidad" / "principal.js")
+        self.assertIn('"emision-destacada": montarEmisionDestacada', principal)
+        css = leer(RAIZ / "css" / "actualidad.css")
+        self.assertIn("> .actualidad-emision-destacada {", css)
+
+    def test_dashboards_y_administracion(self):
+        pintor = leer(RAIZ / "js" / "dashboards" / "pintor.js")
+        self.assertIn('"emision-destacada": ["/js/componentes/emision-destacada.js?v=20261120-destacada1"', pintor)
+        pagina = leer(RAIZ / "pages" / "administracion.html")
+        self.assertIn('id="modulo-emision-destacada"', pagina)
+        self.assertIn('data-modulo="emision-destacada"', pagina)
+        principal = leer(RAIZ / "js" / "administracion" / "principal.js")
+        self.assertIn('"./emision-destacada.js?v=20261120-destacada1"', principal)
+
+    def test_componente(self):
+        codigo = leer(RAIZ / "js" / "componentes" / "emision-destacada.js")
+        self.assertIn('"/emision-destacada/actual"', codigo)
+        self.assertIn("const CONSULTA_MS = 60 * 1000;", codigo)
+        self.assertIn('const CLAVE_RESERVA = "camara-1";', codigo)
+        self.assertIn("video.muted = true;", codigo)
+        self.assertTrue((RAIZ / "css" / "emision-destacada.css").exists())
 
 if __name__ == "__main__":
     unittest.main()
