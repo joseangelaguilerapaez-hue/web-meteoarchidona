@@ -2,7 +2,8 @@
 /*
  * MeteoArchidona · Visor YouTube reutilizable
  * Solo afecta a visores/youtube.html.
- * La reproducción utiliza el reproductor oficial, sin superposiciones.
+ * La reproducción utiliza el reproductor oficial, sin superposiciones:
+ * el aviso «Conectando…» solo está mientras el reproductor sigue invisible.
  */
 
 * {
@@ -134,6 +135,63 @@ body {
     .visor-youtube-boton {
         padding: 8px 12px;
         font-size: .8rem;
+    }
+}
+
+/* =====================================================
+   ARRANQUE LIMPIO (20 nov 2026)
+   El reproductor arranca invisible sobre negro y aparece
+   con un fundido cuando YouTube ya ha ocultado sus controles.
+   ===================================================== */
+
+.visor-youtube-pantalla.visor-youtube-negro {
+    background: #000;
+}
+
+.visor-youtube-pantalla iframe {
+    transition: opacity .5s ease;
+}
+
+.visor-youtube-pantalla iframe.visor-youtube-oculto {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.visor-youtube-conectando {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px;
+    color: #d5e5ee;
+    font-size: clamp(.75rem, 2.2vw, .95rem);
+    letter-spacing: .02em;
+    pointer-events: none;
+    transition: opacity .5s ease;
+}
+
+.visor-youtube-conectando-fuera {
+    opacity: 0;
+}
+
+.visor-youtube-punto {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #e5262b;
+    animation: visor-youtube-latido 1.2s ease-in-out infinite;
+}
+
+@keyframes visor-youtube-latido {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .35; transform: scale(.75); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .visor-youtube-punto {
+        animation: none;
     }
 }
 

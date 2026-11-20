@@ -337,7 +337,24 @@
      * previo; el visitante activa el sonido con el altavoz del
      * propio reproductor. La portada queda solo para el caso de
      * URL incorrecta (más arriba).
+     *
+     * Arranque limpio (20 nov 2026, José): al empezar, YouTube
+     * enseña unos segundos su capa de controles. Para no verla,
+     * el reproductor se carga invisible sobre fondo negro con un
+     * «Conectando con el directo…» y aparece con un fundido
+     * ESPERA_CONTROLES_MS después de que YouTube avise de que ya
+     * reproduce. No se pone nada encima del reproductor: solo se
+     * retrasa su aparición. TOPE_MS garantiza que nunca se quede
+     * en negro si el aviso no llega.
+     *
+     * El aviso llega por postMessage (enablejsapi=1), sin cargar
+     * el script de la API de YouTube.
      */
+
+    const ORIGEN_YOUTUBE = 'https://www.youtube-nocookie.com';
+    const ESPERA_CONTROLES_MS = 3000;
+    const TOPE_MS = 10000;
+    const REPRODUCIENDO = 1;
 
     const reproductor = document.createElement(
         'iframe'
@@ -346,9 +363,12 @@
     reproductor.title =
         'Reproductor oficial de YouTube';
 
+    reproductor.className = 'visor-youtube-oculto';
+
     reproductor.src =
-        `https://www.youtube-nocookie.com/embed/${id}` +
-        '?autoplay=1&mute=1&playsinline=1';
+        `${ORIGEN_YOUTUBE}/embed/${id}` +
+        '?autoplay=1&mute=1&playsinline=1&enablejsapi=1' +
+        `&origin=${encodeURIComponent(window.location.origin)}`;
 
     reproductor.allow =
         'accelerometer; autoplay; encrypted-media; ' +
@@ -360,8 +380,115 @@
         'strict-origin-when-cross-origin';
 
 
-    // Incorporar primero el reproductor.
-    pantalla.appendChild(reproductor);
+    const conectando = document.createElement('div');
+
+    conectando.className = 'visor-youtube-conectando';
+    conectando.setAttribute('role', 'status');
+
+    const punto = document.createElement('span');
+    punto.className = 'visor-youtube-punto';
+    punto.setAttribute('aria-hidden', 'true');
+
+    conectando.append(punto, 'Conectando con el directo…');
+
+
+    let mostrado = false;
+    let escucha = null;
+    let espera = null;
+
+    function mostrar() {
+
+        if (mostrado) {
+            return;
+        }
+
+        mostrado = true;
+
+        clearInterval(escucha);
+        clearTimeout(espera);
+        clearTimeout(tope);
+        window.removeEventListener('message', alRecibir);
+
+        reproductor.classList.remove('visor-youtube-oculto');
+        conectando.classList.add('visor-youtube-conectando-fuera');
+        pantalla.classList.remove('visor-youtube-negro');
+
+        setTimeout(() => conectando.remove(), 600);
+    }
+
+    function alRecibir(evento) {
+
+        if (
+            evento.origin !== ORIGEN_YOUTUBE ||
+            evento.source !== reproductor.contentWindow
+        ) {
+            return;
+        }
+
+        let datos;
+
+        try {
+            datos = typeof evento.data === 'string'
+                ? JSON.parse(evento.data)
+                : evento.data;
+        } catch (error) {
+            return;
+        }
+
+        if (!datos || typeof datos !== 'object') {
+            return;
+        }
+
+        // YouTube ya escucha: no hace falta seguir llamándole.
+        clearInterval(escucha);
+
+        let estado = null;
+
+        if (datos.event === 'onStateChange') {
+            estado = datos.info;
+        } else if (
+            datos.event === 'infoDelivery' &&
+            datos.info &&
+            typeof datos.info.playerState === 'number'
+        ) {
+            estado = datos.info.playerState;
+        }
+
+        if (estado === REPRODUCIENDO && !espera) {
+            espera = setTimeout(mostrar, ESPERA_CONTROLES_MS);
+        }
+    }
+
+    window.addEventListener('message', alRecibir);
+
+    reproductor.addEventListener('load', () => {
+
+        const avisar = () => {
+            try {
+                reproductor.contentWindow?.postMessage(
+                    JSON.stringify({
+                        event: 'listening',
+                        id: 1,
+                        channel: 'widget'
+                    }),
+                    ORIGEN_YOUTUBE
+                );
+            } catch (error) {
+                // Sin aviso: lo resuelve el tope.
+            }
+        };
+
+        avisar();
+        escucha = setInterval(avisar, 250);
+    });
+
+    const tope = setTimeout(mostrar, TOPE_MS);
+
+
+    pantalla.classList.add('visor-youtube-negro');
+
+    // Incorporar primero el reproductor (invisible) y el aviso.
+    pantalla.append(reproductor, conectando);
 
     // Retirar después la portada corporativa.
     portada.remove();
