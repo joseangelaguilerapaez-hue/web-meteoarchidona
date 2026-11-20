@@ -466,7 +466,7 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         self.assertIn("'fullscreenchange'", codigo)
         self.assertIn("'webkitfullscreenchange'", codigo)
         self.assertIn(
-            "youtube.js?v=20261120-autoarranque1",
+            "youtube.js?v=20261120-arranque2",
             leer(RAIZ / "visores" / "youtube.html"),
         )
 
@@ -474,7 +474,13 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         """Decisión de José del 20-11-2026: el directo arranca solo, en silencio."""
 
         codigo = leer(RAIZ / "visores" / "youtube.js")
-        self.assertIn("?autoplay=1&mute=1&playsinline=1", codigo)
+        self.assertIn("?autoplay=1&mute=1&playsinline=1&enablejsapi=1", codigo)
+        # Arranque limpio: invisible hasta que YouTube oculta sus controles,
+        # con tope para no quedarse nunca en negro.
+        self.assertIn("Conectando con el directo", codigo)
+        self.assertIn("const TOPE_MS", codigo)
+        self.assertIn("evento.origin !== ORIGEN_YOUTUBE", codigo)
+        self.assertIn(".visor-youtube-oculto", leer(RAIZ / "visores" / "youtube.css"))
         self.assertNotIn("boton.addEventListener('click'", codigo)
         privacidad = sin_comentarios(RAIZ / "componentes" / "privacidad.html")
         self.assertNotIn("no se cargan hasta que pulsas", privacidad)
