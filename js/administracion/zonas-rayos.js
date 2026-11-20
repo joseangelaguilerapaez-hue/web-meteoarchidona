@@ -7,7 +7,7 @@
  * GET /admin/rayos/zonas
  * PUT /admin/rayos/zonas/{id}    {"nombre": "..."}
  *
- * Un cuadrado de 25 km centrado en El Silo, en 5 × 5 cuadros de 5 km.
+ * Un cuadrado de 25 km centrado en El Silo, en 7 × 7 cuadros de unos 3,6 km.
  * Cada cuadro muestra su nombre (o «Sin nombre») y cuántos rayos del
  * Meteosat han caído dentro; se pulsa para ponerle o cambiarle el nombre.
  * Fondo físico, satélite o político, como el visor de seguimiento.
@@ -213,7 +213,7 @@ function pintarRejilla(){
         html.className = "zr-etiqueta-texto";
         html.append(
             crear("strong", zona.nombre ? "" : "zr-sin-nombre", zona.nombre || "Sin nombre"),
-            crear("span", "", textoRayos(zona.rayos))
+            crear("span", "", String(zona.rayos || 0))
         );
 
         capaRejilla.addLayer(L.marker(
@@ -361,8 +361,9 @@ export async function montarZonasRayos(destino){
     const intro = crear(
         "p",
         "modulo-intro",
-        "Cuadrado de 25 km alrededor de El Silo en 25 cuadros de 5 km. " +
+        "Cuadrado de 25 km alrededor de El Silo en 49 cuadros de unos 3,6 km. " +
         "Cada cuadro muestra su nombre y cuántos rayos del Meteosat han caído dentro. " +
+        "El satélite sitúa cada rayo con un error de varios km: cerca de un borde puede contar en el cuadro vecino. " +
         "Pulsa un cuadro para ponerle nombre; déjalo vacío para quitárselo."
     );
 
