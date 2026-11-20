@@ -1,0 +1,208 @@
+/*
+ * MeteoArchidona · Componente «Emisión destacada ahora»
+ *
+ * js/componentes/emision-destacada.js (José, 20-11-2026): tarjeta con el
+ * título y el botón de pantalla completa, y debajo el vídeo en 16:9, sin
+ * texto encima. Mismo aspecto que el Vistazo general.
+ */
+
+
+.ed-componente {
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    min-width: 0;
+
+    overflow: hidden;
+
+    border: 1px solid #29435e;
+    border-radius: 12px;
+
+    background: #071019;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+
+    font-family: Arial, sans-serif;
+}
+
+
+.ed-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    min-height: 42px;
+    box-sizing: border-box;
+
+    padding: 6px 10px 6px 13px;
+
+    border-bottom: 1px solid #29435e;
+
+    background: #252b33;
+}
+
+
+.ed-titulo {
+    margin: 0;
+
+    color: #f6f8fb;
+    font-size: clamp(14px, 2.7vw, 18px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.025em;
+}
+
+
+.ed-boton {
+    flex: 0 0 auto;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    color: #e8f2f8;
+    font-size: 19px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    border: 1px solid #29435e;
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.ed-boton:hover,
+.ed-boton:focus-visible {
+    border-color: #36d5ff;
+    background: rgba(54, 213, 255, 0.18);
+    outline: none;
+}
+
+
+/* El vídeo, en 16:9 */
+
+.ed-pantalla {
+    position: relative;
+
+    aspect-ratio: 16 / 9;
+    width: 100%;
+
+    overflow: hidden;
+
+    background: #000;
+}
+
+
+.ed-capa {
+    position: absolute;
+    inset: 0;
+}
+
+.ed-capa[hidden] {
+    display: none;
+}
+
+
+.ed-medio {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+
+    background: #000;
+
+    /* Llena el recuadro recortando los bordes, como la Sala de cámaras… */
+    object-fit: cover;
+}
+
+/* …salvo la panorámica y los timelapses, que se ven enteros. */
+.ed-capa[data-ajuste="entero"] .ed-medio {
+    object-fit: contain;
+}
+
+
+.ed-cargando,
+.ed-caida {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    color: #c8d6e3;
+    font-size: 14px;
+    text-align: center;
+
+    background: #000;
+
+    pointer-events: none;
+}
+
+.ed-cargando[hidden],
+.ed-caida[hidden] {
+    display: none;
+}
+
+.ed-caida strong {
+    color: #f6f8fb;
+    font-size: 16px;
+}
+
+
+/* ----------------------------------------------------------
+   Pantalla completa (js/componentes/pantalla-completa.js)
+   ---------------------------------------------------------- */
+
+/* Plan B (iPhone): a toda la ventana. */
+.ed-componente.ed-maximizado {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+
+    margin: 0;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+}
+
+.ed-componente.ed-ampliado {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ed-componente.ed-ampliado:fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
+
+.ed-ampliado .ed-cabecera {
+    min-height: 0;
+
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+/* Ampliado, el vídeo ocupa todo el hueco que deja la cabecera. */
+.ed-ampliado .ed-pantalla {
+    flex: 1 1 0;
+
+    aspect-ratio: auto;
+    min-height: 0;
+}
+
+.ed-ampliado .ed-medio {
+    object-fit: contain;
+}
+
+
+/* Fin de fichero: css/emision-destacada.css */

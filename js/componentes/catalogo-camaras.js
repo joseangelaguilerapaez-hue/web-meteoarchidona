@@ -9,6 +9,12 @@
  * API (/api/camaras/youtube).
  *
  * El nombre corto (nombreCorto) es la etiqueta de cada recuadro de la Sala de cámaras.
+ *
+ * La clave (clave) identifica cada cámara en Administración → Emisión
+ * destacada (js/componentes/emision-destacada.js): «camara-<id>» para las
+ * de la base (el mismo id de la API) y «sierra-nevada-…» para las de
+ * fuera. No se cambia una clave ya usada: la emisión guardada la perdería.
+ * Los directos de YouTube usan «camara-<id>» con su id de /api/camaras/youtube.
  */
 
 /* =========================================================
@@ -37,6 +43,10 @@ export const ZONAS_CAMARAS={
         camaras:[
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "camara-1",
+
                 nombre:
                     "MeteoCam Los Llanos — Panorámica",
 
@@ -79,6 +89,10 @@ export const ZONAS_CAMARAS={
 
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "camara-2",
+
                 nombre:
                     "MeteoCam Los Llanos — Específica",
 
@@ -144,6 +158,10 @@ export const ZONAS_CAMARAS={
         camaras:[
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "sierra-nevada-borreguiles",
+
                 nombre:
                     "Zona Borreguiles",
 
@@ -181,6 +199,10 @@ export const ZONAS_CAMARAS={
 
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "sierra-nevada-mirlo-blanco",
+
                 nombre:
                     "Mirlo Blanco / Pradollano",
 
@@ -219,6 +241,10 @@ export const ZONAS_CAMARAS={
 
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "sierra-nevada-veleta",
+
                 nombre:
                     "Zona Veleta",
 
@@ -257,6 +283,10 @@ export const ZONAS_CAMARAS={
 
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "sierra-nevada-laguna",
+
                 nombre:
                     "Zona Laguna",
 
@@ -295,6 +325,10 @@ export const ZONAS_CAMARAS={
 
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "sierra-nevada-montebajo",
+
                 nombre:
                     "Zona Montebajo",
 
@@ -333,6 +367,10 @@ export const ZONAS_CAMARAS={
 
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "sierra-nevada-pradollano",
+
                 nombre:
                     "Pradollano",
 
@@ -374,6 +412,10 @@ export const ZONAS_CAMARAS={
 
 
             {
+                // Clave fija de la cámara (Emisión destacada, José, 20-11-2026).
+                clave:
+                    "sierra-nevada-el-rio",
+
                 nombre:
                     "El Río - Las Negras",
 

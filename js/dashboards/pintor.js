@@ -39,9 +39,10 @@ const COMPONENTES = {
     "accesos": ["/js/componentes/accesos.js?v=20261104-componentes1", "montarAccesos"],
     "ficha-estacion": ["/js/componentes/ficha-estacion.js?v=20261113-episodio1", "montarFichaEstacion"],
     "timelapses": ["/js/componentes/timelapses.js?v=20261104-componentes1", "montarComponenteTimelapses"],
+    "emision-destacada": ["/js/componentes/emision-destacada.js?v=20261120-destacada1", "montarEmisionDestacada"],
     "estadistica": ["/js/componentes/estadistica.js?v=20261105-componente1", "montarComponenteEstadistica"],
     // En vivo y Estadísticas
-    "camaras-en-vivo": ["/js/componentes/camaras-en-vivo.js?v=20261117-camara1", "montarCamarasEnVivo"],
+    "camaras-en-vivo": ["/js/componentes/camaras-en-vivo.js?v=20261120-destacada1", "montarCamarasEnVivo"],
     "catalogo-estadisticas": ["/js/componentes/catalogo-estadisticas.js?v=20261104-componentes1", "montarCatalogoEstadisticas"],
     // Predicción
     "prediccion-avisos": ["/js/prediccion/avisos.js?v=20261104-componentes1", "montarAvisos"],

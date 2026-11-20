@@ -20,8 +20,8 @@
  */
 
 import {avisarCambio, crear, llamar} from "./comun.js?v=20261117-miweb1";
-import {pintarDashboard} from "../dashboards/pintor.js?v=20261117-camara1";
-import {abrirEditor} from "../dashboards/editor.js?v=20261117-editor2";
+import {pintarDashboard} from "../dashboards/pintor.js?v=20261120-destacada1";
+import {abrirEditor} from "../dashboards/editor.js?v=20261120-destacada1";
 
 
 const CORTE_MOVIL = "(max-width: 850px)";

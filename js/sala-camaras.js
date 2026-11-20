@@ -20,7 +20,7 @@
  *   y no se carga ningún vídeo.
  */
 
-import {ZONAS_CAMARAS} from "./componentes/catalogo-camaras.js?v=20261120-sala1";
+import {ZONAS_CAMARAS} from "./componentes/catalogo-camaras.js?v=20261120-destacada1";
 
 
 const RUTA_LANZAMIENTOS = "/js/lanzamientos.js?v=20261115-lanzamientos2";
