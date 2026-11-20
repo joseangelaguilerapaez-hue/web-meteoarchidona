@@ -20,15 +20,15 @@
 .zr-etiqueta-texto{
     display:grid;
     justify-items:center;
-    width:96px;
-    margin:-16px 0 0 -48px;
+    width:72px;
+    margin:-13px 0 0 -36px;
     color:#ffffff;
-    font-size:11px;
+    font-size:10px;
     line-height:1.25;
     text-align:center;
     text-shadow:0 0 3px #000000, 0 0 6px #000000;
 }
-.zr-etiqueta-texto strong{ font-size:12px; overflow-wrap:anywhere }
+.zr-etiqueta-texto strong{ font-size:10.5px; line-height:1.15; overflow-wrap:anywhere }
 .zr-etiqueta-texto .zr-sin-nombre{ font-style:italic; font-weight:normal; opacity:.85 }
 
 .zr-formulario form{ display:grid; gap:8px }
