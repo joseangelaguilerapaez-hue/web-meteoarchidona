@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+
+<title>Sala de cámaras · MeteoArchidona</title>
+
+<!--
+    Sala de cámaras (José, 20-11-2026): todos los directos a la vez, a
+    pantalla entera y sin la cabecera ni el pie de la web. Sección aparte,
+    no componente de dashboards (decisión de José). Las cámaras salen de
+    las mismas listas que En vivo: js/componentes/catalogo-camaras.js
+    (Los Llanos y Sierra Nevada) y /api/camaras/youtube.
+-->
+
+<meta
+    name="description"
+    content="Todas las cámaras en directo de MeteoArchidona a la vez: Los Llanos, Sierra Nevada y la costa."
+>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+
+<link rel="canonical" href="https://meteoarchidona.com/sala-camaras">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Sala de cámaras · MeteoArchidona">
+<meta property="og:description" content="Todas las cámaras en directo de MeteoArchidona a la vez: Los Llanos, Sierra Nevada y la costa.">
+<meta property="og:url" content="https://meteoarchidona.com/sala-camaras">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<link rel="stylesheet" href="../css/fuentes.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/paleta.css?v=20260913-lluvia2">
+<link rel="stylesheet" href="../css/lanzamientos.css?v=20261115-lanzamientos1">
+<link rel="stylesheet" href="../css/sala-camaras.css?v=20261120-sala1">
+
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
+<script type="module" src="../js/sala-camaras.js?v=20261120-sala1"></script>
+<script src="../js/pwa.js?v=20261101-pwa1" defer></script>
+
+</head>
+
+
+<body data-seccion="sala-camaras" class="sala-camaras">
+
+<main class="sala" id="sala">
+
+    <header class="sala-cabecera">
+
+        <a
+            class="sala-boton sala-volver"
+            href="/en-vivo"
+            aria-label="Salir de la sala y volver a En vivo"
+            title="Volver a En vivo (Esc)"
+        >←</a>
+
+        <h1 class="sala-titulo">Sala de cámaras</h1>
+
+        <button
+            class="sala-boton sala-completa"
+            id="sala-completa"
+            type="button"
+            aria-label="Poner la sala en pantalla completa"
+            title="Pantalla completa"
+            hidden
+        >⛶</button>
+
+    </header>
+
+    <div
+        class="sala-rejilla"
+        id="sala-rejilla"
+        aria-label="Cámaras en directo"
+    ></div>
+
+    <p class="sala-estado" id="sala-estado" role="status" hidden></p>
+
+</main>
+
+</body>
+</html>
+
+<!-- Fin de fichero: pages/sala-camaras.html -->

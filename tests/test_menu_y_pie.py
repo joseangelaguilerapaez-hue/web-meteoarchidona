@@ -56,8 +56,9 @@ class TestMenu(unittest.TestCase):
         # escritorio, filas de cinco y la última centrada; en el pie, columnas
         # de cinco; en el móvil, dos columnas. Hasta el 30-12-2026 se ven menos:
         # los lanzamientos escalonados esconden lo que no ha salido. 18 con
-        # Costas (José, 18-11-2026), detrás de El Olivar.
-        self.assertEqual(len(secciones), 18, secciones)
+        # Costas (José, 18-11-2026), detrás de El Olivar. 19 con la Sala de
+        # cámaras (José, 20-11-2026), detrás de En vivo.
+        self.assertEqual(len(secciones), 19, secciones)
 
 
 class TestPie(unittest.TestCase):

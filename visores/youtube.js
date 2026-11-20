@@ -397,12 +397,51 @@
     punto.className = 'visor-youtube-punto';
     punto.setAttribute('aria-hidden', 'true');
 
-    conectando.append(punto, 'Conectando con el directo…');
+    const textoConectando = document.createElement('span');
+    textoConectando.className = 'visor-youtube-conectando-texto';
+    textoConectando.textContent = 'Conectando con el directo…';
+
+    conectando.append(punto, textoConectando);
 
 
     let mostrado = false;
     let escucha = null;
     let espera = null;
+
+
+    /*
+     * Aviso a la página que contiene el visor (Sala de cámaras,
+     * José, 20-11-2026): «reproduciendo» cuando YouTube dice que
+     * reproduce y «sin-emision» si da error o si, habiendo
+     * contestado, no llega a reproducir antes del tope. Si YouTube
+     * no contesta nunca no se sabe nada y no se avisa: así no se
+     * da por caído un directo que sí funciona. Solo sale hacia el
+     * mismo origen; En vivo no lo escucha y no cambia nada.
+     */
+    let youtubeContesta = false;
+    let reproducido = false;
+    let avisado = '';
+
+    function avisarContenedor(estado) {
+
+        if (avisado === estado || window.parent === window) {
+            return;
+        }
+
+        avisado = estado;
+
+        try {
+            window.parent.postMessage(
+                {
+                    origen: 'meteoarchidona-visor-youtube',
+                    estado
+                },
+                window.location.origin
+            );
+        } catch (error) {
+            // Sin contenedor que escuche: no pasa nada.
+        }
+    }
 
     function mostrar() {
 
@@ -450,6 +489,13 @@
         // YouTube ya escucha: no hace falta seguir llamándole.
         clearInterval(escucha);
 
+        youtubeContesta = true;
+
+        if (datos.event === 'onError') {
+            avisarContenedor('sin-emision');
+            return;
+        }
+
         let estado = null;
 
         if (datos.event === 'onStateChange') {
@@ -460,6 +506,11 @@
             typeof datos.info.playerState === 'number'
         ) {
             estado = datos.info.playerState;
+        }
+
+        if (estado === REPRODUCIENDO) {
+            reproducido = true;
+            avisarContenedor('reproduciendo');
         }
 
         if (estado === REPRODUCIENDO && !espera) {
@@ -494,7 +545,12 @@
         escucha = setInterval(avisar, 250);
     });
 
-    const tope = setTimeout(mostrar, TOPE_MS);
+    const tope = setTimeout(() => {
+        if (youtubeContesta && !reproducido) {
+            avisarContenedor('sin-emision');
+        }
+        mostrar();
+    }, TOPE_MS);
 
 
     pantalla.classList.add('visor-youtube-negro');
