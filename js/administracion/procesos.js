@@ -43,6 +43,8 @@ const RUTA = "/admin/procesos";
 const ZONA = "Europe/Madrid";
 const POR_TANDA = 50;
 const REFRESCO_MS = 3000;
+// La ficha entera (con sus incidencias), como mucho cada 30 segundos.
+const REFRESCO_FICHA_MS = 30000;
 
 const ESTADOS = [
     ["", "Todos"],
@@ -581,20 +583,72 @@ function pintarFicha(contenedor, ficha){
 
     const piezas = [];
 
+    const datos = crear("dl", "procesos-ficha-datos");
+
+    // Datos de la ficha: se repintan con cada consulta de la barra, para
+    // que estado, inicio, duración y pasos no se queden como estaban al
+    // abrirla (José, 19-11-2026: salía «Pendiente» con el proceso en curso).
+    const rellenarDatos = actual => {
+        datos.replaceChildren();
+        dato(datos, "Proceso", `n.º ${actual.id} · ${actual.tipo_nombre}`);
+        dato(datos, "Parámetros", actual.parametros_texto);
+        dato(datos, "Estado", actual.estado_nombre + (actual.cancelacion_solicitada && activo(actual) ? " (cancelación pedida)" : ""));
+        dato(datos, "Lanzado por", actual.lanzado_por);
+        dato(datos, "Encargado", fechaCompleta(actual.fecha_encargo));
+        dato(datos, "Inicio", fechaCompleta(actual.fecha_inicio));
+        dato(datos, "Fin", fechaCompleta(actual.fecha_fin));
+        dato(datos, "Duración", duracion(actual.duracion_segundos));
+        dato(datos, "Pasos", actual.pasos_total ? `${actual.pasos_hechos} de ${actual.pasos_total}` : "—");
+    };
+    rellenarDatos(ficha);
+
+    // Las incidencias se piden con la ficha entera, como mucho cada 30 s.
+    const titulo = crear(
+        "h4",
+        "procesos-subtitulo",
+        `Incidencias (${ficha.incidencias.length})`
+    );
+    let bloqueIncidencias = incidenciasAgrupadas(ficha.incidencias);
+    let ultimaFicha = Date.now();
+    let pidiendoFicha = false;
+
+    const refrescarIncidencias = async () => {
+        if(pidiendoFicha || Date.now() - ultimaFicha < REFRESCO_FICHA_MS){
+            return;
+        }
+        pidiendoFicha = true;
+        try{
+            const nueva = await peticionJson(`${RUTA}/${ficha.id}`);
+            ultimaFicha = Date.now();
+            if(!contenedor.isConnected){
+                return;
+            }
+            Object.assign(ficha, nueva);
+            titulo.textContent = `Incidencias (${nueva.incidencias.length})`;
+            const otro = incidenciasAgrupadas(nueva.incidencias);
+            bloqueIncidencias.replaceWith(otro);
+            bloqueIncidencias = otro;
+        }catch{
+            // Se reintenta en la siguiente consulta de la barra.
+        }finally{
+            pidiendoFicha = false;
+        }
+    };
+
     if(activo(ficha)){
-        piezas.push(barraViva(ficha, {compacta: false}));
+        piezas.push(barraViva(ficha, {
+            compacta: false,
+            alActualizar: progreso => {
+                if(!contenedor.isConnected){
+                    return;
+                }
+                Object.assign(ficha, progreso);
+                rellenarDatos(ficha);
+                refrescarIncidencias();
+            }
+        }));
     }
 
-    const datos = crear("dl", "procesos-ficha-datos");
-    dato(datos, "Proceso", `n.º ${ficha.id} · ${ficha.tipo_nombre}`);
-    dato(datos, "Parámetros", ficha.parametros_texto);
-    dato(datos, "Estado", ficha.estado_nombre + (ficha.cancelacion_solicitada && activo(ficha) ? " (cancelación pedida)" : ""));
-    dato(datos, "Lanzado por", ficha.lanzado_por);
-    dato(datos, "Encargado", fechaCompleta(ficha.fecha_encargo));
-    dato(datos, "Inicio", fechaCompleta(ficha.fecha_inicio));
-    dato(datos, "Fin", fechaCompleta(ficha.fecha_fin));
-    dato(datos, "Duración", duracion(ficha.duracion_segundos));
-    dato(datos, "Pasos", ficha.pasos_total ? `${ficha.pasos_hechos} de ${ficha.pasos_total}` : "—");
     piezas.push(datos);
 
     if(ficha.mensaje){
@@ -614,12 +668,7 @@ function pintarFicha(contenedor, ficha){
         piezas.push(envoltura);
     }
 
-    const titulo = crear(
-        "h4",
-        "procesos-subtitulo",
-        `Incidencias (${ficha.incidencias.length})`
-    );
-    piezas.push(titulo, incidenciasAgrupadas(ficha.incidencias));
+    piezas.push(titulo, bloqueIncidencias);
 
     const acciones = crear("div", "acciones procesos-acciones");
 
