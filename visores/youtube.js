@@ -14,8 +14,8 @@
  * - youtube.com/shorts/...
  * - identificador directo del vídeo.
  *
- * Carga el reproductor oficial de YouTube
- * únicamente cuando el usuario pulsa Reproducir.
+ * Carga el reproductor oficial de YouTube nada más
+ * abrirse y lo arranca en silencio (autoarranque).
  *
  * No modifica ni interfiere con el visor HLS/MP4.
  */
@@ -330,51 +330,41 @@
        REPRODUCCIÓN
        ===================================================== */
 
-    boton.addEventListener('click', (evento) => {
+    /*
+     * Desde el 20 nov 2026 el directo arranca solo, sin pulsar
+     * «Reproducir» (decisión de José). Arranca en silencio porque
+     * los navegadores no dejan reproducir con sonido sin un toque
+     * previo; el visitante activa el sonido con el altavoz del
+     * propio reproductor. La portada queda solo para el caso de
+     * URL incorrecta (más arriba).
+     */
 
-        // Auditoría (docs/auditoria.md de la API, 11.7): sin la API de
-        // YouTube, lo único que se registra es esta pulsación. La
-        // auditoría vive en la página que contiene el visor.
-        try {
-            if (evento.isTrusted) {
-                window.parent?.MeteoAuditoria?.registrar(
-                    'VISOR_YOUTUBE',
-                    'ACTIVACION_VISOR',
-                    { video: id }
-                );
-            }
-        } catch (error) {
-            // La auditoría nunca debe impedir la reproducción.
-        }
+    const reproductor = document.createElement(
+        'iframe'
+    );
 
-        const reproductor = document.createElement(
-            'iframe'
-        );
+    reproductor.title =
+        'Reproductor oficial de YouTube';
 
-        reproductor.title =
-            'Reproductor oficial de YouTube';
+    reproductor.src =
+        `https://www.youtube-nocookie.com/embed/${id}` +
+        '?autoplay=1&mute=1&playsinline=1';
 
-        reproductor.src =
-            `https://www.youtube-nocookie.com/embed/${id}` +
-            '?autoplay=1&playsinline=1';
+    reproductor.allow =
+        'accelerometer; autoplay; encrypted-media; ' +
+        'gyroscope; picture-in-picture; fullscreen';
 
-        reproductor.allow =
-            'accelerometer; autoplay; encrypted-media; ' +
-            'gyroscope; picture-in-picture; fullscreen';
+    reproductor.allowFullscreen = true;
 
-        reproductor.allowFullscreen = true;
-
-        reproductor.referrerPolicy =
-            'strict-origin-when-cross-origin';
+    reproductor.referrerPolicy =
+        'strict-origin-when-cross-origin';
 
 
-        // Incorporar primero el reproductor.
-        pantalla.appendChild(reproductor);
+    // Incorporar primero el reproductor.
+    pantalla.appendChild(reproductor);
 
-        // Retirar después la portada corporativa.
-        portada.remove();
-
-    }, { once: true });
+    // Retirar después la portada corporativa.
+    portada.remove();
 
 })();
 

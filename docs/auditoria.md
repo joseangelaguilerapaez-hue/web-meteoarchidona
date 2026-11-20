@@ -14,9 +14,10 @@ Lo que la web envía hoy (`js/auditoria.js`, solo con consentimiento salvo la vi
 - SELECCION en los `<select data-auditoria-seleccion>`: cámara de la ficha (SELECTOR_CAMARA), día del
   timelapse (TIMELAPSES) y los dos selectores de En vivo (SELECTOR_EMISION). Lleva el valor y el texto
   de la opción elegida.
-- ACTIVACION_VISOR en los botones `data-auditoria-activacion`: abrir un timelapse (con el día elegido) y
-  la portada «Reproducir» del visor de YouTube (con el identificador del vídeo, desde
-  `visores/youtube.js`).
+- ACTIVACION_VISOR en los botones `data-auditoria-activacion`: abrir un timelapse (con el día elegido).
+  La portada «Reproducir» del visor de YouTube ya no existe: desde el 20 nov 2026 el directo
+  arranca solo y en silencio, así que VISOR_YOUTUBE / ACTIVACION_VISOR deja de llegar. La
+  emisión elegida se sigue contando con SELECTOR_EMISION.
 
 Solo cuentan las acciones del visitante (`isTrusted`), no los cambios hechos por código. `js/auditoria.js`
 lleva una copia del catálogo y descarta lo que no esté en él, porque la API rechaza el lote entero: si el

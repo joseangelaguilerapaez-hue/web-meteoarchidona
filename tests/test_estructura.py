@@ -466,9 +466,18 @@ class TestDirectoConInstrumentos(unittest.TestCase):
         self.assertIn("'fullscreenchange'", codigo)
         self.assertIn("'webkitfullscreenchange'", codigo)
         self.assertIn(
-            "youtube.js?v=20261102-horizontal1",
+            "youtube.js?v=20261120-autoarranque1",
             leer(RAIZ / "visores" / "youtube.html"),
         )
+
+    def test_youtube_arranca_solo_en_silencio(self):
+        """Decisión de José del 20-11-2026: el directo arranca solo, en silencio."""
+
+        codigo = leer(RAIZ / "visores" / "youtube.js")
+        self.assertIn("?autoplay=1&mute=1&playsinline=1", codigo)
+        self.assertNotIn("boton.addEventListener('click'", codigo)
+        privacidad = sin_comentarios(RAIZ / "componentes" / "privacidad.html")
+        self.assertNotIn("no se cargan hasta que pulsas", privacidad)
 
     def test_controles_bajo_el_termometro(self):
         """Decisión de José del 1-11-2026: el botón no tapa la barra de humedad."""
