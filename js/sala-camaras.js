@@ -159,6 +159,11 @@ function crearCelda(camara) {
     celda.className = "sala-celda";
     celda.dataset.medio = camara.medio;
 
+    // La panorámica se ve entera al ampliarla: sus instrumentos van en los bordes.
+    if (camara.medio === "visor-video" && camara.visorVista === "panoramica") {
+        celda.dataset.ajuste = "entero";
+    }
+
     const medio = crearMedio(camara);
 
     const caida = document.createElement("div");

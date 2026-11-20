@@ -4,8 +4,8 @@
  * Todos los directos a la vez, a pantalla entera, sin cabecera ni pie
  * (José, 20-11-2026). Rejilla de columnas fijas y filas que salen solas:
  * 3 columnas con el móvil en vertical, 6 en horizontal y en el ordenador.
- * El vídeo llena su recuadro y se recortan los bordes (decisión de José);
- * ampliado, se ve entero.
+ * El vídeo llena su recuadro y se recortan los bordes (decisión de José),
+ * también ampliado, salvo la panorámica de Los Llanos.
  */
 
 html,
@@ -242,15 +242,15 @@ img.sala-medio {
     display: none;
 }
 
-.sala-celda.ampliada .sala-medio {
+/*
+ * Ampliada también llena la pantalla recortando lo que sobre (José,
+ * 20-11-2026), salvo la panorámica de Los Llanos: es más ancha que la
+ * pantalla y recortarla por los lados cortaría el termómetro y la probeta.
+ * Esa va entera, con franjas.
+ */
+.sala-celda.ampliada[data-ajuste="entero"] .sala-medio {
     width: min(100cqw, calc(100cqh * 16 / 9));
     height: min(100cqh, calc(100cqw * 9 / 16));
-}
-
-.sala-celda.ampliada img.sala-medio {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
 }
 
 .sala-celda.ampliada .sala-nombre {
