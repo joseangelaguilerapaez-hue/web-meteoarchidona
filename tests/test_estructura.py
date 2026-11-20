@@ -305,7 +305,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261118-pantalla1"),
-            ("administracion", r"administracion/principal\.js\?v=20261120-zonas1"),
+            ("administracion", r"administracion/principal\.js\?v=20261120-zonas2"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -329,7 +329,7 @@ class TestConfiguracion(unittest.TestCase):
 
     def test_modulo_y_version(self):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./configuracion.js?v=20261120-zonas1", principal)
+        self.assertIn("./configuracion.js?v=20261120-zonas2", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "configuracion.js")
         self.assertIn('"/admin/configuracion"', codigo)
         self.assertIn("valores_por_icono", codigo)

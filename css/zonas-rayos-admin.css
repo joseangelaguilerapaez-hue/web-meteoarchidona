@@ -9,8 +9,8 @@
 
 .zr-mapa{
     position:relative;
-    height:min(70vh, 560px);
-    min-height:340px;
+    height:min(78vh, 680px);
+    min-height:380px;
     border:1px solid var(--border-strong);
     border-radius:10px;
     background:#dfe6ec;
@@ -20,15 +20,15 @@
 .zr-etiqueta-texto{
     display:grid;
     justify-items:center;
-    width:120px;
-    margin:-22px 0 0 -60px;
+    width:96px;
+    margin:-16px 0 0 -48px;
     color:#ffffff;
-    font-size:12px;
+    font-size:11px;
     line-height:1.25;
     text-align:center;
     text-shadow:0 0 3px #000000, 0 0 6px #000000;
 }
-.zr-etiqueta-texto strong{ font-size:13px; overflow-wrap:anywhere }
+.zr-etiqueta-texto strong{ font-size:12px; overflow-wrap:anywhere }
 .zr-etiqueta-texto .zr-sin-nombre{ font-style:italic; font-weight:normal; opacity:.85 }
 
 .zr-formulario form{ display:grid; gap:8px }

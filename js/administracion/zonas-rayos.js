@@ -7,7 +7,7 @@
  * GET /admin/rayos/zonas
  * PUT /admin/rayos/zonas/{id}    {"nombre": "..."}
  *
- * Un cuadrado de 15 km centrado en El Silo, en 3 × 3 cuadros de 5 km.
+ * Un cuadrado de 25 km centrado en El Silo, en 5 × 5 cuadros de 5 km.
  * Cada cuadro muestra su nombre (o «Sin nombre») y cuántos rayos del
  * Meteosat han caído dentro; se pulsa para ponerle o cambiarle el nombre.
  * Fondo físico, satélite o político, como el visor de seguimiento.
@@ -26,8 +26,6 @@ const RUTA = "/admin/rayos/zonas";
 const LEAFLET = "/js/vendor/leaflet-1.9.4.js";
 const CLAVE_FONDO = "meteoarchidona_zonas_rayos_fondo";
 
-const FILAS = ["Norte", "Centro", "Sur"];
-const COLUMNAS = ["oeste", "centro", "este"];
 
 const FONDOS = {
     fisico: {
@@ -112,21 +110,25 @@ function cargarLeaflet(){
 }
 
 
+// Rumbo y distancia del centro del cuadro a El Silo («Norte, 10 km»).
 function posicion(zona){
 
-    if(zona.fila === 2 && zona.columna === 2){
+    const [latitud, longitud] = datos.centro;
+    const centroLatitud = (zona.sur + zona.norte) / 2;
+    const centroLongitud = (zona.oeste + zona.este) / 2;
+    const norte = (centroLatitud - latitud) * 111.32;
+    const este = (centroLongitud - longitud) * 111.32 * Math.cos(latitud * Math.PI / 180);
+    const kilometros = Math.hypot(norte, este);
+
+    if(kilometros < 1){
         return "Centro (El Silo)";
     }
 
-    if(zona.fila === 2){
-        return zona.columna === 1 ? "Oeste" : "Este";
-    }
+    const rumbos = ["Norte", "Noreste", "Este", "Sureste", "Sur", "Suroeste", "Oeste", "Noroeste"];
+    const angulo = (Math.atan2(este, norte) * 180 / Math.PI + 360) % 360;
+    const rumbo = rumbos[Math.round(angulo / 45) % 8];
 
-    if(zona.columna === 2){
-        return FILAS[zona.fila - 1];
-    }
-
-    return `${FILAS[zona.fila - 1]}${COLUMNAS[zona.columna - 1]}`;
+    return `${rumbo}, ${Math.round(kilometros)} km de El Silo`;
 }
 
 
@@ -356,7 +358,7 @@ export async function montarZonasRayos(destino){
     const intro = crear(
         "p",
         "modulo-intro",
-        "Cuadrado de 15 km alrededor de El Silo en 9 cuadros de 5 km. " +
+        "Cuadrado de 25 km alrededor de El Silo en 25 cuadros de 5 km. " +
         "Cada cuadro muestra su nombre y cuántos rayos del Meteosat han caído dentro. " +
         "Pulsa un cuadro para ponerle nombre; déjalo vacío para quitárselo."
     );
