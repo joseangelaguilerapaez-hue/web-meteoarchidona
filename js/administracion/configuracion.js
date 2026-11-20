@@ -17,6 +17,9 @@
  * catálogo): con el monigote se ocultan el color y el texto del día.
  *
  * El cambio se guarda al momento; el directo lo lee cada minuto.
+ *
+ * Pestaña fija «Zonas de rayos» al final (docs/rayos.md, 12): no viene del
+ * catálogo; la monta zonas-rayos.js, que se importa solo al abrirla.
  */
 
 import {
@@ -38,6 +41,33 @@ const AMBITOS = {
 };
 
 const CLAVE_PESTANA = "meteoarchidona_configuracion_pestana";
+
+// Pestaña propia, fuera del catálogo de parámetros.
+const ZONAS_RAYOS = "ZONAS_RAYOS";
+const MODULO_ZONAS_RAYOS = "./zonas-rayos.js?v=20261120-zonas1";
+
+let moduloZonasRayos = null;
+
+
+async function obtenerZonasRayos(){
+
+    if(!moduloZonasRayos){
+        moduloZonasRayos = import(MODULO_ZONAS_RAYOS).catch(error => {
+            moduloZonasRayos = null;
+            throw error;
+        });
+    }
+
+    return moduloZonasRayos;
+}
+
+
+function desmontarZonasRayos(){
+
+    if(moduloZonasRayos){
+        moduloZonasRayos.then(modulo => modulo.desmontarZonasRayos()).catch(() => {});
+    }
+}
 
 let parametros = [];
 let apartados = [];
@@ -572,6 +602,18 @@ function renderizarPestanas(){
 
         barra.append(boton);
     }
+
+    const zonas = crear("button", "boton boton-secundario", "Zonas de rayos");
+    zonas.type = "button";
+    zonas.dataset.apartado = ZONAS_RAYOS;
+    zonas.setAttribute("role", "tab");
+    zonas.setAttribute("aria-controls", "listaConfiguracion");
+    zonas.addEventListener("click", () => {
+        pestanaActiva = ZONAS_RAYOS;
+        guardarPestana(pestanaActiva);
+        renderizarLista();
+    });
+    barra.append(zonas);
 }
 
 
@@ -585,6 +627,22 @@ function renderizarLista(){
         boton.tabIndex = seleccionada ? 0 : -1;
         boton.classList.toggle("activo", seleccionada);
     }
+
+    if(pestanaActiva === ZONAS_RAYOS){
+        lista.replaceChildren();
+        obtenerZonasRayos()
+            .then(modulo => {
+                if(pestanaActiva === ZONAS_RAYOS){
+                    return modulo.montarZonasRayos(lista);
+                }
+            })
+            .catch(() => {
+                lista.replaceChildren(crear("p", "modulo-intro", "No se ha podido abrir Zonas de rayos."));
+            });
+        return;
+    }
+
+    desmontarZonasRayos();
 
     const visibles = parametros.filter(p => p.apartado === pestanaActiva);
     lista.replaceChildren(...visibles.map(crearFicha));
@@ -604,7 +662,7 @@ function renderizar(){
         return;
     }
 
-    const codigos = apartados.map(a => a.codigo);
+    const codigos = [...apartados.map(a => a.codigo), ZONAS_RAYOS];
     const guardada = leerPestanaGuardada();
 
     if(!codigos.includes(pestanaActiva)){
@@ -661,6 +719,7 @@ export function limpiarConfiguracion(){
     parametros = [];
     apartados = [];
     pestanaActiva = null;
+    desmontarZonasRayos();
     $("pestanasConfiguracion")?.remove();
     $("listaConfiguracion")?.replaceChildren();
     mostrarEstado($("estadoConfiguracion"), "");
