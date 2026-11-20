@@ -199,8 +199,11 @@ function pintarRejilla(){
         const cuadro = L.rectangle(limites, {
             color: elegida ? "#ffd400" : "#ffffff",
             weight: elegida ? 4 : 2,
-            fillColor: zona.rayos ? "#e2231a" : "#1f4e79",
-            fillOpacity: zona.rayos ? Math.min(0.12 + zona.rayos / 400, 0.4) : 0.08
+            // Sin relleno, para ver el terreno (José, 20-11-2026): el
+            // relleno transparente se deja solo para que el cuadro se pueda
+            // pulsar por dentro.
+            fill: true,
+            fillOpacity: 0
         });
 
         cuadro.on("click", () => elegir(zona.id));
