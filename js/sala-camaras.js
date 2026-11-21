@@ -22,7 +22,8 @@
  *   administradores (sesión de usuario administrador), en la cuadrícula y
  *   ampliada (en la cuadrícula, solo la estrella): «☆ Destacar» pone esa cámara como la emisión destacada
  *   manual (reutiliza la que ya hubiera de otras veces y apaga la
- *   anterior); «★ Destacada» marca la que está saliendo como manual, y al
+ *   anterior); «★ Destacada» marca la manual activa (aunque una franja la
+ *   tape hasta que acabe), y al
  *   pulsarlo se quita la manual. Se mira cada minuto por si se cambia desde
  *   Administración.
  */
@@ -491,9 +492,8 @@ function pintarDestacada() {
 
 
 function leerDestacada(datos) {
-    manualActual = datos?.origen === "MANUAL" && datos.emision?.tipo === "DIRECTO"
-        ? datos.emision.directo
-        : null;
+    // La manual activa, salga ya o espere a que acabe una franja (José, 21-11-2026).
+    manualActual = datos?.manual?.tipo === "DIRECTO" ? datos.manual.directo : null;
     pintarDestacada();
 }
 

@@ -6,10 +6,12 @@
  * qué sale en el componente «Emisión destacada ahora» de Actualidad y de
  * los dashboards.
  *
- * - Manual: manda sobre todo. Solo una activa: al activar otra se apaga la
- *   anterior. «Quitar la manual» vuelve a lo programado.
- * - Franja: de una hora a otra (hora de Madrid), un día o todos los días.
- *   Si se pisan, manda la que empezó más tarde.
+ * - Franja: manda sobre todo (José, 21-11-2026). De una hora a otra (hora
+ *   de Madrid), un día o todos los días. Si se pisan, manda la que empezó
+ *   más tarde.
+ * - Manual: cuando no hay franja; durante una franja espera su turno. Solo
+ *   una activa: al activar otra se apaga la anterior. «Quitar la manual»
+ *   vuelve a lo programado o a la de por defecto.
  * - Por defecto: cuando no hay otra (al empezar, la panorámica de Los
  *   Llanos). Se cambia, no se borra.
  *
@@ -164,11 +166,19 @@ function pintarActual() {
     const texto = emision ? queEmite(emision) : "—";
     caja.append(crear("strong", null, `Ahora sale (${(USOS[actual.origen] || actual.origen || "").toLowerCase()}): `), texto);
 
+    // La manual activa que espera a que acabe la franja (José, 21-11-2026).
+    if (actual.manual && actual.origen === "FRANJA") {
+        const manual = datos.emisiones.find(item => item.id === actual.manual.id);
+        if (manual) {
+            caja.append(crear("div", "campo-ayuda", `Manual en espera hasta que acabe la franja: ${queEmite(manual)}.`));
+        }
+    }
+
     if (actual.sustituida) {
         caja.append(crear("div", "campo-ayuda", "El timelapse elegido no tiene vídeo: sale la de por defecto."));
     }
 
-    $("botonQuitarManual").hidden = actual.origen !== "MANUAL";
+    $("botonQuitarManual").hidden = !actual.manual;
 }
 
 
@@ -280,7 +290,7 @@ function limpiarFormulario() {
     $("botonGuardarEd").textContent = "Guardar";
     $("botonCancelarEd").hidden = true;
 
-    opciones($("edUso"), [["MANUAL", "Manual (manda sobre todo)"], ["FRANJA", "Franja horaria"]], "MANUAL");
+    opciones($("edUso"), [["MANUAL", "Manual (cuando no hay franja)"], ["FRANJA", "Franja horaria"]], "MANUAL");
     $("edTipo").value = "DIRECTO";
     opciones($("edDirecto"), directos.map(item => [item.clave, item.nombre]));
     rellenarCamaras();

@@ -3,8 +3,9 @@
  *
  * Una sola emisión, la que más interesa en cada momento, elegida en
  * Administración → Emisión destacada (José, 20-11-2026; docs/emision-destacada.md
- * de la API): la manual, si hay; si no, la franja horaria en curso; si no,
- * la de por defecto (la panorámica de Los Llanos).
+ * de la API): la franja horaria en curso, si hay; si no, la manual; si no,
+ * la de por defecto (la panorámica de Los Llanos). Desde el 21-11-2026
+ * manda la franja (antes, la manual).
  *
  *     <div data-componente="emision-destacada"></div>
  *
