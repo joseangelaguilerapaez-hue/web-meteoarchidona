@@ -1825,6 +1825,14 @@ class TestSalaCamaras(unittest.TestCase):
         self.assertIn("origen: 'meteoarchidona-visor-youtube'", visor)
         self.assertIn("avisarContenedor('sin-emision')", visor)
 
+    def test_boton_destacar_solo_administradores(self):
+        codigo = leer(RAIZ / "js" / "sala-camaras.js")
+        self.assertIn("if (await esAdministrador()) {", codigo)
+        self.assertIn('`${RUTA_DESTACADA}/${quitar ? "quitar" : "destacar"}`', codigo)
+        self.assertIn("clave: `camara-${camara.id}`,", codigo)
+        self.assertIn(".sala-destacar.encendido {", leer(RAIZ / "css" / "sala-camaras.css"))
+        self.assertIn(".sala-celda:not(.ampliada) .sala-destacar-texto {", leer(RAIZ / "css" / "sala-camaras.css"))
+
     def test_nginx_y_lanzamientos(self):
         self.assertIn('modulo.SECCION = "sala-camaras"',
                       leer(RAIZ / "scripts" / "configurar_seccion_sala_camaras.py"))
