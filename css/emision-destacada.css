@@ -208,7 +208,29 @@
     min-height: 0;
 }
 
-.ed-ampliado .ed-medio {
+/*
+ * Ampliado, como en la Sala de cámaras (José, 21-11-2026): el directo llena
+ * la pantalla recortando lo que sobre, sin franjas, salvo la panorámica de
+ * Los Llanos y los timelapses (data-ajuste="entero"), que van enteros para
+ * no cortar los instrumentos ni la fecha grabada.
+ */
+.ed-ampliado .ed-capa {
+    overflow: hidden;
+    container-type: size;
+}
+
+.ed-ampliado .ed-capa:not([data-ajuste="entero"]) iframe.ed-medio {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: max(100cqw, calc(100cqh * 16 / 9));
+    height: max(100cqh, calc(100cqw * 9 / 16));
+
+    transform: translate(-50%, -50%);
+}
+
+.ed-ampliado .ed-capa[data-ajuste="entero"] .ed-medio {
     object-fit: contain;
 }
 
