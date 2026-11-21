@@ -18,6 +18,13 @@
  * - Salir: «←» a En vivo, o Esc en el ordenador.
  * - Lanzamientos escalonados: si la sala aún no ha salido, «Próximamente»
  *   y no se carga ningún vídeo.
+ * - Botón «Destacar» junto al nombre (José, 21-11-2026), solo para los
+ *   administradores (sesión de usuario administrador), en la cuadrícula y
+ *   ampliada (en la cuadrícula, solo la estrella): «☆ Destacar» pone esa cámara como la emisión destacada
+ *   manual (reutiliza la que ya hubiera de otras veces y apaga la
+ *   anterior); «★ Destacada» marca la que está saliendo como manual, y al
+ *   pulsarlo se quita la manual. Se mira cada minuto por si se cambia desde
+ *   Administración.
  */
 
 import {ZONAS_CAMARAS} from "./componentes/catalogo-camaras.js?v=20261120-destacada1";
@@ -25,6 +32,8 @@ import {ZONAS_CAMARAS} from "./componentes/catalogo-camaras.js?v=20261120-destac
 
 const RUTA_LANZAMIENTOS = "/js/lanzamientos.js?v=20261115-lanzamientos2";
 const RUTA_YOUTUBE = "/api/camaras/youtube";
+const RUTA_DESTACADA = "/api/emision-destacada";
+const CONSULTA_DESTACADA_MS = 60 * 1000;
 const ZONAS_PROPIAS = ["los-llanos", "sierra-nevada"];
 const SECCION = "sala-camaras";
 
@@ -88,6 +97,7 @@ async function camarasDeYoutube() {
             .filter((camara) => camara && camara.url)
             .sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0))
             .map((camara) => ({
+                clave: `camara-${camara.id}`,
                 nombre: camara.nombre || "YouTube",
                 nombreCorto: camara.nombre || "YouTube",
                 medio: "youtube",
@@ -183,7 +193,13 @@ function crearCelda(camara) {
 
     const nombre = document.createElement("figcaption");
     nombre.className = "sala-nombre";
-    nombre.textContent = camara.nombreCorto || camara.nombre;
+    const textoNombre = document.createElement("span");
+    textoNombre.className = "sala-nombre-texto";
+    textoNombre.textContent = camara.nombreCorto || camara.nombre;
+    nombre.append(textoNombre);
+    if (camara.clave) {
+        celda.dataset.clave = camara.clave;
+    }
 
     const cerrar = document.createElement("button");
     cerrar.type = "button";
@@ -447,6 +463,108 @@ function avisar(texto) {
 
 
 /* ==========================================================
+   BOTÓN «DESTACAR» (solo administradores)
+   ========================================================== */
+
+let manualActual = null;
+
+
+function pintarDestacada() {
+
+    for (const boton of rejilla.querySelectorAll(".sala-destacar")) {
+        const encendido = boton.dataset.clave === manualActual;
+        boton.classList.toggle("encendido", encendido);
+        // En la cuadrícula solo se ve la estrella; ampliada, también el texto.
+        const icono = document.createElement("span");
+        icono.textContent = encendido ? "★" : "☆";
+        const texto = document.createElement("span");
+        texto.className = "sala-destacar-texto";
+        texto.textContent = encendido ? " Destacada" : " Destacar";
+        boton.replaceChildren(icono, texto);
+        boton.setAttribute("aria-label", encendido ? "Destacada" : "Destacar");
+        boton.setAttribute("aria-pressed", encendido ? "true" : "false");
+        boton.title = encendido
+            ? "Es la emisión destacada. Pulsa para quitarla"
+            : "Poner como emisión destacada";
+    }
+}
+
+
+function leerDestacada(datos) {
+    manualActual = datos?.origen === "MANUAL" && datos.emision?.tipo === "DIRECTO"
+        ? datos.emision.directo
+        : null;
+    pintarDestacada();
+}
+
+
+async function consultarDestacada() {
+    try {
+        const respuesta = await fetch(`${RUTA_DESTACADA}/actual`, {cache: "no-store", credentials: "same-origin"});
+        if (respuesta.ok) leerDestacada(await respuesta.json());
+    } catch (error) {
+        console.error("Sala de cámaras: no se pudo consultar la emisión destacada", error);
+    }
+}
+
+
+async function pulsarDestacar(evento) {
+
+    evento.stopPropagation();
+    const boton = evento.currentTarget;
+    const quitar = boton.dataset.clave === manualActual;
+
+    boton.disabled = true;
+    try {
+        const respuesta = await fetch(`${RUTA_DESTACADA}/${quitar ? "quitar" : "destacar"}`, {
+            method: "POST",
+            cache: "no-store",
+            credentials: "same-origin",
+            headers: {"Content-Type": "application/json", Accept: "application/json"},
+            body: quitar ? "{}" : JSON.stringify({clave_directo: boton.dataset.clave}),
+        });
+        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+        leerDestacada(await respuesta.json());
+    } catch (error) {
+        console.error("Sala de cámaras: no se pudo cambiar la emisión destacada", error);
+        avisar("No se ha podido cambiar la emisión destacada.");
+    } finally {
+        boton.disabled = false;
+    }
+}
+
+
+function ponerBotonesDestacar() {
+
+    for (const celda of rejilla.querySelectorAll(".sala-celda[data-clave]")) {
+        const boton = document.createElement("button");
+        boton.type = "button";
+        boton.className = "sala-destacar";
+        boton.dataset.clave = celda.dataset.clave;
+        boton.addEventListener("click", pulsarDestacar);
+        celda.querySelector(".sala-nombre").append(boton);
+    }
+
+    pintarDestacada();
+    consultarDestacada();
+    setInterval(() => {
+        if (!document.hidden) consultarDestacada();
+    }, CONSULTA_DESTACADA_MS);
+}
+
+
+async function esAdministrador() {
+    try {
+        const modulo = await import(RUTA_LANZAMIENTOS);
+        const datos = await modulo.cargarLanzamientos();
+        return Boolean(datos?.administrador);
+    } catch {
+        return false;
+    }
+}
+
+
+/* ==========================================================
    ARRANQUE
    ========================================================== */
 
@@ -501,6 +619,10 @@ async function montarSala() {
     setInterval(refrescarImagenes, REFRESCO_IMAGENES_MS);
 
     prepararBotonSala();
+
+    if (await esAdministrador()) {
+        ponerBotonesDestacar();
+    }
 }
 
 

@@ -196,6 +196,48 @@ img.sala-medio {
     pointer-events: none;
 }
 
+/* Nombre y, para los administradores, el botón «Destacar» detrás (José, 21-11-2026). */
+.sala-nombre:has(.sala-destacar) {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.sala-nombre-texto {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.sala-destacar {
+    flex: 0 0 auto;
+    padding: 0 5px;
+    border: 1px solid rgba(255, 210, 74, 0.7);
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.35);
+    color: #ffd24a;
+    font: inherit;
+    font-weight: 700;
+    line-height: 1.35;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.sala-destacar.encendido {
+    background: #ffd24a;
+    color: #10161d;
+}
+
+.sala-destacar:disabled {
+    opacity: 0.6;
+}
+
+.sala-celda:not(.ampliada) .sala-destacar-texto {
+    display: none;
+}
+
 .sala-caida {
     position: absolute;
     inset: 0;
