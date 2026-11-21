@@ -930,7 +930,7 @@ async function cargarModuloEmisionDestacada(){
 
     if(promesaModuloEmisionDestacada === null){
         promesaModuloEmisionDestacada = import(
-            "./emision-destacada.js?v=20261120-destacada1"
+            "./emision-destacada.js?v=20261121-franja1"
         );
     }
 
