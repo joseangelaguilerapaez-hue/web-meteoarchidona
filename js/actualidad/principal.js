@@ -188,7 +188,7 @@ import {
 
 import {
     montarEmisionDestacada
-} from "../componentes/emision-destacada.js?v=20261121-nombre1";
+} from "../componentes/emision-destacada.js?v=20261121-llenar1";
 
 
 const COMPONENTES_ACTUALIDAD = {
@@ -505,7 +505,7 @@ async function arrancarActualidad() {
         );
 
         try {
-            const modulo = await import("/js/dashboards/actualidad.js?v=20261121-nombre1");
+            const modulo = await import("/js/dashboards/actualidad.js?v=20261121-llenar1");
             await modulo.arrancarActualidadDashboard(document.getElementById("actual"));
         } catch (error) {
             console.error("Actualidad: no se ha podido montar el dashboard.", error);

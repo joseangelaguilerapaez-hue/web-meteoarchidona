@@ -40,7 +40,7 @@ import {ZONAS_CAMARAS} from "./catalogo-camaras.js?v=20261120-destacada1";
 import {prepararPantallaCompleta} from "./pantalla-completa.js?v=20261118-pantalla1";
 
 
-const HOJA = "/css/emision-destacada.css?v=20261121-nombre1";
+const HOJA = "/css/emision-destacada.css?v=20261121-llenar1";
 const SCRIPT_API = "/js/api.js?v=20261003-vps1";
 
 const CONSULTA_MS = 60 * 1000;
