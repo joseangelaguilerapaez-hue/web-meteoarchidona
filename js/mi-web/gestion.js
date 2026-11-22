@@ -5,6 +5,10 @@
  * tres, con su nombre corto (el del menú) y su descripción (el título de
  * la pestaña). José, 5 y 17-11-2026; docs/dashboards.md de la API.
  *
+ * «Dashboard» abre en la ficha la configuración de su dashboard (elegir,
+ * fijar, crear, copiar, editar y borrar; js/mi-web/configurar.js). La
+ * pestaña del menú solo enseña lo fijado (José, 22-11-2026).
+ *
  * GET, POST /usuarios/mi-web · PATCH, DELETE /usuarios/mi-web/{id}
  *
  * El texto nunca se mete como HTML.
@@ -17,11 +21,13 @@ import {
     direccionPestana,
     llamar
 } from "./comun.js?v=20261117-miweb1";
+import {montarConfiguracion} from "./configurar.js?v=20261122-miweb2";
 
 
 let contenedor = null;
 let pestanas = [];
 let editando = null;
+let configurando = null;
 
 
 function boton(texto, clase, accion) {
@@ -89,7 +95,7 @@ function formulario(pestana) {
                 estado(`Guardada «${datos.nombre}».`, "ok");
             } else {
                 const nueva = await llamar("POST", "/usuarios/mi-web", datos);
-                estado(`Creada «${nueva.nombre}». Ya está en el menú: entra para elegir o crear su dashboard.`, "ok");
+                estado(`Creada «${nueva.nombre}». Ya está en el menú: pulsa «Dashboard» para elegir o crear el suyo.`, "ok");
             }
             editando = null;
             avisarCambio();
@@ -114,15 +120,21 @@ function ficha(pestana) {
     caja.appendChild(crear("p", "mi-cuenta-nota", pestana.descripcion));
 
     const fijados = crear("p", "mi-web-gestion-fijados");
-    fijados.textContent =
-        `PC: ${pestana.dashboard_pc ? pestana.dashboard_pc.titulo : "sin dashboard"} · ` +
-        `Móvil: ${pestana.dashboard_movil ? pestana.dashboard_movil.titulo : "sin dashboard"}`;
+    fijados.dataset.pestana = String(pestana.identificador);
+    fijados.textContent = textoFijados(pestana);
     caja.appendChild(fijados);
 
     const acciones = crear("div", "mi-cuenta-acciones");
     const abrir = crear("a", "mi-cuenta-boton mi-cuenta-boton-principal", "Abrir");
     abrir.href = direccionPestana(pestana.orden);
     acciones.appendChild(abrir);
+    const abierto = configurando === pestana.identificador;
+    const dashboard = boton(abierto ? "Cerrar dashboard" : "Dashboard", "", () => {
+        configurando = abierto ? null : pestana.identificador;
+        pintar();
+    });
+    dashboard.setAttribute("aria-expanded", String(abierto));
+    acciones.appendChild(dashboard);
     acciones.appendChild(boton("Cambiar nombre", "", () => { editando = pestana.identificador; pintar(); }));
     acciones.appendChild(boton("Borrar", "mi-cuenta-boton-peligro", async () => {
         if (!window.confirm(`¿Borrar la pestaña «${pestana.nombre}»? Tus dashboards no se borran.`)) {
@@ -142,7 +154,30 @@ function ficha(pestana) {
     if (editando === pestana.identificador) {
         caja.appendChild(formulario(pestana));
     }
+    if (abierto) {
+        const panel = crear("div", "mi-web-configurar");
+        caja.appendChild(panel);
+        void montarConfiguracion(panel, pestana, refrescarFijados);
+    }
     return caja;
+}
+
+
+function textoFijados(pestana) {
+    return `PC: ${pestana.dashboard_pc ? pestana.dashboard_pc.titulo : "sin dashboard"} · ` +
+        `Móvil: ${pestana.dashboard_movil ? pestana.dashboard_movil.titulo : "sin dashboard"}`;
+}
+
+
+/** Pone al día el resumen de lo fijado sin cerrar la configuración abierta. */
+async function refrescarFijados() {
+    pestanas = (await llamar("GET", "/usuarios/mi-web")).sort((a, b) => a.orden - b.orden);
+    for (const pestana of pestanas) {
+        const nodo = contenedor.querySelector(`.mi-web-gestion-fijados[data-pestana="${pestana.identificador}"]`);
+        if (nodo) {
+            nodo.textContent = textoFijados(pestana);
+        }
+    }
 }
 
 

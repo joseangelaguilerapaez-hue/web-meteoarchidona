@@ -195,3 +195,17 @@
 .mi-web-gestion-formulario {
     margin-top: 12px;
 }
+
+.mi-web-configurar {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.mi-web-configurar-nota {
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
