@@ -15,7 +15,7 @@
 import {EVENTO_CAMBIO, direccionPestana, llamar} from "./comun.js?v=20261117-miweb1";
 
 
-const HOJA = "/css/mi-web.css?v=20261117-miweb1";
+const HOJA = "/css/mi-web.css?v=20261122-miweb2";
 
 let conSesion = false;
 let pintando = null;

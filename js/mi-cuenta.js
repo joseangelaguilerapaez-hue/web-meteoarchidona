@@ -637,7 +637,7 @@ async function cargarTodo(){
 
     // Mi web (José, 17-11-2026): su propio módulo, que también usan el
     // menú y la página de cada pestaña.
-    import("./mi-web/gestion.js?v=20261117-miweb1")
+    import("./mi-web/gestion.js?v=20261122-miweb2")
         .then(modulo => modulo.montarGestionMiWeb($("gestionMiWeb")))
         .catch(error => {
             console.error("No se ha podido cargar Mi web.", error);

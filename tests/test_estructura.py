@@ -411,7 +411,7 @@ class TestMiCuenta(unittest.TestCase):
             self.assertIn(f'id="{identificador}"', pagina)
         self.assertIn('data-cuenta-accion="baja"', pagina)
         self.assertIn('data-cuenta-accion="pin-olvidado"', pagina)
-        self.assertIn("mi-cuenta.js?v=20261117-miweb1", pagina)
+        self.assertIn("mi-cuenta.js?v=20261122-miweb2", pagina)
         self.assertIn('name="robots" content="noindex, nofollow"', pagina)
 
     def test_modulo(self):
@@ -1625,8 +1625,8 @@ class TestMiWeb(unittest.TestCase):
         pagina = leer(RAIZ / "pages" / "mi-web.html")
         for identificador in ("tituloMiWeb", "estadoMiWeb", "miWebSinSesion", "miWebContenido"):
             self.assertIn(f'id="{identificador}"', pagina)
-        self.assertIn("js/mi-web/pagina.js?v=20261121-llenar1", pagina)
-        self.assertIn("css/mi-web.css?v=20261117-miweb1", pagina)
+        self.assertIn("js/mi-web/pagina.js?v=20261122-miweb2", pagina)
+        self.assertIn("css/mi-web.css?v=20261122-miweb2", pagina)
 
     def test_menu_desde_la_cabecera(self):
         self.assertIn("/js/mi-web/menu.js?v=20261117-miweb1", leer(RAIZ / "js" / "cabecera.js"))
@@ -1638,16 +1638,27 @@ class TestMiWeb(unittest.TestCase):
         pagina = leer(RAIZ / "pages" / "mi-cuenta.html")
         self.assertIn('data-pestana="miweb"', pagina)
         self.assertIn('id="gestionMiWeb"', pagina)
-        self.assertIn("./mi-web/gestion.js?v=20261117-miweb1", leer(RAIZ / "js" / "mi-cuenta.js"))
+        self.assertIn("./mi-web/gestion.js?v=20261122-miweb2", leer(RAIZ / "js" / "mi-cuenta.js"))
+        self.assertIn("css/mi-web.css?v=20261122-miweb2", pagina)
 
-    def test_la_pagina_usa_el_editor_y_el_pintor(self):
+    def test_la_pagina_solo_pinta(self):
+        # José, 22-11-2026: la pestaña del menú enseña el dashboard fijado,
+        # sin configuración; se configura en Mi cuenta → Mi web.
         codigo = leer(RAIZ / "js" / "mi-web" / "pagina.js")
-        self.assertIn("../dashboards/editor.js?v=20261121-llenar1", codigo)
         self.assertIn("../dashboards/pintor.js?v=20261121-llenar1", codigo)
+        self.assertNotIn("editor.js", codigo)
+        self.assertNotIn("Crear dashboard", codigo)
+        self.assertIn("/mi-cuenta#miweb", codigo)
         self.assertIn("(max-width: 850px)", codigo)
 
+    def test_la_configuracion_va_en_mi_cuenta(self):
+        configurar = leer(RAIZ / "js" / "mi-web" / "configurar.js")
+        self.assertIn("../dashboards/editor.js?v=20261121-llenar1", configurar)
+        self.assertIn("(max-width: 850px)", configurar)
+        self.assertIn("./configurar.js?v=20261122-miweb2", leer(RAIZ / "js" / "mi-web" / "gestion.js"))
+
     def test_sin_html_desde_la_api(self):
-        for fichero in ("comun.js", "menu.js", "gestion.js", "pagina.js"):
+        for fichero in ("comun.js", "menu.js", "gestion.js", "pagina.js", "configurar.js"):
             self.assertNotIn("innerHTML", leer(RAIZ / "js" / "mi-web" / fichero), fichero)
 
     def test_script_de_nginx(self):
