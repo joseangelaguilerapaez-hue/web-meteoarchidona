@@ -50,14 +50,18 @@ PRIVADAS = {"administracion", "mi-cuenta", "mi-web", "orquideas"}
 # Climatología (José, 13-11-2026): dada de alta pero fuera del menú hasta
 # que esté cargada la serie histórica; luego irá delante de Embalses.
 # Climatología entra en el menú delante de Agua y sequía (José, 15-11-2026); sale el 6-12 con los lanzamientos.
-FUERA_DEL_MENU = {"mi-cuenta", "mi-web"}
+FUERA_DEL_MENU = {"mi-cuenta", "mi-web", "orquideas"}
 
 # Observaciones no lleva pie: su mapa ocupa la pantalla entera.
 SIN_PIE = {"observaciones"}
 
 # La Sala de cámaras (José, 20-11-2026) ocupa la pantalla entera sin la
 # cabecera ni el pie de la web, y sin lluvia animada encima de los vídeos.
-SIN_CABECERA = {"sala-camaras"}
+# Fauna y Flora (José, 25-11-2026) es una página hermana con su propia
+# cabecera, menú y pie (js/fauna-flora/marco.js): su portada y sus secciones.
+FAUNA_FLORA = {"fauna-flora", "orquideas"}
+
+SIN_CABECERA = {"sala-camaras"} | FAUNA_FLORA
 
 # Actualidad tiene su propio motor y hoja de lluvia.
 CON_LLUVIA_PROPIA = {"actualidad"}
@@ -1886,3 +1890,28 @@ class TestEmisionDestacada(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFaunaFlora(unittest.TestCase):
+    """Fauna y Flora (José, 25-11-2026): página hermana con su marco propio."""
+
+    def test_sus_paginas_llevan_su_marco(self):
+        for seccion in sorted(FAUNA_FLORA):
+            texto = sin_comentarios(RAIZ / "pages" / f"{seccion}.html")
+            with self.subTest(pagina=seccion):
+                self.assertIn('id="ff-cabecera"', texto)
+                self.assertIn('id="ff-pie"', texto)
+                self.assertIn("css/fauna-flora.css", texto)
+                self.assertIn("data-ff-seccion=", texto)
+        self.assertIn("fauna-flora/marco.js", leer(RAIZ / "js" / "orquideas.js"))
+        self.assertIn("./marco.js", leer(RAIZ / "js" / "fauna-flora" / "portada.js"))
+
+    def test_menu_de_meteoarchidona_y_de_fauna_flora(self):
+        cabecera = leer(RAIZ / "componentes" / "cabecera.html")
+        self.assertIn('href="/fauna-flora"', cabecera)
+        self.assertNotIn('data-seccion="orquideas"', cabecera)
+        propia = leer(RAIZ / "componentes" / "fauna-flora-cabecera.html")
+        self.assertIn('href="/"', propia)
+        self.assertRegex(propia, r'data-ff-seccion="orquideas"\s+data-privada="orquideas"\s+hidden')
+        self.assertIn(".ff-menu a[hidden]", leer(RAIZ / "css" / "fauna-flora.css"))
+        self.assertIn('modulo.SECCION = "fauna-flora"', leer(RAIZ / "scripts" / "configurar_seccion_fauna_flora.py"))

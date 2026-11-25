@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Fauna y Flora de MeteoArchidona: la naturaleza de Archidona y la Sierra Norte de Málaga, con el tiempo de nuestras estaciones."
+>
+
+<title>
+    Fauna y Flora · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<link rel="canonical" href="https://meteoarchidona.com/fauna-flora">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/fauna-flora.css?v=20261125-fauna1"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    type="module"
+    src="../js/fauna-flora/portada.js?v=20261125-fauna1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="fauna-flora" data-ff-seccion="portada">
+
+
+<div id="ff-cabecera"></div>
+
+
+<main class="ff-portada">
+
+
+<header class="ff-entrada">
+
+    <div class="ff-etiqueta">
+        METEOARCHIDONA · FAUNA Y FLORA
+    </div>
+
+    <h1>
+        La vida de la <span>Sierra Norte</span> de Málaga
+    </h1>
+
+    <p>
+        Lo que crece, vuela y brota alrededor de Archidona, contado con los
+        datos de naturalistas y herbarios y con el tiempo que miden nuestras
+        estaciones: cuándo florece cada orquídea, qué aves llegan, cuándo
+        salen las setas.
+    </p>
+
+</header>
+
+
+<!-- ========================================================
+     AHORA EN EL CAMPO
+     Lo pinta js/fauna-flora/portada.js con El Silo (y las
+     orquídeas en flor, solo para quien puede verlas).
+     ======================================================== -->
+
+<section class="ff-bloque" aria-labelledby="ff-titulo-campo">
+
+    <div class="ff-bloque-cabeza">
+        <h2 id="ff-titulo-campo">Ahora en el campo</h2>
+        <p class="ff-nota" id="ff-campo-nota">Estación de El Silo.</p>
+    </div>
+
+    <div class="ff-datos" id="ff-campo">
+        <p class="ff-aviso">Cargando…</p>
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     SECCIONES
+     ======================================================== -->
+
+<section class="ff-secciones" aria-labelledby="ff-titulo-secciones">
+
+    <h2 class="ff-secciones-titulo" id="ff-titulo-secciones">Secciones</h2>
+
+    <div class="ff-tarjetas">
+
+        <a href="/orquideas" class="ff-tarjeta ff-tarjeta-orquideas">
+            <span class="ff-tarjeta-cabeza">
+                <span class="ff-tarjeta-tipo">FLORA</span>
+                <span class="ff-privada"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Privada</span>
+            </span>
+            <strong>Orquídeas</strong>
+            <span class="ff-tarjeta-texto">Las orquídeas silvestres que se han visto a nuestro alrededor, cuándo florecen y en qué cuadrículas de 10 km aparecen.</span>
+            <span class="ff-tarjeta-pie">Entrar →</span>
+        </a>
+
+        <div class="ff-tarjeta">
+            <span class="ff-tarjeta-tipo ff-tipo-fauna">FAUNA</span>
+            <strong>Aves</strong>
+            <span class="ff-tarjeta-texto">Especies de la comarca, llegadas y salidas de las migratorias y avistamientos recientes.</span>
+            <span class="ff-tarjeta-pie">Próximamente</span>
+        </div>
+
+        <div class="ff-tarjeta">
+            <span class="ff-tarjeta-tipo ff-tipo-fauna">FAUNA</span>
+            <strong>Mariposas e insectos</strong>
+            <span class="ff-tarjeta-texto">Qué vuela cada mes y cómo lo marcan el calor y la lluvia de nuestras estaciones.</span>
+            <span class="ff-tarjeta-pie">Próximamente</span>
+        </div>
+
+        <div class="ff-tarjeta">
+            <span class="ff-tarjeta-tipo ff-tipo-hongos">HONGOS</span>
+            <strong>Setas</strong>
+            <span class="ff-tarjeta-texto">Cuándo empieza la temporada según las lluvias de otoño y la temperatura.</span>
+            <span class="ff-tarjeta-pie">Próximamente</span>
+        </div>
+
+        <div class="ff-tarjeta">
+            <span class="ff-tarjeta-tipo ff-tipo-flora">FLORA</span>
+            <strong>Árboles y plantas</strong>
+            <span class="ff-tarjeta-texto">Encinas, quejigos, almendros en flor: el calendario de la flora autóctona de la comarca.</span>
+            <span class="ff-tarjeta-pie">Próximamente</span>
+        </div>
+
+        <div class="ff-tarjeta ff-tarjeta-invitacion">
+            <strong>¿Tienes fotos de la comarca?</strong>
+            <span class="ff-tarjeta-texto">
+                Súbelas a <a href="https://www.inaturalist.org" target="_blank" rel="noopener noreferrer">iNaturalist</a>:
+                cuando la comunidad confirma la especie pasan a GBIF y, de ahí, a su sección.
+            </span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     CALENDARIO DE LA NATURALEZA
+     Lo pinta js/fauna-flora/portada.js.
+     ======================================================== -->
+
+<section class="ff-bloque" aria-labelledby="ff-titulo-calendario">
+
+    <div class="ff-bloque-cabeza">
+        <h2 id="ff-titulo-calendario">Calendario de la naturaleza</h2>
+        <div class="ff-calendario-mando">
+            <button type="button" id="ff-calendario-anterior" aria-label="Mes anterior">‹</button>
+            <span class="ff-calendario-mes" id="ff-calendario-mes" aria-live="polite"></span>
+            <button type="button" id="ff-calendario-siguiente" aria-label="Mes siguiente">›</button>
+        </div>
+    </div>
+
+    <p class="ff-nota">
+        Lo que suele pasar cada mes en la comarca. Es orientativo: cada año
+        lo adelantan o lo retrasan la lluvia y la temperatura.
+    </p>
+
+    <div class="ff-meses" id="ff-calendario"></div>
+
+</section>
+
+
+</main>
+
+
+<div id="ff-pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/fauna-flora.html -->

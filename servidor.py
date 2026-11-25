@@ -60,6 +60,7 @@ SECCIONES = (
     "incendios",
     "costas",
     "orquideas",
+    "fauna-flora",
     "mi-cuenta",
     "mi-web",
     "novedades",

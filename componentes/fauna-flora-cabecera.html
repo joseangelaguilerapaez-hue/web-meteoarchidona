@@ -1,0 +1,73 @@
+<!--
+    MeteoArchidona · Fauna y Flora · cabecera
+
+    Cabecera propia de la página «Fauna y Flora» (José, 25-11-2026): hermana
+    de la de MeteoArchidona (fondo oscuro, la misma letra y el reloj), con
+    su nombre, su hoja y la raya verde, su menú de secciones y la vuelta a
+    MeteoArchidona. La inserta js/fauna-flora/marco.js en el
+    <div id="ff-cabecera"> de cada página de Fauna y Flora.
+
+    Cada sección es un <a> con data-ff-seccion; la página dice la suya con
+    <body data-ff-seccion="...">. Las que aún no existen van como <span>
+    con «pronto». Orquídeas es privada (data-privada): sale solo para los
+    administradores y los amigos de las orquídeas.
+-->
+
+<header class="ff-cabecera">
+
+<div class="ff-cabecera-fila">
+
+    <a href="/fauna-flora" class="ff-marca" aria-label="Portada de Fauna y Flora">
+
+        <span class="ff-marca-hoja" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6 0-9 0-12"/><path d="M12 13c-4 0-7-2.5-7-7 4 0 7 2.5 7 7z"/><path d="M12 10c3.5 0 6-2 6-6-3.5 0-6 2-6 6z"/></svg>
+        </span>
+
+        <span class="ff-marca-texto">
+            <span class="ff-marca-titulo">FAUNA <span>Y</span> FLORA</span>
+            <span class="ff-marca-subtitulo">La naturaleza de nuestra comarca · <b>MeteoArchidona</b></span>
+        </span>
+
+    </a>
+
+    <div class="ff-reloj" aria-hidden="true">
+        <span class="ff-reloj-fecha" id="ff-fecha"></span>
+        <span class="ff-reloj-hora" id="ff-hora"></span>
+    </div>
+
+    <div class="ff-acciones">
+
+        <div class="cuenta-zona" id="cuenta-zona" hidden></div>
+
+        <a href="/" class="ff-volver">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            <span>Volver a MeteoArchidona</span>
+        </a>
+
+        <button type="button" class="ff-boton-menu" id="ff-boton-menu" aria-expanded="false" aria-controls="ff-menu" aria-label="Abrir el menú de secciones">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+    </div>
+
+</div>
+
+<nav class="ff-menu" id="ff-menu" aria-label="Secciones de Fauna y Flora">
+
+    <a href="/fauna-flora" data-ff-seccion="portada">Portada</a>
+
+    <a href="/orquideas" data-ff-seccion="orquideas" data-privada="orquideas" hidden>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Orquídeas
+    </a>
+
+    <span class="ff-menu-pronto">Aves · pronto</span>
+    <span class="ff-menu-pronto">Mariposas e insectos · pronto</span>
+    <span class="ff-menu-pronto">Setas · pronto</span>
+    <span class="ff-menu-pronto">Árboles y plantas · pronto</span>
+
+</nav>
+
+</header>
+
+<!-- Fin de fichero: componentes/fauna-flora-cabecera.html -->
