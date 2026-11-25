@@ -1236,4 +1236,18 @@ html.lluvia-detenida .capa-gotas-cristal-ficha {
 }
 
 
+
+/* ==========================================================
+   SECCIONES PRIVADAS (José, 25-11-2026)
+   El hidden de Orquídeas tiene que ganar al display de los enlaces del
+   menú y de las filas del pie: sin esta regla, se veía en el menú de
+   cualquiera. js/cabecera.js la enseña solo a quien puede verla.
+   ========================================================== */
+
+.navegacion a[data-privada][hidden],
+#pie-secciones li[hidden] {
+    display: none !important;
+}
+
+
 /* Fin de fichero: css/cabecera.css */
