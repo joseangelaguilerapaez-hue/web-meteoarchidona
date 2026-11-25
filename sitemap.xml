@@ -62,6 +62,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://meteoarchidona.com/fauna-flora</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://meteoarchidona.com/novedades</loc>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
