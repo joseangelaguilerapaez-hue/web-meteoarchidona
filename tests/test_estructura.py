@@ -43,7 +43,8 @@ HOJAS_DEL_SITIO = sorted((RAIZ / "css").glob("*.css")) + [RAIZ / "visores" / "ra
 PORTADA = "actualidad"
 
 # Páginas que no deben aparecer en buscadores ni en el sitemap.
-PRIVADAS = {"administracion", "mi-cuenta", "mi-web"}
+# Orquídeas (José, 25-11-2026): solo administradores y amigos de las orquídeas.
+PRIVADAS = {"administracion", "mi-cuenta", "mi-web", "orquideas"}
 
 # Se llega desde el botón con el nombre del usuario, no desde el menú.
 # Climatología (José, 13-11-2026): dada de alta pero fuera del menú hasta
@@ -316,7 +317,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261121-llenar1"),
-            ("administracion", r"administracion/principal\.js\?v=20261121-franja1"),
+            ("administracion", r"administracion/principal\.js\?v=20261125-orquideas1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -358,7 +359,7 @@ class TestConfiguracion(unittest.TestCase):
         self.assertIn("function ponerCuentaAtras", codigo)
         self.assertIn("fecha_actualizacion", codigo)
         self.assertIn(
-            "administracion.css?v=20261108-ficha1",
+            "administracion.css?v=20261125-orquideas1",
             leer(RAIZ / "pages" / "administracion.html"),
         )
 
@@ -376,14 +377,14 @@ class TestUsuariosAdministracion(unittest.TestCase):
 
     def test_modulo(self):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./usuarios.js?v=20261108-ficha1", principal)
+        self.assertIn("./usuarios.js?v=20261125-orquideas1", principal)
         self.assertIn("./acceso.js?v=20261104-usuarios1", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "usuarios.js")
         self.assertIn('"/admin/usuarios"', codigo)
         self.assertIn("es_administrador", codigo)
         self.assertIn('method: "PATCH"', codigo)
         self.assertIn("/reenviar-activacion", codigo)
-        self.assertIn("./ficha-usuario.js?v=20261108-ficha1", codigo)
+        self.assertIn("./ficha-usuario.js?v=20261125-orquideas1", codigo)
         ficha = leer(RAIZ / "js" / "administracion" / "ficha-usuario.js")
         for ruta in ("/estado", "/enviar-cambio-pin", "/cerrar-sesiones", "/borrar", "/suscripciones"):
             self.assertIn(ruta, ficha)
@@ -423,7 +424,7 @@ class TestMiCuenta(unittest.TestCase):
 
     def test_el_nombre_lleva_a_mi_cuenta(self):
         self.assertIn('window.location.assign("/mi-cuenta")', leer(RAIZ / "js" / "cuenta.js"))
-        self.assertIn("/js/cuenta.js?v=20261104-mi-cuenta1", leer(RAIZ / "js" / "cabecera.js"))
+        self.assertIn("/js/cuenta.js?v=20261125-orquideas1", leer(RAIZ / "js" / "cabecera.js"))
 
     def test_precios_en_administracion(self):
         self.assertIn('id="listaServiciosSuscripcion"', sin_comentarios(RAIZ / "pages" / "administracion.html"))

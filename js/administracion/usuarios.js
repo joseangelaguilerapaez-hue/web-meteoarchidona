@@ -6,12 +6,14 @@
  *
  * GET   /admin/usuarios
  * PATCH /admin/usuarios/{identificador}   {"es_administrador": true|false}
+ *                                         {"amigo_orquideas": true|false}  (25-11-2026)
  * POST  /admin/usuarios/{identificador}/reenviar-activacion   (8-11-2026)
  * GET   /admin/suscripciones/servicios
  * PATCH /admin/suscripciones/servicios/{codigo}   {"precio", "disponible"}
  *
- * Una ficha por cuenta: nombre, correo, estado y fechas, con la casilla
- * «Administrador». Un administrador entra en Administración con su
+ * Una ficha por cuenta: nombre, correo, estado y fechas, con las casillas
+ * «Administrador» y «Amigo de las orquídeas» (José, 25-11-2026: ve la
+ * sección privada Orquídeas; los administradores la ven siempre). Un administrador entra en Administración con su
  * sesión, sin el PIN. De momento es lo único que se cambia; más
  * adelante, otros datos de la cuenta (por ejemplo, permisos del foro).
  *
@@ -34,7 +36,7 @@ import {
 import {
     abrirFichaUsuario,
     cerrarFichaUsuario
-} from "./ficha-usuario.js?v=20261108-ficha1";
+} from "./ficha-usuario.js?v=20261125-orquideas1";
 
 
 const RUTA = "/admin/usuarios";
@@ -120,6 +122,9 @@ function ficha(usuario){
     if(usuario.es_administrador){
         etiquetas.append(crear("span", "usuarios-admin", "Administrador"));
     }
+    if(usuario.amigo_orquideas){
+        etiquetas.append(crear("span", "usuarios-orquideas", "Amigo de las orquídeas"));
+    }
     cabecera.append(etiquetas);
     tarjeta.append(cabecera);
 
@@ -135,27 +140,29 @@ function ficha(usuario){
     }
     tarjeta.append(datos);
 
-    // Casilla «Administrador». Solo una cuenta activa puede serlo;
-    // quitarlo siempre se puede.
-    const linea = crear("div", "check-linea usuarios-permiso");
-    const casilla = document.createElement("input");
-    casilla.type = "checkbox";
-    casilla.id = `usuario-admin-${usuario.identificador}`;
-    casilla.checked = Boolean(usuario.es_administrador);
-    casilla.disabled = !usuario.es_administrador && usuario.estado !== "ACTIVO";
-    const etiqueta = crear("label", "", "Administrador");
-    etiqueta.htmlFor = casilla.id;
-    linea.append(casilla, etiqueta);
-    tarjeta.append(linea);
-
+    // Casillas de permisos. Solo una cuenta activa puede recibirlos;
+    // quitarlos siempre se puede.
     const estado = crear("div", "estado");
     estado.setAttribute("role", "status");
     estado.setAttribute("aria-live", "polite");
-    tarjeta.append(estado);
 
-    casilla.addEventListener("change", () => {
-        void cambiarAdministrador(usuario, casilla, estado);
-    });
+    for(const permiso of PERMISOS){
+        const linea = crear("div", "check-linea usuarios-permiso");
+        const casilla = document.createElement("input");
+        casilla.type = "checkbox";
+        casilla.id = `usuario-${permiso.campo}-${usuario.identificador}`;
+        casilla.checked = Boolean(usuario[permiso.campo]);
+        casilla.disabled = !usuario[permiso.campo] && usuario.estado !== "ACTIVO";
+        const etiqueta = crear("label", "", permiso.nombre);
+        etiqueta.htmlFor = casilla.id;
+        linea.append(casilla, etiqueta);
+        tarjeta.append(linea);
+        casilla.addEventListener("change", () => {
+            void cambiarPermiso(usuario, casilla, estado, permiso);
+        });
+    }
+
+    tarjeta.append(estado);
 
     // Pulsar la tarjeta (fuera de la casilla y los botones) abre la ficha.
     tarjeta.classList.add("usuarios-ficha-abrible");
@@ -214,13 +221,33 @@ function actualizarDesdeFicha(actualizado, borrado){
 }
 
 
-async function cambiarAdministrador(usuario, casilla, estado){
+const PERMISOS = [
+    {
+        campo: "es_administrador",
+        nombre: "Administrador",
+        dar: nombre => `¿Hacer administrador a ${nombre}? Podrá entrar en Administración sin el PIN.`,
+        quitar: nombre => `¿Quitar el permiso de administrador a ${nombre}?`,
+        hecho: nombre => `${nombre} ya es administrador.`,
+        deshecho: nombre => `${nombre} ya no es administrador.`
+    },
+    {
+        campo: "amigo_orquideas",
+        nombre: "Amigo de las orquídeas",
+        dar: nombre => `¿Hacer a ${nombre} amigo de las orquídeas? Podrá ver la sección privada Orquídeas.`,
+        quitar: nombre => `¿Quitar a ${nombre} de los amigos de las orquídeas? Dejará de ver la sección Orquídeas.`,
+        hecho: nombre => `${nombre} ya es amigo de las orquídeas.`,
+        deshecho: nombre => `${nombre} ya no es amigo de las orquídeas.`
+    }
+];
+
+
+async function cambiarPermiso(usuario, casilla, estado, permiso){
 
     const nuevo = casilla.checked;
 
     const pregunta = nuevo
-        ? `¿Hacer administrador a ${usuario.nombre_visible}? Podrá entrar en Administración sin el PIN.`
-        : `¿Quitar el permiso de administrador a ${usuario.nombre_visible}?`;
+        ? permiso.dar(usuario.nombre_visible)
+        : permiso.quitar(usuario.nombre_visible);
 
     if(!window.confirm(pregunta)){
         casilla.checked = !nuevo;
@@ -235,7 +262,7 @@ async function cambiarAdministrador(usuario, casilla, estado){
             `${RUTA}/${encodeURIComponent(usuario.identificador)}`,
             {
                 method: "PATCH",
-                body: JSON.stringify({es_administrador: nuevo})
+                body: JSON.stringify({[permiso.campo]: nuevo})
             }
         );
 
@@ -250,8 +277,8 @@ async function cambiarAdministrador(usuario, casilla, estado){
         mostrarEstado(
             $("estadoUsuarios"),
             nuevo
-                ? `${actualizado.nombre_visible} ya es administrador.`
-                : `${actualizado.nombre_visible} ya no es administrador.`,
+                ? permiso.hecho(actualizado.nombre_visible)
+                : permiso.deshecho(actualizado.nombre_visible),
             "ok"
         );
 
@@ -478,9 +505,11 @@ function renderizarLista(){
     const resumen = $("resumenUsuarios");
     if(resumen){
         const administradores = usuarios.filter(u => u.es_administrador).length;
+        const amigos = usuarios.filter(u => u.amigo_orquideas).length;
         resumen.textContent = usuarios.length
             ? `${usuarios.length} ${usuarios.length === 1 ? "cuenta" : "cuentas"}`
                 + ` · ${administradores} ${administradores === 1 ? "administrador" : "administradores"}`
+                + ` · ${amigos} ${amigos === 1 ? "amigo" : "amigos"} de las orquídeas`
                 + (filtro ? ` · ${visibles.length} con «${filtro}»` : "")
             : "Todavía no hay ninguna cuenta.";
     }

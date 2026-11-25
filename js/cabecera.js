@@ -30,7 +30,7 @@
 
 
 const RUTA_CABECERA =
-    "/componentes/cabecera.html?v=20261118-costas1";
+    "/componentes/cabecera.html?v=20261125-orquideas1";
 
 
 /* ==========================================================
@@ -276,7 +276,7 @@ const RUTA_PIE = "/componentes/pie.html";
 
 const RUTA_CUENTA_CSS = "/css/cuenta.css?v=20261026-cuenta3";
 
-const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261104-mi-cuenta1";
+const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261125-orquideas1";
 
 const RUTA_DISTINTIVO_CSS = "/css/distintivo.css?v=20261103-distintivo1";
 
@@ -382,6 +382,15 @@ async function montarPie() {
         }
 
         const elemento = document.createElement("li");
+
+        // Las secciones privadas (Orquídeas) llegan escondidas, como en el menú.
+        if (original.dataset.privada) {
+
+            enlace.dataset.privada = original.dataset.privada;
+
+            elemento.hidden = original.hidden;
+
+        }
 
         elemento.appendChild(enlace);
 
@@ -527,6 +536,35 @@ function cargarMiWeb() {
 }
 
 
+/*
+ * Secciones privadas (José, 25-11-2026): Orquídeas solo sale en el menú y
+ * en el pie para los administradores y los amigos de las orquídeas. Lo
+ * dice js/cuenta.js con su aviso «meteoarchidona:cuenta» (veOrquideas).
+ */
+function mostrarPrivadas(veOrquideas) {
+
+    document
+        .querySelectorAll('.navegacion a[data-privada="orquideas"]')
+        .forEach((enlace) => { enlace.hidden = !veOrquideas; });
+
+    document
+        .querySelectorAll('#pie-secciones a[data-privada="orquideas"]')
+        .forEach((enlace) => { enlace.closest("li").hidden = !veOrquideas; });
+
+}
+
+
+function vigilarPrivadas() {
+
+    document.addEventListener("meteoarchidona:cuenta", (evento) => {
+
+        mostrarPrivadas(Boolean(evento.detail?.veOrquideas));
+
+    });
+
+}
+
+
 async function montarCabecera() {
 
     const hueco = document.getElementById("cabecera");
@@ -578,6 +616,9 @@ async function montarCabecera() {
 
 
     marcarSeccionActual();
+
+    // Antes de cargar la cuenta, para no perder su primer aviso.
+    vigilarPrivadas();
 
     cargarLanzamientos();
 

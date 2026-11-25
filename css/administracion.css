@@ -1655,6 +1655,15 @@ a.modulo-boton{
     color:var(--amber-light)
 }
 
+/* Amigo de las orquídeas (25-11-2026): púrpura de la gama «Ophrys». */
+.usuarios-orquideas{
+    padding:3px 9px;
+    border:1px solid #b45aa0;
+    border-radius:999px;
+    font-size:.78rem;
+    color:#e3a6d6
+}
+
 /* Ficha de mantenimiento del usuario (8-11-2026) */
 
 .usuarios-ficha-abrible{

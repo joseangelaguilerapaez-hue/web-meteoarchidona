@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="Orquídeas silvestres de la comarca de Archidona: especies, floración y cuadrículas donde se han visto."
+>
+
+<title>
+    Orquídeas · MeteoArchidona
+</title>
+
+<link rel="icon" href="/assets/icono-192.png?v=20261101-nieve" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
+<link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#080d14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+
+
+<link
+    rel="stylesheet"
+    href="../css/fuentes.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/paleta.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/cabecera.css?v=20261117-lluvia1"
+>
+<link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
+
+<link
+    rel="stylesheet"
+    href="../css/pie.css?v=20261113-menu5"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/lluvia.css?v=20260913-lluvia2"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/orquideas-componentes.css?v=20261125-orquideas1"
+>
+
+<link
+    rel="stylesheet"
+    href="../css/orquideas.css?v=20261125-orquideas1"
+>
+
+
+<script
+    src="../js/api.js?v=20261003-vps1"
+    defer
+></script>
+
+<script
+    src="../js/cabecera.js?v=20261125-orquideas1"
+    defer
+></script>
+<script src="../js/pantalla-simulada-anfitrion.js?v=20261113-iphone2" defer></script>
+<script src="../js/auditoria.js?v=20261025-auditoria2" defer></script>
+
+<script
+    src="../js/lluvia.js?v=20261117-lluvia1"
+    defer
+></script>
+
+<script
+    type="module"
+    src="../js/orquideas.js?v=20261125-orquideas1"
+></script>
+
+<script
+    src="../js/pwa.js?v=20261101-pwa1"
+    defer
+></script>
+
+<script
+    src="../js/instalar.js?v=20261102-manual1"
+    defer
+></script>
+
+</head>
+
+
+<body data-seccion="orquideas">
+
+
+<div class="pagina">
+
+
+<div id="cabecera"></div>
+
+
+<main class="orquideas">
+
+
+<header class="orquideas-cabecera">
+
+    <div class="orq-etiqueta-pagina">
+        METEOARCHIDONA · ORQUÍDEAS
+    </div>
+
+    <h1>
+        Orquídeas silvestres de <span>la comarca</span>
+    </h1>
+
+    <p class="orquideas-entradilla">
+        La Sierra Norte de Málaga es de los rincones de la península con más
+        orquídeas silvestres, y en Archidona se han descrito incluso híbridos
+        nuevos para la ciencia. Aquí están las especies que se han visto a
+        nuestro alrededor, cuándo florecen y en qué cuadrículas de 10 km
+        aparecen, con las observaciones de naturalistas y herbarios reunidas
+        en GBIF.
+    </p>
+
+    <div class="orquideas-radio">
+        <span>Distancia a Archidona</span>
+        <div
+            class="orquideas-radio-botones"
+            id="orquideas-radio"
+            role="group"
+            aria-label="Distancia a Archidona"
+        ></div>
+    </div>
+
+</header>
+
+
+<!-- ========================================================
+     SECCIÓN PRIVADA
+     La API responde 401 o 403 a quien no es administrador ni amigo
+     de las orquídeas: entonces solo se ve este aviso (js/orquideas.js).
+     ======================================================== -->
+
+<section
+    class="orquideas-bloque orquideas-privado"
+    id="orquideas-privado"
+    hidden
+>
+
+    <h2>
+        Sección privada
+    </h2>
+
+    <p data-texto></p>
+
+</section>
+
+
+<div
+    class="orquideas-contenido"
+    id="orquideas-contenido"
+>
+
+
+<!-- ========================================================
+     RESUMEN
+     Componente js/orquideas/resumen.js.
+     ======================================================== -->
+
+<section
+    class="orquideas-bloque"
+    aria-labelledby="titulo-orquideas-resumen"
+>
+
+    <h2 id="titulo-orquideas-resumen">
+        De un vistazo
+    </h2>
+
+    <div
+        data-componente="orquideas-resumen"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     EN FLOR AHORA
+     Componente js/orquideas/en-flor.js.
+     ======================================================== -->
+
+<section
+    class="orquideas-bloque"
+    aria-labelledby="titulo-orquideas-en-flor"
+>
+
+    <h2 id="titulo-orquideas-en-flor">
+        En flor ahora
+    </h2>
+
+    <p class="orquideas-nota">
+        Las que suelen estar en flor este mes, de más a menos vistas. Puedes
+        mirar otro mes en el selector.
+    </p>
+
+    <div
+        data-componente="orquideas-en-flor"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     MAPA
+     Componente js/orquideas/mapa.js.
+     ======================================================== -->
+
+<section
+    class="orquideas-bloque orquideas-bloque-musgo"
+    aria-labelledby="titulo-orquideas-mapa"
+>
+
+    <h2 id="titulo-orquideas-mapa">
+        Dónde se han visto
+    </h2>
+
+    <p class="orquideas-nota">
+        Cada cuadrado es una cuadrícula UTM de 10 × 10 km, más oscura cuantas
+        más especies tiene. Toca una para ver cuáles. Elige una especie para
+        ver solo la suya.
+    </p>
+
+    <div
+        data-componente="orquideas-mapa"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     ESPECIES
+     Componente js/orquideas/especies.js.
+     ======================================================== -->
+
+<section
+    class="orquideas-bloque"
+    aria-labelledby="titulo-orquideas-especies"
+>
+
+    <h2 id="titulo-orquideas-especies">
+        Las especies
+    </h2>
+
+    <div
+        data-componente="orquideas-especies"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     FICHA
+     Componente js/orquideas/ficha.js.
+     ======================================================== -->
+
+<section
+    id="ficha"
+    class="orquideas-bloque"
+    aria-labelledby="titulo-orquideas-ficha"
+>
+
+    <h2 id="titulo-orquideas-ficha">
+        Ficha
+    </h2>
+
+    <div
+        data-componente="orquideas-ficha"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================
+     GLOSARIO
+     ======================================================== -->
+
+<section
+    class="orquideas-bloque orquideas-bloque-musgo"
+    aria-labelledby="titulo-orquideas-glosario"
+>
+
+    <h2 id="titulo-orquideas-glosario">
+        Qué significa cada cosa
+    </h2>
+
+    <dl class="orquideas-glosario">
+
+        <dt>Orquídea silvestre</dt>
+        <dd>
+            Las de aquí son terrestres y pequeñas, nada que ver con las de
+            maceta. Brotan de un tubérculo en otoño o invierno, florecen en
+            primavera y en verano desaparecen bajo tierra.
+        </dd>
+
+        <dt>Ophrys</dt>
+        <dd>
+            El género estrella de la comarca: su flor imita a la hembra de una
+            abeja o una avispa, con su forma, su vello y hasta su olor, para que
+            el macho la visite y se lleve el polen.
+        </dd>
+
+        <dt>Híbrido</dt>
+        <dd>
+            El cruce natural de dos especies que crecen juntas. Se escribe con
+            «×» entre el género y el nombre: <em>Ophrys ×arxdominensis</em>.
+        </dd>
+
+        <dt>Cuadrícula de 10 km</dt>
+        <dd>
+            Así citan los botánicos dónde vive una planta (30SUG70, por ejemplo).
+            MeteoArchidona no publica el sitio exacto de ninguna orquídea: hay
+            quien las arranca, y algunas son raras.
+        </dd>
+
+        <dt>Observación</dt>
+        <dd>
+            Cada vez que alguien ha visto y fotografiado una orquídea (sobre
+            todo en iNaturalist), o un pliego de herbario recogido en el campo.
+        </dd>
+
+        <dt>Floración</dt>
+        <dd>
+            Los meses con más observaciones de cada especie. Los casos sueltos
+            fuera de temporada, que suelen ser fechas mal puestas, no cuentan.
+        </dd>
+
+    </dl>
+
+</section>
+
+
+<!-- ========================================================
+     FUENTES
+     ======================================================== -->
+
+<section
+    class="orquideas-bloque"
+    aria-labelledby="titulo-orquideas-fuentes"
+>
+
+    <h2 id="titulo-orquideas-fuentes">
+        Fuentes
+    </h2>
+
+    <ul class="orquideas-fuentes">
+        <li>
+            Observaciones:
+            <a href="https://www.gbif.org/occurrence/search?taxon_key=7689" target="_blank" rel="noopener noreferrer">GBIF.org</a>,
+            que reúne iNaturalist, los herbarios de las universidades de Málaga,
+            Córdoba y Granada y otras bases botánicas. Se cargan cada lunes.
+        </li>
+        <li>
+            Cada foto es de su autor, con su licencia al pie; al tocarla se abre
+            su registro en GBIF.
+        </li>
+        <li>
+            Para saber más: Robles y Becerra (2024), <em>Orquídeas silvestres de
+            la provincia de Málaga</em>, Ediciones Pinsapar.
+        </li>
+        <li>
+            Mapa: &copy; colaboradores de
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>.
+        </li>
+        <li>
+            Todas las orquídeas están en el convenio CITES, que controla su
+            comercio. En el campo se miran y se fotografían, pero no se arrancan.
+        </li>
+    </ul>
+
+</section>
+
+
+</div>
+
+
+</main>
+
+
+</div>
+
+
+
+<div id="pie"></div>
+
+
+</body>
+
+</html>
+
+<!-- Fin de fichero: pages/orquideas.html -->

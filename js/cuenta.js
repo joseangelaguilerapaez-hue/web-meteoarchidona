@@ -340,7 +340,11 @@ function pintarZona() {
     // se pinta al arrancar, al entrar y al salir.
     document.dispatchEvent(
         new CustomEvent("meteoarchidona:cuenta", {
-            detail: { conSesion: Boolean(usuario) },
+            detail: {
+                conSesion: Boolean(usuario),
+                // Sección privada Orquídeas (25-11-2026): administradores y amigos.
+                veOrquideas: Boolean(usuario?.ve_orquideas),
+            },
         })
     );
 

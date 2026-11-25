@@ -55,7 +55,8 @@ const SUCESOS = {
     BAJA_CANCELADA: "Baja cancelada",
     CUENTA_BORRADA: "Cuenta borrada",
     ACCESO_ADMINISTRACION: "Entrada en Administración",
-    CAMBIO_ADMINISTRADOR: "Cambio de administrador"
+    CAMBIO_ADMINISTRADOR: "Cambio de administrador",
+    CAMBIO_PERMISO: "Cambio de permiso"
 };
 
 let dialogo = null;
@@ -244,6 +245,9 @@ function pintarDatos(usuario){
     );
     if(usuario.es_administrador){
         etiquetas.append(crear("span", "usuarios-admin", "Administrador"));
+    }
+    if(usuario.amigo_orquideas){
+        etiquetas.append(crear("span", "usuarios-orquideas", "Amigo de las orquídeas"));
     }
 
     const datos = crear("div", "usuarios-datos");
