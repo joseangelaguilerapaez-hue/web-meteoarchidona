@@ -1664,7 +1664,7 @@ class TestLluviaEnTodasLasPaginas(unittest.TestCase):
                 continue
             texto = leer(pagina)
             self.assertIn("js/lluvia.js?v=20261117-lluvia1", texto, pagina.name)
-            self.assertIn("css/cabecera.css?v=20261117-lluvia1", texto, pagina.name)
+            self.assertIn("css/cabecera.css?v=20261125-orquideas1", texto, pagina.name)
 
     def test_boton_y_lluvia_real(self):
         codigo = leer(RAIZ / "js" / "lluvia.js")
