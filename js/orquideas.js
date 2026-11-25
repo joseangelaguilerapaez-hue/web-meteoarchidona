@@ -1,6 +1,9 @@
 /*
  * MeteoArchidona · Página Orquídeas
  *
+ * Desde el 25-11-2026 es una sección de la página «Fauna y Flora», con su
+ * cabecera, su menú y su pie (js/fauna-flora/marco.js).
+ *
  * Decisión de José del 25-11-2026: las orquídeas silvestres de la
  * comarca, con las observaciones de GBIF a menos de 25, 50 o 100 km de
  * Archidona (50 por defecto). Gama «Ophrys» sobre blanco. Sección privada:
@@ -27,6 +30,7 @@ import {montarMapaOrquideas} from "./orquideas/mapa.js?v=20261125-orquideas1";
 import {montarEspeciesOrquideas} from "./orquideas/especies.js?v=20261125-orquideas1";
 import {montarFichaOrquideas} from "./orquideas/ficha.js?v=20261125-orquideas1";
 import {pedir, textoError, RADIOS, RADIO_DEFECTO} from "./orquideas/comun.js?v=20261125-orquideas1";
+import {montarMarcoFaunaFlora} from "./fauna-flora/marco.js?v=20261125-fauna1";
 
 
 export const COMPONENTES_ORQUIDEAS = {
@@ -81,6 +85,7 @@ function pintarSelectorRadio(radio) {
 
 
 async function arrancar() {
+    void montarMarcoFaunaFlora();
     const radio = radioDeLaDireccion();
     const privado = document.getElementById("orquideas-privado");
     const contenido = document.getElementById("orquideas-contenido");
