@@ -59,6 +59,7 @@ SECCIONES = (
     "climatologia",
     "incendios",
     "costas",
+    "orquideas",
     "mi-cuenta",
     "mi-web",
     "novedades",

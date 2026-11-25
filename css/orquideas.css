@@ -1,0 +1,210 @@
+/*
+ * MeteoArchidona
+ * Página Orquídeas
+ *
+ * Estilos exclusivos de:
+ *
+ *     pages/orquideas.html
+ *
+ * Decisión de José del 25-11-2026: gama «Ophrys» sobre blanco (como
+ * Embalses, Polen o Costas): púrpuras y rosas con verde musgo de acento.
+ * Una columna de bloques con bordes finos y radios de 14 px; la cabecera
+ * y el pie siguen siendo los oscuros de siempre.
+ *
+ * La paleta (--orq-*) está en css/orquideas-componentes.css, que se carga
+ * antes; aquí solo va lo de la página.
+ */
+
+
+/* ==========================================================
+   FONDO DE LA PÁGINA
+   ========================================================== */
+
+body[data-seccion="orquideas"] {
+    background:
+        radial-gradient(ellipse at top, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #fdf8fb 0%, #f6e8f1 50%, #eaf0df 100%);
+}
+
+
+/* ==========================================================
+   CONTENEDOR Y BLOQUES
+   ========================================================== */
+
+.orquideas {
+    width: min(1080px, calc(100% - 32px));
+    margin: 34px auto 56px;
+    display: grid;
+    gap: 18px;
+    color: var(--orq-texto);
+}
+
+.orquideas-cabecera {
+    display: grid;
+    gap: 10px;
+    padding: 4px 4px 8px;
+}
+
+.orquideas-cabecera h1 {
+    margin: 0;
+    color: var(--orq-profundo);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.orquideas-cabecera h1 span {
+    color: var(--orq-rosa);
+}
+
+.orq-etiqueta-pagina {
+    color: var(--orq-musgo);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+}
+
+.orquideas-entradilla {
+    margin: 0;
+    max-width: 780px;
+    color: var(--orq-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.orquideas-radio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    color: var(--orq-texto-suave);
+    font-size: 13px;
+}
+
+.orquideas-radio-botones {
+    display: inline-flex;
+    overflow: hidden;
+    border: 1px solid var(--orq-borde-fuerte);
+    border-radius: 999px;
+}
+
+.orquideas-radio-boton {
+    padding: 6px 14px;
+    color: var(--orq-purpura);
+    background: #ffffff;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.orquideas-radio-boton + .orquideas-radio-boton {
+    border-left: 1px solid var(--orq-borde-fuerte);
+}
+
+.orquideas-radio-boton[aria-pressed="true"] {
+    color: #ffffff;
+    background: var(--orq-purpura);
+}
+
+.orquideas-bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 20px 22px;
+    background: linear-gradient(170deg, #ffffff 0%, var(--orq-petalo) 100%);
+    border: 1px solid var(--orq-borde);
+    border-radius: 14px;
+    box-shadow: var(--orq-sombra);
+    scroll-margin-top: 80px;
+}
+
+.orquideas-bloque-musgo {
+    background: linear-gradient(170deg, #ffffff 0%, var(--orq-musgo-claro) 100%);
+}
+
+.orquideas-bloque h2 {
+    margin: 0;
+    color: var(--orq-profundo);
+    font-size: 18px;
+}
+
+.orquideas-nota {
+    margin: 0;
+    color: var(--orq-texto-suave);
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+.orquideas-contenido {
+    display: grid;
+    gap: 18px;
+}
+
+.orquideas-radio[hidden],
+.orquideas-contenido[hidden],
+.orquideas-privado[hidden] {
+    display: none;
+}
+
+.orquideas-privado {
+    text-align: center;
+}
+
+.orquideas-privado p {
+    margin: 0;
+    color: var(--orq-texto-suave);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   GLOSARIO Y FUENTES
+   ========================================================== */
+
+.orquideas-glosario {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 8px 16px;
+    margin: 0;
+}
+
+.orquideas-glosario dt {
+    color: var(--orq-profundo);
+    font-weight: 700;
+}
+
+.orquideas-glosario dd {
+    margin: 0;
+    color: var(--orq-texto-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+@media (max-width: 620px) {
+    .orquideas-glosario {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .orquideas-glosario dd {
+        margin-bottom: 6px;
+    }
+}
+
+.orquideas-fuentes {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding-left: 18px;
+    color: var(--orq-texto-suave);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.orquideas-fuentes a {
+    color: var(--orq-purpura);
+}
+
+
+/* Fin de fichero: css/orquideas.css */
