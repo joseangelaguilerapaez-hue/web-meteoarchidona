@@ -17,7 +17,7 @@
 import {
     pedir, crear, aviso, vaciar, prepararRaiz, titulo, pie, numero, leerRadio, textoError,
     nombreEspecie, figuraFoto, sinFoto, elegirEspecie, MESES, PAGINA
-} from "./comun.js?v=20261125-orquideas1";
+} from "./comun.js?v=20261126-jornadas1";
 
 
 function tarjeta(especie, enPagina) {

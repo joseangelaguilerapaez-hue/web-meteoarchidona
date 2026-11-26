@@ -43,8 +43,9 @@ HOJAS_DEL_SITIO = sorted((RAIZ / "css").glob("*.css")) + [RAIZ / "visores" / "ra
 PORTADA = "actualidad"
 
 # Páginas que no deben aparecer en buscadores ni en el sitemap.
-# Orquídeas (José, 25-11-2026): solo administradores y amigos de las orquídeas.
-PRIVADAS = {"administracion", "mi-cuenta", "mi-web", "orquideas"}
+# Orquídeas fue privada (José, 25-11-2026); desde el 26-11-2026 es pública
+# con su lanzamiento del 24-12-2026, en buscadores y en el sitemap.
+PRIVADAS = {"administracion", "mi-cuenta", "mi-web"}
 
 # Se llega desde el botón con el nombre del usuario, no desde el menú.
 # Climatología (José, 13-11-2026): dada de alta pero fuera del menú hasta
@@ -321,7 +322,7 @@ class TestFechaEnNombreTimelapse(unittest.TestCase):
         """El navegador guarda /js un año: si cambia principal.js, cambia su ?v= en la página."""
         for pagina, patron in (
             ("actualidad", r"actualidad/principal\.js\?v=20261121-llenar1"),
-            ("administracion", r"administracion/principal\.js\?v=20261125-orquideas1"),
+            ("administracion", r"administracion/principal\.js\?v=20261126-jornadas1"),
         ):
             self.assertRegex(leer(RAIZ / "pages" / f"{pagina}.html"), patron)
 
@@ -381,14 +382,14 @@ class TestUsuariosAdministracion(unittest.TestCase):
 
     def test_modulo(self):
         principal = leer(RAIZ / "js" / "administracion" / "principal.js")
-        self.assertIn("./usuarios.js?v=20261125-orquideas1", principal)
+        self.assertIn("./usuarios.js?v=20261126-jornadas1", principal)
         self.assertIn("./acceso.js?v=20261104-usuarios1", principal)
         codigo = leer(RAIZ / "js" / "administracion" / "usuarios.js")
         self.assertIn('"/admin/usuarios"', codigo)
         self.assertIn("es_administrador", codigo)
         self.assertIn('method: "PATCH"', codigo)
         self.assertIn("/reenviar-activacion", codigo)
-        self.assertIn("./ficha-usuario.js?v=20261125-orquideas1", codigo)
+        self.assertIn("./ficha-usuario.js?v=20261126-jornadas1", codigo)
         ficha = leer(RAIZ / "js" / "administracion" / "ficha-usuario.js")
         for ruta in ("/estado", "/enviar-cambio-pin", "/cerrar-sesiones", "/borrar", "/suscripciones"):
             self.assertIn(ruta, ficha)
@@ -428,7 +429,7 @@ class TestMiCuenta(unittest.TestCase):
 
     def test_el_nombre_lleva_a_mi_cuenta(self):
         self.assertIn('window.location.assign("/mi-cuenta")', leer(RAIZ / "js" / "cuenta.js"))
-        self.assertIn("/js/cuenta.js?v=20261125-orquideas1", leer(RAIZ / "js" / "cabecera.js"))
+        self.assertIn("/js/cuenta.js?v=20261126-jornadas1", leer(RAIZ / "js" / "cabecera.js"))
 
     def test_precios_en_administracion(self):
         self.assertIn('id="listaServiciosSuscripcion"', sin_comentarios(RAIZ / "pages" / "administracion.html"))
@@ -1912,6 +1913,38 @@ class TestFaunaFlora(unittest.TestCase):
         self.assertNotIn('data-seccion="orquideas"', cabecera)
         propia = leer(RAIZ / "componentes" / "fauna-flora-cabecera.html")
         self.assertIn('href="/"', propia)
-        self.assertRegex(propia, r'data-ff-seccion="orquideas"\s+data-privada="orquideas"\s+hidden')
+        self.assertRegex(propia, r'data-ff-seccion="orquideas"\s+data-lanzamiento="orquideas"\s+hidden')
         self.assertIn(".ff-menu a[hidden]", leer(RAIZ / "css" / "fauna-flora.css"))
         self.assertIn('modulo.SECCION = "fauna-flora"', leer(RAIZ / "scripts" / "configurar_seccion_fauna_flora.py"))
+
+    def test_orquideas_publica_con_jornadas_y_publicaciones(self):
+        """José y Damián Quintana, 26-11-2026: pública desde su lanzamiento."""
+        pagina = leer(RAIZ / "pages" / "orquideas.html")
+        self.assertNotIn("noindex", pagina)
+        self.assertIn('<link rel="canonical" href="https://meteoarchidona.com/orquideas">', pagina)
+        self.assertIn("https://meteoarchidona.com/orquideas</loc>", leer(RAIZ / "sitemap.xml"))
+        for apartado in ("especies", "jornadas", "publicaciones"):
+            self.assertIn(f'id="orquideas-pestana-{apartado}"', pagina)
+            self.assertIn(f'id="orquideas-panel-{apartado}"', pagina)
+        self.assertIn('data-componente="orquideas-jornadas"', pagina)
+        self.assertIn('data-componente="orquideas-publicaciones"', pagina)
+        principal = leer(RAIZ / "js" / "orquideas.js")
+        self.assertIn('"orquideas-jornadas": montarJornadasOrquideas', principal)
+        self.assertIn('"orquideas-publicaciones": montarPublicacionesOrquideas', principal)
+        jornadas = leer(RAIZ / "js" / "orquideas" / "jornadas.js")
+        self.assertIn("/inscripcion`", jornadas)
+        self.assertIn('trampa.name = "web"', jornadas)
+        self.assertIn("/orquideas/editor/jornadas", jornadas)
+        self.assertIn("/orquideas/editor/publicaciones", leer(RAIZ / "js" / "orquideas" / "publicaciones.js"))
+        self.assertIn("/orquideas/editor/especies/", leer(RAIZ / "js" / "orquideas" / "ficha.js"))
+        self.assertIn("editaOrquideas: Boolean(usuario?.edita_orquideas)", leer(RAIZ / "js" / "cuenta.js"))
+        self.assertIn('campo: "editor_orquideas"', leer(RAIZ / "js" / "administracion" / "usuarios.js"))
+        marco = leer(RAIZ / "js" / "fauna-flora" / "marco.js")
+        self.assertIn("cargarLanzamientos", marco)
+        self.assertIn('a[data-lanzamiento]', marco)
+        # Mismo número de versión de comun.js en todos los módulos de Orquídeas.
+        versiones = set()
+        for modulo in (RAIZ / "js" / "orquideas").glob("*.js"):
+            versiones.update(re.findall(r'comun\.js\?v=([\w-]+)', leer(modulo)))
+        versiones.update(re.findall(r'orquideas/comun\.js\?v=([\w-]+)', principal))
+        self.assertEqual(versiones, {"20261126-jornadas1"})

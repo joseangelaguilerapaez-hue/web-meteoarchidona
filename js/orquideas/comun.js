@@ -2,8 +2,9 @@
  * MeteoArchidona · Orquídeas · piezas comunes
  *
  * Lo que comparten los componentes de Orquídeas (js/orquideas/*.js) y su
- * página: la petición a la API con la cookie de sesión (la sección es
- * privada: administradores y amigos de las orquídeas, José, 25-11-2026),
+ * página: la petición a la API con la cookie de sesión (antes de su
+ * lanzamiento del 24-12-2026 solo la ven administradores, amigos y
+ * editores de orquídeas; José, 25 y 26-11-2026),
  * nombres de los meses, fotos con su autor y su licencia, la escala de
  * colores del mapa, Leaflet bajo demanda y la hoja de estilos.
  *
@@ -11,7 +12,7 @@
  * posición de una orquídea: solo cuadrículas UTM de 10 km.
  */
 
-const HOJA = "/css/orquideas-componentes.css?v=20261125-orquideas1";
+const HOJA = "/css/orquideas-componentes.css?v=20261126-jornadas1";
 
 const LEAFLET = "/js/vendor/leaflet-1.9.4.js";
 
@@ -91,18 +92,22 @@ export function pedir(ruta) {
     return promesa;
 }
 
+/* Tras un cambio del editor: que lo siguiente se pida de nuevo. */
+export function olvidar(prefijo) {
+    for (const ruta of [...cache.keys()]) {
+        if (ruta.startsWith(prefijo)) cache.delete(ruta);
+    }
+}
+
 export function leerRadio(raiz) {
     const valor = Number(raiz.dataset.radio);
     return RADIOS.includes(valor) ? valor : RADIO_DEFECTO;
 }
 
-/* Texto para un fallo: la sección es privada, así que 401 y 403 tienen el suyo. */
+/* Texto para un fallo: antes del lanzamiento, 401 y 403 tienen el suyo. */
 export function textoError(error) {
-    if (error && error.estado === 401) {
-        return "La sección Orquídeas es privada: inicia sesión con tu cuenta.";
-    }
-    if (error && error.estado === 403) {
-        return "La sección Orquídeas es privada: solo para los amigos de las orquídeas.";
+    if (error && (error.estado === 401 || error.estado === 403)) {
+        return "La sección Orquídeas se estrena muy pronto.";
     }
     return "No se han podido cargar los datos de las orquídeas. Prueba dentro de un rato.";
 }
@@ -174,6 +179,17 @@ export function fechaCorta(texto) {
     if (!texto) return "—";
     const [anio, mes, dia] = texto.split("-").map(Number);
     return `${dia} de ${MESES[mes - 1]} de ${anio}`;
+}
+
+/* «9 al 12 de abril de 2026», «30 de abril al 2 de mayo de 2026». */
+export function fechasJornada(inicio, fin, anio) {
+    if (!inicio) return `${anio} · fechas por confirmar`;
+    const [a1, m1, d1] = inicio.split("-").map(Number);
+    if (!fin || fin === inicio) return fechaCorta(inicio);
+    const [a2, m2, d2] = fin.split("-").map(Number);
+    if (a1 === a2 && m1 === m2) return `${d1} al ${d2} de ${MESES[m2 - 1]} de ${a2}`;
+    if (a1 === a2) return `${d1} de ${MESES[m1 - 1]} al ${d2} de ${MESES[m2 - 1]} de ${a2}`;
+    return `${fechaCorta(inicio)} al ${fechaCorta(fin)}`;
 }
 
 export function mesesTexto(meses) {

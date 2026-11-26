@@ -342,8 +342,11 @@ function pintarZona() {
         new CustomEvent("meteoarchidona:cuenta", {
             detail: {
                 conSesion: Boolean(usuario),
-                // Sección privada Orquídeas (25-11-2026): administradores y amigos.
+                // Orquídeas antes de su lanzamiento (25 y 26-11-2026):
+                // administradores, amigos y editores de orquídeas.
                 veOrquideas: Boolean(usuario?.ve_orquideas),
+                // Editor de orquídeas (26-11-2026): botones de añadir y editar.
+                editaOrquideas: Boolean(usuario?.edita_orquideas),
             },
         })
     );

@@ -676,7 +676,7 @@ async function obtenerModuloUsuarios(){
 
     if(promesaModuloUsuarios === null){
         promesaModuloUsuarios = import(
-            "./usuarios.js?v=20261125-orquideas1"
+            "./usuarios.js?v=20261126-jornadas1"
         );
     }
 

@@ -12,7 +12,7 @@
 
 <meta
     name="description"
-    content="Orquídeas silvestres de la comarca de Archidona: especies, floración y cuadrículas donde se han visto."
+    content="Orquídeas silvestres de la comarca de Archidona: especies, floración, cuadrículas donde se han visto, Jornadas de Orquideoflora y publicaciones."
 >
 
 <title>
@@ -23,12 +23,21 @@
 <link rel="icon" href="/favicon.ico?v=20261101-nieve" sizes="48x48">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=20261101-nieve">
 <link rel="manifest" href="/manifest.webmanifest?v=20261101-pwa1">
-<meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#080d14">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MeteoArchidona">
+<link rel="canonical" href="https://meteoarchidona.com/orquideas">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MeteoArchidona">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Orquídeas · Fauna y Flora · MeteoArchidona">
+<meta property="og:description" content="Orquídeas silvestres de la comarca de Archidona, Jornadas de Orquideoflora y publicaciones.">
+<meta property="og:url" content="https://meteoarchidona.com/orquideas">
+<meta property="og:image" content="https://meteoarchidona.com/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 
 
 <link
@@ -43,18 +52,18 @@
 
 <link
     rel="stylesheet"
-    href="../css/fauna-flora.css?v=20261125-fauna1"
+    href="../css/fauna-flora.css?v=20261126-jornadas1"
 >
 <link rel="stylesheet" href="../css/auditoria.css?v=20261025-aviso1">
 
 <link
     rel="stylesheet"
-    href="../css/orquideas-componentes.css?v=20261125-orquideas1"
+    href="../css/orquideas-componentes.css?v=20261126-jornadas1"
 >
 
 <link
     rel="stylesheet"
-    href="../css/orquideas.css?v=20261125-orquideas1"
+    href="../css/orquideas.css?v=20261126-jornadas1"
 >
 
 
@@ -68,7 +77,7 @@
 
 <script
     type="module"
-    src="../js/orquideas.js?v=20261125-fauna1"
+    src="../js/orquideas.js?v=20261126-jornadas1"
 ></script>
 
 <script
@@ -111,9 +120,22 @@
         orquídeas silvestres, y en Archidona se han descrito incluso híbridos
         nuevos para la ciencia. Aquí están las especies que se han visto a
         nuestro alrededor, cuándo florecen y en qué cuadrículas de 10 km
-        aparecen, con las observaciones de naturalistas y herbarios reunidas
-        en GBIF.
+        aparecen, las Jornadas de Orquideoflora que se celebran cada
+        primavera en Archidona y las publicaciones sobre ellas.
     </p>
+
+    <!-- Apartados: js/orquideas.js abre uno u otro (?apartado=). -->
+    <div
+        class="orquideas-pestanas"
+        id="orquideas-pestanas"
+        role="tablist"
+        aria-label="Apartados de Orquídeas"
+        hidden
+    >
+        <button type="button" role="tab" id="orquideas-pestana-especies" aria-controls="orquideas-panel-especies" aria-selected="true">Especies y mapa</button>
+        <button type="button" role="tab" id="orquideas-pestana-jornadas" aria-controls="orquideas-panel-jornadas" aria-selected="false" tabindex="-1">Jornadas</button>
+        <button type="button" role="tab" id="orquideas-pestana-publicaciones" aria-controls="orquideas-panel-publicaciones" aria-selected="false" tabindex="-1">Publicaciones</button>
+    </div>
 
     <div class="orquideas-radio">
         <span>Distancia a Archidona</span>
@@ -129,9 +151,9 @@
 
 
 <!-- ========================================================
-     SECCIÓN PRIVADA
-     La API responde 401 o 403 a quien no es administrador ni amigo
-     de las orquídeas: entonces solo se ve este aviso (js/orquideas.js).
+     ANTES DEL LANZAMIENTO (24-12-2026)
+     La API responde 401 o 403 a quien no es administrador, amigo ni
+     editor de orquídeas: entonces solo se ve este aviso (js/orquideas.js).
      ======================================================== -->
 
 <section
@@ -141,7 +163,7 @@
 >
 
     <h2>
-        Sección privada
+        Próximamente
     </h2>
 
     <p data-texto></p>
@@ -150,8 +172,20 @@
 
 
 <div
+    class="orquideas-apartados"
+    id="orquideas-apartados"
+>
+
+
+<!-- ========================================================
+     APARTADO · ESPECIES Y MAPA
+     ======================================================== -->
+
+<div
     class="orquideas-contenido"
-    id="orquideas-contenido"
+    id="orquideas-panel-especies"
+    role="tabpanel"
+    aria-labelledby="orquideas-pestana-especies"
 >
 
 
@@ -375,6 +409,85 @@
     </ul>
 
 </section>
+
+
+</div>
+
+
+<!-- ========================================================
+     APARTADO · JORNADAS DE ORQUIDEOFLORA
+     Componente js/orquideas/jornadas.js.
+     ======================================================== -->
+
+<div
+    class="orquideas-contenido"
+    id="orquideas-panel-jornadas"
+    role="tabpanel"
+    aria-labelledby="orquideas-pestana-jornadas"
+    hidden
+>
+
+<section
+    class="orquideas-bloque"
+    aria-labelledby="titulo-orquideas-jornadas"
+>
+
+    <h2 id="titulo-orquideas-jornadas">
+        Jornadas Andaluzas sobre Orquideoflora «Ciudad de Archidona»
+    </h2>
+
+    <p class="orquideas-nota">
+        Cada primavera, Archidona reúne a aficionados y botánicos de media
+        Europa con ponencias, salidas al campo para ver orquídeas en flor y un
+        concurso fotográfico.
+    </p>
+
+    <div
+        data-componente="orquideas-jornadas"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+</div>
+
+
+<!-- ========================================================
+     APARTADO · PUBLICACIONES
+     Componente js/orquideas/publicaciones.js.
+     ======================================================== -->
+
+<div
+    class="orquideas-contenido"
+    id="orquideas-panel-publicaciones"
+    role="tabpanel"
+    aria-labelledby="orquideas-pestana-publicaciones"
+    hidden
+>
+
+<section
+    class="orquideas-bloque"
+    aria-labelledby="titulo-orquideas-publicaciones"
+>
+
+    <h2 id="titulo-orquideas-publicaciones">
+        Publicaciones científicas
+    </h2>
+
+    <p class="orquideas-nota">
+        Artículos de Damián Quintana y sus coautores sobre las orquídeas
+        silvestres de Archidona y de Andalucía, entre ellos la descripción de
+        híbridos nuevos para la ciencia. Toca una especie para ver su ficha.
+    </p>
+
+    <div
+        data-componente="orquideas-publicaciones"
+        data-titulo="no"
+    ></div>
+
+</section>
+
+</div>
 
 
 </div>

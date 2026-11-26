@@ -24,7 +24,8 @@
    ========================================================== */
 
 .orquideas,
-.orq-componente {
+.orq-componente,
+.orq-editor-dialogo {
     --orq-blanco: #ffffff;
     --orq-petalo: #fcf6fa;
     --orq-rosa-claro: #f3d6e8;
@@ -760,6 +761,610 @@
     font-family: "JetBrains Mono", monospace;
     font-size: 12px;
     line-height: 1.7;
+}
+
+
+/* ==========================================================
+   JORNADAS DE ORQUIDEOFLORA (js/orquideas/jornadas.js)
+   ========================================================== */
+
+.orq-jornada-proxima {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 22px;
+    padding: 24px;
+    color: #ffffff;
+    background: linear-gradient(150deg, var(--orq-profundo) 0%, var(--orq-purpura) 55%, #b4579a 100%);
+    border-radius: 16px;
+}
+
+.orq-jornada-proxima-texto {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+}
+
+.orq-jornada-proxima-etiqueta {
+    color: #f3d6e8;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+}
+
+.orq-jornada-proxima-titulo {
+    margin: 0;
+    font-size: clamp(20px, 3vw, 27px);
+    line-height: 1.2;
+}
+
+.orq-jornada-proxima-fechas {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.orq-jornada-proxima-lugar,
+.orq-jornada-proxima-descripcion {
+    margin: 0;
+    color: #f6e3ef;
+    font-size: 14.5px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.orq-jornada-proxima-programa {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.orq-jornada-proxima .orq-jornada-organizan {
+    color: #e8c6dc;
+}
+
+.orq-jornada-organizan {
+    margin: 4px 0 0;
+    color: var(--orq-texto-suave);
+    font-size: 13px;
+}
+
+.orq-inscripcion {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 18px;
+    color: var(--orq-texto);
+    background: #ffffff;
+    border-radius: 12px;
+}
+
+.orq-inscripcion-titulo {
+    color: var(--orq-profundo);
+    font-size: 16px;
+}
+
+.orq-inscripcion-campo {
+    display: grid;
+    gap: 4px;
+    color: var(--orq-texto-suave);
+    font-size: 13px;
+}
+
+.orq-inscripcion-campo input {
+    box-sizing: border-box;
+    height: 42px;
+    padding: 8px 10px;
+    color: var(--orq-texto);
+    border: 1px solid var(--orq-borde-fuerte);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 15px;
+}
+
+.orq-inscripcion-boton {
+    min-height: 44px;
+    color: #ffffff;
+    background: var(--orq-purpura);
+    border: 0;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.orq-inscripcion-boton:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.orq-inscripcion-cerrada,
+.orq-inscripcion-nota {
+    margin: 0;
+    color: var(--orq-texto-suave);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.orq-inscripcion-nota {
+    color: var(--orq-texto-tenue);
+    font-size: 12px;
+}
+
+.orq-inscripcion-estado {
+    margin: 0;
+    font-size: 14px;
+}
+
+.orq-inscripcion-estado.bien {
+    color: var(--orq-musgo);
+    font-weight: 700;
+}
+
+.orq-inscripcion-estado.mal {
+    color: #b3261e;
+}
+
+/* Trampa para robots: fuera de la vista, también para lectores de pantalla. */
+.orq-trampa {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.orq-jornadas-subtitulo {
+    margin: 8px 0 0;
+    color: var(--orq-profundo);
+    font-size: 17px;
+}
+
+.orq-jornadas-rejilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+    align-items: start;
+    gap: 12px;
+}
+
+.orq-jornada {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 1px solid var(--orq-borde);
+    border-radius: 12px;
+}
+
+.orq-jornada.oculta,
+.orq-publicacion.oculta {
+    opacity: 0.6;
+    border-style: dashed;
+}
+
+.orq-jornada-cabeza {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.orq-jornada-numero {
+    margin: 0;
+    color: var(--orq-profundo);
+    font-size: 16px;
+}
+
+.orq-jornada-fechas {
+    margin: 0;
+    color: var(--orq-purpura);
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.orq-jornada-lugar,
+.orq-jornada-descripcion {
+    margin: 0;
+    color: var(--orq-texto-suave);
+    font-size: 13.5px;
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
+.orq-jornada-programa {
+    color: var(--orq-purpura);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.orq-jornada-galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+}
+
+.orq-jornada-foto {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+}
+
+.orq-jornada-foto-boton {
+    display: block;
+    padding: 0;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--orq-rosa-claro);
+    border: 0;
+    border-radius: 8px;
+    cursor: zoom-in;
+}
+
+.orq-jornada-foto-boton img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.orq-jornada-foto figcaption {
+    display: grid;
+    color: var(--orq-texto-suave);
+    font-size: 11.5px;
+    line-height: 1.35;
+}
+
+.orq-jornada-foto figcaption strong {
+    color: var(--orq-profundo);
+}
+
+.orq-jornada-foto-grande {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+}
+
+.orq-jornada-foto-grande img {
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.orq-jornada-foto-grande figcaption {
+    color: var(--orq-texto-suave);
+    font-size: 13px;
+}
+
+@media (max-width: 760px) {
+    .orq-jornada-proxima {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 18px;
+    }
+}
+
+
+/* ==========================================================
+   PUBLICACIONES (js/orquideas/publicaciones.js y la ficha)
+   ========================================================== */
+
+.orq-publicaciones-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.orq-selector {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--orq-texto-suave);
+    font-size: 13px;
+}
+
+.orq-selector select {
+    min-height: 36px;
+    max-width: 260px;
+    padding: 6px 8px;
+    color: var(--orq-texto);
+    background: #ffffff;
+    border: 1px solid var(--orq-borde-fuerte);
+    border-radius: 8px;
+    font: inherit;
+}
+
+.orq-publicaciones-lista {
+    display: grid;
+    gap: 10px;
+}
+
+.orq-publicacion {
+    display: grid;
+    gap: 5px;
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 1px solid var(--orq-borde);
+    border-left: 4px solid var(--orq-purpura);
+    border-radius: 12px;
+}
+
+.orq-publicacion-revista {
+    color: var(--orq-musgo);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+}
+
+.orq-publicacion-titulo {
+    color: var(--orq-profundo);
+    font-size: 15.5px;
+    line-height: 1.35;
+}
+
+.orq-publicacion-autores {
+    color: var(--orq-texto-suave);
+    font-size: 13px;
+}
+
+.orq-publicacion-resumen {
+    margin: 2px 0 0;
+    color: var(--orq-texto-suave);
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+.orq-publicacion-pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.orq-publicacion-taxon {
+    padding: 3px 10px;
+    color: var(--orq-profundo);
+    background: var(--orq-rosa-claro);
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.orq-publicacion-taxon.enlazado {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--orq-rosa);
+}
+
+.orq-publicacion-enlaces {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.orq-publicacion-enlace {
+    color: var(--orq-purpura);
+    font-size: 12.5px;
+    font-weight: 700;
+    word-break: break-all;
+}
+
+
+/* ==========================================================
+   EDITOR DE ORQUÍDEAS (js/orquideas/editor.js)
+   ========================================================== */
+
+.orq-editor-barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    color: #dfe8d6;
+    background: #16271a;
+    border-radius: 10px;
+}
+
+.orq-editor-aviso {
+    color: #a9d36f;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.orq-editor-fila {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.orq-editor-boton {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 6px 12px;
+    color: var(--orq-musgo);
+    background: #ffffff;
+    border: 1px solid var(--orq-musgo);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.orq-editor-boton.orq-editor-principal {
+    color: #0b1410;
+    background: #a9d36f;
+    border-color: #a9d36f;
+}
+
+.orq-editor-boton.orq-editor-peligro {
+    margin-right: auto;
+    color: #b3261e;
+    border-color: #e3b2ae;
+}
+
+.orq-editor-boton.orq-editor-mini {
+    min-height: 28px;
+    padding: 3px 8px;
+    font-size: 11.5px;
+}
+
+.orq-editor-boton:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.orq-editor-dialogo {
+    width: min(620px, calc(100vw - 24px));
+    max-height: calc(100vh - 24px);
+    padding: 0;
+    color: var(--orq-texto);
+    border: 1px solid var(--orq-borde);
+    border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(30, 10, 30, 0.35);
+}
+
+.orq-editor-dialogo::backdrop {
+    background: rgba(20, 10, 20, 0.55);
+}
+
+.orq-editor-formulario,
+.orq-dialogo-lectura > :not(.orq-dialogo-cabeza) {
+    display: grid;
+    gap: 12px;
+    padding: 18px 20px 20px;
+}
+
+.orq-dialogo-lectura {
+    width: min(900px, calc(100vw - 24px));
+}
+
+.orq-dialogo-cabeza {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 20px 0;
+}
+
+.orq-dialogo-cerrar {
+    width: 36px;
+    height: 36px;
+    color: var(--orq-profundo);
+    background: var(--orq-petalo);
+    border: 1px solid var(--orq-borde);
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.orq-editor-titulo {
+    margin: 0;
+    color: var(--orq-profundo);
+    font-size: 18px;
+}
+
+.orq-editor-explicacion {
+    margin: 0;
+    color: var(--orq-texto-suave);
+    font-size: 13.5px;
+}
+
+.orq-editor-campo {
+    display: grid;
+    gap: 4px;
+    font-size: 13px;
+}
+
+.orq-editor-campo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.orq-editor-etiqueta {
+    color: var(--orq-texto-suave);
+    font-weight: 600;
+}
+
+.orq-editor-campo input:not([type="checkbox"]),
+.orq-editor-campo textarea,
+.orq-editor-campo select {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 40px;
+    padding: 7px 10px;
+    color: var(--orq-texto);
+    background: #ffffff;
+    border: 1px solid var(--orq-borde-fuerte);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 15px;
+}
+
+.orq-editor-campo textarea {
+    resize: vertical;
+}
+
+.orq-editor-campo input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--orq-purpura);
+}
+
+.orq-editor-ayuda {
+    color: var(--orq-texto-tenue);
+    font-size: 12px;
+}
+
+.orq-editor-error {
+    margin: 0;
+    padding: 8px 10px;
+    color: #b3261e;
+    background: #fdecea;
+    border-radius: 8px;
+    font-size: 13.5px;
+}
+
+.orq-editor-error[hidden] {
+    display: none;
+}
+
+.orq-editor-botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.orq-inscritos-total {
+    margin: 0;
+    color: var(--orq-profundo);
+    font-weight: 700;
+}
+
+.orq-inscritos-desliza {
+    overflow-x: auto;
+}
+
+.orq-inscritos-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.orq-inscritos-tabla th,
+.orq-inscritos-tabla td {
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--orq-borde);
 }
 
 

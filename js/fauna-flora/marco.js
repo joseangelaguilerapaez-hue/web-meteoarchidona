@@ -11,17 +11,22 @@
  *   - marca la sección de <body data-ff-seccion="...">;
  *   - pone el reloj en hora de Madrid;
  *   - abre y cierra el menú en el móvil;
- *   - carga la cuenta (js/cuenta.js), y con su aviso enseña Orquídeas en
- *     el menú solo a los administradores y los amigos de las orquídeas.
+ *   - carga la cuenta (js/cuenta.js) y los lanzamientos (js/lanzamientos.js):
+ *     una sección con lanzamiento (data-lanzamiento, como Orquídeas, que
+ *     sale el 24-12-2026) se enseña en el menú cuando ya ha salido o a quien
+ *     puede verla antes (administradores, amigos y editores de orquídeas,
+ *     con el candado); las primeras 48 horas lleva el cartelito de obras.
  */
 
-const RUTA_CABECERA = "/componentes/fauna-flora-cabecera.html?v=20261125-fauna1";
+const RUTA_CABECERA = "/componentes/fauna-flora-cabecera.html?v=20261126-jornadas1";
 
 const RUTA_PIE = "/componentes/fauna-flora-pie.html?v=20261125-fauna1";
 
 const RUTA_CUENTA_CSS = "/css/cuenta.css?v=20261026-cuenta3";
 
-const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261125-orquideas1";
+const RUTA_CUENTA_JS = "/js/cuenta.js?v=20261126-jornadas1";
+
+const RUTA_LANZAMIENTOS_JS = "/js/lanzamientos.js?v=20261115-lanzamientos2";
 
 const ZONA = "Europe/Madrid";
 
@@ -75,11 +80,37 @@ function configurarMenu() {
 }
 
 
-/* Orquídeas, en el menú solo para quien puede verla (js/cuenta.js lo avisa). */
-function mostrarPrivadas(veOrquideas) {
-    document.querySelectorAll('.ff-menu a[data-privada="orquideas"]').forEach(enlace => {
-        enlace.hidden = !veOrquideas;
+/*
+ * Secciones con lanzamiento: visibles si ya han salido (o no hay datos de
+ * lanzamientos), o antes a quien puede verlas (js/cuenta.js lo avisa).
+ */
+const estado = { veAntes: false, lanzamientos: null };
+
+function mostrarSecciones() {
+    document.querySelectorAll(".ff-menu a[data-lanzamiento]").forEach(enlace => {
+        const lanzamiento = estado.lanzamientos?.find(l => l.clave === enlace.dataset.lanzamiento);
+        const oculto = lanzamiento ? lanzamiento.estado === "OCULTO" : estado.lanzamientos === null;
+        enlace.hidden = oculto && !estado.veAntes;
+        enlace.classList.toggle("ff-antes", oculto);
+        enlace.classList.toggle("ff-obras", lanzamiento?.estado === "EN_OBRAS");
+        if (oculto && lanzamiento) {
+            enlace.title = `Se estrena el ${new Date(lanzamiento.fecha).toLocaleDateString("es-ES", { timeZone: ZONA })}`;
+        } else {
+            enlace.removeAttribute("title");
+        }
     });
+}
+
+async function cargarLanzamientos() {
+    try {
+        const modulo = await import(RUTA_LANZAMIENTOS_JS);
+        const datos = await modulo.cargarLanzamientos();
+        estado.lanzamientos = datos.lanzamientos || [];
+    } catch (error) {
+        console.error("Fauna y Flora: no se han podido leer los lanzamientos:", error);
+        estado.lanzamientos = [];
+    }
+    mostrarSecciones();
 }
 
 
@@ -117,9 +148,11 @@ async function montarCabecera() {
 
     // Antes de cargar la cuenta, para no perder su primer aviso.
     document.addEventListener(EVENTO_CUENTA, evento => {
-        mostrarPrivadas(Boolean(evento.detail?.veOrquideas));
+        estado.veAntes = Boolean(evento.detail?.veOrquideas);
+        mostrarSecciones();
     });
     cargarCuenta();
+    void cargarLanzamientos();
 }
 
 
