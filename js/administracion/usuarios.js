@@ -7,6 +7,7 @@
  * GET   /admin/usuarios
  * PATCH /admin/usuarios/{identificador}   {"es_administrador": true|false}
  *                                         {"amigo_orquideas": true|false}  (25-11-2026)
+ *                                         {"editor_orquideas": true|false} (26-11-2026)
  * POST  /admin/usuarios/{identificador}/reenviar-activacion   (8-11-2026)
  * GET   /admin/suscripciones/servicios
  * PATCH /admin/suscripciones/servicios/{codigo}   {"precio", "disponible"}
@@ -36,7 +37,7 @@ import {
 import {
     abrirFichaUsuario,
     cerrarFichaUsuario
-} from "./ficha-usuario.js?v=20261125-orquideas1";
+} from "./ficha-usuario.js?v=20261126-jornadas1";
 
 
 const RUTA = "/admin/usuarios";
@@ -124,6 +125,9 @@ function ficha(usuario){
     }
     if(usuario.amigo_orquideas){
         etiquetas.append(crear("span", "usuarios-orquideas", "Amigo de las orquídeas"));
+    }
+    if(usuario.editor_orquideas){
+        etiquetas.append(crear("span", "usuarios-orquideas", "Editor de orquídeas"));
     }
     cabecera.append(etiquetas);
     tarjeta.append(cabecera);
@@ -233,10 +237,18 @@ const PERMISOS = [
     {
         campo: "amigo_orquideas",
         nombre: "Amigo de las orquídeas",
-        dar: nombre => `¿Hacer a ${nombre} amigo de las orquídeas? Podrá ver la sección privada Orquídeas.`,
+        dar: nombre => `¿Hacer a ${nombre} amigo de las orquídeas? Podrá ver la sección Orquídeas antes de su estreno.`,
         quitar: nombre => `¿Quitar a ${nombre} de los amigos de las orquídeas? Dejará de ver la sección Orquídeas.`,
         hecho: nombre => `${nombre} ya es amigo de las orquídeas.`,
         deshecho: nombre => `${nombre} ya no es amigo de las orquídeas.`
+    },
+    {
+        campo: "editor_orquideas",
+        nombre: "Editor de orquídeas",
+        dar: nombre => `¿Hacer a ${nombre} editor de orquídeas? Podrá añadir y corregir las Jornadas, las publicaciones y las fichas de Orquídeas.`,
+        quitar: nombre => `¿Quitar a ${nombre} el permiso de editor de orquídeas?`,
+        hecho: nombre => `${nombre} ya es editor de orquídeas.`,
+        deshecho: nombre => `${nombre} ya no es editor de orquídeas.`
     }
 ];
 
@@ -506,10 +518,12 @@ function renderizarLista(){
     if(resumen){
         const administradores = usuarios.filter(u => u.es_administrador).length;
         const amigos = usuarios.filter(u => u.amigo_orquideas).length;
+        const editores = usuarios.filter(u => u.editor_orquideas).length;
         resumen.textContent = usuarios.length
             ? `${usuarios.length} ${usuarios.length === 1 ? "cuenta" : "cuentas"}`
                 + ` · ${administradores} ${administradores === 1 ? "administrador" : "administradores"}`
                 + ` · ${amigos} ${amigos === 1 ? "amigo" : "amigos"} de las orquídeas`
+                + (editores ? ` · ${editores} ${editores === 1 ? "editor" : "editores"} de orquídeas` : "")
                 + (filtro ? ` · ${visibles.length} con «${filtro}»` : "")
             : "Todavía no hay ninguna cuenta.";
     }

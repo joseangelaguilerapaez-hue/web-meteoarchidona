@@ -141,10 +141,53 @@ body[data-seccion="orquideas"] {
     gap: 18px;
 }
 
+.orquideas-apartados {
+    display: grid;
+    gap: 18px;
+}
+
 .orquideas-radio[hidden],
 .orquideas-contenido[hidden],
+.orquideas-apartados[hidden],
+.orquideas-pestanas[hidden],
 .orquideas-privado[hidden] {
     display: none;
+}
+
+
+/* ==========================================================
+   APARTADOS (Especies y mapa · Jornadas · Publicaciones)
+   ========================================================== */
+
+.orquideas-pestanas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.orquideas-pestanas [role="tab"] {
+    min-height: 42px;
+    padding: 9px 18px;
+    color: var(--orq-purpura);
+    background: #ffffff;
+    border: 1px solid var(--orq-borde-fuerte);
+    border-radius: 999px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.orquideas-pestanas [role="tab"][aria-selected="true"] {
+    color: #ffffff;
+    background: var(--orq-purpura);
+    border-color: var(--orq-purpura);
+}
+
+.orquideas-pestanas [role="tab"]:focus-visible {
+    outline: 2px solid var(--orq-rosa);
+    outline-offset: 2px;
 }
 
 .orquideas-privado {

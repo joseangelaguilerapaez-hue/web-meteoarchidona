@@ -11,13 +11,69 @@
  * Sin data-especie, en la página Orquídeas sigue a la especie elegida en
  * el catálogo (o ?especie= en la dirección); fuera de ella no enseña nada.
  *
- * API: GET /orquideas/especies/{id}?radio=50 (privada).
+ * Desde el 26-11-2026 trae también las publicaciones que tratan de la
+ * especie, y el editor de orquídeas puede corregir sus textos desde aquí.
+ *
+ * API: GET /orquideas/especies/{id}?radio=50 y, para el editor,
+ * PATCH /orquideas/editor/especies/{id}.
  */
 
 import {
-    pedir, crear, aviso, vaciar, prepararRaiz, titulo, pie, numero, fechaCorta, leerRadio, textoError,
+    pedir, olvidar, crear, aviso, vaciar, prepararRaiz, titulo, pie, numero, fechaCorta, leerRadio, textoError,
     figuraFoto, mesesTexto, especieDeLaDireccion, EVENTO_ESPECIE, MESES, INICIALES
-} from "./comun.js?v=20261125-orquideas1";
+} from "./comun.js?v=20261126-jornadas1";
+import {esEditor, alCambiarEditor, enviar, formulario, botonEditor} from "./editor.js?v=20261126-jornadas1";
+import {tarjetaPublicacion} from "./publicaciones.js?v=20261126-jornadas1";
+
+
+const SI_NO = [
+    { valor: "", texto: "Sin saber" },
+    { valor: "true", texto: "Sí" },
+    { valor: "false", texto: "No" }
+];
+
+function siNo(valor) {
+    return valor === null || valor === undefined ? "" : String(valor);
+}
+
+function deSiNo(texto) {
+    return texto === null || texto === "" ? null : texto === "true";
+}
+
+async function editarFicha(datos, alCambiar) {
+    const especie = datos.especie;
+    const resultado = await formulario({
+        titulo: `Editar la ficha · ${especie.nombre_cientifico}`,
+        explicacion: "Lo que cambies aquí no lo pisa la carga semanal de GBIF.",
+        campos: [
+            { nombre: "nombre_comun", etiqueta: "Nombre común", maximo: 120 },
+            { nombre: "hibrido", etiqueta: "Es un híbrido", tipo: "checkbox" },
+            { nombre: "autoctona", etiqueta: "Autóctona", tipo: "select", opciones: SI_NO },
+            { nombre: "endemica", etiqueta: "Endémica", tipo: "select", opciones: SI_NO },
+            { nombre: "proteccion", etiqueta: "Protección", maximo: 80,
+              ayuda: "Categoría del catálogo andaluz o español: «Vulnerable», «En peligro»…" },
+            { nombre: "descripcion", etiqueta: "Cómo es", tipo: "textarea", filas: 5, maximo: 8000 },
+            { nombre: "habitat", etiqueta: "Dónde vive", tipo: "textarea", filas: 4, maximo: 4000 },
+            { nombre: "visible", etiqueta: "Visible en la web", tipo: "checkbox" }
+        ],
+        valores: {
+            nombre_comun: especie.nombre_comun,
+            hibrido: especie.hibrido,
+            autoctona: siNo(especie.autoctona),
+            endemica: siNo(especie.endemica),
+            proteccion: especie.proteccion,
+            descripcion: datos.descripcion,
+            habitat: datos.habitat,
+            visible: true
+        },
+        guardar: valores => enviar("PATCH", `/orquideas/editor/especies/${especie.id}`, {
+            ...valores,
+            autoctona: deSiNo(valores.autoctona),
+            endemica: deSiNo(valores.endemica)
+        })
+    });
+    if (resultado) alCambiar();
+}
 
 
 function grafica(porMes, meses) {
@@ -48,9 +104,16 @@ function dato(etiqueta, valor) {
 }
 
 
-function pintarFicha(cuerpo, datos) {
+function pintarFicha(cuerpo, datos, alCambiar) {
     vaciar(cuerpo);
     const especie = datos.especie;
+
+    if (esEditor()) {
+        const barra = crear("div", "orq-editor-barra");
+        barra.appendChild(crear("span", "orq-editor-aviso", "Modo editor de orquídeas"));
+        barra.appendChild(botonEditor("Editar la ficha", () => editarFicha(datos, alCambiar), "orq-editor-principal"));
+        cuerpo.appendChild(barra);
+    }
 
     const cabeza = crear("div", "orq-ficha-cabeza");
     cabeza.appendChild(crear("h4", "orq-ficha-cientifico", especie.nombre_cientifico));
@@ -97,6 +160,13 @@ function pintarFicha(cuerpo, datos) {
         cuerpo.appendChild(galeria);
     }
 
+    if (datos.publicaciones?.length) {
+        cuerpo.appendChild(crear("h5", "orq-subtitulo", "Publicado en"));
+        const lista = crear("div", "orq-publicaciones-lista");
+        datos.publicaciones.forEach(publicacion => lista.appendChild(tarjetaPublicacion(publicacion, { conTaxones: false })));
+        cuerpo.appendChild(lista);
+    }
+
     if (datos.cuadriculas.length) {
         cuerpo.appendChild(crear("h5", "orq-subtitulo", "Cuadrículas donde se ha visto"));
         cuerpo.appendChild(crear(
@@ -126,7 +196,10 @@ export async function montarFichaOrquideas(raiz) {
         aviso(cuerpo, "Cargando…");
         try {
             const datos = await pedir(`/orquideas/especies/${id}?radio=${radio}`);
-            pintarFicha(cuerpo, datos);
+            pintarFicha(cuerpo, datos, () => {
+                olvidar("/orquideas/");
+                void pintar(id);
+            });
             nota.textContent = `Datos a menos de ${datos.radio} km de Archidona. ${datos.cita.texto} Toca una foto para ver su registro.`;
         } catch (error) {
             aviso(cuerpo, error.estado === 404 ? "No hay ninguna especie con ese número." : textoError(error), true);
@@ -135,14 +208,17 @@ export async function montarFichaOrquideas(raiz) {
     }
 
     const fija = Number(raiz.dataset.especie) || null;
+    let actual = fija || (enPagina ? especieDeLaDireccion() : null);
+    alCambiarEditor(() => void pintar(actual));
     if (!fija && enPagina) {
         document.addEventListener(EVENTO_ESPECIE, evento => {
-            void pintar(evento.detail?.id || null).then(() => {
+            actual = evento.detail?.id || null;
+            void pintar(actual).then(() => {
                 raiz.scrollIntoView({ behavior: "smooth", block: "start" });
             });
         });
     }
-    await pintar(fija || (enPagina ? especieDeLaDireccion() : null));
+    await pintar(actual);
 }
 
 

@@ -12,7 +12,7 @@
 
 import {
     pedir, crear, aviso, prepararRaiz, titulo, pie, numero, fechaCorta, leerRadio, textoError, MESES
-} from "./comun.js?v=20261125-orquideas1";
+} from "./comun.js?v=20261126-jornadas1";
 
 
 function cifra(valor, texto, destacada = false) {

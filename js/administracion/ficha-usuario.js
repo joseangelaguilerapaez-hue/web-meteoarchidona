@@ -249,6 +249,9 @@ function pintarDatos(usuario){
     if(usuario.amigo_orquideas){
         etiquetas.append(crear("span", "usuarios-orquideas", "Amigo de las orquídeas"));
     }
+    if(usuario.editor_orquideas){
+        etiquetas.append(crear("span", "usuarios-orquideas", "Editor de orquídeas"));
+    }
 
     const datos = crear("div", "usuarios-datos");
     datos.append(

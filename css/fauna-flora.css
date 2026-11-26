@@ -225,9 +225,19 @@ body[data-ff-seccion] {
     border-color: #d66fa8;
 }
 
-/* El hidden de las secciones privadas tiene que ganar al display del enlace. */
+/* El hidden de las secciones sin lanzar tiene que ganar al display del enlace. */
 .ff-menu a[hidden] {
     display: none !important;
+}
+
+/* Candado solo antes del lanzamiento (quien la ve antes); obras las 48 horas siguientes. */
+.ff-menu a:not(.ff-antes) .ff-candado {
+    display: none;
+}
+
+.ff-menu a.ff-obras::after {
+    content: "🚧";
+    margin-left: 4px;
 }
 
 .ff-menu-pronto {

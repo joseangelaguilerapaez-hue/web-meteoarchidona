@@ -6,7 +6,7 @@
  *   - «Ahora en el campo»: lluvia del año agrícola y del mes, temperatura y
  *     humedad de El Silo (GET /condiciones-actuales/EL_SILO) y, solo para
  *     quien puede ver Orquídeas, cuántas están en flor este mes
- *     (GET /orquideas/resumen, privada: si responde 401 o 403 no sale).
+ *     (GET /orquideas/resumen; antes de su lanzamiento, si responde 401 o 403 no sale).
  *   - «Calendario de la naturaleza»: lo que suele pasar cada mes en la
  *     comarca con las orquídeas, las aves y las setas. Arranca en el mes
  *     actual y se puede ir mes a mes.
@@ -14,7 +14,7 @@
  * Las tarjetas de las secciones son HTML fijo de pages/fauna-flora.html.
  */
 
-import {montarMarcoFaunaFlora} from "./marco.js?v=20261125-fauna1";
+import {montarMarcoFaunaFlora} from "./marco.js?v=20261126-jornadas1";
 
 
 const ESTACION = "EL_SILO";
